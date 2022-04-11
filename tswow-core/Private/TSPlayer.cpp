@@ -1472,6 +1472,75 @@ uint32 TSPlayer::GetDbcLocale()
     return ChatHandler(player->GetSession()).GetNearbyGameObject();
 }*/
 
+void TSPlayer::RemoveAllItemMods()
+{
+#if TRINITY
+   player->_RemoveAllItemMods();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::RemoveAllItemMods not implemented for AzerothCore");
+#endif
+}
+
+void TSPlayer::RemoveItemMods(TSItem item, uint8 slot)
+{
+#if TRINITY
+    if (item)
+    {
+        TSItemTemplate proto = item->GetTemplate();
+        if (!proto)
+            return;
+        if (proto->_GetInfo()->ItemSet)
+            RemoveItemsSetItem(player, proto->_GetInfo());
+
+        if (item->IsBroken() || !player->CanUseAttackType(player->GetAttackBySlot(slot)))
+            return;
+
+        player->ApplyItemEquipSpell(item.item, false);
+        player->ApplyEnchantment(item.item, false);
+        player->ApplyItemDependentAuras(item.item, false);
+        player->_ApplyItemBonuses(proto->_GetInfo(), slot, false);
+    
+        if (slot == EQUIPMENT_SLOT_RANGED)
+            player->_ApplyAmmoBonuses();
+    }
+#elif AZEROTHCORE
+TS_LOG_ERROR("tswow.api", "TSPlayer::RemoveItemMods not implemented for AzerothCore");
+#endif 
+}
+
+void TSPlayer::ApplyAllItemMods()
+{
+#if TRINITY
+    player->_ApplyAllItemMods();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyAllItemMods not implemented for AzerothCore");
+#endif    
+}
+
+void TSPlayer::ApplyItemMods(TSItem item, uint8 slot, bool apply, bool updateAuras)
+{
+#if TRINITY
+    player->_ApplyItemMods(item.item, slot, apply, updateAuras);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyItemMods not implemented for AzerothCore");
+#endif  
+}
+
+void TSPlayer::UpdateCache()
+{
+    #if TRINITY
+    QueryResult result = CharacterDatabase.PQuery("SELECT * FROM custom_item_stats");
+    do
+    {
+        Field* fields = result->Fetch();
+        const ItemTemplate* itemTemplate = sObjectMgr->GetItemTemplate(fields[0].GetUInt32());
+        SendItemQueryPacket(itemTemplate);
+    } while (result->NextRow());
+    #elif AZEROTHCORE
+        TS_LOG_ERROR("tswow.api", "TSPlayer::UpdateCache not implemented for AzerothCore");
+    #endif
+}
+
 /**
  * Locks the player controls and disallows all movement and casting.
  *
@@ -2079,17 +2148,29 @@ void TSPlayer::SendGameObjectQueryPacket(uint32 entry)
 
 void TSPlayer::SendItemQueryPacket(uint32 entry)
 {
+    SendItemQueryPacket(TSItemTemplate(sObjectMgr->GetItemTemplate(entry)));
+}
+
+void TSPlayer::SendItemQueryPacket(TSItemTemplate curItem)
+{
 #if TRINITY
-    if (ItemTemplate const* ci = sObjectMgr->GetItemTemplate(entry))
+    if (!curItem.IsNull())
     {
-        WorldSession* curSes = player->GetSession();
-        WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
-        curSes->SendPacket(&response);
-    }
+        if (sWorld->getBoolConfig(CONFIG_CACHE_DATA_QUERIES))
+        {
+            player->GetSession()->SendPacket(curItem->_GetInfo()->GetQueryData(player->GetSession()->GetSessionDbLocaleIndex()));
+        }
+        else
+        {
+            WorldPacket response = curItem->_GetInfo()->BuildQueryData(player->GetSession()->GetSessionDbcLocale());
+            player->GetSession()->SendPacket(&response);
+        }
+}
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacket not implemented for AzerothCore");
 #endif
 }
+
 /**
  * Sends a spirit resurrection request to the [Player]
  */
@@ -4399,3 +4480,14 @@ uint32 TSPlayer::GetFreeInventorySpace()
 {
     return player->GetFreeInventorySpace();
 }
+
+void TSPlayer::LSendItemQueryPacket0(uint32 entry)
+{
+    SendItemQueryPacket(entry);
+}
+
+void TSPlayer::LSendItemQueryPacket1(TSItemTemplate item)
+{
+    SendItemQueryPacket(item);
+}
+

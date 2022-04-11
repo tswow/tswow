@@ -20,6 +20,8 @@
 #include "TSItem.h"
 #include "TSBase.h"
 #include "TSString.h"
+TSItemTemplate TC_GAME_API CreateItemTemplate(uint32 entry,uint32 copyItemID = 38);
+
 
 void TC_GAME_API SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items);
 void TC_GAME_API SendWorldMessage(TSString string);

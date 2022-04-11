@@ -50,7 +50,9 @@ void TSLuaState::load_creature_methods(uint32_t modid)
     LUA_FIELD(ts_creature, TSCreature, IsDamageEnoughForLootingAndReward);
     LUA_FIELD(ts_creature, TSCreature, CanStartAttack);
     LUA_FIELD(ts_creature, TSCreature, HasLootMode);
+    #if TRINITY
     LUA_FIELD(ts_creature, TSCreature, GetAttackDistance);
+    #endif
     LUA_FIELD(ts_creature, TSCreature, GetRespawnDelay);
     LUA_FIELD(ts_creature, TSCreature, GetWanderRadius);
     LUA_FIELD(ts_creature, TSCreature, UpdateLevelDependantStats);

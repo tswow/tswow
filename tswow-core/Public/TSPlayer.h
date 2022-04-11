@@ -150,6 +150,11 @@ public:
 	TSCorpse GetCorpse();
 	int GetDbLocaleIndex();
 	uint32 GetDbcLocale();
+	void RemoveAllItemMods();
+	void RemoveItemMods(TSItem item, uint8 slot);
+	void ApplyAllItemMods();
+	void ApplyItemMods(TSItem item, uint8 slot, bool apply, bool updateAuras);
+	void UpdateCache();
 	void SetPlayerLock(bool apply);
 	void SetAtLoginFlag(uint32 flag);
 	void SetSheath(uint32 sheathed);
@@ -193,6 +198,7 @@ public:
 	void SendCreatureQueryPacket(uint32 entry);
 	void SendGameObjectQueryPacket(uint32 entry);
 	void SendItemQueryPacket(uint32 entry);
+	void SendItemQueryPacket(TSItemTemplate curItem);
 	void SendSpiritResurrect();
 	void SendTabardVendorActivate(TSWorldObject obj);
 	void SendShowBank(TSWorldObject obj);
@@ -415,5 +421,9 @@ private:
 
 		void LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id);
 		void LGossipSendMenu1(uint32 npc_text, TSObject sender);
+
+		void LSendItemQueryPacket0(uint32 entry);
+		void LSendItemQueryPacket1(TSItemTemplate item);
+
 		friend class TSLuaState;
 };

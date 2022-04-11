@@ -25,6 +25,17 @@
 #include "World.h"
 #include "Timer.h"
 #include "GameEventMgr.h"
+#include "TSItemTemplate.h"
+
+TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
+{
+#if TRINITY
+    return sObjectMgr->CreateItemTemplate(entry,copyItemID);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
+    return TSItemTemplate();
+#endif
+}
 
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {

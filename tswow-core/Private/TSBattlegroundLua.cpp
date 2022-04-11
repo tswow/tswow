@@ -19,7 +19,9 @@ void TSLuaState::load_battleground_methods(uint32_t modid)
 
     sol::usertype<TSBattleground> ts_battleground = new_usertype<TSBattleground>("TSBattleground");
     load_map_methods_t(ts_battleground, modid, "TSBattleground");
+    #if TRINITY
     LUA_FIELD(ts_battleground, TSBattleground, GetBracketID);
+    #endif
     LUA_FIELD(ts_battleground, TSBattleground, GetAlivePlayersCountByTeam);
     LUA_FIELD(ts_battleground, TSBattleground, GetBonusHonorFromKillCount);
     LUA_FIELD(ts_battleground, TSBattleground, GetEndTime);

@@ -1082,7 +1082,42 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return [LocaleConstant] locale
      */
-    GetDbcLocale() : uint32
+    GetDbcLocale(): uint32
+
+    /**
+     * Remove all item's stats on player
+     *
+     * @note Generally only used when creating/modifying ItemTemplates
+     */
+    RemoveAllItemMods(): void
+
+    /**
+     * Remove single item's stats on player
+     *
+     * @note Generally only used when creating/modifying ItemTemplates
+     */
+    RemoveItemMods(item: TSItem, slot: uint8): void
+
+    /**
+     * Apply all item's stats on player
+     *
+     * @note Generally only used when creating/modifying ItemTemplates
+     */
+    ApplyAllItemMods(): void
+
+    /**
+     * Apply single item's stats on player
+     *
+     * @note Generally only used when creating/modifying ItemTemplates
+     */
+    ApplyItemMods(item: TSItem, slot: uint8, apply: bool, updateAuras:bool): void
+
+    /**
+     * Applies all custom item cache to player
+     *
+     * @note Generally only used when creating/modifying ItemTemplates
+     */
+    UpdateCache(): void
 
     /**
      * Locks the player controls and disallows all movement and casting.
@@ -1385,9 +1420,9 @@ declare interface TSPlayer extends TSUnit {
     /**
      * Sends a [Item] cache packet to the [Player] from the [Item] entry specified
      *
-     * @param [Number] entry
+     * @param [Number|TSItemTemplate] entry
      */
-    SendItemQueryPacket(entry : number) : void
+    SendItemQueryPacket(entry: number | TSItemTemplate): void
 
     /**
      * Sends a spirit resurrection request to the [Player]
@@ -2390,6 +2425,7 @@ declare interface TSOutfit {
     GetGender(): Gender;
     GetRace(): uint8;
     GetDisplayID(): uint32;
+    SetDisplayID(displayID: uint32): void;
 
     SetMainhand(mainhand: uint32): TSOutfit
     SetOffhand(offhand: uint32): TSOutfit
@@ -4080,6 +4116,7 @@ declare class TSItem extends TSObject {
     //GetItemLink(locale : uint8) : string
 
     GetTemplate(): TSItemTemplate
+
     GetOwnerGUID() : uint64
 
     /**
@@ -6795,87 +6832,180 @@ declare interface TSUnit extends TSWorldObject {
 
 declare interface TSItemTemplate extends TSEntityProvider {
     IsNull() : bool
-    GetEntry() : uint32;
-    GetDamageMinA(): float;
-    GetDamageMinB(): float;
-
-    GetDamageMaxA(): float;
-    GetDamageMaxB(): float;
-
-    GetDamageTypeA(): uint32;
-    GetDamageTypeB(): uint32;
+    GetEntry(): uint32;
+    SetEntry(value:uint32):void
     GetClass(): uint32;
+    SetClass(value: uint32): void
     GetSubClass(): uint32;
+    SetSubClass(value: uint32): void
     GetSoundOverrideSubclass(): int32;
+    SetSoundOverrideSubclass(value: int32): void
     GetName(): string;
+    SetName(name:string):void
     GetDisplayInfoID(): uint32;
+    SetDisplayInfoID(value: uint32): void
     GetQuality(): uint32;
+    SetQuality(value: uint32): void
     GetFlags(): uint32;
+    SetFlags(value: uint32): void
     GetFlags2(): uint32;
+    SetFlags2(value: uint32): void
     GetBuyCount(): uint32;
+    SetBuyCount(value: uint32): void
     GetBuyPrice(): int32;
+    SetBuyPrice(value: int32): void
     GetSellPrice(): uint32;
+    SetSellPrice(value: uint32): void
     GetInventoryType(): uint32;
+    SetInventoryType(value: uint32): void
     GetAllowableClass(): uint32;
+    SetAllowableClass(value: uint32): void
     GetAllowableRace(): uint32;
+    SetAllowableRace(value: uint32): void
     GetItemLevel(): uint32;
+    SetItemLevel(value: uint32): void
     GetRequiredLevel(): uint32;
+    SetRequiredLevel(value: uint32): void
     GetRequiredSkill(): uint32;
+    SetRequiredSkill(value: uint32): void
     GetRequiredSkillRank(): uint32;
+    SetRequiredSkillRank(value: uint32): void
     GetRequiredSpell(): uint32;
+    SetRequiredSpell(value: uint32): void
     GetRequiredHonorRank(): uint32;
+    SetRequiredHonorRank(value: uint32): void
     GetRequiredCityRank(): uint32;
+    SetRequiredCityRank(value: uint32): void
     GetRequiredReputationFaction(): uint32;
+    SetRequiredReputationFaction(value: uint32): void
     GetRequiredReputationRank(): uint32;
+    SetRequiredReputationRank(value: uint32): void
     GetMaxCount(): int32;
+    SetMaxCount(value: uint32): void
     GetStackable(): int32;
+    SetStackable(value: uint32): void
     GetContainerSlots(): uint32;
+    SetContainerSlots(value: uint32): void
     GetStatsCount(): uint32;
-    GetStatType(index: uint32): uint32
-    GetStatValue(index: uint32): int32
+    SetStatsCount(value: uint32): void
     GetScalingStatDistribution(): uint32;
+    SetScalingStatDistribution(value: uint32): void
     GetScalingStatValue(): uint32;
+    SetScalingStatValue(value: uint32): void
     GetArmor(): uint32;
+    SetArmor(value: uint32): void
     GetHolyRes(): uint32;
+    SetHolyRes(value: uint32): void
     GetFireRes(): uint32;
+    SetFireRes(value: uint32): void
     GetNatureRes(): uint32;
+    SetNatureRes(value: uint32): void
     GetFrostRes(): uint32;
+    SetFrostRes(value: uint32): void
     GetShadowRes(): uint32;
+    SetShadowRes(value: uint32): void
     GetArcaneRes(): uint32;
+    SetArcaneRes(value: uint32): void
     GetDelay(): uint32;
+    SetDelay(value: uint32): void
     GetAmmoType(): uint32;
+    SetAmmoType(value: uint32): void
     GetRangedModRange(): float;
+    SetRangedModRange(value: uint32): void
     GetBonding(): uint32;
+    SetBonding(value: uint32): void
     GetDescription(): string;
+    SetDescription(value: uint32): void
     GetPageText(): uint32;
+    SetPageText(value: uint32): void
     GetLanguageID(): uint32;
+    SetLanguageID(value: uint32): void
     GetPageMaterial(): uint32;
+    SetPageMaterial(value: uint32): void
     GetStartQuest(): uint32;
+    SetStartQuest(value: uint32): void
     GetLockID(): uint32;
+    SetLockID(value: uint32): void
     GetMaterial(): int32;
+    SetMaterial(value: uint32): void
     GetSheath(): uint32;
+    SetSheath(value: uint32): void
     GetRandomProperty(): int32;
+    SetRandomProperty(value: uint32): void
     GetRandomSuffix(): int32;
+    SetRandomSuffix(value: uint32): void
     GetBlock(): uint32;
+    SetBlock(value: uint32): void
     GetItemSet(): uint32;
+    SetItemSet(value: uint32): void
     GetMaxDurability(): uint32;
+    SetMaxDurability(value: uint32): void
     GetArea(): uint32;
+    SetArea(value: uint32): void
     GetMap(): uint32;
+    SetMap(value: uint32): void
     GetBagFamily(): uint32;
+    SetBagFamily(value: uint32): void
     GetTotemCategory(): uint32;
+    SetTotemCategory(value: uint32): void
     GetSocketBonus(): uint32;
+    SetSocketBonus(value: uint32): void
     GetGemProperties(): uint32;
+    SetGemProperties(value: uint32): void
     GetRequiredDisenchantSkill(): uint32;
+    SetRequiredDisenchantSkill(value: uint32): void
     GetArmorDamageModifier(): float;
+    SetArmorDamageModifier(value: float): void
     GetDuration(): uint32;
+    SetDuration(value: uint32): void
     GetItemLimitCategory(): uint32;
+    SetItemLimitCategory(value: uint32): void
     GetHolidayID(): uint32;
+    SetHolidayID(value: uint32): void
     GetScriptID(): uint32;
+    SetScriptID(value: uint32): void
     GetDisenchantID(): uint32;
+    SetDisenchantID(value: uint32): void
     GetFoodType(): uint32;
+    SetFoodType(value: uint32): void
     GetMinMoneyLoot(): uint32;
+    SetMinMoneyLoot(value: uint32): void
     GetMaxMoneyLoot(): uint32;
+    SetMaxMoneyLoot(value: uint32): void
     GetFlagsCu(): uint32;
+    SetFlagsCu(value: uint32): void
+    GetStatType(index: uint32): uint32
+    SetStatType(index: uint32, value: uint32): void
+    GetStatValue(index: uint32): int32
+    SetStatValue(index: uint32, value: int32): void
+    GetDamageMinA(): float;
+    SetDamageMinA(value: float):void
+    GetDamageMinB(): float;
+    SetDamageMinB(value: float): void
+    GetDamageMaxA(): float;
+    SetDamageMaxA(value: float): void
+    GetDamageMaxB(): float;
+    SetDamageMaxB(value: float): void
+    GetDamageTypeA(): uint32;
+    SetDamageTypeA(value: uint32): void
+    GetDamageTypeB(): uint32;
+    SetDamageTypeB(value: uint32): void
+    GetSpellCategory(index: uint32): int32
+    SetSpellCategory(index: uint32, value: int32): void
+    GetSpellCategoryCooldown(index: uint32): int32
+    SetSpellCategoryCooldown(index: uint32, value: int32): void
+    GetSpellCharges(index: uint32): int32
+    SetSpellCharges(index: uint32, value: int32): void
+    GetSpellCooldown(index: uint32): int32
+    SetSpellCooldown(index: uint32, value: int32): void
+    GetSpellID(index: uint32): int32
+    SetSpellID(index: uint32, value: int32): void
+    GetSpellPPMRate(index: uint32): int32
+    SetSpellPPMRate(index: uint32, value: int32): void
+    GetSpellTrigger(index: uint32): int32
+    SetSpellTrigger(index: uint32, value: int32): void
+
+    //extras
     GetIsCurrencyToken(): bool;
     GetCanChangeEquipStateInCombat(): bool;
     GetMaxStackSize(): uint32
@@ -6889,6 +7019,10 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetIsArmorVellum(): bool
     GetIsConjuredConsumable(): bool
     GetHasSignature(): bool;
+    //
+
+    InitializeQueryData(): void;
+    Save(): void
 }
 
 declare interface TSSpellInfo extends TSEntityProvider {
@@ -8740,6 +8874,13 @@ declare function IsHolidayActive(holiday: uint16): boolean
 declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
+
+/**
+ * @param entry - The id to be used for the new item template.
+ * @param copyItemID? - the old template to be used as a base.
+ *                      defaults to 38 (Recruits Shirt, shirt slot equip)
+ */
+declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
 // end of Global.h
 
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
