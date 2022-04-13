@@ -1104,18 +1104,6 @@ void TSCreature::SetCanFly(bool enable)
 }
 
 /**
- * Disables the Gravity for a Creature.
- * 
- * @param bool disable : `true` to disable gravity, `false` to enable.
- * @param bool packetOnly = false : It's possible only a packet is sent but moveflags are not updated.
- * @param bool updateAnimationTier = true : `true` to Update the Creatures Animation Tier, `false` to not do so.
- */
-void TSCreature::SetDisableGravity(bool disable, bool packetOnly = false, bool updateAnimationTier = true)
-{
-    creature->SetDisableGravity(disable, packetOnly, updateAnimationTier);
-}
-
-/**
  * Despawn this [Creature].
  *
  * @param uint32 delay = 0 : dely to despawn in milliseconds

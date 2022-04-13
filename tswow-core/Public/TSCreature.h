@@ -106,7 +106,6 @@ public:
     void SetNoCallAssistance(bool val);
     void SetHover(bool enable);
     void SetCanFly(bool enable);
-    void SetDisableGravity(bool disable, bool packetOnly = false, bool updateAnimationTier = true);
     void DespawnOrUnsummon(uint32 msTimeToDespawn);
     void Respawn();
     void RemoveCorpse();
