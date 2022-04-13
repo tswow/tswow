@@ -2973,6 +2973,22 @@ declare interface TSCreature extends TSUnit {
     SetHover(enable : bool) : void
 
     /**
+     * Sets whether the Creature can fly. Usually mixed with Disable Gravity.
+     * 
+     * @param bool enable = true : `true` to enable flying, `false` to disable
+     */
+    SetCanFly(enable : bool) : void
+
+    /**
+     * Disables the Gravity for a Creature.
+     * 
+     * @param bool disable : `true` to disable gravity, `false` to enable.
+     * @param bool packetOnly = false : It's possible only a packet is sent but moveflags are not updated.
+     * @param bool updateAnimationTier = true : `true` to Update the Creatures Animation Tier, `false` to not do so.
+     */
+    SetDisableGravity(disable : bool, packetOnly : bool, updateAnimationTier : bool) : void
+
+    /**
      * Despawn this [Creature].
      *
      * @param uint32 delay = 0 : dely to despawn in milliseconds
