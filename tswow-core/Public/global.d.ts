@@ -7517,7 +7517,8 @@ declare namespace _hidden {
         OnTick(spell: EventID, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
         OnCalcMeleeMiss(callback: (spell: TSSpellInfo, miss: TSMutable<float>, attacker: TSUnit, victim: TSUnit, attackType: uint8, skillDiff: WeaponAttackType)=>void): T
-        OnApply(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+        OnApply(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32) => void);
+        OnCalcMiss(spell: EventID, callback: (spell: TSSpell, caster: TSWorldObject, target: TSUnit, effectMask: TSMutable<uint32>, missCondition: TSMutable<uint32>) => void)
         OnDamageEarly(spell: EventID, callback : (
               spell: TSSpell
             , damage: TSMutable<int32>
@@ -7584,7 +7585,8 @@ declare namespace _hidden {
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
         OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
         OnCalcMeleeMiss(callback: (spell: TSSpellInfo, miss: TSMutable<float>, attacker: TSUnit, victim: TSUnit, attackType: WeaponAttackType, skillDiff: int32)=>void): T
-        OnDamageEarly(callback : (
+        OnCalcMiss(callback: (spell: TSSpell, caster: TSWorldObject, target: TSUnit, effectMask: TSMutable<uint32>, missCondition: TSMutable<uint32>) => void)
+        OnDamageEarly(callback: (
             spell: TSSpell
           , damage: TSMutable<int32>
           , info: TSSpellDamageInfo
