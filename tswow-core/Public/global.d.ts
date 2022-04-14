@@ -8115,6 +8115,8 @@ declare namespace _hidden {
             , dodgeChance: TSMutable<float>
             , blockChance : TSMutable<float>
             , parryChance: TSMutable<float>
+            , glancingChance: TSMutable<float>
+            , crushingChance: TSMutable<float>
             , attackType: WeaponAttackType
         )=>void)
 
