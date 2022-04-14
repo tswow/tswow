@@ -610,6 +610,16 @@ EVENT_TYPE(CreatureOnCalcBaseGain
     , TSMutable<uint32>
     , TSPlayer /*killer*/
 )
+EVENT_TYPE(PlayerOnGlyphInitForLevel
+    , TSPlayer
+    , TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
+)
+EVENT_TYPE(PlayerOnEffectApplyGlyphIsLocked
+    , uint32 /* glyphSlotIndex*/
+    , TSMutable<bool> /* isLocked */
+    , TSPlayer
+)
+
 
 struct TSCreatureEvents {
      EVENT(CreatureOnMoveInLOS)
@@ -1238,6 +1248,8 @@ struct TSEventStore
     EVENT(PlayerOnCalcSkillGainChance)
     EVENT(PlayerOnUpdateAttackPower)
     EVENT(PlayerOnUpdateRangedAttackPower)
+    EVENT(PlayerOnGlyphInitForLevel)
+    EVENT(PlayerOnEffectApplyGlyphIsLocked)
 
     // AccountScript
     EVENT(AccountOnAccountLogin)
@@ -1637,6 +1649,8 @@ public:
          EVENT_HANDLE(Player,OnCalcSkillGainChance)
          EVENT_HANDLE(Player,OnUpdateAttackPower)
          EVENT_HANDLE(Player,OnUpdateRangedAttackPower)
+         EVENT_HANDLE(Player,OnGlyphInitForLevel)
+         EVENT_HANDLE(Player,OnEffectApplyGlyphIsLocked)
     } Player;
 
     struct AccountEvents : public EventHandler
