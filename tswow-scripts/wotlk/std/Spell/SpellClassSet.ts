@@ -115,11 +115,23 @@ export class BaseClassSet extends ClassSet<Spell> {
 
 export class EffectClassSet<T> extends ClassSet<T> {
     protected effect: SpellEffect;
-    protected makeCell(cell: DBCUIntArrayCell<any>) {
+    protected makeCell(index: number) {
+        let cell: DBCUIntArrayCell<any>;
+        switch(this.effect.index) {
+            case 0:
+                cell = this.effect.row.EffectSpellClassMaskA;
+                break;
+            case 1:
+                cell = this.effect.row.EffectSpellClassMaskB;
+                break
+            case 2:
+                cell = this.effect.row.EffectSpellClassMaskC;
+                break
+        }
         return new MaskCell32(this.owner, new CellBasic(
               this.owner
-            , ()=>cell.getIndex(this.effect.index)
-            , (val)=>cell.setIndex(this.effect.index, val)
+            , ()=>cell.getIndex(index)
+            , (val)=>cell.setIndex(index,val)
         ))
     }
 
@@ -128,9 +140,9 @@ export class EffectClassSet<T> extends ClassSet<T> {
         this.effect = effect;
     }
 
-    get A() { return this.makeCell(this.effect.row.EffectSpellClassMaskA)};
-    get B() { return this.makeCell(this.effect.row.EffectSpellClassMaskB)};
-    get C() { return this.makeCell(this.effect.row.EffectSpellClassMaskC)};
+    get A() { return this.makeCell(0)};
+    get B() { return this.makeCell(1)};
+    get C() { return this.makeCell(2)};
 
     matches(spell: Spell|number) {
         if(typeof(spell) === 'number') {

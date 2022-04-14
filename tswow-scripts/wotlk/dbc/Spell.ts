@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { float, int, loc_constructor, uint, ulong } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCFloatArrayCell, DBCFloatCell, DBCIntArrayCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCUIntArrayCell, DBCUIntCell, DBCULongCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float, int, loc_constructor, uint, ulong } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -386,17 +386,20 @@ export class SpellRow extends DBCRow<SpellCreator,SpellQuery> {
     get EffectPointsPerCombo() { return new DBCFloatArrayCell(this,3,this.buffer,this.offset+476)}
 
     /**
-     * No comment (yet!)
+     * @deprecated This declaration is wrong and does not actually refer to an array of "A" classmasks,
+     *             but A/B/C in effect 0. TODO: There is currently no replacement.
      */
     get EffectSpellClassMaskA() { return new DBCUIntArrayCell(this,3,this.buffer,this.offset+488)}
 
     /**
-     * No comment (yet!)
+     * @deprecated This declaration is wrong and does not actually refer to an array of "A" classmasks,
+     *             but A/B/C in effect 1. TODO: There is currently no replacement.
      */
     get EffectSpellClassMaskB() { return new DBCUIntArrayCell(this,3,this.buffer,this.offset+500)}
 
     /**
-     * No comment (yet!)
+     * @deprecated This declaration is wrong and does not actually refer to an array of "A" classmasks,
+     *             but A/B/C in effect 2. TODO: There is currently no replacement.
      */
     get EffectSpellClassMaskC() { return new DBCUIntArrayCell(this,3,this.buffer,this.offset+512)}
 
