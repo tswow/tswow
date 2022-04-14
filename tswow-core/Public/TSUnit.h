@@ -161,6 +161,8 @@ public:
     void MoveConfused();
     void MoveFleeing(TSUnit target, uint32 time);
     void MoveTo(uint32 id, float x, float y, float z, bool genPath);
+    void MoveTakeoff(uint32 id, float x, float y, float z);
+    void MoveLand(uint32 id, float x, float y, float z);
     void MoveJump(float x, float y, float z, float zSpeed, float maxHeight, uint32 id);
     void SendUnitWhisper(TSString msg, uint32 lang, TSPlayer receiver, bool bossWhisper);
     void SendUnitEmote(TSString msg, TSUnit receiver, bool bossEmote);
