@@ -1955,6 +1955,32 @@ void TSUnit::MoveTo(uint32 id,float x,float y,float z,bool genPath)
     unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
 }
 
+/**
+ * The [Unit] will take off from the ground and fly to the coordinates.
+ *
+ * @param uint32 id : unique waypoint Id
+ * @param float x
+ * @param float y
+ * @param float z
+ */
+void TSUnit::MoveTakeoff(uint32 id,float x,float y,float z)
+{
+    unit->GetMotionMaster()->MoveTakeoff(id, {x, y, z, 0.0f});
+}
+
+/**
+ * The [Unit] will land from the air at the coordinates.
+ *
+ * @param uint32 id : unique waypoint Id
+ * @param float x
+ * @param float y
+ * @param float z
+ */
+void TSUnit::MoveLand(uint32 id,float x,float y,float z)
+{
+    unit->GetMotionMaster()->MoveLand(id, {x, y, z, 0.0f});
+}
+
 #if (!defined(TBC) && !defined(CLASSIC))
 /**
  * Makes the [Unit] jump to the coordinates

@@ -1094,6 +1094,16 @@ void TSCreature::SetHover(bool enable)
 }
 
 /**
+ * Sets whether the Creature can fly. Usually mixed with Disable Gravity.
+ * 
+ * @param bool enable = true : `true` to enable flying, `false` to disable
+ */
+void TSCreature::SetCanFly(bool enable)
+{
+    creature->SetCanFly(enable);
+}
+
+/**
  * Despawn this [Creature].
  *
  * @param uint32 delay = 0 : dely to despawn in milliseconds
