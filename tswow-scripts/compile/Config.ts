@@ -41,6 +41,9 @@ export namespace Config {
             license: "GPL-3.0-only",
         }
         ipaths.package_json.writeJson(package_json)
+        if(!ipaths.package_lock_json.exists()) {
+            spaths.package_lock_json.copy(ipaths.package_lock_json)
+        }
         wsys.execIn(ipaths.get(), 'npm i');
 
         ipaths.modules.mkdir();
