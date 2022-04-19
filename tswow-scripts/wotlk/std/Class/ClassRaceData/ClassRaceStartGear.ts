@@ -46,6 +46,9 @@ export class StartGearItems extends ArraySystem<StartGearItem,StartGear> {
 
     add(item: number, displayId: number = 0, invTypeOverride?: EnumCon<keyof typeof ItemInventoryType>) {
         let template = ItemTemplateRegistry.load(item)
+        if(!template) {
+            throw new Error(`Invalid item id ${item}`)
+        }
         if(displayId === 0) {
             displayId = template.DisplayInfo.get()
         }
