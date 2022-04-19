@@ -1247,7 +1247,7 @@ struct TSEventStore
     EVENT(PlayerOnCalcIntellectManaBonus)
     EVENT(PlayerOnCalcSkillGainChance)
     EVENT(PlayerOnUpdateAttackPower)
-    EVENT(PlayerOnUpdateRangedAttackPower)
+    EVENT(PlayerOnUpdateRangedAttackPower)    
     EVENT(PlayerOnGlyphInitForLevel)
     EVENT(PlayerOnEffectApplyGlyphIsLocked)
 
@@ -1649,8 +1649,8 @@ public:
          EVENT_HANDLE(Player,OnCalcSkillGainChance)
          EVENT_HANDLE(Player,OnUpdateAttackPower)
          EVENT_HANDLE(Player,OnUpdateRangedAttackPower)
-         EVENT_HANDLE(Player,OnGlyphInitForLevel)
-         EVENT_HANDLE(Player,OnEffectApplyGlyphIsLocked)
+         EVENT_HANDLE(Player, OnGlyphInitForLevel)
+         EVENT_HANDLE(Player, OnEffectApplyGlyphIsLocked)
     } Player;
 
     struct AccountEvents : public EventHandler
