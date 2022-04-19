@@ -4,10 +4,12 @@ on:
     branches: [ "master", "stdlib-merge" ]
   workflow_dispatch:
 jobs:
-  ubuntu-latest-clang:
-    runs-on: ubuntu-latest
+  ubuntu-20-clang:
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Fix mariadb
+        run: sudo apt remove mariadb-server mariadb-server-10.3 mariadb-server-core-10.3
       - name: Install submodules
         run: git submodule update --init --recursive
       - name: Install deps
