@@ -2974,7 +2974,7 @@ declare interface TSCreature extends TSUnit {
 
     /**
      * Sets whether the Creature can fly. Usually mixed with Disable Gravity.
-     * 
+     *
      * @param bool enable = true : `true` to enable flying, `false` to disable
      */
     SetCanFly(enable : bool) : void
@@ -4754,7 +4754,7 @@ declare interface TSSpell {
      *
      * @return [Unit] caster
      */
-    GetCaster() : TSUnit
+    GetCaster() : TSWorldObject
 
     /**
      * Returns the cast time of the [Spell].
