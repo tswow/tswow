@@ -113,7 +113,7 @@ export class UnitFlags extends MaskCell<CreatureTemplate> {
             cell.set((cell.get()|1<<this.bitno(no))>>>0);
         } else {
             const cell = this.cell(no);
-            cell.set((cell.get()&~1<<this.bitno(no))>>>0);
+            cell.set((cell.get()&~(1<<this.bitno(no)))>>>0);
         }
         return this.owner;
     }
