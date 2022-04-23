@@ -542,6 +542,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         AzerothCore: dir({
+            sol_headers: dirn('_deps/sol2-src/include',{}),
             bin: dir({
                 // TODO: fix
                 libraries: custom(pathIn=>(type: string)=>{
