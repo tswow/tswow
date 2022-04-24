@@ -34,7 +34,6 @@ runs:
 
     # Upload
     - name: Upload Artifact
-      if: ${{ inputs.upload_url }} != ''
       uses: WebFreak001/deploy-nightly@v1.1.0
       env:
         GITHUB_TOKEN: ${{ inputs.token }}

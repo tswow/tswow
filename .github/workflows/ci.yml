@@ -26,6 +26,9 @@ jobs:
       - name: Build tswow
         run: npm run build-release clean-archives noac
       - uses: ./.github/actions/publish_windows
+        env:
+          TSWOW_UPLOAD_URL: ${{secrets.TSWOW_UPLOAD_URL}}
+        if: "${{ env.TSWOW_UPLOAD_URL != ''}}"
         with:
           core: 'trinitycore'
           token: ${{secrets.GITHUB_TOKEN}}
@@ -42,6 +45,9 @@ jobs:
       - name: Build tswow
         run: npm run build-release clean-archives notc
       - uses: ./.github/actions/publish_windows
+        env:
+          TSWOW_UPLOAD_URL: ${{ secrets.TSWOW_UPLOAD_URL }}
+        if: "${{ env.TSWOW_UPLOAD_URL != '' }}"
         with:
           core: 'azerothcore'
           token: ${{secrets.GITHUB_TOKEN}}
