@@ -74,6 +74,7 @@ declare const enum InventorySlots /**@realType:uint32*/{
     BAG_3 = 21,
     BAG_4 = 22
 }
+declare const enum SpellMissInfo {} /** SharedDefines.h:SpellMissInfo */
 declare const enum CorpseType {} /** Corpse.h:CorpseType */
 declare const enum CreatureFamily {} /** SharedDefines.h:CreatureFamily */
 declare const enum RemoveMethod {} /** SharedDefines.h:RemoveMethod */
@@ -7562,6 +7563,7 @@ declare namespace _hidden {
           , effectMask: uint32
         )=>void)
         OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        OnCalcMiss(spell: EventID, callback: (spell: TSSpell, caster: TSWorldObject, target: TSUnit, effectMask: TSMutable<uint32>, missCondition: TSMutable<SpellMissInfo>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(spell: EventID, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
@@ -7628,6 +7630,7 @@ declare namespace _hidden {
             , effectMask: uint32
         )=>void): T
         OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void): T
+        OnCalcMiss(callback: (spell: TSSpell, caster: TSWorldObject, target: TSUnit, effectMask: TSMutable<uint32>, missCondition: TSMutable<SpellMissInfo>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void): T
         /** critChance should be between 0 and 1 */
