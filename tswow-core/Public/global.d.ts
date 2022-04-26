@@ -135,6 +135,15 @@ declare const enum SpellEffectHandleMode { } /** Spell.h:SpellEffectHandleMode *
 
 declare const enum SpellFinishReason { } /** Spell.h:SpellFinishReason */
 
+declare const enum GlyphMask /**@realType:uint32 */ {
+    MAJOR_1 = 0x1,
+    MINOR_1 = 0x2,
+    MINOR_2 = 0x4,
+    MAJOR_2 = 0x8,
+    MINOR_3 = 0x10,
+    MAJOR_3 = 0x20,
+}
+
 declare const enum TriggerCastFlags { } /** SpellDefines.h:TriggerCastFlags */
 
 declare interface TSMutable<T> {
@@ -4807,6 +4816,8 @@ declare interface TSSpell {
      */
     GetTarget() : TSObject
 
+    GetGlyphSlot() : uint32
+
     /**
      * Sets the [Spell] to automatically repeat.
      *
@@ -7502,7 +7513,18 @@ declare namespace _hidden {
         OnUpdateRangedAttackPower(callback: (
               player: TSPlayer
             , attackPower: TSMutable<float>
-        )=>void)
+        ) => void)
+
+        /**
+         * @param player
+         * @param activeGlyphSlots - Bitmask of GlyphMask representing the active glyphs.
+         *
+         * @note Use with Spell.OnEffectApplyGlyph
+         */
+        OnGlyphInitForLevel(callback: (
+            player: TSPlayer
+            , activeGlyphSlot: TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
+        ) => void)
     }
 
     export class Account<T> {
@@ -7540,6 +7562,13 @@ declare namespace _hidden {
         OnCheckCast(spell: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
         OnDispel(spell: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void);
         OnEffect(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
+        /**
+         * @note Use with Player.OnGlyphInitForLevel
+         */
+        OnEffectApplyGlyph(spell: EventID, callback: (
+              spell: TSSpell
+            , locked: TSMutable<bool>
+        ) => void)
         OnHit(spell: EventID, callback: (spell: TSSpell)=>void);
         OnTick(spell: EventID, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
@@ -7606,6 +7635,14 @@ declare namespace _hidden {
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void): T;
         OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
         OnEffect(callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
+        /**
+         * @note Use with Player.OnGlyphInitForLevel
+         */
+        OnEffectApplyGlyph(callback: (
+              spell: TSSpell
+            , locked: TSMutable<bool>
+        ) => void)
+
         OnHit(callback: (spell: TSSpell)=>void): T;
         OnTick(callback: (effect: TSAuraEffect)=>void): T;
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
