@@ -7640,7 +7640,7 @@ declare namespace _hidden {
          */
         OnEffectApplyGlyph(callback: (
               spell: TSSpell
-            , minLevel: TSMutable<bool>
+            , locked: TSMutable<bool>
         ) => void)
 
         OnHit(callback: (spell: TSSpell)=>void): T;
