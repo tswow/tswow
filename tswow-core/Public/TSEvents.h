@@ -430,7 +430,7 @@ EVENT_TYPE(SpellOnCheckCast,TSSpell, TSMutable<uint8>)
 EVENT_TYPE(SpellOnDispel,TSSpell,uint32)
 EVENT_TYPE(SpellOnEffect,TSSpell, TSMutable<bool> /*preventDefault*/, TSSpellEffectInfo, uint32 /*mode*/, TSUnit /*unitTarget*/, TSItem /*itemTarget*/, TSGameObject /*gameObjectTarget*/, TSCorpse /*corpseTarget*/)
 
-EVENT_TYPE(SpellOnEffectApplyGlyphIsLocked
+EVENT_TYPE(SpellOnEffectApplyGlyph
     , TSSpell
     , TSMutable<bool> /* isLocked */
 )
@@ -463,7 +463,7 @@ struct TSSpellEvents {
      EVENT(SpellOnCheckCast)
      EVENT(SpellOnDispel)
      EVENT(SpellOnEffect)
-     EVENT(SpellOnEffectApplyGlyphIsLocked)
+     EVENT(SpellOnEffectApplyGlyph)
      EVENT(SpellOnHit)
      EVENT(SpellOnTick)
      EVENT(SpellOnRemove)
@@ -1367,7 +1367,7 @@ struct TSEventStore
     EVENT(SpellOnCheckCast)
     EVENT(SpellOnDispel)
     EVENT(SpellOnEffect)
-    EVENT(SpellOnEffectApplyGlyphIsLocked)
+    EVENT(SpellOnEffectApplyGlyph)
     EVENT(SpellOnHit)
     EVENT(SpellOnTick)
     EVENT(SpellOnRemove)
@@ -1718,7 +1718,7 @@ public:
           EVENT_HANDLE(Spell,OnCheckCast)
           EVENT_HANDLE(Spell,OnDispel)
           EVENT_HANDLE(Spell,OnEffect)
-          EVENT_HANDLE(Spell,OnEffectApplyGlyphIsLocked)
+          EVENT_HANDLE(Spell,OnEffectApplyGlyph)
           EVENT_HANDLE(Spell,OnHit)
           EVENT_HANDLE(Spell,OnTick)
           EVENT_HANDLE(Spell,OnRemove)

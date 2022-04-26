@@ -7492,7 +7492,7 @@ declare namespace _hidden {
          * @param player
          * @param activeGlyphSlots - Bitmask of GlyphMask representing the active glyphs.
          *
-         * @note Use with Spell.OnEffectApplyGlyphIsLocked
+         * @note Use with Spell.OnEffectApplyGlyph
          */
         OnGlyphInitForLevel(callback: (
             player: TSPlayer
@@ -7538,7 +7538,7 @@ declare namespace _hidden {
         /**
          * @note Use with Player.OnGlyphInitForLevel
          */
-        OnEffectApplyGlyphIsLocked(spell: EventID, callback: (
+        OnEffectApplyGlyph(spell: EventID, callback: (
               spell: TSSpell
             , locked: TSMutable<bool>
         ) => void)
@@ -7611,7 +7611,7 @@ declare namespace _hidden {
         /**
          * @note Use with Player.OnGlyphInitForLevel
          */
-        OnEffectApplyGlyphIsLocked(callback: (
+        OnEffectApplyGlyph(callback: (
               spell: TSSpell
             , minLevel: TSMutable<bool>
         ) => void)
