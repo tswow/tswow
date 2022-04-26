@@ -1,5 +1,5 @@
 import { NodeConfig } from "../runtime/NodeConfig";
-import { ClientPatches, EXTENSION_DLL_PATCH_NAME, ITEM_DBC_DISABLER_PATCH_NAME } from "./ClientPatches";
+import { ClientPatches, EXTENSION_DLL_PATCH_NAME, FIX_COMBO_POINT_PATCH_NAME, ITEM_DBC_DISABLER_PATCH_NAME } from "./ClientPatches";
 import { ConfigFile, Property, Section } from "./ConfigFile";
 import { EmulatorCore } from "./EmulatorCore";
 import { ipaths, modulePathToName } from "./Paths";
@@ -71,7 +71,7 @@ export class DatasetConfig extends ConfigFile {
           name: 'Client.Patches'
         , description: 'What client binary patches should be applied'
         , examples: [
-            [['all',`!${EXTENSION_DLL_PATCH_NAME}`,`!${ITEM_DBC_DISABLER_PATCH_NAME}`],'']
+            [['all',`!${EXTENSION_DLL_PATCH_NAME}`,`!${ITEM_DBC_DISABLER_PATCH_NAME}`,`!${FIX_COMBO_POINT_PATCH_NAME}`],'']
         ]
         , note: 'Values prepended with "!" are excluded.'
     })

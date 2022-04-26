@@ -2417,6 +2417,45 @@ declare function MouselookStart(): void;
  */
 declare function MouselookStop(): void;
 
+declare function ReloadUI(): void;
+
+declare function IsModifierKeyDown(): boolean;
+declare function IsShiftKeyDown(): boolean;
+declare function IsAltKeyDown(): boolean;
+declare function IsControlKeyDown(): boolean;
+declare function IsLeftShiftKeyDown(): boolean;
+declare function IsLeftAltKeyDown(): boolean;
+declare function IsLeftControlKeyDown(): boolean;
+declare function IsRightShiftKeyDown(): boolean;
+declare function IsRightAltKeyDown(): boolean;
+declare function IsRightControlKeyDown(): boolean;
+
+declare function DressUpItemLink(itemLink:string):void;
+declare function DressUpMountLink(itemLink:string):void;
+declare function DressUpTransmogLink(transmogLink:string):void;
+declare function SetDressUpBackground(frame:WoWAPI.Frame,raceFilename:string,classFilename :string):void;
+
+declare function GetMouseFocus(): WoWAPI.Frame;
+/**
+ * Returns the WorldMapAreaID of the currently displayed area map, and whether quest objectives should be shown.
+ * @returns mapID,isContinent
+ * @tupleReturn
+ */
+declare function GetCurrentMapAreaID(): [number, boolean];
+
+/**
+ * Returns the WorldMapAreaID of the currently displayed area map, and whether quest objectives should be shown.
+ * @returns posX,posY
+ * @tupleReturn
+ */
+ declare function GetPlayerMapPosition(unit:WoWAPI.UnitId): [number, number];
+
+/**
+ * Exits mouse look mode; allows mouse input to move the mouse cursor
+ * @see https://wow.gamepedia.com/API_MouselookStop
+ */
+declare function MouselookStop(): void;
+
 /**
  * Begins rotating the camera down around your character
  * - Speed is a multiplier on the CVar 'cameraPitchMoveSpeed', which is in degrees/second
@@ -12003,7 +12042,7 @@ declare function GetRealmName(): string;
 /// <reference path="../auction.d.ts" />
 
 declare namespace WoWAPI {
-    interface GameTooltip extends UIObject,GameTooltipHookScript, GameTooltipSetScript {
+    interface GameTooltip extends UIObject, GameTooltipHookScript, GameTooltipSetScript {
 
         /**
          * Adds Line to tooltip with textLeft on left side of line and textRight on right side
@@ -12050,6 +12089,24 @@ declare namespace WoWAPI {
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_AddTexture
          */
         AddTexture(texturePath: TexturePath): void;
+		
+		/**
+         * Sets an attachment point of an UI component.
+         *
+         * @param point Point of the object to adjust based on the anchor.
+         * @param relativeTo Name or reference to a Region to attach obj to. If not specified in the call's signature, defaults to obj's parent (or, if obj has
+         * no parent, the entire screen), or if specified in the signature and passed nil, defaults to the entire screen.
+         * @param relativePoint point of the relativeTo Region to attach point of obj to. If not specified, defaults to the value of point.
+         * @param offsetX x-offset (negative values will move obj left, positive values will move obj right), defaults to 0 if not specified,
+         * if ofsy is not specified, or if both relativeTo and relativePoint are specified and nil.
+         * @param offsetY y-offset (negative values will move obj down, positive values will move obj up), defaults to 0 if not specified,
+         * if ofsx is not specified, or if both relativeTo and relativePoint are specified and nil.
+         */
+        SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point, offsetX: number, offsetY: number): void;
+        SetPoint(point: Point): void;
+        SetPoint(point: Point, offsetX: number, offsetY: number): void;
+        SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
+
 
         /**
          * Append text to the end of the first line of the tooltip
@@ -12648,7 +12705,7 @@ declare namespace WoWAPI {
          * @param size size in points.
          * @param flags any comma-delimited combination of "OUTLINE", "THICKOUTLINE" and "MONOCHROME".
          */
-        SetFont(font: string, size: number, flags?: FontInstanceFlags): void;
+        SetFont(font: string, size: number, flags?: FontInstanceFlags | string): void;
 
         /**
          * Sets horizontal text justification
@@ -12675,13 +12732,6 @@ declare namespace WoWAPI {
         SetTextColor(r: number, g: number, b: number, a?: number): void;
 
         SetShadowOffset(x: number, y: number): void;
-    }
-
-    interface CheckButton extends UIObject, Frame, Region, Button {
-        GetChecked(): boolean
-        GetCheckedTexture(): boolean
-        GetDisabledCheckedTexture(): boolean
-        SetChecked()
     }
 
     /**
@@ -12917,6 +12967,7 @@ declare namespace WoWAPI {
          * @param filterMode Texture filtering mode to use
          */
         SetTexture(file: string | number, horizWrap?: Wrap, vertWrap?: Wrap, filterMode?: FilterMode): void;
+		SetTexture(r:number,g:number,b:number,a:number): void;
 
         /**
          * Changes the color of a texture.
@@ -13234,6 +13285,10 @@ declare namespace WoWAPI {
         SetFrameLevel(level: number): void;
 
         RegisterForDrag(button: WoWAPI.MouseButton): void;
+
+        SetID(id: number): void;
+        
+        GetID(): number;
     }
 
     /**
@@ -13602,7 +13657,8 @@ declare namespace WoWAPI {
         SetDisabledFontObject(fontObject: FontObject): void;
         SetDisabledTexture(texture: string): void;
         SetEnabled(isEnable: bool): void;
-        SetFontString(fontString: string): void;
+        SetFontString(fontString: string|FontObject): void;
+		SetFontString(fontString: string): void;
         SetFormattedText(formatstring: string): void;
         SetHighlightAtlas(atlasName: string): void;
         SetHighlightFontObject(fontObject: FontObject): void;
@@ -13890,6 +13946,8 @@ declare function CreateFrame(frameType: "Frame", frameName?: string, parentFrame
 declare function CreateFrame(frameType: "Slider", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Slider;
 declare function CreateFrame(frameType: "EditBox", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.EditBox;
 declare function CreateFrame(frameType: "Button", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Button;
+declare function CreateFrame(frameType: "CheckButton", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.CheckButton;
+declare function CreateFrame(frameType: "LootButton", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.LootButton;
 declare function CreateFrame(frameType: "GameTooltip", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.GameTooltip;
 declare function CreateFrame(frameType: "Model", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Model;
 declare function CreateFrame(frameType: "PlayerModel", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.PlayerModel;

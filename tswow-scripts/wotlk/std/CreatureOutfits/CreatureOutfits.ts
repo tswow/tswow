@@ -101,13 +101,16 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
         , ranged: RangedType = 'NO_RANGED'
         , emptyWeaponOverride = true
     ) {
-        const lines = charStr
+        const trimmed = charStr.split('.m2')[1];
+
+        const lines = trimmed
             .split('\n')
             .map(x=>x.trimLeft().trimRight())
             .filter(x=>x.length>0) // empty lines are invalid
+
         const nums = lines
-            .slice(1) // model line
-            .map(x=>x.split(' ').map(x=>parseInt(x)))
+            .map(x=>x.split(' ').map(x=>parseInt(x)));
+
         this.Race.set        (nums[0][0])
             .Gender.set      (nums[0][1])
             .Skin.set        (nums[1][0])

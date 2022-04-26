@@ -1,0 +1,19 @@
+name: 'Setup Windows'
+description: 'Set up Windows for installing TSWoW'
+runs:
+  using: "composite"
+  steps:
+    - name: Clean up space
+      shell: pwsh
+      run: >
+        Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\dotnet";
+        Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\LLVM";
+        Clear-Recyclebin -Force;
+    - name: Setup Build Directory
+      uses: DamianReeves/write-file-action@v1.0
+      with:
+        path: "./build.conf"
+        contents: |
+          BuildDirectory = "C:/tswow-build"
+          InstallDirectory = "../tswow-install"
+        write-mode: overwrite

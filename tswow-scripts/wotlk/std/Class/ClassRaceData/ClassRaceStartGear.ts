@@ -44,19 +44,80 @@ export class StartGearItems extends ArraySystem<StartGearItem,StartGear> {
         return new StartGearItem(this.owner, index);
     }
 
-    add(item: number, displayId: number = 0, invTypeOverride?: EnumCon<keyof typeof ItemInventoryType>) {
+    /**
+     * Adds an item display id that will be shown on the character creation
+     * screen, but won't correspond to an actual item once the character is created.
+     *
+     * @param displayId - ID referencing an entry in ItemDisplayInfo.dbc
+     * @param slot
+     * @returns
+     */
+    addDisplay(displayId: number, slot: EnumCon<keyof typeof ItemInventoryType>) {
+        return this.addMod(gear=>gear
+            .DisplayItem.set(displayId)
+            .Item.set(0)
+            .InventoryType.set(makeEnum(ItemInventoryType,slot))
+        )
+    }
+
+    /**
+     * Adds an item that will be added to the character on creation, but
+     * won't be shown on the character creation screen.
+     *
+     * @param item
+     * @param slot - The slot to use for this item. Uses the items InventoryType field by default.
+     * @returns
+     */
+    addItem(item: number, slot?: EnumCon<keyof typeof ItemInventoryType>) {
+        let template = slot === undefined ? ItemTemplateRegistry.load(item) : undefined;
+        if(!slot && !template) {
+            throw new Error(`Invalid item id ${item}`)
+        }
+        return this.addMod(gear=>gear
+            .Item.set(item)
+            .DisplayItem.set(0)
+            .InventoryType.set(slot === undefined
+                ? template.InventoryType.get()
+                : makeEnum(ItemInventoryType,slot)
+            )
+        )
+    }
+
+    /**
+     * Adds an item that will be added to the character on creation
+     * and shown on the character creation screen.
+     *
+     * @param item
+     * @param slot
+     */
+    addAuto(item: number, slot?: EnumCon<keyof typeof ItemInventoryType>) {
+        return this.add(item, 0, slot);
+    }
+
+    /**
+     * Adds an item that will be added to the character on creation,
+     * optionally with a different display id on the character creation screen.
+     *
+     * @param item - The item to add on creation
+     * @param displayId - The displayId to use on the character creation screen (same as item by default)
+     * @param slot - The slot to store this item (same as items InventoryType by default)
+     * @returns
+     */
+    add(item: number, displayId: number = 0, slot?: EnumCon<keyof typeof ItemInventoryType>) {
         let template = ItemTemplateRegistry.load(item)
+        if(!template) {
+            throw new Error(`Invalid item id ${item}`)
+        }
         if(displayId === 0) {
             displayId = template.DisplayInfo.get()
         }
-        return this.addMod(i=>{
-            i
-                .Item.set(item)
-                .DisplayItem.set(displayId)
-                .InventoryType.set(invTypeOverride === undefined
-                    ? template.InventoryType.get()
-                    : makeEnum(ItemInventoryType,invTypeOverride)
-                )
+        return this.addMod(startItem=>{startItem
+            .Item.set(item)
+            .DisplayItem.set(displayId)
+            .InventoryType.set(slot === undefined
+                ? template.InventoryType.get()
+                : makeEnum(ItemInventoryType,slot)
+            )
         })
     }
 }

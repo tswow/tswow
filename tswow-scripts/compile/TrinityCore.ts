@@ -52,7 +52,16 @@ export namespace TrinityCore {
         spaths.tswow_core.Public.copy(ipaths.bin.include, true)
 
         if(!globalOnly) {
-            bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include);
+            let sol_sourcedir = [
+                bpaths.AzerothCore.sol_headers,
+                bpaths.TrinityCore.sol_headers
+            ].find(x=>x.exists())
+
+            if(!sol_sourcedir) {
+                throw new Error(`Can't build headers: no sol2 headers found (you need to build a core first)`)
+            }
+
+            sol_sourcedir.copy(ipaths.bin.include);
             spaths.misc.client_extensions.lua_51.src.iterateDef(node=>{
                 if(node.endsWith('.h')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));

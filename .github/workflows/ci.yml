@@ -1,69 +1,54 @@
 name: CI
 on:
   push:
-    branches: [ "master", "stdlib-merge" ]
+    branches: [ "master" ]
   workflow_dispatch:
 jobs:
-  ubuntu-latest-clang:
-    runs-on: ubuntu-latest
+  ubuntu-clang-trinitycore:
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Install submodules
-        run: git submodule update --init --recursive
-      - name: Install deps
-        run: sudo apt-get update && sudo apt-get install git clang cmake make gcc g++ libmariadbclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mariadb-server p7zip libmariadb-client-lgpl-dev-compat
+        with:
+          submodules: 'recursive'
+      - uses: ./.github/actions/setup_ubuntu
       - name: Build tswow
-        run: npm run build
+        shell: bash
+        run: npm run build noac
 
-  windows-msvc-2019:
+  windows-msvc-trinitycore:
     runs-on: windows-2019
     steps:
       # Build
-      - name: Clean up space
-        run: >
-          Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\dotnet";
-          Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\LLVM";
-          Clear-Recyclebin -Force;
       - uses: actions/checkout@v2
-      - name: Install submodules
-        run: git submodule update --init --recursive
-      - name: Setup Build Directory
-        uses: DamianReeves/write-file-action@v1.0
         with:
-          path: "./build.conf"
-          contents: |
-            BuildDirectory = "C:/tswow-build"
-            InstallDirectory = "../tswow-install"
-          write-mode: overwrite
+          submodules: 'recursive'
+      - uses: ./.github/actions/setup_windows
       - name: Build tswow
-        run: npm run build-release clean-archives
-
-      # Metadata
-      - name: Get Time ID
-        id: time
-        uses: nanzm/get-time-action@v1.1
-        with:
-          timeZone: 0
-          format: 'YYYY-MM-DD-HH-mm-ss'
-      - name: Get Time Header
-        id: time-header
-        uses: nanzm/get-time-action@v1.1
-        with:
-          timeZone: 0
-          format: 'YYYY-MM-DD HH:mm:ss'
-      - name: Get SHA
-        id: sha
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
-      # Upload release
-      - name: Upload Artifact
-        uses: WebFreak001/deploy-nightly@v1.1.0
+        run: npm run build-release clean-archives noac
+      - uses: ./.github/actions/publish_windows
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TSWOW_UPLOAD_URL: ${{secrets.TSWOW_UPLOAD_URL}}
+        if: "${{ env.TSWOW_UPLOAD_URL != ''}}"
         with:
-          upload_url: "https://uploads.github.com/repos/tswow/tswow/releases/61706427/assets{?name,label}"
-          release_id: "61706427"
-          asset_path: C:/tswow-build/release.7z
-          asset_name: tswow-${{steps.sha.outputs.sha_short}}.7z
-          asset_content_type: application/x-7z-compressed
-          max_releases: 10
+          core: 'trinitycore'
+          token: ${{secrets.GITHUB_TOKEN}}
+          upload-url: ${{ secrets.TSWOW_UPLOAD_URL }}
+
+  windows-msvc-azerothcore:
+    runs-on: windows-2019
+    steps:
+      # Build
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - uses: ./.github/actions/setup_windows
+      - name: Build tswow
+        run: npm run build-release clean-archives notc
+      - uses: ./.github/actions/publish_windows
+        env:
+          TSWOW_UPLOAD_URL: ${{ secrets.TSWOW_UPLOAD_URL }}
+        if: "${{ env.TSWOW_UPLOAD_URL != '' }}"
+        with:
+          core: 'azerothcore'
+          token: ${{secrets.GITHUB_TOKEN}}
+          upload-url: ${{ secrets.TSWOW_UPLOAD_URL }}

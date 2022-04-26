@@ -2982,6 +2982,13 @@ declare interface TSCreature extends TSUnit {
     SetHover(enable : bool) : void
 
     /**
+     * Sets whether the Creature can fly. Usually mixed with Disable Gravity.
+     *
+     * @param bool enable = true : `true` to enable flying, `false` to disable
+     */
+    SetCanFly(enable : bool) : void
+
+    /**
      * Despawn this [Creature].
      *
      * @param uint32 delay = 0 : dely to despawn in milliseconds
@@ -4756,7 +4763,7 @@ declare interface TSSpell {
      *
      * @return [Unit] caster
      */
-    GetCaster() : TSUnit
+    GetCaster() : TSWorldObject
 
     /**
      * Returns the cast time of the [Spell].
@@ -6653,6 +6660,26 @@ declare interface TSUnit extends TSWorldObject {
      * @param bool genPath = true : if true, generates path
      */
     MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool) : void
+
+    /**
+     * The [Unit] will take off from the ground and fly to the coordinates.
+     *
+     * @param uint32 id : unique waypoint Id
+     * @param float x
+     * @param float y
+     * @param float z
+     */
+    MoveTakeoff(id : uint32, x : float, y : float, z : float) : void
+
+    /**
+     * The [Unit] will land from the air at the coordinates.
+     *
+     * @param uint32 id : unique waypoint Id
+     * @param float x
+     * @param float y
+     * @param float z
+     */
+    MoveLand(id : uint32, x : float, y : float, z : float) : void
 
     /**
      * Makes the [Unit] jump to the coordinates

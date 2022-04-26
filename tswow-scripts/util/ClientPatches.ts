@@ -15,6 +15,7 @@ export function patch(name: string, patches: [number,number[]][]): ClientPatchCa
 
 export const EXTENSION_DLL_PATCH_NAME = 'client-extensions'
 export const ITEM_DBC_DISABLER_PATCH_NAME = 'item-dbc-disabler'
+export const FIX_COMBO_POINT_PATCH_NAME = 'fix-combo-points'
 
 export function ClientPatches(
     gamebuild: number
@@ -39,7 +40,7 @@ export function ClientPatches(
                     0x00,0x40,0x1c,0x46,0x00,0x40,0x1c,0x46
                 ]],
             ]),
-            patch('fix-combo-points',[
+            patch(FIX_COMBO_POINT_PATCH_NAME,[
                 [0x210b12,[
                     0x90,0x90,0x90,0x90,0x90,0x90,0x90,0x90
                 ]],

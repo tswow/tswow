@@ -455,6 +455,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             file: dynfile(x=>`${x}.MPQ`),
         }),
         package_json: file('package.json'),
+        package_lock_json: file('package-lock.json')
     }));
 }
 
@@ -541,6 +542,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         AzerothCore: dir({
+            sol_headers: dirn('_deps/sol2-src/include',{}),
             bin: dir({
                 // TODO: fix
                 libraries: custom(pathIn=>(type: string)=>{
@@ -668,6 +670,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
 export function SourcePaths(pathIn: string) {
     return generateTree(pathIn,dir({
         package_json: file('package.json'),
+        package_lock_json: file('package-lock.json'),
         node_modules: dir({
             typescript_js: file('typescript/lib/tsc'),
         }),
