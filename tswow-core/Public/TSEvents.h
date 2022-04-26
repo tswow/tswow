@@ -432,7 +432,6 @@ EVENT_TYPE(SpellOnEffect,TSSpell, TSMutable<bool> /*preventDefault*/, TSSpellEff
 
 EVENT_TYPE(SpellOnEffectApplyGlyphIsLocked
     , TSSpell
-    , uint32 /* glyphSlotIndex*/
     , TSMutable<bool> /* isLocked */
 )
 

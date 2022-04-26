@@ -4809,6 +4809,8 @@ declare interface TSSpell {
      */
     GetTarget() : TSObject
 
+    GetGlyphSlot() : uint32
+
     /**
      * Sets the [Spell] to automatically repeat.
      *
@@ -7538,7 +7540,6 @@ declare namespace _hidden {
          */
         OnEffectApplyGlyphIsLocked(spell: EventID, callback: (
               spell: TSSpell
-            , glpyhSlotIndex: uint32
             , locked: TSMutable<bool>
         ) => void)
         OnHit(spell: EventID, callback: (spell: TSSpell)=>void);
@@ -7612,7 +7613,6 @@ declare namespace _hidden {
          */
         OnEffectApplyGlyphIsLocked(callback: (
               spell: TSSpell
-            , glpyhSlotIndex: uint32
             , minLevel: TSMutable<bool>
         ) => void)
 
