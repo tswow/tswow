@@ -70,7 +70,6 @@ public:
     void SetCoreFloat(uint16 index, float value);
     void SetCoreByte(uint16 index, uint8 offset, uint8 value);
     void SetCoreUInt16(uint16 index, uint8 offset, uint16 value);
-    void SetCoreInt16(uint16 index, uint8 offset, int16 value);
     void SetCoreUInt64(uint16 index, uint64 value);
 
     uint8 GetCoreByte(uint16 index, uint8 offset);
@@ -79,6 +78,38 @@ public:
     float GetCoreFloat(uint16 index);
     uint16 GetCoreUInt16(uint16 index, uint8 offset);
     uint64 GetCoreUInt64(uint16 index);
+
+    template <typename T> T GetUpdateField(uint16 index, uint8 offset);
+    template <typename T> T GetUpdateField(uint16 index);
+
+    template <typename T> void SetUpdateField(uint16 index, uint8 offset, T value);
+    template <typename T> void SetUpdateField(uint16 index, T value);
+
+    // Note: commented out fields are never used, do not enable unless core changes
+    template <> uint8 GetUpdateField<uint8>(uint16 index, uint8 offset) { return GetCoreByte(index, offset); }
+    template <> uint8 GetUpdateField<uint8>(uint16 index) { return GetCoreByte(index, 0); }
+    //template <> int8 GetUpdateField<int8>(uint16 index, uint8 offset) { return GetCoreInt8(index, offset); }
+    //template <> int8 GetUpdateField<int8>(uint16 index) { return GetCoreInt8(index, 0); }
+    template <> uint16 GetUpdateField<uint16>(uint16 index, uint8 offset) { return GetCoreUInt16(index, offset); }
+    template <> uint16 GetUpdateField<uint16>(uint16 index) { return GetCoreUInt16(index, 0); }
+    //template <> int16 GetUpdateField<int16>(uint16 index, uint8 offset) { return GetCoreInt16(index, offset); }
+    //template <> int16 GetUpdateField<int16>(uint16 index) { return GetCoreInt16(index, 0); }
+    template <> uint32 GetUpdateField<uint32>(uint16 index) { return GetCoreUInt32(index); }
+    template <> int32 GetUpdateField<int32>(uint16 index) { return GetCoreInt32(index); }
+    template <> uint64 GetUpdateField<uint64>(uint16 index) { return GetCoreUInt64(index); }
+    //template <> int64 GetUpdateField<int64>(uint16 index) { return GetCoreInt64(index); }
+    template <> float GetUpdateField<float>(uint16 index) { return GetCoreFloat(index); }
+    template <> void SetUpdateField<uint8>(uint16 index, uint8 offset, uint8 value) { SetCoreByte(index, offset, value); }
+    template <> void SetUpdateField<uint8>(uint16 index, uint8 value) { SetCoreByte(index, 0, value); }
+    //template <> void SetUpdateField<int8>(uint16 index, uint8 offset, int8 value) { SetCoreInt8(index, offset, value); }
+    //template <> void SetUpdateField<int8>(uint16 index, int8 value) { SetCoreInt8(index, 0, value); }
+    template <> void SetUpdateField<uint16>(uint16 index, uint8 offset, uint16 value) { SetCoreUInt16(index, offset, value); }
+    template <> void SetUpdateField<uint16>(uint16 index, uint16 value) { SetCoreUInt16(index, 0, value); }
+    //template <> void SetUpdateField<int16>(uint16 index, int16 value) { SetCoreInt16(index, 0, value); }
+    template <> void SetUpdateField<uint32>(uint16 index, uint32 value) { SetCoreUInt32(index, value); }
+    template <> void SetUpdateField<int32>(uint16 index, int32 value) { SetCoreInt32(index, value); }
+    template <> void SetUpdateField<uint64>(uint16 index, uint64 value) { SetCoreUInt64(index, value); }
+    //template <> void SetUpdateField<int64>(uint16 index, int64 value) { SetCoreInt64(index, value); }
 
     TSPlayer ToPlayer();
     TSUnit ToUnit();

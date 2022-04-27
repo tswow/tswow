@@ -5555,13 +5555,29 @@ declare class TSObject extends TSEntityProvider {
     SetCoreUInt16(index : UpdateFields,offset : uint8,value : uint16) : void
 
     /**
-     * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0 or 1
-     * @param int16 value
+     * Sets the data at the specified index and offset to the given value.
+     * @note: Cannot be used with numbers larger than int16/uint16
+     * @param index
+     * @param offset
+     * @param value
      */
-    SetCoreInt16(index : UpdateFields,offset : uint8,value : int16) : void
+    SetUpdateField<T extends uint8|int8|uint16|int16>(index: UpdateFields, offset: uint8, value: T): void
+
+    /**
+     * Sets the data at the specified index to the given value.
+     * @param index
+     * @param offset
+     * @param value
+     */
+    SetUpdateField<T extends uint8|int8|uint16|int16|uint32|int32|uint64|int64|float|double>(index: UpdateFields, value: T): void
+
+    /**
+     * Sets the data at the specified index to the given value.
+     * @param index
+     * @param offset
+     * @param value
+     */
+    GetUpdateField<T extends uint8|int8|uint16|int16|uint32|int32|uint64|int64|float|double>(index: UpdateFields): T
 
     /**
      * Sets the [Object]'s scale/size to the given value.
