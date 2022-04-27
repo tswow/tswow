@@ -7577,7 +7577,7 @@ declare namespace _hidden {
           , effectMask: uint32
         )=>void)
         OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
-        OnCalcMiss(spell: EventID, callback: (spell: TSSpell, target: TSUnit, effectMask: TSMutable<uint32>, missCondition: TSMutable<SpellMissInfo>) => void)
+        OnCalcMiss(spell: EventID, callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo>, effectMask: TSMutable<uint32>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(spell: EventID, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
@@ -7644,7 +7644,7 @@ declare namespace _hidden {
             , effectMask: uint32
         )=>void): T
         OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void): T
-        OnCalcMiss(callback: (spell: TSSpell, target: TSUnit, effectMask: TSMutable<uint32>, missCondition: TSMutable<SpellMissInfo>) => void)
+        OnCalcMiss(callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo>, effectMask: TSMutable<uint32>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void): T
         /** critChance should be between 0 and 1 */
