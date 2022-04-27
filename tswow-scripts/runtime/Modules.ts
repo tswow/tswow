@@ -16,11 +16,12 @@
  */
 import * as chokidar from 'chokidar';
 import path from 'path';
+import { Args } from '../util/Args';
 import { commands } from '../util/Commands';
 import { destroyTSWatcher } from '../util/CompileTS';
-import { wfs } from '../util/FileSystem';
+import { mpath, wfs } from '../util/FileSystem';
 import { WDirectory } from '../util/FileTree';
-import { ipaths } from '../util/Paths';
+import { EndpointDirectory, ipaths } from '../util/Paths';
 import { term } from '../util/Terminal';
 import { Addon } from './Addon';
 import { Assets } from './Assets';
@@ -132,9 +133,11 @@ export class ModuleEndpoint {
     // types by function returns, so we cannot track the real type.
     // but if we retreive it dynamically, we do get the correct type out
     get path() {
-        if(this._path !== undefined) return this._path;
-        return ( this._path as any ) = this.mod.path.endpoints()
-            .find(x=>this.mod.path.relativeFrom(x).get() == this.subdir)
+        if(this.subdir === '') {
+            return EndpointDirectory(mpath('modules',this.mod.id))
+        } else {
+            return EndpointDirectory(mpath('modules',this.mod.id,this.subdir.split('.').join('/')))
+        }
     }
     private _path: never;
 
@@ -153,21 +156,54 @@ export class ModuleEndpoint {
 }
 
 export class Module {
+    private static shouldCacheEndpoints: boolean = false;
+    private static cachedEndpoints?: ModuleEndpoint[] = undefined;
+    private static cachedNamedEndpoints?: {[identifier: string]: ModuleEndpoint[]} = undefined;
+    static cacheEndpoints(shouldCache: boolean) {
+        if(Args.hasFlag('nocache',process.argv)) {
+            return;
+        }
+        this.shouldCacheEndpoints = shouldCache;
+        this.cachedEndpoints = undefined;
+        if(!shouldCache) {
+            this.cachedNamedEndpoints = undefined;
+        } else {
+            this.cachedNamedEndpoints = {}
+        }
+    }
+
     static modules() {
         return ipaths.modules.module.all().map(x=>new Module(x.basename().get()));
     }
     static endpoints(identifier?: string): ModuleEndpoint[] {
+        if(this.shouldCacheEndpoints) {
+            if(identifier) {
+                let cachedIdent = this.cachedNamedEndpoints[identifier];
+                if(cachedIdent) return cachedIdent;
+            } else {
+                if(this.cachedEndpoints) return this.cachedEndpoints;
+            }
+        }
         let modules = identifier ? [ipaths.modules.module.pick(identifier)]
             : ipaths.modules.module.all()
-        return modules.reduce((p,c)=>{
-            return p.concat(c.endpoints()
+
+        let endpoints = modules.reduce((p,c)=>{
+            let modEndpoints = c.endpoints()
                 .map(x=>
                     new ModuleEndpoint(
                           new Module(c.basename().get())
                         , x.relativeTo(c).get()
                     )
-                ))
+                )
+            if(this.shouldCacheEndpoints) {
+                this.cachedNamedEndpoints[c.basename().get()] = modEndpoints
+            }
+            return p.concat(modEndpoints)
         },[])
+        if(this.shouldCacheEndpoints && !identifier) {
+            this.cachedEndpoints = endpoints;
+        }
+        return endpoints;
     }
 
     async destroy() {

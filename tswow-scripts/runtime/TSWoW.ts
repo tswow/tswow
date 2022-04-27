@@ -76,7 +76,7 @@ export async function main() {
         process.exit(0)
     }
 
-
+    Module.cacheEndpoints(true);
     await mysql.initialize();
     await Dataset.initialize()
     await Client.initialize();
@@ -94,6 +94,7 @@ export async function main() {
     await MiscCommands.initialize();
     await Lua.initialize();
     await Launcher.initialize();
+    Module.cacheEndpoints(false);
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,
@@ -105,6 +106,10 @@ export async function main() {
         ipaths.bin.changes.remove();
         term.log('mysql',`Removed ${ipaths.bin.changes.abs().get()}`)
     });
-    await commands.enterLoop();
+    await commands.enterLoop((input: string)=>{
+        Module.cacheEndpoints(true);
+        commands.sendCommand(input);
+        Module.cacheEndpoints(false);
+    });
 }
 main();

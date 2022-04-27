@@ -205,8 +205,9 @@ export namespace commands {
     /**
     * Enters the tswow interactive program, allowing the user to type in commands into the window and executing them.
     */
-    export async function enterLoop() {
+    export async function enterLoop(callback: (input: string)=>void = async (input)=>{ sendCommand(input) }) {
         term.setEnabled(true);
+        term.setInputCallback(callback);
         term.setInputCallback(async (input) => {
             sendCommand(input);
         });
