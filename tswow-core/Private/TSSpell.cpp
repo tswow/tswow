@@ -77,6 +77,13 @@ TSWorldObject TSSpell::GetOriginalCaster()
     return TSWorldObject(nullptr);
 }
 
+TSWorldObject TSSpell::GetOriginalOrCurrentCaster()
+{
+    return spell->m_originalCaster
+        ? TSWorldObject(spell->m_originalCaster)
+        : TSWorldObject(spell->m_caster);
+}
+
 /**
  * Returns the cast time of the [Spell].
  *

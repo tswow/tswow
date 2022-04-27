@@ -4765,6 +4765,13 @@ declare interface TSSpell {
     GetOriginalCaster(): TSWorldObject
 
     /**
+     * Returns the [WorldObject] that originally casted the [Spell], or the current caster.
+     *
+     * @return [WorldObject] original or current caster
+     */
+    GetOriginalOrCurrentCaster(): TSWorldObject
+
+    /**
      * Returns the cast time of the [Spell].
      *
      * @return int32 castTime

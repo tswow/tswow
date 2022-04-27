@@ -33,6 +33,7 @@ public:
     bool IsAutoRepeat();
     TSWorldObject GetCaster();
     TSWorldObject GetOriginalCaster();
+    TSWorldObject GetOriginalOrCurrentCaster();
     int32 GetCastTime();
     uint32 GetEntry();
     uint32 GetPowerCost();
