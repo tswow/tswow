@@ -141,6 +141,17 @@ export namespace TrinityCore {
                             let numPrefix = longestPrefix.length > 0 ? longestPrefix : 'ENUM_'
                             content = content
                                 .split('\n')
+                                .map((x)=>x
+                                    // hack: hardcoded UpdateFields offsets
+                                    .split(/OBJECT_END *\+/).join('6 +')
+                                    .split(/ITEM_END *\+/).join('64 +')
+                                    .split(/CONTAINER_END *\+/).join('138 +')
+                                    .split(/UNIT_END *\+/).join('148 +')
+                                    .split(/PLAYER_END *\+/).join('1326 +')
+                                    .split(/GAMEOBJECT_END *\+/).join('18 +')
+                                    .split(/DYNAMICOBJECT_END *\+/).join('12 +')
+                                    .split(/CORPSE_END *\+/).join('36 +')
+                                )
                                 .map((x)=>{
                                     let m = x.match(/^ *([a-zA-Z0-9_]+) *(= *(\d+)|)(?:,|) *(\/\/.+|)/)
                                     if(!m) return x;

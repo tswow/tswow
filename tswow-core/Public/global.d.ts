@@ -102,6 +102,14 @@ declare const enum LocaleConstant {} /** Common.h:LocaleConstant */
 declare const enum UnitMoveType {} /** UnitDefines.h:UnitMoveType */
 declare const enum MovementGeneratorType {} /** MovementDefines.h:MovementGeneratorType */
 declare const enum SheathState {} /** UnitDefines.h:SheathState */
+declare const enum ObjectFields {} /** UpdateFields.h:EObjectFields */
+declare const enum ItemFields {} /** UpdateFields.h:EItemFields */
+declare const enum ContainerFields {} /** UpdateFields.h:EContainerFields */
+declare const enum UnitFields {} /** UpdateFields.h:EUnitFields */
+declare const enum GameObjectFields {} /** UpdateFields.h:EGameObjectFields */
+declare const enum DynamicObjectFields {} /** UpdateFields.h:EDynamicObjectFields */
+declare const enum CorpseFields {} /** UpdateFields.h:ECorpseFields */
+declare type UpdateFields = uint16 | ObjectFields | ItemFields | ContainerFields | UnitFields | GameObjectFields | DynamicObjectFields | CorpseFields
 declare const enum SpellSchools {} /** SharedDefines.h:SpellSchools */
 declare const enum SpellSchoolMask /**@realType:uint32 */ {
     NONE    = 0,
@@ -5372,7 +5380,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return int32 value
      */
-    GetCoreInt32(index : uint16) : int32
+    GetCoreInt32(index : UpdateFields) : int32
 
     /**
      * Returns the data at the specified index, casted to a unsigned 32-bit integer.
@@ -5380,7 +5388,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return uint32 value
      */
-    GetCoreUInt32(index : uint16) : uint32
+    GetCoreUInt32(index : UpdateFields) : uint32
 
     /**
      * Returns the data at the specified index, casted to a single-precision floating point value.
@@ -5388,7 +5396,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return float value
      */
-    GetCoreFloat(index : uint16) : float
+    GetCoreFloat(index : UpdateFields) : float
 
     /**
      * Returns the data at the specified index and offset, casted to an unsigned 8-bit integer.
@@ -5399,7 +5407,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0, 1, 2, or 3
      * @return uint8 value
      */
-    GetCoreByte(index : uint16,offset : uint8) : uint8
+    GetCoreByte(index : UpdateFields,offset : uint8) : uint8
 
     /**
      * Returns the data at the specified index and offset, casted to a signed 16-bit integer.
@@ -5410,7 +5418,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @return uint16 value
      */
-    GetCoreUInt16(index : uint16,offset : uint8) : uint16
+    GetCoreUInt16(index : UpdateFields,offset : uint8) : uint16
 
     /**
      * Returns the scale/size of the [Object].
@@ -5482,7 +5490,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return uint64 value
      */
-    GetCoreUInt64(index : uint16) : uint64
+    GetCoreUInt64(index : UpdateFields) : uint64
 
     /**
      * Sets the specified flag in the data value at the specified index.
@@ -5502,7 +5510,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param int32 value
      */
-    SetCoreInt32(index : uint16,value : int32) : void
+    SetCoreInt32(index : UpdateFields,value : int32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
@@ -5510,7 +5518,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint32 value
      */
-    SetCoreUInt32(index : uint16,value : uint32) : void
+    SetCoreUInt32(index : UpdateFields,value : uint32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
@@ -5518,7 +5526,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint32 value
      */
-    UpdateCoreUInt32(index : uint16,value : uint32) : void
+    UpdateCoreUInt32(index : UpdateFields,value : uint32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to a single-precision floating point value.
@@ -5526,7 +5534,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param float value
      */
-    SetCoreFloat(index : uint16,value : float) : void
+    SetCoreFloat(index : UpdateFields,value : float) : void
 
     /**
      * Sets the data at the specified index and offset to the given value, converted to an unsigned 8-bit integer.
@@ -5535,7 +5543,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0, 1, 2, or 3
      * @param uint8 value
      */
-    SetCoreByte(index : uint16,offset : uint8,value : uint8) : void
+    SetCoreByte(index : UpdateFields,offset : uint8,value : uint8) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 16-bit integer.
@@ -5544,7 +5552,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @param uint16 value
      */
-    SetCoreUInt16(index : uint16,offset : uint8,value : uint16) : void
+    SetCoreUInt16(index : UpdateFields,offset : uint8,value : uint16) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
@@ -5553,7 +5561,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @param int16 value
      */
-    SetCoreInt16(index : uint16,offset : uint8,value : int16) : void
+    SetCoreInt16(index : UpdateFields,offset : uint8,value : int16) : void
 
     /**
      * Sets the [Object]'s scale/size to the given value.
@@ -5568,7 +5576,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint64 value
      */
-    SetCoreUInt64(index : uint16,value : uint64) : void
+    SetCoreUInt64(index : UpdateFields,value : uint64) : void
 
     /**
      * Removes a flag from the value at the specified index.
