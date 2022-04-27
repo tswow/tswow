@@ -49,7 +49,8 @@ jobs:
       - uses: ./.github/actions/publish_windows
         env:
           TSWOW_UPLOAD_URL: ${{ secrets.TSWOW_UPLOAD_URL }}
-        if: "${{ env.TSWOW_UPLOAD_URL != '' }}"
+          EVENT_NAME: ${{github.event_name}}
+        if: "${{ env.TSWOW_UPLOAD_URL != '' && env.EVENT_NAME != 'pull_request'}}"
         with:
           core: 'azerothcore'
           token: ${{secrets.GITHUB_TOKEN}}
