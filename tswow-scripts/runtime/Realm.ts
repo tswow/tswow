@@ -313,6 +313,10 @@ export class Realm {
         if(this.core === 'trinitycore') {
             patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',1)
             patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableReCompiler',0)
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableEarlyTermination',0)
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableBuildFileRecreation',0)
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableInstall',0)
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnablePrefixCorrection',0)
         }
 
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.EnableDatabases', 0)
