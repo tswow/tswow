@@ -74,6 +74,7 @@ declare const enum InventorySlots /**@realType:uint32*/{
     BAG_3 = 21,
     BAG_4 = 22
 }
+declare const enum SpellMissInfo {} /** SharedDefines.h:SpellMissInfo */
 declare const enum CorpseType {} /** Corpse.h:CorpseType */
 declare const enum CreatureFamily {} /** SharedDefines.h:CreatureFamily */
 declare const enum RemoveMethod {} /** SharedDefines.h:RemoveMethod */
@@ -4766,6 +4767,20 @@ declare interface TSSpell {
     GetCaster() : TSWorldObject
 
     /**
+     * Returns the [WorldObject] that originally casted the [Spell].
+     *
+     * @return [WorldObject] original caster
+     */
+    GetOriginalCaster(): TSWorldObject
+
+    /**
+     * Returns the [WorldObject] that originally casted the [Spell], or the current caster.
+     *
+     * @return [WorldObject] original or current caster
+     */
+    GetOriginalOrCurrentCaster(): TSWorldObject
+
+    /**
      * Returns the cast time of the [Spell].
      *
      * @return int32 castTime
@@ -7591,6 +7606,7 @@ declare namespace _hidden {
           , effectMask: uint32
         )=>void)
         OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        OnCalcMiss(spell: EventID, callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo>, effectMask: TSMutable<uint32>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(spell: EventID, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
@@ -7665,6 +7681,7 @@ declare namespace _hidden {
             , effectMask: uint32
         )=>void): T
         OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void): T
+        OnCalcMiss(callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo>, effectMask: TSMutable<uint32>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void): T
         /** critChance should be between 0 and 1 */

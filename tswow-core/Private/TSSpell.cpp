@@ -60,6 +60,30 @@ TSWorldObject TSSpell::GetCaster()
     return TSWorldObject(spell->GetCaster());
 }
 
+TSWorldObject TSSpell::GetOriginalCaster()
+{
+    if (Unit* const origCaster = spell->GetOriginalCaster())
+    {
+        return TSWorldObject(origCaster);
+    }
+
+    if (WorldObject* const caster = spell->GetCaster())
+    {
+        if (caster->GetGUID() == spell->m_originalCasterGUID)
+        {
+            return TSWorldObject(caster);
+        }
+    }
+    return TSWorldObject(nullptr);
+}
+
+TSWorldObject TSSpell::GetOriginalOrCurrentCaster()
+{
+    return spell->m_originalCaster
+        ? TSWorldObject(spell->m_originalCaster)
+        : TSWorldObject(spell->m_caster);
+}
+
 /**
  * Returns the cast time of the [Spell].
  *
