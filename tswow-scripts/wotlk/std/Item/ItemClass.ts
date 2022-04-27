@@ -14,7 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Objects } from "../../../data/cell/serialization/ObjectIteration";
+import { ObjectifyOptions, Objects } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -53,7 +53,7 @@ export class ItemClassEnumValue {
 }
 
 export class ItemClass extends CellSystem<ItemTemplate> {
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         let enums = Objects.mapObject(this,['object'],(k,v)=>v.isEnum);
         for(const [key,value] of Object.entries(enums)) {
             if(value.is()) {

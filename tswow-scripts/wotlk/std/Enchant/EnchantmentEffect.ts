@@ -1,4 +1,5 @@
 import { EnumCellTransform, makeEnumCell, TransformedClass } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { ArraySystemBase } from "../../../data/cell/systems/ArraySystem";
 import { SpellItemEnchantmentRow } from "../../dbc/SpellItemEnchantment";
@@ -70,8 +71,8 @@ export class EnchantmentEffectBase extends TransformedClass<EnchantmentEffectPla
         return base.row;
     }
 
-    objectifyPlain() {
-        return super.objectify();
+    objectifyPlain(options?: ObjectifyOptions) {
+        return super.objectify(options);
     }
 }
 
@@ -81,11 +82,11 @@ export class EnchantmentEffectPlain extends EnchantmentEffectBase {
     get MaxAmount() { return this.wrapIndex(this.row.EffectPointsMax,this.index); }
     get Arg() { return this.wrapIndex(this.row.EffectArg,this.index); }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         if(all_effects[this.Type.get()]) {
-            return new all_effects[this.Type.get()](this).objectify();
+            return new all_effects[this.Type.get()](this).objectify(options);
         }
-        return super.objectify();
+        return super.objectify(options);
     }
 }
 

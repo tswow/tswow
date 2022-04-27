@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration"
 import { smart_scriptsRow } from "../../sql/smart_scripts"
 import { Position } from "../Misc/Position"
 import { SmartScript } from "./SmartScript"
@@ -113,7 +114,7 @@ export class TargetType {
         return argmap
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return {type: this.getType(), arguments: this.getArguments()}
     }
 

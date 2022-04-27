@@ -16,6 +16,7 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { DBCFile } from "../../../data/dbc/DBCFile";
 import { DBC } from "../../DBCFiles";
@@ -181,7 +182,7 @@ export class ClassStatValueRow extends MaybeSQLEntity<Class,class_stat_valuesRow
         return this.value().get();
     }
 
-    objectify() { return this.get(); }
+    objectify(options?: ObjectifyOptions) { return this.get(); }
 }
 
 export class ClassStats extends CellSystem<Class> {

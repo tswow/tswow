@@ -1,4 +1,5 @@
 import { DummyCell } from "../../../data/cell/cells/DummyCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Table } from "../../../data/table/Table";
 import { ItemVisualsQuery, ItemVisualsRow } from "../../dbc/ItemVisuals";
 import { DBC } from "../../DBCFiles";
@@ -66,7 +67,7 @@ export class ItemVisuals extends MainEntity<ItemVisualsRow> {
         throw new Error(`Can't add more entries, array is full.`);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         const values: any[] = [];
         for (let i = 0; i < this.length; ++i) {
             if(this.row.Slot.getIndex(i) == 0) {

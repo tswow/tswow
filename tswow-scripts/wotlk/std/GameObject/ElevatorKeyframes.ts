@@ -1,4 +1,5 @@
 import { Cell, CPrim } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient, TransientOn } from "../../../data/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { TransportAnimationRow } from "../../dbc/TransportAnimation";
@@ -400,15 +401,15 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
         }
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         let i = this.getAll();
         let o = {
-              default: i.default.map(x=>x.objectify())
+              default: i.default.map(x=>x.objectify(options))
             , sequences: <{[key: string]:SeqKeyFrameCon[]}> {}
         }
         Object.entries(i.sequences).forEach(([k,v])=>{
             if(k !== '0') {
-                o.sequences[k] = v.map(x=>x.objectify())
+                o.sequences[k] = v.map(x=>x.objectify(options))
             }
         })
         return o;

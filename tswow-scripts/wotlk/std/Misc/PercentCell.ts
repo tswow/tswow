@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 
 export const PercentUnits = [
@@ -97,7 +98,7 @@ export class PercentCell<T> extends CellSystem<T> {
         return this.owner;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return `${convertPercent(this.cell.get(),this.getUnit(),'[0-100]')}%`
     }
 }

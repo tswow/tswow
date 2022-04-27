@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Table } from "../../../data/table/Table";
@@ -63,7 +64,7 @@ export class Power<T> extends CellSystem<T> {
         return this.owner;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.get();
     }
 }

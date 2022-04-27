@@ -2,6 +2,7 @@ import { Cell, CellWrapper } from "../../../data/cell/cells/Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "../../../data/cell/cells/CellReadOnly";
 import { EnumCon, EnumValueRead, EnumValueWrite } from "../../../data/cell/cells/EnumCell";
 import { makePrototype } from "../../../data/cell/cells/PrototypeRegistry";
+import { ObjectifyOptions, Objects } from "../../../data/cell/serialization/ObjectIteration";
 
 // TODO: move/rename this somewhere suitable
 export class SelfRef<T,V> {
@@ -57,7 +58,13 @@ export class RefReadOnly<T,V> extends CellWrapperReadOnly<number,T>{
 
     exists() { return this.registry.Exists(this.cell.get()); }
 
-    objectify() { return this.cell.get(); }
+    objectify(options?: ObjectifyOptions) {
+        if(options && options.refDepth > 0)
+        {
+            return Objects.objectifyObj(this.getRef(), Object.assign({},options,{refDepth:options.refDepth-1}));
+        }
+        return this.cell.get();
+    }
 }
 
 export class RefUnknown<T> extends CellWrapper<number,T> {}
@@ -90,7 +97,13 @@ export class RefBase<T,V,R extends LoadRegistry<V>> extends CellWrapper<number,T
 
     is(value: number) { return this.get() === value; }
 
-    objectify() { return this.cell.get(); }
+    objectify(options?: ObjectifyOptions) {
+        if(options && options.refDepth > 0)
+        {
+            return Objects.objectifyObj(this.getRef(), Object.assign({},options,{refDepth:options.refDepth-1}));
+        }
+        return this.cell.get();
+    }
 }
 
 /**

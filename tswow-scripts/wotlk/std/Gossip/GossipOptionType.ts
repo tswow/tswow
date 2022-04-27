@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
@@ -162,7 +163,7 @@ export class GossipOptionType extends CellSystem<GossipOption> {
 
     get() { return this.owner.row.OptionType.get()}
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         switch(this.owner.row.OptionType.get()) {
             case 1:  return 'VENDOR'
             case 3:  return 'GOSSIP'

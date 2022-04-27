@@ -1,7 +1,7 @@
 import { CPrim } from "../../../../data/cell/cells/Cell";
 import { CellArray, CellIndexWrapper } from "../../../../data/cell/cells/CellArray";
 import { EnumCellTransform } from "../../../../data/cell/cells/EnumCell";
-import { Objects } from "../../../../data/cell/serialization/ObjectIteration";
+import { ObjectifyOptions, Objects } from "../../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../../data/cell/systems/CellSystem";
 import { SelfRef } from "../../Refs/Ref";
@@ -23,7 +23,7 @@ export class EffectTemplate extends CellSystem<SpellEffect> {
         return new SpellTargetPosition(this, this.row.ID.get(), this.owner.index)
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         const eff = this.AsEffect.get();
         if(eff.Aura.get() > 0) {
             let {cell:auraCell} = EnumCellTransform.getSelection(eff.Aura);

@@ -1,4 +1,5 @@
 import { CPrim } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { DBCArrayCell } from "../../../data/dbc/DBCCell";
 
@@ -29,7 +30,7 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
         return this.array.getIndex(this.index);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.array.getIndex(this.index);
     }
 }

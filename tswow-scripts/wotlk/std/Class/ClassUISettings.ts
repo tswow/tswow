@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { FunctionalCell } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Edit, EditSystem } from "../../../data/luaxml/TextFile";
 import { LUAXML } from "../../luaxml/LUAXML";
@@ -66,7 +67,7 @@ class TCoordSystem extends CellSystem<Class> {
             .map(x=>parseFloat(x)) as [number,number,number,number];
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.get();
     }
 }

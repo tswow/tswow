@@ -24,8 +24,10 @@ export type EntryType = 'primitive' | 'cell' | 'system' | 'struct' | 'entity'
 export type Entry = CPrim | {ref:'struct'|'entity', name: string};
 export type Schema = {__schema_type: 'entity'|'struct', [key: string]: Schema|Entry}
 
+export type ObjectifyOptions = {refDepth?: number} | undefined
+
 export interface Objectified {
-    objectify(): any;
+    objectify(options?: ObjectifyOptions): any;
 }
 
 let visitStack : any[] = [];
@@ -109,7 +111,7 @@ export const Objects = {
         return result;
     },
 
-    objectifyObj(thiz: any) {
+    objectifyObj(thiz: any, options?: ObjectifyOptions) {
         const obj: {[key: string]: any} = {};
         visitStack.push(thiz);
 
@@ -133,7 +135,7 @@ export const Objects = {
                         return;
                     }
 
-                    obj[key] = val.objectify();
+                    obj[key] = val.objectify(options);
                 }
             } catch(err) {
                 obj[key] = "ERROR";

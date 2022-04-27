@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as xml from 'xml2js';
+import { ObjectifyOptions } from '../../../../data/cell/serialization/ObjectIteration';
 import { CellSystem } from "../../../../data/cell/systems/CellSystem";
 import { Edit } from "../../../../data/luaxml/TextFile";
 
@@ -70,7 +71,7 @@ export class AnchorRow<T> extends CellSystem<T> {
         return this.owner;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.getXml().Anchor.$;
     }
 }

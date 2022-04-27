@@ -1,3 +1,4 @@
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { SQL } from "../../SQLFiles";
 import { Spell } from "./Spell";
@@ -18,7 +19,7 @@ export class SpellScript extends CellSystem<Spell> {
         return q2.length === 0 ? undefined : q2[0].ScriptName;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.get();
     }
 }

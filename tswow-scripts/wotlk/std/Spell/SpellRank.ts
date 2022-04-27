@@ -1,3 +1,4 @@
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { SQL } from "../../SQLFiles";
@@ -33,7 +34,7 @@ export class SpellRank<T> extends CellSystem<T>{
         return this.getRow().rank.get();
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return {
             firstSpell: this.getFirstSpell(),
             rank: this.getRank()

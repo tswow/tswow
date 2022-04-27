@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Table } from "../../../data/table/Table";
 import { SpellDescriptionVariablesQuery, SpellDescriptionVariablesRow } from "../../dbc/SpellDescriptionVariables";
 import { DBC } from "../../DBCFiles";
@@ -29,7 +30,7 @@ export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariabl
         return this;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.row.Variables.get();
     }
 

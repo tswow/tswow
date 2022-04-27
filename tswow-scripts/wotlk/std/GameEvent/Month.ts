@@ -1,4 +1,5 @@
 import { Cell } from "../../../data/cell/cells/Cell"
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration"
 import { Transient } from "../../../data/cell/serialization/Transient"
 import { CellSystem } from "../../../data/cell/systems/CellSystem"
 
@@ -60,7 +61,7 @@ export class MonthCell<T> extends CellSystem<T> {
     return this.owner;
     }
 
-    objectify() {
-    return this.get();
+    objectify(options?: ObjectifyOptions) {
+        return this.get();
     }
 }

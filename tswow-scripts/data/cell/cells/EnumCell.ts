@@ -1,4 +1,4 @@
-import { Objectified, Objects } from "../serialization/ObjectIteration";
+import { Objectified, ObjectifyOptions, Objects } from "../serialization/ObjectIteration";
 import { CellSystemTop } from "../systems/CellSystem";
 import { Cell, CellWrapper } from "./Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "./CellReadOnly";
@@ -116,7 +116,7 @@ export class EnumCellTransform<T extends Objectified> extends CellWrapper<number
         return enumCellTransformGetSelection(this);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         const {name} = this.getSelection();
         return name === undefined ? this.cell.get() : name;
     }
@@ -197,16 +197,16 @@ export abstract class TransformedClass<T> extends CellSystemTop {
     protected abstract transformer(): EnumCellTransform<any>
     protected abstract default(): T;
 
-    protected objectifyParent() {
-        return Objects.objectifyObj(this);
+    protected objectifyParent(options?: ObjectifyOptions) {
+        return Objects.objectifyObj(this, options);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         let {cell} = EnumCellTransform.getSelection(this.transformer());
         if(cell === undefined) {
-            return this.objectifyParent();
+            return this.objectifyParent(options);
         }
-        return cell.as().objectifyParent();
+        return cell.as().objectifyParent(options);
     }
 }
 
@@ -265,16 +265,16 @@ export abstract class TransformedClassReadOnly<T> extends CellSystemTop {
     protected abstract transformer(): EnumCellTransformReadOnly<any>
     protected abstract default(): T;
 
-    protected objectifyParent() {
-        return Objects.objectifyObj(this);
+    protected objectifyParent(options?: ObjectifyOptions) {
+        return Objects.objectifyObj(this, options);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         let {cell} = EnumCellTransformReadOnly.getSelection(this.transformer());
         if(cell === undefined) {
-            return this.objectifyParent();
+            return this.objectifyParent(options);
         }
-        return cell.as().objectifyParent();
+        return cell.as().objectifyParent(options);
     }
 }
 

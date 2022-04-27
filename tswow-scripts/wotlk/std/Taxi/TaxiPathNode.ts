@@ -1,4 +1,5 @@
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { TaxiPathNodeRow } from "../../dbc/TaxiPathNode";
 import { DBC } from "../../DBCFiles";
@@ -90,7 +91,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         return this;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.getAllRows().map(node=>{
             return ({
                   map: node.Position.Map.get()

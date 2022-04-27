@@ -16,6 +16,7 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCon, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { Language } from "../../../data/dbc/Localization";
 import { loc_constructor } from "../../../data/primitives";
@@ -122,8 +123,8 @@ export class CreatureTextGroup {
         return this
     }
 
-    objectify() {
-        return this.texts.map(x=>x.objectify())
+    objectify(options?: ObjectifyOptions) {
+        return this.texts.map(x=>x.objectify(options))
     }
 }
 
@@ -201,8 +202,8 @@ export class CreatureTextsAttached extends CellSystem<CreatureTemplate> {
         return this.owner;
     }
 
-    objectify() {
-        return this.texts.objectify()
+    objectify(options?: ObjectifyOptions) {
+        return this.texts.objectify(options)
     }
 }
 

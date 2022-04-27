@@ -1,5 +1,6 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "../../dbc/DungeonEncounter";
 import { DBC } from "../../DBCFiles";
@@ -101,14 +102,14 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
         return LFGDungeonRegistry.ref(this, this.wrapSQL(0,sql=>sql.lastEncounterDungeon));
     }
 
-    objectify(): any {
+    objectify(options?: ObjectifyOptions): any {
         switch(this.Type.get()) {
             case 0:
-                return new DungeonEncounterCreature(this.id).objectify();
+                return new DungeonEncounterCreature(this.id).objectify(options);
             case 1:
-                return new DungeonEncounterSpell(this.id).objectify();
+                return new DungeonEncounterSpell(this.id).objectify(options);
             default:
-                return new DungeonEncounterPlain(this.id).objectify();
+                return new DungeonEncounterPlain(this.id).objectify(options);
         }
     }
 }

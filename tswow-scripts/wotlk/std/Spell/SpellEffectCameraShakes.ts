@@ -1,3 +1,4 @@
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Table } from "../../../data/table/Table";
 import { SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow } from "../../dbc/SpellEffectCameraShakes";
 import { DBC } from "../../DBCFiles";
@@ -35,13 +36,13 @@ export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesR
 
     get length() { return 3; }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         const values: any[] = [];
         for (let i = 0; i < this.length; ++i) {
             if(this.row.CameraShake.getIndex(i)===0) {
                 values.push('<empty>');
             } else {
-                values.push(this.get(i).objectify());
+                values.push(this.get(i).objectify(options));
             }
         }
         return values;

@@ -16,6 +16,7 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { SpellRegistry } from "../Spell/Spells";
@@ -110,7 +111,7 @@ export class ChargesSystem<T> extends CellSystem<T> {
 
     get Raw() { return this.ownerWrap(this.cell); }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         if(this.cell.get() === 0) return 'UNLIMITED';
         if(this.cell.get() < 0) {
             return {charges:-this.cell.get(),type:'DELETE_ITEM'}

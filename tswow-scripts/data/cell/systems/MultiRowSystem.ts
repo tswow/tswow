@@ -1,3 +1,4 @@
+import { ObjectifyOptions } from "../serialization/ObjectIteration";
 import { CellSystem } from "./CellSystem";
 
 /**
@@ -44,11 +45,11 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
         return this.get().filter(callback);
     }
 
-    objectify(): any {
+    objectify(options?: ObjectifyOptions): any {
         return this.get().map(x=>{
             let y = x as any;
             return y.objectify && typeof(y.objectify) == 'function'
-                ? y.objectify()
+                ? y.objectify(options)
                 : 'CANT_OBJECTIFY';
         });
     }

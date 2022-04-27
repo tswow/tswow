@@ -14,6 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
 
@@ -35,7 +36,7 @@ export class ItemIcon extends CellSystem<ItemDisplayInfo> {
         return this.owner.row.InventoryIcon.getIndex(0);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.owner.row.InventoryIcon.get();
     }
 }

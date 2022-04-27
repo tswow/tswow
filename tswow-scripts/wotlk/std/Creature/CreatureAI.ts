@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
@@ -36,5 +37,5 @@ export class CreatureAI extends CellSystem<CreatureTemplate> {
     EventAI() { return this.set("EventAI"); }
     SmartAI() { return this.set("SmartAI"); }
 
-    objectify() { return this.get(); }
+    objectify(options?: ObjectifyOptions) { return this.get(); }
 }

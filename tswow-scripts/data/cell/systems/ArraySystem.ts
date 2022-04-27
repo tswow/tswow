@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Objectified } from '../serialization/ObjectIteration';
+import { Objectified, ObjectifyOptions } from '../serialization/ObjectIteration';
 import { Transient } from '../serialization/Transient';
 import { CellSystem, CellSystemTop } from './CellSystem';
 
@@ -90,14 +90,14 @@ export abstract class ArraySystemBase<A extends Objectified, T> extends CellSyst
 
     abstract get(index: number): A;
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         const values: any[] = [];
         for (let i = 0; i < this.length; ++i) {
             const v = this.get(i);
             if (this.isClearValue(v)) {
                 values.push('<empty>')
             } else {
-                values.push(v.objectify());
+                values.push(v.objectify(options));
             }
         }
         return values;

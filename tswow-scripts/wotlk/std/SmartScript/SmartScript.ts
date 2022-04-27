@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { SQLCellReadOnly } from "../../../data/sql/SQLCell";
@@ -99,11 +100,11 @@ export class SmartScript extends CellSystemTop {
         return sc;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return {
-            action: this.Action.objectify(),
-            target: this.Target.objectify(),
-            event: this.Event.objectify(),
+            action: this.Action.objectify(options),
+            target: this.Target.objectify(options),
+            event: this.Event.objectify(options),
         }
     }
 }

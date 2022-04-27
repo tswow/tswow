@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "../../../data/cell/cells/Cell"
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration"
 import { iterLocConstructor, loc_constructor } from "../../../data/primitives"
 import { smart_scriptsRow } from "../../sql/smart_scripts"
 import { SQL } from "../../SQLFiles"
@@ -335,7 +336,7 @@ export class ActionType {
         return argmap
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return {type: this.getType(), arguments: this.getArguments()}
     }
 

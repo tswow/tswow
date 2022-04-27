@@ -1,4 +1,5 @@
 import { Cell } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 
 export const TimeUnits = [
@@ -163,7 +164,7 @@ export class DurationCell<T> extends CellSystem<T> {
         return convertTime(this.get(),this.unit,'YEARS');
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return `${this.get()} ${this.unit}`
     }
 }

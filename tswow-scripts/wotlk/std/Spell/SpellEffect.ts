@@ -17,7 +17,7 @@
 import { CPrim } from "../../../data/cell/cells/Cell";
 import { CellArray } from "../../../data/cell/cells/CellArray";
 import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "../../../data/cell/cells/EnumCell";
-import { Objectified, Objects } from "../../../data/cell/serialization/ObjectIteration";
+import { Objectified, ObjectifyOptions, Objects } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { DBC } from "../../DBCFiles";
@@ -289,13 +289,15 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return Objects.objectifyObj(this);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         if(this.Aura.get() > 0) {
             return {
-                Type: this.Type.objectify()
-              , Aura: this.Aura.objectify()
+                Type: this.Type.objectify(options)
+              , Aura: this.Aura.objectify(options)
               , ...Objects.objectifyObj(
-                  EnumCellTransform.getSelection(this.Aura).cell.as())
+                      EnumCellTransform.getSelection(this.Aura).cell.as()
+                    , options
+                )
           }
         }
         if(this.Type.get() > 0) {

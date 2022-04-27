@@ -1,3 +1,4 @@
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { MultiFloatWrapper, MultiIntWrapper, MultiUIntWrapper } from "../../../data/dbc/DBCCell";
@@ -128,10 +129,10 @@ export class SpellCharacterProcedures<T> extends CellSystem<T> {
         return new SpellCharacterProcedure(this.row, index);
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.row.CharProc.get()
             .filter((x)=>x>=0)
-            .map((x,i)=> SpellCharacterProcedure.As(this.get(i),x).objectify())
+            .map((x,i)=> SpellCharacterProcedure.As(this.get(i),x).objectify(options))
     }
 
     get length() { return 4; }

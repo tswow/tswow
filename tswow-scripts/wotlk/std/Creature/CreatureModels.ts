@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { creature_templateRow } from "../../sql/creature_template";
@@ -51,9 +52,9 @@ export class CreatureModels<T> extends CellSystem<T> {
         ]
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return this.rows().filter(x=>x.get()!=0).map(
-            x=>CreatureDisplayInfoRegistry.ref(this.owner,x).objectify());
+            x=>CreatureDisplayInfoRegistry.ref(this.owner,x).objectify(options));
     }
 
     clearAll() {

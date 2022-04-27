@@ -22,7 +22,7 @@ import { CellReadOnly, CellWrapperReadOnly } from '../cells/CellReadOnly';
 import { MulticastCell } from '../cells/MulticastCell';
 import { CellWrapperExists, PendingCell } from '../cells/PendingCell';
 import { CommonStruct } from '../serialization/CommonStruct';
-import { Objects } from '../serialization/ObjectIteration';
+import { ObjectifyOptions, Objects } from '../serialization/ObjectIteration';
 import { Transient } from '../serialization/Transient';
 
 export class CellSystem<T> {
@@ -147,8 +147,8 @@ export class CellSystem<T> {
         obj[key] = this.objectify();
     }
 
-    objectify(): any {
-        return Objects.objectifyObj(this);
+    objectify(options?: ObjectifyOptions): any {
+        return Objects.objectifyObj(this, options);
     }
 }
 
@@ -215,8 +215,8 @@ export class WrappedLoc<T> extends LocSystem<T> {
         return this.owner;
     }
 
-    objectify() {
-        return this.wrapped.objectify();
+    objectify(options?: ObjectifyOptions) {
+        return this.wrapped.objectify(options);
     }
 }
 

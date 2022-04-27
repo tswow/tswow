@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
@@ -32,7 +33,7 @@ export class CreatureMovementSpeed extends CellSystem<CreatureTemplate> {
         return this.owner.row.speed_run.get();
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         return {walk: this.owner.row.speed_walk.get(), run: this.owner.row.speed_run.get()}
     }
 }

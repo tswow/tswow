@@ -18,6 +18,7 @@ import { Cell, CPrim } from '../cell/cells/Cell';
 import { CellArray } from '../cell/cells/CellArray';
 import { CellReadOnly } from '../cell/cells/CellReadOnly';
 import { PendingCell } from '../cell/cells/PendingCell';
+import { ObjectifyOptions } from '../cell/serialization/ObjectIteration';
 import { LocSystem } from '../cell/systems/CellSystem';
 import { iterLocConstructor, loc_constructor } from '../primitives';
 import { DBCBuffer } from './DBCBuffer';
@@ -356,12 +357,12 @@ export class DBCLocCell<T> extends LocSystem<T> {
         return this.owner;
     }
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         // enGB optimization
         if (this.mask.get() === 16712190) {
             return {enGB: this.enGB.get(), mask: 16712190};
         } else {
-            return super.objectify();
+            return super.objectify(options);
         }
     }
 

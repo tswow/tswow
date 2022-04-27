@@ -16,6 +16,7 @@
  */
 
 import { TransformedClass, TransformedClassReadOnly } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { ArrayEntry } from "../../../data/cell/systems/ArraySystem";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
@@ -229,14 +230,14 @@ export abstract class ArrayEntity<R extends IDeletable,O,A extends ArrayEntry<O>
 
     abstract get(index: number): A;
 
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
         const values: any[] = [];
         for (let i = 0; i < this.length; ++i) {
             const v = this.get(i);
             if (v.isClear()) {
                 values.push('<empty>')
             } else {
-                values.push(v.objectify());
+                values.push(v.objectify(options));
             }
         }
         return values;

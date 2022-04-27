@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ObjectifyOptions } from '../cell/serialization/ObjectIteration';
 import { CellSystem } from '../cell/systems/CellSystem';
 import { Row } from '../table/Row';
 import { SqlTable } from './SQLTable';
@@ -89,7 +90,8 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
     }
 
     // TODO: This doesn't work, don't know why.
-    objectify() {
+    objectify(options?: ObjectifyOptions) {
+        // ???????
         return Object.assign({}, this.obj);
     }
 
