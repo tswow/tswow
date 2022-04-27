@@ -2,6 +2,7 @@ name: CI
 on:
   push:
     branches: [ "master" ]
+  pull_request:
   workflow_dispatch:
 jobs:
   ubuntu-clang-trinitycore:
@@ -28,7 +29,8 @@ jobs:
       - uses: ./.github/actions/publish_windows
         env:
           TSWOW_UPLOAD_URL: ${{secrets.TSWOW_UPLOAD_URL}}
-        if: "${{ env.TSWOW_UPLOAD_URL != ''}}"
+          EVENT_NAME: ${{github.event_name}}
+        if: "${{ env.TSWOW_UPLOAD_URL != '' && env.EVENT_NAME != 'pull_request'}}"
         with:
           core: 'trinitycore'
           token: ${{secrets.GITHUB_TOKEN}}
