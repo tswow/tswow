@@ -24,6 +24,7 @@
 #include "TSDictionary.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
+#include "TSItem.h"
 #include <chrono>
 #include <vector>
 
@@ -31,7 +32,6 @@ class TSCollisions;
 class TSCollisionEntry;
 class TSEntity;
 class TSUnit;
-class TSItem;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
 
@@ -113,12 +113,12 @@ public:
     uint32 CastCustomSpell(
           TSWorldObject target
         , uint32 spell
-        , bool triggered
-        , int32 bp0
-        , int32 bp1
-        , int32 bp2
-        , TSItem castItem
-        , uint64 originalCaster
+        , bool triggered = false
+        , int32 bp0 = 0
+        , int32 bp1 = 0
+        , int32 bp2 = 0
+        , TSItem castItem = TSItem()
+        , uint64 originalCaster = 0
     );
 
     TSGameObject GetGameObject(uint64 guid);

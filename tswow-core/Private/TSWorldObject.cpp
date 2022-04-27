@@ -1195,12 +1195,12 @@ uint32 TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, b
 uint32 TSWorldObject::CastCustomSpell(
       TSWorldObject _target
     , uint32 spell
-    , bool triggered = false
-    , int32 bp0 = 0
-    , int32 bp1 = 0
-    , int32 bp2 = 0
-    , TSItem _castItem = TSItem()
-    , uint64 originalCaster = 0
+    , bool triggered
+    , int32 bp0
+    , int32 bp1
+    , int32 bp2
+    , TSItem _castItem
+    , uint64 originalCaster
 ) {
     auto target = _target.obj;
     auto castItem = _castItem.item;
