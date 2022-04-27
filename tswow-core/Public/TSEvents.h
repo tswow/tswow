@@ -429,6 +429,13 @@ EVENT_TYPE(SpellOnCast,TSSpell)
 EVENT_TYPE(SpellOnCheckCast,TSSpell, TSMutable<uint8>)
 EVENT_TYPE(SpellOnDispel,TSSpell,uint32)
 EVENT_TYPE(SpellOnEffect,TSSpell, TSMutable<bool> /*preventDefault*/, TSSpellEffectInfo, uint32 /*mode*/, TSUnit /*unitTarget*/, TSItem /*itemTarget*/, TSGameObject /*gameObjectTarget*/, TSCorpse /*corpseTarget*/)
+
+EVENT_TYPE(SpellOnEffectApplyGlyph
+    , TSSpell
+    , TSMutable<bool> /* isLocked */
+)
+
+
 EVENT_TYPE(SpellOnHit,TSSpell)
 EVENT_TYPE(SpellOnTick,TSAuraEffect)
 EVENT_TYPE(SpellOnRemove,TSAuraEffect,TSAuraApplication, uint32)
@@ -457,6 +464,7 @@ struct TSSpellEvents {
      EVENT(SpellOnCheckCast)
      EVENT(SpellOnDispel)
      EVENT(SpellOnEffect)
+     EVENT(SpellOnEffectApplyGlyph)
      EVENT(SpellOnHit)
      EVENT(SpellOnTick)
      EVENT(SpellOnRemove)
@@ -611,6 +619,10 @@ EVENT_TYPE(CreatureOnCalcBaseGain
     , TSCreature /*victim*/
     , TSMutable<uint32>
     , TSPlayer /*killer*/
+)
+EVENT_TYPE(PlayerOnGlyphInitForLevel
+    , TSPlayer
+    , TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
 )
 
 struct TSCreatureEvents {
@@ -1239,7 +1251,8 @@ struct TSEventStore
     EVENT(PlayerOnCalcIntellectManaBonus)
     EVENT(PlayerOnCalcSkillGainChance)
     EVENT(PlayerOnUpdateAttackPower)
-    EVENT(PlayerOnUpdateRangedAttackPower)
+    EVENT(PlayerOnUpdateRangedAttackPower)    
+    EVENT(PlayerOnGlyphInitForLevel)
 
     // AccountScript
     EVENT(AccountOnAccountLogin)
@@ -1356,6 +1369,7 @@ struct TSEventStore
     EVENT(SpellOnCheckCast)
     EVENT(SpellOnDispel)
     EVENT(SpellOnEffect)
+    EVENT(SpellOnEffectApplyGlyph)
     EVENT(SpellOnHit)
     EVENT(SpellOnTick)
     EVENT(SpellOnRemove)
@@ -1640,6 +1654,7 @@ public:
          EVENT_HANDLE(Player,OnCalcSkillGainChance)
          EVENT_HANDLE(Player,OnUpdateAttackPower)
          EVENT_HANDLE(Player,OnUpdateRangedAttackPower)
+         EVENT_HANDLE(Player,OnGlyphInitForLevel)
     } Player;
 
     struct AccountEvents : public EventHandler
@@ -1706,6 +1721,7 @@ public:
           EVENT_HANDLE(Spell,OnCheckCast)
           EVENT_HANDLE(Spell,OnDispel)
           EVENT_HANDLE(Spell,OnEffect)
+          EVENT_HANDLE(Spell,OnEffectApplyGlyph)
           EVENT_HANDLE(Spell,OnHit)
           EVENT_HANDLE(Spell,OnTick)
           EVENT_HANDLE(Spell,OnRemove)

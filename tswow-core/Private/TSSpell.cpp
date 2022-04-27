@@ -246,3 +246,7 @@ bool TSSpell::IsTriggeredByAura(uint32 aura)
 #endif
 }
 
+uint32 TSSpell::GetGlyphSlot()
+{
+    return spell->m_glyphIndex;
+}

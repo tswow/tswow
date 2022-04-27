@@ -38,6 +38,7 @@ public:
     uint32 GetEntry();
     uint32 GetPowerCost();
     int32 GetDuration();
+    uint32 GetGlyphSlot();
     TSPosition GetTargetDest();
     TSObject  GetTarget();
     TSSpellInfo GetSpellInfo();
