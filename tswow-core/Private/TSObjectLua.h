@@ -25,7 +25,6 @@ void TSLuaState::load_object_methods_t(sol::usertype<T> & target, uint32_t modid
     LUA_FIELD(target, TSObject, SetCoreFloat);
     LUA_FIELD(target, TSObject, SetCoreByte);
     LUA_FIELD(target, TSObject, SetCoreUInt16);
-    LUA_FIELD(target, TSObject, SetCoreInt16);
     LUA_FIELD(target, TSObject, SetCoreUInt64);
     LUA_FIELD(target, TSObject, GetCoreByte);
     LUA_FIELD(target, TSObject, GetCoreInt32);
