@@ -444,7 +444,7 @@ EVENT_TYPE(SpellOnCalcSpellPowerLevelPenalty
 )
 EVENT_TYPE(SpellOnTrainerSend, TSSpellInfo /*spell*/, uint32 /*trainerId*/, TSPlayer /*receiver*/, TSMutable<bool> /*allowTrain*/)
 
-EVENT_TYPE(SpellOnCalcMiss, TSSpell, TSWorldObject, TSUnit, TSMutable<uint32>, TSMutable<uint32>)
+EVENT_TYPE(SpellOnCalcMiss, TSSpell, TSUnit, TSMutable<uint32>, TSMutable<uint32>)
 EVENT_TYPE(SpellOnCalcCrit, TSSpell, TSMutable<float>)
 EVENT_TYPE(SpellOnCalcAuraCrit, TSAuraEffect, TSMutable<float>)
 EVENT_TYPE(SpellOnCalcReflect, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
