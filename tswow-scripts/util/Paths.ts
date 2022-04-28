@@ -173,7 +173,8 @@ export function EndpointDirectory(inPath: string) {
         }),
         assets: dir({
             Interface: dir({
-                WorldMap: dir({})
+                WorldMap: dir({}),
+                TAXIFRAME: dir({})
             }),
 
             Textures: dir({

@@ -19,6 +19,7 @@ import { ipaths } from "../../../data/Settings";
 import { FileChangeModule } from "../../../util/FileChanges";
 import { wfs } from "../../../util/FileSystem";
 import { generateBLP } from "./BLP";
+import { BuildTaxiMaps } from "./BuildTaxiMaps";
 import { onDirtyPNG } from "./PNG";
 
 finish('blps', () => {
@@ -71,4 +72,5 @@ finish('blps', () => {
             });
         })
     })
+    BuildTaxiMaps();
 })
