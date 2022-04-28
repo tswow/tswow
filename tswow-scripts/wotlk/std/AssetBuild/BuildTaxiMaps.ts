@@ -18,7 +18,6 @@ export function BuildTaxiMaps() {
                 let mapname = node.basename().match(/TAXIMAP_(.+?)\.blp/)
                 if(!mapname)
                     return;
-                console.log("Found non-numerical minimap:",mapname[1])
                 let map = DBC.Map.query({Directory:mapname[1]});
                 if(!map)
                     return;
