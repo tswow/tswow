@@ -11,6 +11,7 @@ import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
+import { EntityTags } from "../Tags/Tags";
 
 // Note: There is no table containing WorldStates, so we just
 // pretend there is one.
@@ -68,6 +69,8 @@ export class WorldState {
     ui_text() {
         return `%${this.id}w`
     }
+
+    get Tags() { return new EntityTags(this, this.id); }
 
     objectify() { return this.get(); }
 }
