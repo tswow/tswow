@@ -24,6 +24,7 @@ public:
 private:
     void load_worldentity_methods(uint32_t modid);
     void load_creature_methods(uint32_t modid);
+    void load_creature_template_methods(uint32_t modid);
     void load_gameobject_methods(uint32_t modid);
     void load_player_methods(uint32_t modid);
     void load_item_methods(uint32_t modid);

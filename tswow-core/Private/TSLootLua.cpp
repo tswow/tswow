@@ -12,6 +12,10 @@ void TSLuaState::load_loot_methods(uint32_t modid)
     LUA_FIELD(ts_lootitem, TSLootItem, SetRandomSuffix);
     LUA_FIELD(ts_lootitem, TSLootItem, SetRandomPropertyID);
     LUA_FIELD(ts_lootitem, TSLootItem, SetCount);
+    LUA_FIELD(ts_lootitem, TSLootItem, SetFakeRandomSuffix);
+    LUA_FIELD(ts_lootitem, TSLootItem, SetFakeRandomPropertyID);
+    LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomSuffix);
+    LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomPropertyID);
 
     auto ts_loot = new_usertype<TSLoot>("TSLoot");
     ts_loot.set_function("AddItem", sol::overload(

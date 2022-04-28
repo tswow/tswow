@@ -132,6 +132,11 @@ void TSLuaState::load_player_methods(uint32_t modid)
     LUA_FIELD(ts_player, TSPlayer, GetCorpse);
     LUA_FIELD(ts_player, TSPlayer, GetDbLocaleIndex);
     LUA_FIELD(ts_player, TSPlayer, GetDbcLocale);
+    LUA_FIELD(ts_player, TSPlayer, RemoveAllItemMods);
+    LUA_FIELD(ts_player, TSPlayer, RemoveItemMods);
+    LUA_FIELD(ts_player, TSPlayer, ApplyAllItemMods);
+    LUA_FIELD(ts_player, TSPlayer, ApplyItemMods);
+    LUA_FIELD(ts_player, TSPlayer, UpdateCache);
     LUA_FIELD(ts_player, TSPlayer, SetPlayerLock);
     LUA_FIELD(ts_player, TSPlayer, SetAtLoginFlag);
     LUA_FIELD(ts_player, TSPlayer, SetSheath);
@@ -264,6 +269,7 @@ void TSLuaState::load_player_methods(uint32_t modid)
     LUA_FIELD(ts_player, TSPlayer, SendUpdateEventStates);
     LUA_FIELD(ts_player, TSPlayer, GetMails);
     LUA_FIELD(ts_player, TSPlayer, RemoveMail);
+    LUA_FIELD(ts_player, TSPlayer, GetFreeInventorySpace);
     ts_player.set_function("GetPlayerIP", &TSPlayer::LGetPlayerIP);
     ts_player.set_function("GetGuildName", &TSPlayer::LGetGuildName);
     ts_player.set_function("GetAccountName", &TSPlayer::LGetAccountName);

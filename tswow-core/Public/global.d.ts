@@ -4958,7 +4958,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 spell : entry of a spell
      * @param bool triggered = false : if true the spell is instant and has no cost
      */
-     CastSpell(target : TSWorldObject,spell : uint32,triggered : bool) : SpellCastResult
+     CastSpell(target : TSWorldObject,spell : uint32,triggered?: bool) : SpellCastResult
 
      /**
       * Casts the [Spell] at target [Unit] with custom basepoints or casters.
@@ -4984,7 +4984,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
       * @param uint32 spell : entry of a spell
       * @param bool triggered = false : if true the spell is instant and has no cost
       */
-    CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered : bool) : SpellCastResult
+    CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered?: bool) : SpellCastResult
 
     /**
      * Returns the name of the [WorldObject]

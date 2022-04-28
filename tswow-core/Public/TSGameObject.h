@@ -52,4 +52,10 @@ public:
     void FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj);
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
+private:
+    friend class TSLuaState;
+    void LDespawn0(bool forced, uint32 delayMs, uint32 respawnSec);
+    void LDespawn1(bool forced, uint32 delayMs);
+    void LDespawn2(bool forced);
+    void LDespawn3();
 };

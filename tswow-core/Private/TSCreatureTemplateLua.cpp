@@ -1,0 +1,106 @@
+#include "TSLua.h"
+#include "TSCreatureTemplate.h"
+#include "TSObjectLua.h"
+
+void TSLuaState::load_creature_template_methods(uint32_t modid)
+{
+    auto ts_creature_template = new_usertype<TSCreatureTemplate>("TSCreatureTemplate");
+    load_entity_methods_t(ts_creature_template, modid, "TSCreatureTemplate");
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetEntry);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryA);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryB);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryC);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetKillCreditA);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetKillCreditB);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModelID1);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModelID2);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModelID3);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModelID4);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetName);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetTitle);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIconName);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetGossipMenuID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMinLevel);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMaxLevel);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetExpansion);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFaction);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetNPCFlag);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpeedWalk);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpeedRun);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetScale);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRank);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDamageSchool);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetBaseAttackTime);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRangeAttackTime);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetBaseVariance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRangeVariance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetUnitClass);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetUnitFlags);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetUnitFlags2);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDynamicFlags);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFamily);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetType);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetTypeFlags);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetLootID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetPickpocketLootID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSkinLootID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetNormalResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetHolyResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFireResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetNatureResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFrostResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetShadowResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetArcaneResistance);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellA);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellB);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellC);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellD);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellE);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellF);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellG);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellH);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetPetSpellDataID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetVehicleID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMinGold);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMaxGold);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetAIName);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMovementType);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetHoverHeight);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModHealth);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModMana);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModArmor);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModDamage);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetModExperience);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRacialLeader);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMovementID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRegenHealth);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetMechanicImmuneMask);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSpellSchoolImmuneMask);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFlagsExtra);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetScriptID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRandomValidModelID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFirstValidModelID);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFirstInvisibleModel);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFirstVisibleModel);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRequiredLootSkill);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIsExotic);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIsTameable);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetGroundMovement);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetFlightMovement);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetSwims);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRooted);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetChaseMovement);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetRandomMovement);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetInteractionPauseTimer);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIsGroundAllowed);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIsSwimAllowed);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIsFlightAllowed);
+    LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetIsRooted);
+
+    ts_creature_template.set_function("GetName", &TSCreatureTemplate::LGetName);
+    ts_creature_template.set_function("GetTitle", &TSCreatureTemplate::LGetTitle);
+    ts_creature_template.set_function("GetIconName", &TSCreatureTemplate::LGetIconName);
+    ts_creature_template.set_function("GetAIName", &TSCreatureTemplate::LGetAIName);
+
+    set_function("GetCreatureTemplate", &GetCreatureTemplate);
+}

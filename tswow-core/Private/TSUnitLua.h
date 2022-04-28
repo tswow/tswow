@@ -135,15 +135,15 @@ void TSLuaState::load_unit_methods_t(sol::usertype<T> & target, uint32_t modid, 
     LUA_FIELD(target, TSUnit, MoveConfused);
     LUA_FIELD(target, TSUnit, MoveFleeing);
     LUA_FIELD(target, TSUnit, MoveTo);
+    LUA_FIELD(target, TSUnit, MoveTakeoff);
+    LUA_FIELD(target, TSUnit, MoveLand);
     LUA_FIELD(target, TSUnit, MoveJump);
     LUA_FIELD(target, TSUnit, SendUnitWhisper);
     LUA_FIELD(target, TSUnit, SendUnitEmote);
     LUA_FIELD(target, TSUnit, SendUnitSay);
     LUA_FIELD(target, TSUnit, SendUnitYell);
     LUA_FIELD(target, TSUnit, DeMorph);
-    LUA_FIELD(target, TSUnit, CastSpell);
     LUA_FIELD(target, TSUnit, CastCustomSpell);
-    LUA_FIELD(target, TSUnit, CastSpellAoF);
     LUA_FIELD(target, TSUnit, ClearInCombat);
     LUA_FIELD(target, TSUnit, StopSpellCast);
     LUA_FIELD(target, TSUnit, InterruptSpell);

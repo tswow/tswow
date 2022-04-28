@@ -17,6 +17,7 @@ void TSLuaState::load_bindings(uint32_t modid)
     open_libraries(sol::lib::base, sol::lib::table, sol::lib::string, sol::lib::math);
     load_worldentity_methods(modid);
     load_creature_methods(modid);
+    load_creature_template_methods(modid);
     load_gameobject_methods(modid);
     load_player_methods(modid);
     load_item_methods(modid);

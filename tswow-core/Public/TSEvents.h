@@ -1748,6 +1748,7 @@ public:
           MAP_EVENT_HANDLE(Spell,OnCheckCast)
           MAP_EVENT_HANDLE(Spell,OnDispel)
           MAP_EVENT_HANDLE(Spell,OnEffect)
+          MAP_EVENT_HANDLE(Spell,OnEffectApplyGlyph)
           MAP_EVENT_HANDLE(Spell,OnHit)
           MAP_EVENT_HANDLE(Spell,OnTick)
           MAP_EVENT_HANDLE(Spell,OnRemove)

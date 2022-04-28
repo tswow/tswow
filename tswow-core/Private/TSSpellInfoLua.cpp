@@ -23,6 +23,7 @@ void TSLuaState::load_spell_info_methods(uint32_t modid)
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, GetTriggerSpell);
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, IsEffect);
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, IsAura);
+    LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, CalcValue);
 
     auto ts_spellinfo = new_usertype<TSSpellInfo>("TSSpellInfo");
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetEntry);
@@ -88,5 +89,6 @@ void TSLuaState::load_spell_info_methods(uint32_t modid)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTargetCreatureType);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTargets);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetEffect);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTotem);
     set_function("GetSpellInfo", &GetSpellInfo);
 }

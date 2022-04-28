@@ -70,4 +70,25 @@ void TSLuaState::load_world_object_methods_t(sol::usertype<T> & target, uint32_t
     LUA_FIELD(target, TSWorldObject, GetCollisions);
     LUA_FIELD(target, TSWorldObject, SetActive);
     LUA_FIELD(target, TSWorldObject, IsActive);
+
+    target.set_function("CastSpell", sol::overload(
+          &TSWorldObject::LCastSpell0
+        , &TSWorldObject::LCastSpell1
+    ));
+
+    target.set_function("CastSpellAoF", sol::overload(
+          &TSWorldObject::LCastSpellAoF0
+        , &TSWorldObject::LCastSpellAoF1
+    ));
+
+    target.set_function("CastCustomSpell", sol::overload(
+          &TSWorldObject::LCastCustomSpell0
+        , &TSWorldObject::LCastCustomSpell1
+        , &TSWorldObject::LCastCustomSpell2
+        , &TSWorldObject::LCastCustomSpell3
+        , &TSWorldObject::LCastCustomSpell4
+        , &TSWorldObject::LCastCustomSpell5
+        , &TSWorldObject::LCastCustomSpell6
+    ));
+    LUA_FIELD(target, TSWorldObject, CastSpell);
 }

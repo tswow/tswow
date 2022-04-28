@@ -6,8 +6,11 @@ void TSLuaState::load_spell_methods(uint32_t modid)
     auto ts_spell = new_usertype<TSSpell>("TSSpell");
     LUA_FIELD(ts_spell, TSSpell, IsAutoRepeat);
     LUA_FIELD(ts_spell, TSSpell, GetCaster);
+    LUA_FIELD(ts_spell, TSSpell, GetOriginalCaster);
+    LUA_FIELD(ts_spell, TSSpell, GetOriginalOrCurrentCaster);
     LUA_FIELD(ts_spell, TSSpell, GetCastTime);
     LUA_FIELD(ts_spell, TSSpell, GetEntry);
+    LUA_FIELD(ts_spell, TSSpell, GetGlyphSlot);
     LUA_FIELD(ts_spell, TSSpell, GetPowerCost);
     LUA_FIELD(ts_spell, TSSpell, GetDuration);
     LUA_FIELD(ts_spell, TSSpell, GetTargetDest);

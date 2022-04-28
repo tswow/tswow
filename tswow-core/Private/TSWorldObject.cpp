@@ -1119,7 +1119,7 @@ bool TSWorldObject::IsNeutralToAll()
  * @param uint32 spell : entry of a spell
  * @param bool triggered = false : if true the spell is instant and has no cost
  */
-uint32 TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool triggered)
+uint32 TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool triggered = false)
 {
 #if TRINITY
     return obj->CastSpell(_target.obj, spell, triggered);
@@ -1157,7 +1157,7 @@ uint32 TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool trigge
  * @param uint32 spell : entry of a spell
  * @param bool triggered = false : if true the spell is instant and has no cost
  */
-uint32 TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered)
+uint32 TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered = false)
 {
 #if AZEROTHCORE
     if (Unit* unit = obj->ToUnit())
@@ -1262,3 +1262,92 @@ uint32 TSWorldObject::CastCustomSpell(
     }
 #endif
 }
+
+uint32 TSWorldObject::LCastSpell0(TSWorldObject target, uint32 spell, bool triggered)
+{
+    return CastSpell(target, spell, triggered);
+}
+
+uint32 TSWorldObject::LCastSpell1(TSWorldObject target, uint32 spell)
+{
+    return CastSpell(target, spell);
+}
+
+uint32 TSWorldObject::LCastSpellAoF0(float _x, float _y, float _z, uint32 spell, bool triggered)
+{
+    return CastSpellAoF(_x, _y, _z, spell, triggered);
+}
+uint32 TSWorldObject::LCastSpellAoF1(float _x, float _y, float _z, uint32 spell)
+{
+    return CastSpellAoF(_x, _y, _z, spell);
+}
+
+uint32 TSWorldObject::LCastCustomSpell0(
+    TSWorldObject target
+    , uint32 spell
+    , bool triggered
+    , int32 bp0
+    , int32 bp1
+    , int32 bp2
+    , TSItem castItem
+    , uint64 originalCaster
+) {
+    return CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, castItem, originalCaster);
+}
+
+uint32 TSWorldObject::LCastCustomSpell1(
+    TSWorldObject target
+    , uint32 spell
+    , bool triggered
+    , int32 bp0
+    , int32 bp1
+    , int32 bp2
+    , TSItem castItem
+) {
+    return CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, castItem);
+
+}
+
+uint32 TSWorldObject::LCastCustomSpell2(
+    TSWorldObject target
+    , uint32 spell
+    , bool triggered
+    , int32 bp0
+    , int32 bp1
+    , int32 bp2
+) {
+    return CastCustomSpell(target, spell, triggered, bp0, bp1, bp2);
+}
+
+uint32 TSWorldObject::LCastCustomSpell3(
+    TSWorldObject target
+    , uint32 spell
+    , bool triggered
+    , int32 bp0
+    , int32 bp1
+) {
+    return CastCustomSpell(target, spell, triggered, bp0, bp1);
+}
+
+uint32 TSWorldObject::LCastCustomSpell4(
+    TSWorldObject target
+    , uint32 spell
+    , bool triggered
+    , int32 bp0
+) {
+    return CastCustomSpell(target, spell, triggered, bp0);
+}
+
+uint32 TSWorldObject::LCastCustomSpell5(
+    TSWorldObject target
+    , uint32 spell
+    , bool triggered
+) {
+    return CastCustomSpell(target, spell, triggered);
+}
+
+uint32 TSWorldObject::LCastCustomSpell6(TSWorldObject target, uint32 spell)
+{
+    return CastCustomSpell(target, spell);
+}
+

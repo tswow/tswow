@@ -137,6 +137,67 @@ public:
 
     void AddedByGroup(TSWorldObjectGroup* group);
     void RemovedByGroup(TSWorldObjectGroup* group);
+private:
+    friend class TSLuaState;
+
+    uint32 LCastSpell0(TSWorldObject target, uint32 spell, bool triggered);
+    uint32 LCastSpell1(TSWorldObject target, uint32 spell);
+
+    uint32 LCastSpellAoF0(float _x, float _y, float _z, uint32 spell, bool triggered);
+    uint32 LCastSpellAoF1(float _x, float _y, float _z, uint32 spell);
+
+    uint32 LCastCustomSpell0(
+          TSWorldObject target
+        , uint32 spell
+        , bool triggered
+        , int32 bp0
+        , int32 bp1
+        , int32 bp2
+        , TSItem castItem
+        , uint64 originalCaster
+    );
+
+    uint32 LCastCustomSpell1(
+        TSWorldObject target
+        , uint32 spell
+        , bool triggered
+        , int32 bp0
+        , int32 bp1
+        , int32 bp2
+        , TSItem castItem
+    );
+
+    uint32 LCastCustomSpell2(
+        TSWorldObject target
+        , uint32 spell
+        , bool triggered
+        , int32 bp0
+        , int32 bp1
+        , int32 bp2
+    );
+
+    uint32 LCastCustomSpell3(
+          TSWorldObject target
+        , uint32 spell
+        , bool triggered
+        , int32 bp0
+        , int32 bp1
+    );
+
+    uint32 LCastCustomSpell4(
+          TSWorldObject target
+        , uint32 spell
+        , bool triggered
+        , int32 bp0
+    );
+
+    uint32 LCastCustomSpell5(
+          TSWorldObject target
+        , uint32 spell
+        , bool triggered
+    );
+
+    uint32 LCastCustomSpell6(TSWorldObject target, uint32 spell);
 };
 
 class TC_GAME_API TSCollisionEntry {

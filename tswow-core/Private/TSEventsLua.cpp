@@ -110,6 +110,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(player_events, PlayerEvents, OnCalcSkillGainChance);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
+    LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
 
     auto account_events = new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
@@ -157,12 +158,14 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(unit_events, UnitEvents, OnExitCombat);
     LUA_HANDLE(unit_events, UnitEvents, OnEnterCombatWith);
     LUA_HANDLE(unit_events, UnitEvents, OnExitCombatWith);
+    LUA_HANDLE(unit_events, UnitEvents, OnSetTarget);
 
     auto spell_events = new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_HANDLE(spell_events, SpellEvents, OnCast);
     LUA_HANDLE(spell_events, SpellEvents, OnCheckCast);
     LUA_HANDLE(spell_events, SpellEvents, OnDispel);
     LUA_HANDLE(spell_events, SpellEvents, OnEffect);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectApplyGlyph);
     LUA_HANDLE(spell_events, SpellEvents, OnHit);
     LUA_HANDLE(spell_events, SpellEvents, OnTick);
     LUA_HANDLE(spell_events, SpellEvents, OnRemove);
@@ -170,6 +173,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(spell_events, SpellEvents, OnDamageEarly);
     LUA_HANDLE(spell_events, SpellEvents, OnDamageLate);
     LUA_HANDLE(spell_events, SpellEvents, OnPeriodicDamage);
+    LUA_HANDLE(spell_events, SpellEvents, OnCalcMiss);
     LUA_HANDLE(spell_events, SpellEvents, OnCalcCrit);
     LUA_HANDLE(spell_events, SpellEvents, OnCalcAuraCrit);
     LUA_HANDLE(spell_events, SpellEvents, OnCalcReflect);
@@ -184,6 +188,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckCast);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnDispel);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffect);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectApplyGlyph);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnHit);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnTick);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnRemove);
@@ -191,6 +196,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnDamageEarly);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnDamageLate);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnPeriodicDamage);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcMiss);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcCrit);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcAuraCrit);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcReflect);

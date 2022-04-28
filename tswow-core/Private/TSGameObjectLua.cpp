@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "TSGameObject.h"
+#include "TSGameObjectTemplate.h"
 #include "TSWorldObjectLua.h"
 
 #include "TSPlayer.h"
@@ -31,10 +32,16 @@ void TSLuaState::load_gameobject_methods(uint32_t modid)
     LUA_FIELD(ts_gameobject, TSGameObject, SaveToDB);
     LUA_FIELD(ts_gameobject, TSGameObject, RemoveFromWorld);
     LUA_FIELD(ts_gameobject, TSGameObject, UseDoorOrButton);
-    LUA_FIELD(ts_gameobject, TSGameObject, Despawn);
     LUA_FIELD(ts_gameobject, TSGameObject, Respawn);
     LUA_FIELD(ts_gameobject, TSGameObject, SetRespawnTime);
     LUA_FIELD(ts_gameobject, TSGameObject, GetLoot);
     LUA_FIELD(ts_gameobject, TSGameObject, FireSmartEvent);
     LUA_FIELD(ts_gameobject, TSGameObject, IsAIEnabled);
+    LUA_FIELD(ts_gameobject, TSGameObject, GetTemplate);
+    ts_gameobject.set_function("Despawn", sol::overload(
+          &TSGameObject::LDespawn0
+        , &TSGameObject::LDespawn1
+        , &TSGameObject::LDespawn2
+        , &TSGameObject::LDespawn3
+    ));
 }

@@ -40,6 +40,7 @@ void TSLuaState::load_outfit_methods(uint32_t modid)
     LUA_FIELD(ts_outfit, TSOutfit, GetOffhand);
     LUA_FIELD(ts_outfit, TSOutfit, GetRanged);
     //LUA_FIELD(ts_outfit, TSOutfit, GetDisplayID);
+    LUA_FIELD(ts_outfit, TSOutfit, SetDisplayID);
     LUA_FIELD(ts_outfit, TSOutfit, ApplyRef);
     ts_outfit.set_function("ApplyCopy", sol::overload(
         &TSOutfit::LApplyCopy0

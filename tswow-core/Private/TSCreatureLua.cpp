@@ -88,6 +88,7 @@ void TSLuaState::load_creature_methods(uint32_t modid)
     LUA_FIELD(ts_creature, TSCreature, SetNoSearchAssistance);
     LUA_FIELD(ts_creature, TSCreature, SetNoCallAssistance);
     LUA_FIELD(ts_creature, TSCreature, SetHover);
+    LUA_FIELD(ts_creature, TSCreature, SetCanFly);
     LUA_FIELD(ts_creature, TSCreature, DespawnOrUnsummon);
     LUA_FIELD(ts_creature, TSCreature, Respawn);
     LUA_FIELD(ts_creature, TSCreature, RemoveCorpse);
