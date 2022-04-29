@@ -29,6 +29,7 @@
 #include "TSWorldObject.h"
 #include "TSSpellInfo.h"
 #include "SpellMgr.h"
+#include "Player.h"
 
 TSSpell::TSSpell(Spell *spell)
 {

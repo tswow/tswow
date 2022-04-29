@@ -264,7 +264,11 @@ void TSHealInfo::AbsorbHeal(uint32 amount)
 }
 void TSHealInfo::SetEffectiveHeal(uint32 amount)
 {
+#if TRINITY
     m_info->SetEffectiveHeal(amount);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSHealInfo::SetEffectiveHeal not implemented for AzerothCore");
+#endif
 }
 TSUnit TSHealInfo::GetHealer()
 {
@@ -281,7 +285,11 @@ uint32 TSHealInfo::GetHeal()
 }
 uint32 TSHealInfo::GetEffectiveHeal()
 {
+#if TRINITY
     return m_info->GetEffectiveHeal();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSHealInfo::GetEffectiveHeal not implemented for AzerothCore");
+#endif
 }
 uint32 TSHealInfo::GetAbsorb()
 {
@@ -297,7 +305,12 @@ uint32 TSHealInfo::GetSchoolMask()
 }
 uint32 TSHealInfo::GetHitMask()
 {
+#if TRINITY
     return m_info->GetHitMask();
+#elif AZEROTHCORE
+    TS_LOG_INFO("tswow.api", "TSHealInfo::GetHitMask not implemented on AzerothCore");
+    return 0;
+#endif
 }
 
 TS_CLASS_DEFINITION(TSDamageInfo, DamageInfo, m_info)
@@ -358,5 +371,10 @@ uint32 TSDamageInfo::GetBlock()
 }
 uint32 TSDamageInfo::GetHitMask()
 {
+#if TRINITY
     return m_info->GetHitMask();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSDamageInfo::GetHitMask not implemented on AzerothCore");
+    return 0;
+#endif
 }
