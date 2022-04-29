@@ -50,4 +50,18 @@ void TSLuaState::load_aura_methods(uint32_t modid)
     LUA_FIELD(ts_aura, TSAura, SetStackAmount);
     LUA_FIELD(ts_aura, TSAura, Remove);
     ts_aura.set_function("GetApplications", &TSAura::LGetApplications);
+
+    auto ts_proc_event_info = new_usertype<TSProcEventInfo>("TSProcEventInfo");
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetActor);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetActionTarget);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetProcTarget);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetTypeMask);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetSpellTypeMask);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetSpellPhaseMask);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetHitMask);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetSpellInfo);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetSchoolMask);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetDamageInfo);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetHealInfo);
+    LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetSpell);
 }

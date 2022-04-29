@@ -43,4 +43,32 @@ void TSLuaState::load_damage_metods(uint32_t modid)
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetHitInfo);
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetCleanDamage);
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetFullBlock);
+
+    auto ts_healinfo = new_usertype<TSHealInfo>("TSHealInfo");
+    LUA_FIELD(ts_healinfo, TSHealInfo, AbsorbHeal);
+    LUA_FIELD(ts_healinfo, TSHealInfo, SetEffectiveHeal);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetHealer);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetTarget);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetHeal);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetEffectiveHeal);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetAbsorb);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetSpellInfo);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetSchoolMask);
+    LUA_FIELD(ts_healinfo, TSHealInfo, GetHitMask);
+
+    auto ts_damageinfo = new_usertype<TSDamageInfo>("TSDamageInfo");
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, ModifyDamage);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, AbsorbDamage);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, ResistDamage);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, BlockDamage);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetAttacker);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetVictim);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetSpellInfo);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetSchoolMask);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetDamageType);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetAttackType);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetDamage);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetAbsorb);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetBlock);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetHitMask);
 }

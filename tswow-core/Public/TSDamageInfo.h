@@ -21,6 +21,8 @@
 
 struct CalcDamageInfo;
 struct SpellNonMeleeDamage;
+class DamageInfo;
+class HealInfo;
 
 class TC_GAME_API TSMeleeDamageInfo {
 public:
@@ -78,4 +80,36 @@ public:
     uint32 GetHitInfo();
     uint32 GetCleanDamage();
     bool GetFullBlock();
+};
+
+class TC_GAME_API TSHealInfo {
+    TS_CLASS_DECLARATION(TSHealInfo, HealInfo, m_info)
+    void AbsorbHeal(uint32 amount);
+    void SetEffectiveHeal(uint32 amount);
+    TSUnit GetHealer();
+    TSUnit GetTarget();
+    uint32 GetHeal();
+    uint32 GetEffectiveHeal();
+    uint32 GetAbsorb();
+    TSSpellInfo GetSpellInfo();
+    uint32 GetSchoolMask();
+    uint32 GetHitMask();
+};
+
+class TC_GAME_API TSDamageInfo {
+    TS_CLASS_DECLARATION(TSDamageInfo, DamageInfo, m_info)
+    void ModifyDamage(int32 amount);
+    void AbsorbDamage(uint32 amount);
+    void ResistDamage(uint32 amount);
+    void BlockDamage(uint32 amount);
+    TSUnit GetAttacker();
+    TSUnit GetVictim();
+    TSSpellInfo GetSpellInfo();
+    uint32 GetSchoolMask();
+    uint32 GetDamageType();
+    uint32 GetAttackType();
+    uint32 GetDamage();
+    uint32 GetAbsorb();
+    uint32 GetBlock();
+    uint32 GetHitMask();
 };

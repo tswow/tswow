@@ -67,3 +67,18 @@
 #endif
 
 #define TS_GET_GUID GetGUID
+
+#define TS_CLASS_DECLARATION(clsName, ptrType, ptrName) \
+public:\
+    ptrType* ptrName; \
+    clsName(ptrType const* ptrName); \
+    clsName(); \
+    clsName* operator->() { return this; }\
+    operator bool() const { return ptrName != nullptr; } \
+    bool operator==(clsName const& rhs) { return ptrName == rhs.ptrName; } \
+    bool IsNull();
+
+#define TS_CLASS_DEFINITION(clsName, ptrType, ptrName) \
+    clsName::clsName(ptrType const* _##ptrName) : ptrName(const_cast<ptrType*>(_##ptrName)) {} \
+    clsName::clsName() : ptrName(nullptr) {} \
+    bool clsName::IsNull() { return ptrName == nullptr; }

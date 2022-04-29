@@ -27,6 +27,7 @@
 #include "TSItem.h"
 #include <chrono>
 #include <vector>
+#include <list>
 
 class TSCollisions;
 class TSCollisionEntry;
@@ -223,4 +224,21 @@ public:
     bool Contains(TSString id);
     TSCollisionEntry* Get(TSString id);
     void Tick(TSWorldObject obj);
+};
+
+class TC_GAME_API TSMutableWorldObject
+{
+    TS_CLASS_DECLARATION(TSMutableWorldObject, WorldObject, m_obj)
+    TSWorldObject get();
+    void set(TSWorldObject value);
+};
+
+class TC_GAME_API TSWorldObjectCollection
+{
+    TS_CLASS_DECLARATION(TSWorldObjectCollection, std::list<WorldObject*>, m_info)
+    void filterInPlace(std::function<bool(TSWorldObject)> callback);
+    void forEach(std::function<void(TSWorldObject)> callback);
+    TSWorldObject find(std::function<bool(TSWorldObject)> callback);
+    uint32 get_length();
+    TSWorldObject get(uint32 index);
 };

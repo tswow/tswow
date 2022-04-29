@@ -183,6 +183,36 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(spell_events, SpellEvents, OnCalcSpellPowerLevelPenalty);
     LUA_HANDLE(spell_events, SpellEvents, OnTrainerSend);
 
+    LUA_HANDLE(spell_events, SpellEvents, OnCheckAreaTarget);
+    LUA_HANDLE(spell_events, SpellEvents, OnCheckEffectProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnCheckProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectPeriodic);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnPrepareProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterDispel);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterEffectApply);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterEffectProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterEffectRemove);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterProc);
+    LUA_HANDLE(spell_events, SpellEvents, OnDispel);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectAbsorb);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectAfterAbsorb);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectAfterManaShield);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectCalcAmount);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectCalcPeriodic);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectCalcSpellMod);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectManaShield);
+    LUA_HANDLE(spell_events, SpellEvents, OnEffectSplit);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterCast);
+    LUA_HANDLE(spell_events, SpellEvents, OnAfterHit);
+    LUA_HANDLE(spell_events, SpellEvents, OnBeforeCast);
+    LUA_HANDLE(spell_events, SpellEvents, OnBeforeHit);
+    LUA_HANDLE(spell_events, SpellEvents, OnDestinationTargetSelect);
+    LUA_HANDLE(spell_events, SpellEvents, OnObjectAreaTargetSelect);
+    LUA_HANDLE(spell_events, SpellEvents, OnObjectTargetSelect);
+    LUA_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
+
     auto spell_id_events = new_usertype<TSEvents::SpellIDEvents>("SpellIDEvents");
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCast);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckCast);
@@ -204,8 +234,38 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcResist);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcMeleeMiss);
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcSpellPowerLevelPenalty);
-#include "TSEvents.h"
     LUA_HANDLE(spell_id_events, SpellIDEvents, OnTrainerSend);
+
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckAreaTarget);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckEffectProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectPeriodic);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnPrepareProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterDispel);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterEffectApply);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterEffectProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterEffectRemove);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterProc);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDispel);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectAbsorb);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectAfterAbsorb);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectAfterManaShield);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectCalcAmount);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectCalcPeriodic);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectCalcSpellMod);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectManaShield);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectSplit);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterCast);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterHit);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnBeforeCast);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnBeforeHit);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDestinationTargetSelect);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnObjectAreaTargetSelect);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnObjectTargetSelect);
+    LUA_HANDLE(spell_id_events, SpellIDEvents, OnOnResistAbsorbCalculate);
+
 
     auto creature_events = new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);

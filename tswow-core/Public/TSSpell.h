@@ -20,6 +20,14 @@
 #include "TSClasses.h"
 #include "TSPosition.h"
 #include "TSSpellInfo.h"
+#include "TSPosition.h"
+
+struct SpellModifier;
+class Spell;
+struct SpellDestination;
+class SpellImplicitTargetInfo;
+class DispelInfo;
+class TSAura;
 
 class TC_GAME_API TSSpell {
 public:
@@ -49,4 +57,69 @@ public:
     void Cast(bool skipCheck);
     void Cancel();
     void Finish();
+};
+
+class TC_GAME_API TSSpellModifier
+{
+    TS_CLASS_DECLARATION(TSSpellModifier, SpellModifier, m_mod)
+    uint32 GetOp();
+    void SetOp(uint32 op);
+    uint32 GetType();
+    void SetType(uint32 type);
+    int32 GetValue();
+    void SetValue(int32 value);
+    uint32 GetMaskA();
+    void SetMaskA(uint32 mask);
+    uint32 GetMaskB();
+    void SetMaskB(uint32 mask);
+    uint32 GetMaskC();
+    void SetMaskC(uint32 mask);
+    uint32 GetSpellID();
+    void SetSpellID(uint32 spell);
+    TSAura GetOwnerAura();
+};
+
+class TC_GAME_API TSSpellDestination
+{
+    TS_CLASS_DECLARATION(TSSpellDestination, SpellDestination, m_dest)
+
+    float GetX();
+    float GetY();
+    float GetZ();
+    float GetO();
+    float GetMap();
+
+    float GetOffsetX();
+    float GetOffsetY();
+    float GetOffsetZ();
+    float GetOffsetO();
+
+    uint64 GetTransportGUID();
+    void Relocate(float x, float y, float z, float o);
+    void RelocateOffset(float x, float y, float z, float o);
+};
+
+class TC_GAME_API TSSpellImplicitTargetInfo
+{
+    TS_CLASS_DECLARATION(TSSpellImplicitTargetInfo, SpellImplicitTargetInfo, m_info)
+    bool IsArea();
+    uint32 GetSelectionCategory();
+    uint32 GetReferenceType();
+    uint32 GetObjectType();
+    uint32 GetCheckType();
+    uint32 GetDirectionType();
+    float CalcDirectionAngle();
+    uint32 GetTarget();
+    uint32 GetExplicitTargetMask();
+    bool IsSourceSet();
+    bool IsTargetSet();
+};
+
+class TC_GAME_API TSDispelInfo
+{
+    TS_CLASS_DECLARATION(TSDispelInfo, DispelInfo, m_info)
+    TSWorldObject GetDispeller();
+    uint32 GetDispellerSpellId();
+    uint8 GetRemovedCharges();
+    void SetRemovedCharges(uint8 amount);
 };

@@ -1351,3 +1351,62 @@ uint32 TSWorldObject::LCastCustomSpell6(TSWorldObject target, uint32 spell)
     return CastCustomSpell(target, spell);
 }
 
+TS_CLASS_DEFINITION(TSMutableWorldObject, WorldObject, m_obj)
+TSWorldObject TSMutableWorldObject::get()
+{
+    return TSWorldObject(m_obj);
+}
+void TSMutableWorldObject::set(TSWorldObject value)
+{
+    m_obj = value.obj;
+}
+
+TS_CLASS_DEFINITION(TSWorldObjectCollection, std::list<WorldObject*>, m_info)
+
+void TSWorldObjectCollection::filterInPlace(std::function<bool(TSWorldObject)> callback)
+{
+    auto itr = m_info->begin();
+    while (itr != m_info->end())
+    {
+        if (!callback(TSWorldObject(*itr)))
+        {
+            itr = m_info->erase(itr);
+        }
+        else
+        {
+            itr++;
+        }
+    }
+}
+
+uint32 TSWorldObjectCollection::get_length()
+{
+    return m_info->size();
+}
+
+TSWorldObject TSWorldObjectCollection::get(uint32 index)
+{
+    auto front = m_info->begin();
+    std::advance(front, 4);
+    return TSWorldObject(*front);
+}
+
+void TSWorldObjectCollection::forEach(std::function<void(TSWorldObject)> callback)
+{
+    for (WorldObject* obj : *m_info)
+    {
+        callback(TSWorldObject(obj));
+    }
+}
+
+TSWorldObject TSWorldObjectCollection::find(std::function<bool(TSWorldObject)> callback)
+{
+    for (WorldObject* obj : *m_info)
+    {
+        if (callback(obj))
+        {
+            return TSWorldObject(obj);
+        }
+    }
+    return TSWorldObject(nullptr);
+}

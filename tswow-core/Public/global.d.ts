@@ -130,6 +130,8 @@ declare const enum RuneType {} /** Player.h:RuneType */
 
 declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
+declare const enum AuraEffectHandleMode {} /** SpellAuraDefines.h:AuraEffectHandleModes */
+
 declare const enum Stats {} /** SharedDefines.h:Stats */
 
 declare const enum Mechanics { } /** SharedDefines.h:Mechanics */
@@ -4866,6 +4868,84 @@ declare interface TSSpell {
     Finish() : void
 }
 
+declare interface TSSpellModifier {
+    GetOp(): uint32;
+    SetOp(op: uint32): void;
+    GetType(): uint32;
+    SetType(type: uint32): void;
+    GetValue(): int32;
+    SetValue(value: int32): void;
+    GetMaskA(): uint32;
+    SetMaskA(mask: uint32): void;
+    GetMaskB(): uint32;
+    SetMaskB(mask: uint32): void;
+    GetMaskC(): uint32;
+    SetMaskC(mask: uint32): void;
+    GetSpellID(): uint32;
+    SetSpellID(spell: uint32): void;
+    GetOwnerAura(): TSAura;
+}
+
+declare interface TSSpellDestination {
+    GetX(): float;
+    GetY(): float;
+    GetZ(): float;
+    GetO(): float;
+    GetMap(): float;
+
+    GetOffsetX(): float;
+    GetOffsetY(): float;
+    GetOffsetZ(): float;
+    GetOffsetO(): float;
+
+    GetTransportGUID(): uint64;
+    Relocate(x: float, y: float, z: float, o: float): void;
+    RelocateOffset(x: float, y: float, z: float, o: float): void;
+}
+
+declare interface TSSpellImplicitTargetInfo
+{
+    IsArea(): bool;
+    GetSelectionCategory(): uint32;
+    GetReferenceType(): uint32;
+    GetObjectType(): uint32;
+    GetCheckType(): uint32;
+    GetDirectionType(): uint32;
+    CalcDirectionAngle(): float;
+    GetTarget(): uint32;
+    GetExplicitTargetMask(): uint32;
+    IsSourceSet(): bool;
+    IsTargetSet(): bool;
+}
+
+declare interface TSDispelInfo
+{
+    GetDispeller(): TSWorldObject;
+    GetDispellerSpellId(): uint32;
+    GetRemovedCharges(): uint8;
+    SetRemovedCharges(amount: uint8): void;
+}
+
+declare interface TSProcEventInfo
+{
+    GetActor(): TSUnit;
+    GetActionTarget(): TSUnit;
+    GetProcTarget(): TSUnit;
+    GetTypeMask(): uint32;
+    GetSpellTypeMask(): uint32;
+    GetSpellPhaseMask(): uint32;
+    GetHitMask(): uint32;
+    GetSpellInfo(): TSSpellInfo;
+    GetSchoolMask(): uint32;
+    GetDamageInfo(): TSDamageInfo;
+    GetHealInfo(): TSHealInfo;
+    GetSpell(): TSSpell;
+}
+
+
+
+
+
 declare interface TSVehicle {
     IsNull() : bool
 
@@ -5345,6 +5425,23 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetUnit(guid: uint64): TSUnit
     GetCreature(guid: uint64): TSCreature
     GetPlayer(guid: uint64): TSPlayer
+}
+
+declare interface TSWorldObjectCollection {
+    filterInPlace(callback: (obj: TSWorldObject)=>bool): void
+    forEach(callback: (obj: TSWorldObject)=>void) :void
+    find(callback: (obj: TSWorldObject)=>bool): TSWorldObject
+    length: uint32
+    /**
+     * @warn This is an O(n) operation, because the backing type is an std::list
+     * @param index
+     */
+    get(index: uint32): TSWorldObject
+}
+
+declare interface TSMutableWorldObject {
+    get(): TSWorldObject
+    set(obj: TSWorldObject): void
 }
 
 declare class TSObject extends TSEntityProvider {
@@ -7599,7 +7696,7 @@ declare namespace _hidden {
     export class SpellID<T> {
         OnCast(spell: EventID, callback : (spell: TSSpell)=>void);
         OnCheckCast(spell: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
-        OnDispel(spell: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void);
+        OnSuccessfulDispel(spell: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void);
         OnEffect(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
         /**
          * @note Use with Player.OnGlyphInitForLevel
@@ -7668,12 +7765,42 @@ declare namespace _hidden {
             , receiver: TSPlayer
             , allow: TSMutable<bool>
         )=>void)
+
+        OnCheckAreaTarget(spell: EventID, callback: (aura: TSAura, unit: TSUnit, result: TSMutable<bool>, cancel: TSMutable<bool>)=>void)
+        OnCheckEffectProc(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnCheckProc(spell: EventID, callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectPeriodic(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, cancel: TSMutable<bool> )=>void)
+        OnEffectProc(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, eventInfo: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnPrepareProc(spell: EventID, callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, prepare: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnProc(spell: EventID, callback: (application: TSAuraApplication, proc: TSProcEventInfo, handled: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnAfterDispel(spell: EventID, callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool>)=>void)
+        OnAfterEffectApply(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectProc(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectRemove(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterProc(spell: EventID, callback: (application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnDispel(spell: EventID, callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool> )=>void)
+        OnEffectAbsorb(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterAbsorb(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterManaShield(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcAmount(spell: EventID, callback: (effect: TSAuraEffect, amount: TSMutable<int32>, canBeReclalculated: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcPeriodic(spell: EventID, callback: (effect: TSAuraEffect, isPeriodic: TSMutable<bool>, amplitude: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcSpellMod(spell: EventID, callback: (effect: TSAuraEffect, modifier: TSSpellModifier, cancel: TSMutable<bool> )=>void)
+        OnEffectManaShield(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectSplit(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, splitAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnAfterCast(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnAfterHit(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeCast(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeHit(spell: EventID, callback: (spell: TSSpell, miss: SpellMissInfo, cancel: TSMutable<bool> )=>void)
+        OnDestinationTargetSelect(spell: EventID, callback: (spell: TSSpell, dest: TSSpellDestination, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectAreaTargetSelect(spell: EventID, callback: (spell: TSSpell, objects: TSWorldObjectCollection , index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectTargetSelect(spell: EventID, callback: (spell: TSSpell, object: TSMutableWorldObject, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnResistAbsorbCalculate(spell: EventID, callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutable<uint32>, absorbAmount: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
     }
 
     export class Spells<T> {
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void): T;
-        OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
+        OnSuccessfulDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
         OnEffect(callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
         /**
          * @note Use with Player.OnGlyphInitForLevel
@@ -7737,6 +7864,36 @@ declare namespace _hidden {
             , caster: TSUnit
         )=>void): T
         OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void): T
+
+        OnCheckAreaTarget(callback: (aura: TSAura, unit: TSUnit, result: TSMutable<bool>, cancel: TSMutable<bool>)=>void)
+        OnCheckEffectProc(callback: (effect: TSAuraEffect, application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnCheckProc(callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectPeriodic(callback: (effect: TSAuraEffect, application: TSAuraApplication, cancel: TSMutable<bool> )=>void)
+        OnEffectProc(callback: (effect: TSAuraEffect, application: TSAuraApplication, eventInfo: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnPrepareProc(callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, prepare: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnProc(callback: (application: TSAuraApplication, proc: TSProcEventInfo, handled: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnAfterDispel(callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool>)=>void)
+        OnAfterEffectApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectProc(callback: (effect: TSAuraEffect, application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterProc(callback: (application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnDispel(callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool> )=>void)
+        OnEffectAbsorb(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterAbsorb(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterManaShield(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcAmount(callback: (effect: TSAuraEffect, amount: TSMutable<int32>, canBeReclalculated: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcPeriodic(callback: (effect: TSAuraEffect, isPeriodic: TSMutable<bool>, amplitude: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcSpellMod(callback: (effect: TSAuraEffect, modifier: TSSpellModifier, cancel: TSMutable<bool> )=>void)
+        OnEffectManaShield(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectSplit(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, splitAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnAfterCast(callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnAfterHit(callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeCast(callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeHit(callback: (spell: TSSpell, miss: SpellMissInfo, cancel: TSMutable<bool> )=>void)
+        OnDestinationTargetSelect(callback: (spell: TSSpell, dest: TSSpellDestination, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectAreaTargetSelect(callback: (spell: TSSpell, objects: TSWorldObjectCollection , index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectTargetSelect(callback: (spell: TSSpell, object: TSMutableWorldObject, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnResistAbsorbCalculate(callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutable<uint32>, absorbAmount: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
     }
 
     export class CreatureID<T> {
@@ -9251,6 +9408,36 @@ declare class TSSpellDamageInfo {
     GetHitInfo(): uint32;
     GetCleanDamage(): uint32;
     GetFullBlock(): bool;
+}
+
+declare interface TSHealInfo {
+    AbsorbHeal(amount: uint32): void;
+    SetEffectiveHeal(amount: uint32): void;
+    GetHealer(): TSUnit;
+    GetTarget(): TSUnit;
+    GetHeal(): uint32;
+    GetEffectiveHeal(): uint32;
+    GetAbsorb(): uint32;
+    GetSpellInfo(): TSSpellInfo;
+    GetSchoolMask(): uint32;
+    GetHitMask(): uint32;
+}
+
+declare interface TSDamageInfo {
+    ModifyDamage(amount: int32): void;
+    AbsorbDamage(amount: uint32): void;
+    ResistDamage(amount: uint32): void;
+    BlockDamage(amount: uint32): void;
+    GetAttacker(): TSUnit;
+    GetVictim(): TSUnit;
+    GetSpellInfo(): TSSpellInfo;
+    GetSchoolMask(): uint32;
+    GetDamageType(): uint32;
+    GetAttackType(): uint32;
+    GetDamage(): uint32;
+    GetAbsorb(): uint32;
+    GetBlock(): uint32;
+    GetHitMask(): uint32;
 }
 
 declare class TSPacketWrite {

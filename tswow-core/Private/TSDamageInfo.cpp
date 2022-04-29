@@ -255,3 +255,108 @@ bool TSSpellDamageInfo::GetFullBlock()
     return 0;
 #endif
 }
+
+TS_CLASS_DEFINITION(TSHealInfo, HealInfo, m_info)
+
+void TSHealInfo::AbsorbHeal(uint32 amount)
+{
+    m_info->AbsorbHeal(amount);
+}
+void TSHealInfo::SetEffectiveHeal(uint32 amount)
+{
+    m_info->SetEffectiveHeal(amount);
+}
+TSUnit TSHealInfo::GetHealer()
+{
+    return TSUnit(m_info->GetHealer());
+}
+
+TSUnit TSHealInfo::GetTarget()
+{
+    return TSUnit(m_info->GetTarget());
+}
+uint32 TSHealInfo::GetHeal()
+{
+    return m_info->GetHeal();
+}
+uint32 TSHealInfo::GetEffectiveHeal()
+{
+    return m_info->GetEffectiveHeal();
+}
+uint32 TSHealInfo::GetAbsorb()
+{
+    return m_info->GetAbsorb();
+}
+TSSpellInfo TSHealInfo::GetSpellInfo()
+{
+    return TSSpellInfo(m_info->GetSpellInfo());
+}
+uint32 TSHealInfo::GetSchoolMask()
+{
+    return static_cast<uint32_t>(m_info->GetSchoolMask());
+}
+uint32 TSHealInfo::GetHitMask()
+{
+    return m_info->GetHitMask();
+}
+
+TS_CLASS_DEFINITION(TSDamageInfo, DamageInfo, m_info)
+
+void TSDamageInfo::ModifyDamage(int32 amount)
+{
+    m_info->ModifyDamage(amount);
+}
+
+void TSDamageInfo::AbsorbDamage(uint32 amount)
+{
+    m_info->AbsorbDamage(amount);
+}
+void TSDamageInfo::ResistDamage(uint32 amount)
+{
+    m_info->ResistDamage(amount);
+}
+void TSDamageInfo::BlockDamage(uint32 amount)
+{
+    m_info->BlockDamage(amount);
+}
+TSUnit TSDamageInfo::GetAttacker()
+{
+    return TSUnit(m_info->GetAttacker());
+}
+TSUnit TSDamageInfo::GetVictim()
+{
+    return TSUnit(m_info->GetVictim());
+}
+TSSpellInfo TSDamageInfo::GetSpellInfo()
+{
+    return TSSpellInfo(m_info->GetSpellInfo());
+}
+uint32 TSDamageInfo::GetSchoolMask()
+{
+    return static_cast<uint32>(m_info->GetSchoolMask());
+}
+uint32 TSDamageInfo::GetDamageType()
+{
+    return static_cast<uint32>(m_info->GetDamageType());
+}
+uint32 TSDamageInfo::GetAttackType()
+{
+    return static_cast<uint32>(m_info->GetAttackType());
+}
+
+uint32 TSDamageInfo::GetDamage()
+{
+    return m_info->GetDamage();
+}
+uint32 TSDamageInfo::GetAbsorb()
+{
+    return m_info->GetAbsorb();
+}
+uint32 TSDamageInfo::GetBlock()
+{
+    return m_info->GetBlock();
+}
+uint32 TSDamageInfo::GetHitMask()
+{
+    return m_info->GetHitMask();
+}

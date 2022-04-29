@@ -25,15 +25,7 @@
 #include "TSSpellInfo.h"
 #include "TSUnit.h"
 
-TSAuraEffect::TSAuraEffect(AuraEffect* aura)
-{
-    this->aura = aura;
-}
-
-TSAuraEffect::TSAuraEffect()
-{
-    this->aura = nullptr;
-}
+TS_CLASS_DEFINITION(TSAuraEffect, AuraEffect, aura)
 
 TSUnit TSAuraEffect::GetCaster()
 {
@@ -140,15 +132,7 @@ bool TSAuraEffect::IsPeriodic()
     return aura->IsPeriodic();
 }
 
-TSAuraApplication::TSAuraApplication(AuraApplication* aura)
-{
-    this->aura = aura;
-}
-
-TSAuraApplication::TSAuraApplication()
-{
-    aura = nullptr;
-}
+TS_CLASS_DEFINITION(TSAuraApplication, AuraApplication, aura)
 
 TSUnit TSAuraApplication::GetTarget()
 {
@@ -398,3 +382,66 @@ sol::as_table_t<std::vector<TSAuraApplication>> TSAura::LGetApplications()
 {
     return sol::as_table(*GetApplications().vec);
 }
+
+TS_CLASS_DEFINITION(TSProcEventInfo, ProcEventInfo, m_info)
+
+TSUnit TSProcEventInfo::GetActor()
+{
+    return m_info->GetActor();
+}
+
+TSUnit TSProcEventInfo::GetActionTarget()
+{
+    return m_info->GetActionTarget();
+}
+
+TSUnit TSProcEventInfo::GetProcTarget()
+{
+    return m_info->GetProcTarget();
+}
+
+uint32 TSProcEventInfo::GetTypeMask()
+{
+    return m_info->GetTypeMask();
+}
+
+uint32 TSProcEventInfo::GetSpellTypeMask()
+{
+    return m_info->GetSpellTypeMask();
+}
+
+uint32 TSProcEventInfo::GetSpellPhaseMask()
+{
+    return m_info->GetSpellPhaseMask();
+}
+
+uint32 TSProcEventInfo::GetHitMask()
+{
+    return m_info->GetHitMask();
+}
+
+TSSpellInfo TSProcEventInfo::GetSpellInfo()
+{
+    return TSSpellInfo(m_info->GetSpellInfo());
+}
+
+uint32 TSProcEventInfo::GetSchoolMask()
+{
+    return static_cast<uint32>(m_info->GetSchoolMask());
+}
+
+TSDamageInfo TSProcEventInfo::GetDamageInfo()
+{
+    return TSDamageInfo(m_info->GetDamageInfo());
+}
+
+TSHealInfo TSProcEventInfo::GetHealInfo()
+{
+    return TSHealInfo(m_info->GetHealInfo());
+}
+
+TSSpell TSProcEventInfo::GetSpell()
+{
+    return TSSpell(const_cast<Spell*>(m_info->GetProcSpell()));
+}
+

@@ -250,3 +250,210 @@ uint32 TSSpell::GetGlyphSlot()
 {
     return spell->m_glyphIndex;
 }
+
+TS_CLASS_DEFINITION(TSSpellModifier, SpellModifier, m_mod)
+
+uint32 TSSpellModifier::GetOp()
+{
+    return m_mod->op;
+}
+void TSSpellModifier::SetOp(uint32 op)
+{
+    m_mod->op = static_cast<SpellModOp>(op);
+}
+uint32 TSSpellModifier::GetType()
+{
+    return m_mod->op;
+}
+void TSSpellModifier::SetType(uint32 type)
+{
+    m_mod->type = static_cast<SpellModType>(type);
+}
+int32 TSSpellModifier::GetValue()
+{
+    return m_mod->value;
+}
+void TSSpellModifier::SetValue(int32 value)
+{
+    m_mod->value = value;
+}
+uint32 TSSpellModifier::GetMaskA()
+{
+    return m_mod->mask.part[0];
+}
+void TSSpellModifier::SetMaskA(uint32 mask)
+{
+    m_mod->mask.part[0] = mask;
+}
+uint32 TSSpellModifier::GetMaskB()
+{
+    return m_mod->mask.part[1];
+}
+void TSSpellModifier::SetMaskB(uint32 mask)
+{
+    m_mod->mask.part[1] = mask;
+}
+uint32 TSSpellModifier::GetMaskC()
+{
+    return m_mod->mask.part[2];
+}
+void TSSpellModifier::SetMaskC(uint32 mask)
+{
+    m_mod->mask.part[2] = mask;
+}
+uint32 TSSpellModifier::GetSpellID()
+{
+    return m_mod->spellId;
+}
+void TSSpellModifier::SetSpellID(uint32 spell)
+{
+    m_mod->spellId = spell;
+}
+TSAura TSSpellModifier::GetOwnerAura()
+{
+    return TSAura(m_mod->ownerAura);
+}
+
+TS_CLASS_DEFINITION(TSSpellDestination, SpellDestination, m_dest)
+
+float TSSpellDestination::GetX()
+{
+    return m_dest->_position.m_positionX;
+}
+
+float TSSpellDestination::GetY()
+{
+    return m_dest->_position.m_positionY;
+}
+
+float TSSpellDestination::GetZ()
+{
+    return m_dest->_position.m_positionZ;
+}
+
+float TSSpellDestination::GetO()
+{
+    return m_dest->_position.GetOrientation();
+}
+
+float TSSpellDestination::GetMap()
+{
+    return m_dest->_position.m_mapId;
+}
+
+
+float TSSpellDestination::GetOffsetX()
+{
+    return m_dest->_transportOffset.m_positionX;
+}
+
+float TSSpellDestination::GetOffsetY() 
+{
+    return m_dest->_transportOffset.m_positionY;
+}
+
+float TSSpellDestination::GetOffsetZ()
+{
+    return m_dest->_transportOffset.m_positionZ;
+}
+
+float TSSpellDestination::GetOffsetO()
+{
+    return m_dest->_transportOffset.GetOrientation();
+}
+
+uint64 TSSpellDestination::GetTransportGUID()
+{
+    return m_dest->_transportGUID.GetRawValue();
+}
+
+void TSSpellDestination::Relocate(float x, float y, float z, float o)
+{
+    m_dest->Relocate(Position(x,y,z,o));
+}
+
+void TSSpellDestination::RelocateOffset(float x, float y, float z, float o)
+{
+    m_dest->RelocateOffset(Position(x, y, z, o));
+}
+
+
+TS_CLASS_DEFINITION(TSSpellImplicitTargetInfo, SpellImplicitTargetInfo, m_info)
+bool TSSpellImplicitTargetInfo::IsArea()
+{
+    return m_info->IsArea();
+}
+
+uint32 TSSpellImplicitTargetInfo::GetSelectionCategory()
+{
+    return m_info->GetSelectionCategory();
+}
+uint32 TSSpellImplicitTargetInfo::GetReferenceType()
+{
+    return m_info->GetReferenceType();
+}
+uint32 TSSpellImplicitTargetInfo::GetObjectType()
+{
+    return m_info->GetObjectType();
+}
+uint32 TSSpellImplicitTargetInfo::GetCheckType()
+{
+    return m_info->GetCheckType();
+}
+uint32 TSSpellImplicitTargetInfo::GetDirectionType()
+{
+    return m_info->GetDirectionType();
+}
+float TSSpellImplicitTargetInfo::CalcDirectionAngle()
+{
+    return m_info->CalcDirectionAngle();
+}
+uint32 TSSpellImplicitTargetInfo::GetTarget()
+{
+    return m_info->GetTarget();
+}
+uint32 TSSpellImplicitTargetInfo::GetExplicitTargetMask()
+{
+    bool a;
+    bool b;
+    return m_info->GetExplicitTargetMask(a,b);
+}
+
+bool TSSpellImplicitTargetInfo::IsSourceSet()
+{
+    bool a;
+    bool b;
+    m_info->GetExplicitTargetMask(a,b);
+    return a;
+}
+
+bool TSSpellImplicitTargetInfo::IsTargetSet()
+{
+    bool a;
+    bool b;
+    m_info->GetExplicitTargetMask(a,b);
+    return b;
+}
+
+TS_CLASS_DEFINITION(TSDispelInfo, DispelInfo, m_info)
+
+TSWorldObject TSDispelInfo::GetDispeller()
+{
+    return TSWorldObject(m_info->GetDispeller());
+}
+
+uint32 TSDispelInfo::GetDispellerSpellId()
+{
+    return m_info->GetDispellerSpellId();
+}
+
+uint8 TSDispelInfo::GetRemovedCharges()
+{
+    return m_info->GetRemovedCharges();
+}
+
+void TSDispelInfo::SetRemovedCharges(uint8 amount)
+{
+    m_info->SetRemovedCharges(amount);
+}
+

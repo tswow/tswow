@@ -19,23 +19,18 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSArray.h"
+#include "TSDamageInfo.h"
+#include "TSUnit.h"
+#include "TSSpell.h"
 
 #include <sol/sol.hpp>
 #include <vector>
 
 class AuraEffect;
+class ProcEventInfo;
 
 class TC_GAME_API TSAuraEffect {
-public:
-    AuraEffect* aura;
-    TSAuraEffect(AuraEffect* aura);
-    TSAuraEffect();
-    TSAuraEffect* operator->() { return this;}
-    operator bool() const { return aura != nullptr; }
-    bool operator==(TSAuraEffect const& rhs) {
-        return aura == rhs.aura;
-    }
-
+    TS_CLASS_DECLARATION(TSAuraEffect,AuraEffect,aura)
     TSUnit GetCaster();
     uint64 GetCasterGUID();
     TSAura GetAura();
@@ -60,13 +55,7 @@ public:
 
 class AuraApplication;
 class TC_GAME_API TSAuraApplication {
-public:
-    AuraApplication* aura;
-    TSAuraApplication(AuraApplication* aura);
-    TSAuraApplication();
-    TSAuraApplication* operator->() { return this;}
-    operator bool() const { return aura != nullptr; }
-    bool operator==(TSAuraApplication const& rhs) { return aura == rhs.aura; }
+    TS_CLASS_DECLARATION(TSAuraApplication,AuraApplication,aura)
     TSUnit GetTarget();
     TSAura GetAura();
     uint8 GetSlot();
@@ -103,4 +92,21 @@ public:
 private:
     sol::as_table_t<std::vector<TSAuraApplication>> LGetApplications();
     friend class TSLuaState;
+};
+
+class TC_GAME_API TSProcEventInfo
+{
+    TS_CLASS_DECLARATION(TSProcEventInfo, ProcEventInfo, m_info)
+    TSUnit GetActor();
+    TSUnit GetActionTarget();
+    TSUnit GetProcTarget();
+    uint32 GetTypeMask();
+    uint32 GetSpellTypeMask();
+    uint32 GetSpellPhaseMask();
+    uint32 GetHitMask();
+    TSSpellInfo GetSpellInfo();
+    uint32 GetSchoolMask();
+    TSDamageInfo GetDamageInfo();
+    TSHealInfo GetHealInfo();
+    TSSpell GetSpell();
 };
