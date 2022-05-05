@@ -996,9 +996,9 @@ declare interface TSPlayer extends TSUnit {
      *
      * @warn not thread-safe
      * @warn currently only works across maps if the selected unit is a player.
-     * @return [Player] target player
+     * @return [Unit] target unit
      */
-    GetGlobalSelection(): TSPlayer
+    GetGlobalSelection(): TSUnit
 
     /**
      * Returns the [Player]s GM Rank
