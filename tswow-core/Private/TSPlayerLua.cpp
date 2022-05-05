@@ -119,6 +119,7 @@ void TSLuaState::load_player_methods(uint32_t modid)
     LUA_FIELD(ts_player, TSPlayer, GetItemByGUID);
     LUA_FIELD(ts_player, TSPlayer, GetGossipTextID);
     LUA_FIELD(ts_player, TSPlayer, GetSelection);
+    LUA_FIELD(ts_player, TSPlayer, GetGlobalSelection);
     LUA_FIELD(ts_player, TSPlayer, GetGMRank);
     LUA_FIELD(ts_player, TSPlayer, GetGuildID);
     LUA_FIELD(ts_player, TSPlayer, GetTeam);

@@ -991,6 +991,16 @@ declare interface TSPlayer extends TSUnit {
     GetSelection() : TSUnit
 
     /**
+     * Returns the [Player]s currently selected [Unit] object,
+     * even if said unit is in another map or in no map at all.
+     *
+     * @warn not thread-safe
+     * @warn currently only works across maps if the selected unit is a player.
+     * @return [Player] target player
+     */
+    GetGlobalSelection(): TSPlayer
+
+    /**
      * Returns the [Player]s GM Rank
      *
      * @return [AccountTypes] gmRank

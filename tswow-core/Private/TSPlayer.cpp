@@ -4491,3 +4491,15 @@ void TSPlayer::LSendItemQueryPacket1(TSItemTemplate item)
     SendItemQueryPacket(item);
 }
 
+TSUnit TSPlayer::GetGlobalSelection()
+{
+    ObjectGuid target = player->GetTarget();
+    if (target.IsPlayer())
+    {
+        return TSUnit(player->GetSelectedPlayer());
+    }
+    else
+    {
+        return TSUnit(player->GetSelectedUnit());
+    }
+}

@@ -135,6 +135,7 @@ public:
 	TSItem GetItemByEntry(uint32 entry);
 	uint32 GetGossipTextID(TSWorldObject obj);
 	TSUnit GetSelection();
+	TSUnit GetGlobalSelection();
 	uint32 GetGMRank();
 	uint32 GetGuildID();
 	uint32 GetTeam();
