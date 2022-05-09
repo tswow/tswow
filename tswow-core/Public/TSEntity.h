@@ -230,8 +230,11 @@ public:
 
     // backwards compatibility
     void SetUInt(TSString key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
+    void SetUInt64(TSString key, uint64_t value) { getData()->m_json.SetNumber(key, value); }
     bool HasUInt(TSString key) { return getData()->m_json.HasNumber(key); }
+    bool HasUInt64(TSString key) { return getData()->m_json.HasNumber(key); }
     uint32_t GetUInt(TSString key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
+    uint64_t GetUInt64(TSString key, uint64_t def = 0) { return uint64_t(getData()->m_json.GetNumber(key, def)); }
 
     void SetInt(TSString key, int32_t value) { getData()->m_json.SetNumber(key, value); }
     bool HasInt(TSString key) { return getData()->m_json.HasNumber(key); }

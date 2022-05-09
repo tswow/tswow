@@ -2205,9 +2205,12 @@ declare class TSEntityProvider {
     SetInt(key: string, value: int32): int32;
     HasInt(key: string): boolean;
     GetInt(key: string, def?: int32): int32;
+    SetUInt64(key: string, value: uint64): uint64;
     SetUInt(key: string, value: uint32): uint32;
     HasUInt(key: string): boolean;
+    HasUInt64(key: string): boolean;
     GetUInt(key: string, def?: uint32): uint32;
+    GetUInt64(key: string, def?: uint64): uint64;
     SetFloat(key: string, value: double): double;
     HasFloat(key: string): boolean;
     GetFloat(key: string, def?: float): double;
