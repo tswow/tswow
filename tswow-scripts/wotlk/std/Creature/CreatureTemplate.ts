@@ -44,6 +44,7 @@ import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
 import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
 import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
+import { CreatureEquipment } from "./CreatureEquipment";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureFlagsExtra } from "./CreatureFlagsExtra";
 import { CreatureGold } from "./CreatureGold";
@@ -311,6 +312,11 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     get Texts() { return CreatureTextRegistry.load(this.ID); }
 
     get Resistances() { return new CreatureResistances(this); }
+
+    /**
+     * @note This can be overridden by creature outfits
+     */
+    get Weapons() { return new CreatureEquipment(this); }
 
     get NormalLoot() {
         return new LootSetPointer(
