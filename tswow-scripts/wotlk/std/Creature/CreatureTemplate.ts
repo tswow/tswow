@@ -57,6 +57,7 @@ import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
+import { CreatureResistances } from "./CreatureResistances";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
@@ -308,6 +309,8 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     get Vendor() { return new VendorItems(this, this.ID); }
 
     get Texts() { return CreatureTextRegistry.load(this.ID); }
+
+    get Resistances() { return new CreatureResistances(this); }
 
     get NormalLoot() {
         return new LootSetPointer(
