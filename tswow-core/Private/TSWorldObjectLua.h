@@ -70,6 +70,7 @@ void TSLuaState::load_world_object_methods_t(sol::usertype<T> & target, uint32_t
     LUA_FIELD(target, TSWorldObject, GetCollisions);
     LUA_FIELD(target, TSWorldObject, SetActive);
     LUA_FIELD(target, TSWorldObject, IsActive);
+    target.set_function("DoDelayed", &TSWorldObject::LDoDelayed);
 
     target.set_function("CastSpell", sol::overload(
           &TSWorldObject::LCastSpell0

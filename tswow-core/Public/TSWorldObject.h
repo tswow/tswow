@@ -33,6 +33,7 @@ class TSCollisions;
 class TSCollisionEntry;
 class TSEntity;
 class TSUnit;
+class TSMapManager;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
 
@@ -138,6 +139,8 @@ public:
 
     void AddedByGroup(TSWorldObjectGroup* group);
     void RemovedByGroup(TSWorldObjectGroup* group);
+
+    void DoDelayed(std::function<void(TSWorldObject, TSMapManager)> callback);
 private:
     friend class TSLuaState;
 
@@ -199,6 +202,7 @@ private:
     );
 
     uint32 LCastCustomSpell6(TSWorldObject target, uint32 spell);
+    void LDoDelayed(sol::protected_function callback);
 };
 
 class TC_GAME_API TSCollisionEntry {

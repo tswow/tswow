@@ -76,6 +76,9 @@ public:
     void DoDelayed(std::function<void(TSMap, TSMapManager)> callback);
 private:
     std::string LGetName();
+
+    void LDoDelayed(sol::function callback);
+
     sol::as_table_t<std::vector<TSPlayer>> LGetPlayers0(uint32 team);
     sol::as_table_t<std::vector<TSPlayer>> LGetPlayers1();
 

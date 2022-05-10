@@ -5042,7 +5042,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     IsFriendlyToPlayers(): bool
     IsHostileToPlayers(): bool
     IsNeutralToAll(): bool
-
+    DoDelayed(callback: (obj: TSWorldObject, mgr: TSMapManager)=>void): void
 
     /**
      * Makes the [Unit] cast the spell on the target.

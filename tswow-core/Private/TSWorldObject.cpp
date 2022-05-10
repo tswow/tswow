@@ -36,6 +36,7 @@
 #include "TSCorpse.h"
 #include "TSEntity.h"
 #include "TSItem.h"
+#include "TSMapManager.h"
 
 TSWorldObject::TSWorldObject(WorldObject *objIn)
     : TSObject(objIn)
@@ -1260,6 +1261,27 @@ uint32 TSWorldObject::CastCustomSpell(
         TS_LOG_ERROR("tswow.api", "TSWorldObject::CastCustomSpell not implemented for GameObjects with AzerothCore.");
         return SPELL_FAILED_UNKNOWN;
     }
+#endif
+}
+
+void TSWorldObject::DoDelayed(std::function<void(TSWorldObject, TSMapManager)> callback)
+{
+#if TRINITY
+    obj->m_delayedCallbacks.push_back(callback);
+    obj->GetMap()->m_delayedGuids.insert(obj->GetGUID());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::DoDelayed not implemented on AzerothCore");
+#endif
+}
+
+
+void TSWorldObject::LDoDelayed(sol::protected_function callback)
+{
+#if TRINITY
+    obj->m_delayedLuaCallbacks.push_back(callback);
+    obj->GetMap()->m_delayedGuids.insert(obj->GetGUID());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::DoDelayed not implemented on AzerothCore");
 #endif
 }
 

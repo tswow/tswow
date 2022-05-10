@@ -452,7 +452,11 @@ TSInstance TSMap::ToInstance()
 
 void TSMap::DoDelayed(std::function<void(TSMap, TSMapManager)> callback)
 {
+#if TRINITY
     map->m_delayCallbacks.push_back(callback);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSMap::DoDelayed not implemented for AzerothCore");
+#endif
 }
 
 TSCreature TSMap::GetCreature(uint64 guid)
@@ -468,6 +472,15 @@ TSGameObject TSMap::GetGameObject(uint64 guid)
 TSPlayer TSMap::GetPlayer(uint64 guid)
 {
     return TSPlayer(ObjectAccessor::GetPlayer(map, ObjectGuid(guid)));
+}
+
+void TSMap::LDoDelayed(sol::function callback)
+{
+#if TRINITY
+    map->m_delayLuaCallbacks.push_back(callback);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSMap::DoDelayed not implemented for AzerothCore");
+#endif
 }
 
 std::string TSMap::LGetName()
