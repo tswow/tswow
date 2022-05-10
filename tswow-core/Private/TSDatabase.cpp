@@ -27,6 +27,11 @@
 #include <memory>
 #include <algorithm>
 
+std::string TSDatabaseResult::LGetString(int index)
+{
+    return GetString(index).std_str();
+}
+
 class TC_GAME_API TSDatabaseImpl final : public TSDatabaseResult {
     Field* field = nullptr;
     QueryResult result;
@@ -173,6 +178,13 @@ TSString TSDatabaseConnectionInfo::Database() { return JSTR(_info->database); }
 TSString TSDatabaseConnectionInfo::Host() { return JSTR(_info->host); }
 TSString TSDatabaseConnectionInfo::PortOrSocket() { return JSTR(_info->port_or_socket); }
 TSString TSDatabaseConnectionInfo::SSL() { return JSTR(_info->ssl); }
+
+std::string TSDatabaseConnectionInfo::LUser() { return _info->user;  }
+std::string TSDatabaseConnectionInfo::LPassword() { return _info->password; }
+std::string TSDatabaseConnectionInfo::LDatabase() { return _info->database; }
+std::string TSDatabaseConnectionInfo::LHost() { return _info->host; }
+std::string TSDatabaseConnectionInfo::LPortOrSocket() { return _info->port_or_socket; }
+std::string TSDatabaseConnectionInfo::LSSL() { return _info->ssl; }
 
 std::shared_ptr<TSDatabaseConnectionInfo> WorldDatabaseInfo()
 {
@@ -334,6 +346,27 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetString(const uint8 index, T
     m_statement->SetData(index, value.std_str());
 #endif
     return this;
+}
+
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend0()
+{
+    return Send();
+}
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend1(TSWorldDatabaseConnection& con)
+{
+    return Send(con);
+}
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend2(TSAuthDatabaseConnection& con)
+{
+    return Send(con);
+}
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend3(TSCharactersDatabaseConnection& con)
+{
+    return Send(con);
+}
+TSPreparedStatementBase* TSPreparedStatementBase::LSetString(const uint8 index, std::string const& value)
+{
+    return SetString(index, TSString(value));
 }
 
 TSPreparedStatementBase TSPreparedStatement::Create()
@@ -501,6 +534,36 @@ std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSPreparedStat
     TS_LOG_ERROR("tswow.api", "TSAuthDatabaseConnection::Query is not implemented for AzerothCore");
     return nullptr;
 #endif
+}
+
+std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::LQuery0(std::string const& sql)
+{
+    return Query(sql);
+}
+
+std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::LQuery1(TSPreparedStatementBase* stmnt)
+{
+    return Query(stmnt);
+}
+
+std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::LQuery0(std::string const& sql)
+{
+    return Query(sql);
+}
+
+std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::LQuery1(TSPreparedStatementBase* stmnt)
+{
+    return Query(stmnt);
+}
+
+std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::LQuery0(std::string const& sql)
+{
+    return Query(sql);
+}
+
+std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::LQuery1(TSPreparedStatementBase* stmnt)
+{
+    return Query(stmnt);
 }
 
 void TSAuthDatabaseConnection::Unlock()

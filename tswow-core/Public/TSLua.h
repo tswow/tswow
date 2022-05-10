@@ -58,6 +58,7 @@ private:
     void load_world_object_methods(uint32_t modid);
     void load_unit_methods(uint32_t modid);
     void load_map_methods(uint32_t modid);
+    void load_database_methods(uint32_t modid);
 
     template <typename C, typename T>
     void load_json_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);

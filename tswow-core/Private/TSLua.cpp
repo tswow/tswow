@@ -50,6 +50,7 @@ void TSLuaState::load_bindings(uint32_t modid)
     load_world_object_methods(modid);
     load_unit_methods(modid);
     load_map_methods(modid);
+    load_database_methods(modid);
     load_events(modid);
 }
 
