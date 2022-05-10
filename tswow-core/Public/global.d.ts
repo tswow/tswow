@@ -248,7 +248,7 @@ declare interface TSPlayer extends TSUnit {
     CanBeHealer(): bool
     CanBeDPS(): bool
     CanBeLeader(): bool
-
+    GetTalentPointsInTree(): uint32
     GetBG(): TSBattleground
     GetBGPlayer(): TSBattlegroundPlayer
 

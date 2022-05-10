@@ -116,6 +116,7 @@ public:
 	int32 GetDifficulty(bool isRaid);
 	uint32 GetGuildRank();
 	uint32 GetFreeTalentPoints();
+	uint32 GetTalentPointsInTree(uint32 tabId);
 	uint32 GetFreeInventorySpace();
 	TSString GetGuildName();
 	int32 GetReputation(uint32 faction);

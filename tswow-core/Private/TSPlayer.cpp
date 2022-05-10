@@ -4162,6 +4162,10 @@ bool TSPlayer::CanBeLeader()
 #endif
 }
 
+uint32 TSPlayer::GetTalentPointsInTree(uint32 tabId)
+{
+    return player->GetTalentPointsInTree(tabId);
+}
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
