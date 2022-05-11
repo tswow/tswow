@@ -26,6 +26,7 @@ void TSLuaState::load_player_methods(uint32_t modid)
 {
     auto ts_player = new_usertype <TSPlayer>("TSPlayer");
     load_unit_methods_t(ts_player, modid, "TSPlayer");
+    LUA_FIELD(ts_player, TSPlayer, GetTalentPointsInTree);
     LUA_FIELD(ts_player, TSPlayer, CanTitanGrip);
     LUA_FIELD(ts_player, TSPlayer, HasTalent);
     LUA_FIELD(ts_player, TSPlayer, HasAchieved);

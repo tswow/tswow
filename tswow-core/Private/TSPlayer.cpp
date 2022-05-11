@@ -4164,7 +4164,12 @@ bool TSPlayer::CanBeLeader()
 
 uint32 TSPlayer::GetTalentPointsInTree(uint32 tabId)
 {
+#if TRINITY
     return player->GetTalentPointsInTree(tabId);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::GetTalentPointsInTree not implemented for AzerothCore");
+    return 0;
+#endif
 }
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
