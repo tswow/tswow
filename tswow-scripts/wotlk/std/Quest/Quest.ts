@@ -21,7 +21,7 @@ import { quest_templateRow } from "../../sql/quest_template";
 import { quest_template_addonRow } from "../../sql/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntityID } from "../Misc/Entity";
-import { MinMaxTargetCell } from "../Misc/LimitCells";
+import { MinTargetMaxCell } from "../Misc/LimitCells";
 import { RaceMask } from "../Race/RaceType";
 import { QuestAddon } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
@@ -64,11 +64,11 @@ export class Quest extends MainEntityID<quest_templateRow> {
     get SpecialFlags() { return this.Addon.SpecialFlags; }
 
     get Level() {
-        return new MinMaxTargetCell(
+        return new MinTargetMaxCell(
               this
             , this.row.MinLevel
-            , this.Addon.MaxLevel
             , this.QuestLevel
+            , this.Addon.MaxLevel
         )
     }
 
