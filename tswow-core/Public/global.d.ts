@@ -8728,6 +8728,7 @@ declare namespace _hidden {
     export class MapID<T> {
         OnCreate(map: EventID, callback: (map: TSMap)=>void)
         OnUpdate(map: EventID, callback: (map: TSMap, diff: uint32)=>void)
+        OnReload(map: EventID, callback: (map: TSMap)=>void): T
         OnUpdateDelayed(map: EventID, callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void)
         OnPlayerEnter(map: EventID, callback: (map: TSMap, player: TSPlayer)=>void)
         OnPlayerLeave(map: EventID, callback: (map: TSMap, player: TSPlayer)=>void)
