@@ -7503,6 +7503,8 @@ declare namespace _hidden {
         OnLearnTalent(callback: (player: TSPlayer, tabId: uint32, talentId: uint32, spellId: uint32, cancel: TSMutable<bool>)=>void)
         OnFreeTalentPointsChanged(callback: (player : TSPlayer,points : uint32)=>void);
         OnTalentsReset(callback: (player : TSPlayer,noCost : bool)=>void);
+        OnTalentsResetEarly(callback: (player : TSPlayer,noCost : TSMutable<bool>)=>void);
+        OnTalentsResetLate(callback: (player : TSPlayer,noCost : bool)=>void);
         OnMoneyChanged(callback: (player : TSPlayer,amount : TSMutable<int32>)=>void);
         OnMoneyLimit(callback: (player : TSPlayer,amount : int32)=>void);
         OnGiveXP(callback: (player : TSPlayer,amount : TSMutable<uint32>,victim : TSUnit)=>void);
