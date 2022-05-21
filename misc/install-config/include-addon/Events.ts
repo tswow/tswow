@@ -546,20 +546,17 @@ const Events = {
          *
          * Patch added: 1.12.0
          *
-         * @param text Text content being received in the message
-         * @param playerName Name of the player sending the message
-         * @param langName Name of the language (if applicable) of the message
-         * @param channelName Name of the channel
-         * @param playerName2 Name of the second player, if involved (used in whispers)
-         * @param specialFlags
-         * @param zoneChannelID
-         * @param channelIndex
-         * @param channelBaseName
-         * @param unused
-         * @param lineID
-         * @param guid
+         * @param prefix The message prefix (maximum of 4 characters)
+         * @param body The main message
+         * @param channel The addon channel's chat type, e.g. "PARTY" or "WHISPER"
+         * @param sender Name of the player sending the message
+         * @param target ??
+         * @param zoneChannelId - always 0
+         * @param localId - Channel index or 0 if not applicable
+         * @param name - Channel name or empty if not applicable
+         * @param instanceid - Seems to always be 0
          */
-        OnChatMsgAddon(frame: WoWAPI.Frame, callback: (text: string,playerName: string,langName: string,channelName: string,playerName2: string,specialFlags: string,zoneChannelID: string,channelIndex: number,channelBaseName: string,unused: number,lineID: number,guid: string)=>void) { addEvent(frame,'CHAT_MSG_ADDON',callback)},
+        OnChatMsgAddon(frame: WoWAPI.Frame, callback: (prefix: string,body: string,channel: string,sender: string,target: string,zoneChannelId: number,localId: number,name: string,instanceid: number)=>void) { addEvent(frame,'CHAT_MSG_ADDON',callback)},
 
         /**
          *
