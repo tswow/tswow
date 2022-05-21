@@ -19,6 +19,10 @@ export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter)
             'int8','int16','int32','int64','bool','boolean',
             'float','double','string','TSString','TSArray','TSDictionary'];
 
+        if(member.type.kind == ts.SyntaxKind.FunctionType) {
+            return;
+        }
+
         let isNormal = type === 'int';
         for(const normalType of normalTypes) {
             if(type.includes(normalType)) {
