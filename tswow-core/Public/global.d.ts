@@ -249,6 +249,7 @@ declare interface TSPlayer extends TSUnit {
     CanBeDPS(): bool
     CanBeLeader(): bool
     GetTalentPointsInTree(): uint32
+    GetQuestRewardTalentCount(): uint32
     GetBG(): TSBattleground
     GetBGPlayer(): TSBattlegroundPlayer
 
@@ -7674,6 +7675,8 @@ declare namespace _hidden {
             player: TSPlayer
             , activeGlyphSlot: TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
         ) => void)
+
+        OnCalculateTalentPoints(callback: (player: TSPlayer, talents: TSMutable<uint32>) => void);
     }
 
     export class Account<T> {

@@ -384,6 +384,11 @@ EVENT_TYPE(PlayerOnUpdateRangedAttackPower
     , TSMutable<float>
 )
 
+EVENT_TYPE(PlayerOnCalculateTalentPoints
+    , TSPlayer
+    , TSMutable<uint32>
+)
+
 // AccountScript
 EVENT_TYPE(AccountOnAccountLogin,uint32)
 EVENT_TYPE(AccountOnFailedAccountLogin,uint32)
@@ -1314,6 +1319,7 @@ struct TSEventStore
     EVENT(PlayerOnUpdateAttackPower)
     EVENT(PlayerOnUpdateRangedAttackPower)    
     EVENT(PlayerOnGlyphInitForLevel)
+    EVENT(PlayerOnCalculateTalentPoints)
 
     // AccountScript
     EVENT(AccountOnAccountLogin)
@@ -1746,6 +1752,7 @@ public:
          EVENT_HANDLE(Player,OnUpdateAttackPower)
          EVENT_HANDLE(Player,OnUpdateRangedAttackPower)
          EVENT_HANDLE(Player,OnGlyphInitForLevel)
+         EVENT_HANDLE(Player,OnCalculateTalentPoints)
     } Player;
 
     struct AccountEvents : public EventHandler

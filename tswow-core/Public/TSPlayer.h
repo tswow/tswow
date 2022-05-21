@@ -117,6 +117,7 @@ public:
 	uint32 GetGuildRank();
 	uint32 GetFreeTalentPoints();
 	uint32 GetTalentPointsInTree(uint32 tabId);
+	uint32 GetQuestRewardTalentCount();
 	uint32 GetFreeInventorySpace();
 	TSString GetGuildName();
 	int32 GetReputation(uint32 faction);

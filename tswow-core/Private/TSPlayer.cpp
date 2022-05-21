@@ -4512,3 +4512,8 @@ TSUnit TSPlayer::GetGlobalSelection()
         return TSUnit(player->GetSelectedUnit());
     }
 }
+
+uint32 TSPlayer::GetQuestRewardTalentCount()
+{
+    return player->m_questRewardTalentCount;
+}
