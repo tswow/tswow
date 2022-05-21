@@ -216,6 +216,30 @@ public:
     return TSArray<M>(result);
   }
 
+  double findIndex(std::function<bool(T, double, TSArray<T>&)> p)
+  {
+      for (size_t i = 0; i < get_length(); ++i)
+      {
+          if (p((*vec)[i], double(i), *this))
+          {
+              return double(i);
+          }
+      }
+      return -1;
+  }
+
+  T findDefault(T def, std::function<bool(T, size_t, TSArray<T>&)> p)
+  {
+      for (size_t i = 0; i < get_length(); ++i)
+      {
+          if (p((*vec)[i], i, *this))
+          {
+              return (*vec)[i];
+          }
+      }
+      return def;
+  }
+
   TSArray<T> filter(std::function<bool(T, size_t, TSArray<T> &)> p)
   {
     std::vector<T> result;

@@ -183,6 +183,7 @@ declare class TSPosition {
 interface Array<T> {
     get(index: number): T;
     set(index: number, value: T);
+    findDefault(def: T, callback: (value: T, index: int32, arr: Array<T>) => bool): T;
 }
 
 declare interface TSMutableString extends TSMutable<string>{}
