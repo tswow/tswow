@@ -207,7 +207,10 @@ export class BeSpellTarget2 extends CriteriaBase {
     get SpellCount() { return this.wrap(this.row.Quantity); }
 }
 
-export class CastSpell extends CriteriaBase {}
+export class CastSpell extends CriteriaBase {
+    get Spell() { return this.wrap(this.row.Asset_Id); }
+    get SpellCount() { return this.wrap(this.row.Quantity); }
+}
 
 export class CastSpell2 extends CriteriaBase {
     get Spell() { return this.wrap(this.row.Asset_Id); }
