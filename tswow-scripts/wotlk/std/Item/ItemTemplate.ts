@@ -160,6 +160,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
+    get BonusArmor() { return this.wrap(this.row.ArmorDamageModifier); }
     get Delay() {
         return new DurationCell(
             this, 'MILLISECONDS', false, this.row.delay
