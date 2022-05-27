@@ -2304,6 +2304,10 @@ declare function CancelItemTempEnchantment(weaponHand: WoWAPI.BuffWeaponHandType
  */
 declare function GetWeaponEnchantInfo(): [boolean, number, number, number, boolean, number, number, number];
 
+declare function UnitName(unitId: WoWAPI.UnitId): string;
+declare function UnitPower(unitId: WoWAPI.UnitId, powerType: number): number;
+declare function UnitPowerMax(unitId: WoWAPI.UnitId, powerType: number): number;
+
 /**
  * Returns information about a buff or debuff on the specified unit
  * @param unitId unit whose auras to query
