@@ -2304,6 +2304,10 @@ declare function CancelItemTempEnchantment(weaponHand: WoWAPI.BuffWeaponHandType
  */
 declare function GetWeaponEnchantInfo(): [boolean, number, number, number, boolean, number, number, number];
 
+declare function UnitName(unitId: WoWAPI.UnitId): string;
+declare function UnitPower(unitId: WoWAPI.UnitId, powerType: number): number;
+declare function UnitPowerMax(unitId: WoWAPI.UnitId, powerType: number): number;
+
 /**
  * Returns information about a buff or debuff on the specified unit
  * @param unitId unit whose auras to query
@@ -3681,6 +3685,52 @@ declare function PickupCompanion(type: WoWAPI.CompanionType, companionIndex: num
  */
 declare function SummonRandomCritter(): void;
 
+declare function BuyMerchantItem(index:number, quantity?: number):void;
+declare function BuybackItem(index:number):void;
+declare function CanMerchantRepair():boolean;
+declare function CloseMerchant():void;
+  
+/**
+ * Returns name, texture, price and quantity
+ *
+ * @param index for the item
+ * @see https://wowwiki-archive.fandom.com/wiki/API_GetBuybackItemInfo
+ * @tupleReturn
+ */
+declare function GetBuybackItemInfo(index:number): [ string, string, number, number];
+declare function GetBuybackItemLink(index:number): string;
+declare function GetMerchantItemCostInfo (index:number): number;
+
+/**
+ * Returns information about an "alternative currency" component of the price for a purchasable item. 
+ * Returns texture, value and link
+ *
+ * @param index for the item
+ * @see https://wowwiki-archive.fandom.com/wiki/API_GetMerchantItemCostItem
+ * @tupleReturn
+ */
+declare function GetMerchantItemCostItem(index:number, itemIndex:number): [string, number, string]
+  
+/**
+ * Returns information about a merchant's item.
+ * Returns texture, value and link
+ *
+ * @param index for the item
+ * @see https://wowwiki-archive.fandom.com/wiki/API_GetMerchantItemInfo
+ * @tupleReturn
+ */
+declare function GetMerchantItemInfo(index:number): [string, string, number, number, number, number, number]
+declare function GetMerchantItemLink(index:number): string;
+declare function GetMerchantItemMaxStack(index:number):number;
+declare function GetMerchantNumItems():number;
+declare function GetRepairAllCost():number;
+declare function HideRepairCursor():void;
+declare function InRepairMode():boolean;
+declare function PickupMerchantItem(index:number):void;
+declare function RepairAllItems(guildBankRepair?:boolean):void;
+declare function ShowMerchantSellCursor(index:number):void;
+declare function ShowRepairCursor():void;
+declare function GetNumBuybackItems():number;
 
 declare const MAX_PLAYER_LEVEL_TABLE: {
     LE_EXPANSION_CLASSIC: 60,
@@ -4213,6 +4263,11 @@ declare function GetCurrencyListInfo(currencyIndex: number): [string, boolean, b
 declare function ExpandCurrencyList(currencyHeaderIndex: number, expanded: WoWAPI.Flag): void;
 
 /**
+ * Check to see if chosen unit utilizes a relic slot
+ */
+ declare function UnitHasRelicSlot(unitType: WoWAPI.UnitId):boolean
+
+/**
  * Marks/unmarks a currency as unused
  *
  * @param currencyIndex Index of the currency in the currency list to alter unused status of.
@@ -4262,11 +4317,6 @@ declare namespace WoWAPI {
  * @see https://wow.gamepedia.com/API_AutoEquipCursorItem
  */
 declare function AutoEquipCursorItem(): void;
-
-/**
- * Check to see if chosen unit utilizes a relic slot
- */
-declare function UnitHasRelicSlot(unitType: WoWAPI.UnitId):boolean
 
 /**
  * Clears the in-game cursor, returning the object held to its original position (equivalent to right-clicking while holding something on the cursor).
@@ -10328,6 +10378,20 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/UNIT_MANA
          */
         UNIT_MANA: [UnitId];
+		UNIT_RAGE: [UnitId];
+		UNIT_FOCUS: [UnitId];
+		UNIT_ENERGY: [UnitId];
+		UNIT_HAPPINESS: [UnitId];
+		UNIT_RUNIC_POWER: [UnitId];
+		UNIT_HEALTH: [UnitId];
+		
+		UNIT_MAXMANA: [UnitId];
+		UNIT_MAXRAGE: [UnitId];
+		UNIT_MAXFOCUS: [UnitId];
+		UNIT_MAXENERGY: [UnitId];
+		UNIT_MAXHAPPINESS: [UnitId];
+		UNIT_MAXRUNIC_POWER: [UnitId];
+		UNIT_MAXHEALTH: [UnitId];
 
         /**
          * Fired when a unit's maximum health changes
@@ -11320,13 +11384,12 @@ declare namespace WoWAPI {
     type ITEM_QUALITY_LEGENDARY = 5;
     type ITEM_QUALITY_ARTIFACT = 6;
     type ITEM_QUALITY_HEIRLOOM = 7;
-    type ITEM_QUALITY_WOW_TOKEN = 8;
 
     /**
      * all currently known item qualities
      */
     type ITEM_QUALITY = ITEM_QUALITY_GENERIC | ITEM_QUALITY_POOR | ITEM_QUALITY_COMMON | ITEM_QUALITY_UNCOMMON |
-        ITEM_QUALITY_RARE | ITEM_QUALITY_EPIC | ITEM_QUALITY_LEGENDARY | ITEM_QUALITY_ARTIFACT | ITEM_QUALITY_HEIRLOOM | ITEM_QUALITY_WOW_TOKEN;
+        ITEM_QUALITY_RARE | ITEM_QUALITY_EPIC | ITEM_QUALITY_LEGENDARY | ITEM_QUALITY_ARTIFACT | ITEM_QUALITY_HEIRLOOM;
 
     type BIND_TYPE_NONE = 0;
     type BIND_TYPE_PICKUP = 1;
@@ -11345,12 +11408,6 @@ declare namespace WoWAPI {
      * a clickable ingame item link
      */
     type ItemLink = Hyperlink;
-
-    interface CorruptionEffectInfo {
-        name: string;
-        description: string;
-        minCorruption: number;
-    }
 
     interface ItemLocationMixin {
         bagID: number | null;
@@ -11472,20 +11529,6 @@ declare function EquipItemByName(itemIdentifier: string | number | WoWAPI.ItemLi
 declare function GetContainerItemLink(bagId: WoWAPI.CONTAINER_ID, slotIndex: number): WoWAPI.ItemLink | null;
 
 /**
- * Tracks the extent to which a player is wearing items touched by N'Zoth's influence.
- * @returns the amount of corruption independent of any resistances
- * @see https://wow.gamepedia.com/API_GetCorruption
- */
-declare function GetCorruption(): number;
-
-/**
- * Tracks how much the player has offset their exposure to dangers that result from wearing items touched by N'Zoth's influence.
- * @returns Amount of corruption resistance, independent of how much corruption is actually present
- * @see https://wow.gamepedia.com/API_GetCorruptionResistance
- */
-declare function GetCorruptionResistance(): number;
-
-/**
  * Returns cooldown information for the item
  * @param itemId The numeric ID of the item. ie. 12345
  * @returns **startTime, duration, enable**
@@ -11592,11 +11635,6 @@ declare function GetItemStats(itemLink: WoWAPI.ItemLink, statTable?: {}): { [ind
  * @see https://wow.gamepedia.com/API_GetMerchantWoWAPI.ItemLink
  */
 declare function GetMerchantItemLink(merchantIndex: number): WoWAPI.ItemLink;
-
-/**
- * @see https://wow.gamepedia.com/API_GetNegativeCorruptionEffectInfo
- */
-declare function GetNegativeCorruptionEffectInfo(): WoWAPI.CorruptionEffectInfo[];
 
 /**
  * Returns link to the quest item
@@ -14034,6 +14072,33 @@ declare function UnitExists(unitId: WoWAPI.UnitId): 1 | null;
 declare function UnitIsPlayer(unitId: WoWAPI.UnitId): boolean;
 
 /**
+ * Returns the number of skill lines in the skill window, including headers.
+ * @see https://wowpedia.fandom.com/wiki/API_GetNumSkillLines
+ */
+declare function GetNumSkillLines(): number
+
+/**
+ * Returns information on a skill line/header.
+ * @argument index The index of a line in the skills window, can be a header or skill line. Indices can change depending on collapsed/expanded headers.
+ * @returns
+ * 1. skillName - string - Name of the skill line.
+ * 2. header - number - Returns 1 if the line is a header, nil otherwise.
+ * 3. isExpanded - number - Returns 1 if the line is a header and expanded, nil otherwise.
+ * 4. skillRank - number - The current rank for the skill, 0 if not applicable.
+ * 5. numTempPoints - number - Temporary points for the current skill.
+ * 6. skillModifier - number - Skill modifier value for the current skill.
+ * 7. skillMaxRank - number - The maximum rank for the current skill. If this is 1 the skill is a proficiency.
+ * 8. isAbandonable - number - Returns 1 if this skill can be unlearned, nil otherwise.
+ * 9. stepCost - number - Returns 1 if skill can be learned, nil otherwise.
+ * 10. rankCost - number - Returns 1 if skill can be trained, nil otherwise.
+ * 11. minLevel - number - Minimum level required to learn this skill.
+ * 12. skillCostType - number
+ * 13. skillDescription - string - Localized skill description text
+ * @tupleReturn
+ */
+declare function GetSkillLineInfo(index: number): [string,number,number,number,number,number,number,number,number,number,number,number,string]
+ 
+/**
  * Returns the unit's level
  * @param unitId The unitId to get information from. (e.g. "player", "target")
  * @return The unit level. Returns -1 for bosses, or players more than 10 levels above the player
@@ -14070,33 +14135,6 @@ declare function UnitHealth(unitId: WoWAPI.UnitId): number;
  * @see https://wow.gamepedia.com/API_UnitHealthMax
  */
 declare function UnitHealthMax(unitId: WoWAPI.UnitId): number;
-
-/**
- * Returns the number of skill lines in the skill window, including headers.
- * @see https://wowpedia.fandom.com/wiki/API_GetNumSkillLines
- */
-declare function GetNumSkillLines(): number
-
-/**
- * Returns information on a skill line/header.
- * @argument index The index of a line in the skills window, can be a header or skill line. Indices can change depending on collapsed/expanded headers.
- * @returns
- * 1. skillName - string - Name of the skill line.
- * 2. header - number - Returns 1 if the line is a header, nil otherwise.
- * 3. isExpanded - number - Returns 1 if the line is a header and expanded, nil otherwise.
- * 4. skillRank - number - The current rank for the skill, 0 if not applicable.
- * 5. numTempPoints - number - Temporary points for the current skill.
- * 6. skillModifier - number - Skill modifier value for the current skill.
- * 7. skillMaxRank - number - The maximum rank for the current skill. If this is 1 the skill is a proficiency.
- * 8. isAbandonable - number - Returns 1 if this skill can be unlearned, nil otherwise.
- * 9. stepCost - number - Returns 1 if skill can be learned, nil otherwise.
- * 10. rankCost - number - Returns 1 if skill can be trained, nil otherwise.
- * 11. minLevel - number - Minimum level required to learn this skill.
- * 12. skillCostType - number
- * 13. skillDescription - string - Localized skill description text
- * @tupleReturn
- */
-declare function GetSkillLineInfo(index: number): [string,number,number,number,number,number,number,number,number,number,number,number,string]
 
 /**
  * Returns 1 if the unit is a player in your party, nil otherwise
