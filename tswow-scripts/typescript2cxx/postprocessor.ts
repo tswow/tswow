@@ -3,6 +3,7 @@ import { NodeConfig } from "../runtime/NodeConfig";
 import { GetExistingId, IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
 import { dataset } from "./tswow-dataset";
+import { get_tracy_category_color } from './tswow-tracy-categories';
 import deasync = require('deasync');
 
 class IdPublic extends IdPrivate {
@@ -13,19 +14,78 @@ export function loadIDFile() {
     return IdPublic.readFile();
 }
 
+// https://www.delftstack.com/howto/javascript/wildcard-string-comparison-in-javascript/
+function match(first, second)
+{
+    if (first.length == 0 && second.length == 0)
+        return true;
+
+    if (first.length > 1 && first[0] == '*' &&
+        second.length == 0)
+        return false;
+
+    if ((first.length > 1 && first[0] == '?') ||
+        (first.length != 0 && second.length != 0 &&
+        first[0] == second[0]))
+        return match(first.substring(1),
+                    second.substring(1));
+
+    if (first.length > 0 && first[0] == '*')
+        return match(first.substring(1), second) ||
+            match(first, second.substring(1));
+
+    return false;
+}
+
 export function postprocess(contents: string): string {
-    let m: RegExpMatchArray;
-    do {
-        m = contents
+    // ======================================
+    //  GetID
+    // ======================================
+    while(true) {
+        let m = contents
             .match(
                 /GetID\(JSTR\("(.+?)"\), JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/)
-        if(m) {
-            const [_,table,mod,name] = m;
-            let id = GetExistingId(table,mod,name);
-            contents = contents.replace(m[0],`${id}`)
-        }
-    } while(m != null);
+        if(!m) break;
+        const [_,table,mod,name] = m;
+        let id = GetExistingId(table,mod,name);
+        contents = contents.replace(m[0],`${id}`)
+    }
 
+    // ======================================
+    //  Tracy
+    // ======================================
+    if(process.argv.find(x=>x.startsWith('--tracy'))) {
+        const TRACY_OPT_PREFIX = '--tracy='
+        let categories =
+            (process.argv.find(x=>x.startsWith(TRACY_OPT_PREFIX)) || `${TRACY_OPT_PREFIX}*`)
+            .substring(TRACY_OPT_PREFIX.length)
+            .split(',')
+
+        while(true) {
+            let m = contents.match(/TS_ZONE_SCOPED\((.+?)\)/)
+            if(!m) break;
+
+            if(categories.find(x=>match(x,m[1]))) {
+                contents = contents.replace(m[0],`ZoneScopedC(${get_tracy_category_color(m[1])})`);
+            } else {
+                contents = contents.replace(m[0],'')
+            }
+        }
+
+        while(true) {
+            let m = contents.match(/TS_ZONE_SCOPED_N\((.+?), JSTR\("(.+?)"\)\)/)
+            if(!m) break;
+            if(categories.find(x=>match(x,m[1]))) {
+                contents = contents.replace(m[0], `ZoneScopedNC("${m[2]}", ${get_tracy_category_color(m[1])})`)
+            } else {
+                contents = contents.replace(m[0],'')
+            }
+        }
+    }
+
+    // ======================================
+    //  ID Tags
+    // ======================================
     while(true) {
         let m = contents.match(/GetIDTag\(JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/)
         if(!m) break;
@@ -70,6 +130,9 @@ export function postprocess(contents: string): string {
         contents = contents.replace(m[0],`${values[0]}`);
     }
 
+    // ======================================
+    //  World table asserts
+    // ======================================
     let checks: {table: string, cols: string}[] = []
     while(true) {
         let m = contents.match(/ASSERT_WORLD_TABLE\(JSTR\("(.+?)"\), JSTR\("(.+?)"\)\);/)

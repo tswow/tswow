@@ -1,4 +1,5 @@
 import { Emitter } from "./emitter";
+import { set_tracy_category_color } from "./tswow-tracy-categories";
 import ts = require("typescript");
 
 function simpleModid(emt,node){
@@ -91,6 +92,12 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
 
     "TSMutex": (emt,node)=>{
         emt.writer.writeString(`TSMutex();`);
+    },
+
+    "TS_ZONE_CATEGORY": (emt,node)=>{
+        const declaration = node.parent as ts.VariableDeclaration;
+        set_tracy_category_color(declaration.name.getText(), node.arguments[0].getText());
+        emt.writer.writeString(node.arguments[0].getText())
     },
 }
 

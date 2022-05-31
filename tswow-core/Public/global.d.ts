@@ -9583,3 +9583,9 @@ declare function GetSpellInfo(entry: uint32): TSSpellInfo
 declare function GetItemTemplate(entry: uint32): TSItemTemplate
 declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate
 declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate
+
+// tracy
+declare type ZoneCategory = uint32;
+declare function TS_ZONE_CATEGORY(color: uint32): ZoneCategory
+declare function TS_ZONE_SCOPED(cat: ZoneCategory): void
+declare function TS_ZONE_SCOPED_N(cat: ZoneCategory): void
