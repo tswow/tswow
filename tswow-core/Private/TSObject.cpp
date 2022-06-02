@@ -312,18 +312,6 @@ void TSObject::SetCoreUInt16(uint16 index,uint8 offset,uint16 value)
 }
 
 /**
- * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
- *
- * @param uint16 index
- * @param uint8 offset : should be 0 or 1
- * @param int16 value
- */
-void TSObject::SetCoreInt16(uint16 index,uint8 offset,int16 value)
-{
-    obj->SetInt16Value(index, offset, value);
-}
-
-/**
  * Sets the [Object]'s scale/size to the given value.
  *
  * @param float scale

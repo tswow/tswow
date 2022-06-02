@@ -70,7 +70,6 @@ public:
     void SetCoreFloat(uint16 index, float value);
     void SetCoreByte(uint16 index, uint8 offset, uint8 value);
     void SetCoreUInt16(uint16 index, uint8 offset, uint16 value);
-    void SetCoreInt16(uint16 index, uint8 offset, int16 value);
     void SetCoreUInt64(uint16 index, uint64 value);
 
     uint8 GetCoreByte(uint16 index, uint8 offset);
