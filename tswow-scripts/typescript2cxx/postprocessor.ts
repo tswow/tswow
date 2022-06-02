@@ -54,7 +54,8 @@ export function postprocess(contents: string): string {
     // ======================================
     //  Tracy
     // ======================================
-    if(process.argv.find(x=>x.startsWith('--tracy'))) {
+    const USE_TRACY = process.argv.find(x=>x.startsWith('--tracy'))
+    {
         const TRACY_OPT_PREFIX = '--tracy='
         let categories =
             (process.argv.find(x=>x.startsWith(TRACY_OPT_PREFIX)) || `${TRACY_OPT_PREFIX}*`)
@@ -65,7 +66,7 @@ export function postprocess(contents: string): string {
             let m = contents.match(/TS_ZONE_SCOPED\((.+?)\)/)
             if(!m) break;
 
-            if(categories.find(x=>match(x,m[1]))) {
+            if(USE_TRACY && categories.find(x=>match(x,m[1]))) {
                 contents = contents.replace(m[0],`ZoneScopedC(${get_tracy_category_color(m[1])})`);
             } else {
                 contents = contents.replace(m[0],'')
@@ -75,7 +76,7 @@ export function postprocess(contents: string): string {
         while(true) {
             let m = contents.match(/TS_ZONE_SCOPED_N\((.+?), JSTR\("(.+?)"\)\)/)
             if(!m) break;
-            if(categories.find(x=>match(x,m[1]))) {
+            if(USE_TRACY && categories.find(x=>match(x,m[1]))) {
                 contents = contents.replace(m[0], `ZoneScopedNC("${m[2]}", ${get_tracy_category_color(m[1])})`)
             } else {
                 contents = contents.replace(m[0],'')
