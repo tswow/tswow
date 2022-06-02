@@ -258,8 +258,10 @@ export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     get Money() { return this.ownerWrap(this.row.RewardMoney) }
     /** Bonus money at level 80 */
     get MoneyBonus() { return this.ownerWrap(this.row.RewardBonusMoney) }
-    /** Display a spell when the player completes the quest */
+    /** Cast a spell on player when the player completes the quest (Display as reward spell, but not cast, if Spell() is set) */
     get DisplaySpell() { return this.ownerWrap(this.row.RewardDisplaySpell) }
+    /** Cast a spell on player when the player completes the quest - normally a "teacher" spell for DisplaySpell */
+    get Spell() { return this.ownerWrap(this.row.RewardSpell) }
     /** Reward player with honor points */
     get Honor() { return this.ownerWrap(this.row.RewardHonor)}
     /** Reward player with talent points, as in the Death Knight starting area. */
