@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
@@ -27,6 +28,7 @@ import { QuestAddon } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
 import { QuestGameEventCondition } from "./QuestGameEventPoints";
 import { QuestNPC } from "./QuestGiver";
+import { QuestInfoTypes } from "./QuestInfoTypes";
 import { QuestObjective } from "./QuestObjective";
 import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
@@ -105,6 +107,8 @@ export class Quest extends MainEntityID<quest_templateRow> {
     get RaceMask() {
         return makeMaskCell32(RaceMask, this, this.row.AllowableRaces, false);
     }
+
+    get QuestInfo() { return makeEnumCell(QuestInfoTypes, this, this.row.QuestInfoID); }
 
     readonly GameEventPoints = new QuestGameEventCondition(this);
 }

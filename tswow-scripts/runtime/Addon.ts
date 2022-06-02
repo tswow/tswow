@@ -212,7 +212,7 @@ export class Addon {
             if(node.isDirectory() && node.endsWith('build')) {
                 return 'ENDPOINT'
             }
-            if(!node.endsWith('.lua')) return;
+            if(!node.endsWith('.lua') && !node.endsWith('.xml')) return;
 
             node.copy(this.path.build.join('addon',node.relativeTo(this.path)))
             if(node.endsWith(''))
