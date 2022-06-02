@@ -272,6 +272,7 @@ export namespace TrinityCore {
                 +` -DTRACY_ENABLE="${tracyEnabled?'ON':'OFF'}"`
                 +` -DTRACY_CATEGORIES="${profileCats.join(';')}"`
                 +` -DBUILD_SHARED_LIBS="ON"`
+                +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
@@ -291,6 +292,7 @@ export namespace TrinityCore {
                 +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
+                +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -DWITH_WARNINGS=1`
                 +` -DSCRIPTS=${scripts}`;
                 buildCommand = 'make -j 4';
