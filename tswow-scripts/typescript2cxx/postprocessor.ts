@@ -2,8 +2,8 @@ import * as mysql from 'mysql2';
 import { NodeConfig } from "../runtime/NodeConfig";
 import { GetExistingId, IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
-import { dataset } from "./tswow-dataset";
-import { get_tracy_category_color } from './tswow-tracy-categories';
+import { dataset } from "./tswow/dataset";
+import { get_tracy_category_color } from './tswow/tracy-categories';
 import deasync = require('deasync');
 
 class IdPublic extends IdPrivate {

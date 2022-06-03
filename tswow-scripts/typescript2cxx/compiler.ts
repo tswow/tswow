@@ -5,9 +5,9 @@ import * as ts from 'typescript';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
 import { loadIDFile, postprocess } from './postprocessor';
-import { writeIdFile } from './tswow-idfile';
-import { writeLoader } from './tswow-loader';
-import { writeTableCreationFile } from './tswow-orm';
+import { writeIdFile } from './tswow/idfile';
+import { writeLoader } from './tswow/loader';
+import { writeTableCreationFile } from './tswow/orm';
 import { TRANSPILER_CHANGES } from './version';
 
 export enum ForegroundColorEscapeSequences {

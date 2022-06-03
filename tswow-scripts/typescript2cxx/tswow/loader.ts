@@ -1,8 +1,8 @@
 import * as fs from 'fs';
-import { WDirectory, WNode } from '../util/FileTree';
-import { ipaths } from '../util/Paths';
-import { CodeWriter } from "./codewriter";
-import { TRANSPILER_CHANGES } from './version';
+import { WDirectory, WNode } from '../../util/FileTree';
+import { ipaths } from '../../util/Paths';
+import { CodeWriter } from "../codewriter";
+import { TRANSPILER_CHANGES } from '../version';
 import path = require('path');
 
 const datasetName = process.argv.find(x=>x.startsWith('--datasetName=')).substring('--datasetName='.length)

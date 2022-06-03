@@ -1,6 +1,6 @@
 import * as path from 'path';
-import { CodeWriter } from "./codewriter";
-import { TRANSPILER_CHANGES } from './version';
+import { CodeWriter } from "../codewriter";
+import { TRANSPILER_CHANGES } from '../version';
 
 export function writeIdFile(outDir: string) {
     const header = new CodeWriter();

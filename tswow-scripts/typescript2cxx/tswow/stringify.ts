@@ -1,5 +1,5 @@
 import ts = require("typescript");
-import { CodeWriter } from "./codewriter";
+import { CodeWriter } from "../codewriter";
 
 export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter) {
     const name = node.name.getText(node.getSourceFile());

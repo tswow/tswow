@@ -1,5 +1,5 @@
-import { Emitter } from "./emitter";
-import { set_tracy_category_color } from "./tswow-tracy-categories";
+import { Emitter } from "../emitter";
+import { set_tracy_category_color } from "./tracy-categories";
 import ts = require("typescript");
 
 function simpleModid(emt,node){

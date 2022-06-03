@@ -4,9 +4,9 @@ import { CodeWriter } from './codewriter';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
 import { IdentifierResolver } from './resolvers';
-import { handleClass, handleClassImpl } from './tswow-orm';
-import { handleTSWoWOverride } from './tswow-override';
-import { generateStringify } from './tswow-stringify';
+import { handleClass, handleClassImpl } from './tswow/orm';
+import { handleTSWoWOverride } from './tswow/override';
+import { generateStringify } from './tswow/stringify';
 
 let mainFile: string = undefined;
 export class Emitter {
