@@ -634,8 +634,6 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     `install/trinitycore/lib/libdatabase.so`,
                     `install/trinitycore/lib/libgame.so`,
                     `install/trinitycore/lib/libshared.so`,
-                    `libliblua.so`,
-                    `libsourcemaps.so`,
                     `install/trinitycore/lib/libTracyClient.so`,
                 ]
                 ).map(x=>new WFile(mpath(pathIn,x)))
