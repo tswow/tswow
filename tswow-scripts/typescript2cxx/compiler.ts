@@ -8,7 +8,6 @@ import { loadIDFile, postprocess } from './postprocessor';
 import { writeIdFile } from './tswow-idfile';
 import { writeLoader } from './tswow-loader';
 import { writeTableCreationFile } from './tswow-orm';
-import { writePacketCreationFile } from './tswow-packet';
 import { TRANSPILER_CHANGES } from './version';
 
 export enum ForegroundColorEscapeSequences {
@@ -289,7 +288,6 @@ export class Run {
         }
 
         writeTableCreationFile(outDir);
-        writePacketCreationFile(outDir);
         writeIdFile(outDir);
         writeLoader(outDir);
     }

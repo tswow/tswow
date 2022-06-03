@@ -6,7 +6,6 @@ import { Preprocessor } from './preprocessor';
 import { IdentifierResolver } from './resolvers';
 import { handleClass, handleClassImpl } from './tswow-orm';
 import { handleTSWoWOverride } from './tswow-override';
-import { handlePacketClass } from './tswow-packet';
 import { generateStringify } from './tswow-stringify';
 
 let mainFile: string = undefined;
@@ -1396,7 +1395,6 @@ export class Emitter {
         // @tswow-begin
         if(node.kind === ts.SyntaxKind.ClassDeclaration) {
             handleClass(node,this.writer);
-            handlePacketClass(node, this.writer);
             generateStringify(node, this.writer);
         }
         // @tswow-end

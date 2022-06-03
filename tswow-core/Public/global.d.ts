@@ -2126,18 +2126,6 @@ declare interface TSPlayer extends TSUnit {
      */
     SendMovieStart(MovieId : uint32) : void
 
-    /**
-     * Sends an addon message that can be longer than the standard
-     * 255 bytes.
-     *
-     * Maximum size can be configured in worldserver.conf under
-     * TSWoW.MessageBufferBytes
-     *
-     * @param channel
-     * @param message
-     */
-    SendLongAddonMessage(channel: uint8, message: string): void;
-
     GetHairStyle(): uint8;
     SetHairStyle(style: uint8);
 
@@ -8786,12 +8774,6 @@ declare namespace _hidden {
         OnActivateLate(actionType: EventID, callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
     }
 
-    export class Addon<T> {
-        OnMessage(callback: (reader: any)=>void);
-        OnMessageID<T>(cls: new()=>T, callback: (player: TSPlayer,message: T)=>void);
-        OnLongMessage(callback: (player: TSPlayer, channel: uint16, message: string)=>void)
-    }
-
     export class Tests<T> {
         //ManualTest(name: string): TSManualTestBuilder
         AutomaticTest(name: string, callback: (player: TSPlayer, assert: TSAssert)=>void)
@@ -8801,7 +8783,6 @@ declare namespace _hidden {
 
 declare class TSEvents {
     World: _hidden.World<void>;
-    Addon: _hidden.Addon<void>;
     AreaTriggers: _hidden.AreaTrigger<void>;
     AreaTriggerID: _hidden.AreaTrigger<void>;
     //Vehicle: _hidden.Vehicle;
@@ -8842,7 +8823,6 @@ declare class TSEvents {
     QuestID: _hidden.QuestID<void>;
 
     static World: _hidden.World<void>;
-    static Addon: _hidden.Addon<void>;
     static AreaTriggers: _hidden.AreaTrigger<void>;
     static AreaTriggerID: _hidden.AreaTrigger<void>;
     //Vehicle: _hidden.Vehicle;
