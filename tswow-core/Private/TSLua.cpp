@@ -1,57 +1,105 @@
-#include "TSEventLoader.h"
 #include "TSLua.h"
 #include "Config.h"
 #include <regex>
 #include "document.hpp"
 #include <fstream>
+    
+static std::map<std::filesystem::path, sol::table> modules;
+static std::vector<std::filesystem::path> file_stack;
+static std::filesystem::path cur_module;
+static std::filesystem::path cur_directory;
+static bool already_errored = false;
+static sol::state state;
 
-static std::map<std::string, TSLuaState> states;
-
-TSLuaState::TSLuaState(std::filesystem::path rootDir)
-    : _root_dir(rootDir)
+sol::state& TSLuaState::GetState()
 {
+    return state;
 }
 
-void TSLuaState::load_bindings(uint32_t modid)
+std::filesystem::path TSLuaState::LuaRoot()
 {
-    open_libraries(sol::lib::base, sol::lib::table, sol::lib::string, sol::lib::math);
-    load_worldentity_methods(modid);
-    load_creature_methods(modid);
-    load_creature_template_methods(modid);
-    load_gameobject_methods(modid);
-    load_player_methods(modid);
-    load_item_methods(modid);
-    load_instance_methods(modid);
-    load_battleground_methods(modid);
-    load_achievement_methods(modid);
-    load_gameobject_template_methods(modid);
-    load_spell_info_methods(modid);
-    load_areatrigger_methods(modid);
-    load_auction_methods(modid);
-    load_aura_methods(modid);
-    load_spell_methods(modid);
-    load_channel_methods(modid);
-    load_corpse_methods(modid);
-    load_packet_methods(modid);
-    load_damage_metods(modid);
-    load_group_methods(modid);
-    load_guild_methods(modid);
-    load_json_methods(modid);
-    load_loot_methods(modid);
-    load_mail_methods(modid);
-    load_itemtemplate_methods(modid);
-    load_mutablestring_methods(modid);
-    load_mutable_methods(modid);
-    load_position_methods(modid);
-    load_quest_methods(modid);
-    load_smartscript_methods(modid);
-    load_outfit_methods(modid);
-    load_object_methods(modid);
-    load_world_object_methods(modid);
-    load_unit_methods(modid);
-    load_map_methods(modid);
-    load_database_methods(modid);
-    load_events(modid);
+#if AZEROTHCORE
+    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
+#elif TRINITY
+    return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
+#endif
+}
+
+static bool ends_with(std::string const& value, std::string const& ending)
+{
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+static std::filesystem::path search_from(std::filesystem::path const& root, std::string const& target)
+{
+    std::filesystem::path candidate = root / target;
+    if (std::filesystem::exists(candidate))
+    {
+        return candidate;
+    }
+
+    for (auto const& dir_entry : std::filesystem::recursive_directory_iterator(root))
+    {
+        std::string entry = dir_entry.path().string();
+        std::replace(entry.begin(), entry.end(), '\\', '/');
+        if (ends_with(entry, target))
+        {
+            return dir_entry.path();
+        }
+    }
+    return "";
+}
+
+std::filesystem::path TSLuaState::FindLuaModule(std::string target)
+{
+    std::replace(target.begin(), target.end(), '.', '/');
+    std::replace(target.begin(), target.end(), '\\', '/');
+    target += ".lua";
+    std::filesystem::path candidate = search_from(cur_directory, target);
+    return candidate.empty() ? search_from(cur_module, target) : candidate;
+}
+
+void TSLuaState::load_bindings(sol::state& ztate)
+{
+    state.open_libraries(sol::lib::base, sol::lib::table, sol::lib::string, sol::lib::math);
+    load_worldentity_methods(state);
+    load_creature_methods(state);
+    load_creature_template_methods(state);
+    load_gameobject_methods(state);
+    load_player_methods(state);
+    load_item_methods(state);
+    load_instance_methods(state);
+    load_battleground_methods(state);
+    load_achievement_methods(state);
+    load_gameobject_template_methods(state);
+    load_spell_info_methods(state);
+    load_areatrigger_methods(state);
+    load_auction_methods(state);
+    load_aura_methods(state);
+    load_spell_methods(state);
+    load_channel_methods(state);
+    load_corpse_methods(state);
+    load_packet_methods(state);
+    load_damage_metods(state);
+    load_group_methods(state);
+    load_guild_methods(state);
+    load_json_methods(state);
+    load_loot_methods(state);
+    load_mail_methods(state);
+    load_itemtemplate_methods(state);
+    load_mutablestring_methods(state);
+    load_mutable_methods(state);
+    load_position_methods(state);
+    load_quest_methods(state);
+    load_smartscript_methods(state);
+    load_outfit_methods(state);
+    load_object_methods(state);
+    load_world_object_methods(state);
+    load_unit_methods(state);
+    load_map_methods(state);
+    load_database_methods(state);
+    load_events(state);
 }
 
 void TSLuaState::handle_error(sol::protected_function_result const& res)
@@ -92,7 +140,7 @@ void TSLuaState::handle_error(sol::protected_function_result const& res)
 
     // Apply source maps
     {
-        std::regex exp("([ \t]*)(.+?\\.lua):(\\d+):");
+        static std::regex exp("([ \t]*)(.+?\\.lua):(\\d+):");
         std::smatch res;
         std::string::const_iterator start(what.cbegin());
         uint32_t totStart = 0;
@@ -129,131 +177,126 @@ void TSLuaState::handle_error(sol::protected_function_result const& res)
             std::ifstream mapfile(map.string());
             std::stringstream buffer;
             buffer << mapfile.rdbuf();
-            SourceMap::SrcMapDoc doc(buffer.str());
-            if (doc.map->getRowCount() < match.lineNo)
-            {
-                continue;
-            }
+            std::string str = buffer.str();
 
-            auto line = doc.map->getLineMap(match.lineNo - 1);
-            if (line->getEntryCount() == 0)
+            // todo: sourcemap corrupts the heap, fix that before enabling this.
+            if (str.size() > 0 && false)
             {
-                continue;
+                SourceMap::SrcMapDoc doc(str);
+                if (doc.map->getRowCount() < match.lineNo)
+                {
+                    continue;
+                }
+
+                auto line = doc.map->getLineMap(match.lineNo - 1);
+                if (line->getEntryCount() == 0)
+                {
+                    continue;
+                }
+                auto entry = line->entries[0];
+                size_t srcLine = entry->src_line;
+                std::string srcFile = match.filename.substr(0, match.filename.size() - 4) + ".ts";
+                std::string replacement = match.spaces + srcFile + ":" + std::to_string(srcLine);
+                what.replace(match.start, match.len, replacement);
             }
-            auto entry = line->entries[0];
-            size_t srcLine = entry->src_line;
-            std::string srcFile = match.filename.substr(0, match.filename.size() - 4) + ".ts";
-            std::string replacement = match.spaces + srcFile + ":" + std::to_string(srcLine);
-            what.replace(match.start, match.len, replacement);
         }
     }
     TS_LOG_ERROR("tswow.lua", "%s", what.c_str());
 }
 
-void TSLuaState::execute_module(std::string const& mod)
+void TSLuaState::execute_file(std::filesystem::path file)
 {
-    execute_file(module_to_file(mod));
-}
-
-void TSLuaState::execute_file(std::filesystem::path const& file)
-{
-    if (alredy_errored)
+    file = std::filesystem::absolute(file);
+    if (already_errored)
     {
         return;
     }
 
-    if (_modules.find(file) != _modules.end())
+    if (modules.find(file) != modules.end())
     {
         return;
     }
-    _file_stack.push_back(file);
+
+    file_stack.push_back(file);
     sol::protected_function_result res;
 
-    res = safe_script_file(file.string(), &sol::script_pass_on_error);
+    res = state.safe_script_file(file.string(), &sol::script_pass_on_error);
     if (!res.valid())
     {
-        if (!alredy_errored)
+        if (!already_errored)
         {
             handle_error(res);
         }
-        alredy_errored = true;
+        already_errored = true;
         return;
     }
 
-    _modules[file] = res.get_type() == sol::type::table
+    modules[file] = res.get_type() == sol::type::table
         ? res.get<sol::table>()
-        : create_table();
-    _file_stack.pop_back();
+        : state.create_table();
+    file_stack.pop_back();
 }
 
-std::filesystem::path TSLuaState::module_to_file(std::string const& mod)
-{
-    std::string modConv = mod;
-    std::replace(modConv.begin(), modConv.end(), '.', '/');
-    return std::filesystem::absolute((_root_dir / std::filesystem::path(modConv + ".lua")));
-}
 
 sol::table TSLuaState::require(std::string const& mod)
 {
-    std::filesystem::path path = module_to_file(mod);
-    std::string err_str;
-
-    if (std::find(_file_stack.begin(), _file_stack.end(), path) != _file_stack.end())
+    std::filesystem::path path = std::filesystem::absolute(FindLuaModule(mod));
+    if (path.empty())
     {
-        throw std::runtime_error("circular dependency");
+        throw std::runtime_error("Could not find module " + mod);
     }
 
-    if (_modules.find(path) == _modules.end())
+    if (std::find(file_stack.begin(), file_stack.end(), path) != file_stack.end())
+    {
+        throw std::runtime_error("Circular dependency from module " + mod);
+    }
+
+    auto itr = modules.find(path);
+    if (itr == modules.end())
     {
         execute_file(path);
+        itr = modules.find(path);
+        return itr != modules.end() ? itr->second : GetState().create_table();
     }
-
-    return _modules[path];
+    else
+    {
+        return itr->second;
+    }
+    return modules[path];
 }
 
 void TSLuaState::Load()
 {
-    for (auto const& [key,value]: states)
+    if (!std::filesystem::exists(LuaRoot()))
     {
-        TSUnloadEventHandler(key);
-    }
-    states.clear();
-
-#if AZEROTHCORE
-    std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
-#elif TRINITY
-    std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
-#endif
-    if (!std::filesystem::exists(lua_path))
-    {
-        TS_LOG_ERROR("tswow.lua", "No lua path");
         return;
     }
-    for (auto const& entry : std::filesystem::directory_iterator(lua_path))
+
+    modules.clear();
+    state = sol::state();
+    already_errored = false;
+
+    state.set_function("require", [=](std::string const& name) {
+        return TSLuaState::require(name);
+    });
+    load_bindings(state);
+    state["TSEvents"] = ts_events;
+
+    for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {
+        cur_module = entry.path();
+
         if (!entry.is_directory())
         {
             continue;
         }
 
-        std::filesystem::path rootdir = entry.path();
-        std::string modname = entry.path().filename().string();
-        TSLuaState* state = &(states[rootdir.string()] = TSLuaState(rootdir));
-        state->set_function("require", [=](std::string const& name) {
-            return state->require(name);
-        });
-
-        TSEvents* events = TSLoadEventHandler(rootdir.string(), modname);
-        uint32 modid = TSGetModID(rootdir.string());
-        state->load_bindings(modid);
-
-        (*state)["TSEvents"] = events;
-
-        for (auto const& file : std::filesystem::recursive_directory_iterator(rootdir))
+        for (auto const& file : std::filesystem::recursive_directory_iterator(entry.path()))
         {
             if (file.is_regular_file() && file.path().extension() == ".lua")
             {
-                state->execute_file(file);
+                cur_directory = file.path().parent_path();
+                execute_file(file);
             }
         }
     }

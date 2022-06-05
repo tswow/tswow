@@ -128,9 +128,9 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         return getInlineID(
               this
             , this.ID
-            , 'ItemID'
+            , 'Item'
             , 'livescript'
-        ) as _hidden.Items<this>
+        ) as _hidden.Item<this>
     }
 
     get InlineLua() {
@@ -139,7 +139,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             , this.ID
             , 'ItemID'
             , 'lua'
-        ) as _hidden.Items<this>
+        ) as _hidden.Item<this>
     }
 
     /** Only applicable if item is a shield */

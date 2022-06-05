@@ -2,12 +2,12 @@
 #include "TSJson.h"
 #include "TSJsonLua.h"
 
-void TSLuaState::load_json_methods(uint32_t modid)
+void TSLuaState::load_json_methods(sol::state& state)
 {
-    auto ts_jsonobject = new_usertype<TSJsonObject>("TSJsonObject");
-    load_json_methods_t<TSJsonObject,TSJsonObject>(ts_jsonobject, modid, "JsonObject");
+    auto ts_jsonobject = state.new_usertype<TSJsonObject>("TSJsonObject");
+    load_json_methods_t<TSJsonObject,TSJsonObject>(state, ts_jsonobject, "JsonObject");
 
-    auto ts_jsonarray = new_usertype<TSJsonArray>("TSJsonArray");
+    auto ts_jsonarray = state.new_usertype<TSJsonArray>("TSJsonArray");
     LUA_FIELD(ts_jsonarray, TSJsonArray, GetJsonArray);
     LUA_FIELD(ts_jsonarray, TSJsonArray, HasJsonArray);
     LUA_FIELD(ts_jsonarray, TSJsonArray, Remove);

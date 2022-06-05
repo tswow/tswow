@@ -9,80 +9,74 @@
 
 #define LUA_FIELD(target,cls,fn) target.set_function(#fn,&cls::fn)
 
-class TC_GAME_API TSLuaState : public sol::state
+class TC_GAME_API TSLuaState
 {
 public:
-    void load_bindings(uint32_t modid);
-    TSLuaState(std::filesystem::path rootDir);
-    TSLuaState() = default;
+    static void load_bindings(sol::state& state);
     static void handle_error(sol::protected_function_result const& what);
-    void execute_file(std::filesystem::path const& file);
-    void execute_module(std::string const& mod);
-    std::filesystem::path module_to_file(std::string const& mod);
-    sol::table require(std::string const& mod);
+    static void execute_file(std::filesystem::path file);
+    static sol::table require(std::string const& mod);
     static void Load();
+    static sol::state& GetState();
+    static std::filesystem::path LuaRoot();
+    static std::filesystem::path FindLuaModule(std::string target);
 private:
-    void load_worldentity_methods(uint32_t modid);
-    void load_creature_methods(uint32_t modid);
-    void load_creature_template_methods(uint32_t modid);
-    void load_gameobject_methods(uint32_t modid);
-    void load_player_methods(uint32_t modid);
-    void load_item_methods(uint32_t modid);
-    void load_instance_methods(uint32_t modid);
-    void load_battleground_methods(uint32_t modid);
-    void load_achievement_methods(uint32_t modid);
-    void load_gameobject_template_methods(uint32_t modid);
-    void load_spell_info_methods(uint32_t modid);
-    void load_areatrigger_methods(uint32_t modid);
-    void load_auction_methods(uint32_t modid);
-    void load_aura_methods(uint32_t modid);
-    void load_spell_methods(uint32_t modid);
-    void load_channel_methods(uint32_t modid);
-    void load_corpse_methods(uint32_t modid);
-    void load_packet_methods(uint32_t modid);
-    void load_damage_metods(uint32_t modid);
-    void load_group_methods(uint32_t modid);
-    void load_guild_methods(uint32_t modid);
-    void load_json_methods(uint32_t modid);
-    void load_loot_methods(uint32_t modid);
-    void load_mail_methods(uint32_t modid);
-    void load_itemtemplate_methods(uint32_t modid);
-    void load_mutablestring_methods(uint32_t modid);
-    void load_mutable_methods(uint32_t modid);
-    void load_position_methods(uint32_t modid);
-    void load_quest_methods(uint32_t modid);
-    void load_smartscript_methods(uint32_t modid);
-    void load_outfit_methods(uint32_t modid);
-    void load_events(uint32_t modid);
-    void load_object_methods(uint32_t modid);
-    void load_world_object_methods(uint32_t modid);
-    void load_unit_methods(uint32_t modid);
-    void load_map_methods(uint32_t modid);
-    void load_database_methods(uint32_t modid);
+    static void load_worldentity_methods(sol::state & state);
+    static void load_creature_methods(sol::state & state);
+    static void load_creature_template_methods(sol::state & state);
+    static void load_gameobject_methods(sol::state & state);
+    static void load_player_methods(sol::state & state);
+    static void load_item_methods(sol::state & state);
+    static void load_instance_methods(sol::state & state);
+    static void load_battleground_methods(sol::state & state);
+    static void load_achievement_methods(sol::state & state);
+    static void load_gameobject_template_methods(sol::state & state);
+    static void load_spell_info_methods(sol::state & state);
+    static void load_areatrigger_methods(sol::state & state);
+    static void load_auction_methods(sol::state & state);
+    static void load_aura_methods(sol::state & state);
+    static void load_spell_methods(sol::state & state);
+    static void load_channel_methods(sol::state & state);
+    static void load_corpse_methods(sol::state & state);
+    static void load_packet_methods(sol::state & state);
+    static void load_damage_metods(sol::state & state);
+    static void load_group_methods(sol::state & state);
+    static void load_guild_methods(sol::state & state);
+    static void load_json_methods(sol::state & state);
+    static void load_loot_methods(sol::state & state);
+    static void load_mail_methods(sol::state & state);
+    static void load_itemtemplate_methods(sol::state & state);
+    static void load_mutablestring_methods(sol::state & state);
+    static void load_mutable_methods(sol::state & state);
+    static void load_position_methods(sol::state & state);
+    static void load_quest_methods(sol::state & state);
+    static void load_smartscript_methods(sol::state & state);
+    static void load_outfit_methods(sol::state & state);
+    static void load_events(sol::state & state);
+    static void load_object_methods(sol::state & state);
+    static void load_world_object_methods(sol::state & state);
+    static void load_unit_methods(sol::state & state);
+    static void load_map_methods(sol::state & state);
+    static void load_database_methods(sol::state & state);
 
     template <typename C, typename T>
-    void load_json_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
+    static void load_json_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 
     template <typename T>
-    void load_entity_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
+    static void load_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 
     template <typename C, typename T>
-    void load_world_entity_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
+    static void load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 
     template <typename T>
-    void load_map_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
+    static void load_map_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 
     template <typename T>
-    void load_object_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
+    static void load_object_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 
     template <typename T>
-    void load_world_object_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
+    static void load_world_object_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 
     template <typename T>
-    void load_unit_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name);
-
-    std::map<std::filesystem::path, sol::table> _modules;
-    std::vector<std::filesystem::path> _file_stack;
-    std::filesystem::path _root_dir;
-    bool alredy_errored = false;
+    static void load_unit_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 };

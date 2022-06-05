@@ -1,24 +1,24 @@
 #include "TSLua.h"
 #include "TSMutable.h"
 
-#define BIND_MUTABLE(type)\
+#define BIND_MUTABLE(state,type)\
     {\
-        auto mut = new_usertype<TSMutable<type>>("TSMutable" #type);\
+        auto mut = state.new_usertype<TSMutable<type>>("TSMutable" #type);\
         mut.set_function("set", &TSMutable<type>::set);\
         mut.set_function("get", &TSMutable<type>::get);\
     }\
 
-void TSLuaState::load_mutable_methods(uint32_t modid)
+void TSLuaState::load_mutable_methods(sol::state& state)
 {
-    BIND_MUTABLE(bool)
-    BIND_MUTABLE(uint8)
-    BIND_MUTABLE(int8)
-    BIND_MUTABLE(uint16)
-    BIND_MUTABLE(int16)
-    BIND_MUTABLE(uint32)
-    BIND_MUTABLE(int32)
-    BIND_MUTABLE(uint64)
-    BIND_MUTABLE(int64)
-    BIND_MUTABLE(float)
-    BIND_MUTABLE(double)
+    BIND_MUTABLE(state, bool)
+    BIND_MUTABLE(state, uint8)
+    BIND_MUTABLE(state, int8)
+    BIND_MUTABLE(state, uint16)
+    BIND_MUTABLE(state, int16)
+    BIND_MUTABLE(state, uint32)
+    BIND_MUTABLE(state, int32)
+    BIND_MUTABLE(state, uint64)
+    BIND_MUTABLE(state, int64)
+    BIND_MUTABLE(state, float)
+    BIND_MUTABLE(state, double)
 }

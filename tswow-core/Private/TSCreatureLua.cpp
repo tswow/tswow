@@ -11,10 +11,10 @@
 #include "TSSpell.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_creature_methods(uint32_t modid)
+void TSLuaState::load_creature_methods(sol::state & state)
 {
-    auto ts_creature = new_usertype<TSCreature>("TSCreature");
-    load_unit_methods_t(ts_creature, modid, "TSCreature");
+    auto ts_creature = state.new_usertype<TSCreature>("TSCreature");
+    load_unit_methods_t(state, ts_creature, "TSCreature");
     ts_creature.set_function("GetScriptName", &TSCreature::LGetScriptName);
     ts_creature.set_function("GetAIName", &TSCreature::LGetAIName);
     ts_creature.set_function("GetAITargets", &TSCreature::LGetAITargets);

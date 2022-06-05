@@ -201,18 +201,18 @@ export class Spell extends MainEntityID<SpellRow> {
         return getInlineID(
               this
             , this.ID
-            , 'SpellID'
+            , 'Spell'
             , 'livescript'
-        ) as _hidden.Spells<this>
+        ) as _hidden.Spell<this>
     }
 
     get InlineLua() {
         return getInlineID(
               this
             , this.ID
-            , 'SpellID'
+            , 'Spell'
             , 'lua'
-        ) as _hidden.Spells<this>
+        ) as _hidden.Spell<this>
     }
 
     clear() {

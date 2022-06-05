@@ -130,7 +130,7 @@ public:
     TSPlayer GetPlayer(uint64 guid);
 
     bool HasCollision(TSString id) ;
-    void AddCollision(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
+    void AddCollision(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
     TSCollisionEntry * GetCollision(TSString id);
     TSCollisions* GetCollisions();
 
@@ -211,20 +211,19 @@ public:
     CollisionCallback callback;
     TSString name;
     uint32_t lastReload;
-    uint32_t modid;
     uint32_t maxHits;
     float range;
     uint64_t minDelay;
     uint64_t lastHit = 0;
 
-    TSCollisionEntry(uint32_t modid, TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback);
+    TSCollisionEntry(TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback);
     bool Tick(TSWorldObject value, bool force = true);
 };
 
 class TC_GAME_API TSCollisions {
 public:
     std::vector<TSCollisionEntry> callbacks;
-    TSCollisionEntry* Add(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
+    TSCollisionEntry* Add(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
     bool Contains(TSString id);
     TSCollisionEntry* Get(TSString id);
     void Tick(TSWorldObject obj);

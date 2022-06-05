@@ -240,9 +240,9 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
         return FactionTemplateRegistry.ref(this, this.row.faction);
     }
 
-    get InlineScripts() { return getInlineID(this, this.ID, 'CreatureID', 'livescript') as _hidden.Creatures<this> }
+    get InlineScripts() { return getInlineID(this, this.ID, 'Creature', 'livescript') as _hidden.Creature<this> }
 
-    get InlineLua() { return getInlineID(this, this.ID, 'CreatureID', 'lua') as _hidden.Creatures<this> }
+    get InlineLua() { return getInlineID(this, this.ID, 'Creature', 'lua') as _hidden.Creature<this> }
 
     /**
      * - 0 = does not regenerate health

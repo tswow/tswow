@@ -2,9 +2,9 @@
 #include "TSDamageInfo.h"
 #include "TSUnit.h"
 
-void TSLuaState::load_damage_metods(uint32_t modid)
+void TSLuaState::load_damage_metods(sol::state& state)
 {
-    auto ts_meleedamageinfo = new_usertype<TSMeleeDamageInfo>("TSDamageInfo");
+    auto ts_meleedamageinfo = state.new_usertype<TSMeleeDamageInfo>("TSDamageInfo");
     LUA_FIELD(ts_meleedamageinfo, TSMeleeDamageInfo, GetAttacker);
     LUA_FIELD(ts_meleedamageinfo, TSMeleeDamageInfo, GetTarget);
     LUA_FIELD(ts_meleedamageinfo, TSMeleeDamageInfo, GetSchool1);
@@ -28,7 +28,7 @@ void TSLuaState::load_damage_metods(uint32_t modid)
     LUA_FIELD(ts_meleedamageinfo, TSMeleeDamageInfo, GetCleanDamage);
     LUA_FIELD(ts_meleedamageinfo, TSMeleeDamageInfo, GetMeleeHitOutcome);
 
-    auto ts_spelldamageinfo = new_usertype<TSSpellDamageInfo>("TSSpellDamageInfo");
+    auto ts_spelldamageinfo = state.new_usertype<TSSpellDamageInfo>("TSSpellDamageInfo");
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetAttacker);
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetTarget);
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetSpellID);
@@ -44,7 +44,7 @@ void TSLuaState::load_damage_metods(uint32_t modid)
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetCleanDamage);
     LUA_FIELD(ts_spelldamageinfo, TSSpellDamageInfo, GetFullBlock);
 
-    auto ts_healinfo = new_usertype<TSHealInfo>("TSHealInfo");
+    auto ts_healinfo = state.new_usertype<TSHealInfo>("TSHealInfo");
     LUA_FIELD(ts_healinfo, TSHealInfo, AbsorbHeal);
     LUA_FIELD(ts_healinfo, TSHealInfo, SetEffectiveHeal);
     LUA_FIELD(ts_healinfo, TSHealInfo, GetHealer);
@@ -56,7 +56,7 @@ void TSLuaState::load_damage_metods(uint32_t modid)
     LUA_FIELD(ts_healinfo, TSHealInfo, GetSchoolMask);
     LUA_FIELD(ts_healinfo, TSHealInfo, GetHitMask);
 
-    auto ts_damageinfo = new_usertype<TSDamageInfo>("TSDamageInfo");
+    auto ts_damageinfo = state.new_usertype<TSDamageInfo>("TSDamageInfo");
     LUA_FIELD(ts_damageinfo, TSDamageInfo, ModifyDamage);
     LUA_FIELD(ts_damageinfo, TSDamageInfo, AbsorbDamage);
     LUA_FIELD(ts_damageinfo, TSDamageInfo, ResistDamage);

@@ -5,9 +5,9 @@
 #include "TSPlayer.h"
 #include "TSWorldPacket.h"
 
-void TSLuaState::load_guild_methods(uint32_t modid)
+void TSLuaState::load_guild_methods(sol::state& state)
 {
-    auto ts_guild = new_usertype<TSGuild>("TSGuild");
+    auto ts_guild = state.new_usertype<TSGuild>("TSGuild");
     LUA_FIELD(ts_guild, TSGuild, GetMemberCount);
     LUA_FIELD(ts_guild, TSGuild, GetLeader);
     LUA_FIELD(ts_guild, TSGuild, GetLeaderGUID);

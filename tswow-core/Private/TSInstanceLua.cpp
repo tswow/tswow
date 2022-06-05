@@ -5,22 +5,22 @@
 #include "TSGameObject.h"
 #include "TSCreature.h"
 
-void TSLuaState::load_instance_methods(uint32_t modid)
+void TSLuaState::load_instance_methods(sol::state& state)
 {
-    auto ts_guidset = new_usertype<TSGuidSet>("TSGuidSet");
+    auto ts_guidset = state.new_usertype<TSGuidSet>("TSGuidSet");
     LUA_FIELD(ts_guidset, TSGuidSet, Contains);
     LUA_FIELD(ts_guidset, TSGuidSet, Add);
     LUA_FIELD(ts_guidset, TSGuidSet, Remove);
 
-    auto ts_bossinfo = new_usertype<TSBossInfo>("TSBossInfo");
+    auto ts_bossinfo = state.new_usertype<TSBossInfo>("TSBossInfo");
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetBossState);
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetMinionGUIDs);
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetDoorsOpenDuringEncounter);
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetDoorsClosedDuringEncounter);
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetDoorsOpenAfterEncounter);
 
-    auto ts_instance = new_usertype<TSInstance>("TSInstance");
-    load_map_methods_t(ts_instance, modid, "TSInstance");
+    auto ts_instance = state.new_usertype<TSInstance>("TSInstance");
+    load_map_methods_t(state, ts_instance, "TSInstance");
     LUA_FIELD(ts_instance, TSInstance, SaveInstanceToDB);
     LUA_FIELD(ts_instance, TSInstance, IsEncounterInProgress);
     LUA_FIELD(ts_instance, TSInstance, GetObjectGUID);

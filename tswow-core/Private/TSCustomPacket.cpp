@@ -79,7 +79,7 @@ TSServerBuffer::TSServerBuffer(TSPlayer player)
 
 void TSServerBuffer::OnPacket(CustomPacketRead* value)
 {
-	// Expanded FIRE_MAP macro because we need to reset the packet
+	// Expanded FIRE_ID macro because we need to reset the packet
 	// reading head between every invocation.
 	// Please do not change this to some auto-resetting macro abuse,
 	// it would NOT be guaranteed to work in the long term.
@@ -87,37 +87,34 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	TSPacketRead read(value);
 	opcode_t opcode = value->Opcode();
 
-	for (size_t i = 0; i < GetTSEvents()->CustomPacketOnReceive.GetSize(); ++i)
+	auto& cbs = ts_events.CustomPacket.OnReceive_callbacks;
+	for (auto const& cb : cbs.m_cxx_callbacks)
 	{
-		auto val = GetTSEvents()->CustomPacketOnReceive.Get(i);
-		if (val.callback)
-		{
-				val.callback(opcode, read, m_player);
-		}
-		else
-		{
-				val.lua_callback(opcode, read, m_player);
-		}
-		value->Reset();
+			cb(opcode, read, m_player);
 	}
 
-	TSPacketEvents* events = GetPacketEvent(value->Opcode());
-	if (!events)
+	for (auto const& cb : cbs.m_lua_callbacks)
 	{
-		return;
+			cb(opcode, read, m_player);
+			value->Reset();
 	}
-	for (size_t i = 0; i < events->CustomPacketOnReceive.GetSize(); ++i)
+
+	if (opcode < cbs.m_id_cxx_callbacks.size())
 	{
-			auto val = events->CustomPacketOnReceive.Get(i);
-			if (val.callback)
+			for (auto const& cb : cbs.m_id_cxx_callbacks[opcode])
 			{
-				  val.callback(opcode, read, m_player);
+					cb(opcode, read, m_player);
+					value->Reset();
 			}
-			else
+	}
+
+	if (opcode < cbs.m_id_lua_callbacks.size())
+	{
+			for (auto const& cb : cbs.m_id_lua_callbacks[opcode])
 			{
-				  val.lua_callback(opcode, read, m_player);
+					cb(opcode, read, m_player);
+					value->Reset();
 			}
-		value->Reset();
 	}
 }
 

@@ -3,7 +3,7 @@
 #include "TSLua.h"
 
 template <typename V, typename T>
-void TSLuaState::load_json_methods_t(sol::usertype<T> & target, uint32_t /*modid*/, std::string const& /*name*/)
+void TSLuaState::load_json_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& /*name*/)
 {
     target.set_function("SetNumber", &V::LSetNumber);
     target.set_function("GetNumber", sol::overload(&V::LGetNumber0, &V::LGetNumber1));

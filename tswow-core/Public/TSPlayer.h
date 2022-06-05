@@ -22,6 +22,7 @@
 #include "TSClasses.h"
 #include "TSUnit.h"
 #include "TSOutfit.h"
+#include "TSDBJson.h"
 
 #include <sol/sol.hpp>
 

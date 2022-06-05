@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSLoot.h"
 
-void TSLuaState::load_loot_methods(uint32_t modid)
+void TSLuaState::load_loot_methods(sol::state& state)
 {
-    auto ts_lootitem = new_usertype<TSLootItem>("TSLootItem");
+    auto ts_lootitem = state.new_usertype<TSLootItem>("TSLootItem");
     LUA_FIELD(ts_lootitem, TSLootItem, GetItemID);
     LUA_FIELD(ts_lootitem, TSLootItem, GetRandomSuffix);
     LUA_FIELD(ts_lootitem, TSLootItem, GetRandomPropertyID);
@@ -17,7 +17,7 @@ void TSLuaState::load_loot_methods(uint32_t modid)
     LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomSuffix);
     LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomPropertyID);
 
-    auto ts_loot = new_usertype<TSLoot>("TSLoot");
+    auto ts_loot = state.new_usertype<TSLoot>("TSLoot");
     ts_loot.set_function("AddItem", sol::overload(
         &TSLoot::LAddItem0
         , &TSLoot::LAddItem1

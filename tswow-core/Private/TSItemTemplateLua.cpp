@@ -3,10 +3,10 @@
 #include "TSGlobal.h"
 #include "TSObjectLua.h"
 
-void TSLuaState::load_itemtemplate_methods(uint32_t modid)
+void TSLuaState::load_itemtemplate_methods(sol::state& state)
 {
-    auto ts_itemtemplate = new_usertype < TSItemTemplate>("TSItemTemplate");
-    load_entity_methods_t(ts_itemtemplate, modid, "TSItemTemplate");
+    auto ts_itemtemplate = state.new_usertype < TSItemTemplate>("TSItemTemplate");
+    load_entity_methods_t(state, ts_itemtemplate, "TSItemTemplate");
     LUA_FIELD(ts_itemtemplate, TSItemTemplate, GetDamageMinA);
     LUA_FIELD(ts_itemtemplate, TSItemTemplate, GetDamageMinB);
     LUA_FIELD(ts_itemtemplate, TSItemTemplate, GetDamageMaxA);
@@ -209,6 +209,6 @@ void TSLuaState::load_itemtemplate_methods(uint32_t modid)
     ));
     ts_itemtemplate.set_function("GetName", &TSItemTemplate::LGetName);
     ts_itemtemplate.set_function("GetDescription", &TSItemTemplate::LGetDescription);
-    set_function("GetItemTemplate", &GetItemTemplate);
-    set_function("CreateItemTemplate", &CreateItemTemplate);
+    state.set_function("GetItemTemplate", &GetItemTemplate);
+    state.set_function("CreateItemTemplate", &CreateItemTemplate);
 }

@@ -10,15 +10,15 @@
 #include "TSGroup.h"
 #include "TSWorldPacket.h"
 
-void TSLuaState::load_battleground_methods(uint32_t modid)
+void TSLuaState::load_battleground_methods(sol::state& state)
 {
-    auto ts_battlegroundplayer = new_usertype<TSBattlegroundPlayer>("TSBattlegroundPlayer");
+    auto ts_battlegroundplayer = state.new_usertype<TSBattlegroundPlayer>("TSBattlegroundPlayer");
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetGUID);
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetTeam);
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetOfflineRemoveTime);
 
-    sol::usertype<TSBattleground> ts_battleground = new_usertype<TSBattleground>("TSBattleground");
-    load_map_methods_t(ts_battleground, modid, "TSBattleground");
+    sol::usertype<TSBattleground> ts_battleground = state.new_usertype<TSBattleground>("TSBattleground");
+    load_map_methods_t(state, ts_battleground, "TSBattleground");
     #if TRINITY
     LUA_FIELD(ts_battleground, TSBattleground, GetBracketID);
     #endif

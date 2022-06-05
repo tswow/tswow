@@ -1,364 +1,210 @@
+/*
+ * This file is part of tswow (https://github.com/tswow/).
+ * Copyright (C) 2020-2022 tswow <https://github.com/tswow/>
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 #pragma once
 
-#include "TSPlayer.h"
-#include "TSLua.h"
-
 #include <vector>
-#include <map>
-#include <sol/sol.hpp>
 
-class TSEventHandle;
+#include "sol/sol.hpp"
 
-// Contains a single callback function
-template <class TSCallback>
-class TSEventEntry {
-public:
-		TSEventHandle* handle;
-		TSCallback callback;
-		sol::protected_function lua_callback;
+template <class C>
+struct TSEvent;
 
-		TSEventEntry(TSEventHandle* handle, TSCallback callback)
-		{
-				this->handle = handle;
-				this->callback = callback;
-		}
+void ts_clear_events();
+void __ts_add_event(TSEvent<void*>* evt);
 
-		TSEventEntry(TSEventHandle* handle, sol::protected_function lua_callback)
-		{
-				this->handle = handle;
-				this->lua_callback = lua_callback;
-				this->callback = nullptr;
-		}
-};
-
-// Contains all callback functions for a single global event type.
-template <class TSCallback>
-class TSEvent
+template <class C>
+struct TSEvent
 {
-		std::vector<TSEventEntry<TSCallback>> callbacks;
-		size_t size = 0;
-public:
-		TSEventHandle* Add(TSCallback callback);
-		TSEventHandle* Add(sol::protected_function callback);
-		void Remove(size_t index);
-		size_t GetSize() { return callbacks.size(); }
-		TSEventEntry<TSCallback> Get(size_t index) { return callbacks[index]; }
-};
-
-// A handle to a TSEvent index that can remove itself
-// please for the love of god remove this monstrosity.
-class TSEventHandle
-{
-public:
-		size_t index;
-		TSEvent<void*>* evt;
-		TSEventHandle(TSEvent<void*>* evt, size_t index)
+		TSEvent()
 		{
-				this->evt = evt;
-				this->index = index;
+				__ts_add_event((TSEvent<void*>*)this);
 		}
 
-		void Remove()
+		using cxx_callbacks = std::vector<C>;
+		using lua_callbacks = std::vector<sol::protected_function>;
+		using cxx_id_callbacks = std::vector<cxx_callbacks>;
+		using lua_id_callbacks = std::vector<lua_callbacks>;
+		cxx_callbacks m_cxx_callbacks;
+		lua_callbacks m_lua_callbacks;
+		cxx_id_callbacks m_id_cxx_callbacks;
+		lua_id_callbacks m_id_lua_callbacks;
+
+		bool has_non_id_entries()
 		{
-				this->evt->Remove(this->index);
-		}
-};
-
-template <class TSCallback>
-TSEventHandle* TSEvent<TSCallback>::Add(TSCallback callback)
-{
-		TSEvent<void*>* vd = (TSEvent<void*>*) this;
-		TSEventHandle* handle = new TSEventHandle(vd, callbacks.size());
-		callbacks.push_back(TSEventEntry<TSCallback>(handle, callback));
-		return handle;
-}
-
-template <class TSCallback>
-TSEventHandle* TSEvent<TSCallback>::Add(sol::protected_function callback)
-{
-		TSEvent<void*>* vd = (TSEvent<void*>*) this;
-		TSEventHandle* handle = new TSEventHandle(vd, callbacks.size());
-		callbacks.push_back(TSEventEntry<TSCallback>(handle, callback));
-		return handle;
-}
-
-template <class TSCallback>
-void TSEvent<TSCallback>::Remove(size_t index)
-{
-		callbacks.erase(callbacks.begin() + index);
-		for (size_t i = index; i < callbacks.size(); ++i)
-		{
-				callbacks[i].handle->index--;
-		}
-}
-
-// entity id <-> special container for TSEvents
-template <typename T>
-class TSEventMap {
-		std::map<uint32_t, T> map;
-public:
-		void Remove(uint32_t key)
-		{
-				OnRemove(key);
-				map.erase(key);
+				return m_cxx_callbacks.size() > 0 || m_lua_callbacks.size() > 0;
 		}
 
-		virtual void OnAdd(uint32_t key, T* value) = 0;
-		virtual void OnRemove(uint32_t key) = 0;
-
-		T* Get(uint32_t key)
+		void clear()
 		{
-				typename std::map<uint32_t, T>::iterator it = map.find(key);
-				if (it != map.end())
+				m_cxx_callbacks.clear();
+				m_lua_callbacks.clear();
+				for (cxx_callbacks& cb : m_id_cxx_callbacks)
 				{
-						return &it->second;
+						cb.clear();
 				}
-				else
+				for (lua_callbacks& cb : m_id_lua_callbacks)
 				{
-						T t = T();
-						map[key] = t;
-						T* v = &map[key];
-						OnAdd(key, v);
-						return v;
+						cb.clear();
 				}
 		}
 };
 
-struct TSEventStore;
-class EventHandler {
-protected:
-		std::vector<TSEventHandle*> handles;
-		void Add(TSEventHandle* listener) { handles.push_back(listener); }
-		TSEventStore* events = nullptr;
-public:
-		void LoadEvents(TSEventStore* events)
-		{
-				this->events = events;
-		}
-
-		void Unload() {
-				for (TSEventHandle* g : handles)
-				{
-						g->Remove();
-						free(g);
-				}
-				handles.clear();
-		}
-};
-
-template <typename T>
-class MappedEventHandler
+class TSMappedEvents
 {
 protected:
-		std::vector<TSEventHandle*> handles;
-		void Add(TSEventHandle* listener) { handles.push_back(listener); }
-		T* eventMap = nullptr;
-public:
-		void LoadEvents(T* eventMap)
-		{
-				this->eventMap = eventMap;
-		}
+		virtual uint32_t get_registry_id(uint32_t id) = 0;
+};
 
-		void Unload()
+class TSMappedEventsDirect : public TSMappedEvents
+{
+protected:
+		uint32_t get_registry_id(uint32_t id) final override
 		{
-				for (TSEventHandle* g : handles)
-				{
-						g->Remove();
-						free(g);
-				}
-				handles.clear();
+				return id;
 		}
 };
 
-TC_GAME_API uint32_t GetReloads(uint32_t modid);
-
-/** Network Messages */
-template <typename T>
-struct MessageHandle {
-		std::function<std::shared_ptr<void>(uint8_t*)> constructor;
-		std::vector < void(*)(TSPlayer, std::shared_ptr<T>)> listeners;
-		uint8_t size = 0;
-		bool enabled = false;
-
-		MessageHandle() {}
-		MessageHandle(uint8_t size, std::function<std::shared_ptr<void>(uint8_t*)> constructor)
-		{
-				this->constructor = constructor;
-				this->size = size;
-				this->enabled = true;
-		}
-
-		void fire(TSPlayer player, uint8_t* data)
-		{
-				auto g = std::static_pointer_cast<T>(constructor(data));
-				for (auto& func : listeners)
-				{
-						func(player, g);
-				}
-		}
+struct TSRegistryRef
+{
+		uint32_t id = UINT32_MAX;
 };
 
-TC_GAME_API void RegisterMessage(uint32_t modid, uint16_t opcode, uint8_t size, std::function<std::shared_ptr<void>(uint8_t*)> constructor);
+class TSMappedEventsRegistry : public TSMappedEvents
+{
+protected:
+		virtual TSRegistryRef& get_registry_ref(uint32_t id) = 0;
+		uint32_t get_registry_id(uint32_t id) final override
+		{
+				TSRegistryRef& ref = get_registry_ref(id);
+				if (ref.id == UINT32_MAX)
+				{
+						ref.id = m_cur_id++;
+				}
+				return ref.id;
+		}
+private:
+		uint32_t m_cur_id = 0;
+};
 
-TC_GAME_API MessageHandle<void>* GetMessage(uint16_t opcode);
-
-TC_GAME_API void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer, std::shared_ptr<void>));
-
-#define EVENT_TYPE(name,...) typedef void (*name##__Type)(__VA_ARGS__);
-#define EVENT(name,...) TSEvent<name##__Type> name;
-
-#define EVENT_HANDLE(category,name)\
-    void name(category##name##__Type cb)\
-    {\
-        Add(this->events->category##name.Add(cb));\
-    }\
-		\
-		void name##__lua(sol::protected_function fn)\
+#define EVENT_ROOT(name,is_fn,fn_cxx,fn_lua,...) \
+		typedef void (*name##__type)(__VA_ARGS__);\
+		TSEvent<name##__type> name##_callbacks;\
+		void name(name##__type cb) {\
+				name##_callbacks.m_cxx_callbacks.push_back(cb);\
+				if(is_fn) fn_cxx(cb);\
+		}\
+		void L##name(sol::protected_function cb)\
 		{\
-				Add(this->events->category##name.Add(fn));\
+				name##_callbacks.m_lua_callbacks.push_back(cb);\
+				if(is_fn) fn_lua(cb);\
 		}\
 
-#define EVENT_HANDLE_FN(category,name,fn)\
-    void name(category##name##__Type cb)\
-    {\
-        Add(this->events->category##name.Add(cb));\
-        fn(cb,std::numeric_limits<uint32_t>::max());\
-    }\
-    void name##__lua(category##name##__Type cb)\
-    {\
-        Add(this->events->category##name.Add(cb));\
-    }\
-
-#define MAP_EVENT_HANDLE(category,name)\
-    void name(uint32_t id, category##name##__Type cb)\
-    {\
-        Add(this->eventMap->Get(id)->category##name.Add(cb));\
-    }\
-    \
-    void name(TSArray<uint32_t> ids, category##name##__Type cb)\
-    {\
-        for(uint32_t id : ids)\
-        {\
-            name(id,cb);\
-        }\
-    }\
-		\
-		void name##__lua(sol::object obj, sol::protected_function cb)\
+#define ID_EVENT_ROOT(name,is_fn,fn_plain_cxx,fn_plain_lua,fn_mapped_cxx,fn_mapped_lua,...)\
+		EVENT_ROOT(name,is_fn,fn_plain_cxx,fn_plain_lua,__VA_ARGS__)\
+		void name(uint32_t id, name##__type cb)\
+		{\
+				uint32_t reg_id = get_registry_id(id);\
+				auto & cbs = name##_callbacks.m_id_cxx_callbacks;\
+				if(reg_id >= cbs.size())\
+				{\
+						cbs.resize(uint64_t(reg_id) + 1);\
+				}\
+				cbs[reg_id].push_back(cb);\
+				if (is_fn) fn_mapped_cxx(cb,id);\
+		}\
+		void name(TSArray<uint32_t> ids, name##__type cb) {\
+				for(uint32_t id : ids)\
+				{\
+						name(id, cb);\
+				}\
+		}\
+		void _L##name(uint32_t id, sol::protected_function cb)\
+		{\
+				uint32_t reg_id = get_registry_id(id);\
+				auto& cbs = name##_callbacks.m_id_lua_callbacks;\
+				if(reg_id >= cbs.size())\
+				{\
+						cbs.resize(uint64_t(reg_id) + 1);\
+				}\
+				cbs[reg_id].push_back(cb);\
+				if (is_fn) fn_mapped_lua(cb,id);\
+		}\
+		void Lid##name(sol::object obj, sol::protected_function cb)\
 		{\
 				switch(obj.get_type())\
 				{\
 						case sol::type::number:\
-								Add(eventMap->Get(obj.as<uint32_t>())->category##name.Add(cb));\
+								_L##name(obj.as<uint32_t>(), cb);\
 								break;\
 						case sol::type::table:\
 								sol::table table = obj.as<sol::table>();\
 								for(size_t i = 1; i <= table.size(); ++i)\
 								{\
-										Add(eventMap->Get((uint32_t)table.get<double>(i))->category##name.Add(cb));\
+										_L##name((uint32_t)table.get<double>(i), cb);\
 								}\
 								break;\
 				}\
 		}\
 
-#define MAP_EVENT_HANDLE_FN(category,name,fn)\
-    void name(uint32 id, category##name##__Type cb)\
-    {\
-        Add(this->eventMap->Get(id)->category##name.Add(cb));\
-        fn(cb,id);\
-    }\
-    \
-    void name(TSArray<uint32> ids, category##name##__Type cb)\
-    {\
-        for (uint32 id : ids)\
-        {\
-            name(id, cb);\
-        }\
-    }\
-		void name##__lua(sol::object obj, sol::protected_function cb)\
+#define EVENT_FN(name,fn,...)\
+		EVENT_ROOT(name,true,fn,fn,__VA_ARGS__)
+
+#define ID_EVENT_FN(name,fn,...)\
+		ID_EVENT_ROOT(name,true,fn,fn,fn,fn,__VA_ARGS__)
+
+#define EVENT(name,...)\
+		EVENT_ROOT(name,false,[](name##__type){},[](sol::protected_function){},__VA_ARGS__)
+
+#define ID_EVENT(name,...)\
+		ID_EVENT_ROOT(name,false,[](name##__type){},[](sol::protected_function){},[](name##__type,uint32_t){},[](sol::protected_function,uint32_t){},__VA_ARGS__);
+
+#define FIRE(category,name,...)\
 		{\
-				switch(obj.get_type())\
+				for(auto cb : ts_events.category.name##_callbacks.m_cxx_callbacks)\
 				{\
-						case sol::type::number:\
-								Add(eventMap->Get(obj.as<uint32_t>())->category##name.Add(cb));\
-								fn##__lua(cb,obj.as<uint32_t>());\
-								break;\
-						case sol::type::table:\
-								sol::table table = obj.as<sol::table>();\
-								for(size_t i = 1; i <= table.size(); ++i)\
-								{\
-										Add(eventMap->Get((uint32_t)table.get<double>(i))->category##name.Add(cb));\
-										fn##__lua(cb,uint32_t(table.get<double>(i)));\
-								}\
-								break;\
+						cb(__VA_ARGS__);\
+				}\
+				\
+				for(auto cb : ts_events.category.name##_callbacks.m_lua_callbacks)\
+				{\
+						cb(__VA_ARGS__);\
 				}\
 		}\
 
-#define FIRE(name,...)\
-    {\
-        for(size_t __fire_i=0;__fire_i< GetTSEvents()->name.GetSize(); ++__fire_i)\
-        {\
-						auto val = GetTSEvents()->name.Get(__fire_i);\
-						if(val.callback) \
+#define FIRE_ID(ref,category,name,...)\
+		{\
+				FIRE(category,name,__VA_ARGS__)\
+				auto cxx_cbs = ts_events.category.name##_callbacks.m_id_cxx_callbacks;\
+				if(ref < cxx_cbs.size())\
+				{\
+						for(auto cb: cxx_cbs[ref])\
 						{\
-								val.callback(__VA_ARGS__);\
+								cb(__VA_ARGS__);\
 						}\
-						else\
+				}\
+				auto lua_cbs = ts_events.category.name##_callbacks.m_id_lua_callbacks;\
+				if(ref < lua_cbs.size())\
+				{\
+						for(auto cb: lua_cbs[ref])\
 						{\
-								TSLuaState::handle_error(val.lua_callback(__VA_ARGS__));\
+								cb(__VA_ARGS__);\
 						}\
-        }\
-    }
+				}\
+		}
 
-#define FIRE_SPLIT(name,normal,lua)\
-    {\
-        for(size_t __fire_i=0;__fire_i< GetTSEvents()->name.GetSize(); ++__fire_i)\
-        {\
-						auto val = GetTSEvents()->name.Get(__fire_i);\
-						if(val.callback) \
-						{\
-								val.callback##normal;\
-						}\
-						else\
-						{\
-								TSLuaState::handle_error(val.lua_callback##lua);\
-						}\
-        }\
-    }
-
-#define FIRE_MAP(obj,name,...)\
-    FIRE(name,__VA_ARGS__);\
-    if(obj)\
-    {\
-        for(size_t __fire_i=0;__fire_i< obj->name.GetSize(); ++__fire_i)\
-        {\
-						auto val = obj->name.Get(__fire_i);\
-						if(val.callback) \
-						{\
-								val.callback(__VA_ARGS__);\
-						}\
-						else\
-						{\
-								TSLuaState::handle_error(val.lua_callback(__VA_ARGS__)); \
-						}\
-        }\
-    }\
-
-#define FIRE_MAP_SPLIT(obj,name,normal,lua)\
-    FIRE_SPLIT(name,normal,lua);\
-    if(obj)\
-    {\
-        for(size_t __fire_i=0;__fire_i< obj->name.GetSize(); ++__fire_i)\
-        {\
-						auto val = obj->name.Get(__fire_i);\
-						if(val.callback) \
-						{\
-								val.callback(normal);\
-						}\
-						else\
-						{\
-								TSLuaState::handle_error(val.lua_callback(lua)); \
-						}\
-        }\
-    }\
-
-#define const_(a) a
+#define EVENTS_HEADER(type)\
+		type* operator->() { return this; }

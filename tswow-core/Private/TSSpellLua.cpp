@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSSpell.h"
 
-void TSLuaState::load_spell_methods(uint32_t modid)
+void TSLuaState::load_spell_methods(sol::state& state)
 {
-    auto ts_spell = new_usertype<TSSpell>("TSSpell");
+    auto ts_spell = state.new_usertype<TSSpell>("TSSpell");
     LUA_FIELD(ts_spell, TSSpell, IsAutoRepeat);
     LUA_FIELD(ts_spell, TSSpell, GetCaster);
     LUA_FIELD(ts_spell, TSSpell, GetOriginalCaster);
@@ -21,7 +21,7 @@ void TSLuaState::load_spell_methods(uint32_t modid)
     LUA_FIELD(ts_spell, TSSpell, Cancel);
     LUA_FIELD(ts_spell, TSSpell, Finish);
 
-    auto ts_spell_destination = new_usertype<TSSpellDestination>("TSSpellDestination");
+    auto ts_spell_destination = state.new_usertype<TSSpellDestination>("TSSpellDestination");
     LUA_FIELD(ts_spell_destination, TSSpellDestination, GetX);
     LUA_FIELD(ts_spell_destination, TSSpellDestination, GetY);
     LUA_FIELD(ts_spell_destination, TSSpellDestination, GetZ);
@@ -37,7 +37,7 @@ void TSLuaState::load_spell_methods(uint32_t modid)
     LUA_FIELD(ts_spell_destination, TSSpellDestination, Relocate);
     LUA_FIELD(ts_spell_destination, TSSpellDestination, RelocateOffset);
 
-    auto ts_spell_implicit_target_info = new_usertype<TSSpellImplicitTargetInfo>("TSSpellImplicitTargetInfo");
+    auto ts_spell_implicit_target_info = state.new_usertype<TSSpellImplicitTargetInfo>("TSSpellImplicitTargetInfo");
     LUA_FIELD(ts_spell_implicit_target_info, TSSpellImplicitTargetInfo, IsArea);
     LUA_FIELD(ts_spell_implicit_target_info, TSSpellImplicitTargetInfo, GetSelectionCategory);
     LUA_FIELD(ts_spell_implicit_target_info, TSSpellImplicitTargetInfo, GetReferenceType);
@@ -50,7 +50,7 @@ void TSLuaState::load_spell_methods(uint32_t modid)
     LUA_FIELD(ts_spell_implicit_target_info, TSSpellImplicitTargetInfo, IsSourceSet);
     LUA_FIELD(ts_spell_implicit_target_info, TSSpellImplicitTargetInfo, IsTargetSet);
 
-    auto ts_dispel_info = new_usertype<TSDispelInfo>("TSDispelInfo");
+    auto ts_dispel_info = state.new_usertype<TSDispelInfo>("TSDispelInfo");
     LUA_FIELD(ts_dispel_info, TSDispelInfo, GetDispeller);
     LUA_FIELD(ts_dispel_info, TSDispelInfo, GetDispellerSpellId);
     LUA_FIELD(ts_dispel_info, TSDispelInfo, GetRemovedCharges);

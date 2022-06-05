@@ -1,12 +1,14 @@
 #include "TSEvents.h"
 #include "TSLua.h"
 
-#define LUA_HANDLE(target, category,name) target.set_function(#name,&TSEvents::category::name##__lua)
-#define LUA_MAPPED_HANDLE(category,name) #name,sol::overload(&TSEvents::category::name##__luaNum,&TSEvents::category::name##__luaTable)
+#define LUA_HANDLE(target, category,name) target.set_function(#name,&TSEvents::category::L##name)
+#define LUA_MAPPED_HANDLE(category,name) target.set_function(#name,sol::overload(&TSEvents::category::Lid##name,&TSEvents::category::L##name)
 
-void TSLuaState::load_events(uint32_t modid)
+void TSLuaState::load_events(sol::state& state)
 {
-    auto world_events = new_usertype<TSEvents::WorldEvents>("WorldEvents");
+    auto lua_events = state.new_usertype<TSEvents>("CTSEvents");
+
+    auto world_events = state.new_usertype<TSEvents::WorldEvents>("WorldEvents");
     LUA_HANDLE(world_events, WorldEvents, OnOpenStateChange);
     LUA_HANDLE(world_events, WorldEvents, OnStartup);
     LUA_HANDLE(world_events, WorldEvents, OnShutdown);
@@ -17,13 +19,13 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(world_events, WorldEvents, OnUpdate);
     LUA_HANDLE(world_events, WorldEvents, OnCalcHonor);
 
-    auto auction_events = new_usertype<TSEvents::AuctionEvents>("AuctionEvents");
+    auto auction_events = state.new_usertype<TSEvents::AuctionEvents>("AuctionEvents");
     LUA_HANDLE(auction_events, AuctionEvents, OnAuctionAdd);
     LUA_HANDLE(auction_events, AuctionEvents, OnAuctionRemove);
     LUA_HANDLE(auction_events, AuctionEvents, OnAuctionSuccessful);
     LUA_HANDLE(auction_events, AuctionEvents, OnAuctionExpire);
 
-    auto vehicle_events = new_usertype<TSEvents::VehicleEvents>("VehicleEvents");
+    auto vehicle_events = state.new_usertype<TSEvents::VehicleEvents>("VehicleEvents");
     LUA_HANDLE(vehicle_events, VehicleEvents, OnInstall);
     LUA_HANDLE(vehicle_events, VehicleEvents, OnUninstall);
     LUA_HANDLE(vehicle_events, VehicleEvents, OnReset);
@@ -31,15 +33,11 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(vehicle_events, VehicleEvents, OnAddPassenger);
     LUA_HANDLE(vehicle_events, VehicleEvents, OnRemovePassenger);
 
-    auto achievement_events = new_usertype<TSEvents::AchievementEvents>("AchievementEvents");
+    auto achievement_events = state.new_usertype<TSEvents::AchievementEvents>("AchievementEvents");
     LUA_HANDLE(achievement_events, AchievementEvents, OnComplete);
     LUA_HANDLE(achievement_events, AchievementEvents, OnUpdate);
 
-    auto achievement_id_events = new_usertype<TSEvents::AchievementIDEvents>("AchievementIDEvents");
-    LUA_HANDLE(achievement_id_events, AchievementIDEvents, OnComplete);
-    LUA_HANDLE(achievement_id_events, AchievementIDEvents, OnUpdate);
-
-    auto player_events = new_usertype<TSEvents::PlayerEvents>("PlayerEvents");
+    auto player_events = state.new_usertype<TSEvents::PlayerEvents>("PlayerEvents");
     LUA_HANDLE(player_events, PlayerEvents, OnPVPKill);
     LUA_HANDLE(player_events, PlayerEvents, OnCreatureKill);
     LUA_HANDLE(player_events, PlayerEvents, OnPlayerKilledByCreature);
@@ -63,7 +61,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(player_events, PlayerEvents, OnTextEmote);
     LUA_HANDLE(player_events, PlayerEvents, OnSpellCast);
     LUA_HANDLE(player_events, PlayerEvents, OnLogin);
-    //LUA_HANDLE(player_events, PlayerEvents, OnReload);
+    LUA_HANDLE(player_events, PlayerEvents, OnReload);
     LUA_HANDLE(player_events, PlayerEvents, OnLogout);
     LUA_HANDLE(player_events, PlayerEvents, OnCreate);
     LUA_HANDLE(player_events, PlayerEvents, OnCreateEarly);
@@ -83,7 +81,6 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(player_events, PlayerEvents, OnGenerateItemLoot);
     LUA_HANDLE(player_events, PlayerEvents, OnLearnTalent);
     LUA_HANDLE(player_events, PlayerEvents, OnLootCorpse);
-    // todo: why is this not exposed?
     //LUA_HANDLE(player_events, PlayerEvents, OnTradeComplete);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateDodgePercentage);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateBlockPercentage);
@@ -112,7 +109,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
 
-    auto account_events = new_usertype<TSEvents::AccountEvents>("AccountEvents");
+    auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
     LUA_HANDLE(account_events, AccountEvents, OnFailedAccountLogin);
     LUA_HANDLE(account_events, AccountEvents, OnEmailChange);
@@ -120,8 +117,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(account_events, AccountEvents, OnPasswordChange);
     LUA_HANDLE(account_events, AccountEvents, OnFailedPasswordChange);
 
-
-    auto guild_events = new_usertype<TSEvents::GuildEvents>("GuildEvents");
+    auto guild_events = state.new_usertype<TSEvents::GuildEvents>("GuildEvents");
     LUA_HANDLE(guild_events, GuildEvents, OnAddMember);
     LUA_HANDLE(guild_events, GuildEvents, OnRemoveMember);
     LUA_HANDLE(guild_events, GuildEvents, OnMOTDChanged);
@@ -133,15 +129,14 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(guild_events, GuildEvents, OnEvent);
     LUA_HANDLE(guild_events, GuildEvents, OnBankEvent);
 
-
-    auto group_events = new_usertype<TSEvents::GroupEvents>("GroupEvents");
+    auto group_events = state.new_usertype<TSEvents::GroupEvents>("GroupEvents");
     LUA_HANDLE(group_events, GroupEvents, OnAddMember);
     LUA_HANDLE(group_events, GroupEvents, OnInviteMember);
     LUA_HANDLE(group_events, GroupEvents, OnRemoveMember);
     LUA_HANDLE(group_events, GroupEvents, OnChangeLeader);
     LUA_HANDLE(group_events, GroupEvents, OnDisband);
 
-    auto unit_events = new_usertype<TSEvents::UnitEvents>("UnitEvents");
+    auto unit_events = state.new_usertype<TSEvents::UnitEvents>("UnitEvents");
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMissChance);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcHeal);
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageEarly);
@@ -160,7 +155,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(unit_events, UnitEvents, OnExitCombatWith);
     LUA_HANDLE(unit_events, UnitEvents, OnSetTarget);
 
-    auto spell_events = new_usertype<TSEvents::SpellEvents>("SpellEvents");
+    auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_HANDLE(spell_events, SpellEvents, OnCast);
     LUA_HANDLE(spell_events, SpellEvents, OnCheckCast);
     LUA_HANDLE(spell_events, SpellEvents, OnDispel);
@@ -213,61 +208,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(spell_events, SpellEvents, OnObjectTargetSelect);
     LUA_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
 
-    auto spell_id_events = new_usertype<TSEvents::SpellIDEvents>("SpellIDEvents");
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCast);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckCast);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDispel);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffect);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectApplyGlyph);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnHit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnTick);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnRemove);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnApply);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDamageEarly);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDamageLate);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnPeriodicDamage);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcMiss);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcCrit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcAuraCrit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcReflect);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcHit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcResist);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcMeleeMiss);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCalcSpellPowerLevelPenalty);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnTrainerSend);
-
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckAreaTarget);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckEffectProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnCheckProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectPeriodic);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnPrepareProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterDispel);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterEffectApply);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterEffectProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterEffectRemove);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterProc);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDispel);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectAbsorb);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectAfterAbsorb);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectAfterManaShield);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectCalcAmount);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectCalcPeriodic);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectCalcSpellMod);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectManaShield);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnEffectSplit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterCast);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnAfterHit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnBeforeCast);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnBeforeHit);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnDestinationTargetSelect);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnObjectAreaTargetSelect);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnObjectTargetSelect);
-    LUA_HANDLE(spell_id_events, SpellIDEvents, OnOnResistAbsorbCalculate);
-
-
-    auto creature_events = new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
+    auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);
     LUA_HANDLE(creature_events, CreatureEvents, OnJustEnteredCombat);
     LUA_HANDLE(creature_events, CreatureEvents, OnJustEngagedWith);
@@ -296,7 +237,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(creature_events, CreatureEvents, OnUpdateAI);
     LUA_HANDLE(creature_events, CreatureEvents, OnGenerateLoot);
     LUA_HANDLE(creature_events, CreatureEvents, OnCreate);
-    //LUA_HANDLE(creature_events, CreatureEvents, OnReload);
+    LUA_HANDLE(creature_events, CreatureEvents, OnReload);
     LUA_HANDLE(creature_events, CreatureEvents, OnRemove);
     LUA_HANDLE(creature_events, CreatureEvents, OnCanGeneratePickPocketLoot);
     LUA_HANDLE(creature_events, CreatureEvents, OnGeneratePickPocketLoot);
@@ -322,62 +263,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(creature_events, CreatureEvents, OnCalcGain);
     LUA_HANDLE(creature_events, CreatureEvents, OnCalcBaseGain);
 
-    auto creature_id_events = new_usertype<TSEvents::CreatureIDEvents>("CreatureIDEvents");
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnMoveInLOS);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnJustEnteredCombat);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnJustEngagedWith);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnDeathEarly);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnDeath);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnKilledUnit);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSummoned);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnIsSummoned);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSummonDespawn);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSummonDies);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnHitBySpell);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSpellHitTarget);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSpellCastFinished);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnJustAppeared);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCharmed);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnReachedHome);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnReceiveEmote);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnOwnerAttacked);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnOwnerAttacks);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCorpseRemoved);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnWaypointStarted);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnWaypointReached);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnWaypointPathEnded);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnPassengerBoarded);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSpellClick);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateAI);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGenerateLoot);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCreate);
-    //LUA_HANDLE(creature_id_events, CreatureIDEvents, OnReload);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnRemove);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCanGeneratePickPocketLoot);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGeneratePickPocketLoot);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGenerateSkinningLoot);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateLvlDepMaxHealth);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateLvlDepMaxMana);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateLvlDepBaseDamage);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateLvlDepArmor);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateLvlDepAttackPower);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnSendVendorItem);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGossipHello);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGossipSelect);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGossipSelectCode);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnQuestAccept);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnQuestReward);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateResistance);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateArmor);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateMaxHealth);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateMaxPower);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateAttackPowerDamage);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateDamagePhysical);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCalcColorCode);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCalcGain);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCalcBaseGain);
-
-    auto gameobject_events = new_usertype<TSEvents::GameObjectEvents>("GameObjectEvents");
+    auto gameobject_events = state.new_usertype<TSEvents::GameObjectEvents>("GameObjectEvents");
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnUpdate);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnDialogStatus);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnDestroyed);
@@ -388,7 +274,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnGossipSelect);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnGossipSelectCode);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnCreate);
-    //LUA_HANDLE(gameobject_events, GameObjectEvents, OnReload);
+    LUA_HANDLE(gameobject_events, GameObjectEvents, OnReload);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnRemove);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnUse);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnQuestAccept);
@@ -396,28 +282,9 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnGenerateLoot);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnGenerateFishLoot);
 
-    auto gameobject_id_events = new_usertype<TSEvents::GameObjectIDEvents>("GameObjectIDEvents");
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnUpdate);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnDialogStatus);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnDestroyed);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnDamaged);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnLootStateChanged);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGOStateChanged);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGossipHello);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGossipSelect);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGossipSelectCode);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnCreate);
-    //LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnReload);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnRemove);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnUse);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnQuestAccept);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnQuestReward);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGenerateLoot);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGenerateFishLoot);
-
-    auto map_events = new_usertype<TSEvents::MapEvents>("MapEvents");
+    auto map_events = state.new_usertype<TSEvents::MapEvents>("MapEvents");
     LUA_HANDLE(map_events, MapEvents, OnCreate);
-    //LUA_HANDLE(map_events, MapEvents, OnReload);
+    LUA_HANDLE(map_events, MapEvents, OnReload);
     LUA_HANDLE(map_events, MapEvents, OnUpdate);
     LUA_HANDLE(map_events, MapEvents, OnPlayerEnter);
     LUA_HANDLE(map_events, MapEvents, OnPlayerLeave);
@@ -426,24 +293,10 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(map_events, MapEvents, OnGameObjectCreate);
     LUA_HANDLE(map_events, MapEvents, OnGameObjectRemove);
     LUA_HANDLE(map_events, MapEvents, OnCheckEncounter);
-    LUA_HANDLE(map_events, MapEvents, OnMessage);
 
-    auto map_id_events = new_usertype<TSEvents::MapIDEvents>("MapIDEvents");
-    LUA_HANDLE(map_id_events, MapIDEvents, OnCreate);
-    //LUA_HANDLE(map_id_events, MapIDEvents, OnReload);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnUpdate);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnPlayerEnter);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnPlayerLeave);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnCreatureCreate);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnCreatureRemove);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnGameObjectCreate);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnGameObjectRemove);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnCheckEncounter);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnMessage);
-
-    auto battleground_events = new_usertype<TSEvents::BattlegroundEvents>("BattlegroundEvents");
+    auto battleground_events = state.new_usertype<TSEvents::BattlegroundEvents>("BattlegroundEvents");
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnCanCreate);
-    //LUA_HANDLE(battleground_events, BattlegroundEvents, OnReload);
+    LUA_HANDLE(battleground_events, BattlegroundEvents, OnReload);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnCreate);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnReset);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnOpenDoors);
@@ -472,39 +325,9 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnWeight);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnSelect);
 
-
-    auto battleground_id_events = new_usertype<TSEvents::BattlegroundIDEvents>("BattlegroundIDEvents");
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnCanCreate);
-    //LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnReload);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnCreate);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnReset);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnOpenDoors);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnCloseDoors);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnDestroyGate);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnAchievementCriteria);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnAddPlayer);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnPlayerLogin);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnPlayerLogout);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnUpdateScore);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnEndEarly);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnEndLate);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnUpdateEarly);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnUpdateLate);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnRemovePlayer);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnKillPlayer);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnKillCreature);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnAddCreature);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnAddGameObject);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnAddSpiritGuide);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnAreaTrigger);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnGenericEvent);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnDropFlag);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnClickFlag);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnPlayerUnderMap);
-
-    auto instance_events = new_usertype<TSEvents::InstanceEvents>("InstanceEvents");
+    auto instance_events = state.new_usertype<TSEvents::InstanceEvents>("InstanceEvents");
     LUA_HANDLE(instance_events, InstanceEvents, OnCreate);
-    //LUA_HANDLE(instance_events, InstanceEvents, OnReload);
+    LUA_HANDLE(instance_events, InstanceEvents, OnReload);
     LUA_HANDLE(instance_events, InstanceEvents, OnLoad);
     LUA_HANDLE(instance_events, InstanceEvents, OnSave);
     LUA_HANDLE(instance_events, InstanceEvents, OnUpdate);
@@ -519,24 +342,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(instance_events, InstanceEvents, OnLoadDoorData);
     LUA_HANDLE(instance_events, InstanceEvents, OnLoadObjectData);
 
-    auto instance_id_events = new_usertype<TSEvents::InstanceIDEvents>("InstanceIDEvents");
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnCreate);
-    //LUA_HANDLE(instance_id_events, InstanceIDEvents, OnReload);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnLoad);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnSave);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnUpdate);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnPlayerEnter);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnPlayerLeave);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnBossStateChange);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnCanKillBoss);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnFillInitialWorldStates);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnSetBossNumber);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnLoadBossBoundaries);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnLoadMinionData);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnLoadDoorData);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnLoadObjectData);
-
-    auto item_events = new_usertype<TSEvents::ItemEvents>("ItemEvents");
+    auto item_events = state.new_usertype<TSEvents::ItemEvents>("ItemEvents");
     LUA_HANDLE(item_events, ItemEvents, OnUse);
     LUA_HANDLE(item_events, ItemEvents, OnExpire);
     LUA_HANDLE(item_events, ItemEvents, OnRemove);
@@ -556,27 +362,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(item_events, ItemEvents, OnDestroyEarly);
     LUA_HANDLE(item_events, ItemEvents, OnTakenAsLoot);
 
-    auto item_id_events = new_usertype<TSEvents::ItemIDEvents>("ItemIDEvents");
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnUse);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnExpire);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnRemove);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnCastSpell);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnQuestAccept);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnGossipHello);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnGossipSelect);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnGossipSelectCode);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnCanChangeEquipState);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnUnequip);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnBank);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnCanEquip);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnEquip);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnCanUse);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnCanUseType);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnLFGRollEarly);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnDestroyEarly);
-    LUA_HANDLE(item_id_events, ItemIDEvents, OnTakenAsLoot);
-
-    auto quest_events = new_usertype<TSEvents::QuestEvents>("QuestEvents");
+    auto quest_events = state.new_usertype<TSEvents::QuestEvents>("QuestEvents");
     LUA_HANDLE(quest_events, QuestEvents, OnAccept);
     LUA_HANDLE(quest_events, QuestEvents, OnReward);
     LUA_HANDLE(quest_events, QuestEvents, OnRewardXP);
@@ -584,97 +370,51 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(quest_events, QuestEvents, OnStatusChanged);
     LUA_HANDLE(quest_events, QuestEvents, OnSpellFinish);
 
-    auto quest_id_events = new_usertype<TSEvents::QuestIDEvents>("QuestIDEvents");
-    LUA_HANDLE(quest_id_events, QuestIDEvents, OnAccept);
-    LUA_HANDLE(quest_id_events, QuestIDEvents, OnReward);
-    LUA_HANDLE(quest_id_events, QuestIDEvents, OnRewardXP);
-    LUA_HANDLE(quest_id_events, QuestIDEvents, OnObjectiveProgress);
-    LUA_HANDLE(quest_id_events, QuestIDEvents, OnStatusChanged);
-    LUA_HANDLE(quest_id_events, QuestIDEvents, OnSpellFinish);
-
 #if TRINITY
-    auto area_trigger_events = new_usertype<TSEvents::AreaTriggerEvents>("AreaTriggerEvents");
+    auto area_trigger_events = state.new_usertype<TSEvents::AreaTriggerEvents>("AreaTriggerEvents");
     LUA_HANDLE(area_trigger_events, AreaTriggerEvents, OnTrigger);
-
-    auto area_trigger_id_events = new_usertype<TSEvents::AreaTriggerIDEvents>("AreaTriggerIDEvents");
-    LUA_HANDLE(area_trigger_id_events, AreaTriggerIDEvents, OnTrigger);
 #endif
-    auto gameevent_events = new_usertype<TSEvents::GameEventsEvents>("GameEventsEvents");
+    auto gameevent_events = state.new_usertype<TSEvents::GameEventsEvents>("GameEventsEvents");
     LUA_HANDLE(gameevent_events, GameEventsEvents, OnStart);
     LUA_HANDLE(gameevent_events, GameEventsEvents, OnUpdateState);
     LUA_HANDLE(gameevent_events, GameEventsEvents, OnEnd);
 
-    auto gameevent_id_events = new_usertype<TSEvents::GameEventIDEvents>("GameEventIDEvents");
-    LUA_HANDLE(gameevent_id_events, GameEventIDEvents, OnStart);
-    LUA_HANDLE(gameevent_id_events, GameEventIDEvents, OnUpdateState);
-    LUA_HANDLE(gameevent_id_events, GameEventIDEvents, OnEnd);
-
-    auto smartaction_events = new_usertype<TSEvents::SmartActionEvents>("SmartActionEvents");
+    auto smartaction_events = state.new_usertype<TSEvents::SmartActionEvents>("SmartActionEvents");
     LUA_HANDLE(smartaction_events, SmartActionEvents, OnActivateEarly);
     LUA_HANDLE(smartaction_events, SmartActionEvents, OnActivateLate);
 
-    auto smartaction_id_events = new_usertype<TSEvents::SmartActionIDEvents>("SmartActionIDEvents");
-    LUA_HANDLE(smartaction_id_events, SmartActionIDEvents, OnActivateEarly);
-    LUA_HANDLE(smartaction_id_events, SmartActionIDEvents, OnActivateLate);
-
-    auto condition_events = new_usertype<TSEvents::ConditionEvents>("ConditionEvents");
+    auto condition_events = state.new_usertype<TSEvents::ConditionEvents>("ConditionEvents");
     LUA_HANDLE(condition_events, ConditionEvents, OnCheck);
 
-    auto condition_id_events = new_usertype<TSEvents::ConditionIDEvents>("ConditionIDEvents");
-    LUA_HANDLE(condition_id_events, ConditionIDEvents, OnCheck);
-
-    auto custompacket_events = new_usertype<TSEvents::CustomPacketEvents>("CustomPacketEvents");
+    auto custompacket_events = state.new_usertype<TSEvents::CustomPacketEvents>("CustomPacketEvents");
     LUA_HANDLE(custompacket_events, CustomPacketEvents, OnReceive);
 
-    auto custompacket_id_events = new_usertype<TSEvents::CustomPacketIDEvents>("CustomPacketIDEvents");
-    LUA_HANDLE(custompacket_id_events, CustomPacketIDEvents, OnReceive);
-
-    auto worldpacket_events = new_usertype<TSEvents::WorldPacketEvents>("WorldPacketEvents");
+    auto worldpacket_events = state.new_usertype<TSEvents::WorldPacketEvents>("WorldPacketEvents");
     LUA_HANDLE(worldpacket_events, WorldPacketEvents, OnReceive);
     LUA_HANDLE(worldpacket_events, WorldPacketEvents, OnSend);
 
-    auto worldpacket_id_events = new_usertype<TSEvents::WorldPacketIDEvents>("WorldPacketIDEvents");
-    LUA_HANDLE(worldpacket_id_events, WorldPacketIDEvents, OnReceive);
-    LUA_HANDLE(worldpacket_id_events, WorldPacketIDEvents, OnSend);
-
-    auto ts_events = new_usertype<TSEvents>("CTSEvents");
-
-    ts_events["World"] = &TSEvents::World;
-    ts_events["Unit"] = &TSEvents::Unit;
-    ts_events["AuctionHouse"] = &TSEvents::AuctionHouse;
-    ts_events["Vehicle"] = &TSEvents::Vehicle;
-    ts_events["Player"] = &TSEvents::Player;
-    ts_events["Account"] = &TSEvents::Account;
-    ts_events["Guild"] = &TSEvents::Guild;
-    ts_events["Group"] = &TSEvents::Group;
-    ts_events["Spells"] = &TSEvents::Spells;
-    ts_events["SpellID"] = &TSEvents::SpellID;
-    ts_events["Creatures"] = &TSEvents::Creatures;
-    ts_events["CreatureID"] = &TSEvents::CreatureID;
-    ts_events["Battlegrounds"] = &TSEvents::Battlegrounds;
-    ts_events["BattlegroundID"] = &TSEvents::BattlegroundID;
-    ts_events["Items"] = &TSEvents::Items;
-    ts_events["ItemID"] = &TSEvents::ItemID;
-    ts_events["Quests"] = &TSEvents::Quests;
-    ts_events["QuestID"] = &TSEvents::QuestID;
+    lua_events["World"] = &TSEvents::World;
+    lua_events["Unit"] = &TSEvents::Unit;
+    lua_events["AuctionHouse"] = &TSEvents::AuctionHouse;
+    lua_events["Vehicle"] = &TSEvents::Vehicle;
+    lua_events["Player"] = &TSEvents::Player;
+    lua_events["Account"] = &TSEvents::Account;
+    lua_events["Guild"] = &TSEvents::Guild;
+    lua_events["Group"] = &TSEvents::Group;
+    lua_events["Spell"] = &TSEvents::Spell;
+    lua_events["Creature"] = &TSEvents::Creature;
+    lua_events["Battleground"] = &TSEvents::Battleground;
+    lua_events["Item"] = &TSEvents::Item;
+    lua_events["Quest"] = &TSEvents::Quest;
 #if TRINITY
-    ts_events["AreaTriggers"] = &TSEvents::AreaTriggers;
-    ts_events["AreaTriggerID"] = &TSEvents::AreaTriggerID;
+    lua_events["AreaTrigger"] = &TSEvents::AreaTrigger;
 #endif
-    ts_events["Maps"] = &TSEvents::Maps;
-    ts_events["MapID"] = &TSEvents::MapID;
-    ts_events["Instances"] = &TSEvents::Instances;
-    ts_events["InstanceiD"] = &TSEvents::InstanceID;
-    ts_events["Achievements"] = &TSEvents::Achievements;
-    ts_events["AchievementID"] = &TSEvents::AchievementID;
-    ts_events["GameEvents"] = &TSEvents::GameEvents;
-    ts_events["GameEventID"] = &TSEvents::GameEventID;
-    ts_events["SmartActions"] = &TSEvents::SmartActions;
-    ts_events["SmartActionID"] = &TSEvents::SmartActionID;
-    ts_events["Conditions"] = &TSEvents::Conditions;
-    ts_events["ConditionID"] = &TSEvents::ConditionID;
-    ts_events["CustomPackets"] = &TSEvents::CustomPackets;
-    ts_events["CustomPacketID"] = &TSEvents::CustomPacketID;
-    ts_events["WorldPackets"] = &TSEvents::WorldPackets;
-    ts_events["WorldPacketID"] = &TSEvents::WorldPacketID;
+    lua_events["Map"] = &TSEvents::Map;
+    lua_events["Instance"] = &TSEvents::Instance;
+    lua_events["Achievement"] = &TSEvents::Achievement;
+    lua_events["GameEvent"] = &TSEvents::GameEvent;
+    lua_events["SmartAction"] = &TSEvents::SmartAction;
+    lua_events["Condition"] = &TSEvents::Condition;
+    lua_events["CustomPacket"] = &TSEvents::CustomPacket;
+    lua_events["WorldPacket"] = &TSEvents::WorldPacket;
 }

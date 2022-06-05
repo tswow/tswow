@@ -436,8 +436,6 @@ export class Emitter {
                 this.writer.writeStringNewLine('.h\"');
             });
 
-            this.writer.writeStringNewLine('#include "'+path.relative(path.dirname(sourceFile.fileName),'livescripts/ModID.h').split('\\').join('/')+'"');
-
             sourceFile.statements.filter(s => this.isImportStatement(s)).forEach(s => {
                 this.processInclude(s);
             });
@@ -2549,7 +2547,8 @@ export class Emitter {
             } else if (isArrowFunction || isFunctionExpression) {
                 // Prepare extra arguments
                 try { // doing try/catch here because "kind" seems to completely bug out when accessing parent elements
-                    let argsLength = (node as ts.ArrowFunction).parameters.length;
+                    let arrowNode = node as ts.ArrowFunction;
+                    let argsLength = arrowNode.parameters.length;
                     let index = -1;
                     (node.parent as ts.CallExpression).arguments.forEach((x,i)=>{
                         if(x === node) {
@@ -2557,21 +2556,20 @@ export class Emitter {
                         }
                     });
                     if(index != -1) {
-                        let text = node.parent.getChildAt(0).getText();
                         let paramLength: number;
-
-                        // AddTimer hack: transpiler doesn't like that there are multiple AddTimer
-                        //                versions, so we hardcode this
-                        if(text.endsWith('AddTimer') || text.endsWith('AddNamedTimer')) {
-                            paramLength = 2;
-                        } else {
-                            let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
-                            let callDecl = this.resolver.getFirstDeclaration(type);
-                            // I think this isn't necessarily always CallSignatureDeclaration,
-                            // but at least they all seem to have the same "parameters" property
-                            let tt = this.resolver.getTypeAtLocation((callDecl as any as ts.CallSignatureDeclaration).parameters[index]);
-                            let decl = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
-                            paramLength = decl.parameters.length;
+                        let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
+                        if(type && type.symbol && type.symbol.declarations) {
+                            // hack: naively try all declarations until we find one.
+                            // we can't really support overloaded callbacks this way, but it's better than nothing
+                            for(let declaration of type.symbol.declarations) {
+                                let tt = this.resolver.getTypeAtLocation((declaration as any as ts.CallSignatureDeclaration).parameters[index]);
+                                let fnType = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
+                                if(fnType == undefined) {
+                                    continue;
+                                }
+                                paramLength = fnType.parameters.length;
+                                break;
+                            }
                         }
                         if(paramLength > argsLength) extraArgs = paramLength - argsLength;
                     }
@@ -3529,15 +3527,7 @@ export class Emitter {
                 this.writer.writeString('(');
             }
 
-            if (!isWriting) {
-                this.writer.writeString('const_(');
-            }
-
             this.processExpression(node.expression);
-
-            if (!isWriting) {
-                this.writer.writeString(')');
-            }
 
             if (dereference) {
                 this.writer.writeString(')');

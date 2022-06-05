@@ -9,8 +9,8 @@
 #include "TSCorpse.h"
 
 
-void TSLuaState::load_object_methods(uint32_t modid)
+void TSLuaState::load_object_methods(sol::state& state)
 {
-    auto ts_object = new_usertype<TSObject>("TSObject");
-    load_object_methods_t(ts_object, modid, "TSObject");
+    auto ts_object = state.new_usertype<TSObject>("TSObject");
+    load_object_methods_t(state, ts_object, "TSObject");
 }

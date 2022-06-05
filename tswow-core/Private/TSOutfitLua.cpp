@@ -5,10 +5,10 @@
 #include "TSItem.h"
 #include "TSCreature.h"
 
-void TSLuaState::load_outfit_methods(uint32_t modid)
+void TSLuaState::load_outfit_methods(sol::state& state)
 {
 #if TRINITY
-    auto ts_outfit = new_usertype<TSOutfit>("TSOutfit");
+    auto ts_outfit = state.new_usertype<TSOutfit>("TSOutfit");
     LUA_FIELD(ts_outfit, TSOutfit, SetClass);
     LUA_FIELD(ts_outfit, TSOutfit, GetClass);
     LUA_FIELD(ts_outfit, TSOutfit, SetFace);
@@ -48,6 +48,6 @@ void TSLuaState::load_outfit_methods(uint32_t modid)
         , &TSOutfit::LApplyCopy2
         , &TSOutfit::LApplyCopy3
     ));
-    set_function("CreateOutfit", &CreateOutfit);
+    state.set_function("CreateOutfit", &CreateOutfit);
 #endif
 }

@@ -12,8 +12,8 @@
 #include "TSCreature.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_unit_methods(uint32_t modid)
+void TSLuaState::load_unit_methods(sol::state& state)
 {
-    auto ts_unit = new_usertype<TSUnit>("TSUnit");
-    load_unit_methods_t(ts_unit, modid, "TSUnit");
+    auto ts_unit = state.new_usertype<TSUnit>("TSUnit");
+    load_unit_methods_t(state, ts_unit, "TSUnit");
 }

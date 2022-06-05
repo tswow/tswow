@@ -5,9 +5,9 @@
 #include "TSWorldObjectLua.h"
 
 template <typename T>
-void TSLuaState::load_unit_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name)
+void TSLuaState::load_unit_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name)
 {
-    load_world_object_methods_t<T>(target, modid, name);
+    load_world_object_methods_t<T>(state, target, name);
     LUA_FIELD(target, TSUnit, Attack);
     LUA_FIELD(target, TSUnit, AttackStop);
     LUA_FIELD(target, TSUnit, IsStandState);
