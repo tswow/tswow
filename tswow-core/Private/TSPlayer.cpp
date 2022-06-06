@@ -3519,7 +3519,7 @@ void TSPlayer::ResurrectPlayer(float percent,bool sickness)
 void TSPlayer::GossipMenuAddItem(uint32 _icon,TSString msg,uint32 _sender,uint32 _intid,bool _code,TSString _promptMsg,uint32 _money)
 {
 #if defined TRINITY || AZEROTHCORE
-    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, _icon, msg._value, _sender, _intid, _promptMsg._value, _money, _code);
+    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg._value, _sender, _intid, _promptMsg._value, _money, _code);
 #else
 #ifndef CLASSIC
     player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg._value, _sender, _intid, _promptMsg._value, _money, _code);

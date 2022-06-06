@@ -602,7 +602,7 @@ uint64 TSUnit::GetOwnerGUID()
  */
 uint32 TSUnit::GetMountID()
 {
-    return unit->GetMountID();
+    return unit->GetMountDisplayId();
 }
 
 /**
@@ -1588,7 +1588,7 @@ void TSUnit::SetWaterWalk(bool enable)
  */
 void TSUnit::SetStandState(uint8 state)
 {
-    unit->SetStandState(state);
+    unit->SetStandState(UnitStandStateType(state));
 }
 
 #if (!defined(TBC) && !defined(CLASSIC))

@@ -109,6 +109,7 @@ declare const enum UnitFields {} /** UpdateFields.h:EUnitFields */
 declare const enum GameObjectFields {} /** UpdateFields.h:EGameObjectFields */
 declare const enum DynamicObjectFields {} /** UpdateFields.h:EDynamicObjectFields */
 declare const enum CorpseFields {} /** UpdateFields.h:ECorpseFields */
+declare const enum UnitStandState {} /** UnitDefines.h:UnitStandStateType */
 declare type UpdateFields = uint16 | ObjectFields | ItemFields | ContainerFields | UnitFields | GameObjectFields | DynamicObjectFields | CorpseFields
 declare const enum SpellSchools {} /** SharedDefines.h:SpellSchools */
 declare const enum SpellSchoolMask /**@realType:uint32 */ {
@@ -6100,7 +6101,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return uint8 standState
      */
-    GetStandState() : uint8
+    GetStandState() : UnitStandState
 
     /**
      * Returns the [Unit]'s current display ID.
@@ -6616,7 +6617,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param uint8 state : stand state
      */
-    SetStandState(state : uint8) : void
+    SetStandState(state : UnitStandState) : void
 
     /**
      * Sets the [Unit]'s FFA flag on or off.
