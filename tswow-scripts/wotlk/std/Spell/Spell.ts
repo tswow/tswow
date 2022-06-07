@@ -127,6 +127,10 @@ export class Spell extends MainEntityID<SpellRow> {
     get Speed() { return this.wrap(this.row.Speed); }
     get ClassMask() { return new BaseClassSet(this); }
 
+    get Family() {
+        return this.wrap(this.row.SpellClassSet);
+    }
+
     get Power() { return new SpellPower(this,this); }
 
     /**
