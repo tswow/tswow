@@ -35,7 +35,11 @@ class TSInstance;
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit {
 public:
-  TS_CLASS_DECLARATION(TSPlayer, Player, player)
+	Player* player;
+	TSPlayer(Player* player);
+	TSPlayer();
+	TSPlayer* operator->() { return this;}
+	bool IsNull() { return player == nullptr; };
 	bool CanTitanGrip();
 	bool HasTalent(uint32 spellId, uint8 spec);
 	bool HasAchieved(uint32 achievementId);
