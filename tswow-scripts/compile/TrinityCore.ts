@@ -246,7 +246,9 @@ export namespace TrinityCore {
         bpaths.TrinityCore.mkdir()
 
         // We no longer make non-dynamic builds.
-        const compileType = 'dynamic';
+        const compileType = Args.hasFlag('minimal',[process.argv,args1])
+            ? 'minimal-dynamic'
+            : 'dynamic';
         const scripts = args1.includes('minimal')
             ? `minimal-${compileType}`
             : args1.includes('noscripts')
