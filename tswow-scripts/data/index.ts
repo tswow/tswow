@@ -155,6 +155,7 @@ async function main() {
     await applyStage(patches);
     cur_stage = 'FINISH'
     await applyStage(finishes);
+    time(`Executed scripts`);
 
     if(BuildArgs.WRITE_CLIENT) {
         _writeLUAXML();
@@ -171,9 +172,11 @@ async function main() {
     if(!BuildArgs.READ_ONLY) {
         await applyStage(sorts);
     }
-    time(`Executed scripts`);
+    time(`Sorted tables`);
 
     await __internal_wotlk_save();
+    time(`Wrote SQL/DBC`)
+
     SqlConnection.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
 
     if(!BuildArgs.READ_ONLY) {
