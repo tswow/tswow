@@ -17,6 +17,7 @@
 
 #include <memory.h>
 #include "Object.h"
+#include "TSFactionTemplate.h"
 #include "TSIncludes.h"
 #include "TSWorldObject.h"
 #include "TSArray.h"
@@ -1424,4 +1425,10 @@ TSWorldObject TSWorldObjectCollection::find(std::function<bool(TSWorldObject)> c
         }
     }
     return TSWorldObject(nullptr);
+}
+
+
+TSFactionTemplate TSWorldObject::GetFactionTemplate()
+{
+    return TSFactionTemplate(obj->GetFactionTemplateEntry());
 }

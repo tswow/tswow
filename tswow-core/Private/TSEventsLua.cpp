@@ -108,6 +108,7 @@ void TSLuaState::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
+    LUA_HANDLE(player_events, PlayerEvents, OnReputationPriceDiscount);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);

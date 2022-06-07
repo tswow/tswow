@@ -37,6 +37,8 @@ class TSMapManager;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
 
+class TSFactionTemplate;
+
 class TC_GAME_API TSWorldObject : public TSObject, public TSWorldEntityProvider<TSWorldObject> {
 public:
     WorldObject* obj;
@@ -133,6 +135,8 @@ public:
     void AddCollision(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
     TSCollisionEntry * GetCollision(TSString id);
     TSCollisions* GetCollisions();
+
+    TSFactionTemplate GetFactionTemplate();
 
     void SetActive(bool active);
     bool IsActive();

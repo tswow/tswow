@@ -15,11 +15,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <memory.h>
-#include "Object.h"
-#include "Unit.h"
 #include "TSIncludes.h"
 #include "TSUnit.h"
+#include "TSPlayer.h"
+#include "TSAura.h"
+#include "TSSpell.h"
+#include "TSVehicle.h"
+#include "TSCreature.h"
+#include "TSItem.h"
+#include "TSMap.h"
+
+#include "Object.h"
+#include "Unit.h"
 #include "Chat.h"
 #include "Unit.h"
 #include "SpellMgr.h"
@@ -27,14 +34,9 @@
 #include "SpellAuraDefines.h"
 #include "MotionMaster.h"
 #include "Unit.h"
-#include "TSPlayer.h"
-#include "TSAura.h"
-#include "TSSpell.h"
-#include "TSVehicle.h"
-#include "TSCreature.h"
-#include "TSItem.h"
 #include "Player.h"
-#include "TSMap.h"
+
+#include <memory.h>
 
 TSUnit::TSUnit(Unit *unit) : TSWorldObject(unit)
 {

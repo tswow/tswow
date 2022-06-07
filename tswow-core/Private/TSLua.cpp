@@ -99,6 +99,7 @@ void TSLuaState::load_bindings(sol::state& ztate)
     load_unit_methods(state);
     load_map_methods(state);
     load_database_methods(state);
+    load_faction_template_methods(state);
     load_events(state);
 }
 

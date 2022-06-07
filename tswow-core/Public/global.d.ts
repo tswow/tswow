@@ -2324,6 +2324,22 @@ declare interface TSGameObjectTemplate extends TSEntityProvider {
     GetGOData(index: uint32): uint32;
 }
 
+declare interface TSFactionTemplate {
+    GetID(): uint32;
+    GetFaction(): uint32;
+    GetFlags(): uint32;
+    GetFactionGroup(): uint32;
+    GetFriendGroup(): uint32;
+    GetEnemyGroup(): uint32;
+    GetEnemy(index: uint32): uint32;
+    GetFriend(index: uint32): uint32;
+    IsFriendlyTo(entry: TSFactionTemplate): bool;
+    IsHostileTo(entry: TSFactionTemplate): bool;
+    IsHostileToPlayers(): bool;
+    IsNeutralToAll() : bool;
+    IsContestedGuardFaction() : bool;
+}
+
 declare interface TSCreatureTemplate extends TSEntityProvider {
     GetEntry(): uint32;
     GetDifficultyEntryA(): uint32;
@@ -5428,6 +5444,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetUnit(guid: uint64): TSUnit
     GetCreature(guid: uint64): TSCreature
     GetPlayer(guid: uint64): TSPlayer
+    GetFactionTemplate(): TSFactionTemplate
 }
 
 declare interface TSWorldObjectCollection {
@@ -7639,6 +7656,12 @@ declare namespace _hidden {
         ) => void)
 
         OnCalculateTalentPoints(callback: (player: TSPlayer, talents: TSMutable<uint32>) => void);
+        OnReputationPriceDiscount(callback: (
+              player: TSPlayer
+            , faction: TSFactionTemplate
+            , creature: TSCreature
+            , money: TSMutable<float>
+         ) => void);
     }
 
     export class Account<T> {
@@ -9502,6 +9525,7 @@ declare function GetCharactersDBConnection(): TSCharactersDatabaseConnection
 declare function GetSpellInfo(entry: uint32): TSSpellInfo
 declare function GetItemTemplate(entry: uint32): TSItemTemplate
 declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate
+declare function GetFactionTemplate(entry: uint32): TSFactionTemplate
 declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate
 
 // tracy

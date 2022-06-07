@@ -331,6 +331,13 @@ struct TSEvents
              , TSPlayer
              , TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
          )
+
+         EVENT(OnReputationPriceDiscount
+            , TSPlayer player
+            , TSFactionTemplate faction
+            , TSCreature creature
+            , TSMutable<float> money
+         )
     } Player;
 
     struct AccountEvents
