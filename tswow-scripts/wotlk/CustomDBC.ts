@@ -25,6 +25,10 @@ class LocCollector {
 }
 
 export function GenerateCustomDBC() {
+    if(!dataset.dbc_source_server.exists()) {
+        dataset.dbc_source_server.mkdir();
+    }
+
     if(!dataset.dbc_source_server.Creature.exists()) {
         console.log('Populating Creature.dbc')
         const dbc = new CreatureDBCFile()
