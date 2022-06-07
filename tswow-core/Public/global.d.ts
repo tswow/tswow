@@ -30,6 +30,8 @@ type bool = boolean;
 type TSArray<T> = T[];
 type TSString = string;
 
+declare const BROADCAST_PHASE_ID: uint32;
+
 declare const enum Gender /**@realType:uint8 */ {
     MALE   = 0,
     FEMALE = 1

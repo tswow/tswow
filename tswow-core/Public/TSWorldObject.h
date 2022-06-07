@@ -249,3 +249,5 @@ class TC_GAME_API TSWorldObjectCollection
     uint32 get_length();
     TSWorldObject get(uint32 index);
 };
+
+#define BROADCAST_PHASE_ID = 0xffffff;
