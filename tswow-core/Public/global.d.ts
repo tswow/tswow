@@ -9094,9 +9094,23 @@ declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTe
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
+/**
+ * @deprecated use ID_TABLE macro, or better use tags
+ */
 declare function GetID(table: string, mod: string, name: string): uint32;
+declare function ID_TABLE(table: string, mod: string, name: string): uint32
+
+/**
+ * @deprecated use TAG macro
+ */
 declare function GetIDTag(mod: string, id: string): TSArray<uint32>
+declare function TAG(mod: string, id: string): TSArray<uint32>
+
+/**
+ * @deprecated use UTAG
+ */
 declare function GetIDTagUnique(mod: string, id: string): uint32
+declare function UTAG(mod: string, id: string): uint32
 
 /**
  * Runs a compile-time check that a given world database table exists.
