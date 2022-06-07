@@ -22,7 +22,7 @@ export class ItemShop extends CellSystem<ItemTemplate> {
 
     set(buycount: number, buyprice: number, sellprice: number) {
         this.BuyCount.set(buycount);
-        this.BuyPrice.set(BigInt(buyprice));
+        this.BuyPrice.set(buyprice);
         this.SellPrice.set(sellprice);
         return this.owner;
     }

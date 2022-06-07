@@ -16,6 +16,12 @@
  */
 /* tslint:disable */
 import { DBCFile } from "../data/dbc/DBCFile"
+import { BroadcastTextDBCFile } from "./custom_dbc/BroadcastText"
+import { CreatureDBCFile } from "./custom_dbc/Creature"
+import { CreatureTemplateDBCFile } from "./custom_dbc/CreatureTemplate"
+import { GameObjectDBCFile } from "./custom_dbc/GameObject"
+import { GameObjectTemplateDBCFile } from "./custom_dbc/GameObjectTemplate"
+import { ItemTemplateDBCFile } from "./custom_dbc/ItemTemplate"
 import { AchievementDBCFile } from "./dbc/Achievement"
 import { Achievement_CategoryDBCFile } from "./dbc/Achievement_Category"
 import { Achievement_CriteriaDBCFile } from "./dbc/Achievement_Criteria"
@@ -1488,6 +1494,38 @@ export const DBC = {
      * No comment (yet!)
      */
     ZoneMusic : new ZoneMusicDBCFile(),
+
+    // Custom server dbcs
+
+    /**
+     * No comment (yet!)
+     */
+    BroadcastText : new BroadcastTextDBCFile(),
+
+    /**
+     * No comment (yet!)
+     */
+    Creature: new CreatureDBCFile(),
+
+    /**
+     * No comment (yet!)
+     */
+    CreatureTemplate: new CreatureTemplateDBCFile(),
+
+    /**
+     * No comment (yet!)
+     */
+    GameObject: new GameObjectDBCFile(),
+
+    /**
+     * No comment (yet!)
+     */
+    GameObjectTemplate: new GameObjectTemplateDBCFile(),
+
+    /**
+     * No comment (yet!)
+     */
+    ItemTemplate: new ItemTemplateDBCFile(),
 }
 
 export const DBCLoader = {
@@ -1563,6 +1601,7 @@ export const DBCLoader = {
 
     CreatureSoundData : (path: string) => CreatureSoundDataDBCFile.read(path),
     CreatureSpellData : (path: string) => CreatureSpellDataDBCFile.read(path),
+
     CreatureType : (path: string) => CreatureTypeDBCFile.read(path),
 
     CurrencyCategory : (path: string) => CurrencyCategoryDBCFile.read(path),
@@ -1961,8 +2000,270 @@ export const DBCLoader = {
     ZoneintroMusicTable : (path: string) => ZoneintroMusicTableDBCFile.read(path),
 
     ZoneMusic : (path: string) => ZoneMusicDBCFile.read(path),
+
+    // Custom dbcs
+    BroadcastText : (path: string) => BroadcastTextDBCFile.read(path),
+    Creature: (path: string) => CreatureDBCFile.read(path),
+    CreatureTemplate: (path: string) => CreatureTemplateDBCFile.read(path),
+    GameObject: (path: string) => GameObjectDBCFile.read(path),
+    GameObjectTemplate: (path: string) => GameObjectTemplateDBCFile.read(path),
+    ItemTemplate: (path: string) => ItemTemplateDBCFile.read(path),
 }
 
-export type DBCNames = "Achievement" | "Achievement_Category" | "Achievement_Criteria" | "AnimationData" | "AreaGroup" | "AreaPOI" | "AreaTable" | "AreaTrigger" | "AttackAnimKits" | "AttackAnimTypes" | "AuctionHouse" | "BankBagSlotPrices" | "BannedAddOns" | "BarberShopStyle" | "BattlemasterList" | "CameraShakes" | "Cfg_Categories" | "Cfg_Configs" | "CharacterFacialHairStyles" | "CharBaseInfo" | "CharHairGeosets" | "CharHairTextures" | "CharSections" | "CharStartOutfit" | "CharTitles" | "ChatChannels" | "ChatProfanity" | "ChrClasses" | "ChrRaces" | "CinematicCamera" | "CinematicSequences" | "CreatureDisplayInfo" | "CreatureDisplayInfoExtra" | "CreatureFamily" | "CreatureModelData" | "CreatureMovementInfo" | "CreatureSoundData" | "CreatureSpellData" | "CreatureType" | "CurrencyCategory" | "CurrencyTypes" | "DanceMoves" | "DeathThudLookups" | "DeclinedWord" | "DeclinedWordCases" | "DestructibleModelData" | "DungeonEncounter" | "DungeonMap" | "DungeonMapChunk" | "DurabilityCosts" | "DurabilityQuality" | "Emotes" | "EmotesText" | "EmotesTextData" | "EmotesTextSound" | "EnvironmentalDamage" | "Exhaustion" | "Faction" | "FactionGroup" | "FactionTemplate" | "FileData" | "FootprintTextures" | "FootstepTerrainLookup" | "GameObjectArtKit" | "GameObjectDisplayInfo" | "GameTables" | "GameTips" | "GemProperties" | "GlyphProperties" | "GlyphSlot" | "GMSurveyAnswers" | "GMSurveyCurrentSurvey" | "GMSurveyQuestions" | "GMSurveySurveys" | "GMTicketCategory" | "GroundEffectDoodad" | "GroundEffectTexture" | "GtBarberShopCostBase" | "GtChanceToMeleeCrit" | "GtChanceToMeleeCritBase" | "GtChanceToSpellCrit" | "GtChanceToSpellCritBase" | "GtCombatRatings" | "GtNPCManaCostScaler" | "GtOCTClassCombatRatingScalar" | "GtOCTRegenHP" | "GtOCTRegenMP" | "GtRegenHPPerSpt" | "GtRegenMPPerSpt" | "HelmetGeosetVisData" | "HolidayDescriptions" | "HolidayNames" | "Holidays" | "Item" | "ItemBagFamily" | "ItemClass" | "ItemCondExtCosts" | "ItemDisplayInfo" | "ItemExtendedCost" | "ItemGroupSounds" | "ItemLimitCategory" | "ItemPetFood" | "ItemPurchaseGroup" | "ItemRandomProperties" | "ItemRandomSuffix" | "ItemSet" | "ItemSubClass" | "ItemSubClassMask" | "ItemVisualEffects" | "ItemVisuals" | "Languages" | "LanguageWords" | "LfgDungeonExpansion" | "LfgDungeonGroup" | "LfgDungeons" | "Light" | "LightfloatBand" | "LightintBand" | "LightParams" | "LightSkybox" | "LiquidMaterial" | "LiquidType" | "LoadingScreens" | "LoadingScreenTaxiSplines" | "Lock" | "LockType" | "MailTemplate" | "Map" | "MapDifficulty" | "Material" | "Movie" | "MovieFileData" | "MovieVariation" | "NameGen" | "NamesProfanity" | "NamesReserved" | "NPCSounds" | "ObjectEffect" | "ObjectEffectGroup" | "ObjectEffectModifier" | "ObjectEffectPackage" | "ObjectEffectPackageElem" | "OverrideSpellData" | "Package" | "PageTextMaterial" | "PaperDollItemFrame" | "ParticleColor" | "PetitionType" | "PetPersonality" | "PowerDisplay" | "PvpDifficulty" | "QuestFactionReward" | "QuestInfo" | "QuestSort" | "QuestXP" | "RandPropPoints" | "Resistances" | "ScalingStatDistribution" | "ScalingStatValues" | "ScreenEffect" | "ServerMessages" | "SheatheSoundLookups" | "SkillCostsData" | "SkillLine" | "SkillLineAbility" | "SkillLineCategory" | "SkillRaceClassInfo" | "SkillTiers" | "SoundAmbience" | "SoundEmitters" | "SoundEntries" | "SoundEntriesAdvanced" | "SoundFilter" | "SoundFilterElem" | "SoundProviderPreferences" | "SoundSamplePreferences" | "SoundWaterType" | "SpamMessages" | "Spell" | "SpellCastTimes" | "SpellCategory" | "SpellChainEffects" | "SpellDescriptionVariables" | "SpellDifficulty" | "SpellDispelType" | "SpellDuration" | "SpellEffectCameraShakes" | "SpellFocusObject" | "SpellIcon" | "SpellItemEnchantment" | "SpellItemEnchantmentCondition" | "SpellMechanic" | "SpellMissile" | "SpellMissileMotion" | "SpellRadius" | "SpellRange" | "SpellRuneCost" | "SpellShapeshiftForm" | "SpellVisual" | "SpellVisualEffectName" | "SpellVisualKit" | "SpellVisualKitAreaModel" | "SpellVisualKitModelAttach" | "SpellVisualPrecastTransitions" | "StableSlotPrices" | "Startup_strings" | "Stationery" | "StringLookups" | "SummonProperties" | "Talent" | "TalentTab" | "TaxiNodes" | "TaxiPath" | "TaxiPathNode" | "TeamContributionPoints" | "Terraintype" | "TerraintypeSounds" | "TotemCategory" | "TransportAnimation" | "TransportPhysics" | "TransportRotation" | "UISoundLookups" | "UnitBlood" | "UnitBloodLevels" | "Vehicle" | "VehicleSeat" | "VehicleUIIndicator" | "VehicleUIIndSeat" | "VideoHardware" | "VocalUISounds" | "WeaponImpactSounds" | "WeaponSwingSounds2" | "Weather" | "WMOAreaTable" | "WorldChunkSounds" | "WorldMapArea" | "WorldMapContinent" | "WorldMapOverlay" | "WorldMapTransforms" | "WorldSafeLocs" | "WorldStateUI" | "WorldStateZoneSounds" | "WowError_Strings" | "ZoneintroMusicTable" | "ZoneMusic"
+export type DBCNames = 
+     "Achievement" |
+     "Achievement_Category" |
+     "Achievement_Criteria" |
+     "AnimationData" |
+     "AreaGroup" |
+     "AreaPOI" |
+     "AreaTable" |
+     "AreaTrigger" |
+     "AttackAnimKits" |
+     "AttackAnimTypes" |
+     "AuctionHouse" |
+     "BankBagSlotPrices" |
+     "BannedAddOns" |
+     "BarberShopStyle" |
+     "BattlemasterList" |
+     "CameraShakes" |
+     "Cfg_Categories" |
+     "Cfg_Configs" |
+     "CharacterFacialHairStyles" |
+     "CharBaseInfo" |
+     "CharHairGeosets" |
+     "CharHairTextures" |
+     "CharSections" |
+     "CharStartOutfit" |
+     "CharTitles" |
+     "ChatChannels" |
+     "ChatProfanity" |
+     "ChrClasses" |
+     "ChrRaces" |
+     "CinematicCamera" |
+     "CinematicSequences" |
+     "CreatureDisplayInfo" |
+     "CreatureDisplayInfoExtra" |
+     "CreatureFamily" |
+     "CreatureModelData" |
+     "CreatureMovementInfo" |
+     "CreatureSoundData" |
+     "CreatureSpellData" |
+     "CreatureTemplate" |
+     "CreatureType" |
+     "CurrencyCategory" |
+     "CurrencyTypes" |
+     "DanceMoves" |
+     "DeathThudLookups" |
+     "DeclinedWord" |
+     "DeclinedWordCases" |
+     "DestructibleModelData" |
+     "DungeonEncounter" |
+     "DungeonMap" |
+     "DungeonMapChunk" |
+     "DurabilityCosts" |
+     "DurabilityQuality" |
+     "Emotes" |
+     "EmotesText" |
+     "EmotesTextData" |
+     "EmotesTextSound" |
+     "EnvironmentalDamage" |
+     "Exhaustion" |
+     "Faction" |
+     "FactionGroup" |
+     "FactionTemplate" |
+     "FileData" |
+     "FootprintTextures" |
+     "FootstepTerrainLookup" |
+     "GameObjectArtKit" |
+     "GameObjectDisplayInfo" |
+     "GameTables" |
+     "GameTips" |
+     "GemProperties" |
+     "GlyphProperties" |
+     "GlyphSlot" |
+     "GMSurveyAnswers" |
+     "GMSurveyCurrentSurvey" |
+     "GMSurveyQuestions" |
+     "GMSurveySurveys" |
+     "GMTicketCategory" |
+     "GroundEffectDoodad" |
+     "GroundEffectTexture" |
+     "GtBarberShopCostBase" |
+     "GtChanceToMeleeCrit" |
+     "GtChanceToMeleeCritBase" |
+     "GtChanceToSpellCrit" |
+     "GtChanceToSpellCritBase" |
+     "GtCombatRatings" |
+     "GtNPCManaCostScaler" |
+     "GtOCTClassCombatRatingScalar" |
+     "GtOCTRegenHP" |
+     "GtOCTRegenMP" |
+     "GtRegenHPPerSpt" |
+     "GtRegenMPPerSpt" |
+     "HelmetGeosetVisData" |
+     "HolidayDescriptions" |
+     "HolidayNames" |
+     "Holidays" |
+     "Item" |
+     "ItemBagFamily" |
+     "ItemClass" |
+     "ItemCondExtCosts" |
+     "ItemDisplayInfo" |
+     "ItemExtendedCost" |
+     "ItemGroupSounds" |
+     "ItemLimitCategory" |
+     "ItemPetFood" |
+     "ItemPurchaseGroup" |
+     "ItemRandomProperties" |
+     "ItemRandomSuffix" |
+     "ItemSet" |
+     "ItemSubClass" |
+     "ItemSubClassMask" |
+     "ItemVisualEffects" |
+     "ItemVisuals" |
+     "Languages" |
+     "LanguageWords" |
+     "LfgDungeonExpansion" |
+     "LfgDungeonGroup" |
+     "LfgDungeons" |
+     "Light" |
+     "LightfloatBand" |
+     "LightintBand" |
+     "LightParams" |
+     "LightSkybox" |
+     "LiquidMaterial" |
+     "LiquidType" |
+     "LoadingScreens" |
+     "LoadingScreenTaxiSplines" |
+     "Lock" |
+     "LockType" |
+     "MailTemplate" |
+     "Map" |
+     "MapDifficulty" |
+     "Material" |
+     "Movie" |
+     "MovieFileData" |
+     "MovieVariation" |
+     "NameGen" |
+     "NamesProfanity" |
+     "NamesReserved" |
+     "NPCSounds" |
+     "ObjectEffect" |
+     "ObjectEffectGroup" |
+     "ObjectEffectModifier" |
+     "ObjectEffectPackage" |
+     "ObjectEffectPackageElem" |
+     "OverrideSpellData" |
+     "Package" |
+     "PageTextMaterial" |
+     "PaperDollItemFrame" |
+     "ParticleColor" |
+     "PetitionType" |
+     "PetPersonality" |
+     "PowerDisplay" |
+     "PvpDifficulty" |
+     "QuestFactionReward" |
+     "QuestInfo" |
+     "QuestSort" |
+     "QuestXP" |
+     "RandPropPoints" |
+     "Resistances" |
+     "ScalingStatDistribution" |
+     "ScalingStatValues" |
+     "ScreenEffect" |
+     "ServerMessages" |
+     "SheatheSoundLookups" |
+     "SkillCostsData" |
+     "SkillLine" |
+     "SkillLineAbility" |
+     "SkillLineCategory" |
+     "SkillRaceClassInfo" |
+     "SkillTiers" |
+     "SoundAmbience" |
+     "SoundEmitters" |
+     "SoundEntries" |
+     "SoundEntriesAdvanced" |
+     "SoundFilter" |
+     "SoundFilterElem" |
+     "SoundProviderPreferences" |
+     "SoundSamplePreferences" |
+     "SoundWaterType" |
+     "SpamMessages" |
+     "Spell" |
+     "SpellCastTimes" |
+     "SpellCategory" |
+     "SpellChainEffects" |
+     "SpellDescriptionVariables" |
+     "SpellDifficulty" |
+     "SpellDispelType" |
+     "SpellDuration" |
+     "SpellEffectCameraShakes" |
+     "SpellFocusObject" |
+     "SpellIcon" |
+     "SpellItemEnchantment" |
+     "SpellItemEnchantmentCondition" |
+     "SpellMechanic" |
+     "SpellMissile" |
+     "SpellMissileMotion" |
+     "SpellRadius" |
+     "SpellRange" |
+     "SpellRuneCost" |
+     "SpellShapeshiftForm" |
+     "SpellVisual" |
+     "SpellVisualEffectName" |
+     "SpellVisualKit" |
+     "SpellVisualKitAreaModel" |
+     "SpellVisualKitModelAttach" |
+     "SpellVisualPrecastTransitions" |
+     "StableSlotPrices" |
+     "Startup_strings" |
+     "Stationery" |
+     "StringLookups" |
+     "SummonProperties" |
+     "Talent" |
+     "TalentTab" |
+     "TaxiNodes" |
+     "TaxiPath" |
+     "TaxiPathNode" |
+     "TeamContributionPoints" |
+     "Terraintype" |
+     "TerraintypeSounds" |
+     "TotemCategory" |
+     "TransportAnimation" |
+     "TransportPhysics" |
+     "TransportRotation" |
+     "UISoundLookups" |
+     "UnitBlood" |
+     "UnitBloodLevels" |
+     "Vehicle" |
+     "VehicleSeat" |
+     "VehicleUIIndicator" |
+     "VehicleUIIndSeat" |
+     "VideoHardware" |
+     "VocalUISounds" |
+     "WeaponImpactSounds" |
+     "WeaponSwingSounds2" |
+     "Weather" |
+     "WMOAreaTable" |
+     "WorldChunkSounds" |
+     "WorldMapArea" |
+     "WorldMapContinent" |
+     "WorldMapOverlay" |
+     "WorldMapTransforms" |
+     "WorldSafeLocs" |
+     "WorldStateUI" |
+     "WorldStateZoneSounds" |
+     "WowError_Strings" |
+     "ZoneintroMusicTable" |
+     "ZoneMusic" | 
+
+     // Custom dbcs
+     "BroadcastText" |
+     "Creature" |
+     "CreatureTemplate" |
+     "GameObject" |
+     "GameObjectTemplate" |
+     "ItemTemplate"
 
 export const DBCFiles : DBCFile<any,any,any>[] = Object.values(DBC);

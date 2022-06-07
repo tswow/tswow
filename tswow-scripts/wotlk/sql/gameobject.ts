@@ -16,10 +16,10 @@
 /* tslint:disable */
 import { char, float, int, mediumint, smallint, tinyint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { SQLCell, SQLCellReadOnly } from '../../data/sql/SQLCell'
 import { SqlRow } from '../../data/sql/SQLRow'
 import { SqlTable } from '../../data/sql/SQLTable'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition

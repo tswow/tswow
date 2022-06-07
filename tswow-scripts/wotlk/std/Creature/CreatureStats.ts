@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { creature_templateRow } from "../../sql/creature_template";
+import { CreatureTemplateRow } from "../../custom_dbc/CreatureTemplate";
 import { ChildEntity } from "../Misc/Entity";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureStats extends ChildEntity<creature_templateRow,CreatureTemplate> {
+export class CreatureStats extends ChildEntity<CreatureTemplateRow,CreatureTemplate> {
     get HealthMod() { return this.ownerWrap(this.row.HealthModifier); }
     get ManaMod() { return this.ownerWrap(this.row.ManaModifier); }
     get ArmorMod() { return this.ownerWrap(this.row.ArmorModifier); }

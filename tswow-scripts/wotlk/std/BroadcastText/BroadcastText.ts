@@ -16,51 +16,18 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
-import { Language } from "../../../data/dbc/Localization";
 import { loc_constructor } from "../../../data/primitives";
 import { Table } from "../../../data/table/Table";
-import { broadcast_textQuery, broadcast_textRow } from "../../sql/broadcast_text";
-import { SQL } from "../../SQLFiles";
+import { BroadcastTextQuery, BroadcastTextRow } from "../../custom_dbc/BroadcastText";
+import { DBC } from "../../DBCFiles";
 import { DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
 import { GenderedText } from "../Misc/GenderedText";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RefStatic } from "../Refs/Ref";
 import { RegistryStatic } from "../Refs/Registry";
 
-function getLocRow(id: number, lang: Language) {
-    const row = SQL.broadcast_text_locale.query({ID: id, locale: lang});
-    if(row!==undefined) {
-        return row;
-    } else {
-        return SQL.broadcast_text_locale.add(id, lang)
-            .Text.set('')
-            .Text1.set('')
-    }
-}
-
-export class BroadcastTextContent extends SQLLocSystem<BroadcastText> {
-    protected isFemale: boolean;
-
-    constructor(owner: BroadcastText, isFemale: boolean){
-        super(owner);
-        this.isFemale = isFemale;
-    }
-
-    protected getMain(): Cell<string, any> {
-        return this.isFemale ?
-            this.owner.row.Text1 : this.owner.row.Text
-    }
-
-    protected getLoc(loc: Language): Cell<string, any> {
-        return this.isFemale ?
-            getLocRow(this.owner.row.ID.get(),loc).Text1 :
-            getLocRow(this.owner.row.ID.get(),loc).Text
-    }
-}
-
-export function emote(row: broadcast_textRow, index: number) {
+export function emote(row: BroadcastTextRow, index: number) {
     switch(index) {
         case 0: return row.EmoteID1;
         case 1: return row.EmoteID2;
@@ -69,7 +36,7 @@ export function emote(row: broadcast_textRow, index: number) {
     }
 }
 
-export function emoteDelay(row: broadcast_textRow, index: number) {
+export function emoteDelay(row: BroadcastTextRow, index: number) {
     switch(index) {
         case 0: return row.EmoteDelay1;
         case 1: return row.EmoteDelay2;
@@ -120,8 +87,8 @@ export class BroadcastTextEmotes extends ArraySystem<BroadcastTextEmote,Broadcas
     }
 }
 
-export class BroadcastText extends MainEntity<broadcast_textRow> {
-    constructor(row: broadcast_textRow) {
+export class BroadcastText extends MainEntity<BroadcastTextRow> {
+    constructor(row: BroadcastTextRow) {
         super(row);
     }
 
@@ -131,8 +98,8 @@ export class BroadcastText extends MainEntity<broadcast_textRow> {
         return new GenderedText(
               this
             , 'WRITE_MALE'
-            , new BroadcastTextContent(this, false)
-            , new BroadcastTextContent(this, true)
+            , this.row.Text
+            , this.row.Text1
         )
     }
 
@@ -167,7 +134,7 @@ export class BroadcastText extends MainEntity<broadcast_textRow> {
 export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
     setSimple(langMale: loc_constructor, langFemale?: loc_constructor) {
         let v = new BroadcastText(
-                    SQL.broadcast_text.add(Ids.BroadcastText.dynamicId())
+                    DBC.BroadcastText.add(Ids.BroadcastText.dynamicId())
                 )
         v.Text.Male.set(langMale)
         if(langFemale) {
@@ -179,13 +146,13 @@ export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
 }
 
 export class BroadcastTextRegistryClass
-    extends RegistryStatic<BroadcastText,broadcast_textRow,broadcast_textQuery>
+    extends RegistryStatic<BroadcastText,BroadcastTextRow,BroadcastTextQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new BroadcastTextRef(owner, cell, this);
     }
-    protected Table(): Table<any, broadcast_textQuery, broadcast_textRow> & { add: (id: number) => broadcast_textRow; } {
-        return SQL.broadcast_text
+    protected Table(): Table<any, BroadcastTextQuery, BroadcastTextRow> & { add: (id: number) => BroadcastTextRow; } {
+        return DBC.BroadcastText
     }
     protected IDs(): StaticIDGenerator {
         return Ids.BroadcastText
@@ -228,16 +195,16 @@ export class BroadcastTextRegistryClass
         r.Text.Male.set(parent.Text.Male.objectify())
         r.Text.Female.set(parent.Text.Female.objectify())
     }
-    protected FindByID(id: number): broadcast_textRow {
-        return SQL.broadcast_text.query({ID:id})
+    protected FindByID(id: number): BroadcastTextRow {
+        return DBC.BroadcastText.query({ID:id})
     }
-    protected EmptyQuery(): broadcast_textQuery {
+    protected EmptyQuery(): BroadcastTextQuery {
         return {}
     }
     ID(e: BroadcastText): number {
         return e.ID
     }
-    protected Entity(r: broadcast_textRow): BroadcastText {
+    protected Entity(r: BroadcastTextRow): BroadcastText {
         return new BroadcastText(r);
     }
 }

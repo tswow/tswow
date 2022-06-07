@@ -20,7 +20,7 @@ import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.22021/TDB_full_world_335.22021_2022_02_16.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.22061/TDB_full_world_335.22061_2022_06_01.7z"
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
@@ -38,6 +38,17 @@ export function DatasetDirectory(inPath: string, inName: string) {
         Crashes: dir({}),
         dbc: dir({}),
         dbc_source: dir({}),
+        dbc_source_server: dir({
+            BroadcastText: file('BroadcastText.dbc'),
+            CreatureTemplate: file('CreatureTemplate.dbc'),
+            Creature: file('Creature.dbc'),
+            GameObjectTemplate: file('GameObjectTemplate.dbc'),
+            GameObject: file('GameObject.dbc'),
+            ItemTemplate: file('ItemTemplate.dbc'),
+        }),
+        dbc_server: dir({
+
+        }),
         dbc_temp: dir({
             dbc: dir({}),
         }),

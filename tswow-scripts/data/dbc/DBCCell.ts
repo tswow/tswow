@@ -321,6 +321,16 @@ export class DBCLocCell<T> extends LocSystem<T> {
 
     get isLoc() { return true; }
 
+    clear(mask?: number) {
+        if(mask !== undefined) {
+            this.mask.set(mask);
+        }
+        for(let i=0;i<15;++i) {
+            this.buffer.writeuint(0, this.offset + i * 4)
+        }
+        return this.owner;
+    }
+
     private langOffset(lang: Language) {
         switch (lang) {
             case 'enGB': return 0;
@@ -329,17 +339,16 @@ export class DBCLocCell<T> extends LocSystem<T> {
             case 'deDE': return 3;
             case 'enCN': return 4;
             case 'zhCN': return 5;
-            case 'zhTW': return 6;
-            case 'enTW': return 7;
-            case 'zhTW': return 8;
-            case 'esES': return 9;
-            case 'esMX': return 10;
-            case 'ruRU': return 11;
-            case 'ptPT': return 12;
+            case 'enTW': return 6;
+            case 'zhTW': return 7;
+            case 'esES': return 8;
+            case 'esMX': return 9;
+            case 'ruRU': return 10;
+            case 'ptPT': return 11;
+            case 'ptBR': return 12;
             case 'itIT': return 13;
             case 'Unk': return 14;
         }
-        return 15;
     }
 
     lang(lang: Language) {

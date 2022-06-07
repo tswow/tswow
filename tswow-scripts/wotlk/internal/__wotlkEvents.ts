@@ -24,7 +24,10 @@ import { SQLTables } from '../SQLFiles';
 
 function saveDbc() {
     for (const file of DBCFiles) {
-        const srcpath = dataset.dbc_source.join(file.name + '.dbc');
+        if(file.isCustom()) {
+
+        }
+        const srcpath = (file.isCustom() ? dataset.dbc_source_server : dataset.dbc_source).join(file.name + '.dbc');
 
         // if we skip the server, we should write dbcs to client directly
         const outPaths: WFile[] = [];
@@ -33,7 +36,7 @@ function saveDbc() {
         }
 
         if(BuildArgs.WRITE_SERVER) {
-            outPaths.push(dataset.dbc.join(file.name+'.dbc').toFile())
+            outPaths.push((file.isCustom() ? dataset.dbc_server : dataset.dbc).join(file.name+'.dbc').toFile())
         }
 
         if(file.isLoaded()) {

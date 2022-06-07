@@ -16,8 +16,8 @@
  */
 import { CellSystemTop, MulticastLocCell } from "../../../data/cell/systems/CellSystem";
 import { MultirowSystemCached } from "../../../data/cell/systems/MultiRowSystem";
+import { ItemTemplateRow } from "../../custom_dbc/ItemTemplate";
 import { SpellRow } from "../../dbc/Spell";
-import { item_templateRow } from "../../sql/item_template";
 import { ChargesSystem } from "../Item/ItemSpells";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { Lock } from "../Locks/Lock";
@@ -47,7 +47,7 @@ export class KeyLocks extends MultirowSystemCached<Lock,Key> {
 
 export class Key extends CellSystemTop {
     readonly spellRow: SpellRow
-    readonly itemRow: item_templateRow
+    readonly itemRow: ItemTemplateRow 
     readonly Locks = new KeyLocks(this)
     get AsSpell() { return new SelfRef(this, ()=>new Spell(this.spellRow)); }
     get AsItem() { return new SelfRef(this, ()=>new ItemTemplate(this.itemRow)); }
@@ -69,7 +69,7 @@ export class Key extends CellSystemTop {
         return this.wrapLoc(this.spellRow.Description)
     }
 
-    constructor(spell: SpellRow, item: item_templateRow) {
+    constructor(spell: SpellRow, item: ItemTemplateRow) {
         super();
         this.spellRow = spell;
         this.itemRow = item;

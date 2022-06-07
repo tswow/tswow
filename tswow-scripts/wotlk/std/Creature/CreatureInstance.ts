@@ -21,7 +21,8 @@ import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { finish } from "../../../data/index";
 import { isTrinityCore } from "../../../data/Settings";
-import { creatureRow } from "../../sql/creature";
+import { CreatureRow } from "../../custom_dbc/Creature";
+import { DBC } from "../../DBCFiles";
 import { creature_addonRow } from "../../sql/creature_addon";
 import { instance_boss_creatureRow } from "../../sql/instance_boss_creature";
 import { SQL } from "../../SQLFiles";
@@ -114,7 +115,7 @@ export class CreatureInstanceAddonRow extends CellSystem<CreatureInstance> {
     }
 }
 
-export class CreatureInstance extends MainEntity<creatureRow> {
+export class CreatureInstance extends MainEntity<CreatureRow> {
     @Transient
     protected get Addon() { return CreatureInstanceAddonRow.addon(this); }
     @Transient
@@ -207,7 +208,7 @@ finish('boss_maps',()=>{
             .forEach(x=>{
                 // only set maps set to be "unset"
                 if(x.map.get() !== -1) return;
-                const c = SQL.creature.query({guid:x.guid.get()})
+                const c = DBC.Creature.findById(x.guid.get())
                 if(!c) return;
                 x.map.set(c.map.get());
             })

@@ -30,7 +30,7 @@ export class ItemPrice extends CellSystem<ItemTemplate> {
         return new MoneyCell(this.owner, 'COPPER', new CellBasic(
               this.owner
             , ()=>Number(this.owner.row.BuyPrice.get())
-            , (value)=>this.owner.row.BuyPrice.set(BigInt(value)))
+            , (value)=>this.owner.row.BuyPrice.set(value))
         )
     }
 
@@ -64,7 +64,7 @@ export class ItemPrice extends CellSystem<ItemTemplate> {
 
     setUnsafe(sellPrice: number, buyPrice: number, buyCount: number = 1, currency: CoinType = 'COPPER')  {
         this.owner.row.SellPrice.set(convertCoin(sellPrice,currency,'COPPER'));
-        this.owner.row.BuyPrice.set(BigInt(convertCoin(buyPrice,currency,'COPPER')));
+        this.owner.row.BuyPrice.set(convertCoin(buyPrice,currency,'COPPER'));
         this.owner.row.BuyCount.set(buyCount);
         return this.owner;
     }

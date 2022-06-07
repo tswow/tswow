@@ -15,9 +15,9 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { Table } from "../../../data/table/Table";
-import { creatureQuery, creatureRow } from "../../sql/creature";
-import { creature_templateQuery, creature_templateRow } from "../../sql/creature_template";
-import { SQL } from "../../SQLFiles";
+import { CreatureQuery, CreatureRow } from "../../custom_dbc/Creature";
+import { CreatureTemplateQuery, CreatureTemplateRow } from "../../custom_dbc/CreatureTemplate";
+import { DBC } from "../../DBCFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
@@ -27,12 +27,12 @@ import { CreatureTemplate } from "./CreatureTemplate";
 export class CreatureTemplateRegistryClass
     extends RegistryStatic<
       CreatureTemplate
-    , creature_templateRow
-    , creature_templateQuery
+    , CreatureTemplateRow
+    , CreatureTemplateQuery
     >
 {
-    protected Table(): Table<any, creature_templateQuery, creature_templateRow> & { add: (id: number) => creature_templateRow; } {
-        return SQL.creature_template
+    protected Table(): Table<any, CreatureTemplateQuery, CreatureTemplateRow> & { add: (id: number) => CreatureTemplateRow; } {
+        return DBC.CreatureTemplate
     }
     protected IDs(): StaticIDGenerator {
         return Ids.creature_template
@@ -83,13 +83,13 @@ export class CreatureTemplateRegistryClass
             item.row.clone(child.ID,item.Item.get(),item.ExtendedCost.get())
         })
     }
-    protected Entity(r: creature_templateRow): CreatureTemplate {
+    protected Entity(r: CreatureTemplateRow): CreatureTemplate {
         return new CreatureTemplate(r);
     }
-    protected FindByID(id: number): creature_templateRow {
-        return SQL.creature_template.query({entry:id});
+    protected FindByID(id: number): CreatureTemplateRow {
+        return DBC.CreatureTemplate.query({entry:id});
     }
-    protected EmptyQuery(): creature_templateQuery {
+    protected EmptyQuery(): CreatureTemplateQuery {
         return {}
     }
     ID(e: CreatureTemplate): number {
@@ -99,10 +99,10 @@ export class CreatureTemplateRegistryClass
 export const CreatureTemplateRegistry = new CreatureTemplateRegistryClass()
 
 export class CreatureInstanceRegistryClass
-extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
+extends RegistryStatic<CreatureInstance,CreatureRow,CreatureQuery>
 {
-    protected Table(): Table<any, creatureQuery, creatureRow> & { add: (id: number) => creatureRow; } {
-        return SQL.creature
+    protected Table(): Table<any, CreatureQuery, CreatureRow> & { add: (id: number) => CreatureRow; } {
+        return DBC.Creature
     }
     protected IDs(): StaticIDGenerator {
         return Ids.creature
@@ -128,20 +128,19 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .ScriptName.set('')
          .phaseMask.set(1)
          .equipment_id.set(0)
-         .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {
         if(parent.AddonRow.exists()) {
             parent.AddonRow.get().clone(r.ID);
         }
     }
-    protected Entity(r: creatureRow): CreatureInstance {
+    protected Entity(r: CreatureRow): CreatureInstance {
         return new CreatureInstance(r);
     }
-    protected FindByID(id: number): creatureRow {
-        return SQL.creature.query({guid:id});
+    protected FindByID(id: number): CreatureRow {
+        return DBC.Creature.findById(id)
     }
-    protected EmptyQuery(): creatureQuery {
+    protected EmptyQuery(): CreatureQuery {
         return {}
     }
     ID(e: CreatureInstance): number {

@@ -20,7 +20,8 @@ import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { creature_templateRow } from "../../sql/creature_template";
+import { CreatureTemplateRow } from "../../custom_dbc/CreatureTemplate";
+import { DBC } from "../../DBCFiles";
 import { creature_template_addonRow } from "../../sql/creature_template_addon";
 import { SQL } from "../../SQLFiles";
 import { CreatureTextRegistry } from "../BroadcastText/CreatureText";
@@ -51,7 +52,6 @@ import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
 import { CreatureInstance } from "./CreatureInstance";
 import { CreatureLevel } from "./CreatureLevel";
-import { CreatureName, CreatureSubname } from "./CreatureLoc";
 import { MechanicImmunity } from "./CreatureMechanicImmunity";
 import { CreatureModels } from "./CreatureModels";
 import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
@@ -118,7 +118,7 @@ export interface CreatureInstancePosition extends Position {
 export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,CreatureTemplate>
 {
     protected getAllRows(): CreatureInstance[] {
-        return SQL.creature.queryAll({id:this.owner.ID})
+        return DBC.Creature.queryAll({id:this.owner.ID})
             .map(x=>new CreatureInstance(x));
     }
 
@@ -202,10 +202,10 @@ export class CreatureTemplateAddonRow extends CellSystem<CreatureTemplate> {
     }
 }
 
-export class CreatureTemplate extends MainEntityID<creature_templateRow> {
+export class CreatureTemplate extends MainEntityID<CreatureTemplateRow> {
     get ID() { return this.row.entry.get(); }
-    get Name() { return new CreatureName(this); }
-    get Subname() { return new CreatureSubname(this); }
+    get Name() { return this.wrapLoc(this.row.name) }
+    get Subname() { return this.wrapLoc(this.row.subname) }
     get Scripts() {
         return new AttachedScript(this, ()=>{
             this.row.AIName.set('SmartAI');

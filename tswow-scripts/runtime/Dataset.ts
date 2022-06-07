@@ -252,6 +252,7 @@ export class Dataset {
                 return Promise.all(Identifier
                     .getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
                     .map(x=>{
+                        x.path.dbc_source_server.remove();
                         return x.setupDatabases(
                               args.includes('--source') && args.includes('--dest')
                             ? 'BOTH'

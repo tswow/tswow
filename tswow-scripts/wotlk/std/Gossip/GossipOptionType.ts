@@ -16,6 +16,7 @@
  */
 import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
 import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { TrainerPlain, TrainerRegistry } from "../Trainer/Trainer";
@@ -65,8 +66,8 @@ export class VendorCell extends OptionCellBase {
     }
 
     setNew(callback: (vendor: Vendor)=>void) {
-        let c = SQL.creature_template.add(Ids.creature_template.dynamicId());
-        c.name.set('Dummy Vendor Creature')
+        let c = DBC.CreatureTemplate.add(Ids.creature_template.dynamicId());
+        c.name.enGB.set('Dummy Vendor Creature')
         return this.set(c.entry.get(), callback);
     }
 }
@@ -94,8 +95,8 @@ export class TrainerCell extends OptionCellBase {
     }
 
     setNew(callback: (trainer: TrainerPlain)=>void) {
-        let creature = SQL.creature_template.add(Ids.creature_template.dynamicId());
-        creature.name.set('Dummy Trainer Creature').npcflag.set(16)
+        let creature = DBC.CreatureTemplate.add(Ids.creature_template.dynamicId());
+        creature.name.enGB.set('Dummy Trainer Creature').npcflag.set(16)
         let trainer = TrainerRegistry.create()
         SQL.creature_default_trainer.add(creature.entry.get())
             .TrainerId.set(trainer.ID)

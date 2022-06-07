@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
 import { SQL } from "../../SQLFiles";
 import { Quest } from "./Quest";
 
@@ -36,8 +37,8 @@ export class QuestNPC extends CellSystem<Quest> {
         SQL.creature_questender.add(npcId,this.owner.ID)
 
         if(addPoi) {
-            let creatures = SQL.creature.queryAll({id:npcId})
-            if(creatures.length === 0) {
+            let creatures = DBC.Creature.findById(npcId)
+            if(!creatures) {
                 throw new Error(
                       `No spawn for creature template ${npcId}, `
                     + `either spawn your creature before creating the quest `
@@ -45,18 +46,11 @@ export class QuestNPC extends CellSystem<Quest> {
                 )
             }
 
-            if(creatures.length > 1) {
-                throw new Error(
-                        `Multiple spawns for creature template ${npcId}, `
-                      + `please set poi manually`
-                )
-            }
-
             this.owner.POIs.add(-1,[{
-                  map:creatures[0].map.get()
-                , x:creatures[0].position_x.get()
-                , y:creatures[0].position_y.get()
-                , z:creatures[0].position_z.get()
+                  map:creatures.map.get()
+                , x:creatures.position_x.get()
+                , y:creatures.position_y.get()
+                , z:creatures.position_z.get()
                 , o:0
             }])
         }

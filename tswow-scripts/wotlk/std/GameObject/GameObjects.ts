@@ -16,10 +16,9 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell"
 import { Table } from "../../../data/table/Table"
+import { GameObjectQuery, GameObjectRow } from "../../custom_dbc/GameObject"
 import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "../../dbc/GameObjectDisplayInfo"
 import { DBC } from "../../DBCFiles"
-import { gameobjectQuery, gameobjectRow } from "../../sql/gameobject"
-import { SQL } from "../../SQLFiles"
 import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids"
 import { RefDynamic } from "../Refs/Ref"
 import { RegistryDynamic, RegistryStatic } from "../Refs/Registry"
@@ -27,10 +26,10 @@ import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
 
 export class GameObjectInstanceRegistryClass
-    extends RegistryStatic<GameObjectInstance,gameobjectRow,gameobjectQuery>
+    extends RegistryStatic<GameObjectInstance,GameObjectRow,GameObjectQuery>
 {
-    protected Table(): Table<any, gameobjectQuery, gameobjectRow> & { add: (id: number) => gameobjectRow } {
-        return SQL.gameobject
+    protected Table(): Table<any, GameObjectQuery, GameObjectRow> & { add: (id: number) => GameObjectRow } {
+        return DBC.GameObject
     }
     protected IDs(): StaticIDGenerator {
         return Ids.gameobject
@@ -48,20 +47,19 @@ export class GameObjectInstanceRegistryClass
          .State.set(1)
          .row
             .id.set(0)
-            .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
         if(parent.AddonRow.exists()) {
             parent.AddonRow.get().clone(r.ID);
         }
     }
-    protected Entity(r: gameobjectRow): GameObjectInstance {
+    protected Entity(r: GameObjectRow): GameObjectInstance {
         return new GameObjectInstance(r);
     }
-    protected FindByID(id: number): gameobjectRow {
-        return SQL.gameobject.query({guid:id});
+    protected FindByID(id: number): GameObjectRow {
+        return DBC.GameObject.query({guid:id});
     }
-    protected EmptyQuery(): gameobjectQuery {
+    protected EmptyQuery(): GameObjectQuery {
         return {}
     }
     ID(e: GameObjectInstance): number {

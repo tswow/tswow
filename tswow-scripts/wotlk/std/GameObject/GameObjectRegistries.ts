@@ -1,6 +1,7 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { Table } from "../../../data/table/Table";
-import { gameobject_templateQuery, gameobject_templateRow } from "../../sql/gameobject_template";
+import { GameObjectTemplateQuery, GameObjectTemplateRow } from "../../custom_dbc/GameObjectTemplate";
+import { DBC } from "../../DBCFiles";
 import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
@@ -11,17 +12,17 @@ import { KeyFrameCon } from "./ElevatorKeyframes";
 import { GameObjectAreaDamage, GameObjectAuraGenerator, GameObjectBarberChair, GameObjectButton, GameObjectCamera, GameObjectCapturePoint, GameObjectChair, GameObjectChest, GameObjectDestructibleBuilding, GameObjectDoor, GameObjectDungeonDifficulty, GameObjectElevator, GameObjectFishingHole, GameObjectFlagDrop, GameObjectFlagStand, GameObjectGoober, GameObjectGuardPost, GameObjectGuildBank, GameObjectMailbox, GameObjectMeetingStone, GameObjectMinigame, GameObjectPlain, GameObjectQuestGiver, GameObjectShip, GameObjectSpellCaster, GameObjectSpellFocus, GameObjectSummoningRitual, GameObjectTemplate, GameObjectText, GameObjectTrap, GameObjectTrapdoor } from "./GameObjectTemplate";
 
 export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
-    extends RegistryRowBase<T,gameobject_templateRow,gameobject_templateQuery>
+    extends RegistryRowBase<T,GameObjectTemplateRow,GameObjectTemplateQuery>
 {
     ref<O>(owner: O, cell: Cell<number,any>) {
         return new RefStatic(owner, cell, this);
     }
 
-    protected FindByID(id: number): gameobject_templateRow {
-        return SQL.gameobject_template.query({entry:id});
+    protected FindByID(id: number): GameObjectTemplateRow {
+        return DBC.GameObjectTemplate.query({entry:id});
     }
 
-    protected EmptyQuery(): gameobject_templateQuery {
+    protected EmptyQuery(): GameObjectTemplateQuery {
         return {}
     }
 
@@ -29,8 +30,8 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
         return e.ID
     }
 
-    protected Table(): Table<any, gameobject_templateQuery, gameobject_templateRow> {
-        return SQL.gameobject_template
+    protected Table(): Table<any, GameObjectTemplateQuery, GameObjectTemplateRow> {
+        return DBC.GameObjectTemplate
     }
 
     protected abstract ClearGO(r: GameObjectPlain, mod: string, id: string): void;
@@ -39,7 +40,7 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
     /** Unused, see ClearGO instead */
     Clear(r: T): void {}
 
-    private clearRow(r: gameobject_templateRow) {
+    private clearRow(r: GameObjectTemplateRow) {
             r.AIName.set("")
             .Data0.set(0)
             .Data1.set(0)
@@ -67,9 +68,9 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
             .Data9.set(0)
             .IconName.set("")
             .ScriptName.set("")
-            .castBarCaption.set("")
+            .castBarCaption.clear()
             .displayId.set(0)
-            .name.set("")
+            .name.clear()
             .size.set(1)
             .type.set(0)
             .unk1.set("")
@@ -77,14 +78,14 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
 
     protected abstract GOEntity(plain: GameObjectPlain): T;
 
-    protected Entity(row: gameobject_templateRow) {
+    protected Entity(row: GameObjectTemplateRow) {
         return this.GOEntity(new GameObjectPlain(row));
     }
 
     create(mod: string, id: string, parent = 0) {
         let nid = Ids.gameobject_template.id(mod,id);
         if(parent !== 0) {
-            let parentRow = SQL.gameobject_template.query({entry:parent});
+            let parentRow = DBC.GameObjectTemplate.findById(parent);
             let parentEntity = this.Entity(parentRow);
             // we should use ".Entity" now because we got the type from the parent
             let entity = this.Entity(parentRow.clone(nid))
@@ -94,7 +95,7 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
             this.CloneGO(entity,parentEntity,mod,id);
             return entity;
         } else {
-            let row = SQL.gameobject_template.add(nid)
+            let row = DBC.GameObjectTemplate.add(nid)
             this.clearRow(row);
             this.ClearGO(new GameObjectPlain(row),mod,id)
             // now we can safely use .Entity, because

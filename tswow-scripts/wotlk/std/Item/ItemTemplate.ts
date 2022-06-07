@@ -20,9 +20,9 @@ import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Table } from "../../../data/table/Table";
+import { ItemTemplateQuery, ItemTemplateRow } from "../../custom_dbc/ItemTemplate";
 import { ItemRow } from "../../dbc/Item";
 import { DBC } from "../../DBCFiles";
-import { item_templateQuery, item_templateRow } from "../../sql/item_template";
 import { SQL } from "../../SQLFiles";
 import { ClassMask } from "../Class/ClassRegistry";
 import { EnchantmentRegistry } from "../Enchant/Enchantment";
@@ -64,7 +64,6 @@ import { ItemSheath } from "./ItemSheath";
 import { ItemSockets } from "./ItemSocket";
 import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
-import { ItemDescription, ItemName } from "./ItemText";
 import { PageMaterialCell } from "./PageMaterial";
 
 export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
@@ -108,7 +107,7 @@ export class ItemDBCRow extends CellSystem<ItemTemplate> {
     }
 }
 
-export class ItemTemplate extends MainEntityID<item_templateRow> {
+export class ItemTemplate extends MainEntityID<ItemTemplateRow> {
     @Transient
     protected get dbc() { return ItemDBCRow.dbc(this); }
     readonly DBCRow = new ItemDBCRow(this);
@@ -117,7 +116,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         return template.ItemSetNameRow;
     }
 
-    get Name() { return new ItemName(this); }
+    get Name() { return this.wrapLoc(this.row.name) }
     get ItemSetName() { return new ItemSetName(this); }
     get Socket() { return new ItemSockets(this); }
     get StartQuest() { return this.wrap(this.row.startquest); }
@@ -166,7 +165,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         )
     }
     get RangeMod() { return this.wrap(this.row.RangedModRange); }
-    get Description() { return new ItemDescription(this); }
+    get Description() { return this.wrapLoc(this.row.description); }
     get Quality() {
         return makeEnumCell(ItemQuality,this, this.row.Quality);
     }
@@ -268,7 +267,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 }
 
 export class ItemTemplateRegistryClass
-extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
+extends RegistryStatic<ItemTemplate,ItemTemplateRow,ItemTemplateQuery> {
     protected Clone(mod: string, id: string, r: ItemTemplate, parent: ItemTemplate): void {
         if(parent.GemProperties.get() !== 0) {
             throw new Error(`Tried cloning an item with GemProperties != 0, this is not supported!`);
@@ -278,19 +277,19 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
             dbc.clone(r.ID);
         }
     }
-    protected Table(): Table<any, item_templateQuery, item_templateRow> & { add: (id: number) => item_templateRow; } {
-        return SQL.item_template
+    protected Table(): Table<any, ItemTemplateQuery, ItemTemplateRow> & { add: (id: number) => ItemTemplateRow; } {
+        return DBC.ItemTemplate
     }
     protected IDs(): StaticIDGenerator {
         return Ids.item_template
     }
-    protected Entity(r: item_templateRow): ItemTemplate {
+    protected Entity(r: ItemTemplateRow): ItemTemplate {
         return new ItemTemplate(r)
     }
-    protected FindByID(id: number): item_templateRow {
-        return SQL.item_template.query({entry:id});
+    protected FindByID(id: number): ItemTemplateRow {
+        return DBC.ItemTemplate.query({entry:id});
     }
-    protected EmptyQuery(): item_templateQuery {
+    protected EmptyQuery(): ItemTemplateQuery {
         return {}
     }
     ID(e: ItemTemplate): number {

@@ -17,10 +17,10 @@
 import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { creature_templateRow } from "../../sql/creature_template";
+import { CreatureTemplateRow } from "../../custom_dbc/CreatureTemplate";
 import { CreatureDisplayInfoRegistry } from "./CreatureDisplayInfo";
 
-function getModel(row: creature_templateRow, index: number) {
+function getModel(row: CreatureTemplateRow, index: number) {
     switch(index) {
         case 0: return row.modelid1;
         case 1: return row.modelid2;
@@ -32,9 +32,9 @@ function getModel(row: creature_templateRow, index: number) {
 
 export class CreatureModels<T> extends CellSystem<T> {
     @Transient
-    protected row: creature_templateRow;
+    protected row: CreatureTemplateRow;
 
-    constructor(owner: T, row: creature_templateRow) {
+    constructor(owner: T, row: CreatureTemplateRow) {
         super(owner);
         this.row = row;
     }

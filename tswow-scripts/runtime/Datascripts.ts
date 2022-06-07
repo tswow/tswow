@@ -342,6 +342,8 @@ export class Datascripts {
         // 5. Prepare dataset
         await dataset.setupClientData();
         if(args.includes('--rebuild')) {
+            dataset.path.dbc_source_server.remove();
+            dataset.path.dbc_server.remove();
             await dataset.setupDatabases('SOURCE',false);
             await dataset.setupDatabases('DEST',true);
         } else {

@@ -19,7 +19,8 @@ import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { gameobject_templateRow } from "../../sql/gameobject_template";
+import { GameObjectTemplateRow } from "../../custom_dbc/GameObjectTemplate";
+import { DBC } from "../../DBCFiles";
 import { gameobject_template_addonRow } from "../../sql/gameobject_template_addon";
 import { SQL } from "../../SQLFiles";
 import { AreaRegistry } from "../Area/Area";
@@ -43,7 +44,6 @@ import { BattlegroundDoorObjects } from "./BattlegroundDoorObject";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
 import { GameObjectID } from "./GameObjectID";
 import { GameObjectInstance } from "./GameObjectInstance";
-import { GameObjectName } from "./GameObjectName";
 import { GORegistry } from "./GameObjectRegistries";
 import { GameObjectDisplayRegistry, GameObjectInstances } from "./GameObjects";
 import { GameObjectTemplateAddon } from "./GameObjectTemplateAddon";
@@ -54,7 +54,7 @@ export class GameObjectTemplateInstances<T extends GameObjectTemplate>
     extends MultiRowSystem<GameObjectInstance,T>
 {
     protected getAllRows(): GameObjectInstance[] {
-        return SQL.gameobject.queryAll({id:this.owner.ID})
+        return DBC.GameObject.queryAll({id:this.owner.ID})
             .map(x=>new GameObjectInstance(x))
     }
     protected isDeleted(value: GameObjectInstance): boolean {
@@ -107,7 +107,7 @@ export class GameObjectTemplateAddonRow<T extends GameObjectTemplate>
     }
 }
 
-export class GameObjectTemplate extends TransformedEntityID<gameobject_templateRow, GameObjectPlain> {
+export class GameObjectTemplate extends TransformedEntityID<GameObjectTemplateRow, GameObjectPlain> {
     protected transformer() { return this.Type; }
     protected default(): GameObjectPlain {
         return new GameObjectPlain(this.row);
@@ -125,9 +125,9 @@ export class GameObjectTemplate extends TransformedEntityID<gameobject_templateR
 
     get Type() { return new GameObjectType(this, this.row.type); }
     get ID() { return this.row.entry.get(); }
-    get Name() { return new GameObjectName(this); }
+    get Name() { return this.wrapLoc(this.row.name); }
     get Icon() { return this.wrap(this.row.IconName); }
-    get CastBarCaption() { return this.wrap(this.row.castBarCaption); }
+    get CastBarCaption() { return this.wrapLoc(this.row.castBarCaption); }
     get Size() { return this.wrap(this.row.size); }
     get Display() {
         return GameObjectDisplayRegistry.ref(this, this.row.displayId);
@@ -185,7 +185,7 @@ export class GameObjectPlain extends GameObjectTemplate {
 }
 
 export class GameObjectAreaDamage extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this, this.row.Data0); }
@@ -199,7 +199,7 @@ export class GameObjectAreaDamage extends GameObjectTemplate {
 }
 
 export class GameObjectAuraGenerator extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
 
@@ -213,7 +213,7 @@ export class GameObjectAuraGenerator extends GameObjectTemplate {
 }
 
 export class GameObjectBarberChair extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get ChairHeight() { return this.wrap(this.row.Data0); }
@@ -222,7 +222,7 @@ export class GameObjectBarberChair extends GameObjectTemplate {
 
 GameObjectID(1)
 export class GameObjectButton extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     /**
@@ -269,7 +269,7 @@ export class GameObjectButton extends GameObjectTemplate {
 }
 
 export class GameObjectCamera extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this, this.row.Data0); }
@@ -280,7 +280,7 @@ export class GameObjectCamera extends GameObjectTemplate {
 }
 
 export class GameObjectCapturePoint extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Radius() { return this.wrap(this.row.Data0); }
@@ -308,7 +308,7 @@ export class GameObjectCapturePoint extends GameObjectTemplate {
 }
 
 export class GameObjectChair extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
 
@@ -320,7 +320,7 @@ export class GameObjectChair extends GameObjectTemplate {
 }
 
 export class GameObjectChest extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
 
@@ -362,7 +362,7 @@ export class GameObjectChest extends GameObjectTemplate {
 }
 
 export class GameObjectDestructibleBuilding extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get InteractNumHits() { return this.wrap(this.row.Data0); }
@@ -392,7 +392,7 @@ export class GameObjectDestructibleBuilding extends GameObjectTemplate {
 }
 
 export class GameObjectDoor extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     /**
@@ -441,7 +441,7 @@ export class GameObjectDoor extends GameObjectTemplate {
 }
 
 export class GameObjectDungeonDifficulty extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Map() { return MapRegistry.ref(this, this.row.Data0); }
@@ -449,7 +449,7 @@ export class GameObjectDungeonDifficulty extends GameObjectTemplate {
 }
 
 export class GameObjectFishingHole extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     /**
@@ -473,7 +473,7 @@ export class GameObjectFishingHole extends GameObjectTemplate {
 }
 
 export class GameObjectFlagDrop extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this, this.wrap(this.row.Data0)); }
@@ -484,7 +484,7 @@ export class GameObjectFlagDrop extends GameObjectTemplate {
 }
 
 export class GameObjectFlagStand extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this, this.wrap(this.row.Data0)); }
@@ -499,7 +499,7 @@ export class GameObjectFlagStand extends GameObjectTemplate {
 }
 
 export class GameObjectGeneric extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Tooltip() { return this.wrap(this.row.Data0); }
@@ -518,7 +518,7 @@ export enum SpellFlags {
 };
 
 export class GameObjectGoober extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this, this.wrap(this.row.Data0)); }
@@ -550,7 +550,7 @@ export class GameObjectGoober extends GameObjectTemplate {
 }
 
 export class GameObjectGuardPost extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     /** Assume this is a template, but it's not used in tc */
@@ -561,21 +561,21 @@ export class GameObjectGuardPost extends GameObjectTemplate {
 }
 
 export class GameObjectGuildBank extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Condition() { return new RefUnknown(this, this.row.Data0); }
 }
 
 export class GameObjectMailbox extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Condition() { return new RefUnknown(this, this.row.Data0); }
 }
 
 export class GameObjectMeetingStone extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get MinLevel() { return this.wrap(this.row.Data0); }
@@ -584,14 +584,14 @@ export class GameObjectMeetingStone extends GameObjectTemplate {
 }
 
 export class GameObjectMinigame extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get GameType() { return this.wrap(this.row.Data0); }
 }
 
 export class GameObjectShip extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get TaxiPath() { return TaxiPathRegistry.ref(this, this.row.Data0); }
@@ -606,7 +606,7 @@ export class GameObjectShip extends GameObjectTemplate {
 }
 
 export class GameObjectQuestGiver extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this ,this.row.Data0); }
@@ -623,7 +623,7 @@ export class GameObjectQuestGiver extends GameObjectTemplate {
 }
 
 export class GameObjectSpellCaster extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Spell() { return SpellRegistry.ref(this, this.row.Data0); }
@@ -635,7 +635,7 @@ export class GameObjectSpellCaster extends GameObjectTemplate {
 }
 
 export class GameObjectSpellFocus extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Focus() { return SpellFocusRegistry.ref(this, this.row.Data0); }
@@ -650,7 +650,7 @@ export class GameObjectSpellFocus extends GameObjectTemplate {
 }
 
 export class GameObjectSummoningRitual extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get RequiredParticipants() { return this.wrap(this.row.Data0); }
@@ -665,7 +665,7 @@ export class GameObjectSummoningRitual extends GameObjectTemplate {
 }
 
 export class GameObjectText extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Page() { return PageTextRegistry.ref(this, this.row.Data0); }
@@ -676,7 +676,7 @@ export class GameObjectText extends GameObjectTemplate {
 }
 
 export class GameObjectElevator extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Pause() { return this.wrap(this.row.Data0); }
@@ -689,7 +689,7 @@ export class GameObjectElevator extends GameObjectTemplate {
 }
 
 export class GameObjectTrap extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
     get Lock() { return LockRegistry.ref(this, this.row.Data0); }
@@ -716,7 +716,7 @@ export class GameObjectTrap extends GameObjectTemplate {
 }
 
 export class GameObjectTrapdoor extends GameObjectTemplate {
-    constructor(row: gameobject_templateRow) {
+    constructor(row: GameObjectTemplateRow) {
         super(row);
     }
 

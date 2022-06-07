@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 process.argv.push('--ipaths=./')
+import { Args } from "../util/Args";
 import { commands } from "../util/Commands";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
@@ -78,6 +79,9 @@ export async function main() {
 
     Module.cacheEndpoints(true);
     await mysql.initialize();
+    if(Args.hasFlag('mysql-only', process.argv)) {
+        return;
+    }
     await Dataset.initialize()
     await Client.initialize();
     await Module.initialize();

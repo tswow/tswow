@@ -16,10 +16,10 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { GetStage } from '..';
 import { inMemory } from '../query/Query';
 import { dataset } from '../Settings';
 import { Table } from '../table/Table';
-import { GetStage } from '..';
 import { DBCBuffer } from './DBCBuffer';
 import { DBCRow } from './DBCRow';
 
@@ -27,10 +27,13 @@ export type AnyFile = DBCFile<any, any, any>;
 
 export type DBCRowCreator<C, Q, R extends DBCRow<C, Q>> = (table: DBCFile<C, Q, R>, buffer: DBCBuffer, offset: number) => R;
 
+export const CUSTOM_DBCS = ['BroadcastText','Creature','CreatureTemplate','GameObject','GameObjectTemplate','ItemTemplate']
+
 /**
  * Represents an entire DBC file loaded in memory, with all rows fully loaded.
  */
 export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
+    private isDefault = true;
     private loaded = false;
     protected buffer: DBCBuffer;
     protected rowMaker: DBCRowCreator<C, Q, R>;
@@ -42,7 +45,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     private checkSort() {
-        if(GetStage() !== 'SORT') {
+        if(this.isDefault && GetStage() !== 'SORT') {
             throw new Error(
                   `Attempting to sort DBC before SORT stage. `
                 + `Please register a callback like this to sort:\n\n`
@@ -131,6 +134,12 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         return file.rowMaker(file, file.buffer, offset);
     }
 
+    static initialize(file: DBCFile<any, any, any>, rowSize: number) {
+        file.loaded = true;
+        file.isDefault = false;
+        file.buffer.initialize(rowSize)
+    }
+
     get rowCount() {
         this.load();
         return this.buffer.rowCount;
@@ -148,7 +157,11 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     private defaultPath() {
-        return path.join(dataset.dbc_source.get(), this.name + '.dbc');
+        return path.join(this.isCustom()
+            ? dataset.dbc_source_server.get()
+            : dataset.dbc_source.get()
+            , this.name + '.dbc'
+            );
     }
 
     first(): R {
@@ -156,14 +169,15 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     read(dbcpath: string = this.defaultPath()) {
+        this.isDefault = false;
         this.loaded = false;
-        this.load(dbcpath);
+        this.load(dbcpath, false);
         return this;
     }
 
-    private load(filePath: string = this.defaultPath()) {
+    private load(filePath: string = this.defaultPath(), isDefault: boolean = true) {
         if (!this.loaded) {
-            this.buffer.read(filePath);
+            this.buffer.read(filePath, isDefault);
             this.loaded = true;
         }
     }
@@ -244,5 +258,9 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         }
 
         return arr;
+    }
+
+    isCustom() {
+        return CUSTOM_DBCS.includes(this.name)
     }
 }

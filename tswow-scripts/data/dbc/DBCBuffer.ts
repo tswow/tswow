@@ -27,6 +27,7 @@ export class DBCBuffer {
     private _rowCount = 0;
     private _baseRowCount = 0;
     private _fieldCount = 0;
+    private _isDefault = true;
 
     static getBuffer(file: DBCBuffer) {
         return file.rows;
@@ -66,12 +67,13 @@ export class DBCBuffer {
     }
 
     initialize(rowSize: number) {
-        this._rowSize = rowSize;
-        this.rows = Buffer.alloc(rowSize);
+        this.rows = Buffer.alloc(0);
         this.strings = Buffer.alloc(1);
-        this.bufPtr = rowSize;
+        this.bufPtr = 0;
         this.strPtr = 1;
-        this._rowCount = 1;
+        this._rowCount = 0;
+        this._rowSize = rowSize;
+        this._isDefault = false;
     }
 
     applyDeletes() {
@@ -110,7 +112,7 @@ export class DBCBuffer {
     }
 
     move(sourceIndex: number, targetIndex: number) {
-        if(GetStage() !== 'SORT') {
+        if(this._isDefault && GetStage() !== 'SORT') {
             throw new Error(`Trying to move array indices before SORT stage`)
         }
         if(sourceIndex === targetIndex) return;
@@ -139,12 +141,13 @@ export class DBCBuffer {
         buf1.copy(this.rows,offset2);
     }
 
-    read(file: string) {
+    read(file: string, isDefault = true) {
         const buffer = fs.readFileSync(file);
         const rowCount = buffer.readInt32LE(4);
         const rowSize = buffer.readInt32LE(12);
         const stringSize = buffer.readInt32LE(16);
 
+        this._isDefault = isDefault;
         this._rowCount = rowCount;
         this._baseRowCount = rowCount;
         this._rowSize = rowSize;
@@ -198,7 +201,8 @@ export class DBCBuffer {
 
     addRow(sourceLine: number) {
         while (this.rows.length - this.bufPtr < this._rowSize) {
-            this.rows = Buffer.concat([this.rows, Buffer.allocUnsafe(this.rows.length / 2)]);
+            let newLen = Math.ceil(Math.max(this.rows.length/2,1))
+            this.rows = Buffer.concat([this.rows, Buffer.allocUnsafe(newLen)]);
         }
         const sourceOffset = sourceLine * this.rowSize;
         this.rows.copy(this.rows, this.bufPtr, sourceOffset, sourceOffset + this._rowSize);

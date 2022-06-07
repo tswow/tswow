@@ -48,6 +48,11 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
         table.cachedRows[Row.fullKey(row)] = row;
     }
 
+    static flushCache(table: SqlTable<any,any,any>) {
+        table.cachedRows = {}
+        table.cachedFirst = undefined;
+    }
+
     constructor(name: string, rowCreator: SqlRowCreator<C, Q, R>) {
         super(name);
         this.rowCreator = rowCreator;
