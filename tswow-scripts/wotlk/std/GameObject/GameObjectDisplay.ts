@@ -2,6 +2,7 @@ import { CellIndexWrapper } from "../../../data/cell/cells/CellArray";
 import { GameObjectDisplayInfoRow } from "../../dbc/GameObjectDisplayInfo";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
+import { GeoBox } from "../Misc/GeoBox";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 
 export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameObjectDisplay> {
@@ -48,50 +49,6 @@ export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameO
     }
 }
 
-export class GameObjectGeoBox extends ChildEntity<GameObjectDisplayInfoRow,GameObjectDisplay> {
-    get MinX() { return this.ownerWrap(this.row.GeoBoxMinX); }
-    get MaxX() { return this.ownerWrap(this.row.GeoBoxMaxX); }
-    get MinY() { return this.ownerWrap(this.row.GeoBoxMinY); }
-    get MaxY() { return this.ownerWrap(this.row.GeoBoxMaxY); }
-    get MinZ() { return this.ownerWrap(this.row.GeoBoxMinZ); }
-    get MaxZ() { return this.ownerWrap(this.row.GeoBoxMaxZ); }
-
-    set(box: BoundingBox|number): GameObjectDisplay {
-        if(typeof(box) === 'number') {
-            return this.set(
-                {minX:-box,minY:-box,minZ:-box,maxX:box,maxY:box,maxZ:box}
-            )
-        }
-        this.MinX.set(box.minX);
-        this.MinY.set(box.minY);
-        this.MinZ.set(box.minZ);
-        this.MaxX.set(box.maxX);
-        this.MaxY.set(box.maxY);
-        this.MaxZ.set(box.maxZ);
-        return this.owner;
-    }
-
-    ToBoundingBox() {
-        return new BoundingBox(
-            this.MinX.get(),
-            this.MinY.get(),
-            this.MinZ.get(),
-            this.MaxX.get(),
-            this.MaxY.get(),
-            this.MaxZ.get());
-    }
-
-    scale(x: number, y: number, z: number) {
-        this.MinX.set(this.MinX.get()*x);
-        this.MinY.set(this.MinX.get()*y);
-        this.MinZ.set(this.MinX.get()*z);
-
-        this.MaxX.set(this.MaxX.get()*x);
-        this.MaxY.set(this.MaxY.get()*y);
-        this.MaxZ.set(this.MaxZ.get()*z);
-        return this.owner;
-    }
-}
 
 export function cleanGameObjectDisplayRow(row: GameObjectDisplayInfoRow) {
     row
@@ -122,7 +79,15 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
     get ObjectEffectPackage() {
         return this.wrap(this.row.ObjectEffectPackageID);
     }
-    get GeoBox(): GameObjectGeoBox {
-        return new GameObjectGeoBox(this as any);
+    get GeoBox(): GeoBox<this> {
+        return new GeoBox(
+            this,
+            this.row.GeoBoxMinX,
+            this.row.GeoBoxMaxX,
+            this.row.GeoBoxMinY,
+            this.row.GeoBoxMaxY,
+            this.row.GeoBoxMinZ,
+            this.row.GeoBoxMaxZ
+        )
     }
 }
