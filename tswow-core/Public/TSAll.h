@@ -65,3 +65,4 @@
 #include "TSORMGenerator.h"
 #include "TSBitwise.h"
 #include "TSGameObjectTemplate.h"
+#include "TSFileSystem.h"
