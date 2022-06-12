@@ -224,7 +224,7 @@ struct SDBCGameObject : public SDBCRow
     float rotation1;
     float rotation2;
     float rotation3;
-    uint32 spawntimesecs;
+    int32 spawntimesecs;
     uint32 animprogress;
     uint32 state;
     SDBCString ScriptName;

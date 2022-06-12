@@ -14,7 +14,7 @@
  */
 
 /* tslint:disable */
-import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringCell } from '../../data/dbc/DBCCell'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 import { int } from '../../data/primitives'
@@ -38,32 +38,32 @@ export class GameObjectRow extends DBCRow<GameObjectCreator,GameObjectQuery> {
     /**
      * No comment (yet!)
      */
-    get id() { return new DBCIntCell(this,this.buffer,this.offset+4)}
+    get id() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
 
     /**
      * No comment (yet!)
      */
-    get map() { return new DBCIntCell(this,this.buffer,this.offset+8)}
+    get map() { return new DBCUIntCell(this,this.buffer,this.offset+8)}
 
     /**
      * No comment (yet!)
      */
-    get zoneId() { return new DBCIntCell(this,this.buffer,this.offset+12)}
+    get zoneId() { return new DBCUIntCell(this,this.buffer,this.offset+12)}
 
     /**
      * No comment (yet!)
      */
-    get areaId() { return new DBCIntCell(this,this.buffer,this.offset+16)}
+    get areaId() { return new DBCUIntCell(this,this.buffer,this.offset+16)}
 
     /**
      * No comment (yet!)
      */
-    get spawnMask() { return new DBCIntCell(this,this.buffer,this.offset+20)}
+    get spawnMask() { return new DBCUIntCell(this,this.buffer,this.offset+20)}
 
     /**
      * No comment (yet!)
      */
-    get phaseMask() { return new DBCIntCell(this,this.buffer,this.offset+24)}
+    get phaseMask() { return new DBCUIntCell(this,this.buffer,this.offset+24)}
 
     /**
      * No comment (yet!)
@@ -113,12 +113,12 @@ export class GameObjectRow extends DBCRow<GameObjectCreator,GameObjectQuery> {
     /**
      * No comment (yet!)
      */
-    get animprogress() { return new DBCIntCell(this,this.buffer,this.offset+64)}
+    get animprogress() { return new DBCUIntCell(this,this.buffer,this.offset+64)}
 
     /**
      * No comment (yet!)
      */
-    get state() { return new DBCIntCell(this,this.buffer,this.offset+68)}
+    get state() { return new DBCUIntCell(this,this.buffer,this.offset+68)}
 
     /**
      * No comment (yet!)
