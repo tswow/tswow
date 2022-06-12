@@ -325,7 +325,7 @@ export class DBCLocCell<T> extends LocSystem<T> {
         if(mask !== undefined) {
             this.mask.set(mask);
         }
-        for(let i=0;i<15;++i) {
+        for(let i=0;i<16;++i) {
             this.buffer.writeuint(0, this.offset + i * 4)
         }
         return this.owner;
@@ -334,20 +334,20 @@ export class DBCLocCell<T> extends LocSystem<T> {
     private langOffset(lang: Language) {
         switch (lang) {
             case 'enGB': return 0;
-            case 'koKR': return 1;
-            case 'frFR': return 2;
-            case 'deDE': return 3;
-            case 'enCN': return 4;
-            case 'zhCN': return 5;
-            case 'enTW': return 6;
-            case 'zhTW': return 7;
-            case 'esES': return 8;
-            case 'esMX': return 9;
-            case 'ruRU': return 10;
-            case 'ptPT': return 11;
-            case 'ptBR': return 12;
-            case 'itIT': return 13;
-            case 'Unk': return 14;
+            case 'koKR': return 2;
+            case 'frFR': return 3;
+            case 'deDE': return 4;
+            case 'enCN': return 5;
+            case 'zhCN': return 6;
+            case 'enTW': return 7;
+            case 'zhTW': return 8;
+            case 'esES': return 9;
+            case 'esMX': return 10;
+            case 'ruRU': return 11;
+            case 'ptPT': return 12;
+            case 'ptBR': return 13;
+            case 'itIT': return 14;
+            case 'Unk': return 15;
         }
     }
 
