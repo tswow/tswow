@@ -14,7 +14,7 @@
  */
 
 /* tslint:disable */
-import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringCell } from '../../data/dbc/DBCCell'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 import { int } from '../../data/primitives'
@@ -38,37 +38,37 @@ export class CreatureRow extends DBCRow<CreatureCreator,CreatureQuery> {
     /**
      * No comment (yet!)
      */
-    get id() { return new DBCIntCell(this,this.buffer,this.offset+4)}
+    get id() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
 
     /**
      * No comment (yet!)
      */
-    get map() { return new DBCIntCell(this,this.buffer,this.offset+8)}
+    get map() { return new DBCUIntCell(this,this.buffer,this.offset+8)}
 
     /**
      * No comment (yet!)
      */
-    get zoneId() { return new DBCIntCell(this,this.buffer,this.offset+12)}
+    get zoneId() { return new DBCUIntCell(this,this.buffer,this.offset+12)}
 
     /**
      * No comment (yet!)
      */
-    get areaId() { return new DBCIntCell(this,this.buffer,this.offset+16)}
+    get areaId() { return new DBCUIntCell(this,this.buffer,this.offset+16)}
 
     /**
      * No comment (yet!)
      */
-    get spawnMask() { return new DBCIntCell(this,this.buffer,this.offset+20)}
+    get spawnMask() { return new DBCUIntCell(this,this.buffer,this.offset+20)}
 
     /**
      * No comment (yet!)
      */
-    get phaseMask() { return new DBCIntCell(this,this.buffer,this.offset+24)}
+    get phaseMask() { return new DBCUIntCell(this,this.buffer,this.offset+24)}
 
     /**
      * No comment (yet!)
      */
-    get modelid() { return new DBCIntCell(this,this.buffer,this.offset+28)}
+    get modelid() { return new DBCUIntCell(this,this.buffer,this.offset+28)}
 
     /**
      * No comment (yet!)
@@ -98,7 +98,7 @@ export class CreatureRow extends DBCRow<CreatureCreator,CreatureQuery> {
     /**
      * No comment (yet!)
      */
-    get spawntimesecs() { return new DBCIntCell(this,this.buffer,this.offset+52)}
+    get spawntimesecs() { return new DBCUIntCell(this,this.buffer,this.offset+52)}
 
     /**
      * No comment (yet!)
@@ -108,37 +108,37 @@ export class CreatureRow extends DBCRow<CreatureCreator,CreatureQuery> {
     /**
      * No comment (yet!)
      */
-    get currentwaypoint() { return new DBCIntCell(this,this.buffer,this.offset+60)}
+    get currentwaypoint() { return new DBCUIntCell(this,this.buffer,this.offset+60)}
 
     /**
      * No comment (yet!)
      */
-    get curhealth() { return new DBCIntCell(this,this.buffer,this.offset+64)}
+    get curhealth() { return new DBCUIntCell(this,this.buffer,this.offset+64)}
 
     /**
      * No comment (yet!)
      */
-    get curmana() { return new DBCIntCell(this,this.buffer,this.offset+68)}
+    get curmana() { return new DBCUIntCell(this,this.buffer,this.offset+68)}
 
     /**
      * No comment (yet!)
      */
-    get MovementType() { return new DBCIntCell(this,this.buffer,this.offset+72)}
+    get MovementType() { return new DBCUIntCell(this,this.buffer,this.offset+72)}
 
     /**
      * No comment (yet!)
      */
-    get npcflag() { return new DBCIntCell(this,this.buffer,this.offset+76)}
+    get npcflag() { return new DBCUIntCell(this,this.buffer,this.offset+76)}
 
     /**
      * No comment (yet!)
      */
-    get unit_flags() { return new DBCIntCell(this,this.buffer,this.offset+80)}
+    get unit_flags() { return new DBCUIntCell(this,this.buffer,this.offset+80)}
 
     /**
      * No comment (yet!)
      */
-    get dynamicflags() { return new DBCIntCell(this,this.buffer,this.offset+84)}
+    get dynamicflags() { return new DBCUIntCell(this,this.buffer,this.offset+84)}
 
     /**
      * No comment (yet!)

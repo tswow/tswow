@@ -129,7 +129,7 @@ struct SDBCCreature : public SDBCRow
     uint32 spawnMask;
     uint32 phaseMask;
     uint32 modelid;
-    uint32 equipment_id;
+    int32 equipment_id;
     float position_x;
     float position_y;
     float position_z;
