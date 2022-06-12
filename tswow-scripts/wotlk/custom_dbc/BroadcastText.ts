@@ -14,7 +14,7 @@
  */
 
 /* tslint:disable */
-import { DBCIntCell, DBCKeyCell, DBCLocCell, DBCUIntCell } from '../../data/dbc/DBCCell'
+import { DBCKeyCell, DBCLocCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 import { int } from '../../data/primitives'
@@ -53,47 +53,47 @@ export class BroadcastTextRow extends DBCRow<BroadcastTextCreator,BroadcastTextQ
     /**
      * No comment (yet!)
      */
-    get EmoteID1() { return new DBCIntCell(this, this.buffer, this.offset + 144 )}
+    get EmoteID1() { return new DBCUIntCell(this, this.buffer, this.offset + 144 )}
 
     /**
      * No comment (yet!)
      */
-    get EmoteID2() { return new DBCIntCell(this, this.buffer, this.offset + 148 )}
+    get EmoteID2() { return new DBCUIntCell(this, this.buffer, this.offset + 148 )}
 
     /**
      * No comment (yet!)
      */
-    get EmoteID3() { return new DBCIntCell(this, this.buffer, this.offset + 152)}
+    get EmoteID3() { return new DBCUIntCell(this, this.buffer, this.offset + 152)}
 
     /**
      * No comment (yet!)
      */
-    get EmoteDelay1() { return new DBCIntCell(this, this.buffer, this.offset + 156)}
+    get EmoteDelay1() { return new DBCUIntCell(this, this.buffer, this.offset + 156)}
 
     /**
      * No comment (yet!)
      */
-    get EmoteDelay2() { return new DBCIntCell(this, this.buffer, this.offset + 160)}
+    get EmoteDelay2() { return new DBCUIntCell(this, this.buffer, this.offset + 160)}
 
     /**
      * No comment (yet!)
      */
-    get EmoteDelay3() { return new DBCIntCell(this, this.buffer, this.offset + 164)}
+    get EmoteDelay3() { return new DBCUIntCell(this, this.buffer, this.offset + 164)}
 
     /**
      * No comment (yet!)
      */
-    get SoundEntriesID() { return new DBCIntCell(this, this.buffer, this.offset + 168)}
+    get SoundEntriesID() { return new DBCUIntCell(this, this.buffer, this.offset + 168)}
 
     /**
      * No comment (yet!)
      */
-    get EmotesID() { return new DBCIntCell(this, this.buffer, this.offset + 172)}
+    get EmotesID() { return new DBCUIntCell(this, this.buffer, this.offset + 172)}
 
     /**
      * No comment (yet!)
      */
-    get Flags() { return new DBCIntCell(this, this.buffer, this.offset + 176)}
+    get Flags() { return new DBCUIntCell(this, this.buffer, this.offset + 176)}
 
     static SIZE = 180;
 
