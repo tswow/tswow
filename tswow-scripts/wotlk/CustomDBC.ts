@@ -61,8 +61,6 @@ export function GenerateCustomDBC() {
                     .dynamicflags.set(x.dynamicflags.get())
                     .ScriptName.set(x.ScriptName.get())
         })
-
-        console.log(dbc.query({guid: 25}).objectify())
         SqlTable.flushCache(SQL.creature)
         dbc.write(dataset.dbc_source_server.Creature.get())
     }
@@ -98,7 +96,7 @@ export function GenerateCustomDBC() {
                     .name.set(names.get(x.entry.get(), x.name.get()))
                     .subname.clear(0)
                     .subname.set(titles.get(x.entry.get(), x.subname.get()))
-                    .IconName.set(x.IconName.get())
+                    .IconName.set(x.IconName.get() || '')
                     .gossip_menu_id.set(x.gossip_menu_id.get())
                     .minlevel.set(x.minlevel.get())
                     .maxlevel.set(x.maxlevel.get())
