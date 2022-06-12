@@ -240,6 +240,7 @@ struct SDBCGameObjectTemplate : public SDBCRow
     SDBCLoc castBarCaption;
     SDBCString unk1;
     float size;
+    // these are read as int32 by trinity regardless of what's in db, so this correctly matches trinity behavior.
     int32 Data[24];
     SDBCString AIName;
     SDBCString ScriptName;

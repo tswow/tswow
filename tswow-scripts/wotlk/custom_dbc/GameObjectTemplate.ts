@@ -14,7 +14,7 @@
  */
 
 /* tslint:disable */
-import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell } from '../../data/dbc/DBCCell'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 import { int } from '../../data/primitives'
@@ -38,12 +38,12 @@ export class GameObjectTemplateRow extends DBCRow<GameObjectTemplateCreator,Game
     /**
      * No comment (yet!)
      */
-    get type() { return new DBCIntCell(this,this.buffer,this.offset+4)}
+    get type() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
 
     /**
      * No comment (yet!)
      */
-    get displayId() { return new DBCIntCell(this,this.buffer,this.offset+8)}
+    get displayId() { return new DBCUIntCell(this,this.buffer,this.offset+8)}
 
     /**
      * No comment (yet!)
