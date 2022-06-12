@@ -164,14 +164,14 @@ struct SDBCCreatureTemplate : public SDBCRow
     uint32 gossip_menu_id;
     uint32 minlevel;
     uint32 maxlevel;
-    uint32 exp;
+    int32 exp;
     uint32 faction;
     uint32 npcflag;
     float speed_walk;
     float speed_run;
-    uint32 scale;
+    float scale;
     uint32 rank;
-    uint32 dmgschool;
+    int32 dmgschool;
     uint32 BaseAttackTime;
     uint32 RangeAttackTime;
     float BaseVariance;
@@ -180,7 +180,7 @@ struct SDBCCreatureTemplate : public SDBCRow
     uint32 unit_flags;
     uint32 unit_flags2;
     uint32 dynamicflags;
-    uint32 family;
+    int32 family;
     uint32 type;
     uint32 type_flags;
     uint32 lootid;

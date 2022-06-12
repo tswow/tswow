@@ -14,7 +14,7 @@
  */
 
 /* tslint:disable */
-import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell } from '../../data/dbc/DBCCell'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 import { int } from '../../data/primitives'
@@ -35,17 +35,17 @@ export class CreatureTemplateRow extends DBCRow<CreatureTemplateCreator,Creature
     @PrimaryKey()
     get entry() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
 
-    get difficulty_entry_1() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    get difficulty_entry_2() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    get difficulty_entry_3() { return new DBCIntCell(this,this.buffer,this.offset+12)}
+    get difficulty_entry_1() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
+    get difficulty_entry_2() { return new DBCUIntCell(this,this.buffer,this.offset+8)}
+    get difficulty_entry_3() { return new DBCUIntCell(this,this.buffer,this.offset+12)}
 
-    get KillCredit1() { return new DBCIntCell(this, this.buffer, this.offset+16)}
-    get KillCredit2() { return new DBCIntCell(this, this.buffer, this.offset+20)}
+    get KillCredit1() { return new DBCUIntCell(this, this.buffer, this.offset+16)}
+    get KillCredit2() { return new DBCUIntCell(this, this.buffer, this.offset+20)}
 
-    get modelid1() { return new DBCIntCell(this, this.buffer, this.offset + 24)}
-    get modelid2() { return new DBCIntCell(this, this.buffer, this.offset + 28)}
-    get modelid3() { return new DBCIntCell(this, this.buffer, this.offset + 32)}
-    get modelid4() { return new DBCIntCell(this, this.buffer, this.offset + 36)}
+    get modelid1() { return new DBCUIntCell(this, this.buffer, this.offset + 24)}
+    get modelid2() { return new DBCUIntCell(this, this.buffer, this.offset + 28)}
+    get modelid3() { return new DBCUIntCell(this, this.buffer, this.offset + 32)}
+    get modelid4() { return new DBCUIntCell(this, this.buffer, this.offset + 36)}
 
     get name() { return new DBCLocCell(this, this.buffer, this.offset + 40)}
 
@@ -53,67 +53,67 @@ export class CreatureTemplateRow extends DBCRow<CreatureTemplateCreator,Creature
 
     get IconName() { return new DBCStringCell(this, this.buffer, this.offset + 176)}
 
-    get gossip_menu_id() { return new DBCIntCell(this, this.buffer, this.offset + 180)}
+    get gossip_menu_id() { return new DBCUIntCell(this, this.buffer, this.offset + 180)}
 
-    get minlevel() { return new DBCIntCell(this, this.buffer, this.offset + 184)}
+    get minlevel() { return new DBCUIntCell(this, this.buffer, this.offset + 184)}
 
-    get maxlevel() { return new DBCIntCell(this, this.buffer, this.offset + 188)}
+    get maxlevel() { return new DBCUIntCell(this, this.buffer, this.offset + 188)}
 
     get exp() { return new DBCIntCell(this, this.buffer, this.offset + 192)}
 
-    get faction() { return new DBCIntCell(this, this.buffer, this.offset + 196)}
+    get faction() { return new DBCUIntCell(this, this.buffer, this.offset + 196)}
 
-    get npcflag() { return new DBCIntCell(this, this.buffer, this.offset + 200)}
+    get npcflag() { return new DBCUIntCell(this, this.buffer, this.offset + 200)}
 
     get speed_walk() { return new DBCFloatCell(this, this.buffer, this.offset + 204)}
 
     get speed_run() { return new DBCFloatCell(this, this.buffer, this.offset + 208)}
 
-    get scale() { return new DBCIntCell(this, this.buffer, this.offset + 212)}
+    get scale() { return new DBCFloatCell(this, this.buffer, this.offset + 212)}
 
-    get rank() { return new DBCIntCell(this, this.buffer, this.offset + 216)}
+    get rank() { return new DBCUIntCell(this, this.buffer, this.offset + 216)}
 
     get dmgschool() { return new DBCIntCell(this, this.buffer, this.offset + 220)}
 
-    get BaseAttackTime() { return new DBCIntCell(this, this.buffer, this.offset + 224)}
+    get BaseAttackTime() { return new DBCUIntCell(this, this.buffer, this.offset + 224)}
 
-    get RangeAttackTime() { return new DBCIntCell(this, this.buffer, this.offset + 228)}
+    get RangeAttackTime() { return new DBCUIntCell(this, this.buffer, this.offset + 228)}
 
     get BaseVariance() { return new DBCFloatCell(this, this.buffer, this.offset + 232)}
 
     get RangeVariance() { return new DBCFloatCell(this, this.buffer, this.offset + 236)}
 
-    get unit_class() { return new DBCIntCell(this, this.buffer, this.offset + 240)}
+    get unit_class() { return new DBCUIntCell(this, this.buffer, this.offset + 240)}
 
-    get unit_flags() { return new DBCIntCell(this, this.buffer, this.offset + 244)}
+    get unit_flags() { return new DBCUIntCell(this, this.buffer, this.offset + 244)}
 
-    get unit_flags2() { return new DBCIntCell(this, this.buffer, this.offset + 248)}
+    get unit_flags2() { return new DBCUIntCell(this, this.buffer, this.offset + 248)}
 
-    get dynamicflags() { return new DBCIntCell(this, this.buffer, this.offset + 252)}
+    get dynamicflags() { return new DBCUIntCell(this, this.buffer, this.offset + 252)}
 
     get family() { return new DBCIntCell(this, this.buffer, this.offset + 256)}
 
-    get type() { return new DBCIntCell(this, this.buffer, this.offset + 260)}
+    get type() { return new DBCUIntCell(this, this.buffer, this.offset + 260)}
 
-    get type_flags() { return new DBCIntCell(this, this.buffer, this.offset + 264)}
+    get type_flags() { return new DBCUIntCell(this, this.buffer, this.offset + 264)}
 
-    get lootid() { return new DBCIntCell(this, this.buffer, this.offset + 268)}
+    get lootid() { return new DBCUIntCell(this, this.buffer, this.offset + 268)}
 
-    get pickpocketloot() { return new DBCIntCell(this, this.buffer, this.offset + 272)}
+    get pickpocketloot() { return new DBCUIntCell(this, this.buffer, this.offset + 272)}
 
-    get skinloot() { return new DBCIntCell(this, this.buffer, this.offset + 276)}
+    get skinloot() { return new DBCUIntCell(this, this.buffer, this.offset + 276)}
 
-    get PetSpellDataId() { return new DBCIntCell(this, this.buffer, this.offset + 280)}
+    get PetSpellDataId() { return new DBCUIntCell(this, this.buffer, this.offset + 280)}
 
-    get VehicleId() { return new DBCIntCell(this, this.buffer, this.offset + 284)}
+    get VehicleId() { return new DBCUIntCell(this, this.buffer, this.offset + 284)}
 
-    get mingold() { return new DBCIntCell(this, this.buffer, this.offset + 288)}
+    get mingold() { return new DBCUIntCell(this, this.buffer, this.offset + 288)}
 
-    get maxgold() { return new DBCIntCell(this, this.buffer, this.offset + 292)}
+    get maxgold() { return new DBCUIntCell(this, this.buffer, this.offset + 292)}
 
     get AIName() { return new DBCStringCell(this, this.buffer, this.offset + 296)}
 
-    get MovementType() { return new DBCIntCell(this, this.buffer, this.offset + 300)}
+    get MovementType() { return new DBCUIntCell(this, this.buffer, this.offset + 300)}
 
     get HoverHeight() { return new DBCFloatCell(this, this.buffer, this.offset + 304)}
 
@@ -127,17 +127,17 @@ export class CreatureTemplateRow extends DBCRow<CreatureTemplateCreator,Creature
 
     get ExperienceModifier() { return new DBCFloatCell(this, this.buffer, this.offset + 324)}
 
-    get RacialLeader() { return new DBCIntCell(this, this.buffer, this.offset + 328)}
+    get RacialLeader() { return new DBCUIntCell(this, this.buffer, this.offset + 328)}
 
-    get movementId() { return new DBCIntCell(this, this.buffer, this.offset + 332)}
+    get movementId() { return new DBCUIntCell(this, this.buffer, this.offset + 332)}
 
-    get RegenHealth() { return new DBCIntCell(this, this.buffer, this.offset + 336)}
+    get RegenHealth() { return new DBCUIntCell(this, this.buffer, this.offset + 336)}
 
-    get mechanic_immune_mask() { return new DBCIntCell(this, this.buffer, this.offset + 340)}
+    get mechanic_immune_mask() { return new DBCUIntCell(this, this.buffer, this.offset + 340)}
 
-    get spell_school_immune_mask() { return new DBCIntCell(this, this.buffer, this.offset + 344)}
+    get spell_school_immune_mask() { return new DBCUIntCell(this, this.buffer, this.offset + 344)}
 
-    get flags_extra() { return new DBCIntCell(this, this.buffer, this.offset + 348)}
+    get flags_extra() { return new DBCUIntCell(this, this.buffer, this.offset + 348)}
 
     get ScriptName() { return new DBCStringCell(this, this.buffer, this.offset + 352)}
 
@@ -155,6 +155,7 @@ export class CreatureTemplateRow extends DBCRow<CreatureTemplateCreator,Creature
 
 /**
  * Used for object creation (Don't comment these)
+ * @todo These have the wrong sign/number types, but they aren't enforced.
  */
 export type CreatureTemplateCreator = {
     entry? : int32,
@@ -218,6 +219,7 @@ export type CreatureTemplateCreator = {
 
 /**
  * Used for queries (Don't comment these)
+ * @todo These have the wrong sign/number types, but they aren't enforced.
  */
 export type CreatureTemplateQuery = {
     entry? : Relation<int32>
