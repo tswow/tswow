@@ -251,7 +251,7 @@ struct SDBCItemTemplate : public SDBCRow
     uint32 entry;
     uint32 clazz;
     uint32 subclass;
-    uint32 SoundOverrideSubclass;
+    int32 SoundOverrideSubclass;
     SDBCLoc name;
     uint32 displayid;
     uint32 Quality;
@@ -261,8 +261,8 @@ struct SDBCItemTemplate : public SDBCRow
     uint32 BuyPrice;
     uint32 SellPrice;
     uint32 InventoryType;
-    uint32 AllowableClass;
-    uint32 AllowableRace;
+    int32 AllowableClass;
+    int32 AllowableRace;
     uint32 ItemLevel;
     uint32 RequiredLevel;
     uint32 RequiredSkill;
@@ -272,17 +272,17 @@ struct SDBCItemTemplate : public SDBCRow
     uint32 RequiredCityRank;
     uint32 RequiredReputationFaction;
     uint32 RequiredReputationRank;
-    uint32 maxcount;
-    uint32 stackable;
+    int32 maxcount;
+    int32 stackable;
     uint32 ContainerSlots;
     uint32 StatsCount;
     struct ItemStats
     {
         uint32 stat_type;
-        uint32 stat_value;
+        int32 stat_value;
     } Stats[10];
     uint32 ScalingStatDistribution;
-    uint32 ScalingStatValue;
+    int32 ScalingStatValue;
     struct ItemDamage
     {
         float min;
@@ -302,13 +302,13 @@ struct SDBCItemTemplate : public SDBCRow
 
     struct ItemSpell
     {
-        uint32 spellid;
+        int32 spellid;
         uint32 spelltrigger;
-        uint32 spellcharges;
+        int32 spellcharges;
         float spellppmRate;
-        uint32 spellcooldown;
+        int32 spellcooldown;
         uint32 spellcategory;
-        uint32 spellcategorycooldown;
+        int32 spellcategorycooldown;
     } Spells[5];
 
     uint32 bonding;
@@ -318,28 +318,28 @@ struct SDBCItemTemplate : public SDBCRow
     uint32 PageMaterial;
     uint32 startquest;
     uint32 lockid;
-    uint32 Material;
+    int32 Material;
     uint32 sheath;
-    uint32 RandomProperty;
+    int32 RandomProperty;
     uint32 RandomSuffix;
     uint32 block;
     uint32 itemset;
     uint32 MaxDurability;
     uint32 area;
-    uint32 Map;
-    uint32 BagFamily;
-    uint32 TotemCategory;
+    int32 Map;
+    int32 BagFamily;
+    int32 TotemCategory;
     struct ItemSocket
     {
-        uint32 color;
-        uint32 content;
+        int32 color;
+        int32 content;
     } Sockets[3];
-    uint32 socketBonus;
-    uint32 GemProperties;
-    uint32 RequiredDisenchantSkill;
-    uint32 ArmorDamageModifier;
+    int32 socketBonus;
+    int32 GemProperties;
+    int32 RequiredDisenchantSkill;
+    int32 ArmorDamageModifier;
     uint32 duration;
-    uint32 ItemLimitCategory;
+    int32 ItemLimitCategory;
     uint32 HolidayId;
     SDBCString ScriptName;
     uint32 DisenchantID;

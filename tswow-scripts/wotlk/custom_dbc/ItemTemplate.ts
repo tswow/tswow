@@ -37,12 +37,12 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get class() { return new DBCIntCell(this,this.buffer,this.offset+4)}
+    get class() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
 
     /**
      * No comment (yet!)
      */
-    get subclass() { return new DBCIntCell(this,this.buffer,this.offset+8)}
+    get subclass() { return new DBCUIntCell(this,this.buffer,this.offset+8)}
 
     /**
      * No comment (yet!)
@@ -57,12 +57,12 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get displayid() { return new DBCIntCell(this,this.buffer,this.offset+84)}
+    get displayid() { return new DBCUIntCell(this,this.buffer,this.offset+84)}
 
     /**
      * No comment (yet!)
      */
-    get Quality() { return new DBCIntCell(this,this.buffer,this.offset+88)}
+    get Quality() { return new DBCUIntCell(this,this.buffer,this.offset+88)}
 
     /**
      * No comment (yet!)
@@ -72,27 +72,27 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get FlagsExtra() { return new DBCIntCell(this,this.buffer,this.offset+96)}
+    get FlagsExtra() { return new DBCUIntCell(this,this.buffer,this.offset+96)}
 
     /**
      * No comment (yet!)
      */
-    get BuyCount() { return new DBCIntCell(this,this.buffer,this.offset+100)}
+    get BuyCount() { return new DBCUIntCell(this,this.buffer,this.offset+100)}
 
     /**
      * No comment (yet!)
      */
-    get BuyPrice() { return new DBCIntCell(this,this.buffer,this.offset+104)}
+    get BuyPrice() { return new DBCUIntCell(this,this.buffer,this.offset+104)}
 
     /**
      * No comment (yet!)
      */
-    get SellPrice() { return new DBCIntCell(this,this.buffer,this.offset+108)}
+    get SellPrice() { return new DBCUIntCell(this,this.buffer,this.offset+108)}
 
     /**
      * No comment (yet!)
      */
-    get InventoryType() { return new DBCIntCell(this,this.buffer,this.offset+112)}
+    get InventoryType() { return new DBCUIntCell(this,this.buffer,this.offset+112)}
 
     /**
      * No comment (yet!)
@@ -107,47 +107,47 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get ItemLevel() { return new DBCIntCell(this,this.buffer,this.offset+124)}
+    get ItemLevel() { return new DBCUIntCell(this,this.buffer,this.offset+124)}
 
     /**
      * No comment (yet!)
      */
-    get RequiredLevel() { return new DBCIntCell(this,this.buffer,this.offset+128)}
+    get RequiredLevel() { return new DBCUIntCell(this,this.buffer,this.offset+128)}
 
     /**
      * No comment (yet!)
      */
-    get RequiredSkill() { return new DBCIntCell(this,this.buffer,this.offset+132)}
+    get RequiredSkill() { return new DBCUIntCell(this,this.buffer,this.offset+132)}
 
     /**
      * No comment (yet!)
      */
-    get RequiredSkillRank() { return new DBCIntCell(this,this.buffer,this.offset+136)}
+    get RequiredSkillRank() { return new DBCUIntCell(this,this.buffer,this.offset+136)}
 
     /**
      * No comment (yet!)
      */
-    get requiredspell() { return new DBCIntCell(this,this.buffer,this.offset+140)}
+    get requiredspell() { return new DBCUIntCell(this,this.buffer,this.offset+140)}
 
     /**
      * No comment (yet!)
      */
-    get requiredhonorrank() { return new DBCIntCell(this,this.buffer,this.offset+144)}
+    get requiredhonorrank() { return new DBCUIntCell(this,this.buffer,this.offset+144)}
 
     /**
      * No comment (yet!)
      */
-    get RequiredCityRank() { return new DBCIntCell(this,this.buffer,this.offset+148)}
+    get RequiredCityRank() { return new DBCUIntCell(this,this.buffer,this.offset+148)}
 
     /**
      * No comment (yet!)
      */
-    get RequiredReputationFaction() { return new DBCIntCell(this,this.buffer,this.offset+152)}
+    get RequiredReputationFaction() { return new DBCUIntCell(this,this.buffer,this.offset+152)}
 
     /**
      * No comment (yet!)
      */
-    get RequiredReputationRank() { return new DBCIntCell(this,this.buffer,this.offset+156)}
+    get RequiredReputationRank() { return new DBCUIntCell(this,this.buffer,this.offset+156)}
 
     /**
      * No comment (yet!)
@@ -162,19 +162,19 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get ContainerSlots() { return new DBCIntCell(this,this.buffer,this.offset+168)}
+    get ContainerSlots() { return new DBCUIntCell(this,this.buffer,this.offset+168)}
 
     /**
      * 
      * No comment (yet!)
      */
-    get StatsCount() { return new DBCIntCell(this,this.buffer,this.offset+172)}
+    get StatsCount() { return new DBCUIntCell(this,this.buffer,this.offset+172)}
 
     /**
      *
      * No comment (yet!)
      */
-    get stat_type1() { return new DBCIntCell(this,this.buffer,this.offset+176)}
+    get stat_type1() { return new DBCUIntCell(this,this.buffer,this.offset+176)}
 
     /**
      *
@@ -186,7 +186,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type2() { return new DBCIntCell(this,this.buffer,this.offset+184)}
+    get stat_type2() { return new DBCUIntCell(this,this.buffer,this.offset+184)}
 
     /**
      *
@@ -198,7 +198,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type3() { return new DBCIntCell(this,this.buffer,this.offset+192)}
+    get stat_type3() { return new DBCUIntCell(this,this.buffer,this.offset+192)}
 
     /**
      *
@@ -210,7 +210,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type4() { return new DBCIntCell(this,this.buffer,this.offset+200)}
+    get stat_type4() { return new DBCUIntCell(this,this.buffer,this.offset+200)}
 
     /**
      *
@@ -222,7 +222,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type5() { return new DBCIntCell(this,this.buffer,this.offset+208)}
+    get stat_type5() { return new DBCUIntCell(this,this.buffer,this.offset+208)}
 
     /**
      *
@@ -234,7 +234,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type6() { return new DBCIntCell(this,this.buffer,this.offset+216)}
+    get stat_type6() { return new DBCUIntCell(this,this.buffer,this.offset+216)}
 
     /**
      *
@@ -246,7 +246,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type7() { return new DBCIntCell(this,this.buffer,this.offset+224)}
+    get stat_type7() { return new DBCUIntCell(this,this.buffer,this.offset+224)}
 
     /**
      *
@@ -258,7 +258,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type8() { return new DBCIntCell(this,this.buffer,this.offset+232)}
+    get stat_type8() { return new DBCUIntCell(this,this.buffer,this.offset+232)}
 
     /**
      *
@@ -270,7 +270,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type9() { return new DBCIntCell(this,this.buffer,this.offset+240)}
+    get stat_type9() { return new DBCUIntCell(this,this.buffer,this.offset+240)}
 
     /**
      *
@@ -282,7 +282,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
      *
      * No comment (yet!)
      */
-    get stat_type10() { return new DBCIntCell(this,this.buffer,this.offset+248)}
+    get stat_type10() { return new DBCUIntCell(this,this.buffer,this.offset+248)}
 
     /**
      *
@@ -299,7 +299,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get ScalingStatValue() { return new DBCIntCell(this,this.buffer,this.offset+260)}
+    get ScalingStatValue() { return new DBCUIntCell(this,this.buffer,this.offset+260)}
 
     /**
      * No comment (yet!)
@@ -314,7 +314,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get dmg_type1() { return new DBCIntCell(this,this.buffer,this.offset+272)}
+    get dmg_type1() { return new DBCUIntCell(this,this.buffer,this.offset+272)}
 
     /**
      * No comment (yet!)
@@ -329,52 +329,52 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get dmg_type2() { return new DBCIntCell(this,this.buffer,this.offset+284)}
+    get dmg_type2() { return new DBCUIntCell(this,this.buffer,this.offset+284)}
 
     /**
      * No comment (yet!)
      */
-    get armor() { return new DBCIntCell(this,this.buffer,this.offset+288)}
+    get armor() { return new DBCUIntCell(this,this.buffer,this.offset+288)}
 
     /**
      * No comment (yet!)
      */
-    get holy_res() { return new DBCIntCell(this,this.buffer,this.offset+292)}
+    get holy_res() { return new DBCUIntCell(this,this.buffer,this.offset+292)}
 
     /**
      * No comment (yet!)
      */
-    get fire_res() { return new DBCIntCell(this,this.buffer,this.offset+296)}
+    get fire_res() { return new DBCUIntCell(this,this.buffer,this.offset+296)}
 
     /**
      * No comment (yet!)
      */
-    get nature_res() { return new DBCIntCell(this,this.buffer,this.offset+300)}
+    get nature_res() { return new DBCUIntCell(this,this.buffer,this.offset+300)}
 
     /**
      * No comment (yet!)
      */
-    get frost_res() { return new DBCIntCell(this,this.buffer,this.offset+304)}
+    get frost_res() { return new DBCUIntCell(this,this.buffer,this.offset+304)}
 
     /**
      * No comment (yet!)
      */
-    get shadow_res() { return new DBCIntCell(this,this.buffer,this.offset+308)}
+    get shadow_res() { return new DBCUIntCell(this,this.buffer,this.offset+308)}
 
     /**
      * No comment (yet!)
      */
-    get arcane_res() { return new DBCIntCell(this,this.buffer,this.offset+312)}
+    get arcane_res() { return new DBCUIntCell(this,this.buffer,this.offset+312)}
 
     /**
      * No comment (yet!)
      */
-    get delay() { return new DBCIntCell(this,this.buffer,this.offset+316)}
+    get delay() { return new DBCUIntCell(this,this.buffer,this.offset+316)}
 
     /**
      * No comment (yet!)
      */
-    get ammo_type() { return new DBCIntCell(this,this.buffer,this.offset+320)}
+    get ammo_type() { return new DBCUIntCell(this,this.buffer,this.offset+320)}
 
     /**
      * No comment (yet!)
@@ -389,7 +389,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spelltrigger_1() { return new DBCIntCell(this,this.buffer,this.offset+332)}
+    get spelltrigger_1() { return new DBCUIntCell(this,this.buffer,this.offset+332)}
 
     /**
      * No comment (yet!)
@@ -409,7 +409,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spellcategory_1() { return new DBCIntCell(this,this.buffer,this.offset+348)}
+    get spellcategory_1() { return new DBCUIntCell(this,this.buffer,this.offset+348)}
 
     /**
      * No comment (yet!)
@@ -424,7 +424,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spelltrigger_2() { return new DBCIntCell(this,this.buffer,this.offset+360)}
+    get spelltrigger_2() { return new DBCUIntCell(this,this.buffer,this.offset+360)}
 
     /**
      * No comment (yet!)
@@ -444,7 +444,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spellcategory_2() { return new DBCIntCell(this,this.buffer,this.offset+376)}
+    get spellcategory_2() { return new DBCUIntCell(this,this.buffer,this.offset+376)}
 
     /**
      * No comment (yet!)
@@ -459,7 +459,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spelltrigger_3() { return new DBCIntCell(this,this.buffer,this.offset+388)}
+    get spelltrigger_3() { return new DBCUIntCell(this,this.buffer,this.offset+388)}
 
     /**
      * No comment (yet!)
@@ -479,7 +479,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spellcategory_3() { return new DBCIntCell(this,this.buffer,this.offset+404)}
+    get spellcategory_3() { return new DBCUIntCell(this,this.buffer,this.offset+404)}
 
     /**
      * No comment (yet!)
@@ -494,7 +494,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spelltrigger_4() { return new DBCIntCell(this,this.buffer,this.offset+416)}
+    get spelltrigger_4() { return new DBCUIntCell(this,this.buffer,this.offset+416)}
 
     /**
      * No comment (yet!)
@@ -514,7 +514,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spellcategory_4() { return new DBCIntCell(this,this.buffer,this.offset+432)}
+    get spellcategory_4() { return new DBCUIntCell(this,this.buffer,this.offset+432)}
 
     /**
      * No comment (yet!)
@@ -529,7 +529,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spelltrigger_5() { return new DBCIntCell(this,this.buffer,this.offset+444)}
+    get spelltrigger_5() { return new DBCUIntCell(this,this.buffer,this.offset+444)}
 
     /**
      * No comment (yet!)
@@ -549,7 +549,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get spellcategory_5() { return new DBCIntCell(this,this.buffer,this.offset+460)}
+    get spellcategory_5() { return new DBCUIntCell(this,this.buffer,this.offset+460)}
 
     /**
      * No comment (yet!)
@@ -559,7 +559,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get bonding() { return new DBCIntCell(this,this.buffer,this.offset+468)}
+    get bonding() { return new DBCUIntCell(this,this.buffer,this.offset+468)}
 
     /**
      * No comment (yet!)
@@ -569,27 +569,27 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get PageText() { return new DBCIntCell(this,this.buffer,this.offset+540)}
+    get PageText() { return new DBCUIntCell(this,this.buffer,this.offset+540)}
 
     /**
      * No comment (yet!)
      */
-    get LanguageID() { return new DBCIntCell(this,this.buffer,this.offset+544)}
+    get LanguageID() { return new DBCUIntCell(this,this.buffer,this.offset+544)}
 
     /**
      * No comment (yet!)
      */
-    get PageMaterial() { return new DBCIntCell(this,this.buffer,this.offset+548)}
+    get PageMaterial() { return new DBCUIntCell(this,this.buffer,this.offset+548)}
 
     /**
      * No comment (yet!)
      */
-    get startquest() { return new DBCIntCell(this,this.buffer,this.offset+552)}
+    get startquest() { return new DBCUIntCell(this,this.buffer,this.offset+552)}
 
     /**
      * No comment (yet!)
      */
-    get lockid() { return new DBCIntCell(this,this.buffer,this.offset+556)}
+    get lockid() { return new DBCUIntCell(this,this.buffer,this.offset+556)}
 
     /**
      * No comment (yet!)
@@ -599,7 +599,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get sheath() { return new DBCIntCell(this,this.buffer,this.offset+564)}
+    get sheath() { return new DBCUIntCell(this,this.buffer,this.offset+564)}
 
     /**
      * No comment (yet!)
@@ -609,27 +609,27 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get RandomSuffix() { return new DBCIntCell(this,this.buffer,this.offset+572)}
+    get RandomSuffix() { return new DBCUIntCell(this,this.buffer,this.offset+572)}
 
     /**
      * No comment (yet!)
      */
-    get block() { return new DBCIntCell(this,this.buffer,this.offset+576)}
+    get block() { return new DBCUIntCell(this,this.buffer,this.offset+576)}
 
     /**
      * No comment (yet!)
      */
-    get itemset() { return new DBCIntCell(this,this.buffer,this.offset+580)}
+    get itemset() { return new DBCUIntCell(this,this.buffer,this.offset+580)}
 
     /**
      * No comment (yet!)
      */
-    get MaxDurability() { return new DBCIntCell(this,this.buffer,this.offset+584)}
+    get MaxDurability() { return new DBCUIntCell(this,this.buffer,this.offset+584)}
 
     /**
      * No comment (yet!)
      */
-    get area() { return new DBCIntCell(this,this.buffer,this.offset+588)}
+    get area() { return new DBCUIntCell(this,this.buffer,this.offset+588)}
 
     /**
      * No comment (yet!)
@@ -699,7 +699,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get duration() { return new DBCIntCell(this,this.buffer,this.offset+644)}
+    get duration() { return new DBCUIntCell(this,this.buffer,this.offset+644)}
 
     /**
      * No comment (yet!)
@@ -709,7 +709,7 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get HolidayId() { return new DBCIntCell(this,this.buffer,this.offset+652)}
+    get HolidayId() { return new DBCUIntCell(this,this.buffer,this.offset+652)}
 
     /**
      * No comment (yet!)
@@ -719,27 +719,27 @@ export class ItemTemplateRow extends DBCRow<ItemTemplateCreator,ItemTemplateQuer
     /**
      * No comment (yet!)
      */
-    get DisenchantID() { return new DBCIntCell(this,this.buffer,this.offset+660)}
+    get DisenchantID() { return new DBCUIntCell(this,this.buffer,this.offset+660)}
 
     /**
      * No comment (yet!)
      */
-    get FoodType() { return new DBCIntCell(this,this.buffer,this.offset+664)}
+    get FoodType() { return new DBCUIntCell(this,this.buffer,this.offset+664)}
 
     /**
      * No comment (yet!)
      */
-    get minMoneyLoot() { return new DBCIntCell(this,this.buffer,this.offset+668)}
+    get minMoneyLoot() { return new DBCUIntCell(this,this.buffer,this.offset+668)}
 
     /**
      * No comment (yet!)
      */
-    get maxMoneyLoot() { return new DBCIntCell(this,this.buffer,this.offset+672)}
+    get maxMoneyLoot() { return new DBCUIntCell(this,this.buffer,this.offset+672)}
 
     /**
      * No comment (yet!)
      */
-    get flagsCustom() { return new DBCIntCell(this,this.buffer,this.offset+676)}
+    get flagsCustom() { return new DBCUIntCell(this,this.buffer,this.offset+676)}
 
     static SIZE = 680;
 
