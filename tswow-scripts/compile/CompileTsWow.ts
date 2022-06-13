@@ -142,6 +142,11 @@ async function main() {
         TrinityCore.headers(true);
     }
 
+    if(Args.hasFlag('gdts-only', [process.argv])) {
+        TrinityCore.headers(true);
+        process.exit(0);
+    }
+
     if(isInteractive) {
         main();
     } else {
