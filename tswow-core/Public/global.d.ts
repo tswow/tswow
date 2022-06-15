@@ -9153,6 +9153,7 @@ declare function StopGameEvent(event_id: uint16): void
  *                      defaults to 38 (Recruits Shirt, shirt slot equip)
  */
 declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
+declare function GetAllPlayers(): TSArray<TSPlayer>;
 // end of Global.h
 
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>

@@ -37,6 +37,17 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 #endif
 }
 
+TSArray<TSPlayer> GetAllPlayers()
+{
+    TSArray<TSPlayer> tbl;
+    std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+
+    HashMapHolder<Player>::MapType const& m = ObjectAccessor::GetPlayers();
+    for (HashMapHolder<Player>::MapType::const_iterator itr = m.begin(); itr != m.end(); ++itr)
+        tbl.push(itr->second);
+    return tbl;
+}
+
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
     auto player = ObjectAccessor::FindPlayer(ObjectGuid(to));
