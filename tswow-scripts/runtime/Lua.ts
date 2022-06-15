@@ -121,7 +121,7 @@ export class Lua {
                     }
 
                     while(true) {
-                        let m = contents.match(/GetIDTagUnique *\( *\"(.+?)\" *, *\"(.+?)\" *\)/)
+                        let m = contents.match(/(?:GetIDTagUnique|UTAG) *\( *\"(.+?)\" *, *\"(.+?)\" *\)/)
                         if(m) {
                             let [_,mod,id] = m;
                             let fullName = `${mod}.${id}`
@@ -148,7 +148,7 @@ export class Lua {
                     }
 
                     while(true) {
-                        let m = contents.match(/GetIDTag *\( *"(.+?)" *, *"(.+?)" *\)/);
+                        let m = contents.match(/(?:GetIDTag|TAG) *\( *"(.+?)" *, *"(.+?)" *\)/);
                         if(!m) break;
                         let mod = m[1];
                         let id = m[2];
