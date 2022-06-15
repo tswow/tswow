@@ -247,10 +247,10 @@ export namespace TrinityCore {
 
         // We no longer make non-dynamic builds.
         const scripts = Args.hasFlag('minimal',[process.argv,args1])
-            ? `minimal-${compileType}`
+            ? `minimal-dynamic`
             : args1.includes('noscripts')
             ? 'none'
-            : compileType;
+            : 'dynamic';
 
         const tools = args1.includes('notools') ? '0' : '1';
         const generateOnly = args1.includes('--generate-only')
