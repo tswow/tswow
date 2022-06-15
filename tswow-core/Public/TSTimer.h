@@ -2,6 +2,7 @@
 
 #include "TSMain.h"
 #include "TSString.h"
+#include "TSLua.h"
 
 #include "sol/sol.hpp"
 
