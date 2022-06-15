@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "Config.h"
+#include "TSGlobal.h"
 #include <regex>
 #include "document.hpp"
 #include <fstream>
@@ -100,6 +101,8 @@ void TSLuaState::load_bindings(sol::state& ztate)
     load_map_methods(state);
     load_database_methods(state);
     load_faction_template_methods(state);
+    load_main_thread_context_methods(state);
+    load_global_functions(state);
     load_events(state);
 }
 
@@ -282,6 +285,7 @@ void TSLuaState::Load()
     });
     load_bindings(state);
     state["TSEvents"] = &ts_events;
+    state["HAS_TAG"] = L_HAS_TAG;
 
     for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {

@@ -1,7 +1,7 @@
 import * as mysql from 'mysql2';
 import { NodeConfig } from "../runtime/NodeConfig";
 import { GetExistingId, IdPrivate } from "../util/ids/Ids";
-import { ipaths } from "../util/Paths";
+import { ApplyTagMacros } from '../util/TagMacros';
 import { dataset } from "./tswow/dataset";
 import { get_tracy_category_color } from './tswow/tracy-categories';
 import deasync = require('deasync');
@@ -41,29 +41,43 @@ export function postprocess(contents: string): string {
     // ======================================
     //  GetID
     // ======================================
-    while(true) {
-        let m = contents
-            .match(
-                /GetID\(JSTR\("(.+?)"\), JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/)
-        if(!m) break;
-        const [_,table,mod,name] = m;
-        let id = GetExistingId(table,mod,name);
-        contents = contents.replace(m[0],`${id}`)
-    }
+    [
+        /GetID *\( *JSTR *\("(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
+        /GetID *\( "(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/,
+        /GetID *\( "(.+?)" *, *"(.+?)" *, *'(.+?)' *\)/,
+
+        /GetID *\( "(.+?)" *, *'(.+?)' *, *"(.+?)" *\)/,
+        /GetID *\( "(.+?)" *, *'(.+?)' *, *'(.+?)' *\)/,
+
+        /GetID *\( '(.+?)' *, *"(.+?)" *, *"(.+?)" *\)/,
+        /GetID *\( '(.+?)' *, *"(.+?)" *, *'(.+?)' *\)/,
+
+        /GetID *\( '(.+?)' *, *'(.+?)' *, *"(.+?)" *\)/,
+        /GetID *\( '(.+?)' *, *'(.+?)' *, *'(.+?)' *\)/,
+    ].forEach(regex=>{
+        while(true) {
+            let m = contents
+                .match(regex)
+            if(!m) break;
+            const [_,table,mod,name] = m;
+            let id = GetExistingId(table,mod,name);
+            contents = contents.replace(m[0],`${id}`)
+        }
+    })
 
     // ======================================
     //  Tracy
     // ======================================
-    const USE_TRACY = process.argv.find(x=>x.startsWith('--tracy'))
+    const USE_TRACY = process.argv.find(x=>x.startsWith('tracy'))
     {
-        const TRACY_OPT_PREFIX = '--tracy='
+        const TRACY_OPT_PREFIX = 'tracy='
         let categories =
             (process.argv.find(x=>x.startsWith(TRACY_OPT_PREFIX)) || `${TRACY_OPT_PREFIX}*`)
             .substring(TRACY_OPT_PREFIX.length)
             .split(',')
 
         while(true) {
-            let m = contents.match(/TS_ZONE_SCOPED\((.+?)\)/)
+            let m = contents.match(/TS_ZONE_SCOPED *\( *(.+?) *\)/)
             if(!m) break;
 
             if(USE_TRACY && categories.find(x=>match(x,m[1]))) {
@@ -73,73 +87,27 @@ export function postprocess(contents: string): string {
             }
         }
 
-        while(true) {
-            let m = contents.match(/TS_ZONE_SCOPED_N\((.+?), JSTR\("(.+?)"\)\)/)
-            if(!m) break;
-            if(USE_TRACY && categories.find(x=>match(x,m[1]))) {
-                contents = contents.replace(m[0], `ZoneScopedNC("${m[2]}", ${get_tracy_category_color(m[1])})`)
-            } else {
-                contents = contents.replace(m[0],'')
+        [
+            /TS_ZONE_SCOPED_N *\( *(.+?) *, *JSTR *\( *"(.+?)" *\) *\)/,
+            /TS_ZONE_SCOPED_N *\( *(.+?) *, *"(.+?)" *\)/,
+            /TS_ZONE_SCOPED_N *\( *(.+?) *, *'(.+?)' *\)/,
+        ].forEach(regex=>{
+            while(true) {
+                let m = contents.match(regex)
+                if(!m) break;
+                if(USE_TRACY && categories.find(x=>match(x,m[1]))) {
+                    contents = contents.replace(m[0], `ZoneScopedNC("${m[2]}", ${get_tracy_category_color(m[1])})`)
+                } else {
+                    contents = contents.replace(m[0],'')
+                }
             }
-        }
+        })
     }
 
     // ======================================
     //  ID Tags
     // ======================================
-
-    [
-        /GetIDTagUnique\(JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/,
-        /UTAG\(JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/,
-    ].forEach(regex=>{
-        while(true) {
-            let m = contents.match(regex)
-            if(!m) break;
-            let mod = m[1];
-            let id = m[2];
-            let fullName = `${mod}.${id}`
-            let file = ipaths.coredata.tags.tagfile(fullName)
-            if(!file.exists()) {
-                throw new Error(`No ids are tagged ${fullName}, did you run datascripts?`)
-            }
-            let values = file.readJson(undefined);
-            if(!values) {
-                throw new Error(`Corrupt json for tag ${fullName}, try rebuilding datascripts`)
-            }
-
-            if(values.length == 0) {
-                throw new Error(`ID tag ${mod}:${id} has 0 values`);
-            }
-
-            if(values.length > 1) {
-                throw new Error(`ID tag ${mod}:${id} is not unique (shared by ${values.length} ids)`);
-            }
-            contents = contents.replace(m[0],`${values[0]}`);
-        }
-    });
-
-    [
-        /GetIDTag\(JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/,
-        /TAG\(JSTR\("(.+?)"\), JSTR\("(.+?)"\)\)/,
-    ].forEach(regex=>{
-        while(true) {
-            let m = contents.match(regex)
-            if(!m) break;
-
-            let mod = m[1];
-            let id = m[2];
-            let fullName = `${mod}.${id}`
-            let file = ipaths.coredata.tags.tagfile(fullName)
-            if(!file.exists()) {
-                throw new Error(`No ids are tagged ${fullName}, did you run datascripts?`)
-            }
-            let values = file.readJson(undefined);
-            if(!values) {
-                throw new Error(`Corrupt json for tag ${fullName}, try rebuilding datascripts`)
-            }
-            contents = contents.replace(m[0],`TSArray<uint32>({${values.join(',')}})`);
-        }
-    });
+    contents = ApplyTagMacros(contents, 'LIVESCRIPT')
 
     // ======================================
     //  World table asserts

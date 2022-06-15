@@ -450,7 +450,7 @@ TSInstance TSMap::ToInstance()
     return TSInstance(nullptr,nullptr);
 }
 
-void TSMap::DoDelayed(std::function<void(TSMap, TSMapManager)> callback)
+void TSMap::DoDelayed(std::function<void(TSMap, TSMainThreadContext)> callback)
 {
 #if TRINITY
     map->m_delayCallbacks.push_back(callback);

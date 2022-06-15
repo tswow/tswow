@@ -66,3 +66,4 @@
 #include "TSBitwise.h"
 #include "TSGameObjectTemplate.h"
 #include "TSProfile.h"
+#include "TSMainThreadContext.h"

@@ -36,7 +36,7 @@
 #include "TSAchievementTemplate.h"
 #include "TSBattleground.h"
 #include "TSCustomPacket.h"
-#include "TSMapManager.h"
+#include "TSMainThreadContext.h"
 #include "TSSpellInfo.h"
 
 #include <cstdint>
@@ -83,7 +83,7 @@ struct TSEvents
          EVENT(OnConfigLoad, bool)
          EVENT(OnMotdChange, TSString)
          EVENT(OnShutdownInitiate, uint32, uint32)
-         EVENT(OnUpdate, uint32, TSMapManager)
+         EVENT(OnUpdate, uint32, TSMainThreadContext)
          EVENT(OnStartup)
          EVENT(OnShutdownCancel)
          EVENT(OnShutdown)
@@ -668,7 +668,7 @@ struct TSEvents
         ID_EVENT(OnCreate, TSMap)
         ID_EVENT_FN(OnReload, ReloadMap, TSMap)
         ID_EVENT(OnUpdate, TSMap, uint32)
-        ID_EVENT(OnUpdateDelayed, TSMap, uint32, TSMapManager)
+        ID_EVENT(OnUpdateDelayed, TSMap, uint32, TSMainThreadContext)
         ID_EVENT(OnPlayerEnter, TSMap, TSPlayer)
         ID_EVENT(OnPlayerLeave, TSMap, TSPlayer)
         ID_EVENT(OnCreatureCreate, TSMap, TSCreature, TSMutable<bool>)

@@ -3827,10 +3827,11 @@ declare interface TSQuest {
     GetType() : uint32
 }
 
-declare interface TSMapManager {
+declare interface TSMainThreadContext {
     GetPlayer(guid: uint64): TSPlayer
     GetPlayer(name: string): TSPlayer
     GetMap(mapid: uint32, instanceId?: uint32): TSMap
+    SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>): void;
 }
 
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
@@ -3838,7 +3839,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     HasInstanceScript(): bool
     GetInstanceScript(): TSInstance
     GetUnits(): TSArray<TSWorldObject>
-    DoDelayed(callback: (map: TSMap, mgr: TSMapManager)=>void): void;
+    DoDelayed(callback: (map: TSMap, mgr: TSMainThreadContext)=>void): void;
     /**
      * @param entry only return gameobjects of this entry.
      * Leave out to select all gameobjects.
@@ -5050,7 +5051,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     IsFriendlyToPlayers(): bool
     IsHostileToPlayers(): bool
     IsNeutralToAll(): bool
-    DoDelayed(callback: (obj: TSWorldObject, mgr: TSMapManager)=>void): void
+    DoDelayed(callback: (obj: TSWorldObject, mgr: TSMainThreadContext)=>void): void
 
     /**
      * Makes the [Unit] cast the spell on the target.
@@ -7451,7 +7452,7 @@ declare namespace _hidden {
         OnConfigLoad(callback: (reload : bool)=>void);
         OnMotdChange(callback: (newMotd : string)=>void);
         OnShutdownInitiate(callback: (code : uint32,mask : uint32)=>void);
-        OnUpdate(callback: (diff : uint32, mgr: TSMapManager)=>void);
+        OnUpdate(callback: (diff : uint32, mgr: TSMainThreadContext)=>void);
         OnStartup(callback: ()=>void);
         OnShutdownCancel(callback: ()=>void);
         OnShutdown(callback: ()=>void);
@@ -8700,8 +8701,8 @@ declare namespace _hidden {
         OnUpdate(callback: (map: TSMap, diff: uint32)=>void): T
         OnUpdate(id: EventID, callback: (map: TSMap, diff: uint32)=>void): T
 
-        OnUpdateDelayed(callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void): T
-        OnUpdateDelayed(id: EventID, callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void): T
+        OnUpdateDelayed(callback: (map: TSMap, diff: uint32, mgr: TSMainThreadContext)=>void): T
+        OnUpdateDelayed(id: EventID, callback: (map: TSMap, diff: uint32, mgr: TSMainThreadContext)=>void): T
 
         OnPlayerEnter(callback: (map: TSMap, player: TSPlayer)=>void): T
         OnPlayerEnter(id: EventID, callback: (map: TSMap, player: TSPlayer)=>void): T
@@ -9099,7 +9100,6 @@ declare const TSJSON: _TSJSON
 // Global.h
 declare function GetCurrTime(): uint32;
 declare function GetUnixTime(): uint64;
-declare function SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>);
 declare function SendWorldMessage(message: string);
 declare function SyncHttpGet(url: string): string;
 declare function IsGameEventActive(event: uint16): boolean
@@ -9136,6 +9136,8 @@ declare function TAG(mod: string, id: string): TSArray<uint32>
  */
 declare function GetIDTagUnique(mod: string, id: string): uint32
 declare function UTAG(mod: string, id: string): uint32
+
+declare function HAS_TAG(item: uint32, mod: string, id: string): bool
 
 /**
  * Runs a compile-time check that a given world database table exists.

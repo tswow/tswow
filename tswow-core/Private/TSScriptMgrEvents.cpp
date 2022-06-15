@@ -27,7 +27,7 @@
 #include "TSItem.h"
 #include "TSMutableString.h"
 #include "TSItemTemplate.h"
-#include "TSMapManager.h"
+#include "TSMainThreadContext.h"
 #include "TSSpellInfo.h"
 #include "TSGroup.h"
 #include "TSGuild.h"
@@ -68,7 +68,7 @@ public:
     void OnShutdownCancel() FIRE(World,OnShutdownCancel)
     void OnMotdChange(std::string& newMotd) FIRE(World,OnMotdChange,TSString(newMotd))
     void OnShutdownInitiate(ShutdownExitCode code,ShutdownMask mask) FIRE(World,OnShutdownInitiate,code,mask)
-    void OnUpdate(uint32 diff) FIRE(World,OnUpdate,diff, TSMapManager())
+    void OnUpdate(uint32 diff) FIRE(World,OnUpdate,diff, TSMainThreadContext())
 };
 
 class TSUnitScript : public UnitScript

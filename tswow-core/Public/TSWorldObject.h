@@ -33,7 +33,7 @@ class TSCollisions;
 class TSCollisionEntry;
 class TSEntity;
 class TSUnit;
-class TSMapManager;
+class TSMainThreadContext;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
 
@@ -144,7 +144,7 @@ public:
     void AddedByGroup(TSWorldObjectGroup* group);
     void RemovedByGroup(TSWorldObjectGroup* group);
 
-    void DoDelayed(std::function<void(TSWorldObject, TSMapManager)> callback);
+    void DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback);
 private:
     friend class TSLuaState;
 
