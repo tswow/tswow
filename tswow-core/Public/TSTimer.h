@@ -131,7 +131,7 @@ public:
             }
             else
             {
-                m_lua_callback(ctx, this);
+                TSLuaState::handle_error(m_lua_callback(ctx, this));
             }
 
             m_lastTick = n;

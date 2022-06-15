@@ -14,6 +14,7 @@ void TSLuaState::load_database_methods(sol::state& state)
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetInt64);
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetFloat);
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetDouble);
+    LUA_FIELD(ts_database_result, TSDatabaseResult, GetRow);
     ts_database_result.set_function("GetString", &TSDatabaseResult::LGetString);
 
     auto ts_prepared_statement_world = state.new_usertype<TSPreparedStatementWorld>("TSPreparedStatementWorld");
@@ -76,15 +77,15 @@ void TSLuaState::load_database_methods(sol::state& state)
     state.set_function("GetAuthDBConnection", GetAuthDBConnection);
     state.set_function("GetCharactersDBConnection", GetCharactersDBConnection);
 
-    state.set_function("QueryWorld", QueryWorld);
-    state.set_function("QueryCharacters", QueryCharacters);
-    state.set_function("QueryAuth", QueryAuth);
+    state.set_function("QueryWorld", LQueryWorld);
+    state.set_function("QueryCharacters", LQueryCharacters);
+    state.set_function("QueryAuth", LQueryAuth);
 
     state.set_function("WorldDatabaseInfo", WorldDatabaseInfo);
     state.set_function("CharactersDatabaseInfo", CharactersDatabaseInfo);
     state.set_function("AuthDastabaseInfo", AuthDatabaseInfo);
 
-    state.set_function("PrepareWorldQuery", PrepareWorldQuery);
-    state.set_function("PrepareCharactersQuery", PrepareCharactersQuery);
-    state.set_function("PrepareAuthQuery", PrepareAuthQuery);
+    state.set_function("PrepareWorldQuery", LPrepareWorldQuery);
+    state.set_function("PrepareCharactersQuery", LPrepareCharactersQuery);
+    state.set_function("PrepareAuthQuery", LPrepareAuthQuery);
 }

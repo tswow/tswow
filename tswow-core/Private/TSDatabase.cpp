@@ -637,3 +637,32 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
     return TSCharactersDatabaseConnection(nullptr);
 #endif
 }
+
+std::shared_ptr<TSDatabaseResult> LQueryWorld(std::string const& query)
+{
+    return QueryWorld(query);
+}
+
+std::shared_ptr<TSDatabaseResult> LQueryCharacters(std::string const& query)
+{
+    return QueryCharacters(query);
+}
+std::shared_ptr<TSDatabaseResult> LQueryAuth(std::string const& query)
+{
+    return QueryAuth(query);
+}
+
+TSPreparedStatementWorld LPrepareWorldQuery(std::string const& query)
+{
+    return PrepareWorldQuery(query);
+}
+
+TSPreparedStatementCharacters LPrepareCharactersQuery(std::string const& query)
+{
+    return PrepareCharactersQuery(query);
+}
+
+TSPreparedStatementAuth LPrepareAuthQuery(std::string const& query)
+{
+    return PrepareAuthQuery(query);
+}

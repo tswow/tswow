@@ -807,12 +807,12 @@ struct TSEvents
     {
         EVENTS_HEADER(QuestEvents)
         TSRegistryRef& get_registry_ref(uint32_t id) override;
-        EVENT(OnAccept, TSQuest, TSPlayer, TSObject questgiver)
-        EVENT(OnReward, TSQuest, TSPlayer, TSObject questgiver, uint32 value)
-        EVENT(OnSpellFinish, TSQuest, TSPlayer, TSSpell)
-        EVENT(OnObjectiveProgress, TSQuest, TSPlayer, uint32, uint16)
-        EVENT(OnStatusChanged, TSQuest, TSPlayer)
-        EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutable<uint32>)
+        ID_EVENT(OnAccept, TSQuest, TSPlayer, TSObject questgiver)
+        ID_EVENT(OnReward, TSQuest, TSPlayer, TSObject questgiver, uint32 value)
+        ID_EVENT(OnSpellFinish, TSQuest, TSPlayer, TSSpell)
+        ID_EVENT(OnObjectiveProgress, TSQuest, TSPlayer, uint32, uint16)
+        ID_EVENT(OnStatusChanged, TSQuest, TSPlayer)
+        ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutable<uint32>)
     } Quest;
 #if TRINITY
     struct AreaTriggerEvents : public TSMappedEventsDirect {

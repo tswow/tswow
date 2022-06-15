@@ -24,7 +24,7 @@
 
 void TSLuaState::load_player_methods(sol::state& state)
 {
-    auto ts_player = state.new_usertype <TSPlayer>("TSPlayer");
+    auto ts_player = state.new_usertype <TSPlayer>("TSPlayer", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject,TSEntityProvider,TSWorldEntityProvider<TSWorldObject>>());
     load_unit_methods_t(state, ts_player, "TSPlayer");
     LUA_FIELD(ts_player, TSPlayer, GetTalentPointsInTree);
     LUA_FIELD(ts_player, TSPlayer, CanTitanGrip);

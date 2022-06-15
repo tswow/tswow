@@ -281,7 +281,7 @@ void TSLuaState::Load()
         return TSLuaState::require(name);
     });
     load_bindings(state);
-    state["TSEvents"] = ts_events;
+    state["TSEvents"] = &ts_events;
 
     for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {

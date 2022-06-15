@@ -7,7 +7,7 @@
 
 void TSLuaState::load_world_object_methods(sol::state& state)
 {
-    auto ts_worldobject = state.new_usertype<TSWorldObject>("TSWorldObject");
+    auto ts_worldobject = state.new_usertype<TSWorldObject>("TSWorldObject", sol::base_classes, sol::bases<TSObject,TSWorldEntityProvider<TSWorldObject>, TSEntityProvider>());
     load_world_object_methods_t(state, ts_worldobject, "TSWorldObject");
 
     auto ts_mutable_worldobject = state.new_usertype<TSMutableWorldObject>("TSMutableWorldObject");

@@ -24,9 +24,9 @@
 struct MySQLConnectionInfo;
 class PreparedStatementBase;
 
-class TC_GAME_API TSDatabaseResult : public std::enable_shared_from_this<TSDatabaseResult> {
+class TC_GAME_API TSDatabaseResult /* : public std::enable_shared_from_this<TSDatabaseResult> */ {
 public:
-    using std::enable_shared_from_this<TSDatabaseResult>::shared_from_this;
+    //using std::enable_shared_from_this<TSDatabaseResult>::shared_from_this;
     TSDatabaseResult* operator->(){return this;}
     virtual uint8 GetUInt8(int index) = 0;
     virtual uint16 GetUInt16(int index) = 0;
@@ -233,5 +233,13 @@ TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> AuthDatabaseInfo();
 TC_GAME_API TSPreparedStatementWorld PrepareWorldQuery(TSString query);
 TC_GAME_API TSPreparedStatementCharacters PrepareCharactersQuery(TSString query);
 TC_GAME_API TSPreparedStatementAuth PrepareAuthQuery(TSString query);
+
+TC_GAME_API std::shared_ptr<TSDatabaseResult> LQueryWorld(std::string const& query);
+TC_GAME_API std::shared_ptr<TSDatabaseResult> LQueryCharacters(std::string const& query);
+TC_GAME_API std::shared_ptr<TSDatabaseResult> LQueryAuth(std::string const& query);
+
+TC_GAME_API TSPreparedStatementWorld LPrepareWorldQuery(std::string const& query);
+TC_GAME_API TSPreparedStatementCharacters LPrepareCharactersQuery(std::string const& query);
+TC_GAME_API TSPreparedStatementAuth LPrepareAuthQuery(std::string const& query);
 
 #define LoadRows(cls,query) cls::Load(query)

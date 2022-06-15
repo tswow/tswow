@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "sol/sol.hpp"
+#include "TSLua.h"
 
 template <class C>
 struct TSEvent;
@@ -181,7 +182,7 @@ private:
 				\
 				for(auto cb : ts_events.category.name##_callbacks.m_lua_callbacks)\
 				{\
-						cb(__VA_ARGS__);\
+						TSLuaState::handle_error(cb(__VA_ARGS__));\
 				}\
 		}\
 
@@ -201,7 +202,7 @@ private:
 				{\
 						for(auto cb: lua_cbs[ref])\
 						{\
-								cb(__VA_ARGS__);\
+								TSLuaState::handle_error(cb(__VA_ARGS__));\
 						}\
 				}\
 		}
