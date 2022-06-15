@@ -19,6 +19,7 @@ import { FilePath } from "../util/FileTree";
 import { GetExistingId, IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
+import { ApplyTagMacros } from "../util/TagMacros";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
 import { BuildCommand, CleanCommand, CreateCommand, ListCommand } from "./CommandActions";
@@ -231,16 +232,7 @@ export class Addon {
         this.path.build.iterate('RECURSE','FILES','FULL',node=>{
             let str = node.toFile().readString()
             let m: RegExpMatchArray
-            do {
-                m = str.match(
-                    /GetID\( *"(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/)
-                if(m) {
-                    const [_,table,mod,name] = m;
-                    let id = GetExistingId(table,mod,name);
-                    str = str.replace(m[0],`${id}`)
-                }
-            } while(m != null);
-
+            str = ApplyTagMacros(str,'LUA');
             str = str.split('\n').map(x=>{
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
