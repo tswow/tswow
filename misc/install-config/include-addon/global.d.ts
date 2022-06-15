@@ -14273,10 +14273,6 @@ declare class TSPacketRead {
     Size(): uint32
 }
 
-/**
- * @deprecated use ID tags
- */
-declare function GetID(table: string, mod: string, name: string): number;
 declare function UTAG(mod: string, name: string): number
 declare function TAG(mod: string, name: string): number[]
 declare function HAS_TAG(id: number, mod: string, name: string);

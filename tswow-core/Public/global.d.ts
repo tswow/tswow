@@ -9120,10 +9120,11 @@ declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
 /**
- * @deprecated use ID_TABLE macro, or better use tags
+ * @deprecated use ID tags instead
+ *
+ * @nolua This function only works in livescripts
  */
 declare function GetID(table: string, mod: string, name: string): uint32;
-declare function ID_TABLE(table: string, mod: string, name: string): uint32
 
 /**
  * @deprecated use TAG macro
