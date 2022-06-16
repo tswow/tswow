@@ -12,5 +12,6 @@ void TSLua::load_global_functions(sol::state& state)
     state.set_function("IsHolidayActive", IsHolidayActive);
     state.set_function("StartGameEvent", StartGameEvent);
     state.set_function("StopGameEvent", StopGameEvent);
+    state.set_function("GetActiveGameEvents", LGetActiveGameEvents);
     state.set_function("HAS_TAG", L_HAS_TAG);
 }

@@ -123,3 +123,8 @@ bool L_HAS_TAG(uint32_t id, sol::table list)
     }
     return false;
 }
+
+TSLua::Array<uint16_t> TC_GAME_API LGetActiveGameEvents()
+{
+    return sol::as_table(*GetActiveGameEvents().vec);
+}

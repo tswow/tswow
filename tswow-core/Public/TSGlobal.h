@@ -20,8 +20,7 @@
 #include "TSItem.h"
 #include "TSBase.h"
 #include "TSString.h"
-
-#include <sol/sol.hpp>
+#include "TSLua.h"
 
 TSItemTemplate TC_GAME_API CreateItemTemplate(uint32 entry,uint32 copyItemID = 38);
 
@@ -43,3 +42,5 @@ void TC_GAME_API StopGameEvent(uint16_t event_id);
 
 bool TC_GAME_API HAS_TAG(uint32_t id, std::initializer_list<uint32_t> const& list);
 bool TC_GAME_API L_HAS_TAG(uint32_t id, sol::table);
+
+TSLua::Array<uint16_t> TC_GAME_API LGetActiveGameEvents();
