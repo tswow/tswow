@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "Config.h"
+#include "TSWorldObject.h"
 #include "TSGlobal.h"
 #include <regex>
 #include "document.hpp"
@@ -286,6 +287,7 @@ void TSLua::Load()
     load_bindings(state);
     state["TSEvents"] = &ts_events;
     state["HAS_TAG"] = L_HAS_TAG;
+    state["BROADCAST_PHASE_ID"] = BROADCAST_PHASE_ID;
 
     for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {
