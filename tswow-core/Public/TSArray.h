@@ -87,6 +87,16 @@ public:
     this->vec = std::make_shared<std::vector<T>>(vec);
   }
 
+  TSArray(std::set<T> set)
+  {
+      vec = std::make_shared<std::vector<T>>();
+      vec.reserve(set.size());
+      for (auto const& v : set)
+      {
+          vec.push_back(v);
+      }
+  }
+
   template <typename G>
   G join(G delim)
   {

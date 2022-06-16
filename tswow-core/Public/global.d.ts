@@ -6066,6 +6066,20 @@ declare interface TSUnit extends TSWorldObject {
      */
     GetControllerGUID() : uint64
 
+    GetControlled(): TSArray<TSUnit>
+
+    RemoveAllControlled(): void;
+
+    GetFirstControlled(): TSUnit;
+
+    RemoveAllMinionsByEntry(entry: uint32) :void;
+
+    SetCharm(target: TSUnit, apply: bool): void;
+
+    SetCharmedBy(charmer: TSUnit, type: uint32, application?: TSAuraApplication) void;
+
+    RemoveCharmedBy(charmer: TSUnit): void
+
     /**
      * Returns the [Unit]'s charmer or owner.
      */

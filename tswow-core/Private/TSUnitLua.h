@@ -162,4 +162,11 @@ void TSLua::load_unit_methods_t(sol::state & state, sol::usertype<T> & target, s
     LUA_FIELD(target, TSUnit, GetArmor);
     LUA_FIELD(target, TSUnit, SetResistance);
     LUA_FIELD(target, TSUnit, SetArmor);
+    LUA_FIELD(target, TSUnit, RemoveAllControlled);
+    LUA_FIELD(target, TSUnit, GetFirstControlled);
+    LUA_FIELD(target, TSUnit, RemoveAllMinionsByEntry);
+    LUA_FIELD(target, TSUnit, RemoveCharmedBy);
+    LUA_FIELD(target, TSUnit, SetCharm);
+    target.set_function("SetCharmedBy", sol::overload(&TSUnit::LSetCharmedBy0, &TSUnit::LSetCharmedBy1));
+    target.set_function("GetControlled", &TSUnit::LGetControlled);
 }
