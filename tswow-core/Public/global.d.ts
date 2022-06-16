@@ -88,6 +88,8 @@ declare const enum LootState {} /** GameObject.h:LootState */
 declare const enum TempSummonType {} /** ObjectDefines.h:TempSummonType */
 declare const enum TypeID {} /** ObjectGuid.h:TypeID */
 declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
+declare const enum CharmType {} /** Unit.h:CharmType */
+
 declare const enum Powers /**@realType:int8 */ {
     HEALTH                        = -2,
     MANA                          = 0,
@@ -6076,7 +6078,7 @@ declare interface TSUnit extends TSWorldObject {
 
     SetCharm(target: TSUnit, apply: bool): void;
 
-    SetCharmedBy(charmer: TSUnit, type: uint32, application?: TSAuraApplication) void;
+    SetCharmedBy(charmer: TSUnit, type: CharmType, application?: TSAuraApplication): void;
 
     RemoveCharmedBy(charmer: TSUnit): void
 
