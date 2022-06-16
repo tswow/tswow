@@ -47,7 +47,7 @@ public:
     uint32 GetSharesCriteria();
 
 private:
-    sol::as_table_t<std::vector<std::string>> LGetTitles();
+    TSLua::Array<std::string> LGetTitles();
     friend class TSLua;
 };
 

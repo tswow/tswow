@@ -276,7 +276,7 @@ CharacterDatabaseTransaction trans(nullptr);
 #endif
 }
 
-sol::as_table_t<std::vector<TSPlayer>> TSGuild::LGetMembers()
+TSLua::Array<TSPlayer> TSGuild::LGetMembers()
 {
     return sol::as_table(*GetMembers().vec);
 }

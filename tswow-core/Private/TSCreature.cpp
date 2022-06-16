@@ -1460,7 +1460,7 @@ TSOutfit TSCreature::LGetOutfitCopy3()
 {
     return GetOutfitCopy();
 }
-sol::as_table_t<std::vector<TSUnit>> TSCreature::LGetAITargets()
+TSLua::Array<TSUnit> TSCreature::LGetAITargets()
 {
     return sol::as_table(*GetAITargets().vec);
 }

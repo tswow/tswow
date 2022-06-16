@@ -152,8 +152,8 @@ public:
     TSGameObject GetGameObjectArg();
     TSWorldObject GetSelf();
 private:
-    sol::as_table_t<std::vector<TSWorldObject>> LGetTargets();
+    TSLua::Array<TSWorldObject> LGetTargets();
     void LStoreTargetList(sol::table objects, uint32 id);
-    sol::as_table_t<std::vector<TSWorldObject>> LGetTargetList(uint32 id, TSWorldObject ref);
+    TSLua::Array<TSWorldObject> LGetTargetList(uint32 id, TSWorldObject ref);
     friend class TSLua;
 };

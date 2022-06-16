@@ -58,7 +58,7 @@ public:
     bool IsLFGGroup();
     bool IsBFGroup();
 private:
-    sol::as_table_t<std::vector<TSPlayer>> LGetMembers();
+    TSLua::Array<TSPlayer> LGetMembers();
     void LSendPacket(TSWorldPacket data, bool ignorePlayersInBg, uint64 ignore);
     friend class TSLua;
 };

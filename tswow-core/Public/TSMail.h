@@ -75,7 +75,7 @@ struct TC_GAME_API TSMail {
 private:
     std::string LGetSubject();
     std::string LGetBody();
-    sol::as_table_t<std::vector<TSMailItemInfo>> LGetItems();
+    TSLua::Array<TSMailItemInfo> LGetItems();
     void LFilterItems(sol::protected_function predicate);
     void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
     void LAddItem1(uint32 entry, uint8 count);
@@ -109,7 +109,7 @@ struct TC_GAME_API TSMailDraft {
 private:
     std::string LGetSubject();
     std::string LGetBody();
-    sol::as_table_t<std::vector<uint64>> LGetItemKeys();
+    TSLua::Array<uint64> LGetItemKeys();
     void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
     void LAddItem1(uint32 entry, uint8 count);
     void LFilterItems(sol::protected_function predicate);

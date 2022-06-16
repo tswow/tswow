@@ -51,7 +51,7 @@ public:
     void DeleteMember(TSPlayer player, bool isDisbanding);
     void SetMemberRank(TSPlayer player, uint8 newRank);
 private:
-    sol::as_table_t<std::vector<TSPlayer>> LGetMembers();
+    TSLua::Array<TSPlayer> LGetMembers();
     std::string LGetName();
     std::string LGetMOTD();
     std::string LGetInfo();

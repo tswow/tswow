@@ -487,34 +487,34 @@ std::string TSMap::LGetName()
 {
     return GetName().std_str();
 }
-sol::as_table_t<std::vector<TSPlayer>> TSMap::LGetPlayers0(uint32 team)
+TSLua::Array<TSPlayer> TSMap::LGetPlayers0(uint32 team)
 {
     return sol::as_table(*GetPlayers(team).vec);
 }
-sol::as_table_t<std::vector<TSPlayer>> TSMap::LGetPlayers1()
+TSLua::Array<TSPlayer> TSMap::LGetPlayers1()
 {
     return sol::as_table(*GetPlayers().vec);
 }
 
-sol::as_table_t<std::vector<TSUnit>> TSMap::LGetUnits()
+TSLua::Array<TSUnit> TSMap::LGetUnits()
 {
     return sol::as_table(*GetUnits().vec);
 }
 
-sol::as_table_t<std::vector<TSGameObject>> TSMap::LGetGameObjects0(uint32 entry)
+TSLua::Array<TSGameObject> TSMap::LGetGameObjects0(uint32 entry)
 {
     return sol::as_table(*GetGameObjects(entry).vec);
 }
-sol::as_table_t<std::vector<TSGameObject>> TSMap::LGetGameObjects1()
+TSLua::Array<TSGameObject> TSMap::LGetGameObjects1()
 {
     return sol::as_table(*GetGameObjects().vec);
 }
 
-sol::as_table_t<std::vector<TSCreature>> TSMap::LGetCreatures0(uint32 entry)
+TSLua::Array<TSCreature> TSMap::LGetCreatures0(uint32 entry)
 {
     return sol::as_table(*GetCreatures(entry).vec);
 }
-sol::as_table_t<std::vector<TSCreature>> TSMap::LGetCreatures1()
+TSLua::Array<TSCreature> TSMap::LGetCreatures1()
 {
     return sol::as_table(*GetCreatures().vec);
 }

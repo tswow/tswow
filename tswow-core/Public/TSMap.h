@@ -79,16 +79,16 @@ private:
 
     void LDoDelayed(sol::function callback);
 
-    sol::as_table_t<std::vector<TSPlayer>> LGetPlayers0(uint32 team);
-    sol::as_table_t<std::vector<TSPlayer>> LGetPlayers1();
+    TSLua::Array<TSPlayer> LGetPlayers0(uint32 team);
+    TSLua::Array<TSPlayer> LGetPlayers1();
 
-    sol::as_table_t<std::vector<TSUnit>> LGetUnits();
+    TSLua::Array<TSUnit> LGetUnits();
 
-    sol::as_table_t<std::vector<TSGameObject>> LGetGameObjects0(uint32 entry);
-    sol::as_table_t<std::vector<TSGameObject>> LGetGameObjects1();
+    TSLua::Array<TSGameObject> LGetGameObjects0(uint32 entry);
+    TSLua::Array<TSGameObject> LGetGameObjects1();
 
-    sol::as_table_t<std::vector<TSCreature>> LGetCreatures0(uint32 entry);
-    sol::as_table_t<std::vector<TSCreature>> LGetCreatures1();
+    TSLua::Array<TSCreature> LGetCreatures0(uint32 entry);
+    TSLua::Array<TSCreature> LGetCreatures1();
 
     friend class TSLua;
 };

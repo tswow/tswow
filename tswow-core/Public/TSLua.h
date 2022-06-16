@@ -12,6 +12,12 @@
 class TC_GAME_API TSLua
 {
 public:
+    template <typename T>
+    using Array = sol::as_table_t<std::vector<T>>;
+
+    template <typename K, typename V>
+    using Dictionary = sol::as_table_t<std::map<K, V>>;
+
     static void load_bindings(sol::state& state);
     static void handle_error(sol::protected_function_result const& what);
     static void execute_file(std::filesystem::path file);

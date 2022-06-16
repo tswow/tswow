@@ -90,7 +90,7 @@ public:
     void SetStackAmount(uint8 amount);
     void Remove();
 private:
-    sol::as_table_t<std::vector<TSAuraApplication>> LGetApplications();
+    TSLua::Array<TSAuraApplication> LGetApplications();
     friend class TSLua;
 };
 
