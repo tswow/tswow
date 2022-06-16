@@ -6,7 +6,7 @@
 #include "TSEntityLua.h"
 
 template <typename T>
-void TSLuaState::load_map_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& name)
+void TSLua::load_map_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& name)
 {
     load_entity_methods_t<T>(state, target, name);
     load_world_entity_methods_t<TSMap, T>(state, target, name);

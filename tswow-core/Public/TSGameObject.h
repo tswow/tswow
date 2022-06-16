@@ -53,7 +53,7 @@ public:
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
 private:
-    friend class TSLuaState;
+    friend class TSLua;
     void LDespawn0(bool forced, uint32 delayMs, uint32 respawnSec);
     void LDespawn1(bool forced, uint32 delayMs);
     void LDespawn2(bool forced);

@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSMail.h"
 
-void TSLuaState::load_mail_methods(sol::state& state)
+void TSLua::load_mail_methods(sol::state& state)
 {
     auto ts_mailiteminfo = state.new_usertype < TSMailItemInfo>("TSMailItemInfo");
     LUA_FIELD(ts_mailiteminfo, TSMailItemInfo, GetGUID);

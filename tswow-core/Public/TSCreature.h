@@ -152,5 +152,5 @@ private:
     sol::as_table_t<std::vector<TSUnit>> LGetAITargets();
     std::string LGetScriptName();
     std::string LGetAIName();
-    friend class TSLuaState;
+    friend class TSLua;
 };

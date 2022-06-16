@@ -3,7 +3,7 @@
 #include "TSGlobal.h"
 #include "TSObjectLua.h"
 
-void TSLuaState::load_itemtemplate_methods(sol::state& state)
+void TSLua::load_itemtemplate_methods(sol::state& state)
 {
     auto ts_itemtemplate = state.new_usertype < TSItemTemplate>("TSItemTemplate");
     load_entity_methods_t(state, ts_itemtemplate, "TSItemTemplate");

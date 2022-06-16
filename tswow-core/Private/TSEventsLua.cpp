@@ -4,7 +4,7 @@
 #define LUA_HANDLE(target, category,name) target.set_function(#name,&TSEvents::category::L##name)
 #define LUA_MAPPED_HANDLE(target,category,name) target.set_function(#name,sol::overload(&TSEvents::category::Lid##name,&TSEvents::category::L##name))
 
-void TSLuaState::load_events(sol::state& state)
+void TSLua::load_events(sol::state& state)
 {
     auto lua_events = state.new_usertype<TSEvents>("CTSEvents");
 

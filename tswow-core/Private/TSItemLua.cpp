@@ -4,7 +4,7 @@
 #include "TSString.h"
 #include "TSPlayer.h"
 
-void TSLuaState::load_item_methods(sol::state& state)
+void TSLua::load_item_methods(sol::state& state)
 {
     auto ts_item = state.new_usertype < TSItem>("TSItem");
     ts_item.set_function("GetItemLink", &TSItem::LGetItemLink);

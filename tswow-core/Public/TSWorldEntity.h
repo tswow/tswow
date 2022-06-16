@@ -145,5 +145,5 @@ private:
         m_entity->m_timers.add(time, 1, 0, callback);
     }
 
-    friend class TSLuaState;
+    friend class TSLua;
 };

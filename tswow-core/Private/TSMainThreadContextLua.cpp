@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSMainThreadContext.h"
 
-void TSLuaState::load_main_thread_context_methods(sol::state& state)
+void TSLua::load_main_thread_context_methods(sol::state& state)
 {
     auto main_thread_context = state.new_usertype<TSMainThreadContext>("TSMainThreadContext");
     main_thread_context.set_function("GetPlayer", sol::overload(

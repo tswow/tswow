@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSAura.h"
 
-void TSLuaState::load_aura_methods(sol::state& state)
+void TSLua::load_aura_methods(sol::state& state)
 {
     auto ts_auraeffect = state.new_usertype<TSAuraEffect>("TSAuraEffect");
     LUA_FIELD(ts_auraeffect, TSAuraEffect, GetCaster);

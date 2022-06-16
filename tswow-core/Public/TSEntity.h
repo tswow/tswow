@@ -209,5 +209,5 @@ private:
         }
     }
 
-    friend class TSLuaState;
+    friend class TSLua;
 };

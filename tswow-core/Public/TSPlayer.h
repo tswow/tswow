@@ -429,5 +429,5 @@ private:
 		void LSendItemQueryPacket0(uint32 entry);
 		void LSendItemQueryPacket1(TSItemTemplate item);
 
-		friend class TSLuaState;
+		friend class TSLua;
 };

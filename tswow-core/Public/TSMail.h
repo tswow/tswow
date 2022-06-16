@@ -81,7 +81,7 @@ private:
     void LAddItem1(uint32 entry, uint8 count);
     void LSetSubject(std::string const& subject);
     void LSetBody(std::string const& body);
-    friend class TSLuaState;
+    friend class TSLua;
 };
 
 class MailDraft;
@@ -113,5 +113,5 @@ private:
     void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
     void LAddItem1(uint32 entry, uint8 count);
     void LFilterItems(sol::protected_function predicate);
-    friend class TSLuaState;
+    friend class TSLua;
 };

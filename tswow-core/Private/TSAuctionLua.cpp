@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSAuction.h"
 
-void TSLuaState::load_auction_methods(sol::state& state)
+void TSLua::load_auction_methods(sol::state& state)
 {
     auto ts_auctionentry = state.new_usertype<TSAuctionEntry>("TSAuctionEntry");
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetID);

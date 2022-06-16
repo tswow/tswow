@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSDatabase.h"
 
-void TSLuaState::load_database_methods(sol::state& state)
+void TSLua::load_database_methods(sol::state& state)
 {
     auto ts_database_result = state.new_usertype<TSDatabaseResult>("TSDatabaseResult");
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetUInt8);

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-void TSLuaState::load_areatrigger_methods(sol::state& state)
+void TSLua::load_areatrigger_methods(sol::state& state)
 {
 #if TRINITY
     auto ts_areatriggerentry = state.new_usertype<TSAreaTriggerEntry>("TSAreaTriggerEntry");

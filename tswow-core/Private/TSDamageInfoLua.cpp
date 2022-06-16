@@ -2,7 +2,7 @@
 #include "TSDamageInfo.h"
 #include "TSUnit.h"
 
-void TSLuaState::load_damage_metods(sol::state& state)
+void TSLua::load_damage_metods(sol::state& state)
 {
     auto ts_meleedamageinfo = state.new_usertype<TSMeleeDamageInfo>("TSDamageInfo");
     LUA_FIELD(ts_meleedamageinfo, TSMeleeDamageInfo, GetAttacker);

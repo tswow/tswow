@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSLoot.h"
 
-void TSLuaState::load_loot_methods(sol::state& state)
+void TSLua::load_loot_methods(sol::state& state)
 {
     auto ts_lootitem = state.new_usertype<TSLootItem>("TSLootItem");
     LUA_FIELD(ts_lootitem, TSLootItem, GetItemID);

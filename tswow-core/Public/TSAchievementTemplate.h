@@ -48,7 +48,7 @@ public:
 
 private:
     sol::as_table_t<std::vector<std::string>> LGetTitles();
-    friend class TSLuaState;
+    friend class TSLua;
 };
 
 struct AchievementCriteriaEntry;

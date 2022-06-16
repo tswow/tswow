@@ -54,7 +54,7 @@ struct TC_GAME_API TSCondition {
 private:
     std::string LToString0(bool ext);
     std::string LToString1();
-    friend class TSLuaState;
+    friend class TSLua;
 };
 
 struct ConditionSourceInfo;
@@ -155,5 +155,5 @@ private:
     sol::as_table_t<std::vector<TSWorldObject>> LGetTargets();
     void LStoreTargetList(sol::table objects, uint32 id);
     sol::as_table_t<std::vector<TSWorldObject>> LGetTargetList(uint32 id, TSWorldObject ref);
-    friend class TSLuaState;
+    friend class TSLua;
 };

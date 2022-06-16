@@ -11,7 +11,7 @@
 #include "TSSpell.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_creature_methods(sol::state & state)
+void TSLua::load_creature_methods(sol::state & state)
 {
     auto ts_creature = state.new_usertype<TSCreature>("TSCreature", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
     load_unit_methods_t(state, ts_creature, "TSCreature");

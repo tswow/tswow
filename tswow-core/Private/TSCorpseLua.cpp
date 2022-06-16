@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_corpse_methods(sol::state& state)
+void TSLua::load_corpse_methods(sol::state& state)
 {
     auto ts_corpse = state.new_usertype<TSCorpse>("TSCorpse");
     LUA_FIELD(ts_corpse, TSCorpse, GetOwnerGUID);

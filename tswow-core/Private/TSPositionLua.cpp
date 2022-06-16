@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSPosition.h"
 
-void TSLuaState::load_position_methods(sol::state& state)
+void TSLua::load_position_methods(sol::state& state)
 {
     auto ts_position = state.new_usertype<TSPosition>("TSPosition");
     ts_position["x"] = &TSPosition::x;

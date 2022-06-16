@@ -91,7 +91,7 @@ public:
     void Remove();
 private:
     sol::as_table_t<std::vector<TSAuraApplication>> LGetApplications();
-    friend class TSLuaState;
+    friend class TSLua;
 };
 
 class TC_GAME_API TSProcEventInfo

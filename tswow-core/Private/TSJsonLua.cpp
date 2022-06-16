@@ -2,7 +2,7 @@
 #include "TSJson.h"
 #include "TSJsonLua.h"
 
-void TSLuaState::load_json_methods(sol::state& state)
+void TSLua::load_json_methods(sol::state& state)
 {
     auto ts_jsonobject = state.new_usertype<TSJsonObject>("TSJsonObject");
     load_json_methods_t<TSJsonObject,TSJsonObject>(state, ts_jsonobject, "JsonObject");

@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSGlobal.h"
 
-void TSLuaState::load_global_functions(sol::state& state)
+void TSLua::load_global_functions(sol::state& state)
 {
     state.set_function("SendWorldMessage", LSendWorldMessage);
     state.set_function("GetCurrTime", GetCurrTime);

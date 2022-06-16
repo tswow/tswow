@@ -229,7 +229,7 @@ private:
     std::string LGetDescription();
     int32 LGetFeralBonus0(int32 extraDPS);
     int32 LGetFeralBonus1();
-    friend class TSLuaState;
+    friend class TSLua;
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);

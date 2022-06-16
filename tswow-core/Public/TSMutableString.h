@@ -43,5 +43,5 @@ public:
 private:
     std::string Lget() { return *str; }
     void Lset(std::string const& value) { (*this->str) = value; };
-    friend class TSLuaState;
+    friend class TSLua;
 };

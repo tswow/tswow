@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSFactionTemplate.h"
 
-void TSLuaState::load_faction_template_methods(sol::state& state)
+void TSLua::load_faction_template_methods(sol::state& state)
 {
     auto ts_faction_template = state.new_usertype<TSFactionTemplate>("TSFactionTemplate");
     LUA_FIELD(ts_faction_template, TSFactionTemplate, GetID);

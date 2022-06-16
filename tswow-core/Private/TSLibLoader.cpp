@@ -74,7 +74,7 @@ void LoadTSLibraries()
     DataRemover::Run();
     if (sConfigMgr->GetBoolDefault("TSWoW.EnableLua", false))
     {
-        TSLuaState::Load();
+        TSLua::Load();
     }
     TSLivescripts::Load(buildType);
 }

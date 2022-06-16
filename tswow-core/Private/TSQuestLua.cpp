@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSQuest.h"
 
-void TSLuaState::load_quest_methods(sol::state& state)
+void TSLua::load_quest_methods(sol::state& state)
 {
     auto ts_quest = state.new_usertype<TSQuest>("TSQuest");
     LUA_FIELD(ts_quest, TSQuest, HasFlag);

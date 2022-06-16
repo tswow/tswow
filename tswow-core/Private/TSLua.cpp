@@ -12,12 +12,12 @@ static std::filesystem::path cur_directory;
 static bool already_errored = false;
 static sol::state state;
 
-sol::state& TSLuaState::GetState()
+sol::state& TSLua::GetState()
 {
     return state;
 }
 
-std::filesystem::path TSLuaState::LuaRoot()
+std::filesystem::path TSLua::LuaRoot()
 {
 #if AZEROTHCORE
     return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
@@ -52,7 +52,7 @@ static std::filesystem::path search_from(std::filesystem::path const& root, std:
     return "";
 }
 
-std::filesystem::path TSLuaState::FindLuaModule(std::string target)
+std::filesystem::path TSLua::FindLuaModule(std::string target)
 {
     std::replace(target.begin(), target.end(), '.', '/');
     std::replace(target.begin(), target.end(), '\\', '/');
@@ -61,7 +61,7 @@ std::filesystem::path TSLuaState::FindLuaModule(std::string target)
     return candidate.empty() ? search_from(cur_module, target) : candidate;
 }
 
-void TSLuaState::load_bindings(sol::state& ztate)
+void TSLua::load_bindings(sol::state& ztate)
 {
     state.open_libraries(sol::lib::base, sol::lib::table, sol::lib::string, sol::lib::math);
     load_worldentity_methods(state);
@@ -106,7 +106,7 @@ void TSLuaState::load_bindings(sol::state& ztate)
     load_events(state);
 }
 
-void TSLuaState::handle_error(sol::protected_function_result const& res)
+void TSLua::handle_error(sol::protected_function_result const& res)
 {
     if (res.valid())
     {
@@ -208,7 +208,7 @@ void TSLuaState::handle_error(sol::protected_function_result const& res)
     TS_LOG_ERROR("tswow.lua", "%s", what.c_str());
 }
 
-void TSLuaState::execute_file(std::filesystem::path file)
+void TSLua::execute_file(std::filesystem::path file)
 {
     file = std::filesystem::absolute(file);
     if (already_errored)
@@ -242,7 +242,7 @@ void TSLuaState::execute_file(std::filesystem::path file)
 }
 
 
-sol::table TSLuaState::require(std::string const& mod)
+sol::table TSLua::require(std::string const& mod)
 {
     std::filesystem::path path = std::filesystem::absolute(FindLuaModule(mod));
     if (path.empty())
@@ -269,7 +269,7 @@ sol::table TSLuaState::require(std::string const& mod)
     return modules[path];
 }
 
-void TSLuaState::Load()
+void TSLua::Load()
 {
     if (!std::filesystem::exists(LuaRoot()))
     {
@@ -281,7 +281,7 @@ void TSLuaState::Load()
     already_errored = false;
 
     state.set_function("require", [=](std::string const& name) {
-        return TSLuaState::require(name);
+        return TSLua::require(name);
     });
     load_bindings(state);
     state["TSEvents"] = &ts_events;

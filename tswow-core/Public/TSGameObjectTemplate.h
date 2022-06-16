@@ -32,7 +32,7 @@ private:
     std::string LGetName();
     std::string LGetIconName();
     std::string LGetCastBarCaption();
-    friend class TSLuaState;
+    friend class TSLua;
 };
 
 TSGameObjectTemplate TC_GAME_API GetGameObjectTemplate(uint32 id);

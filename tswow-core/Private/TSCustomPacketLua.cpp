@@ -5,7 +5,7 @@
 #include "TSEvents.h"
 #include "TSBattleground.h"
 
-void TSLuaState::load_packet_methods(sol::state& state)
+void TSLua::load_packet_methods(sol::state& state)
 {
     auto ts_packetwrite = state.new_usertype<TSPacketWrite>("TSPacketWrite");
     LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteUInt8);

@@ -5,7 +5,7 @@
 #include "TSGameObject.h"
 #include "TSCreature.h"
 
-void TSLuaState::load_instance_methods(sol::state& state)
+void TSLua::load_instance_methods(sol::state& state)
 {
     auto ts_guidset = state.new_usertype<TSGuidSet>("TSGuidSet");
     LUA_FIELD(ts_guidset, TSGuidSet, Contains);

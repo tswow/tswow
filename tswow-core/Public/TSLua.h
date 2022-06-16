@@ -9,7 +9,7 @@
 
 #define LUA_FIELD(target,cls,fn) target.set_function(#fn,&cls::fn)
 
-class TC_GAME_API TSLuaState
+class TC_GAME_API TSLua
 {
 public:
     static void load_bindings(sol::state& state);

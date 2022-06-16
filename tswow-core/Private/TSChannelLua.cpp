@@ -2,7 +2,7 @@
 #include "TSChannel.h"
 #include "TSPlayer.h"
 
-void TSLuaState::load_channel_methods(sol::state& state)
+void TSLua::load_channel_methods(sol::state& state)
 {
     auto ts_channel = state.new_usertype<TSChannel>("TSChannel");
     ts_channel.set_function("GetName", sol::overload(

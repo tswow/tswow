@@ -8,7 +8,7 @@
         mut.set_function("get", &TSMutable<type>::get);\
     }\
 
-void TSLuaState::load_mutable_methods(sol::state& state)
+void TSLua::load_mutable_methods(sol::state& state)
 {
     BIND_MUTABLE(state, bool)
     BIND_MUTABLE(state, uint8)

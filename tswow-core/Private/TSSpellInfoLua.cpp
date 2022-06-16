@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSSpellInfo.h"
 
-void TSLuaState::load_spell_info_methods(sol::state& state)
+void TSLua::load_spell_info_methods(sol::state& state)
 {
     auto ts_spelleffectinfo = state.new_usertype<TSSpellEffectInfo>("TSSpellEffectInfo");
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, GetEffectIndex);

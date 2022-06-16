@@ -182,7 +182,7 @@ private:
 				\
 				for(auto cb : ts_events.category.name##_callbacks.m_lua_callbacks)\
 				{\
-						TSLuaState::handle_error(cb(__VA_ARGS__));\
+						TSLua::handle_error(cb(__VA_ARGS__));\
 				}\
 		}\
 
@@ -202,7 +202,7 @@ private:
 				{\
 						for(auto cb: lua_cbs[ref])\
 						{\
-								TSLuaState::handle_error(cb(__VA_ARGS__));\
+								TSLua::handle_error(cb(__VA_ARGS__));\
 						}\
 				}\
 		}

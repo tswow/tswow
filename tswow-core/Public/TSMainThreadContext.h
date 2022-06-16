@@ -19,5 +19,5 @@ private:
     TSPlayer LGetPlayer1(std::string const& name);
     TSMap LGetMap0(uint32_t mapid, uint32_t instanceId);
     TSMap LGetMap1(uint32_t mapid);
-    friend class TSLuaState;
+    friend class TSLua;
 };

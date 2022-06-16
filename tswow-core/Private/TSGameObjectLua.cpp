@@ -13,7 +13,7 @@
 #include "TSVehicle.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_gameobject_methods(sol::state& state)
+void TSLua::load_gameobject_methods(sol::state& state)
 {
     auto ts_gameobject = state.new_usertype<TSGameObject>("TSGameObject", sol::base_classes, sol::bases<TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
     load_world_object_methods_t(state, ts_gameobject, "TSGameObject");

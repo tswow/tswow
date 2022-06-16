@@ -4,7 +4,7 @@
 #include "TSWorldEntity.h"
 
 template <typename C, typename T>
-void TSLuaState::load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name)
+void TSLua::load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name)
 {
     LUA_FIELD(target, TSWorldEntityProvider<C>, GetEntityGroup);
     LUA_FIELD(target, TSWorldEntityProvider<C>, RemoveEntityGroup);

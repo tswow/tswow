@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSWorldEntity.h"
 
-void TSLuaState::load_worldentity_methods(sol::state & state)
+void TSLua::load_worldentity_methods(sol::state & state)
 {
     auto ts_worldobjectgroup = state.new_usertype<TSWorldObjectGroup>("TSWorldObjectGroup");
     LUA_FIELD(ts_worldobjectgroup, TSWorldObjectGroup, Add);

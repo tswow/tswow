@@ -6,7 +6,7 @@
 #include "DBCStores.h"
 #include <vector>
 
-void TSLuaState::load_achievement_methods(sol::state& state)
+void TSLua::load_achievement_methods(sol::state& state)
 {
     auto ts_achievemententry = state.new_usertype<TSAchievementEntry>("TSAchievementEntry");
     LUA_FIELD(ts_achievemententry, TSAchievementEntry, GetEntry);

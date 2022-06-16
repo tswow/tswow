@@ -5,7 +5,7 @@
 #include "TSSpellInfo.h"
 #include "TSGameObject.h"
 
-void TSLuaState::load_smartscript_methods(sol::state& state)
+void TSLua::load_smartscript_methods(sol::state& state)
 {
     auto ts_condition = state.new_usertype<TSCondition>("TSCondition");
     LUA_FIELD(ts_condition, TSCondition, GetSourceType);

@@ -10,7 +10,7 @@
 #include "TSGroup.h"
 #include "TSWorldPacket.h"
 
-void TSLuaState::load_battleground_methods(sol::state& state)
+void TSLua::load_battleground_methods(sol::state& state)
 {
     auto ts_battlegroundplayer = state.new_usertype<TSBattlegroundPlayer>("TSBattlegroundPlayer");
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetGUID);

@@ -146,7 +146,7 @@ public:
 
     void DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback);
 private:
-    friend class TSLuaState;
+    friend class TSLua;
 
     uint32 LCastSpell0(TSWorldObject target, uint32 spell, bool triggered);
     uint32 LCastSpell1(TSWorldObject target, uint32 spell);

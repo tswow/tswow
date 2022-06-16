@@ -132,7 +132,7 @@ public:
             }
             else
             {
-                TSLuaState::handle_error(m_lua_callback(ctx, this));
+                TSLua::handle_error(m_lua_callback(ctx, this));
             }
 
             m_lastTick = n;
@@ -155,7 +155,7 @@ public:
     }
 private:
     std::string LGetName() { return GetName().std_str(); }
-    friend class TSLuaState;
+    friend class TSLua;
     friend class TSTimers<T>;
 };
 

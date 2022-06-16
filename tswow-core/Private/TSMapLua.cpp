@@ -10,7 +10,7 @@
 #include "TSBattleground.h"
 #include "TSInstance.h"
 
-void TSLuaState::load_map_methods(sol::state& state)
+void TSLua::load_map_methods(sol::state& state)
 {
     auto ts_map = state.new_usertype<TSMap>("TSMap", sol::base_classes, sol::bases<TSEntityProvider, TSWorldEntityProvider<TSMap>>());
     load_map_methods_t(state, ts_map, "TSMap");

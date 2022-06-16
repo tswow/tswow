@@ -12,7 +12,7 @@
 #include "TSCreature.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_unit_methods(sol::state& state)
+void TSLua::load_unit_methods(sol::state& state)
 {
     auto ts_unit = state.new_usertype<TSUnit>("TSUnit", sol::base_classes, sol::bases<TSWorldObject, TSObject, TSWorldEntityProvider<TSWorldObject>, TSEntityProvider>());
     load_unit_methods_t(state, ts_unit, "TSUnit");

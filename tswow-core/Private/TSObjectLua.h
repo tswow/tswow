@@ -5,7 +5,7 @@
 #include "TSEntityLua.h"
 
 template <typename T>
-void TSLuaState::load_object_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& name)
+void TSLua::load_object_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& name)
 {
     load_entity_methods_t<T>(state, target, name);
     LUA_FIELD(target, TSObject, IsNull);

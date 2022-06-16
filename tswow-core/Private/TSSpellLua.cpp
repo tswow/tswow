@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSSpell.h"
 
-void TSLuaState::load_spell_methods(sol::state& state)
+void TSLua::load_spell_methods(sol::state& state)
 {
     auto ts_spell = state.new_usertype<TSSpell>("TSSpell");
     LUA_FIELD(ts_spell, TSSpell, IsAutoRepeat);

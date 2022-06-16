@@ -59,5 +59,5 @@ private:
     void LJoinChannel1(TSPlayer player);
 
     void LSay(uint64 guid, std::string const& what, uint32 lang);
-    friend class TSLuaState;
+    friend class TSLua;
 };

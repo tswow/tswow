@@ -5,7 +5,7 @@
 #include "TSItem.h"
 #include "TSCreature.h"
 
-void TSLuaState::load_outfit_methods(sol::state& state)
+void TSLua::load_outfit_methods(sol::state& state)
 {
 #if TRINITY
     auto ts_outfit = state.new_usertype<TSOutfit>("TSOutfit");
