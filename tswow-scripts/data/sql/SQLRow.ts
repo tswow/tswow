@@ -95,6 +95,46 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
         return Object.assign({}, this.obj);
     }
 
+    protected _generatePreparedDeleteStatement() {
+        const pkFields: string[] = Row.primaryKeyFields(this);
+        const text = `DELETE FROM ${this.table.name} WHERE `
+        + `${pkFields.map((x)=>{
+            return `${x} = ?`
+        }).join(' AND ')};`
+        return text;
+    }
+
+    protected _generatePreparedStatement() {
+        const obj = this.objectify();
+        return `REPLACE INTO ${this.table.name} ` +
+            `(${Object.keys(obj).map(x=>`\`${x}\``).join(',')}) ` +
+            `VALUES (${Object.values(obj).map(() => '?')})`
+    }
+
+    protected _getPreparedStatements() {
+        return Object.values(this.objectify())
+    }
+
+    protected _getPreparedDeleteValues() {
+        return this.primaryKeys();
+    }
+
+    static generatePreparedStatement(row: SqlRow<any,any>) {
+        return row._generatePreparedStatement();
+    }
+
+    static generatePreparedDeleteStatement(row: SqlRow<any,any>) {
+        return row._generatePreparedDeleteStatement();
+    }
+
+    static getPreparedStatement(row: SqlRow<any,any>) {
+        return row._getPreparedStatements();
+    }
+
+    static getPreparedDeleteStatement(row: SqlRow<any,any>) {
+        return row._getPreparedDeleteValues();
+    }
+
     protected generateSql() {
         const obj = this.objectify();
         translate(this.table.name,obj,'OUT')
@@ -113,11 +153,9 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
             return text;
         }
 
-        return `INSERT INTO ${this.table.name} ` +
+        return `REPLACE INTO ${this.table.name} ` +
         `(${Object.keys(obj).map(x=>`\`${x}\``).join(',')}) ` +
-        `VALUES (${Object.values(obj).map(x => x === null ? 'null' : typeof(x) === 'string' ? `"${x}"` : x)}) ` +
-        `ON DUPLICATE KEY UPDATE ` +
-        `${Object.keys(obj).map(x => `\`${x}\` = ${obj[x] === null ? 'null' : typeof(obj[x]) === 'string' ? `"${obj[x]}"` : obj[x]}`).join(', ')}`;
+        `VALUES (${Object.values(obj).map(x => x === null ? 'null' : typeof(x) === 'string' ? `"${x}"` : x)})`;
     }
 
     protected cloneInternal(keys: any[], c?: C) {
