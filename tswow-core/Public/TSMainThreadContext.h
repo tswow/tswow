@@ -9,6 +9,7 @@ class TSMap;
 class TC_GAME_API TSMainThreadContext {
 public:
     TSMainThreadContext* operator->() { return this; }
+    TSArray<TSPlayer> GetAllPlayers();
     TSPlayer GetPlayer(uint64_t guid);
     TSPlayer GetPlayer(TSString name);
     TSMap GetMap(uint32_t mapId, uint32_t instanceId = 0);

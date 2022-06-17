@@ -13,6 +13,17 @@
 #include "Item.h"
 #include "ObjectAccessor.h"
 
+TSArray<TSPlayer> TSMainThreadContext::GetAllPlayers()
+{
+    TSArray<TSPlayer> tbl;
+    std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
+
+    HashMapHolder<Player>::MapType const& m = ObjectAccessor::GetPlayers();
+    for (HashMapHolder<Player>::MapType::const_iterator itr = m.begin(); itr != m.end(); ++itr)
+        tbl.push(TSPlayer(itr->second));
+    return tbl;
+}
+
 TSPlayer TSMainThreadContext::GetPlayer(uint64_t guid)
 {
     return TSPlayer(ObjectAccessor::FindPlayer(ObjectGuid(guid)));

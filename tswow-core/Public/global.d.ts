@@ -3828,6 +3828,7 @@ declare interface TSQuest {
 }
 
 declare interface TSMainThreadContext {
+    GetAllPlayers(): TSArray<TSPlayer>;
     GetPlayer(guid: uint64): TSPlayer
     GetPlayer(name: string): TSPlayer
     GetMap(mapid: uint32, instanceId?: uint32): TSMap
