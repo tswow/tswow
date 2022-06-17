@@ -148,6 +148,8 @@ export class SqlConnection {
     static world_dst = new Connection(NodeConfig.DatabaseSettings('world',datasetName));
     static world_src = new Connection(NodeConfig.DatabaseSettings('world_source',datasetName))
 
+    private static query_cache: {[table: string]: {[query: string]: boolean}} = {}
+
     protected static endConnection() {
         Connection.end(this.auth);
         //Connection.end(this.characters);
@@ -165,6 +167,14 @@ export class SqlConnection {
 
     static getRows<C, Q, T extends SqlRow<C, Q>>(table: SqlTable<C, Q, T>, where: Q, first: boolean) {
         const whereSql = queryToSql(where, false);
+
+        // Check cache for the query, don't repeat
+        let tableCache = this.query_cache[table.name] || (this.query_cache[table.name] = {});
+        if(tableCache[whereSql]) {
+            return [];
+        }
+        tableCache[whereSql] = true;
+
         const sqlStr = `SELECT * FROM ${table.name} ${whereSql.length > 1 ? ` WHERE ${whereSql}` : ''} ${first ? 'LIMIT 1' : ''};`;
         const res = SqlConnection.querySource(sqlStr);
         const rowsOut: T[] = [];
