@@ -108,7 +108,7 @@ export class QuestPOIs extends MultiRowSystem<QuestPOI,Quest> {
                 return da > db ? 1 : -1
             })[0]
             if(!area) {
-                throw new Error(`No WorldMapArea found for coordinates, please specify one`)
+                throw new Error(`No WorldMapArea found for coordinates (${x}, ${y}), please specify one`)
             }
         } else {
             area = WorldMapAreaRegistry.load(worldMapArea);
