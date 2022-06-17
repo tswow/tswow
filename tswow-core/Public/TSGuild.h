@@ -59,3 +59,8 @@ private:
     void LSendPacketToRanked(TSWorldPacket data, uint8 ranked);
     friend class TSLua;
 };
+
+TSGuild TC_GAME_API GetGuild(uint32 id);
+TSGuild TC_GAME_API GetGuildByName(TSString name);
+TSGuild TC_GAME_API LGetGuildByName(std::string const& name);
+TSGuild TC_GAME_API GetGuildByLeader(uint64 owner);

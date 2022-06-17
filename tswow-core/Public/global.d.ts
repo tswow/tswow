@@ -9549,6 +9549,9 @@ declare function GetItemTemplate(entry: uint32): TSItemTemplate
 declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate
 declare function GetFactionTemplate(entry: uint32): TSFactionTemplate
 declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate
+declare function GetGuild(guid: uint32): TSGuild
+declare function GetGuildByName(name: string): TSGuild
+declare function GetGuildByLeader(guid: uint64): TSGuild
 
 // tracy
 declare type ZoneCategory = uint32;

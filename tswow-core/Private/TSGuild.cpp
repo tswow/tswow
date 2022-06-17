@@ -15,14 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <memory.h>
-#include "Object.h"
-#include "Guild.h"
-
 #include "TSIncludes.h"
 #include "TSGuild.h"
 #include "TSPlayer.h"
 #include "TSWorldPacket.h"
+
+#include "Object.h"
+#include "Guild.h"
+#include "GuildMgr.h"
+
+#include <memory.h>
 
 TSGuild::TSGuild(Guild *guild)
 {
@@ -304,3 +306,24 @@ void TSGuild::LSendPacketToRanked(TSWorldPacket data, uint8 ranked)
 {
     SendPacketToRanked(data, ranked);
 }
+
+TSGuild GetGuild(uint32 id)
+{
+    return TSGuild(sGuildMgr->GetGuildById(id));
+}
+
+TSGuild GetGuildByName(TSString name)
+{
+    return TSGuild(sGuildMgr->GetGuildByName(name.std_str()));
+}
+
+TSGuild LGetGuildByName(std::string const& name)
+{
+    return TSGuild(sGuildMgr->GetGuildByName(name));
+}
+
+TSGuild GetGuildByLeader(uint64 owner)
+{
+    return TSGuild(sGuildMgr->GetGuildByLeader(ObjectGuid(owner)));
+}
+

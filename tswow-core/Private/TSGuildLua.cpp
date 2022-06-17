@@ -24,4 +24,8 @@ void TSLua::load_guild_methods(sol::state& state)
     ts_guild.set_function("GetInfo", &TSGuild::LGetInfo);
     ts_guild.set_function("SendPacket", &TSGuild::LSendPacket);
     ts_guild.set_function("SendPacketToRanked", &TSGuild::LSendPacketToRanked);
+
+    state.set_function("GetGuildByName", LGetGuildByName);
+    state.set_function("GetGuild", GetGuild);
+    state.set_function("GetGuildByLeader", GetGuildByLeader);
 }
