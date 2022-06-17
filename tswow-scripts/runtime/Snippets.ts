@@ -1,4 +1,7 @@
+import { Args } from "../util/Args";
 import { ipaths } from "../util/Paths";
+import { BuildCommand } from "./CommandActions";
+import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
 
 export namespace Snippets {
@@ -236,5 +239,14 @@ export namespace Snippets {
         if(!ipaths.vscode.snippets_out.exists()) {
             generateSnippets(Module.endpoints(),false,false);
         }
+
+        BuildCommand.addCommand('snippets','','', args => {
+            generateSnippets(Identifier.getModulesOrAll(args),
+                Args.hasFlag('remove-comments', args),
+                Args.hasFlag('no-empty-trail',args),
+                // todo: broken
+                //Args.getString('indention','4',args)
+            )
+        })
     }
 }
