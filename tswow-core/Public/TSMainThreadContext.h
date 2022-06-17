@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSMain.h"
+#include "TSLua.h"
 #include <memory>
 
 class TSPlayer;
@@ -19,5 +20,6 @@ private:
     TSPlayer LGetPlayer1(std::string const& name);
     TSMap LGetMap0(uint32_t mapid, uint32_t instanceId);
     TSMap LGetMap1(uint32_t mapid);
+    TSLua::Array<TSPlayer> LGetAllPlayers();
     friend class TSLua;
 };

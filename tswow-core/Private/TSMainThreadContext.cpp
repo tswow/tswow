@@ -82,3 +82,8 @@ void TSMainThreadContext::SendMail(uint8 senderType, uint64 from, uint64 to, TSS
 #endif
     CharacterDatabase.CommitTransaction(trans);
 }
+
+TSLua::Array<TSPlayer> TSMainThreadContext::LGetAllPlayers()
+{
+    return sol::as_table(GetAllPlayers());
+}

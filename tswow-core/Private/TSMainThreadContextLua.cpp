@@ -12,4 +12,5 @@ void TSLua::load_main_thread_context_methods(sol::state& state)
         &TSMainThreadContext::LGetMap0,
         &TSMainThreadContext::LGetMap1
     ));
+    main_thread_context.set_function("GetAllPlayers", &TSMainThreadContext::LGetAllPlayers);
 }
