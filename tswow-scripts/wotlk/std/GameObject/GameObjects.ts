@@ -57,7 +57,7 @@ export class GameObjectInstanceRegistryClass
         return new GameObjectInstance(r);
     }
     protected FindByID(id: number): GameObjectRow {
-        return DBC.GameObject.query({guid:id});
+        return DBC.GameObject.findById(id);
     }
     protected EmptyQuery(): GameObjectQuery {
         return {}

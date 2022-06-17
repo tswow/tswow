@@ -19,7 +19,7 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
     }
 
     protected FindByID(id: number): GameObjectTemplateRow {
-        return DBC.GameObjectTemplate.query({entry:id});
+        return DBC.GameObjectTemplate.findById(id);
     }
 
     protected EmptyQuery(): GameObjectTemplateQuery {

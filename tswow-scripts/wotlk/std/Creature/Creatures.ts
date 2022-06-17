@@ -87,7 +87,7 @@ export class CreatureTemplateRegistryClass
         return new CreatureTemplate(r);
     }
     protected FindByID(id: number): CreatureTemplateRow {
-        return DBC.CreatureTemplate.query({entry:id});
+        return DBC.CreatureTemplate.findById(id);
     }
     protected EmptyQuery(): CreatureTemplateQuery {
         return {}

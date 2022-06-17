@@ -287,7 +287,7 @@ extends RegistryStatic<ItemTemplate,ItemTemplateRow,ItemTemplateQuery> {
         return new ItemTemplate(r)
     }
     protected FindByID(id: number): ItemTemplateRow {
-        return DBC.ItemTemplate.query({entry:id});
+        return DBC.ItemTemplate.findById(id);
     }
     protected EmptyQuery(): ItemTemplateQuery {
         return {}

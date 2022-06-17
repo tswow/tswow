@@ -196,7 +196,7 @@ export class BroadcastTextRegistryClass
         r.Text.Female.set(parent.Text.Female.objectify())
     }
     protected FindByID(id: number): BroadcastTextRow {
-        return DBC.BroadcastText.query({ID:id})
+        return DBC.BroadcastText.findById(id);
     }
     protected EmptyQuery(): BroadcastTextQuery {
         return {}
