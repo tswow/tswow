@@ -4710,6 +4710,16 @@ declare function setprinthandler(handler: (...args: any[]) => any): void;
  */
 declare function wipe<T extends object>(table: T): T;
 
+/**
+ * Returns the hyperlink for a spell.
+ *
+ * @returns link, spellID
+ * @see https://wowpedia.fandom.com/wiki/API_GetSpellLink
+ * @description Returns the hyperlink for a spell.
+ * @tupleReturn
+ */
+ declare function GetSpellLink(spell:number|string, bookType?:string): [string,number];
+
 
 declare namespace WoWAPI {
     type TypedEvents = {
@@ -13891,6 +13901,7 @@ declare namespace WoWAPI {
 /**
  * global lua namespace
  */
+
 declare const _G: { [prop: string]: any };
 declare const SlashCmdList:{[msg:string]: (message: string) => void};
 declare const InterfaceOptionsFramePanelContainer: WoWAPI.Region;
@@ -13915,6 +13926,11 @@ declare const TargetFrame: WoWAPI.Frame;
 declare const FocusFrame: WoWAPI.Frame;
 declare const WorldFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
+
+declare function loadstring(code: string, name?: string): ()=>void;
+declare function assert(code: ()=>void):() => string;
+declare function type(thing: any): string;
+declare function tonumber(value: string|number, radix?:number): number
 
 /**
  * ##################################
