@@ -16,35 +16,11 @@
  */
 
 #include "TSIncludes.h"
-#include "GameEventMgr.h"
-#include "Object.h"
-#include "Player.h"
+#include "TSSpell.h"
 #include "TSIncludes.h"
 #include "TSPlayer.h"
-#include "Player.h"
-#include "ArenaTeam.h"
-#include "SpellMgr.h"
-#include "GuildMgr.h"
-#include "AccountMgr.h"
-#include "AuctionHouseMgr.h"
-#include "Guild.h"
-#include "Item.h"
-#if TRINITY
-#include "SpellHistory.h"
-#include "Trainer.h"
-#endif
-#include "Group.h"
-#include "GroupMgr.h"
-#include "GridNotifiers.h"
-#include "ReputationMgr.h"
-#include "Chat.h"
-#include "GossipDef.h"
-#include "Mail.h"
-#include "ObjectMgr.h"
-#include "DBCStructure.h"
 #include "TSBattleground.h"
 #include "TSMap.h"
-
 #include "TSInstance.h"
 #include "TSJson.h"
 #include "TSUnit.h"
@@ -58,6 +34,31 @@
 #include "TSWorldPacket.h"
 #include "TSCreature.h"
 #include "TSMail.h"
+
+#if TRINITY
+#include "SpellHistory.h"
+#include "Trainer.h"
+#endif
+#include "GameEventMgr.h"
+#include "Object.h"
+#include "Player.h"
+#include "Player.h"
+#include "ArenaTeam.h"
+#include "SpellMgr.h"
+#include "GuildMgr.h"
+#include "AccountMgr.h"
+#include "AuctionHouseMgr.h"
+#include "Guild.h"
+#include "Item.h"
+#include "Group.h"
+#include "GroupMgr.h"
+#include "GridNotifiers.h"
+#include "ReputationMgr.h"
+#include "Chat.h"
+#include "GossipDef.h"
+#include "Mail.h"
+#include "ObjectMgr.h"
+#include "DBCStructure.h"
 #include "LFG.h"
 
 #include <memory.h>
@@ -4513,7 +4514,28 @@ TSUnit TSPlayer::GetGlobalSelection()
     }
 }
 
-uint32 TSPlayer::GetQuestRewardTalentCount()
+uint32 TSPlayer::GetQuestRewardTempTalentPoints()
 {
     return player->m_questRewardTalentCount;
 }
+
+uint32 TSPlayer::GetQuestRewardPermTalentPoints()
+{
+    return player->m_questRewardPermTalentCount;
+}
+
+TSDictionary<uint32, TSPlayerSpell> TSPlayer::GetSpellMap()
+{
+    TSDictionary<uint32, TSPlayerSpell> map;
+    for (auto& [spell, info] : player->GetSpellMap())
+    {
+        map.set(spell, TSPlayerSpell{ uint8(info.state),info.active,info.dependent,info.disabled });
+    }
+    return map;
+}
+
+TSLua::Dictionary<uint32, TSPlayerSpell> TSPlayer::LGetSpellMap()
+{
+    return sol::as_table(*GetSpellMap()._map);
+}
+

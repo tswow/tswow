@@ -458,3 +458,28 @@ void TSDispelInfo::SetRemovedCharges(uint8 amount)
     m_info->SetRemovedCharges(amount);
 }
 
+TSPlayerSpell::TSPlayerSpell(uint8 state, bool active, bool dependent, bool disabled)
+    : m_state(state), m_active(active), m_dependent(dependent), m_disabled(disabled)
+{}
+
+
+uint8 TSPlayerSpell::GetState()
+{
+    return m_state;
+}
+
+bool TSPlayerSpell::GetActive()
+{
+    return m_active;
+}
+
+bool TSPlayerSpell::GetDependent()
+{
+    return m_dependent;
+}
+
+bool TSPlayerSpell::GetDisabled()
+{
+    return m_disabled;
+}
+

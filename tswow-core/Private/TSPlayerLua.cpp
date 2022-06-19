@@ -272,6 +272,8 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, GetMails);
     LUA_FIELD(ts_player, TSPlayer, RemoveMail);
     LUA_FIELD(ts_player, TSPlayer, GetFreeInventorySpace);
+    LUA_FIELD(ts_player, TSPlayer, GetQuestRewardTempTalentPoints);
+    LUA_FIELD(ts_player, TSPlayer, GetQuestRewardPermTalentPoints);
     ts_player.set_function("GetPlayerIP", &TSPlayer::LGetPlayerIP);
     ts_player.set_function("GetGuildName", &TSPlayer::LGetGuildName);
     ts_player.set_function("GetAccountName", &TSPlayer::LGetAccountName);
@@ -355,4 +357,5 @@ void TSLua::load_player_methods(sol::state& state)
         , &TSPlayer::LGetOutfitCopy2
         , &TSPlayer::LGetOutfitCopy3
     ));
+    ts_player.set_function("GetSpellMap", &TSPlayer::LGetSpellMap);
 }

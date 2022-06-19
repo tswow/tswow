@@ -128,8 +128,11 @@ public:
     uint32 GetTargetCreatureType();
     uint32 GetTargets();
     uint32 GetTotem(uint32 index);
+    uint32 GetTalentCost();
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);
+TC_GAME_API uint32 GetTalentSpellCost(uint32 entry);
+

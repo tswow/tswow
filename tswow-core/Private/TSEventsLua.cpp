@@ -105,6 +105,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCalcGroupGain);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcIntellectManaBonus);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcSkillGainChance);
+    LUA_HANDLE(player_events, PlayerEvents, OnCalcTalentPoints);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);

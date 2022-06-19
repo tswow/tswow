@@ -55,4 +55,10 @@ void TSLua::load_spell_methods(sol::state& state)
     LUA_FIELD(ts_dispel_info, TSDispelInfo, GetDispellerSpellId);
     LUA_FIELD(ts_dispel_info, TSDispelInfo, GetRemovedCharges);
     LUA_FIELD(ts_dispel_info, TSDispelInfo, SetRemovedCharges);
+
+    auto ts_player_spell = state.new_usertype<TSPlayerSpell>("TSPlayerSpell");
+    LUA_FIELD(ts_player_spell, TSPlayerSpell, GetState);
+    LUA_FIELD(ts_player_spell, TSPlayerSpell, GetActive);
+    LUA_FIELD(ts_player_spell, TSPlayerSpell, GetDependent);
+    LUA_FIELD(ts_player_spell, TSPlayerSpell, GetDisabled);
 }

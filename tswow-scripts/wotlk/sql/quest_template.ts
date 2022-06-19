@@ -16,10 +16,10 @@
 /* tslint:disable */
 import { float, int, mediumint, smallint, text, tinyint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { SQLCell, SQLCellReadOnly } from '../../data/sql/SQLCell'
 import { SqlRow } from '../../data/sql/SQLRow'
 import { SqlTable } from '../../data/sql/SQLTable'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -309,6 +309,11 @@ export class quest_templateRow extends SqlRow<quest_templateCreator,quest_templa
      * No comment (yet!)
      */
     get RewardTalents() {return new SQLCell<tinyint, this>(this, 'RewardTalents')}
+
+    /**
+     * No comment (yet!)
+     */
+    get RewardTalentsPermanent() {return new SQLCell<tinyint, this>(this, 'RewardTalentsPermanent')}
 
     /**
      * No comment (yet!)

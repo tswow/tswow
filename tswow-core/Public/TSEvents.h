@@ -322,7 +322,7 @@ struct TSEvents
              , TSMutable<float>
          )
 
-         EVENT(OnCalculateTalentPoints
+         EVENT(OnCalcTalentPoints
              , TSPlayer
              , TSMutable<uint32>
          )

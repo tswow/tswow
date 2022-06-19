@@ -489,3 +489,8 @@ uint32 TSSpellInfo::GetTotem(uint32 index)
     return info->Totem[index];
 }
 
+
+uint32 TSSpellInfo::GetTalentCost()
+{
+    return GetTalentSpellCost(info->Id);
+}

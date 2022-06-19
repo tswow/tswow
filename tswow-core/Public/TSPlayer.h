@@ -31,6 +31,7 @@ class TSJsonArray;
 class TSBattleground;
 class TSBattlegroundPlayer;
 class TSInstance;
+class TSPlayerSpell;
 
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit {
@@ -46,6 +47,7 @@ public:
 	bool HasQuest(uint32 quest);
 	bool HasSkill(uint32 skill);
 	bool HasSpell(uint32 id);
+	TSDictionary<uint32, TSPlayerSpell> GetSpellMap();
 	bool HasAtLoginFlag(uint32 flag);
 	bool HasQuestForGO(int32 entry);
 	bool HasTitle(uint32 id);
@@ -118,7 +120,8 @@ public:
 	uint32 GetGuildRank();
 	uint32 GetFreeTalentPoints();
 	uint32 GetTalentPointsInTree(uint32 tabId);
-	uint32 GetQuestRewardTalentCount();
+	uint32 GetQuestRewardTempTalentPoints();
+	uint32 GetQuestRewardPermTalentPoints();
 	uint32 GetFreeInventorySpace();
 	TSString GetGuildName();
 	int32 GetReputation(uint32 faction);
@@ -428,6 +431,8 @@ private:
 
 		void LSendItemQueryPacket0(uint32 entry);
 		void LSendItemQueryPacket1(TSItemTemplate item);
+
+		TSLua::Dictionary<uint32, TSPlayerSpell> LGetSpellMap();
 
 		friend class TSLua;
 };

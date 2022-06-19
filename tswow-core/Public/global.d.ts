@@ -133,6 +133,8 @@ declare const enum WeaponAttackType {} /** SharedDefines.h:WeaponAttackType */
 
 declare const enum RuneType {} /** Player.h:RuneType */
 
+declare const enum PlayerSpellState {} /** Player.h:PlayerSpellState */
+
 declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
 declare const enum AuraEffectHandleMode {} /** SpellAuraDefines.h:AuraEffectHandleModes */
@@ -256,7 +258,25 @@ declare interface TSPlayer extends TSUnit {
     CanBeDPS(): bool
     CanBeLeader(): bool
     GetTalentPointsInTree(): uint32
-    GetQuestRewardTalentCount(): uint32
+
+    /**
+     * Returns the amount of "temporary" talent points rewarded by quests to this player.
+     *
+     * This is the type of talent points used by death knights in the scarlet enclave map.
+     * By default it has no use for any other class or in any other map, but can be used
+     * by custom scripts to replicate similar effects for other classes.
+     *
+     * @see TSEvents.Player.OnCalcTalentPoints
+     */
+    GetQuestRewardTempTalentPoints(): uint32
+
+    /**
+     * Returns the amount of talent points rewarded by quests to this player.
+     *
+     * Permanent talent points are by default always added on top of the players normal
+     * talent count.
+     */
+    GetQuestRewardPermTalentPoints(): uint32
     GetBG(): TSBattleground
     GetBGPlayer(): TSBattlegroundPlayer
 
@@ -333,6 +353,11 @@ declare interface TSPlayer extends TSUnit {
      * @return bool hasSpell
      */
     HasSpell(id : uint32) : bool
+
+    /**
+     * Returns all spells known by this player
+     */
+    GetSpellMap(): TSDictionary<uint32,TSPlayerSpell>
 
     /**
      * Returns true if [Player] has specified login flag
@@ -4893,6 +4918,13 @@ declare interface TSSpell {
     Finish() : void
 }
 
+declare interface TSPlayerSpell {
+    GetState(): PlayerSpellState
+    GetActive(): boolean
+    GetDependent(): boolean
+    GetDisabled(): boolean
+}
+
 declare interface TSSpellModifier {
     GetOp(): uint32;
     SetOp(op: uint32): void;
@@ -7291,6 +7323,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetTargets() : uint32;
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): uint32;
+    GetTalentCost(): uint32;
 }
 
 declare class TSSpellEffectInfo {
@@ -7675,7 +7708,7 @@ declare namespace _hidden {
             , activeGlyphSlot: TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
         ) => void)
 
-        OnCalculateTalentPoints(callback: (player: TSPlayer, talents: TSMutable<uint32>) => void);
+        OnCalcTalentPoints(callback: (player: TSPlayer, talents: TSMutable<uint32>) => void);
         OnReputationPriceDiscount(callback: (
               player: TSPlayer
             , faction: TSFactionTemplate
@@ -9545,6 +9578,7 @@ declare function GetAuthDBConnection(): TSAuthDatabaseConnection
 declare function GetCharactersDBConnection(): TSCharactersDatabaseConnection
 
 declare function GetSpellInfo(entry: uint32): TSSpellInfo
+declare function GetTalentSpellCost(entry: uint32): uint32
 declare function GetItemTemplate(entry: uint32): TSItemTemplate
 declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate
 declare function GetFactionTemplate(entry: uint32): TSFactionTemplate
