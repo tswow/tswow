@@ -13117,6 +13117,7 @@ declare namespace WoWAPI {
     }
 
     interface GameTooltipHookScript extends ObjectHookScript {
+        HookScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
         HookScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
         HookScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
         HookScript(event: "OnTooltipSetAchievement", handler: (tooltip: GameTooltip) => void): void;
@@ -13129,7 +13130,8 @@ declare namespace WoWAPI {
         HookScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
 
-    interface GameTooltipSetScript extends ObjectetScript {
+    interface GameTooltipSetScript extends ObjectSetScript {
+        SetScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
         SetScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
         SetScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetAchievement", handler: (tooltip: GameTooltip) => void): void;
@@ -13141,6 +13143,7 @@ declare namespace WoWAPI {
         SetScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
+	
     interface Backdrop {
         /**
          * Which texture file to use as frame background (.blp or .tga format)
