@@ -307,4 +307,13 @@ void TSLua::Load()
             }
         }
     }
+
+    for (auto& [_,table] : modules)
+    {
+        auto v = table["Main"];
+        if (v.get_type() == sol::type::function)
+        {
+            v(&ts_events);
+        }
+    }
 }
