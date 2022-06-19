@@ -85,5 +85,5 @@ void TSMainThreadContext::SendMail(uint8 senderType, uint64 from, uint64 to, TSS
 
 TSLua::Array<TSPlayer> TSMainThreadContext::LGetAllPlayers()
 {
-    return sol::as_table(GetAllPlayers());
+    return sol::as_table(*GetAllPlayers().vec);
 }
