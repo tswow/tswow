@@ -68,3 +68,4 @@
 #include "TSProfile.h"
 #include "TSMainThreadContext.h"
 #include "TSDBJson.h"
+#include "TSFileSystem.h"
