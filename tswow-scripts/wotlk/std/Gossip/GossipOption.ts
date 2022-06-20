@@ -38,7 +38,8 @@ export class GossipOption extends CellSystemTop {
     get Icon() {
         return makeEnumCell(GossipIcon, this, this.row.OptionIcon);
     }
-    get Action(){return new GossipOptionAction(this); }
+    get OptionID() { return this.row.OptionID.get(); }
+    get Action(){ return new GossipOptionAction(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get Gossip() { return this.wrap(this.row.ActionMenuID); }
     get Text() {
@@ -59,7 +60,7 @@ export class GossipOptions extends MultiRowSystem<GossipOption,Gossip> {
 
     addGet() {
         return new GossipOption(
-             SQL.gossip_menu_option.add(this.owner.ID, this.length)
+             SQL.gossip_menu_option.add(this.owner.ID, this.getAllRows().reduce((p,c)=>c.OptionID > p ? c.OptionID : p, -1 ) + 1)
             .OptionType.set(1)
             .OptionNpcFlag.set(1)
             .VerifiedBuild.set(17688)
