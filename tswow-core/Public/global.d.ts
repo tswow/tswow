@@ -244,7 +244,7 @@ declare interface TSAchievementCriteriaEntry
     GetStartTimer(): uint32;
 }
 
-declare interface TSPlayer extends TSUnit {
+declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     LearnClassSpells(trainer: boolean, quests: boolean, limitQuestsByLevel?: boolean);
     SendData(data: any)
     SendUpdateWorldState(worldState: uint32, value: uint32);
@@ -2221,8 +2221,6 @@ declare class TSEntityProvider {
     SetObject<T>(key: string, obj: T): T;
     HasObject(key: string): boolean;
     GetObject<T>(key: string, value: T): T;
-    GetDBObject<T>(key: string, sql: string, value: T): T;
-
     SetInt(key: string, value: int32): int32;
     HasInt(key: string): boolean;
     GetInt(key: string, def?: int32): int32;
@@ -9146,6 +9144,40 @@ declare class _TSJSON {
     parseArray(str: string): TSJsonArray
 }
 declare const TSJSON: _TSJSON
+
+declare interface TSDBJsonProvider {
+    SetDBNumber(key: string, value: double): void;
+    SetDBUInt32(key: string, value: uint32): void;
+    SetDBUInt64(key: string, value: uint64): void;
+    SetDBInt32(key: string, value: int32): void;
+    SetDBInt64(key: string, value: int64): void;
+    SetDBFloat(key: string, value: float): void;
+    SetDBNumber(key: string, value: double): void;
+    SetDBString(key: string, value: string): void;
+    SetDBBool(key: string, value: bool): void
+
+    /**
+     * @lua_only - This method is not available in livescripts.
+     */
+    SetDBObject(key: string, value: any): void
+    GetDBNumber(key: string, def?: double): double;
+    GetDBUInt32(key: string, def?: uint32): uint32;
+    GetDBInt32(key: string, def?: int32): int32;
+    GetDBUInt64(key: string, def?: uint64): uint64;
+    GetDBInt64(key: string, def?: int64): int64;
+    GetDBFloat(key: string, def?: float): float;
+    GetDBString(key: string, def?: string): string;
+    GetDBBool(key: string, def?: bool): bool;
+    /**
+     * @lua_only - This method is not available in livescripts.
+     */
+    GetDBObject(key: string, def?: any): any;
+    DeleteDBField(key: string): void;
+    SaveDBJson(): void;
+    LoadDBJson(): void;
+    DeleteDBJson(): void;
+    ClearDBJson(): void;
+}
 
 // Global.h
 declare function GetCurrTime(): uint32;

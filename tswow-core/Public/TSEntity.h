@@ -29,8 +29,6 @@
 #include <set>
 #include <mutex>
 
-#define GetDBObject GetObject
-
 struct TC_GAME_API TSCompiledClass {
     std::shared_ptr<void> ptr;
     TSCompiledClass(std::shared_ptr<void> ptr);

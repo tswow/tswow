@@ -34,13 +34,14 @@ class TSInstance;
 class TSPlayerSpell;
 
 struct TSMail;
-class TC_GAME_API TSPlayer : public TSUnit {
+class TC_GAME_API TSPlayer : public TSUnit, public TSDBJsonProvider {
 public:
 	Player* player;
 	TSPlayer(Player* player);
 	TSPlayer();
 	TSPlayer* operator->() { return this;}
 	bool IsNull() { return player == nullptr; };
+	TSDBJson* get_json() override;
 	bool CanTitanGrip();
 	bool HasTalent(uint32 spellId, uint8 spec);
 	bool HasAchieved(uint32 achievementId);

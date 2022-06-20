@@ -65,6 +65,7 @@ private:
     static void load_map_methods(sol::state & state);
     static void load_database_methods(sol::state & state);
     static void load_faction_template_methods(sol::state& state);
+    static void load_db_json_methods(sol::state& state);
     static void load_global_functions(sol::state& state);
     static void load_main_thread_context_methods(sol::state& state);
 

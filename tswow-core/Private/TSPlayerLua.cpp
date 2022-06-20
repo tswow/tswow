@@ -1,6 +1,7 @@
 #include "TSLua.h"
 #include "TSPlayer.h"
 #include "TSUnitLua.h"
+#include "TSDBjson.h"
 
 #include "TSPlayer.h"
 #include "TSBattleground.h"
@@ -24,7 +25,7 @@
 
 void TSLua::load_player_methods(sol::state& state)
 {
-    auto ts_player = state.new_usertype <TSPlayer>("TSPlayer", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject,TSEntityProvider,TSWorldEntityProvider<TSWorldObject>>());
+    auto ts_player = state.new_usertype <TSPlayer>("TSPlayer", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject,TSEntityProvider,TSWorldEntityProvider<TSWorldObject>, TSDBJsonProvider>());
     load_unit_methods_t(state, ts_player, "TSPlayer");
     LUA_FIELD(ts_player, TSPlayer, GetTalentPointsInTree);
     LUA_FIELD(ts_player, TSPlayer, CanTitanGrip);

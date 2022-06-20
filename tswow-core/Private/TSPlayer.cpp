@@ -4539,3 +4539,7 @@ TSLua::Dictionary<uint32, TSPlayerSpell> TSPlayer::LGetSpellMap()
     return sol::as_table(*GetSpellMap()._map);
 }
 
+TSDBJson* TSPlayer::get_json()
+{
+    return &player->m_db_json;
+}
