@@ -7,22 +7,26 @@ local LuaNetworkOpcode = {
     ["WRITE_INT16"]         = 5,
     ["WRITE_UINT32"]        = 6,
     ["WRITE_INT32"]         = 7,
-    ["WRITE_FLOAT"]         = 8,
-    ["WRITE_DOUBLE"]        = 9,
-    ["WRITE_STRING"]        = 10,
+    ["WRITE_UINT64"]        = 8,
+    ["WRITE_INT64"]         = 9,
+    ["WRITE_FLOAT"]         = 10,
+    ["WRITE_DOUBLE"]        = 11,
+    ["WRITE_STRING"]        = 12,
 
-    ["READ_UINT8"]          = 11,
-    ["READ_INT8"]           = 12,
-    ["READ_UINT16"]         = 13,
-    ["READ_INT16"]          = 14,
-    ["READ_UINT32"]         = 15,
-    ["READ_INT32"]          = 16,
-    ["READ_FLOAT"]          = 17,
-    ["READ_DOUBLE"]         = 18,
-    ["READ_STRING"]         = 19,
-    ["MAKE_CUSTOM_PACKET"]  = 20,
-    ["SEND_CUSTOM_PACKET"]  = 21,
-    ["RESET_CUSTOM_PACKET"] = 22,
+    ["READ_UINT8"]          = 13,
+    ["READ_INT8"]           = 14,
+    ["READ_UINT16"]         = 15,
+    ["READ_INT16"]          = 16,
+    ["READ_UINT32"]         = 17,
+    ["READ_INT32"]          = 18,
+    ["READ_UINT64"]         = 19,
+    ["READ_INT64"]          = 20,
+    ["READ_FLOAT"]          = 21,
+    ["READ_DOUBLE"]         = 22,
+    ["READ_STRING"]         = 23,
+    ["MAKE_CUSTOM_PACKET"]  = 24,
+    ["SEND_CUSTOM_PACKET"]  = 25,
+    ["RESET_CUSTOM_PACKET"] = 26,
 };
 
 function CreateCustomPacket(opcode,size)
@@ -36,6 +40,9 @@ function CreateCustomPacket(opcode,size)
 
     function writer:WriteUInt32(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_UINT32,self.id,value); return self end
     function writer:WriteInt32(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_INT32,self.id,value); return self end
+    
+    function writer:WriteUInt64(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_UINT64,self.id,value); return self end
+    function writer:WriteInt64(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_INT64,self.id,value); return self end
 
     function writer:WriteFloat(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_FLOAT,self.id,value); return self end
     function writer:WriteDouble(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_DOUBLE,self.id,value); return self end
@@ -62,6 +69,9 @@ function __ReadCustomPacket()
 
     function reader:ReadUInt32() return _CLIENT_NETWORK(LuaNetworkOpcode.READ_UINT32) end
     function reader:ReadInt32() return _CLIENT_NETWORK(LuaNetworkOpcode.READ_INT32) end
+    
+    function reader:ReadUInt64() return _CLIENT_NETWORK(LuaNetworkOpcode.READ_UINT32) end
+    function reader:ReadInt64() return _CLIENT_NETWORK(LuaNetworkOpcode.READ_INT32) end
 
     function reader:ReadFloat() return _CLIENT_NETWORK(LuaNetworkOpcode.READ_FLOAT) end
     function reader:ReadDouble() return _CLIENT_NETWORK(LuaNetworkOpcode.READ_DOUBLE) end
