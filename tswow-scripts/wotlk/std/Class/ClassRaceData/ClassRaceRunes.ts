@@ -7,7 +7,6 @@ import { ClassRacePair } from "./ClassRaces";
 
 export class ClassRaceRunes extends CellSystem<ClassRacePair> {
     set(enabled: boolean) {
-        console.log(`Setting ${enabled}`)
         let row = SQL.class_has_runes.query({classID:this.owner.Class.get(),raceID:this.owner.Race.get()});
         if(enabled) {
             if(!row) {
@@ -34,9 +33,9 @@ finish('class-has-runes', () => {
 
     let classFilenameMap: {[key: number]: string} = {}
     let raceNameMap: {[key: number]: string} = {}
-    
+
     DBC.ChrRaces.queryAll({}).forEach(x=>{
-        raceNameMap[x.ID.get()] = x.Name.enGB.get()
+        raceNameMap[x.ID.get()] = x.ClientFilestring.get()
     })
 
     DBC.ChrClasses.queryAll({}).forEach(x=>{
@@ -53,7 +52,7 @@ finish('class-has-runes', () => {
         if(!classFile || !raceName) {
             return;
         }
-        if(!perClass[classFile]) {
+        if(perClass[classFile] === undefined) {
             perClass[classFile] = []
         }
         perClass[classFile].push(raceName)
