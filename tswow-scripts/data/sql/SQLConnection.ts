@@ -233,13 +233,14 @@ export class SqlConnection {
 
     static getRows<C, Q, T extends SqlRow<C, Q>>(table: SqlTable<C, Q, T>, where: Q, first: boolean) {
         const whereSql = queryToSql(where, false);
+        const whereLookup = whereSql + first;
 
         // Check cache for the query, don't repeat
         let tableCache = this.query_cache[table.name] || (this.query_cache[table.name] = {});
-        if(tableCache[whereSql]) {
+        if(tableCache[whereLookup]) {
             return [];
         }
-        tableCache[whereSql] = true;
+        tableCache[whereLookup] = true;
 
         const sqlStr = `SELECT * FROM ${table.name} ${whereSql.length > 1 ? ` WHERE ${whereSql}` : ''} ${first ? 'LIMIT 1' : ''};`;
         const res = SqlConnection.querySource(sqlStr);
