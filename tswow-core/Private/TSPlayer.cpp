@@ -4543,3 +4543,8 @@ TSDBJson* TSPlayer::get_json()
 {
     return &player->m_db_json;
 }
+
+bool TSPlayer::HasRunes()
+{
+    return player->HasRunes();
+}
