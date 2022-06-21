@@ -378,7 +378,7 @@ void TSAura::Remove()
 #endif
 }
 
-sol::as_table_t<std::vector<TSAuraApplication>> TSAura::LGetApplications()
+TSLua::Array<TSAuraApplication> TSAura::LGetApplications()
 {
     return sol::as_table(*GetApplications().vec);
 }

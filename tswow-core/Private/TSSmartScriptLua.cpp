@@ -5,9 +5,9 @@
 #include "TSSpellInfo.h"
 #include "TSGameObject.h"
 
-void TSLuaState::load_smartscript_methods(uint32_t modid)
+void TSLua::load_smartscript_methods(sol::state& state)
 {
-    auto ts_condition = new_usertype<TSCondition>("TSCondition");
+    auto ts_condition = state.new_usertype<TSCondition>("TSCondition");
     LUA_FIELD(ts_condition, TSCondition, GetSourceType);
     LUA_FIELD(ts_condition, TSCondition, GetSourceGroup);
     LUA_FIELD(ts_condition, TSCondition, GetSouceEntry);
@@ -28,11 +28,11 @@ void TSLuaState::load_smartscript_methods(uint32_t modid)
         , &TSCondition::LToString1
     ));
 
-    auto ts_conditionsourceinfo = new_usertype<TSConditionSourceInfo>("TSConditionSourceInfo");
+    auto ts_conditionsourceinfo = state.new_usertype<TSConditionSourceInfo>("TSConditionSourceInfo");
     LUA_FIELD(ts_conditionsourceinfo, TSConditionSourceInfo, GetTarget);
     LUA_FIELD(ts_conditionsourceinfo, TSConditionSourceInfo, GetLastFailedCondition);
 
-    auto ts_smartscriptvalues = new_usertype<TSSmartScriptValues>("TSSmartScriptValues");
+    auto ts_smartscriptvalues = state.new_usertype<TSSmartScriptValues>("TSSmartScriptValues");
     LUA_FIELD(ts_smartscriptvalues, TSSmartScriptValues, GetEntryOrGUID);
     LUA_FIELD(ts_smartscriptvalues, TSSmartScriptValues, GetSourceType);
     LUA_FIELD(ts_smartscriptvalues, TSSmartScriptValues, GetEventID);

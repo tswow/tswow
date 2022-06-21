@@ -65,3 +65,7 @@
 #include "TSORMGenerator.h"
 #include "TSBitwise.h"
 #include "TSGameObjectTemplate.h"
+#include "TSProfile.h"
+#include "TSMainThreadContext.h"
+#include "TSDBJson.h"
+#include "TSFileSystem.h"

@@ -1,7 +1,7 @@
-import { mpath } from "../util/FileSystem";
-import { WDirectory } from "../util/FileTree";
-import { CodeWriter } from "./codewriter";
-import { TRANSPILER_CHANGES } from "./version";
+import { mpath } from "../../util/FileSystem";
+import { WDirectory } from "../../util/FileTree";
+import { CodeWriter } from "../codewriter";
+import { TRANSPILER_CHANGES } from "../version";
 import ts = require("typescript");
 
 type DBType = 'world'|'auth'|'characters'

@@ -16,6 +16,7 @@
  */
 import { finish } from "../../../data/index";
 import { ipaths } from "../../../data/Settings";
+import { Args } from "../../../util/Args";
 import { FileChangeModule } from "../../../util/FileChanges";
 import { mpath, wfs } from "../../../util/FileSystem";
 import { wsys } from "../../../util/System";
@@ -36,7 +37,9 @@ function missingBlps(dir: string, mapname: string) {
 }
 
 finish('worldmaps', () => {
-    if(process.argv.includes('--no-blp')) return;
+    if(!Args.hasFlag('build-blp',[process.argv])) {
+        return;
+    }
     const mapsChanges = new FileChangeModule('worldmaps');
     ipaths.modules.module.all().forEach(basemod=>{
         basemod.endpoints().forEach(mod=>{

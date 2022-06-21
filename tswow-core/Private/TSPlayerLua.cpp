@@ -1,6 +1,7 @@
 #include "TSLua.h"
 #include "TSPlayer.h"
 #include "TSUnitLua.h"
+#include "TSDBJson.h"
 
 #include "TSPlayer.h"
 #include "TSBattleground.h"
@@ -22,10 +23,11 @@
 #include "TSSpell.h"
 #include "TSGameObject.h"
 
-void TSLuaState::load_player_methods(uint32_t modid)
+void TSLua::load_player_methods(sol::state& state)
 {
-    auto ts_player = new_usertype <TSPlayer>("TSPlayer");
-    load_unit_methods_t(ts_player, modid, "TSPlayer");
+    auto ts_player = state.new_usertype <TSPlayer>("TSPlayer", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject,TSEntityProvider,TSWorldEntityProvider<TSWorldObject>, TSDBJsonProvider>());
+    load_unit_methods_t(state, ts_player, "TSPlayer");
+    LUA_FIELD(ts_player, TSPlayer, GetTalentPointsInTree);
     LUA_FIELD(ts_player, TSPlayer, CanTitanGrip);
     LUA_FIELD(ts_player, TSPlayer, HasTalent);
     LUA_FIELD(ts_player, TSPlayer, HasAchieved);
@@ -271,6 +273,8 @@ void TSLuaState::load_player_methods(uint32_t modid)
     LUA_FIELD(ts_player, TSPlayer, GetMails);
     LUA_FIELD(ts_player, TSPlayer, RemoveMail);
     LUA_FIELD(ts_player, TSPlayer, GetFreeInventorySpace);
+    LUA_FIELD(ts_player, TSPlayer, GetQuestRewardTempTalentPoints);
+    LUA_FIELD(ts_player, TSPlayer, GetQuestRewardPermTalentPoints);
     ts_player.set_function("GetPlayerIP", &TSPlayer::LGetPlayerIP);
     ts_player.set_function("GetGuildName", &TSPlayer::LGetGuildName);
     ts_player.set_function("GetAccountName", &TSPlayer::LGetAccountName);
@@ -354,4 +358,5 @@ void TSLuaState::load_player_methods(uint32_t modid)
         , &TSPlayer::LGetOutfitCopy2
         , &TSPlayer::LGetOutfitCopy3
     ));
+    ts_player.set_function("GetSpellMap", &TSPlayer::LGetSpellMap);
 }

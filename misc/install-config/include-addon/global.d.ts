@@ -4710,6 +4710,16 @@ declare function setprinthandler(handler: (...args: any[]) => any): void;
  */
 declare function wipe<T extends object>(table: T): T;
 
+/**
+ * Returns the hyperlink for a spell.
+ *
+ * @returns link, spellID
+ * @see https://wowpedia.fandom.com/wiki/API_GetSpellLink
+ * @description Returns the hyperlink for a spell.
+ * @tupleReturn
+ */
+ declare function GetSpellLink(spell:number|string, bookType?:string): [string,number];
+
 
 declare namespace WoWAPI {
     type TypedEvents = {
@@ -13107,6 +13117,7 @@ declare namespace WoWAPI {
     }
 
     interface GameTooltipHookScript extends ObjectHookScript {
+        HookScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
         HookScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
         HookScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
         HookScript(event: "OnTooltipSetAchievement", handler: (tooltip: GameTooltip) => void): void;
@@ -13119,7 +13130,8 @@ declare namespace WoWAPI {
         HookScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
 
-    interface GameTooltipSetScript extends ObjectetScript {
+    interface GameTooltipSetScript extends ObjectSetScript {
+        SetScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
         SetScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
         SetScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetAchievement", handler: (tooltip: GameTooltip) => void): void;
@@ -13131,6 +13143,7 @@ declare namespace WoWAPI {
         SetScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
+	
     interface Backdrop {
         /**
          * Which texture file to use as frame background (.blp or .tga format)
@@ -13891,6 +13904,7 @@ declare namespace WoWAPI {
 /**
  * global lua namespace
  */
+
 declare const _G: { [prop: string]: any };
 declare const SlashCmdList:{[msg:string]: (message: string) => void};
 declare const InterfaceOptionsFramePanelContainer: WoWAPI.Region;
@@ -13915,6 +13929,11 @@ declare const TargetFrame: WoWAPI.Frame;
 declare const FocusFrame: WoWAPI.Frame;
 declare const WorldFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
+
+declare function loadstring(code: string, name?: string): ()=>void;
+declare function assert(code: ()=>void):() => string;
+declare function type(thing: any): string;
+declare function tonumber(value: string|number, radix?:number): number
 
 /**
  * ##################################
@@ -14273,4 +14292,6 @@ declare class TSPacketRead {
     Size(): uint32
 }
 
-declare function GetID(table: string, mod: string, name: string): number;
+declare function UTAG(mod: string, name: string): number
+declare function TAG(mod: string, name: string): number[]
+declare function HAS_TAG(id: number, mod: string, name: string);

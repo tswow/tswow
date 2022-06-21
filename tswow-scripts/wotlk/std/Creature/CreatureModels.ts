@@ -18,7 +18,9 @@ import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIterati
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { creature_templateRow } from "../../sql/creature_template";
-import { CreatureDisplayInfoRegistry } from "./CreatureDisplayInfo";
+import { BoundingBox } from "../Misc/BoundingBox";
+import { RefDynamic } from "../Refs/Ref";
+import { CreatureDisplayInfo, CreatureDisplayInfoRegistry } from "./CreatureDisplayInfo";
 
 function getModel(row: creature_templateRow, index: number) {
     switch(index) {
@@ -70,6 +72,39 @@ export class CreatureModels<T> extends CellSystem<T> {
     }
 
     addDefaultBear() { return this.addIds(29419) }
+
+    private findFree() {
+        for(let i=0;i<this.length;++i) {
+            if(getModel(this.row,i).get() === 0) {
+                return this.get(i);
+            }
+        }
+        throw new Error(`Can't add more entries, array is full.`);
+    }
+
+    addGet() {
+        return this.findFree()
+    }
+
+    addMod(callback: (ref: RefDynamic<T,CreatureDisplayInfo>) => void) {
+        callback(this.addGet());
+        return this.owner;
+    }
+
+    mod(index: number, callback: (ref: RefDynamic<T,CreatureDisplayInfo>)=>void) {
+        callback(this.get(index));
+        return this.owner;
+    }
+
+    addSimple(model: string, geobox: number | BoundingBox) {
+        let v = CreatureDisplayInfoRegistry.create()
+            .Model.modRefCopy((value)=>value
+                .ModelName.set(model)
+                .Geobox.set(geobox)
+            )
+        this.addIds(v.ID)
+        return this.owner;
+    }
 
     addIds(...modelIds: number[]) {
         for(let i=0;i<this.length && modelIds.length>0;++i) {

@@ -127,6 +127,10 @@ export class Spell extends MainEntityID<SpellRow> {
     get Speed() { return this.wrap(this.row.Speed); }
     get ClassMask() { return new BaseClassSet(this); }
 
+    get Family() {
+        return this.wrap(this.row.SpellClassSet);
+    }
+
     get Power() { return new SpellPower(this,this); }
 
     /**
@@ -201,18 +205,18 @@ export class Spell extends MainEntityID<SpellRow> {
         return getInlineID(
               this
             , this.ID
-            , 'SpellID'
+            , 'Spell'
             , 'livescript'
-        ) as _hidden.Spells<this>
+        ) as _hidden.Spell<this>
     }
 
     get InlineLua() {
         return getInlineID(
               this
             , this.ID
-            , 'SpellID'
+            , 'Spell'
             , 'lua'
-        ) as _hidden.Spells<this>
+        ) as _hidden.Spell<this>
     }
 
     clear() {

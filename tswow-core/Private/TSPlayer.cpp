@@ -16,35 +16,11 @@
  */
 
 #include "TSIncludes.h"
-#include "GameEventMgr.h"
-#include "Object.h"
-#include "Player.h"
+#include "TSSpell.h"
 #include "TSIncludes.h"
 #include "TSPlayer.h"
-#include "Player.h"
-#include "ArenaTeam.h"
-#include "SpellMgr.h"
-#include "GuildMgr.h"
-#include "AccountMgr.h"
-#include "AuctionHouseMgr.h"
-#include "Guild.h"
-#include "Item.h"
-#if TRINITY
-#include "SpellHistory.h"
-#include "Trainer.h"
-#endif
-#include "Group.h"
-#include "GroupMgr.h"
-#include "GridNotifiers.h"
-#include "ReputationMgr.h"
-#include "Chat.h"
-#include "GossipDef.h"
-#include "Mail.h"
-#include "ObjectMgr.h"
-#include "DBCStructure.h"
 #include "TSBattleground.h"
 #include "TSMap.h"
-
 #include "TSInstance.h"
 #include "TSJson.h"
 #include "TSUnit.h"
@@ -58,6 +34,31 @@
 #include "TSWorldPacket.h"
 #include "TSCreature.h"
 #include "TSMail.h"
+
+#if TRINITY
+#include "SpellHistory.h"
+#include "Trainer.h"
+#endif
+#include "GameEventMgr.h"
+#include "Object.h"
+#include "Player.h"
+#include "Player.h"
+#include "ArenaTeam.h"
+#include "SpellMgr.h"
+#include "GuildMgr.h"
+#include "AccountMgr.h"
+#include "AuctionHouseMgr.h"
+#include "Guild.h"
+#include "Item.h"
+#include "Group.h"
+#include "GroupMgr.h"
+#include "GridNotifiers.h"
+#include "ReputationMgr.h"
+#include "Chat.h"
+#include "GossipDef.h"
+#include "Mail.h"
+#include "ObjectMgr.h"
+#include "DBCStructure.h"
 #include "LFG.h"
 
 #include <memory.h>
@@ -3519,7 +3520,7 @@ void TSPlayer::ResurrectPlayer(float percent,bool sickness)
 void TSPlayer::GossipMenuAddItem(uint32 _icon,TSString msg,uint32 _sender,uint32 _intid,bool _code,TSString _promptMsg,uint32 _money)
 {
 #if defined TRINITY || AZEROTHCORE
-    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, _icon, msg._value, _sender, _intid, _promptMsg._value, _money, _code);
+    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg._value, _sender, _intid, _promptMsg._value, _money, _code);
 #else
 #ifndef CLASSIC
     player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg._value, _sender, _intid, _promptMsg._value, _money, _code);
@@ -4162,6 +4163,15 @@ bool TSPlayer::CanBeLeader()
 #endif
 }
 
+uint32 TSPlayer::GetTalentPointsInTree(uint32 tabId)
+{
+#if TRINITY
+    return player->GetTalentPointsInTree(tabId);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::GetTalentPointsInTree not implemented for AzerothCore");
+    return 0;
+#endif
+}
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
@@ -4502,4 +4512,34 @@ TSUnit TSPlayer::GetGlobalSelection()
     {
         return TSUnit(player->GetSelectedUnit());
     }
+}
+
+uint32 TSPlayer::GetQuestRewardTempTalentPoints()
+{
+    return player->m_questRewardTalentCount;
+}
+
+uint32 TSPlayer::GetQuestRewardPermTalentPoints()
+{
+    return player->m_questRewardPermTalentCount;
+}
+
+TSDictionary<uint32, TSPlayerSpell> TSPlayer::GetSpellMap()
+{
+    TSDictionary<uint32, TSPlayerSpell> map;
+    for (auto& [spell, info] : player->GetSpellMap())
+    {
+        map.set(spell, TSPlayerSpell{ uint8(info.state),info.active,info.dependent,info.disabled });
+    }
+    return map;
+}
+
+TSLua::Dictionary<uint32, TSPlayerSpell> TSPlayer::LGetSpellMap()
+{
+    return sol::as_table(*GetSpellMap()._map);
+}
+
+TSDBJson* TSPlayer::get_json()
+{
+    return &player->m_db_json;
 }

@@ -104,6 +104,24 @@ export class AreaRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.Area
     }
+
+    /**
+     * Creates an area entry from a numeric id instead of mod/id string pair.
+     *
+     * @deprecated - Do not use this unless you know exactly what you are doing.
+     *
+     * @warn - You can NOT currently use this together with calls to "create" in the same table safely.
+     *         It's your own responsibility to make sure your custom ids do not clash with the ones tswow
+     *         assigns normally.
+     *
+     * @warn - This signature might be renamed/changed in the future.
+     */
+    createId(id: number) {
+        let entity = this.Entity(this.Table().add(id));
+        this.Clear(entity,undefined,undefined);
+        return entity;
+    }
+
     Clear(r: Area, mod: string, id: string): void {
         registeredAreas[`${mod}:${id}`] = r.ID
         r.row.ExploreFlag.set(Ids.AreaBit.id(mod,`${id}-bit`))

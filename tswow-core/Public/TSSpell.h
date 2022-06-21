@@ -123,3 +123,19 @@ class TC_GAME_API TSDispelInfo
     uint8 GetRemovedCharges();
     void SetRemovedCharges(uint8 amount);
 };
+
+class TC_GAME_API TSPlayerSpell
+{
+public:
+    TSPlayerSpell(uint8 state, bool active, bool dependent, bool disabled);
+    TSPlayerSpell() = default;
+    uint8 GetState();
+    bool GetActive();
+    bool GetDependent();
+    bool GetDisabled();
+private:
+    uint8 m_state;
+    bool m_active;
+    bool m_dependent;
+    bool m_disabled;
+};

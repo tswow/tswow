@@ -84,7 +84,7 @@ public:
                 {
                     (*itr)->_Delete();
                 }
-                m_values.erase(itr);
+                itr = m_values.erase(itr);
             }
             else
             {

@@ -16,19 +16,17 @@
 
 #include "TSEntity.h"
 
-TSCompiledClass::TSCompiledClass(uint32_t modid, std::shared_ptr<void> ptr)
+TSCompiledClass::TSCompiledClass(std::shared_ptr<void> ptr)
 {
-    this->modid = modid;
     this->ptr = ptr;
 }
 
 TSCompiledClass::TSCompiledClass()
 {
-    modid = 0;
     ptr = nullptr;
 }
 
-bool TSCompiledClasses::HasObject(uint32_t modid, TSString key)
+bool TSCompiledClasses::HasObject(TSString key)
 {
     return m_map.find(key) != m_map.end();
 }

@@ -2,10 +2,10 @@
 #include "TSCreatureTemplate.h"
 #include "TSObjectLua.h"
 
-void TSLuaState::load_creature_template_methods(uint32_t modid)
+void TSLua::load_creature_template_methods(sol::state& state)
 {
-    auto ts_creature_template = new_usertype<TSCreatureTemplate>("TSCreatureTemplate");
-    load_entity_methods_t(ts_creature_template, modid, "TSCreatureTemplate");
+    auto ts_creature_template = state.new_usertype<TSCreatureTemplate>("TSCreatureTemplate");
+    load_entity_methods_t(state, ts_creature_template, "TSCreatureTemplate");
     LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetEntry);
     LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryA);
     LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryB);
@@ -102,5 +102,5 @@ void TSLuaState::load_creature_template_methods(uint32_t modid)
     ts_creature_template.set_function("GetIconName", &TSCreatureTemplate::LGetIconName);
     ts_creature_template.set_function("GetAIName", &TSCreatureTemplate::LGetAIName);
 
-    set_function("GetCreatureTemplate", &GetCreatureTemplate);
+    state.set_function("GetCreatureTemplate", &GetCreatureTemplate);
 }

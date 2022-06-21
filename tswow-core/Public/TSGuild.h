@@ -51,11 +51,16 @@ public:
     void DeleteMember(TSPlayer player, bool isDisbanding);
     void SetMemberRank(TSPlayer player, uint8 newRank);
 private:
-    sol::as_table_t<std::vector<TSPlayer>> LGetMembers();
+    TSLua::Array<TSPlayer> LGetMembers();
     std::string LGetName();
     std::string LGetMOTD();
     std::string LGetInfo();
     void LSendPacket(TSWorldPacket data);
     void LSendPacketToRanked(TSWorldPacket data, uint8 ranked);
-    friend class TSLuaState;
+    friend class TSLua;
 };
+
+TSGuild TC_GAME_API GetGuild(uint32 id);
+TSGuild TC_GAME_API GetGuildByName(TSString name);
+TSGuild TC_GAME_API LGetGuildByName(std::string const& name);
+TSGuild TC_GAME_API GetGuildByLeader(uint64 owner);

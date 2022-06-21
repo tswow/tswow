@@ -16,6 +16,7 @@
  */
 import { finish } from "../../../data/index";
 import { ipaths } from "../../../data/Settings";
+import { Args } from "../../../util/Args";
 import { FileChangeModule } from "../../../util/FileChanges";
 import { wfs } from "../../../util/FileSystem";
 import { generateBLP } from "./BLP";
@@ -23,7 +24,9 @@ import { BuildTaxiMaps } from "./BuildTaxiMaps";
 import { onDirtyPNG } from "./PNG";
 
 finish('blps', () => {
-    if(process.argv.includes('--no-blp')) return;
+    if(!Args.hasFlag('build-blp',[process.argv])) {
+        return;
+    }
     const blpChanges = new FileChangeModule('blps');
     let files: {[key: string]: boolean} = {}
     ipaths.modules.module.all().forEach(basemod=>{

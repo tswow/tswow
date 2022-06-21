@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSAura.h"
 
-void TSLuaState::load_aura_methods(uint32_t modid)
+void TSLua::load_aura_methods(sol::state& state)
 {
-    auto ts_auraeffect = new_usertype<TSAuraEffect>("TSAuraEffect");
+    auto ts_auraeffect = state.new_usertype<TSAuraEffect>("TSAuraEffect");
     LUA_FIELD(ts_auraeffect, TSAuraEffect, GetCaster);
     LUA_FIELD(ts_auraeffect, TSAuraEffect, GetCasterGUID);
     LUA_FIELD(ts_auraeffect, TSAuraEffect, GetAura);
@@ -25,7 +25,7 @@ void TSLuaState::load_aura_methods(uint32_t modid)
     LUA_FIELD(ts_auraeffect, TSAuraEffect, ResetTicks);
     LUA_FIELD(ts_auraeffect, TSAuraEffect, IsPeriodic);
 
-    auto ts_auraapplication = new_usertype<TSAuraApplication>("TSAuraApplication");
+    auto ts_auraapplication = state.new_usertype<TSAuraApplication>("TSAuraApplication");
     LUA_FIELD(ts_auraapplication, TSAuraApplication, GetTarget);
     LUA_FIELD(ts_auraapplication, TSAuraApplication, GetAura);
     LUA_FIELD(ts_auraapplication, TSAuraApplication, GetSlot);
@@ -36,7 +36,7 @@ void TSLuaState::load_aura_methods(uint32_t modid)
     LUA_FIELD(ts_auraapplication, TSAuraApplication, IsPositive);
     LUA_FIELD(ts_auraapplication, TSAuraApplication, IsSelfCast);
 
-    auto ts_aura = new_usertype<TSAura>("TSAura");
+    auto ts_aura = state.new_usertype<TSAura>("TSAura");
     LUA_FIELD(ts_aura, TSAura, GetCaster);
     LUA_FIELD(ts_aura, TSAura, GetCasterGUID);
     LUA_FIELD(ts_aura, TSAura, GetCasterLevel);
@@ -51,7 +51,7 @@ void TSLuaState::load_aura_methods(uint32_t modid)
     LUA_FIELD(ts_aura, TSAura, Remove);
     ts_aura.set_function("GetApplications", &TSAura::LGetApplications);
 
-    auto ts_proc_event_info = new_usertype<TSProcEventInfo>("TSProcEventInfo");
+    auto ts_proc_event_info = state.new_usertype<TSProcEventInfo>("TSProcEventInfo");
     LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetActor);
     LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetActionTarget);
     LUA_FIELD(ts_proc_event_info, TSProcEventInfo, GetProcTarget);

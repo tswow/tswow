@@ -19,7 +19,6 @@ import { Row } from '../table/Row';
 import { Table } from '../table/Table';
 import { SqlConnection } from './SQLConnection';
 import { SqlRow } from './SQLRow';
-import { translate } from './SQLTranslate';
 
 export type SqlRowCreator<C, Q, R extends SqlRow<C, Q>> = (table: SqlTable<C, Q, R>, obj: {[key: string]: any}) => R;
 
@@ -68,9 +67,41 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
         return this.filterInt(where, false);
     }
 
+    private isPkLookup(where: Q): string {
+        let fields: string[] = Row.primaryKeyFields(this.rowCreator(this,{}));
+        if(fields.length != Object.entries(where).length) {
+            return undefined;
+        }
+        for(let field of fields) {
+            if(where[field] === undefined) {
+                return undefined;
+            }
+
+            if(typeof(where[field]) == 'object') {
+                return undefined;
+            }
+        }
+        return fields.map(x=>where[x]).join('_')
+    }
+
     private filterInt(where: Q, firstOnly = false): R[] {
-        translate(this.name,where,'OUT')
-        const cacheMatches = this.cachedValues.filter(x => inMemory(where, x));
+        // Try looking up using only primary key
+        let pkLookup = this.isPkLookup(where);
+        let cacheMatches: R[] = []
+        if(pkLookup) {
+            let row = this.cachedRows[pkLookup];
+            if(row) {
+                return [row];
+            }
+        } else {
+            for(let key in this.cachedRows) {
+                let value = this.cachedRows[key];
+                if(inMemory(where, value)) {
+                    cacheMatches.push(value);
+                }
+            }
+        }
+
         const dbMatches = SqlConnection.getRows(this, where, firstOnly)
             .filter(x => !this.cachedRows[Row.fullKey(x)]);
         dbMatches.forEach(x => this.cachedRows[Row.fullKey(x)] = x);
@@ -89,8 +120,34 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
     }
 
     static writeSQL(table: SqlTable<any,any,any>) {
-        table.cachedValues.filter(SqlRow.isDirty)
-            .forEach(x=>SqlConnection.world_dst.write(SqlRow.getSql(x)));
+        // Very stupid
+        let dummyRow: SqlRow<any,any>
+        for(let row in table.cachedRows) {
+            dummyRow = table.cachedRows[row];
+            break;
+        }
+        if(!dummyRow) {
+            return;
+        }
+
+        const normalQuery = SqlRow.generatePreparedStatement(dummyRow);
+        const deleteQuery = SqlRow.generatePreparedDeleteStatement(dummyRow);
+
+        let normalStatement = SqlConnection.world_dst.prepare(normalQuery)
+        let deleteStatement = SqlConnection.world_dst.prepare(deleteQuery)
+
+        SqlConnection.world_dst.prepare(table.rowCreator(table,{}))
+
+        let values = table.cachedValues.filter(SqlRow.isDirty)
+
+        values.forEach((x: SqlRow<any,any>)=>{
+                if(x.isDeleted()) {
+                    deleteStatement.writeNormal(SqlRow.getPreparedDeleteStatement(x))
+                } else {
+                    normalStatement.writeNormal(SqlRow.getPreparedStatement(x))
+                }
+                //SqlConnection.world_dst.write(SqlRow.getSql(x))
+            });
         table.cachedRows = {};
     }
 }

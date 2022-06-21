@@ -67,6 +67,7 @@ source_group("Source" FILES \${source_files})
 # core wrapper headers
 target_include_directories(${buildModule} PUBLIC
     ${ipaths.bin.include.abs('FORWARD')}
+    ${ipaths.bin.include.tracy.abs('FORWARD')}
     ${ipaths.bin.include.lua.abs('FORWARD')}
 )
 file (GLOB headers "${ipaths.bin.include.abs('FORWARD')}/*.h")
@@ -98,5 +99,11 @@ if (WIN32)
         -wd4275
     )
 endif()
+
+# tracy
+if(TRACY_ENABLE)
+    target_compile_definitions(${buildModule} PUBLIC TRACY_ENABLE=1)
+endif()
+
 include({CMAKE_CURRENT_SOURCE_DIR}/../../../../CMakeLists.txt OPTIONAL)`
 }

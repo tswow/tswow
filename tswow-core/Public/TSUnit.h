@@ -22,6 +22,9 @@
 #include "TSWorldObject.h"
 #include "TSItem.h"
 #include "TSClasses.h"
+#include "TSLua.h"
+
+class TSAuraApplication;
 
 class TC_GAME_API TSUnit : public TSWorldObject {
 public:
@@ -79,9 +82,20 @@ public:
     uint64 GetCharmGUID();
     uint64 GetPetGUID(uint32 slot = 0);
     TSCreature GetPet(uint32 slot = 0);
+
     TSUnit GetController();
     uint64 GetControllerGUID();
     uint64 GetControllerGUIDS();
+    TSArray<TSUnit> GetControlled();
+    void RemoveAllControlled();
+    TSUnit GetFirstControlled();
+    void RemoveAllMinionsByEntry(uint32 entry);
+
+    void SetCharm(TSUnit target, bool apply);
+    bool SetCharmedBy(TSUnit charmer, uint32 type, TSAuraApplication aurApp);
+    bool SetCharmedBy(TSUnit charmer, uint32 type);
+    void RemoveCharmedBy(TSUnit charmer);
+
     float GetStat(uint32 stat);
     uint32 GetBaseSpellPower(uint32 spellschool);
     TSUnit  GetVictim();
@@ -188,4 +202,10 @@ public:
     uint32 GetArmor();
     void SetResistance(uint32 school, int32 val);
     void SetArmor(int32 val);
+private:
+    TSLua::Array<TSUnit> LGetControlled();
+    bool LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp);
+    bool LSetCharmedBy1(TSUnit charmer, uint32 type);
+    friend class TSLua;
+
 };

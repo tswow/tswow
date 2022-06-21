@@ -83,6 +83,9 @@ export class BaseClassSet extends ClassSet<Spell> {
     get B(): MaskCell32<Spell> { return this.makeCell(1); }
     get C(): MaskCell32<Spell> { return this.makeCell(2); }
 
+    /**
+     * @deprecated moved to Spell#Family
+     */
     get Family() {
         return new CellWrapper(this.owner,this.owner.row.SpellClassSet);
     }

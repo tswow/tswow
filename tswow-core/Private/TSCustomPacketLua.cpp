@@ -5,9 +5,9 @@
 #include "TSEvents.h"
 #include "TSBattleground.h"
 
-void TSLuaState::load_packet_methods(uint32_t modid)
+void TSLua::load_packet_methods(sol::state& state)
 {
-    auto ts_packetwrite = new_usertype<TSPacketWrite>("TSPacketWrite");
+    auto ts_packetwrite = state.new_usertype<TSPacketWrite>("TSPacketWrite");
     LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteUInt8);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteInt8);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteUInt16);
@@ -24,7 +24,7 @@ void TSLuaState::load_packet_methods(uint32_t modid)
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastAround);
     ts_packetwrite.set_function("WriteString", &TSPacketWrite::WriteString);
 
-    auto ts_packetread = new_usertype<TSPacketRead>("TSPacketRead");
+    auto ts_packetread = state.new_usertype<TSPacketRead>("TSPacketRead");
     LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt8);
     LUA_FIELD(ts_packetread, TSPacketRead, ReadInt8);
     LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt16);

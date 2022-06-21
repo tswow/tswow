@@ -128,9 +128,9 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         return getInlineID(
               this
             , this.ID
-            , 'ItemID'
+            , 'Item'
             , 'livescript'
-        ) as _hidden.Items<this>
+        ) as _hidden.Item<this>
     }
 
     get InlineLua() {
@@ -139,7 +139,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             , this.ID
             , 'ItemID'
             , 'lua'
-        ) as _hidden.Items<this>
+        ) as _hidden.Item<this>
     }
 
     /** Only applicable if item is a shield */
@@ -160,6 +160,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
+    get BonusArmor() { return this.wrap(this.row.ArmorDamageModifier); }
     get Delay() {
         return new DurationCell(
             this, 'MILLISECONDS', false, this.row.delay
