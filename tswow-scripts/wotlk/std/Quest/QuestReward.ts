@@ -245,7 +245,21 @@ export class ReputationRewards<T> extends ArraySystem<ReputationReward<T>,T> {
     }
 }
 
+export class QuestRewardTalents extends ChildEntity<quest_templateRow,Quest> {
+    /**
+     * Talent points that are added as a permanent bonus to the players talent points
+     */
+    get Permanent() { return this.ownerWrap(this.row.RewardTalentsPermanent); }
 
+    /**
+     * Talents that are situationally or temporarily added as bonuses to the players talent points.
+     *
+     * - This is what death knight quests uses to give quest-based talent points in their starting zone.
+     *   Unused in all other maps and by all other classes by default, but can be customized the
+     *   Player.OnCalcTalentPoints livescript event.
+     */
+    get Temporary() { return this.ownerWrap(this.row.RewardTalents); }
+}
 
 export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     /** Reward player with items (no choice) */
@@ -262,8 +276,8 @@ export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     get DisplaySpell() { return this.ownerWrap(this.row.RewardDisplaySpell) }
     /** Reward player with honor points */
     get Honor() { return this.ownerWrap(this.row.RewardHonor)}
-    /** Reward player with talent points, as in the Death Knight starting area. */
-    get Talents() { return this.ownerWrap(this.row.RewardTalents)}
+    /** Reward player with talent points */
+    get Talents() { return new QuestRewardTalents(this.owner); }
     /** Reward player with a Title, such as <Grunt> */
     get Title() { return this.ownerWrap(this.row.RewardTitle )}
     /** Increased XP reward for difficult quests, a value between 0-8 */

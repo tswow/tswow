@@ -1,9 +1,10 @@
-import { Emitter } from "./emitter";
+import { Emitter } from "../emitter";
+import { set_tracy_category_color } from "./tracy-categories";
 import ts = require("typescript");
 
 function simpleModid(emt,node){
     emt.processExpression(node.expression);
-    emt.writer.writeString(`(ModID(),`);
+    emt.writer.writeString(`(`);
     node.arguments.forEach((x,i)=>{
         emt.processExpression(x);
         if(i<node.arguments.length-1) {
@@ -19,7 +20,7 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         let type = emt.typeChecker.typeToString(
             emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
         emt.processExpression(node.expression);
-        emt.writer.writeString(`<${type}>(ModID(),`);
+        emt.writer.writeString(`<${type}>(`);
         // key
         emt.processExpression(node.arguments[0]);
         // default value, wrapped in callback so we don't create it every time
@@ -30,7 +31,7 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
 
     "HasObject": (emt,node)=>{
         emt.processExpression(node.expression);
-        emt.writer.writeString(`(ModID(),`);
+        emt.writer.writeString(`(`);
         // key
         emt.processExpression(node.arguments[0]);
         emt.writer.writeString(`)`);
@@ -40,7 +41,7 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         let type = emt.typeChecker.typeToString(
             emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
         emt.processExpression(node.expression);
-        emt.writer.writeString(`<${type}>(ModID(),`);
+        emt.writer.writeString(`<${type}>(`);
         // argument
         emt.processExpression(node.arguments[0]);
 
@@ -62,7 +63,7 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         let type = emt.typeChecker.typeToString(
             emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
         emt.processExpression(node.expression);
-        emt.writer.writeString(`<${type}>(ModID(),`);
+        emt.writer.writeString(`<${type}>(`);
         // field
         emt.processExpression(node.arguments[0]);
         emt.writer.writeString(`,`);
@@ -71,9 +72,9 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         emt.writer.writeString(`)`);
     },
 
-    "AddTimer": simpleModid,
-    "AddNamedTimer": simpleModid,
-    "AddCollision": simpleModid,
+    //"AddTimer": simpleModid,
+    //"AddNamedTimer": simpleModid,
+    //"AddCollision": simpleModid,
 
     "CreateTSMutable": (emt,node)=>{
         emt.writer.writeString(`TSMutable<${node.typeArguments[0].getText()}>(&`)
@@ -91,6 +92,12 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
 
     "TSMutex": (emt,node)=>{
         emt.writer.writeString(`TSMutex();`);
+    },
+
+    "TS_ZONE_CATEGORY": (emt,node)=>{
+        const declaration = node.parent as ts.VariableDeclaration;
+        set_tracy_category_color(declaration.name.getText(), node.arguments[0].getText());
+        emt.writer.writeString(node.arguments[0].getText())
     },
 }
 

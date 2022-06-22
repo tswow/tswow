@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSSpellInfo.h"
 
-void TSLuaState::load_spell_info_methods(uint32_t modid)
+void TSLua::load_spell_info_methods(sol::state& state)
 {
-    auto ts_spelleffectinfo = new_usertype<TSSpellEffectInfo>("TSSpellEffectInfo");
+    auto ts_spelleffectinfo = state.new_usertype<TSSpellEffectInfo>("TSSpellEffectInfo");
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, GetEffectIndex);
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, GetType);
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, GetAura);
@@ -25,7 +25,7 @@ void TSLuaState::load_spell_info_methods(uint32_t modid)
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, IsAura);
     LUA_FIELD(ts_spelleffectinfo, TSSpellEffectInfo, CalcValue);
 
-    auto ts_spellinfo = new_usertype<TSSpellInfo>("TSSpellInfo");
+    auto ts_spellinfo = state.new_usertype<TSSpellInfo>("TSSpellInfo");
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetEntry);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSchool);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetBaseLevel);
@@ -90,5 +90,7 @@ void TSLuaState::load_spell_info_methods(uint32_t modid)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTargets);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetEffect);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTotem);
-    set_function("GetSpellInfo", &GetSpellInfo);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTalentCost);
+    state.set_function("GetSpellInfo", &GetSpellInfo);
+    state.set_function("GetTalentSpellCost", &GetTalentSpellCost);
 }

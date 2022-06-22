@@ -164,6 +164,7 @@ export class ClassDisabledText extends CellSystem<Class> {
 
     set(value: string) {
         this.edit.text = `${this.owner.Filename}_DISABLED = "${value.split('"').join('\\"')}";`;
+        return this.owner;
     }
 
     get() {

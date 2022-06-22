@@ -302,7 +302,7 @@ std::string TSMail::LGetBody()
 {
     return GetBody().std_str();
 }
-sol::as_table_t<std::vector<TSMailItemInfo>> TSMail::LGetItems()
+TSLua::Array<TSMailItemInfo> TSMail::LGetItems()
 {
     return sol::as_table(*GetItems().vec);
 }
@@ -337,7 +337,7 @@ std::string TSMailDraft::LGetBody()
 {
     return GetSubject().std_str();
 }
-sol::as_table_t<std::vector<uint64>> TSMailDraft::LGetItemKeys()
+TSLua::Array<uint64> TSMailDraft::LGetItemKeys()
 {
     return sol::as_table(*GetItemKeys().vec);
 }

@@ -5,9 +5,9 @@
 #include "TSWorldPacket.h"
 #include "TSGroup.h"
 
-void TSLuaState::load_group_methods(uint32_t modid)
+void TSLua::load_group_methods(sol::state& state)
 {
-    auto ts_group = new_usertype<TSGroup>("TSGroup");
+    auto ts_group = state.new_usertype<TSGroup>("TSGroup");
     LUA_FIELD(ts_group, TSGroup, IsLeader);
     LUA_FIELD(ts_group, TSGroup, IsFull);
     LUA_FIELD(ts_group, TSGroup, IsRaidGroup);

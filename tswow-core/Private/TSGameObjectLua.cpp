@@ -13,10 +13,10 @@
 #include "TSVehicle.h"
 #include "TSCorpse.h"
 
-void TSLuaState::load_gameobject_methods(uint32_t modid)
+void TSLua::load_gameobject_methods(sol::state& state)
 {
-    auto ts_gameobject = new_usertype<TSGameObject>("TSGameObject");
-    load_world_object_methods_t(ts_gameobject, modid, "TSGameObject");
+    auto ts_gameobject = state.new_usertype<TSGameObject>("TSGameObject", sol::base_classes, sol::bases<TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
+    load_world_object_methods_t(state, ts_gameobject, "TSGameObject");
     LUA_FIELD(ts_gameobject, TSGameObject, HasQuest);
     LUA_FIELD(ts_gameobject, TSGameObject, IsSpawned);
     LUA_FIELD(ts_gameobject, TSGameObject, IsTransport);

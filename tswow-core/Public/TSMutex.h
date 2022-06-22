@@ -13,3 +13,5 @@ public:
     void unlock();
     bool try_lock();
 };
+
+#define CreateMutexLock TSMutex

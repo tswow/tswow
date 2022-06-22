@@ -1,8 +1,8 @@
 import * as fs from 'fs';
-import { WDirectory, WNode } from '../util/FileTree';
-import { ipaths } from '../util/Paths';
-import { CodeWriter } from "./codewriter";
-import { TRANSPILER_CHANGES } from './version';
+import { WDirectory, WNode } from '../../util/FileTree';
+import { ipaths } from '../../util/Paths';
+import { CodeWriter } from "../codewriter";
+import { TRANSPILER_CHANGES } from '../version';
 import path = require('path');
 
 const datasetName = process.argv.find(x=>x.startsWith('--datasetName=')).substring('--datasetName='.length)
@@ -10,8 +10,6 @@ const datasetName = process.argv.find(x=>x.startsWith('--datasetName=')).substri
 export function writeLoader(outDir: string) {
     const header = new CodeWriter();
     header.writeStringNewLine(`#include "TSAll.h"`)
-    header.writeStringNewLine(`#include "ModID.h"`)
-    header.writeStringNewLine(`void WritePackets();`)
     header.writeStringNewLine(`void WriteTables();`)
     header.writeStringNewLine(`extern "C"`)
     header.BeginBlock()
@@ -58,8 +56,6 @@ export function writeLoader(outDir: string) {
     cpp.writeStringNewLine(`void AddTSScripts(TSEvents* handlers)`);
     cpp.BeginBlock();
     cpp.writeStringNewLine(`WriteTables();`);
-    cpp.writeStringNewLine(`SetID(handlers->m_modid);`)
-    cpp.writeStringNewLine(`WritePackets();`);
     if(mainExists) {
         cpp.writeStringNewLine(`Main(handlers);`);
     }

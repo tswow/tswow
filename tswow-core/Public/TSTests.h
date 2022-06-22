@@ -57,11 +57,9 @@ class TC_GAME_API TSTestBase {
     virtual std::string searchName() const = 0;
 public:
     TSTestBase(
-          uint32_t modid
-        , std::string const& modName
+          std::string const& modName
         , std::string const& testName
     );
-    const uint32_t m_modid;
     const std::string m_modName;
     const std::string m_testName;
     virtual const char* testPrefix() const = 0;
@@ -74,8 +72,7 @@ class TC_GAME_API TSAutomaticTest : public TSTestBase {
     virtual std::string searchName() const;
 public:
     TSAutomaticTest(
-          uint32_t modid
-        , std::string modName
+          std::string modName
         , std::string testName
         , TSTestCallback callback
     );
@@ -91,8 +88,7 @@ class TC_GAME_API TSManualStep : public TSTestBase {
     virtual std::string searchName() const;
 public:
     TSManualStep(
-          uint32_t modid
-        , std::string const& modName
+          std::string const& modName
         , std::string const& testName
         , std::string const& stepName
         , uint32_t stepIndex
@@ -114,8 +110,7 @@ class TC_GAME_API TSManualStepBuilder {
     TSManualStep* m_step;
 public:
     TSManualStepBuilder(
-          uint32_t modid
-        , std::string const& modName
+          std::string const& modName
         , std::string const& testName
         , std::string const& stepName
         , uint32_t stepIndex
@@ -128,15 +123,13 @@ public:
 
 typedef std::function<void(TSManualStepBuilder*)> TSStepBuilderCallback;
 class TC_GAME_API TSManualTestBuilder {
-    uint32_t m_modid;
     std::string m_modName;
     std::string m_testName;
     std::vector<TSManualStepBuilder> m_steps;
     uint32_t m_stepCtr;
 public:
     TSManualTestBuilder(
-          uint32_t modid
-        , std::string const& modName
+          std::string const& modName
         , std::string const& testName
     );
     TSManualTestBuilder * operator->() { return this; }
@@ -146,12 +139,12 @@ public:
 
 void TC_GAME_API ClearTest(std::string name);
 void TC_GAME_API ClearTests();
-void TC_GAME_API UnloadTestModule(uint32_t modid);
+void TC_GAME_API UnloadTestModule();
 void TC_GAME_API StartTestSession(Player * player, std::string const& sessionName, std::string const& filter);
 void TC_GAME_API NextTestStep(Player * player, std::string const& sessionName, bool isFail, std::string const& failMessage);
-void TC_GAME_API RegisterAutomaticTest(uint32_t modid, std::string const& modName,std::string const& name, TSTestCallback callback);
+void TC_GAME_API RegisterAutomaticTest(std::string const& modName,std::string const& name, TSTestCallback callback);
 void TC_GAME_API PrintSessionStatus(Player* player, std::string const& sessionName);
 
-std::shared_ptr<TSManualTestBuilder> TC_GAME_API RegisterManualTest(uint32_t modid, std::string const& modName, std::string const& name);
+std::shared_ptr<TSManualTestBuilder> TC_GAME_API RegisterManualTest(std::string const& modName, std::string const& name);
 
 #endif

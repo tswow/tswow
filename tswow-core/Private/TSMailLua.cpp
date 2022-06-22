@@ -1,13 +1,13 @@
 #include "TSLua.h"
 #include "TSMail.h"
 
-void TSLuaState::load_mail_methods(uint32_t modid)
+void TSLua::load_mail_methods(sol::state& state)
 {
-    auto ts_mailiteminfo = new_usertype < TSMailItemInfo>("TSMailItemInfo");
+    auto ts_mailiteminfo = state.new_usertype < TSMailItemInfo>("TSMailItemInfo");
     LUA_FIELD(ts_mailiteminfo, TSMailItemInfo, GetGUID);
     LUA_FIELD(ts_mailiteminfo, TSMailItemInfo, GetItemTemplate);
 
-    auto ts_mail = new_usertype<TSMail>("TSMail");
+    auto ts_mail = state.new_usertype<TSMail>("TSMail");
     LUA_FIELD(ts_mail, TSMail, GetID);
     LUA_FIELD(ts_mail, TSMail, GetType);
     LUA_FIELD(ts_mail, TSMail, GetTemplateID);
@@ -36,7 +36,7 @@ void TSLuaState::load_mail_methods(uint32_t modid)
     ts_mail.set_function("SetSubject", &TSMail::LSetSubject);
     ts_mail.set_function("SetBody", &TSMail::LSetBody);
 
-    auto ts_maildraft = new_usertype<TSMailDraft>("TSMailDraft");
+    auto ts_maildraft = state.new_usertype<TSMailDraft>("TSMailDraft");
     LUA_FIELD(ts_maildraft, TSMailDraft, GetTemplateID);
     LUA_FIELD(ts_maildraft, TSMailDraft, GetMoney);
     LUA_FIELD(ts_maildraft, TSMailDraft, GetCOD);

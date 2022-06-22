@@ -17,6 +17,7 @@
 
 #include <memory.h>
 #include "Object.h"
+#include "TSFactionTemplate.h"
 #include "TSIncludes.h"
 #include "TSWorldObject.h"
 #include "TSArray.h"
@@ -36,6 +37,7 @@
 #include "TSCorpse.h"
 #include "TSEntity.h"
 #include "TSItem.h"
+#include "TSMainThreadContext.h"
 
 TSWorldObject::TSWorldObject(WorldObject *objIn)
     : TSObject(objIn)
@@ -917,9 +919,9 @@ bool TSWorldObject::HasCollision(TSString id)
     return GetCollisions()->Contains(id);
 }
 
-void TSWorldObject::AddCollision(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback)
+void TSWorldObject::AddCollision(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback)
 {
-    GetCollisions()->Add(modid,id,range,minDelay,maxHits,callback);
+    GetCollisions()->Add(id,range,minDelay,maxHits,callback);
 }
 
 TSCollisionEntry * TSWorldObject::GetCollision(TSString id)
@@ -951,12 +953,10 @@ bool TSCollisions::Contains(TSString id)
     return false;
 }
 
-TSCollisionEntry::TSCollisionEntry(uint32_t modid, TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback)
+TSCollisionEntry::TSCollisionEntry(TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback)
 {
     this->name = name;
-    this->modid = modid;
     this->callback = callback;
-    this->lastReload = GetReloads(modid);
     this->range = range;
     this->maxHits = maxHits;
     this->minDelay = minDelay;
@@ -964,11 +964,6 @@ TSCollisionEntry::TSCollisionEntry(uint32_t modid, TSString name, float range, u
 
 bool TSCollisionEntry::Tick(TSWorldObject value, bool force)
 {
-    if(lastReload != GetReloads(modid))
-    {
-        return true;
-    }
-
     uint64_t now = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
@@ -1018,16 +1013,16 @@ bool TSCollisionEntry::Tick(TSWorldObject value, bool force)
     return cancelMode == 1;
 }
 
-TSCollisionEntry* TSCollisions::Add(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback)
+TSCollisionEntry* TSCollisions::Add(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback)
 {
     for(int i=0;i<callbacks.size();++i)
     {
         if((&(callbacks[i]))->name == id)
         {
-            return &(callbacks[i] = TSCollisionEntry(modid,id,range,minDelay,maxHits,callback));
+            return &(callbacks[i] = TSCollisionEntry(id,range,minDelay,maxHits,callback));
         }
     }
-    callbacks.push_back(TSCollisionEntry(modid,id,range,minDelay,maxHits,callback));
+    callbacks.push_back(TSCollisionEntry(id,range,minDelay,maxHits,callback));
     return &(callbacks[callbacks.size()-1]);
 }
 
@@ -1263,6 +1258,27 @@ uint32 TSWorldObject::CastCustomSpell(
 #endif
 }
 
+void TSWorldObject::DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback)
+{
+#if TRINITY
+    obj->m_delayedCallbacks.push_back(callback);
+    obj->GetMap()->m_delayedGuids.insert(obj->GetGUID());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::DoDelayed not implemented on AzerothCore");
+#endif
+}
+
+
+void TSWorldObject::LDoDelayed(sol::protected_function callback)
+{
+#if TRINITY
+    obj->m_delayedLuaCallbacks.push_back(callback);
+    obj->GetMap()->m_delayedGuids.insert(obj->GetGUID());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::DoDelayed not implemented on AzerothCore");
+#endif
+}
+
 uint32 TSWorldObject::LCastSpell0(TSWorldObject target, uint32 spell, bool triggered)
 {
     return CastSpell(target, spell, triggered);
@@ -1409,4 +1425,10 @@ TSWorldObject TSWorldObjectCollection::find(std::function<bool(TSWorldObject)> c
         }
     }
     return TSWorldObject(nullptr);
+}
+
+
+TSFactionTemplate TSWorldObject::GetFactionTemplate()
+{
+    return TSFactionTemplate(obj->GetFactionTemplateEntry());
 }

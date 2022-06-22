@@ -33,8 +33,11 @@ class TSCollisions;
 class TSCollisionEntry;
 class TSEntity;
 class TSUnit;
+class TSMainThreadContext;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
+
+class TSFactionTemplate;
 
 class TC_GAME_API TSWorldObject : public TSObject, public TSWorldEntityProvider<TSWorldObject> {
 public:
@@ -129,17 +132,21 @@ public:
     TSPlayer GetPlayer(uint64 guid);
 
     bool HasCollision(TSString id) ;
-    void AddCollision(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
+    void AddCollision(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
     TSCollisionEntry * GetCollision(TSString id);
     TSCollisions* GetCollisions();
+
+    TSFactionTemplate GetFactionTemplate();
 
     void SetActive(bool active);
     bool IsActive();
 
     void AddedByGroup(TSWorldObjectGroup* group);
     void RemovedByGroup(TSWorldObjectGroup* group);
+
+    void DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback);
 private:
-    friend class TSLuaState;
+    friend class TSLua;
 
     uint32 LCastSpell0(TSWorldObject target, uint32 spell, bool triggered);
     uint32 LCastSpell1(TSWorldObject target, uint32 spell);
@@ -199,6 +206,7 @@ private:
     );
 
     uint32 LCastCustomSpell6(TSWorldObject target, uint32 spell);
+    void LDoDelayed(sol::protected_function callback);
 };
 
 class TC_GAME_API TSCollisionEntry {
@@ -207,20 +215,19 @@ public:
     CollisionCallback callback;
     TSString name;
     uint32_t lastReload;
-    uint32_t modid;
     uint32_t maxHits;
     float range;
     uint64_t minDelay;
     uint64_t lastHit = 0;
 
-    TSCollisionEntry(uint32_t modid, TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback);
+    TSCollisionEntry(TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback);
     bool Tick(TSWorldObject value, bool force = true);
 };
 
 class TC_GAME_API TSCollisions {
 public:
     std::vector<TSCollisionEntry> callbacks;
-    TSCollisionEntry* Add(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
+    TSCollisionEntry* Add(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
     bool Contains(TSString id);
     TSCollisionEntry* Get(TSString id);
     void Tick(TSWorldObject obj);
@@ -242,3 +249,5 @@ class TC_GAME_API TSWorldObjectCollection
     uint32 get_length();
     TSWorldObject get(uint32 index);
 };
+
+#define BROADCAST_PHASE_ID 0xffffff

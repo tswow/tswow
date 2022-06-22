@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { sort } from "../../../data";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { TalentRow } from "../../dbc/Talent";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { RefUnknown } from "../Refs/Ref";
 import { Spell } from "../Spell/Spell";
@@ -79,3 +81,21 @@ export class Talent extends MainEntity<TalentRow> {
     get Tab() { return new RefUnknown(this, this.row.TabID); }
     get Spells() { return new TalentSpells(this); }
 }
+
+sort('talents', () => {
+    DBC.Talent.quickSort((talent1,talent2)=>{
+        let t1 = talent1.TabID.get();
+        let t2 = talent2.TabID.get()
+        if(t1 !== t2) return t1 > t2 ? 1 : -1;
+
+        let r1 = talent1.TierID.get();
+        let r2 = talent2.TierID.get();
+        if (r1 !== r2) return r1 > r2 ? 1 : -1;
+
+        let c1 = talent1.ColumnIndex.get();
+        let c2 = talent2.ColumnIndex.get();
+        if (c1 !== c2) return c1 > c2 ? 1: -1;
+
+        return 0; // todo: some pet talents have duplicates, not sure why
+    })
+})

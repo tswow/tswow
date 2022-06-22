@@ -1661,3 +1661,12 @@ function __TS__TypeOf(value)
         return luaType
     end
 end
+
+function HAS_TAG(id, tags)
+    for k,v in pairs(tags) do
+        if id == v then
+	    return true
+        end
+    end
+    return false
+end

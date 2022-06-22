@@ -4,34 +4,34 @@
 #include "TSWorldEntity.h"
 
 template <typename C, typename T>
-void TSLuaState::load_world_entity_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name)
+void TSLua::load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name)
 {
     LUA_FIELD(target, TSWorldEntityProvider<C>, GetEntityGroup);
     LUA_FIELD(target, TSWorldEntityProvider<C>, RemoveEntityGroup);
     LUA_FIELD(target, TSWorldEntityProvider<C>, ClearEntityGroup);
         target.set_function("AddTimer", sol::overload(
             [=](T & prov, uint32_t time, int32_t loops, uint32_t flags, sol::protected_function callback) {
-                prov.LAddTimer0(modid, time, loops, flags, callback);
+                prov.LAddTimer0(time, loops, flags, callback);
             },
             [=](T & prov, uint32_t time, int32_t loops, sol::protected_function callback) {
-                prov.LAddTimer1(modid, time, loops, callback);
+                prov.LAddTimer1(time, loops, callback);
             },
             [=](T & prov, uint32_t time, sol::protected_function callback) {
-                prov.LAddTimer2(modid, time, callback);
+                prov.LAddTimer2(time, callback);
             }
         ));
         target.set_function("AddNamedTimer", sol::overload(
             [=](T & prov, std::string const& name, uint32_t time, int32_t loops, uint32_t flags, sol::protected_function callback) {
-                prov.LAddNamedTimer0(modid, name, time, loops, flags, callback);
+                prov.LAddNamedTimer0(name, time, loops, flags, callback);
             },
             [=](T & prov, std::string const& name, uint32_t time, int32_t loops, sol::protected_function callback) {
-                prov.LAddNamedTimer1(modid, name, time, loops, callback);
+                prov.LAddNamedTimer1(name, time, loops, callback);
             },
             [=](T & prov, std::string const& name, uint32_t time, sol::protected_function callback) {
-                prov.LAddNamedTimer2(modid, name, time, callback);
+                prov.LAddNamedTimer2(name, time, callback);
             }
         ));
-    auto timer = new_usertype<TSTimer<C>>(name+"Timer");
+    auto timer = state.new_usertype<TSTimer<C>>(name+"Timer");
     LUA_FIELD(timer, TSTimer<C>, Stop);
     LUA_FIELD(timer, TSTimer<C>, GetDiff);
     LUA_FIELD(timer, TSTimer<C>, GetFlags);

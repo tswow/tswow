@@ -108,12 +108,10 @@ TSTestException::TSTestException(std::string const& what)
 {}
 
 TSTestBase::TSTestBase(
-    uint32_t modid
-    , std::string const& modName
+      std::string const& modName
     , std::string const& testName
     )
-    : m_modid(modid)
-    , m_modName(modName)
+    : m_modName(modName)
     , m_testName(testName)
 {}
 
@@ -122,8 +120,8 @@ bool TSTestBase::matchRegex(std::regex const& regex) const
     return std::regex_search(searchName(), regex);
 }
 
-TSAutomaticTest::TSAutomaticTest(uint32_t modid, std::string modName, std::string testName, TSTestCallback callback)
-    : TSTestBase(modid,modName,testName)
+TSAutomaticTest::TSAutomaticTest(std::string modName, std::string testName, TSTestCallback callback)
+    : TSTestBase(modName,testName)
     , m_callback(callback)
 {}
 
@@ -204,13 +202,12 @@ void TSAssert::HasSpell(TSPlayer player, uint32_t spellId, TSString message)
 }
 
 TSManualStep::TSManualStep(
-      uint32_t modid
-    , std::string const& modName
+      std::string const& modName
     , std::string const& testName
     , std::string const& stepName
     , uint32_t stepIndex
     )
-    : TSTestBase(modid,modName,testName)
+    : TSTestBase(modName,testName)
     , m_stepName(stepName)
     , m_stepIndex(stepIndex)
 {}
@@ -305,22 +302,20 @@ bool TSManualStep::verify(Player * player, std::string const& sessionName) const
 }
 
 TSManualStepBuilder::TSManualStepBuilder(
-      uint32_t modid
-    , std::string const& modName
+      std::string const& modName
     , std::string const& testName
     , std::string const& stepName
     , uint32_t stepIndex
     )
 {
     // colliding with previous stepIndex means this test already exists
-    if (manualSteps.find(TSManualStep(modid, modName, testName, stepName, stepIndex)) != manualSteps.end())
+    if (manualSteps.find(TSManualStep(modName, testName, stepName, stepIndex)) != manualSteps.end())
     {
         throw std::runtime_error("Duplicate manual test " + modName + ":" + testName);
     }
 
     auto step = &(*manualSteps.insert(TSManualStep(
-          modid
-        , modName
+          modName
         , testName
         , stepName
         , stepIndex
@@ -348,11 +343,10 @@ TSManualStepBuilder * TSManualStepBuilder::verify(TSTestCallback verify)
 }
 
 TSManualTestBuilder::TSManualTestBuilder(
-      uint32_t modid
-    , std::string const& modName
+      std::string const& modName
     , std::string const& testName
-) : m_modid(modid)
-  , m_modName(modName)
+  )
+  : m_modName(modName)
   , m_testName(testName)
 {
 }
@@ -360,8 +354,7 @@ TSManualTestBuilder::TSManualTestBuilder(
 TSManualTestBuilder* TSManualTestBuilder::step(TSString name, TSString description)
 {
     TSManualStepBuilder builder(
-          m_modid
-        , m_modName
+          m_modName
         , m_testName
         , name.std_str()
         , m_stepCtr++
@@ -373,8 +366,7 @@ TSManualTestBuilder* TSManualTestBuilder::step(TSString name, TSString descripti
 TSManualTestBuilder* TSManualTestBuilder::step(TSString name, TSStepBuilderCallback callback)
 {
     TSManualStepBuilder builder(
-          m_modid
-        , m_modName
+          m_modName
         , m_testName
         , name.std_str()
         , m_stepCtr++
@@ -405,47 +397,23 @@ void ClearTests()
     );
 }
 
-void RegisterAutomaticTest(uint32_t modid, std::string const& modName, std::string const& testName, TSTestCallback callback)
+void RegisterAutomaticTest(std::string const& modName, std::string const& testName, TSTestCallback callback)
 {
-    if (automaticTests.find(TSAutomaticTest(modid, modName, testName, callback)) != automaticTests.end())
+    if (automaticTests.find(TSAutomaticTest(modName, testName, callback)) != automaticTests.end())
     {
         throw std::runtime_error("Duplicate automatic test "+modName+":"+testName);
     }
-    automaticTests.insert(TSAutomaticTest(modid, modName, testName, callback));
+    automaticTests.insert(TSAutomaticTest(modName, testName, callback));
 }
 
-std::shared_ptr<TSManualTestBuilder> TC_GAME_API RegisterManualTest(uint32_t modid, std::string const& modName, std::string const& name)
+std::shared_ptr<TSManualTestBuilder> TC_GAME_API RegisterManualTest(std::string const& modName, std::string const& name)
 {
-    return std::make_shared<TSManualTestBuilder>(modid,modName,name);
+    return std::make_shared<TSManualTestBuilder>(modName,name);
 }
 
-void UnloadTestModule(uint32_t modid)
+void UnloadTestModule()
 {
-    auto manualItr = manualSteps.begin();
-    while (manualItr != manualSteps.end())
-    {
-        if(manualItr->m_modid == modid)
-        {
-            manualItr = manualSteps.erase(manualItr);
-        }
-        else
-        {
-            ++manualItr;
-        }
-    }
-
-    auto autoItr = automaticTests.begin();
-    while (autoItr != automaticTests.end())
-    {
-        if(manualItr->m_modid == modid)
-        {
-            autoItr = automaticTests.erase(autoItr);
-        }
-        else
-        {
-            ++autoItr;
-        }
-    }
+    manualSteps.clear();
 }
 
 void TC_GAME_API StartTestSession(Player * player, std::string const& sessionName, std::string const& filter)

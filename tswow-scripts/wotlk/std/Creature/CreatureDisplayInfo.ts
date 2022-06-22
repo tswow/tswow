@@ -6,6 +6,7 @@ import { DBC } from "../../DBCFiles";
 import { creature_model_infoRow } from "../../sql/creature_model_info";
 import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
+import { GeoBox } from "../Misc/GeoBox";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
@@ -54,6 +55,16 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     get MissileCollisionRadius() { return this.wrap(this.row.MissileCollisionRadius); }
     get MissileCollisionPush() { return this.wrap(this.row.MissileCollisionPush); }
     get MissileCollisionRaise() { return this.wrap(this.row.MissileCollisionRaise); }
+    get Geobox() { 
+        return new GeoBox(this,
+            this.row.GeoBoxMinX,
+            this.row.GeoBoxMaxX,
+            this.row.GeoBoxMinY,
+            this.row.GeoBoxMaxY,
+            this.row.GeoBoxMinZ,
+            this.row.GeoBoxMaxZ
+        )
+    }
 }
 
 export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {

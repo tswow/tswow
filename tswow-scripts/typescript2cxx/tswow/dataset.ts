@@ -1,5 +1,5 @@
-import { wfs } from "../util/FileSystem";
-import { DatasetDirectory } from "../util/Paths";
+import { wfs } from "../../util/FileSystem";
+import { DatasetDirectory } from "../../util/Paths";
 
 // Copypaste from wotlkdata/Settings.ts
 export const dataset = function() {

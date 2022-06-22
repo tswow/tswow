@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSGameObjectTemplate.h"
 
-void TSLuaState::load_gameobject_template_methods(uint32_t modid)
+void TSLua::load_gameobject_template_methods(sol::state& state)
 {
-    auto ts_gameobjecttemplate = new_usertype<TSGameObjectTemplate>("TSGameObjectTemplate");
+    auto ts_gameobjecttemplate = state.new_usertype<TSGameObjectTemplate>("TSGameObjectTemplate");
     LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetEntry);
     LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetType);
     LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetDisplayID);
