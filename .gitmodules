@@ -1,4 +1,4 @@
-[submodule "TrinityCore"]
+[submodule "cores/TrinityCore"]
 	path = cores/TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
