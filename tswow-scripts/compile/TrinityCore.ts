@@ -67,6 +67,15 @@ export namespace TrinityCore {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
             })
+
+            bpaths.TrinityCore.tracy_source.tracy_header.copy(ipaths.bin.include.tracy.tracy_hpp);
+            [bpaths.TrinityCore.tracy_source.common,bpaths.TrinityCore.tracy_source.client].forEach(x=>{
+                x.iterateDef((node)=>{
+                    if(node.endsWith('.hpp') || node.endsWith('.h')) {
+                        node.copy(ipaths.bin.include.tracy.join(x.basename(),node.basename()))
+                    }
+                });
+            });
         }
 
         spaths.misc.client_extensions.CustomPackets
@@ -200,6 +209,35 @@ export namespace TrinityCore {
     }
 
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
+        //
+        // Tracy
+        //
+        const allArgs = args1.concat(process.argv);
+        const tracyEnabled = allArgs.findIndex(x=>x.startsWith('tracy')) >= 0
+
+        const TRACY_PREFIX = 'tracy='
+        let allProfileCats = spaths.tswow_core.Public.TSProfile_h.readString()
+            .match(/#ifdef PROFILE_(.+)/g)
+            .map(x=>x.substring('#ifdef PROFILE_'.length))
+            .map(x=>x.toUpperCase())
+
+        let profileCats =
+            (   args1.find(x=>x.startsWith(TRACY_PREFIX))
+            || process.argv.find(x=>x.startsWith(TRACY_PREFIX))
+            || TRACY_PREFIX
+            )
+            .substring(TRACY_PREFIX.length)
+            .split(',')
+            .filter(x=>x.length>0)
+            .map(x=>x.toUpperCase())
+            ;
+
+        if(profileCats.includes('*')) {
+            profileCats = profileCats.concat(allProfileCats)
+        }
+        profileCats = profileCats
+            .filter((x,i,a)=>x != '*' && a.indexOf(x) == i)
+
         if(Args.hasFlag('notc',[process.argv,args1])) {
             return;
         }
@@ -208,10 +246,11 @@ export namespace TrinityCore {
         bpaths.TrinityCore.mkdir()
 
         // We no longer make non-dynamic builds.
-        const compileType = 'dynamic';
-        const scripts = args1.includes('minimal') ?
-            `minimal-${compileType}` :
-                args1.includes('noscripts') ? 'none' : compileType;
+        const scripts = Args.hasFlag('minimal',[process.argv,args1])
+            ? `minimal-dynamic`
+            : args1.includes('noscripts')
+            ? 'none'
+            : 'dynamic';
 
         const tools = args1.includes('notools') ? '0' : '1';
         const generateOnly = args1.includes('--generate-only')
@@ -229,6 +268,10 @@ export namespace TrinityCore {
                 +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                 +` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
+                +` -DTRACY_ENABLE="${tracyEnabled?'ON':'OFF'}"`
+                +` -DTRACY_CATEGORIES="${profileCats.join(';')}"`
+                +` -DBUILD_SHARED_LIBS="ON"`
+                +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
@@ -246,6 +289,9 @@ export namespace TrinityCore {
                 +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
                 +` -DCMAKE_C_COMPILER=/usr/bin/clang`
                 +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+                +` -DBUILD_SHARED_LIBS="ON"`
+                +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
+                +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -DWITH_WARNINGS=1`
                 +` -DSCRIPTS=${scripts}`;
                 buildCommand = 'make -j 4';
@@ -270,6 +316,8 @@ export namespace TrinityCore {
                     node.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).configs.join(node.basename()))
                 }
             })
+            bpaths.TrinityCore.tracy_dll(type)
+                .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).tracy_client);
         } else {
             [
                   bpaths.TrinityCore.lib_linux

@@ -7,10 +7,10 @@
 #include "TSObjectLua.h"
 
 template <typename T>
-void TSLuaState::load_world_object_methods_t(sol::usertype<T> & target, uint32_t modid, std::string const& name)
+void TSLua::load_world_object_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& name)
 {
-    load_object_methods_t<T>(target, modid, name);
-    load_world_entity_methods_t<TSWorldObject, T>(target, modid, name);
+    load_object_methods_t<T>(state, target, name);
+    load_world_entity_methods_t<TSWorldObject, T>(state, target, name);
     LUA_FIELD(target, TSWorldObject, GetCreaturesInRange);
     LUA_FIELD(target, TSWorldObject, GetPlayersInRange);
     LUA_FIELD(target, TSWorldObject, GetUnitsInRange);
@@ -70,6 +70,7 @@ void TSLuaState::load_world_object_methods_t(sol::usertype<T> & target, uint32_t
     LUA_FIELD(target, TSWorldObject, GetCollisions);
     LUA_FIELD(target, TSWorldObject, SetActive);
     LUA_FIELD(target, TSWorldObject, IsActive);
+    target.set_function("DoDelayed", &TSWorldObject::LDoDelayed);
 
     target.set_function("CastSpell", sol::overload(
           &TSWorldObject::LCastSpell0

@@ -66,7 +66,7 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (type == 'azerothcore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
-    if (isType('azerothcore-relwithdebinfo')) { await AzerothCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
+    if (type == 'azerothcore-relwithdebinfo') { await AzerothCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
     if (type == 'azerothcore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
 
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
@@ -140,6 +140,11 @@ async function main() {
 (async function(){
     if(!spaths.tswow_scripts.wotlk.global_d_ts.exists()) {
         TrinityCore.headers(true);
+    }
+
+    if(Args.hasFlag('gdts-only', [process.argv])) {
+        TrinityCore.headers(true);
+        process.exit(0);
     }
 
     if(isInteractive) {

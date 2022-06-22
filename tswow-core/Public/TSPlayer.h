@@ -22,6 +22,7 @@
 #include "TSClasses.h"
 #include "TSUnit.h"
 #include "TSOutfit.h"
+#include "TSDBJson.h"
 
 #include <sol/sol.hpp>
 
@@ -30,21 +31,25 @@ class TSJsonArray;
 class TSBattleground;
 class TSBattlegroundPlayer;
 class TSInstance;
+class TSPlayerSpell;
 
 struct TSMail;
-class TC_GAME_API TSPlayer : public TSUnit {
+class TC_GAME_API TSPlayer : public TSUnit, public TSDBJsonProvider {
 public:
 	Player* player;
 	TSPlayer(Player* player);
-  TSPlayer();
-  TSPlayer* operator->() { return this;}
+	TSPlayer();
+	TSPlayer* operator->() { return this;}
 	bool IsNull() { return player == nullptr; };
+	TSDBJson* get_json() override;
 	bool CanTitanGrip();
+	bool HasRunes();
 	bool HasTalent(uint32 spellId, uint8 spec);
 	bool HasAchieved(uint32 achievementId);
 	bool HasQuest(uint32 quest);
 	bool HasSkill(uint32 skill);
 	bool HasSpell(uint32 id);
+	TSDictionary<uint32, TSPlayerSpell> GetSpellMap();
 	bool HasAtLoginFlag(uint32 flag);
 	bool HasQuestForGO(int32 entry);
 	bool HasTitle(uint32 id);
@@ -116,6 +121,9 @@ public:
 	int32 GetDifficulty(bool isRaid);
 	uint32 GetGuildRank();
 	uint32 GetFreeTalentPoints();
+	uint32 GetTalentPointsInTree(uint32 tabId);
+	uint32 GetQuestRewardTempTalentPoints();
+	uint32 GetQuestRewardPermTalentPoints();
 	uint32 GetFreeInventorySpace();
 	TSString GetGuildName();
 	int32 GetReputation(uint32 faction);
@@ -426,5 +434,7 @@ private:
 		void LSendItemQueryPacket0(uint32 entry);
 		void LSendItemQueryPacket1(TSItemTemplate item);
 
-		friend class TSLuaState;
+		TSLua::Dictionary<uint32, TSPlayerSpell> LGetSpellMap();
+
+		friend class TSLua;
 };

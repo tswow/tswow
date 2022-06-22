@@ -85,5 +85,5 @@ private:
     void LDoCastSpellOnPlayers1(uint32 spell, bool includePets);
     void LDoCastSpellOnPlayers2(uint32 spell);
     void LDoSendNotify(std::string const& message);
-    friend class TSLuaState;
+    friend class TSLua;
 };

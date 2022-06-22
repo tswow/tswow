@@ -38,6 +38,7 @@ import { NodeConfig } from "./NodeConfig";
 import { Package } from "./Package";
 import { PositionsFile } from "./PositionsFile";
 import { Realm } from "./Realm";
+import { Snippets } from "./Snippets";
 
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
@@ -81,6 +82,7 @@ export async function main() {
     await Dataset.initialize()
     await Client.initialize();
     await Module.initialize();
+    await Snippets.initialize();
     await AuthServer.initializeDatabase()
     await Realm.initialize()
     await AuthServer.initializeServer()

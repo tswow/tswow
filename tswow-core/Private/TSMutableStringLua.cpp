@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSMutableString.h"
 
-void TSLuaState::load_mutablestring_methods(uint32_t modid)
+void TSLua::load_mutablestring_methods(sol::state& state)
 {
-    auto ts_mutablestring = new_usertype<TSMutableString>("TSMutableString");
-    LUA_FIELD(ts_mutablestring, TSMutableString, Lset);
-    LUA_FIELD(ts_mutablestring, TSMutableString, Lget);
+    auto ts_mutablestring = state.new_usertype<TSMutableString>("TSMutableString");
+    ts_mutablestring.set_function("set", &TSMutableString::Lset);
+    ts_mutablestring.set_function("get", &TSMutableString::Lget);
 }

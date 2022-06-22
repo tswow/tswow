@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSAuction.h"
 
-void TSLuaState::load_auction_methods(uint32_t modid)
+void TSLua::load_auction_methods(sol::state& state)
 {
-    auto ts_auctionentry = new_usertype<TSAuctionEntry>("TSAuctionEntry");
+    auto ts_auctionentry = state.new_usertype<TSAuctionEntry>("TSAuctionEntry");
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetID);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetHouseID);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetItemID);
@@ -31,7 +31,7 @@ void TSLuaState::load_auction_methods(uint32_t modid)
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, SetFlags);
     ts_auctionentry.set_function("GetBidders", &TSAuctionEntry::LGetBidders);
 
-    auto ts_auctionhouseobject = new_usertype<TSAuctionHouseObject>("TSAuctionHouseObject");
+    auto ts_auctionhouseobject = state.new_usertype<TSAuctionHouseObject>("TSAuctionHouseObject");
     ts_auctionhouseobject.set_function("GetKeys", &TSAuctionHouseObject::LGetKeys);
     LUA_FIELD(ts_auctionhouseobject, TSAuctionHouseObject, GetEntry);
     LUA_FIELD(ts_auctionhouseobject, TSAuctionHouseObject, GetCount);

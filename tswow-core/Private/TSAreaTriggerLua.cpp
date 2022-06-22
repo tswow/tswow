@@ -4,10 +4,10 @@
 
 #include <vector>
 
-void TSLuaState::load_areatrigger_methods(uint32_t modid)
+void TSLua::load_areatrigger_methods(sol::state& state)
 {
 #if TRINITY
-    auto ts_areatriggerentry = new_usertype<TSAreaTriggerEntry>("TSAreaTriggerEntry");
+    auto ts_areatriggerentry = state.new_usertype<TSAreaTriggerEntry>("TSAreaTriggerEntry");
     LUA_FIELD(ts_areatriggerentry, TSAreaTriggerEntry, GetEntry);
     LUA_FIELD(ts_areatriggerentry, TSAreaTriggerEntry, GetContinentID);
     LUA_FIELD(ts_areatriggerentry, TSAreaTriggerEntry, GetX);

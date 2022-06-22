@@ -1,3 +1,4 @@
+import { Args } from "../util/Args";
 import { BuildType } from "../util/BuildType";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
@@ -93,6 +94,8 @@ export class Livescripts {
             await Datascripts.build(dataset,['--inline-only'])
         }
 
+        let tracyArg = args.find(x=>x.startsWith('tracy'))
+
         this.mod.path.livescript_tsconfig_temp.writeJson(temp_config(dataset))
         try {
             wsys.execIn(
@@ -103,6 +106,7 @@ export class Livescripts {
                 + ` --ipaths=${ipaths.abs()}`
                 + ` --datasetName=${dataset.fullName}`
                 + ` --datasetPath=${dataset.path.abs().get()}`
+                + ` ${tracyArg ? tracyArg : ''}`
                 , 'inherit'
             )
         } catch(err) {
@@ -138,6 +142,7 @@ export class Livescripts {
             (isWindows()
                 ? `"bin/cmake/bin/cmake.exe" -DCMAKE_GENERATOR="Visual Studio 16 2019"`
                 : 'cmake')
+            + ` -DTRACY_ENABLE="${Args.hasFlag('tracy',args) ? 'ON': 'OFF'}"`
             + ` -S ${builddir.cpp.abs()}`
             + ` -B ${builddir.lib.abs()}`
         try {

@@ -191,11 +191,18 @@ export namespace mysql {
         ipaths.coredata.mkdir()
         if(!ipaths.coredata.database.exists()) {
             term.log('mysql',"No mysql database found, creating it...");
-            wsys.exec(
-                  `${ipaths.bin.mysql.mysqld_exe.get()}`
-                + ` --initialize`
-                + ` --log_syslog=0`
-                + ` --datadir=${ipaths.coredata.database.abs()}`);
+            try {
+                wsys.exec(
+                    `${ipaths.bin.mysql.mysqld_exe.get()}`
+                    + ` --initialize`
+                    + ` --log_syslog=0`
+                    + ` --datadir=${ipaths.coredata.database.abs()}`);
+            } catch(error) {
+                term.error('mysql',`Failed to start MySQL: ${error.message}`)
+                term.error('mysql',`Make sure you installed all vcredist versions needed`)
+                term.error('mysql',`See wiki for installation instructions: https://tswow.github.io/tswow-wiki/`)
+                process.exit(-1);
+            }
             term.success('mysql','Created mysql database');
         }
 

@@ -10,6 +10,7 @@ import { Class } from "../Class";
 import { DefaultClassRaces, getDefaultClass, getDefaultRace } from "../ClassDefaultRaces";
 import { ClassRegistry } from "../ClassRegistry";
 import { ClassRaceActions } from "./ClassRaceAction";
+import { ClassRaceRunes } from "./ClassRaceRunes";
 import { ClassRaceSpawn } from "./ClassRaceSpawn";
 import { StartGearRef } from "./ClassRaceStartGear";
 import { ClassRaceStats } from "./RaceClassStats";
@@ -24,6 +25,10 @@ export class ClassRacePair extends MainEntity<CharBaseInfoRow> {
     }
     get Actions() {
         return new ClassRaceActions(this, this.Class.get(),this.Race.get());
+    }
+
+    get HasRunes() {
+        return new ClassRaceRunes(this);
     }
 }
 

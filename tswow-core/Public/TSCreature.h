@@ -149,8 +149,8 @@ private:
     TSOutfit LGetOutfitCopy1(Outfit settings, int32_t race);
     TSOutfit LGetOutfitCopy2(Outfit settings);
     TSOutfit LGetOutfitCopy3();
-    sol::as_table_t<std::vector<TSUnit>> LGetAITargets();
+    TSLua::Array<TSUnit> LGetAITargets();
     std::string LGetScriptName();
     std::string LGetAIName();
-    friend class TSLuaState;
+    friend class TSLua;
 };

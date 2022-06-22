@@ -6,9 +6,9 @@
 #include "DBCStores.h"
 #include <vector>
 
-void TSLuaState::load_achievement_methods(uint32_t modid)
+void TSLua::load_achievement_methods(sol::state& state)
 {
-    auto ts_achievemententry = new_usertype<TSAchievementEntry>("TSAchievementEntry");
+    auto ts_achievemententry = state.new_usertype<TSAchievementEntry>("TSAchievementEntry");
     LUA_FIELD(ts_achievemententry, TSAchievementEntry, GetEntry);
     LUA_FIELD(ts_achievemententry, TSAchievementEntry, GetFaction);
     LUA_FIELD(ts_achievemententry, TSAchievementEntry, GetInstanceID);
@@ -19,7 +19,7 @@ void TSLuaState::load_achievement_methods(uint32_t modid)
     LUA_FIELD(ts_achievemententry, TSAchievementEntry, GetSharesCriteria);
     ts_achievemententry.set_function("GetTitles", &TSAchievementEntry::LGetTitles);
 
-    auto ts_achievementcriteriaentry = new_usertype<TSAchievementCriteriaEntry>("TSAchievementCriteriaEntry");
+    auto ts_achievementcriteriaentry = state.new_usertype<TSAchievementCriteriaEntry>("TSAchievementCriteriaEntry");
     LUA_FIELD(ts_achievementcriteriaentry, TSAchievementCriteriaEntry, GetEntry);
     LUA_FIELD(ts_achievementcriteriaentry, TSAchievementCriteriaEntry, GetAchievementEntry);
     LUA_FIELD(ts_achievementcriteriaentry, TSAchievementCriteriaEntry, GetType);
@@ -33,6 +33,6 @@ void TSLuaState::load_achievement_methods(uint32_t modid)
     LUA_FIELD(ts_achievementcriteriaentry, TSAchievementCriteriaEntry, GetStartEvent);
     LUA_FIELD(ts_achievementcriteriaentry, TSAchievementCriteriaEntry, GetStartAsset);
     LUA_FIELD(ts_achievementcriteriaentry, TSAchievementCriteriaEntry, GetStartTimer);
-    set_function("GetAchievementTemplate", &GetAchievementTemplate);
-    set_function("GetAchievementCriteria", &GetAchievementCriteria);
+    state.set_function("GetAchievementTemplate", &GetAchievementTemplate);
+    state.set_function("GetAchievementCriteria", &GetAchievementCriteria);
 }

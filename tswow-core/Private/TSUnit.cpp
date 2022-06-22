@@ -15,11 +15,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <memory.h>
-#include "Object.h"
-#include "Unit.h"
 #include "TSIncludes.h"
 #include "TSUnit.h"
+#include "TSPlayer.h"
+#include "TSAura.h"
+#include "TSSpell.h"
+#include "TSVehicle.h"
+#include "TSCreature.h"
+#include "TSItem.h"
+#include "TSMap.h"
+
+#include "Object.h"
+#include "Unit.h"
 #include "Chat.h"
 #include "Unit.h"
 #include "SpellMgr.h"
@@ -27,14 +34,9 @@
 #include "SpellAuraDefines.h"
 #include "MotionMaster.h"
 #include "Unit.h"
-#include "TSPlayer.h"
-#include "TSAura.h"
-#include "TSSpell.h"
-#include "TSVehicle.h"
-#include "TSCreature.h"
-#include "TSItem.h"
 #include "Player.h"
-#include "TSMap.h"
+
+#include <memory.h>
 
 TSUnit::TSUnit(Unit *unit) : TSWorldObject(unit)
 {
@@ -602,7 +604,7 @@ uint64 TSUnit::GetOwnerGUID()
  */
 uint32 TSUnit::GetMountID()
 {
-    return unit->GetMountID();
+    return unit->GetMountDisplayId();
 }
 
 /**
@@ -1588,7 +1590,7 @@ void TSUnit::SetWaterWalk(bool enable)
  */
 void TSUnit::SetStandState(uint8 state)
 {
-    unit->SetStandState(state);
+    unit->SetStandState(UnitStandStateType(state));
 }
 
 #if (!defined(TBC) && !defined(CLASSIC))
@@ -2519,61 +2521,63 @@ bool TSUnit::HasAuraType(uint32 type)
     return unit->HasAuraType(static_cast<AuraType>(type));
 }
 
-/*int TSUnit::RestoreDisplayId(lua_State* L, Unit* unit)
+TSArray<TSUnit> TSUnit::GetControlled()
 {
-    unit->RestoreDisplayId();
-}*/
-
-/*int TSUnit::RestoreFaction(lua_State* L, Unit* unit)
-{
-    unit->RestoreFaction();
-}*/
-
-/*int TSUnit::RemoveBindSightAuras(lua_State* L, Unit* unit)
-{
-    unit->RemoveBindSightAuras();
-}*/
-
-/*int TSUnit::RemoveCharmAuras(lua_State* L, Unit* unit)
-{
-    unit->RemoveCharmAuras();
-}*/
-
-/*int TSUnit::DisableMelee(lua_State* L, Unit* unit)
-{
-
-if (apply)
-unit->AddUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
-else
-unit->ClearUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
-}*/
-
-/*int TSUnit::SummonGuardian(lua_State* L, Unit* unit)
-{
-
-SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
-Position pos;
-pos.Relocate(x,y,z,o);
-TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
-
-
-if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
-((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
-
-if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
-summon->setFaction(unit->getFaction());
-if (summon->GetEntry() == 27893)
-{
-if (uint32 weapon = unit->GetUInt32Value(PLAYER_VISIBLE_ITEM_16_ENTRYID))
-{
-summon->SetDisplayId(11686);
-summon->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, weapon);
+    TSArray<TSUnit> arr;
+    for (Unit* unit : unit->m_Controlled)
+    {
+        arr.push(TSUnit(unit));
+    }
+    return arr;
 }
-else
-summon->SetDisplayId(1126);
+
+void TSUnit::RemoveAllControlled()
+{
+    unit->RemoveAllControlled();
 }
-summon->AI()->EnterEvadeMode();
-return summon;
-}*/
-// Inherited from WorldObject
-// Inherited from Object
+
+TSUnit TSUnit::GetFirstControlled()
+{
+    return TSUnit(unit->GetFirstControlled());
+}
+
+TSLua::Array<TSUnit> TSUnit::LGetControlled()
+{
+    return sol::as_table(*GetControlled().vec);
+}
+
+void TSUnit::RemoveAllMinionsByEntry(uint32 entry)
+{
+    unit->RemoveAllMinionsByEntry(entry);
+}
+
+void TSUnit::SetCharm(TSUnit target, bool apply)
+{
+    unit->SetCharm(target.unit, apply);
+}
+
+bool TSUnit::SetCharmedBy(TSUnit charmer, uint32 type, TSAuraApplication aurApp)
+{
+    return unit->SetCharmedBy(charmer.unit, CharmType(type), aurApp->aura);
+}
+
+bool TSUnit::SetCharmedBy(TSUnit charmer, uint32 type)
+{
+    return unit->SetCharmedBy(charmer.unit, CharmType(type));
+}
+
+void TSUnit::RemoveCharmedBy(TSUnit charmer)
+{
+    unit->RemoveCharmedBy(charmer.unit);
+}
+
+bool TSUnit::LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp)
+{
+    return SetCharmedBy(charmer, type, aurApp);
+}
+
+bool TSUnit::LSetCharmedBy1(TSUnit charmer, uint32 type)
+{
+    return SetCharmedBy(charmer, type);
+}
+

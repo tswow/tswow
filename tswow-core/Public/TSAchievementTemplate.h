@@ -47,8 +47,8 @@ public:
     uint32 GetSharesCriteria();
 
 private:
-    sol::as_table_t<std::vector<std::string>> LGetTitles();
-    friend class TSLuaState;
+    TSLua::Array<std::string> LGetTitles();
+    friend class TSLua;
 };
 
 struct AchievementCriteriaEntry;

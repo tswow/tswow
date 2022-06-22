@@ -235,12 +235,12 @@ void TSAuctionHouseObject::AddAuction(TSAuctionEntry entry)
     obj->AddAuction(entry->entry);
 }
 
-sol::as_table_t<std::vector<uint64>> TSAuctionEntry::LGetBidders()
+TSLua::Array<uint64> TSAuctionEntry::LGetBidders()
 {
     return sol::as_table(*GetBidders().vec);
 }
 
-sol::as_table_t<std::vector<uint32>> TSAuctionHouseObject::LGetKeys()
+TSLua::Array<uint32> TSAuctionHouseObject::LGetKeys()
 {
     return sol::as_table(*GetKeys().vec);
 }

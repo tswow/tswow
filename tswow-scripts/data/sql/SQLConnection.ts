@@ -23,6 +23,45 @@ import { SqlTable } from './SQLTable';
 import { translate } from './SQLTranslate';
 import deasync = require('deasync');
 
+export class PreparedStatement {
+    private asyncStatement: any;
+
+    readonly query: string;
+    private early: any[][] = []
+    private normal: any[][] = []
+    private late: any[][] = []
+
+    constructor(statement: string) {
+        this.query = statement;
+    }
+
+    writeEarly(values: any[]) {
+        this.early.push(values);
+    }
+
+    writeNormal(values: any[]) {
+        this.normal.push(values);
+    }
+
+    writeLate(values: any[]) {
+        this.late.push(values);
+    }
+
+    static clear(stmnt: PreparedStatement) {
+        stmnt.early = []
+        stmnt.normal = []
+        stmnt.late = []
+    }
+
+    static setStatement(stmnt: PreparedStatement, asyncStatement: any) {
+        stmnt.asyncStatement = asyncStatement;
+    }
+
+    static getStatement(stmnt: PreparedStatement) {
+        return stmnt.asyncStatement;
+    }
+}
+
 export class Connection {
     static end(connection: Connection) {
         if(connection.sync !== undefined)  {
@@ -71,6 +110,7 @@ export class Connection {
         this.settings.multipleStatements = true;
     }
 
+    protected statements: PreparedStatement[] = []
     protected early: string[] = [];
     protected normal: string[] = [];
     protected late: string[] = [];
@@ -87,6 +127,12 @@ export class Connection {
         return this.syncQuery(query);
     }
 
+    prepare(statement: string) {
+        let prep = new PreparedStatement(statement);
+        this.statements.push(prep);
+        return prep;
+    }
+
     write(query: string) {
         this.normal.push(query);
     }
@@ -100,8 +146,10 @@ export class Connection {
     }
 
     async apply() {
-        const doPriority = (priority: string[]) => {
-            return Promise.all(priority.map((x)=>new Promise<void>((res,rej)=>{
+        const doPriority = async (name: string) => {
+            let priority: string[] = this[name]
+
+            let promises = priority.map((x)=>new Promise<void>((res,rej)=>{
                 if(this.async===undefined) {
                     return rej(`Tried to apply while async adapter was disconnected`);
                 }
@@ -115,12 +163,30 @@ export class Connection {
                     } else {
                         return res();
                 }})
-            })))
+            }))
+
+            this.statements.forEach(x=>{
+                (x[name] as any[][]).forEach(y=>{
+                    promises.push(new Promise((res,rej)=>{
+                        this.async.execute(x.query,y, err => {
+                            if(err) {
+                                err.message = `(For SQL "${x.query}" with values (${JSON.stringify(y)}))\n${err.message}`
+                                rej(err);
+                            } else {
+                                res();
+                            }
+                        })
+                    }))
+                })
+            })
+
+            return Promise.all(promises);
         }
 
-        await doPriority(this.early);
-        await doPriority(this.normal);
-        await doPriority(this.late);
+        await doPriority('early');
+        await doPriority('normal');
+        await doPriority('late');
+        this.statements.forEach(x=>PreparedStatement.clear(x))
         this.early = [];
         this.normal = [];
         this.late = [];
@@ -148,6 +214,8 @@ export class SqlConnection {
     static world_dst = new Connection(NodeConfig.DatabaseSettings('world',datasetName));
     static world_src = new Connection(NodeConfig.DatabaseSettings('world_source',datasetName))
 
+    private static query_cache: {[table: string]: {[query: string]: boolean}} = {}
+
     protected static endConnection() {
         Connection.end(this.auth);
         //Connection.end(this.characters);
@@ -165,6 +233,15 @@ export class SqlConnection {
 
     static getRows<C, Q, T extends SqlRow<C, Q>>(table: SqlTable<C, Q, T>, where: Q, first: boolean) {
         const whereSql = queryToSql(where, false);
+        const whereLookup = whereSql + first;
+
+        // Check cache for the query, don't repeat
+        let tableCache = this.query_cache[table.name] || (this.query_cache[table.name] = {});
+        if(tableCache[whereLookup]) {
+            return [];
+        }
+        tableCache[whereLookup] = true;
+
         const sqlStr = `SELECT * FROM ${table.name} ${whereSql.length > 1 ? ` WHERE ${whereSql}` : ''} ${first ? 'LIMIT 1' : ''};`;
         const res = SqlConnection.querySource(sqlStr);
         const rowsOut: T[] = [];

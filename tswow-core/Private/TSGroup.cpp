@@ -357,7 +357,7 @@ void TSGroup::SetTargetIcon(uint8 icon,uint64 target,uint64 setter)
     group->ConvertToLFG();
 }*/
 
-sol::as_table_t<std::vector<TSPlayer>> TSGroup::LGetMembers()
+TSLua::Array<TSPlayer> TSGroup::LGetMembers()
 {
     return sol::as_table(*GetMembers().vec);
 }

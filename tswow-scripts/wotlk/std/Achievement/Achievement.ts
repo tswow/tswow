@@ -80,9 +80,9 @@ export class Achievement extends MainEntityID<AchievementRow> {
         return getInlineID(
               this
             , this.ID
-            , 'AchievementID'
+            , 'Achievement'
             , 'livescript'
-        ) as _hidden.Achievements<this>
+        ) as _hidden.Achievement<this>
     }
 
     get InlineLua() {
@@ -91,7 +91,7 @@ export class Achievement extends MainEntityID<AchievementRow> {
             , this.ID
             , 'AchievementID'
             , 'lua'
-        ) as _hidden.Achievements<this>
+        ) as _hidden.Achievement<this>
     }
 }
 

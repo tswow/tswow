@@ -44,6 +44,7 @@ import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
 import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
 import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
+import { CreatureEquipment } from "./CreatureEquipment";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureFlagsExtra } from "./CreatureFlagsExtra";
 import { CreatureGold } from "./CreatureGold";
@@ -57,6 +58,7 @@ import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
+import { CreatureResistances } from "./CreatureResistances";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
@@ -238,9 +240,9 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
         return FactionTemplateRegistry.ref(this, this.row.faction);
     }
 
-    get InlineScripts() { return getInlineID(this, this.ID, 'CreatureID', 'livescript') as _hidden.Creatures<this> }
+    get InlineScripts() { return getInlineID(this, this.ID, 'Creature', 'livescript') as _hidden.Creature<this> }
 
-    get InlineLua() { return getInlineID(this, this.ID, 'CreatureID', 'lua') as _hidden.Creatures<this> }
+    get InlineLua() { return getInlineID(this, this.ID, 'Creature', 'lua') as _hidden.Creature<this> }
 
     /**
      * - 0 = does not regenerate health
@@ -308,6 +310,13 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     get Vendor() { return new VendorItems(this, this.ID); }
 
     get Texts() { return CreatureTextRegistry.load(this.ID); }
+
+    get Resistances() { return new CreatureResistances(this); }
+
+    /**
+     * @note This can be overridden by creature outfits
+     */
+    get Weapons() { return new CreatureEquipment(this); }
 
     get NormalLoot() {
         return new LootSetPointer(

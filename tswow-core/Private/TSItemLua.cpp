@@ -4,9 +4,9 @@
 #include "TSString.h"
 #include "TSPlayer.h"
 
-void TSLuaState::load_item_methods(uint32_t modid)
+void TSLua::load_item_methods(sol::state& state)
 {
-    auto ts_item = new_usertype < TSItem>("TSItem");
+    auto ts_item = state.new_usertype < TSItem>("TSItem");
     ts_item.set_function("GetItemLink", &TSItem::LGetItemLink);
     ts_item.set_function("GetName", &TSItem::LGetName);
     LUA_FIELD(ts_item, TSItem, IsSoulBound);
@@ -59,7 +59,7 @@ void TSLuaState::load_item_methods(uint32_t modid)
     LUA_FIELD(ts_item, TSItem, SetEnchantment);
     LUA_FIELD(ts_item, TSItem, ClearEnchantment);
     LUA_FIELD(ts_item, TSItem, SaveToDB);
-    set_function("CreateItem", sol::overload(
+    state.set_function("CreateItem", sol::overload(
         &LCreateItem0
         , &LCreateItem1
         , &LCreateItem2

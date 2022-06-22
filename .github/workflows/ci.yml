@@ -35,22 +35,22 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           upload-url: ${{ secrets.TSWOW_UPLOAD_URL }}
 
-  windows-msvc-azerothcore:
-    runs-on: windows-2019
-    steps:
-      # Build
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-      - uses: ./.github/actions/setup_windows
-      - name: Build tswow
-        run: npm run build-release clean-archives notc
-      - uses: ./.github/actions/publish_windows
-        env:
-          TSWOW_UPLOAD_URL: ${{ secrets.TSWOW_UPLOAD_URL }}
-          EVENT_NAME: ${{github.event_name}}
-        if: "${{ env.TSWOW_UPLOAD_URL != '' && env.EVENT_NAME != 'pull_request'}}"
-        with:
-          core: 'azerothcore'
-          token: ${{secrets.GITHUB_TOKEN}}
-          upload-url: ${{ secrets.TSWOW_UPLOAD_URL }}
+  #windows-msvc-azerothcore:
+  #  runs-on: windows-2019
+  #  steps:
+  #    # Build
+  #    - uses: actions/checkout@v2
+  #      with:
+  #        submodules: 'recursive'
+  #    - uses: ./.github/actions/setup_windows
+  #    - name: Build tswow
+  #      run: npm run build-release clean-archives notc
+  #    - uses: ./.github/actions/publish_windows
+  #      env:
+  #        TSWOW_UPLOAD_URL: ${{ secrets.TSWOW_UPLOAD_URL }}
+  #        EVENT_NAME: ${{github.event_name}}
+  #      if: "${{ env.TSWOW_UPLOAD_URL != '' && env.EVENT_NAME != 'pull_request'}}"
+  #      with:
+  #        core: 'azerothcore'
+  #        token: ${{secrets.GITHUB_TOKEN}}
+  #        upload-url: ${{ secrets.TSWOW_UPLOAD_URL }}

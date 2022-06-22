@@ -1,9 +1,9 @@
 #include "TSLua.h"
 #include "TSQuest.h"
 
-void TSLuaState::load_quest_methods(uint32_t modid)
+void TSLua::load_quest_methods(sol::state& state)
 {
-    auto ts_quest = new_usertype<TSQuest>("TSQuest");
+    auto ts_quest = state.new_usertype<TSQuest>("TSQuest");
     LUA_FIELD(ts_quest, TSQuest, HasFlag);
     LUA_FIELD(ts_quest, TSQuest, IsDaily);
     LUA_FIELD(ts_quest, TSQuest, IsRepeatable);

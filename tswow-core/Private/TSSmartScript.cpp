@@ -398,7 +398,7 @@ std::string TSCondition::LToString1()
     return ToString().std_str();
 }
 
-sol::as_table_t<std::vector<TSWorldObject>> TSSmartScriptValues::LGetTargets()
+TSLua::Array<TSWorldObject> TSSmartScriptValues::LGetTargets()
 {
     return sol::as_table(*GetTargets().vec);
 }
@@ -412,7 +412,7 @@ void TSSmartScriptValues::LStoreTargetList(sol::table objects, uint32 id)
     StoreTargetList(tsobjects, id);
 }
 
-sol::as_table_t<std::vector<TSWorldObject>> TSSmartScriptValues::LGetTargetList(uint32 id, TSWorldObject ref)
+TSLua::Array<TSWorldObject> TSSmartScriptValues::LGetTargetList(uint32 id, TSWorldObject ref)
 {
     return sol::as_table(*GetTargetList(id, ref).vec);
 }

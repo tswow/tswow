@@ -101,9 +101,9 @@ export class Map extends TransformedEntityID<MapRow,MapPlain> {
         return getInlineID(
               this
             , this.ID
-            , 'MapID'
+            , 'Map'
             , 'livescript'
-        ) as _hidden.Maps<this>
+        ) as _hidden.Map<this>
     }
 
     get InlineLua() {
@@ -112,7 +112,7 @@ export class Map extends TransformedEntityID<MapRow,MapPlain> {
             , this.ID
             , 'MapID'
             , 'lua'
-        ) as _hidden.Maps<this>
+        ) as _hidden.Map<this>
     }
 }
 
@@ -200,9 +200,9 @@ export class BattlegroundMap extends Map {
         return getInlineID(
               this
             , this.BattlegroundID
-            , 'BattlegroundID'
+            , 'Battleground'
             , 'livescript'
-        ) as _hidden.Battlegrounds<this>
+        ) as _hidden.Battleground<this>
     }
 
     get InlineLuaBG() {
@@ -211,7 +211,7 @@ export class BattlegroundMap extends Map {
             , this.BattlegroundID
             , 'BattlegroundID'
             , 'lua'
-        ) as _hidden.Battlegrounds<this>
+        ) as _hidden.Battleground<this>
     }
 }
 
@@ -265,18 +265,18 @@ export class DungeonMap extends Map {
         return getInlineID(
             this
           , this.ID
-          , 'InstanceID'
+          , 'Instance'
           , 'livescript'
-      ) as _hidden.Instances<this>
+      ) as _hidden.Instance<this>
     }
 
     get InlineLuaDungeon() {
         return getInlineID(
             this
           , this.ID
-          , 'InstanceID'
+          , 'Instance'
           , 'livescript'
-      ) as _hidden.Instances<this>
+      ) as _hidden.Instance<this>
     }
 
     get Script() {

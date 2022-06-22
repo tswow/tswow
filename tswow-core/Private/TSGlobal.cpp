@@ -37,30 +37,6 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 #endif
 }
 
-void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
-{
-    auto player = ObjectAccessor::FindPlayer(ObjectGuid(to));
-    MailSender sender(MailMessageType(senderType),from);
-    MailDraft draft(subject.std_str(),body.std_str());
-    draft.AddMoney(money);
-    draft.AddCOD(cod);
-    CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
-
-    for(int i=0;i<items.get_length();++i)
-    {
-        auto item = items.get(i);
-        item->item->SaveToDB(trans);
-        draft.AddItem(item.item);
-    }
-
-#if TRINITY
-    draft.SendMailTo(trans,MailReceiver(player,ObjectGuid(to)),sender, MAIL_CHECK_MASK_NONE, delay);
-#elif AZEROTHCORE
-    draft.SendMailTo(trans,MailReceiver(player,uint32(to)),sender, MAIL_CHECK_MASK_NONE, delay);
-#endif
-    CharacterDatabase.CommitTransaction(trans);
-}
-
 void SendWorldMessage(TSString string)
 {
     sWorld->SendServerMessage(SERVER_MSG_STRING, string);
@@ -112,4 +88,43 @@ void StartGameEvent(uint16_t event_id)
 void StopGameEvent(uint16_t event_id)
 {
     sGameEventMgr->StopEvent(event_id, true);
+}
+
+void LSendWorldMessage(std::string const& string)
+{
+    SendWorldMessage(string);
+}
+
+std::string TC_GAME_API LSyncHttpGet(std::string const& url)
+{
+    return SyncHttpGet(url).std_str();
+}
+
+bool HAS_TAG(uint32_t id, std::initializer_list<uint32_t> const& list)
+{
+    for (uint32_t value : list)
+    {
+        if (id == value)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool L_HAS_TAG(uint32_t id, sol::table list)
+{
+    for (auto const& [_,value] : list)
+    {
+        if (id == value.as<uint32_t>())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+TSLua::Array<uint16_t> TC_GAME_API LGetActiveGameEvents()
+{
+    return sol::as_table(*GetActiveGameEvents().vec);
 }

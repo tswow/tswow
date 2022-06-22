@@ -1,5 +1,5 @@
 import ts = require("typescript");
-import { CodeWriter } from "./codewriter";
+import { CodeWriter } from "../codewriter";
 
 export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter) {
     const name = node.name.getText(node.getSourceFile());
@@ -18,6 +18,10 @@ export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter)
             'uint8','uint16','uint32','uint64',
             'int8','int16','int32','int64','bool','boolean',
             'float','double','string','TSString','TSArray','TSDictionary'];
+
+        if(member.type.kind == ts.SyntaxKind.FunctionType) {
+            return;
+        }
 
         let isNormal = type === 'int';
         for(const normalType of normalTypes) {

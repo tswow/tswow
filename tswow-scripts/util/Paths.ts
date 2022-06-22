@@ -341,6 +341,11 @@ export function InstallPath(pathIn: string, tdb: string) {
             ClientExtensions_dll: file('ClientExtensions.dll'),
             include: dir({
                 global_d_ts: file('global.d.ts'),
+                tracy: dir({
+                    tracy_hpp: file('Tracy.hpp'),
+                    common: dir({}),
+                    client: dir({})
+                }),
                 lua: dir({})
             }),
             BLPConverter: dir({
@@ -394,7 +399,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                     vmap4assembler: file(`vmap4assembler${isWindows()?'.exe':''}`),
                     vmap4extractor: file(`vmap4extractor${isWindows()?'.exe':''}`),
                     authserver: file(`authserver${isWindows()?'.exe':''}`),
-
+                    tracy_client: file(`TracyClient.dll`),
                     authserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}authserver.conf.dist`),
                     worldserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}worldserver.conf.dist`),
 
@@ -585,6 +590,14 @@ export function BuildPaths(pathIn: string, tdb: string) {
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
             lib_linux: dirn('install/trinitycore/lib',{}),
+            tracy_dll: custom((k)=>(type: string)=>{
+                return new WFile(mpath(k,`_deps/tracy-build/${type}/TracyClient.dll`))
+            }),
+            tracy_source: dirn('_deps/tracy-src',{
+                tracy_header: file('Tracy.hpp'),
+                common: dir({}),
+                client: dir({})
+            }),
             bin: custom((k)=>(name: string)=>{
                 return generateTree(mpath(k,'bin',name),dir({
                     worldserver_exe: file('worldserver.exe'),
@@ -612,6 +625,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     `dep/argon2/${type}/argon2.lib`,
                     `${type}/liblua.lib`,
                     `${type}/liblua.pdb`,
+                    `_deps/tracy-build/${type}/TracyClient.lib`,
+                    `_deps/tracy-build/${type}/TracyClient.pdb`,
                 ]
                 :
                 [
@@ -619,6 +634,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     `install/trinitycore/lib/libdatabase.so`,
                     `install/trinitycore/lib/libgame.so`,
                     `install/trinitycore/lib/libshared.so`,
+                    `install/trinitycore/lib/libTracyClient.so`,
                 ]
                 ).map(x=>new WFile(mpath(pathIn,x)))
             })),
@@ -747,6 +763,7 @@ export function SourcePaths(pathIn: string) {
             Public: dir({
                 /** Contains global.d.ts placed in livescripts */
                 global_d_ts: file('global.d.ts'),
+                TSProfile_h: file('TSProfile.h'),
             }),
         }),
         ClientExtensions: dir({

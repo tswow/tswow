@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { DBCIntCell } from "../../../data/dbc/DBCCell";
@@ -33,6 +34,10 @@ import { SpellAnimation } from "./SpellAnimation";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 import { SpellEffectCameraShakeRegistry } from "./SpellEffectCameraShakes";
 import { SpellVisualEffectRegistry, SpellVisualEffects } from "./SpellVisualEffect";
+
+export enum SpellVisualKitFlags {
+    LOOP_ANIMATION = 0x40
+}
 
 export class SpellVisualKitModelAttach extends CellSystemTop {
     readonly row: SpellVisualKitModelAttachRow;
@@ -105,7 +110,7 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     get BaseEffect() { return SpellVisualEffectRegistry.ref(this, this.row.BaseEffect); }
     get BreathEffect() { return SpellVisualEffectRegistry.ref(this, this.row.BreathEffect); }
     get CharProcedures() { return new SpellCharacterProcedures(this, this.row); }
-    get Flags() { return this.wrap(this.row.Flags); }
+    get Flags() { return makeMaskCell32(SpellVisualKitFlags, this, this.row.Flags, false); }
     get CameraShake() {
         return SpellEffectCameraShakeRegistry.ref(this, this.row.ShakeID);
     }

@@ -42,7 +42,7 @@ export class MinMaxCell<T> extends CellSystem<T> {
     }
 }
 
-export class MinMaxTargetCell<T> extends CellSystem<T> {
+export class MinTargetMaxCell<T> extends CellSystem<T> {
     @Transient
     protected minCell: Cell<number,any>;
 
