@@ -135,6 +135,10 @@ export class creature_templateRow extends SqlRow<creature_templateCreator,creatu
      */
     get speed_run() {return new SQLCell<float, this>(this, 'speed_run')}
 
+    /** @epoch-start */
+    get detection_range() { return new SQLCell<float, this>(this, 'detection_range') }
+    /** @epoch-end */
+
     /**
      * No comment (yet!)
      */
@@ -355,6 +359,9 @@ export type creature_templateCreator = {
     npcflag? : int,
     speed_walk? : float,
     speed_run? : float,
+    /** @epoch-start */
+    detection_range? : float,
+    /** @epoch-end */
     scale? : float,
     rank? : tinyint,
     dmgschool? : tinyint,
@@ -419,6 +426,9 @@ export type creature_templateQuery = {
     npcflag? : Relation<int>,
     speed_walk? : Relation<float>,
     speed_run? : Relation<float>,
+    /** @epoch-start */
+    detection_range? : Relation<float>,
+    /** @epoch-end */
     scale? : Relation<float>,
     rank? : Relation<tinyint>,
     dmgschool? : Relation<tinyint>,

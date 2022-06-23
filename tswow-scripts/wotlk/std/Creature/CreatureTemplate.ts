@@ -278,6 +278,10 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     }
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
+    /** @epoch-start */
+    /** The range at which a creature will aggro at equal level. */
+    get DetectionRange() { return this.wrap(this.row.detection_range); }
+    /** @epoch-end */
     get Scale() { return this.wrap(this.row.scale); }
     get Rank() {
         return makeEnumCell(CreatureRank,this, this.row.rank);
