@@ -16,10 +16,10 @@
 /* tslint:disable */
 import { int, tinyint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { SQLCell, SQLCellReadOnly } from '../../data/sql/SQLCell'
 import { SqlRow } from '../../data/sql/SQLRow'
 import { SqlTable } from '../../data/sql/SQLTable'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -66,6 +66,11 @@ export class creature_template_movementRow extends SqlRow<creature_template_move
     get Random() {return new SQLCell<tinyint, this>(this, 'Random')}
 
     /**
+     * No comment (yet!)
+     */
+    get InteractionPauseTimer() {return new SQLCell<int, this>(this, 'InteractionPauseTimer')}
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.
@@ -86,6 +91,7 @@ export type creature_template_movementCreator = {
     Rooted? : tinyint,
     Chase? : tinyint,
     Random? : tinyint,
+    InteractionPauseTimer? : int,
 }
 
 /**
@@ -99,6 +105,7 @@ export type creature_template_movementQuery = {
     Rooted? : Relation<tinyint>,
     Chase? : Relation<tinyint>,
     Random? : Relation<tinyint>,
+    InteractionPauseTimer? : Relation<int>,
 }
 
 /**
