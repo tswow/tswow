@@ -31,8 +31,8 @@ export class MiscCommands {
             }
         })
 
-        commands.addCommand('check','','',()=>{
-            return commands.sendCommand(`build data --readonly`)
+        commands.addCommand('check','','',(args)=>{
+            return commands.sendCommand(`build data ${args} --readonly`)
         });
 
         commands.addCommand('revision','','',()=>{
