@@ -20,6 +20,7 @@ export class MiscCommands {
                 await commands.sendCommand(`build addon ${dataset.name} ${args}`)
                 // we've already built inlinescripts, skip them
                 await commands.sendCommand(`build scripts ${dataset.name} ${args} --no-inline`)
+                await commands.sendCommand(`build lua ${dataset.name} ${args} --no-inline`)
 
                 await Promise.all(runningClients.map(x=>x.startup(NodeConfig.AutoStartClient)))
                 let autorealms = NodeConfig.AutoStartRealms
