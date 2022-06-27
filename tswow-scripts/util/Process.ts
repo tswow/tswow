@@ -134,6 +134,10 @@ export class Process {
         return this;
     }
 
+    private stdinError(error: any) {
+        term.error(termCustom('process',this._name),`Error writing to process: ${error.message}`)
+    }
+
     /**
      * Sends a command to the process stdin
      * @param command Command to send to the process
@@ -149,12 +153,16 @@ export class Process {
             throw new Error('Attempted to send message to a stopping process');
         }
 
-        this._process.stdin.write(Buffer.from(
-            command + (useNewline
-                ? String.fromCharCode(10)
-                : '')
-            , 'utf-8'
-        ));
+        try {
+            this._process.stdin.write(Buffer.from(
+                command + (useNewline
+                    ? String.fromCharCode(10)
+                    : '')
+                , 'utf-8'
+            ));
+        } catch(error) {
+            this.stdinError(error);
+        }
         return this;
     }
 
@@ -199,6 +207,10 @@ export class Process {
         this._process.stderr.on('data', (data) => {
             this.handleOutput(data, true);
         });
+
+        this._process.stdin.on('error', (err) => {
+            this.stdinError(err);
+        })
 
         return this._stopPromise = new Promise<void>((res) => {
             let killed = false;
