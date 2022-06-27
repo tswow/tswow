@@ -47,4 +47,5 @@ export const BuildArgs = new class BuildArgsClass {
         .find(x=>x.startsWith('--clientPatch='))
         .substring('--clientPatch='.length))
     LOG_SQL = process.argv.includes('--log-sql')
+    NO_LUAXML = process.argv.includes('--no-luaxml')
 }();
