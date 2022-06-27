@@ -1,6 +1,8 @@
 import { commands } from "../util/Commands";
 import { ipaths } from "../util/Paths";
 import { BuildCommand } from "./CommandActions";
+import { Identifier } from "./Identifiers";
+import { NodeConfig } from "./NodeConfig";
 
 export class MiscCommands {
     static initialize() {
@@ -9,10 +11,23 @@ export class MiscCommands {
             , '(see arguments to build datscripts/addon/livescripts)'
             , 'Builds datascripts/addons/livescripts'
         , async args=>{
-            await commands.sendCommand(`build data ${args}`);
-            await commands.sendCommand(`build addon ${args}`)
-            // we've already built inlinescripts, skip them
-            await commands.sendCommand(`build scripts ${args} --no-inline`)
+            let datasets = Identifier.getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
+            for(const dataset of datasets) {
+                let runningClients = [dataset.client]
+                let runningWorldservers = dataset.realms()
+
+                await commands.sendCommand(`build data ${dataset.name} ${args} --no-restart`);
+                await commands.sendCommand(`build addon ${dataset.name} ${args}`)
+                // we've already built inlinescripts, skip them
+                await commands.sendCommand(`build scripts ${dataset.name} ${args} --no-inline`)
+
+                await Promise.all(runningClients.map(x=>x.startup(NodeConfig.AutoStartClient)))
+                let autorealms = NodeConfig.AutoStartRealms
+                .map(x=>Identifier.getRealm(x))
+                await Promise.all(runningWorldservers
+                    .filter(x=>autorealms.find(y=>y.fullName===x.fullName))
+                    .map(x=>x.start(x.lastBuildType)))
+            }
         })
 
         commands.addCommand('check','','',()=>{
