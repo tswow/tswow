@@ -142,14 +142,22 @@ export class Dataset {
                     .map(x=>x.worldserver.isRunning() ? x.worldserver.stop() : undefined)
             }
 
-            switch(this.config.EmulatorCore) {
-                case 'azerothcore':
-                    await mysql.rebuildDatabase(db,ipaths.bin.sql_ac.db_world.get());
-                    break;
-                case 'trinitycore':
-                    await mysql.rebuildDatabase(db,ipaths.bin.tdb.get());
-                    break;
+            let worldSql: string;
+            if(this.path.world_sql.exists()) {
+                worldSql = this.path.world_sql.abs().get()
+            } else {
+                switch(this.config.EmulatorCore) {
+                    case 'azerothcore': {
+                        worldSql = ipaths.bin.sql_ac.db_world.get()
+                        break;
+                    }
+                    case 'trinitycore': {
+                        worldSql = ipaths.bin.tdb.get()
+                        break;
+                    }
+                }
             }
+            await mysql.rebuildDatabase(db,worldSql)
         }
 
         switch(this.config.EmulatorCore) {

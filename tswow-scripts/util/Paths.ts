@@ -66,7 +66,8 @@ export function DatasetDirectory(inPath: string, inName: string) {
         vmaps: dir({}),
         config: file(`dataset.conf`),
         ids_txt: file('ids.txt'),
-        modules_txt: file('modules.txt')
+        modules_txt: file('modules.txt'),
+        world_sql: file('world.sql')
     }))
 }
 

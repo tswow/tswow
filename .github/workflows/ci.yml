@@ -24,7 +24,7 @@ jobs:
           submodules: 'recursive'
       - uses: ./.github/actions/setup_windows
       - name: Build tswow
-        run: npm run build-release clean-archives noac
+        run: npm run build-release clean-archives noac tracy=*
       - uses: ./.github/actions/publish_windows
         env:
           TSWOW_UPLOAD_URL: ${{secrets.TSWOW_UPLOAD_URL}}

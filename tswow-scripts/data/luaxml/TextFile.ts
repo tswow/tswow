@@ -17,6 +17,7 @@
 import * as fs from 'fs';
 import { Cell } from '../cell/cells/Cell';
 import { CellSystem } from '../cell/systems/CellSystem';
+import { BuildArgs } from '../Settings';
 
 export type EditType = 'before' | 'after' | 'replace';
 
@@ -169,6 +170,10 @@ export class TextFile {
      * @param match
      */
     findRow(match: Match): number {
+        if(BuildArgs.NO_LUAXML) {
+            return 0;
+        }
+
         if (typeof(match) === 'number') {
             return this.verifyRowNo(match);
         }

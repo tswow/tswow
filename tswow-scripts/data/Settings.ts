@@ -1,3 +1,4 @@
+import { Args } from "../util/Args";
 import { DatasetConfig } from "../util/DatasetConfig";
 import { wfs } from "../util/FileSystem";
 import { WDirectory } from "../util/FileTree";
@@ -37,14 +38,16 @@ export const EmulatorCore = config.EmulatorCore;
 export function isTrinityCore() { return EmulatorCore === 'trinitycore'; }
 export function isAzerothCore() { return EmulatorCore === 'azerothcore'; }
 
+
 export const BuildArgs = new class BuildArgsClass {
-    USE_TIMER = process.argv.includes('--use-timer')
-    INLINE_ONLY = process.argv.includes('--inline-only')
-    READ_ONLY = this.INLINE_ONLY || process.argv.includes('--readonly')
+    USE_TIMER = Args.hasFlag('use-timer',process.argv)
+    INLINE_ONLY = Args.hasFlag('inline-only',process.argv)
+    READ_ONLY = this.INLINE_ONLY || Args.hasFlag('readonly',process.argv)
     WRITE_CLIENT = process.argv.includes('--__writes-client')
     WRITE_SERVER = process.argv.includes('--__writes-server')
     CLIENT_PATCH_DIR = new WDirectory(process.argv
         .find(x=>x.startsWith('--clientPatch='))
         .substring('--clientPatch='.length))
-    LOG_SQL = process.argv.includes('--log-sql')
+    LOG_SQL = Args.hasFlag('log-sql',process.argv)
+    NO_LUAXML = Args.hasFlag('no-luaxml',process.argv)
 }();

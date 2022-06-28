@@ -18,6 +18,7 @@ import * as xml from 'xml2js';
 import { ObjectifyOptions } from '../../../../data/cell/serialization/ObjectIteration';
 import { CellSystem } from "../../../../data/cell/systems/CellSystem";
 import { Edit } from "../../../../data/luaxml/TextFile";
+import { BuildArgs } from '../../../../data/Settings';
 
 let builder = new xml.Builder({headless: true});
 export type Points = 'TOP' | 'LEFT' | 'BOTTOM' | 'RIGHT'
@@ -39,6 +40,9 @@ export class AnchorRow<T> extends CellSystem<T> {
     }
 
     protected apply(fields: {[key:string]:any}) {
+        if(BuildArgs.NO_LUAXML) {
+            return;
+        }
         let xml = this.getXml();
         for(const key in fields) {
             xml.Anchor.$[key] = fields[key];

@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { wfs } from '../../util/FileSystem';
-import { dataset } from '../Settings';
+import { BuildArgs, dataset } from '../Settings';
 import { TextFile } from './TextFile';
 
 let files: {[key: string]: TextFile} = {};
@@ -56,6 +56,10 @@ export function _writeLUAXML() {
     wfs.copy(indir,outdir,false);
     if(tocValue !== undefined) {
         tocPath.write(tocValue);
+    }
+
+    if(BuildArgs.NO_LUAXML) {
+        return;
     }
 
     for (const fname in files) {
