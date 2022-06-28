@@ -16,10 +16,10 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { GetStage } from '..';
 import { inMemory } from '../query/Query';
 import { dataset } from '../Settings';
 import { Table } from '../table/Table';
-import { GetStage } from '..';
 import { DBCBuffer } from './DBCBuffer';
 import { DBCRow } from './DBCRow';
 
@@ -184,29 +184,15 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     protected fastSearch(value: number): R {
-        let low = 0;
-        let high = this.rowCount - 1;
+        // loading row first ensures the buffer is loaded before we calculate buffer.baseRowCount
         const row = this.getRow(0);
+        let low = 0;
+        let high = this.buffer.baseRowCount - 1;
 
-        DBCRow.setIndex(row, this.buffer.baseRowCount - 1);
-        if (this.buffer.readuint(DBCRow.getOffset(row)) < value) {
-            for (let i = this.buffer.baseRowCount; i < this.buffer.rowCount; ++i) {
-                DBCRow.setIndex(row, i);
-                if (this.buffer.readuint(DBCRow.getOffset(row)) === value) {
-                    return row;
-                }
-            }
-
-            // @ts-ignore
-            return undefined;
-        }
-
-        DBCRow.setIndex(row, 0);
-
+        // Binary search
         while (true) {
             if (high < low) {
-                // @ts-ignore
-                return undefined;
+                break;
             }
 
             const mid = Math.floor(low + (high - low) / 2);
@@ -221,6 +207,25 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
                 return row;
             }
         }
+
+        // Linear search (custom values)
+        for (let i = this.buffer.baseRowCount; i < this.buffer.rowCount; ++i) {
+            DBCRow.setIndex(row, i);
+            if (this.buffer.readuint(DBCRow.getOffset(row)) === value) {
+                return row;
+            }
+        }
+
+        // Linear search (source values)
+        for (let i = 0; i < this.buffer.baseRowCount; ++i) {
+            DBCRow.setIndex(row, i);
+            if (this.buffer.readuint(DBCRow.getOffset(row)) === value) {
+                console.log(`Warning: Found base row ${value} only from linear search in ${this.name}.dbc, input dbc is not correctly sorted!`)
+                return row;
+            }
+        }
+
+        return undefined;
     }
 
     getName() {
