@@ -169,4 +169,15 @@ void TSLua::load_unit_methods_t(sol::state & state, sol::usertype<T> & target, s
     LUA_FIELD(target, TSUnit, SetCharm);
     target.set_function("SetCharmedBy", sol::overload(&TSUnit::LSetCharmedBy0, &TSUnit::LSetCharmedBy1));
     target.set_function("GetControlled", &TSUnit::LGetControlled);
+    LUA_FIELD(target, TSUnit, KnockbackFrom);
+    target.set_function("Jump", sol::overload(
+        &TSUnit::LJump0,
+        &TSUnit::LJump1
+    ));
+    target.set_function("JumpTo", sol::overload(
+        &TSUnit::LJumpTo0,
+        &TSUnit::LJumpTo1,
+        &TSUnit::LJumpTo2,
+        &TSUnit::LJumpTo3
+    ));
 }

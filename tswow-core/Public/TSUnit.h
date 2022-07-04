@@ -178,6 +178,12 @@ public:
     void MoveTakeoff(uint32 id, float x, float y, float z);
     void MoveLand(uint32 id, float x, float y, float z);
     void MoveJump(float x, float y, float z, float zSpeed, float maxHeight, uint32 id);
+
+    void KnockbackFrom(float x, float y, float speedXY, float speedZ);
+    void Jump(float speedXY, float speedZ, bool forward = true);
+    void JumpTo(TSWorldObject obj, float speedZ, bool withOrientation = false);
+    void JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward = true);
+
     void SendUnitWhisper(TSString msg, uint32 lang, TSPlayer receiver, bool bossWhisper);
     void SendUnitEmote(TSString msg, TSUnit receiver, bool bossEmote);
     void SendUnitSay(TSString msg, uint32 language);
@@ -206,6 +212,13 @@ private:
     TSLua::Array<TSUnit> LGetControlled();
     bool LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp);
     bool LSetCharmedBy1(TSUnit charmer, uint32 type);
-    friend class TSLua;
 
+    void LJump0(float speedXY, float speedZ, bool forward);
+    void LJump1(float speedXY, float speedZ);
+    void LJumpTo0(TSWorldObject obj, float speedZ, bool withOrientation);
+    void LJumpTo1(TSWorldObject obj, float speedZ);
+    void LJumpTo2(float x, float y, float z, float o, float speedXY, float speedZ, bool forward);
+    void LJumpTo3(float x, float y, float z, float o, float speedXY, float speedZ);
+
+    friend class TSLua;
 };

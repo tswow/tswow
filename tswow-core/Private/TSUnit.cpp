@@ -2581,3 +2581,51 @@ bool TSUnit::LSetCharmedBy1(TSUnit charmer, uint32 type)
     return SetCharmedBy(charmer, type);
 }
 
+void TSUnit::KnockbackFrom(float x, float y, float speedXY, float speedZ)
+{
+    unit->KnockbackFrom(x, y, speedXY, speedZ);
+}
+
+void TSUnit::Jump(float speedXY, float speedZ, bool forward)
+{
+    unit->JumpTo(speedXY, speedZ, forward);
+}
+
+void TSUnit::JumpTo(TSWorldObject obj, float speedZ, bool withOrientation)
+{
+    unit->JumpTo(obj->obj, speedZ, withOrientation);
+}
+
+void TSUnit::JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward)
+{
+    unit->JumpTo(speedXY, speedZ, forward, Position{ x,y,z });
+}
+
+void TSUnit::LJump0(float speedXY, float speedZ, bool forward)
+{
+    Jump(speedXY, speedZ, forward);
+}
+
+void TSUnit::LJump1(float speedXY, float speedZ)
+{
+    Jump(speedXY, speedZ);
+}
+void TSUnit::LJumpTo0(TSWorldObject obj, float speedZ, bool withOrientation)
+{
+    JumpTo(obj, speedZ, withOrientation);
+}
+
+void TSUnit::LJumpTo1(TSWorldObject obj, float speedZ)
+{
+    JumpTo(obj, speedZ);
+}
+
+void TSUnit::LJumpTo2(float x, float y, float z, float o, float speedXY, float speedZ, bool forward)
+{
+    JumpTo(x, y, z, o, speedXY, speedZ, forward);
+}
+
+void TSUnit::LJumpTo3(float x, float y, float z, float o, float speedXY, float speedZ)
+{
+    JumpTo(x, y, z, o, speedXY, speedZ);
+}

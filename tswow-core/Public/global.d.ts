@@ -6884,6 +6884,40 @@ declare interface TSUnit extends TSWorldObject {
      */
     MoveJump(x : float,y : float,z : float,zSpeed : float,maxHeight : float,id : uint32) : void
 
+    KnockbackFrom(x: float, y: float, speedXY: float, speedZ: float);
+
+    /**
+     * @param speedXY
+     * @param speedZ
+     * @param forward = true
+     */
+    Jump(speedXY: float, speedZ: float, forward?: bool);
+
+    /**
+     * @param obj
+     * @param speedZ
+     * @param withOrientation = false
+     */
+    JumpTo(obj: TSWorldObject, speedZ: float, withOrientation?: bool);
+
+    /**
+     * @param float
+     * @param x
+     * @param float
+     * @param y
+     * @param float
+     * @param z
+     * @param float
+     * @param o
+     * @param float
+     * @param speedXY
+     * @param float
+     * @param speedZ
+     * @param bool
+     * @param forward = true
+     */
+    JumpTo(x: float, y: float, z: float, o: float, speedXY: float, speedZ: float, forward?: bool);
+
     /**
      * The [Unit] will whisper the message to a [Player]
      *
