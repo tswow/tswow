@@ -22,11 +22,13 @@
 
 #include "CharacterDatabase.h"
 
+#include <boost/filesystem.hpp>
+
 #include <algorithm>
 #include <set>
 #include <string>
 #include <regex>
-#include <boost/filesystem.hpp>
+#include <fstream>
 
 #define TEST_RUN_TABLE " test_sessions "
 #define TEST_ERRORS_TABLE " test_errors "
