@@ -111,10 +111,12 @@ export function LivescriptsDirectory(inPath: string) {
         tsconfig: file('tsconfig.json'),
         /** @todo: how to handle these names? */
         entry: file(`livescripts.ts`),
+        livecripts_conf: file(`livescripts.conf`),
         built_library: file(``),
         built_pdb: file(``),
         build: dir({
             dataset: dyndir(dataset=>({
+                lua: dir({}),
                 built_libs: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(type)=>({
                     // todo: linux
                     library: custom((value)=>

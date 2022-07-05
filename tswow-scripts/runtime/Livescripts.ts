@@ -1,9 +1,13 @@
 import { Args } from "../util/Args";
-import { BuildType } from "../util/BuildType";
-import { wfs } from "../util/FileSystem";
+import { BuildType, BUILD_TYPES } from "../util/BuildType";
+import { ConfigFile, Property, Section } from "../util/ConfigFile";
+import { mpath, wfs } from "../util/FileSystem";
+import { WFile } from "../util/FileTree";
+import { IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
+import { ApplyTagMacros } from "../util/TagMacros";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
 import { Timer } from "../util/Timer";
@@ -55,9 +59,44 @@ const temp_config = (dataset: Dataset) => ({
 'include': ['./shared','./livescripts']
 });
 
+export class LiveScriptsConfig extends ConfigFile {
+    protected description(): string {
+        return "LiveScript Settings"
+    }
+
+    @Section('LiveScripts')
+
+    @Property({
+          name: 'LiveScripts.Backend'
+        , description: 'What these scripts should be transpiled into by default'
+        , examples: [
+            ['lua','Transpiles ts* script files to lua'],
+            ['c++','Transpiles ts* script files to c++']
+        ]
+    })
+    Backend: 'lua'|'c++' = this.undefined()
+}
+
+const lua_tsconfig_json = {
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "tstl": {
+      "luaTarget": "5.1",
+      "luaPlugins": [],
+      "noImplicitSelf": true,
+    }
+}
 
 export class Livescripts {
     readonly mod: ModuleEndpoint
+    readonly config: LiveScriptsConfig
 
     get path() {
         return this.mod.path.livescripts
@@ -65,6 +104,7 @@ export class Livescripts {
 
     constructor(mod: ModuleEndpoint) {
         this.mod = mod;
+        this.config = new LiveScriptsConfig(this.path.livecripts_conf.get())
     }
 
     static create(mod: ModuleEndpoint) {
@@ -83,17 +123,78 @@ export class Livescripts {
         ipaths.bin.include.global_d_ts.copy(this.path.global_d_ts);
         this.path.tsconfig.writeJson(scripts_tsconfig_json);
         this.path.entry.write(livescript_example, 'DONT_OVERWRITE')
+        this.config.generateIfNotExists();
         return this;
     }
 
-    async build(dataset: Dataset, buildType: BuildType, args: string[] = []) {
-        const timer = Timer.start();
-        this.initialize();
+    private buildLua(dataset: Dataset, args: string[] = []) {
+        let config = Object.assign({},lua_tsconfig_json)
 
-        if(this.mod.datascripts.exists() && ! args.includes('--no-inline')) {
-            await Datascripts.build(dataset,['--inline-only'])
+        let buildDir = this.path.build.dataset.pick(dataset.fullName).lua
+        config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.path).get()
+
+        this.path.tsconfig.writeJson(config);
+
+        let foundTs = false;
+        this.path.iterateDef(node=>{
+            if(node.isFile() && node.endsWith('.ts')) {
+                foundTs = true;
+                return 'HALT'
+            }
+        })
+
+        if(foundTs) {
+            term.log(this.logName(),`Compiling ts->lua`)
+            wsys.execIn(
+                this.path.get()
+            , `node ${ipaths.node_modules.tstl_js.abs()}`
+            )
         }
 
+        term.log(this.logName(),`Copying lua sources`)
+        this.path.iterate('RECURSE','BOTH','FULL',node=>{
+            if(node.basename().get() === 'build') {
+                return 'ENDPOINT'
+            }
+            if(node.isFile() && node.endsWith('.lua')) {
+                node.copy(buildDir.join(node.relativeTo(this.path)))
+            }
+        })
+
+        buildDir.copy(this.luaInstallPath(dataset))
+
+        // todo: please fix this singleton hell already.
+        //       this is fine because we're not multithreading.
+        class IdPublic extends IdPrivate {
+            static readFile = () => IdPrivate.readFile(dataset.path.ids_txt.get());
+        }
+        IdPublic.readFile();
+
+        this.luaInstallPath(dataset).iterate('RECURSE','FILES','ABSOLUTE',(node)=>{
+            if(!node.isFile() || !node.endsWith('.lua')) {
+                return;
+            }
+
+            let lines = node
+                .toFile()
+                .readString()
+                .split('\r').join('')
+                .split('\n')
+                .map(contents=>{
+                    return ApplyTagMacros(contents, 'LUA');
+                })
+                .join('\n');
+
+            if(node.basename().get() === '__inline_main.lua') {
+                lines = lines.split(`build.${dataset.fullName}.inline.`).join('')
+            }
+            node.toFile().write(lines,'OVERWRITE');
+        });
+
+        term.success(this.logName(),`Finished building lua`)
+    }
+
+    private buildCxx(dataset: Dataset, buildType: BuildType, args: string[] = []) {
         let tracyArg = args.find(x=>x.startsWith('tracy'))
 
         this.mod.path.livescript_tsconfig_temp.writeJson(temp_config(dataset))
@@ -166,11 +267,58 @@ export class Livescripts {
         }
 
         let lib = builddir.built_libs.pick(buildType).library
-        lib.copy(dataset.path.lib.join(buildType,lib.basename()))
+        lib.copy(this.cxxInstallPath(dataset, buildType))
         if(isWindows()) {
             let pdb = builddir.built_libs.pick(buildType).pdb;
             pdb.copy(dataset.path.lib.join(buildType).join(pdb.basename()))
         }
+    }
+
+    private luaInstallPath(dataset: Dataset)  {
+        return dataset.path.lib.lua.join(this.mod.fullName).abs();
+    }
+
+    private cxxInstallPath(dataset: Dataset, buildType: BuildType) {
+        return isWindows()
+            ? new WFile(mpath(dataset.path.lib,buildType,`${this.mod.fullName}.dll`))
+            : new WFile(mpath(dataset.path.lib,buildType,`${this.mod.fullName}.so`))
+    }
+
+    async build(dataset: Dataset, buildType: BuildType, args: string[] = []) {
+        // Init
+        this.initialize();
+        const timer = Timer.start();
+
+        // Delete old versions of the scripts
+        this.luaInstallPath(dataset).remove();
+        BUILD_TYPES.forEach(x=>{
+            dataset.path.lib.join(x,this.mod.fullName+'.dll').remove();
+            dataset.path.lib.join(x,this.mod.fullName+'.so').remove();
+            dataset.path.lib.join(x,this.mod.fullName+'.pdb').remove();
+        })
+
+        // Build datascripts
+        if(this.mod.datascripts.exists() && ! Args.hasFlag('--no-inline',args)) {
+            await Datascripts.build(dataset,['--inline-only'])
+        }
+
+        // Build scripts
+        let generateType: 'lua'|'c++' = args.includes('lua')
+            ? 'lua'
+            : Args.hasFlag('c++',args) || Args.hasFlag('cxx',args)
+            ? 'c++'
+            : this.config.Backend
+        
+        switch(generateType) {
+            case 'lua':
+                this.buildLua(dataset,args);
+                break;
+            case 'c++':
+                this.buildCxx(dataset,buildType,args);
+                break;
+        }
+
+        // Reload
         dataset.realms()
             .filter(x=>x.worldserver.isRunning())
             .forEach(x=>x.worldserver.send(`reload livescripts`))

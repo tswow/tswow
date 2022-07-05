@@ -84,15 +84,6 @@ export class Achievement extends MainEntityID<AchievementRow> {
             , 'livescript'
         ) as _hidden.Achievement<this>
     }
-
-    get InlineLua() {
-        return getInlineID(
-              this
-            , this.ID
-            , 'AchievementID'
-            , 'lua'
-        ) as _hidden.Achievement<this>
-    }
 }
 
 export class AchievementRegistryClass extends

@@ -29,7 +29,6 @@ import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
 import { Launcher } from "./Launcher";
 import { Livescripts } from "./Livescripts";
-import { Lua } from "./Lua";
 import { MapData } from "./MapData";
 import { MiscCommands } from "./MiscCommands";
 import { Module } from "./Modules";
@@ -94,7 +93,6 @@ export async function main() {
     await Crashes.initialize();
     await PositionsFile.initialize();
     await MiscCommands.initialize();
-    await Lua.initialize();
     await Launcher.initialize();
     Module.cacheEndpoints(false);
     await term.Initialize(

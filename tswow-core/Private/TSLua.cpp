@@ -286,7 +286,6 @@ void TSLua::Load()
         return TSLua::require(name);
     });
     load_bindings(state);
-    state["TSEvents"] = &ts_events;
     state["HAS_TAG"] = L_HAS_TAG;
     state["BROADCAST_PHASE_ID"] = BROADCAST_PHASE_ID;
 
@@ -311,10 +310,16 @@ void TSLua::Load()
 
     for (auto& [_,table] : modules)
     {
-        auto v = table["Main"];
-        if (v.get_type() == sol::type::function)
+        auto main = table["Main"];
+        if (main.get_type() == sol::type::function)
         {
-            v(&ts_events);
+            main(&ts_events);
+        }
+
+        auto __inline_main = table["__InlineMain"];
+        if (__inline_main.get_type() == sol::type::function)
+        {
+            __inline_main(&ts_events);
         }
     }
 }

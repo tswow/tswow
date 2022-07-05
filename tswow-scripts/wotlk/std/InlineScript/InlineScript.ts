@@ -116,8 +116,6 @@ export function getAny(owner: any, prefix: string,type: string, inlineType: Inli
                 )
             }
 
-
-
             const relativeFilename = new WNode(filename).relativeToParent('datascripts')
             const modname = findModulePath(filename);
 
@@ -125,12 +123,6 @@ export function getAny(owner: any, prefix: string,type: string, inlineType: Inli
                 case 'livescript': {
                     const modobj = (filesLivescript[modname]||(filesLivescript[modname] = {}));
                     const fullText = `    events.${type}.${x}(${prefix}${func.getText()})`;
-                    (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
-                    break;
-                }
-                case 'lua': {
-                    const modobj = (filesLua[modname]||(filesLua[modname] = {}));
-                    const fullText = `TSEvents.${type}.${x}(${prefix}${func.getText()})`;
                     (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
                     break;
                 }
@@ -148,6 +140,9 @@ finish('inline-scripts',()=>{
             mpath(mod,'livescripts','build',datasetName,'inline')
         );
 
+        let inlineHeader = ``
+        let inlineBody = `export function __InlineMain(events: TSEvents) {\n`
+
         // update deleted scripts
         if(inlinePath.exists()) {
             inlinePath.iterate('RECURSE','FILES','FULL',(node)=>{
@@ -158,24 +153,20 @@ finish('inline-scripts',()=>{
             })
         }
         Object.entries(files).forEach(([file,funcs])=>{
-            let content =
-                    `export function __inline_${file
-                            .substr(0,file.length-3)
-                            .split('-').join('_')
-                            .split('\\').join('_')
-                            .split('/').join('_')
-                            .split('.').join('_')
-                        }(events: TSEvents){\n`
+            let funcName = '__inline_' + file
+                .substring(0,file.lastIndexOf('.'))
+                .split('-').join('_')
+                .split('\\').join('_')
+                .split('/').join('_')
+                .split('.').join('_')
+            let content = `export function ${funcName}(events: TSEvents){\n`
                 + `${funcs.join('\n\n')}\n}`
-            inlinePath.join(file).toFile().write(content)
-        })
-    });
 
-    Object.entries(filesLua).forEach(([mod,files])=>{
-        let inlinePath = new WDirectory(mpath(mod,'lua','_inline'));
-        inlinePath.remove();
-        Object.entries(files).forEach(([file,funcs])=>{
-            inlinePath.join(file).toFile().write(funcs.join('\n\n'))
+            inlinePath.join(file).toFile().write(content)
+            inlineHeader += `import { ${funcName} } from "./${file.substring(0,file.lastIndexOf('.'))}"\n`
+            inlineBody += `    ${funcName}(events);\n`;
         })
+        inlineBody += '}'
+        inlinePath.join('__inline_main.ts').toFile().write(inlineHeader+'\n'+inlineBody)
     });
 })

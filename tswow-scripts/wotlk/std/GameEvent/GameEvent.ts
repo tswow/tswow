@@ -145,15 +145,6 @@ export class GameEvent extends MainEntityID<game_eventRow> {
         ) as _hidden.GameEvent<this>
     }
 
-    get InlineLua() {
-        return getInlineID(
-              this
-            , this.ID
-            , 'GameEventID'
-            , 'lua'
-        ) as _hidden.GameEvent<this>
-    }
-
     static checkHoliday(event: GameEvent) {
         if(event.row.holiday.get() !== 0) {
             throw new Error(

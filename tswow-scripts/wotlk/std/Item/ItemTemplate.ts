@@ -133,15 +133,6 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         ) as _hidden.Item<this>
     }
 
-    get InlineLua() {
-        return getInlineID(
-              this
-            , this.ID
-            , 'ItemID'
-            , 'lua'
-        ) as _hidden.Item<this>
-    }
-
     /** Only applicable if item is a shield */
     get BlockChance() { return this.wrap(this.row.block); }
     get ItemSet() { return ItemSetRegistry.ref(this, this.row.itemset); }
