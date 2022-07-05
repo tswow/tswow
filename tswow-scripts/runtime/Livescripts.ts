@@ -75,6 +75,16 @@ export class LiveScriptsConfig extends ConfigFile {
         ]
     })
     Backend: 'lua'|'c++' = this.undefined()
+
+    @Property({
+          name: 'LiveScripts.InlineScripts'
+        , description: 'Whether to build minimal datascripts every script build to find inlinescripts'
+        , examples: [
+            [true,''],
+            [false,'']
+        ]
+    })
+    InlineScripts: boolean = this.undefined()
 }
 
 const lua_tsconfig_json = {
@@ -298,7 +308,7 @@ export class Livescripts {
         })
 
         // Build datascripts
-        if(this.mod.datascripts.exists() && ! Args.hasFlag('--no-inline',args)) {
+        if(this.mod.datascripts.exists() && ! Args.hasFlag('--no-inline',args) && this.config.InlineScripts) {
             await Datascripts.build(dataset,['--inline-only'])
         }
 
