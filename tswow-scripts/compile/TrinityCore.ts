@@ -250,7 +250,7 @@ export namespace TrinityCore {
                 +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
-                wsys.exec(setupCommand, 'inherit');
+                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_74_0.abs().get()}`,...process.env}});
                 if(generateOnly) return;
                 wsys.exec(buildCommand, 'inherit');
             } else {
