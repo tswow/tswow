@@ -164,6 +164,9 @@ function GetIdRangeInternal(table: Table, fullname: string) {
 }
 
 export function GetIdRange(table: string, mod: string, name: string, size: number, startid: number = 10000) {
+    if(mod === undefined || name === undefined) {
+        throw new Error(`Tried getting an ID range with an invalid mod/id pair: ${mod} ${name}`)
+    }
     let forward = mappings[table] || (mappings[table] = new Table());
     const fullname = mod + ':' + name;
     let fwd = GetIdRangeInternal(forward,`${mod}:${name}`);
@@ -185,6 +188,9 @@ export function GetIdRange(table: string, mod: string, name: string, size: numbe
 }
 
 export function GetExistingIdRange(table: string, mod: string, name: string) {
+    if(mod === undefined || name === undefined) {
+        throw new Error(`Tried getting an ID range with an invalid mod/id pair: ${mod} ${name}`)
+    }
     let forward = mappings[table] || (mappings[table] = new Table());
     const range = GetIdRangeInternal(forward,`${mod}:${name}`)
     if(range === undefined) {
