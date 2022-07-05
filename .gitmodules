@@ -5,7 +5,3 @@
 [submodule "misc/adt-creator"]
 	path = misc/adt-creator
 	url = https://github.com/tswow/adt-creator.git
-[submodule "cores/azerothcore-wotlk"]
-	path = cores/azerothcore-wotlk
-	url = https://github.com/tswow/azerothcore-wotlk.git
-	branch = tswow

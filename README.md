@@ -22,12 +22,6 @@ TSWoW is a **programming environment**, and the language we use is _TypeScript_.
 - Callback functions / Delegates
 - Command-line interface
 
-## Regarding AzerothCore
-
-The AzerothCore files in this repository are not for users, they are only intended to ease further development as has been requested by AC maintainers. Please do not interpret their inclusion here as a commitment to its development on our part.
-
-**TSWoW is currently nowhere close to compatible with AzerothCore.**
-
 ## Links for getting started
 
 [Introduction & Installation](https://tswow.github.io/tswow-wiki/home/)
