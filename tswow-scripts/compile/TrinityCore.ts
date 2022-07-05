@@ -212,31 +212,7 @@ export namespace TrinityCore {
         //
         // Tracy
         //
-        const allArgs = args1.concat(process.argv);
-        const tracyEnabled = allArgs.findIndex(x=>x.startsWith('tracy')) >= 0
-
-        const TRACY_PREFIX = 'tracy='
-        let allProfileCats = spaths.tswow_core.Public.TSProfile_h.readString()
-            .match(/#ifdef PROFILE_(.+)/g)
-            .map(x=>x.substring('#ifdef PROFILE_'.length))
-            .map(x=>x.toUpperCase())
-
-        let profileCats =
-            (   args1.find(x=>x.startsWith(TRACY_PREFIX))
-            || process.argv.find(x=>x.startsWith(TRACY_PREFIX))
-            || TRACY_PREFIX
-            )
-            .substring(TRACY_PREFIX.length)
-            .split(',')
-            .filter(x=>x.length>0)
-            .map(x=>x.toUpperCase())
-            ;
-
-        if(profileCats.includes('*')) {
-            profileCats = profileCats.concat(allProfileCats)
-        }
-        profileCats = profileCats
-            .filter((x,i,a)=>x != '*' && a.indexOf(x) == i)
+        const tracyEnabled = !Args.hasFlag(['notracy','no-tracy'],[process.argv,args1])
 
         if(Args.hasFlag('notc',[process.argv,args1])) {
             return;
@@ -269,7 +245,6 @@ export namespace TrinityCore {
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                 +` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
                 +` -DTRACY_ENABLE="${tracyEnabled?'ON':'OFF'}"`
-                +` -DTRACY_CATEGORIES="${profileCats.join(';')}"`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -S "${spaths.cores.TrinityCore.get()}"`
