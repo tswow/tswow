@@ -269,7 +269,13 @@ sol::table TSLua::require(std::string const& mod)
 
     if (std::find(file_stack.begin(), file_stack.end(), path) != file_stack.end())
     {
-        throw std::runtime_error("Circular dependency from module " + mod);
+        std::string error_str = "";
+        for (std::filesystem::path const& file : file_stack)
+        {
+            error_str += "    " +file.string() + "->\n";
+        }
+        error_str += "    " + path.string();
+        throw std::runtime_error("Circular dependency:" + error_str);
     }
 
     auto itr = modules.find(path);
