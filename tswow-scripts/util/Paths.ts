@@ -42,7 +42,8 @@ export function DatasetDirectory(inPath: string, inName: string) {
             dbc: dir({}),
         }),
         lib: dir({
-            lua: dir({})
+            lua: dir({}),
+            include_lua: dirn('lualib',{})
         }),
         luaxml: dir({
             Interface: dir({
@@ -287,7 +288,8 @@ export function InstallPath(pathIn: string, tdb: string) {
             scripts: dir({
                 addons: dir({
                     addons: dir({
-                        require_preload: file('RequirePreload.js')
+                        require_preload: file('RequirePreload.js'),
+                        lua_orm: file('LuaORM.js')
                     })
                 }),
                 tests: dir({}),
@@ -350,6 +352,8 @@ export function InstallPath(pathIn: string, tdb: string) {
                     client: dir({})
                 }),
                 lua: dir({})
+            }),
+            include_lua: dirn('include-lua',{
             }),
             BLPConverter: dir({
                 blpconverter: file('blpconverter.exe')
@@ -485,6 +489,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
             events_lua: file('Events.lua'),
             global_d_ts: file('global.d.ts'),
             tsconfig_json: file('tsconfig.json'),
+        }),
+        include_lua: dirn('include-lua',{
         }),
         zlib: dir({
             include: dir({}),
@@ -706,6 +712,7 @@ export function SourcePaths(pathIn: string) {
                     LualibBundle_lua: file('LualibBundle.lua'),
                     RequireStub_lua: file('RequireStub.lua'),
                 }),
+                include_lua: dirn('include-lua',{}),
                 characters_create: file('characters_create.sql'),
                 auth_create: file('auth_create.sql'),
                 package_json: file('package.json'),

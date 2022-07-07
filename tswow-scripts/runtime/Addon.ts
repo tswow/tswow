@@ -16,7 +16,7 @@
  */
 import { mpath, wfs } from "../util/FileSystem";
 import { FilePath } from "../util/FileTree";
-import { GetExistingId, IdPrivate } from "../util/ids/Ids";
+import { IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { ApplyTagMacros } from "../util/TagMacros";
@@ -27,6 +27,7 @@ import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
 import { NodeConfig } from "./NodeConfig";
+import { applyTSTLHack } from "./TSTLHack";
 
 const defaultTsConfig = (addon: Addon) => ({
     "compilerOptions": {
@@ -191,16 +192,7 @@ export class Addon {
         await dataset.setupClientData();
         term.log(this.logName(),`Building addon for dataset ${dataset.name}`)
 
-        // 2. Patch tstl to allow any kind of decorators (no longer needed?)
-        let decoText = ipaths.node_modules.tstl_decorators.read('utf-8')
-        let diagnosticsIndex = decoText.indexOf('context.diagnostics.push(');
-        if(diagnosticsIndex==-1) {
-            throw new Error(`Unable to find the "context.diagnostics" part`);
-        }
-        if(decoText[diagnosticsIndex-1]!='/') {
-            decoText = decoText.substring(0,diagnosticsIndex)+'//'+decoText.substring(diagnosticsIndex,decoText.length);
-            ipaths.node_modules.tstl_decorators.write(decoText);
-        }
+        applyTSTLHack();
 
         // 3. Run tstl
         wsys.execIn(

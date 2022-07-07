@@ -18,6 +18,7 @@ import { Identifier } from "./Identifiers";
 import { getLivescriptCMakeLists } from "./LivescriptsCMakeLists";
 import { Module, ModuleEndpoint } from "./Modules";
 import { NodeConfig } from "./NodeConfig";
+import { applyTSTLHack } from "./TSTLHack";
 
 const livescript_example =
 `export function Main(events: TSEvents) {
@@ -95,12 +96,17 @@ const lua_tsconfig_json = {
       "esModuleInterop": true,
       "skipLibCheck": true,
       "sourceMap": true,
+      "experimentalDecorators": true,
       "forceConsistentCasingInFileNames": true
     },
     "tstl": {
       "luaTarget": "5.1",
-      "luaPlugins": [],
       "noImplicitSelf": true,
+      "luaPlugins": [
+            {     "name": ipaths.bin.scripts.addons.addons.lua_orm.abs().get()
+                , 'import':'LuaORM'
+            }
+        ]
     }
 }
 
@@ -138,6 +144,8 @@ export class Livescripts {
     }
 
     private buildLua(dataset: Dataset, args: string[] = []) {
+        applyTSTLHack();
+        ipaths.bin.include_lua.copy(dataset.path.lib.include_lua)
         let config = Object.assign({},lua_tsconfig_json)
 
         let buildDir = this.path.build.dataset.pick(dataset.fullName).lua

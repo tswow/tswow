@@ -60,6 +60,16 @@ export namespace Config {
         spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
         spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
+        // Serverside lua includes
+        spaths.misc.install_config.include_lua.copy(bpaths.include_lua),
+        wsys.execIn(bpaths.include_lua,'tstl')
+        bpaths.include_lua.iterate('RECURSE','FILES','FULL', node => {
+            if(['.ts','.json'].find(x=>node.endsWith(x))) {
+                return;
+            }
+            node.copy(ipaths.bin.include_lua.join(node.relativeTo(bpaths.include_lua)))
+        })
+
         // Addon includes
         spaths.misc.install_config.include_addon.copy(ipaths.bin.include_addon)
         ipaths.bin.include_addon.join('Events.ts').remove();

@@ -136,7 +136,6 @@ std::shared_ptr<T> LoadDBEntry(std::shared_ptr<T> value)
 
 #define LoadDBArrayEntry(cls,...) cls::Load(__VA_ARGS__)
 #define QueryDBEntry(cls, sql) cls::LoadSQL(sql)
-#define QueryDBArrayEntry(cls, sql) cls::LoadSQL(sql)
 
 #define DeleteDBEntry(cls,sql) cls::DeleteSQL(sql)
 #define DeleteDBArrayEntry(cls,sql) cls::DeleteSQL(sql)

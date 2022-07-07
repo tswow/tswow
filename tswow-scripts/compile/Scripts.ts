@@ -78,7 +78,7 @@ export namespace Scripts {
         makeTsConfig(
             ipaths.bin.scripts.addons.abs()
           , bpaths.scripts_config.addons.abs()
-          , [spaths.tswow_scripts.addons.abs()]
+          , [spaths.tswow_scripts.addons.abs(),spaths.tswow_scripts.util.abs()]
         )
 
         spaths.tswow_scripts.data.package_json

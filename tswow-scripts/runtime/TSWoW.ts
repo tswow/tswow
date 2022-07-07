@@ -38,6 +38,7 @@ import { Package } from "./Package";
 import { PositionsFile } from "./PositionsFile";
 import { Realm } from "./Realm";
 import { Snippets } from "./Snippets";
+import { applyTSTLHack } from "./TSTLHack";
 
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
@@ -76,6 +77,7 @@ export async function main() {
         process.exit(0)
     }
 
+    applyTSTLHack();
     Module.cacheEndpoints(true);
     await mysql.initialize();
     await Dataset.initialize()

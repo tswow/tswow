@@ -18,13 +18,23 @@ sol::state& TSLua::GetState()
     return state;
 }
 
-std::filesystem::path TSLua::LuaRoot()
+static std::filesystem::path LibRoot()
 {
 #if AZEROTHCORE
-    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
+    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib";
 #elif TRINITY
-    return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
+    return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib";
 #endif
+}
+
+std::filesystem::path TSLua::LuaRoot()
+{
+    return LibRoot() / "lua";
+}
+
+static std::filesystem::path LuaLibRoot()
+{
+    return LibRoot() / "lualib";
 }
 
 static bool ends_with(std::string const& value, std::string const& ending)
@@ -246,6 +256,11 @@ void TSLua::execute_file(std::filesystem::path file)
 
 sol::table TSLua::require(std::string const& mod)
 {
+    if (mod == "lualib_bundle")
+    {
+        return modules["lualib_bundle"];
+    }
+
     std::filesystem::path path = std::filesystem::absolute(FindLuaModule(mod));
     if (path.empty())
     {
@@ -289,6 +304,21 @@ void TSLua::Load()
     state["HAS_TAG"] = L_HAS_TAG;
     state["BROADCAST_PHASE_ID"] = BROADCAST_PHASE_ID;
 
+    // Load lua libraries ( todo: move to "load_bindings" method )
+    std::filesystem::path lualib_bundle_path = LuaLibRoot() / "lualib_bundle.lua";
+    std::filesystem::path LuaORMClasses_path = LuaLibRoot() / "LuaORMClasses.lua";
+
+    if (std::filesystem::exists(lualib_bundle_path))
+    {
+        modules["lualib_bundle"] = state.safe_script_file(lualib_bundle_path.string()).get<sol::table>();
+    }
+
+    if (std::filesystem::exists(LuaORMClasses_path))
+    {
+        state.safe_script_file(LuaORMClasses_path.string());
+    }
+
+
     for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {
         cur_module = entry.path();
@@ -303,6 +333,11 @@ void TSLua::Load()
             if (file.is_regular_file() && file.path().extension() == ".lua")
             {
                 cur_directory = file.path().parent_path();
+                // don't load any accidental lualib_bundles
+                if (file.path().filename() == "lualib_bundle.lua")
+                {
+                    continue;
+                }
                 execute_file(file);
             }
         }

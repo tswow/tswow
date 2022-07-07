@@ -9636,7 +9636,6 @@ declare function ModID(): uint32;
 declare function LoadDBEntry<T extends DBEntry>(value: T): T
 declare function LoadDBArrayEntry<T extends DBArrayEntry>(cons: new(...args: any[])=>T, ...pks: any[]): DBContainer<T>
 declare function QueryDBEntry<T extends DBEntry>(con: new(...args: any[])=>T, sql: string): TSArray<T>
-declare function QueryDBArrayEntry<T extends DBArrayEntry>(cons: new(...args: any[])=>T): DBContainer<T>
 declare function DeleteDBEntry<T extends DBEntry>(con: new(...args: any[])=>T, sql: string): void
 declare function DeleteDBArrayEntry<T extends DBArrayEntry>(con: new(...args: any[])=>T, sql: string): void
 

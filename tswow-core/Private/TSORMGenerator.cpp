@@ -22,7 +22,7 @@
 #include <string>
 #include <stdexcept>
 
-std::shared_ptr<TSDatabaseResult> DatabaseSpec::query(std::string const& value)
+static std::shared_ptr<TSDatabaseResult> query(DatabaseType m_type, std::string const& value)
 {
     switch(m_type)
     {
@@ -34,17 +34,6 @@ std::shared_ptr<TSDatabaseResult> DatabaseSpec::query(std::string const& value)
             return QueryWorld(TSString(value));
         default: throw std::out_of_range("DatabaseSpec::m_type");
     }
-}
-
-void DatabaseSpec::destroy()
-{
-    query(
-        "DROP TABLE IF EXISTS `"
-        + m_dbName +
-        "`.`"
-        + m_name +
-        "`;"
-    );
 }
 
 std::string toLower(std::string const& str)
@@ -59,11 +48,12 @@ std::string toLower(std::string const& str)
     return out;
 }
 
-void DatabaseSpec::update()
+void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string const& m_name, std::vector<FieldSpec> m_fields)
 {
+    DatabaseType m_type = (DatabaseType)(type);
     std::vector<FieldSpec> effectiveFields = m_fields;
 
-    auto oldTableQuery = query(
+    auto oldTableQuery = query(m_type,
         "SELECT COUNT(TABLE_NAME) as TableCount"
         " FROM `information_schema`.`TABLES`"
         " WHERE `TABLE_NAME` = \""
@@ -78,7 +68,7 @@ void DatabaseSpec::update()
     {
         // 1. build old fields
         std::vector<FieldSpec> oldFields;
-        auto oldQuery = query(
+        auto oldQuery = query(m_type,
             "SELECT `COLUMN_NAME`,`COLUMN_TYPE`,`COLUMN_KEY`,`EXTRA`"
             " FROM `information_schema`.`COLUMNS` "
             " WHERE `TABLE_SCHEMA` = \""
@@ -97,7 +87,7 @@ void DatabaseSpec::update()
                 , toLower(oldQuery->GetString(1))
                 , toLower(oldQuery->GetString(2)) == "pri"
                 , toLower(oldQuery->GetString(3)) == "auto_increment"
-            });
+                });
         }
 
         // 2. Find if pks changed
@@ -134,8 +124,8 @@ void DatabaseSpec::update()
                         oldPk.begin()
                         , oldPk.end()
                         , [&](FieldSpec const& old) {
-                        return old.m_name == eff.m_name;
-                    });
+                            return old.m_name == eff.m_name;
+                        });
                     if (itr == oldPk.end())
                     {
                         TS_LOG_INFO(
@@ -172,7 +162,13 @@ void DatabaseSpec::update()
                     , m_dbName.c_str()
                     , m_name.c_str()
                 );
-                destroy();
+                query(m_type,
+                    "DROP TABLE IF EXISTS `"
+                    + m_dbName +
+                    "`.`"
+                    + m_name +
+                    "`;"
+                );
                 goto create;
             }
         }
@@ -197,7 +193,7 @@ void DatabaseSpec::update()
                     , m_name.c_str()
                     , old.m_name.c_str()
                 );
-                query(
+                query(m_type,
                     "ALTER TABLE `"
                     + m_dbName +
                     "`.`"
@@ -207,7 +203,7 @@ void DatabaseSpec::update()
                     + "`;"
                 );
             }
-            else if(itr->m_typeName != old.m_typeName)
+            else if (itr->m_typeName != old.m_typeName)
             {
                 // update column type
                 TS_LOG_INFO(
@@ -219,7 +215,7 @@ void DatabaseSpec::update()
                     , old.m_typeName.c_str()
                     , itr->m_typeName.c_str()
                 );
-                query(
+                query(m_type,
                     "ALTER TABLE `"
                     + m_dbName +
                     "`.`"
@@ -240,8 +236,8 @@ void DatabaseSpec::update()
                 oldFields.begin()
                 , oldFields.end()
                 , [&](FieldSpec const& old) {
-                return eff.m_name == old.m_name;
-            });
+                    return eff.m_name == old.m_name;
+                });
 
             if (itr == oldFields.end())
             {
@@ -252,7 +248,7 @@ void DatabaseSpec::update()
                     , m_name.c_str()
                     , eff.m_name.c_str()
                 );
-                query(
+                query(m_type,
                     "ALTER TABLE `"
                     + m_dbName +
                     "`.`"
@@ -268,10 +264,10 @@ void DatabaseSpec::update()
 
         // We *always* reorder to match the memory layout
         // (in case someone starts running manual * queries)
-        for (size_t i = 0; i<effectiveFields.size(); ++i)
+        for (size_t i = 0; i < effectiveFields.size(); ++i)
         {
             auto eff = effectiveFields[i];
-            query(
+            query(m_type,
                 "ALTER TABLE `"
                 + m_dbName +
                 "`.`"
@@ -280,22 +276,22 @@ void DatabaseSpec::update()
                 + eff.m_name +
                 "` "
                 + eff.m_typeName +
-                ( eff.m_autoIncrements ? " AUTO_INCREMENT" : "") +
+                (eff.m_autoIncrements ? " AUTO_INCREMENT" : "") +
                 " "
-                + (i == 0 ? "FIRST" : "AFTER "+effectiveFields[i-1].m_name)
+                + (i == 0 ? "FIRST" : "AFTER " + effectiveFields[i - 1].m_name)
             );
         }
     }
     else
     {
-        create:
+    create:
         std::string createQuery =
             "CREATE TABLE `"
             + m_dbName +
             "`.`"
             + m_name +
             "` ("
-        ;
+            ;
 
         bool hasPrimaryKeys = false;
         for (int i = 0; i < effectiveFields.size(); ++i)
@@ -331,7 +327,7 @@ void DatabaseSpec::update()
                     {
                         createQuery += ",";
                     }
-                    createQuery += "`"+field.m_name+"`";
+                    createQuery += "`" + field.m_name + "`";
                     fst = false;
                 }
             }
@@ -344,6 +340,21 @@ void DatabaseSpec::update()
             , m_dbName.c_str()
             , m_name.c_str()
         );
-        query(createQuery);
+        query(m_type,createQuery);
     }
+}
+
+void LCreateDatabaseSpec(uint32 type, std::string const& dbName, std::string const& name, sol::table fields)
+{
+    std::vector<FieldSpec> vFields;
+    for (auto& [_, value] : fields)
+    {
+        auto col = value.as<sol::table>();
+        std::string name = col[1].get<std::string>();
+        std::string def = col[2].get<std::string>();
+        bool isPk = col[3].get<bool>();
+        bool autoIncrement = col[4].get<bool>();
+        vFields.push_back(FieldSpec{ name,def,isPk,autoIncrement });
+    }
+    CreateDatabaseSpec(type, dbName, name, vFields);
 }

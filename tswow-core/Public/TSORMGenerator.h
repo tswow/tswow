@@ -15,10 +15,13 @@
  */
 #pragma once
 
+#include "TSDatabase.h"
+
+#include <sol/sol.hpp>
+
 #include <string>
 #include <vector>
 #include <memory>
-#include "TSDatabase.h"
 
 struct FieldSpec {
     std::string m_name;
@@ -27,18 +30,12 @@ struct FieldSpec {
     bool m_autoIncrements;
 };
 
+// @alsoin ORMFields.ts:databaseIndex
 enum class DatabaseType {
     WORLD,
     AUTH,
     CHARACTERS
 };
 
-struct TC_GAME_API DatabaseSpec {
-    DatabaseType m_type;
-    std::string m_dbName;
-    std::string m_name;
-    std::vector<FieldSpec> m_fields;
-    std::shared_ptr<TSDatabaseResult> query(std::string const& value);
-    void destroy();
-    void update();
-};
+void TC_GAME_API CreateDatabaseSpec(uint32 type, std::string const& dbName, std::string const& name, std::vector<FieldSpec> fields);
+void TC_GAME_API LCreateDatabaseSpec(uint32 type, std::string const& dbName, std::string const& name, sol::table fields);

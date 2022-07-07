@@ -1,5 +1,7 @@
 #include "TSLua.h"
 #include "TSDatabase.h"
+#include "TSORM.h"
+#include "TSORMGenerator.h"
 
 void TSLua::load_database_methods(sol::state& state)
 {
@@ -60,18 +62,21 @@ void TSLua::load_database_methods(sol::state& state)
           &TSWorldDatabaseConnection::LQuery0
         , &TSWorldDatabaseConnection::LQuery1
     ));
+    LUA_FIELD(ts_world_database_connection, TSWorldDatabaseConnection, Unlock);
 
     auto ts_auth_database_connection = state.new_usertype<TSAuthDatabaseConnection>("TSAuthDatabaseConnection");
     ts_auth_database_connection.set_function("Query", sol::overload(
           &TSAuthDatabaseConnection::LQuery0
         , &TSAuthDatabaseConnection::LQuery1
     ));
+    LUA_FIELD(ts_auth_database_connection, TSAuthDatabaseConnection, Unlock);
 
     auto ts_characters_database_connection = state.new_usertype<TSCharactersDatabaseConnection>("TSCharactersDatabaseConnection");
     ts_characters_database_connection.set_function("Query", sol::overload(
           &TSCharactersDatabaseConnection::LQuery0
         , &TSCharactersDatabaseConnection::LQuery1
     ));
+    LUA_FIELD(ts_characters_database_connection, TSCharactersDatabaseConnection, Unlock);
 
     state.set_function("GetWorldDBConnection", GetWorldDBConnection);
     state.set_function("GetAuthDBConnection", GetAuthDBConnection);
@@ -88,4 +93,10 @@ void TSLua::load_database_methods(sol::state& state)
     state.set_function("PrepareWorldQuery", LPrepareWorldQuery);
     state.set_function("PrepareCharactersQuery", LPrepareCharactersQuery);
     state.set_function("PrepareAuthQuery", LPrepareAuthQuery);
+
+    state.set_function("CreateDatabaseSpec", LCreateDatabaseSpec);
+
+    state.safe_script("function LoadDBEntry(x) x:Load(); return x; end");
+    state.safe_script("function QueryDBEntry(x,sql) return x.LoadSQL(sql); end");
+    state.safe_script("function LoadDBArrayEntry(x,...) return x.Load(...) end");
 }
