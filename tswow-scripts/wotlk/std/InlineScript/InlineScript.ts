@@ -163,7 +163,7 @@ finish('inline-scripts',()=>{
                 + `${funcs.join('\n\n')}\n}`
 
             inlinePath.join(file).toFile().write(content)
-            inlineHeader += `import { ${funcName} } from "./${file.substring(0,file.lastIndexOf('.'))}"\n`
+            inlineHeader += `import { ${funcName} } from "./${file.substring(0,file.lastIndexOf('.')).split('\\').join('/')}"\n`
             inlineBody += `    ${funcName}(events);\n`;
         })
         inlineBody += '}'
