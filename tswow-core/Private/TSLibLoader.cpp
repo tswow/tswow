@@ -33,6 +33,8 @@ struct DataRemover {
         obj->m_tsEntity.m_lua_tables.clear();
         obj->m_tsWorldEntity.clear();
         obj->m_tsCollisions.callbacks.clear();
+        obj->m_delayedLuaCallbacks.clear();
+        obj->m_delayedCallbacks.clear();
     }
     void Visit(std::unordered_map<ObjectGuid, Creature*>& creatureMap)
     {
@@ -51,10 +53,12 @@ struct DataRemover {
 
     static void Run()
     {
-        sMapMgr->DoForAllMaps([](auto map) {
+        sMapMgr->DoForAllMaps([](Map* map) {
             map->m_tsWorldEntity.clear();
             map->m_tsEntity.m_compiledClasses.clear();
             map->m_tsEntity.m_lua_tables.clear();
+            map->m_delayLuaCallbacks.clear();
+            map->m_delayCallbacks.clear();
             DataRemover worker;
             TypeContainerVisitor<DataRemover, MapStoredObjectTypesContainer> visitor(worker);
             visitor.Visit(map->GetObjectsStore());
