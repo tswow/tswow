@@ -65,6 +65,7 @@ declare const enum Class /** @realType: uint8 */ {
 }
 declare type ClassID = Class | uint8
 
+declare const enum InventoryResult {} /** ItemDefines.h:InventoryResult */
 declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
 declare const enum TimerLoops {} /** TSTimer.h:TimerLoops */
 declare const enum Outfit {} /** TSOutfit.h:Outfit */
@@ -8702,8 +8703,8 @@ declare namespace _hidden {
         OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
         OnBank(id: EventID, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
 
-        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnCanEquip(id: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<InventoryResult>)=>void);
+        OnCanEquip(id: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<InventoryResult>)=>void);
 
         OnEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, isMerge: boolean)=>void)
         OnEquip(id: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, isMerge: boolean)=>void)
