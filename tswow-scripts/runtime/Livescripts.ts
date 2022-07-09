@@ -100,7 +100,7 @@ const lua_tsconfig_json = {
       "forceConsistentCasingInFileNames": true
     },
     "tstl": {
-      "luaTarget": "5.1",
+      "luaTarget": "5.4",
       "noImplicitSelf": true,
       "luaPlugins": [
             {     "name": ipaths.bin.scripts.addons.addons.lua_orm.abs().get()

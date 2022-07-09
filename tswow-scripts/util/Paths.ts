@@ -596,7 +596,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         TrinityCore: dir({
             sol_headers: dirn('_deps/sol2-src/include',{}),
-            lua_headers: dirn('_deps/lua51-src/src',{}),
+            lua_headers: dirn('_deps/lua-src/src',{ src: dir({})}),
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
             lib_linux: dirn('install/trinitycore/lib',{}),
