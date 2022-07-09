@@ -210,7 +210,7 @@ export class Livescripts {
                 .split('\r').join('')
                 .split('\n')
                 .map(contents=>{
-                    return ApplyTagMacros(contents, 'LUA');
+                    return ApplyTagMacros(contents, dataset.fullName, 'LUA');
                 })
                 .join('\n');
 

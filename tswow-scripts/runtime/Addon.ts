@@ -223,7 +223,7 @@ export class Addon {
         this.path.build.iterate('RECURSE','FILES','FULL',node=>{
             let str = node.toFile().readString()
             let m: RegExpMatchArray
-            str = ApplyTagMacros(str,'LUA');
+            str = ApplyTagMacros(str,dataset.fullName,'LUA');
             str = str.split('\n').map(x=>{
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
