@@ -57,7 +57,9 @@ export function writeLoader(outDir: string) {
         cpp.writeStringNewLine(`Main(handlers);`);
     }
 
-    cpp.writeStringNewLine('__InlineMain(handlers);');
+    if(inlinePath.exists()) {
+        cpp.writeStringNewLine('__InlineMain(handlers);');
+    }
     cpp.EndBlock();
     cpp.writeStringNewLine(`void AddScripts(){}`);
     cpp.writeStringNewLine(`char const* GetScriptModule()`);
