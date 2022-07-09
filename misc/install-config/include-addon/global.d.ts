@@ -141,7 +141,7 @@ declare function GetAchievementCriteriaInfo(achivementId: number, criteriaIndex:
  * @see https://wow.gamepedia.com/API_GetAchievementCriteriaInfoByID
  */
 // tslint:disable-next-line max-line-length
-declare function GetAchievementCriteriaInfoByID(achivementId: number, criteriaId: number): [string, number, boolean, number, string, number, number, string, number, boolean];
+declare function GetAchievementCriteriaInfoByID(achivementId: number, criteriaId: number): LuaMultiReturn<[string, number, boolean, number, string, number, number, string, number, boolean]>;
 
 /**
  * Returns information about the given Achievement
@@ -219,7 +219,7 @@ declare function GetNextAchievement(achivementId: number): number | null;
  * @param achivementId ID of the achievement to retrieve information for
  * @see https://wow.gamepedia.com/API_GetNumComparisonCompletedAchievements
  */
-declare function GetNumComparisonCompletedAchievements(achivementId: number): [number, number];
+declare function GetNumComparisonCompletedAchievements(achivementId: number): LuaMultiReturn<[number, number]>;
 
 /**
  * Return the total number of Achievements, and number completed
@@ -1551,7 +1551,7 @@ declare namespace WoWAPI {
          * - **displayID**
          * @see https://wow.gamepedia.com/API_C_AuctionHouse.GetReplicateItemBattlePetInfo
          */
-        GetReplicateItemBattlePetInfo(index: number): [number, number];
+        GetReplicateItemBattlePetInfo(index: number): LuaMultiReturn<[number, number]>;
 
         /**
          *
@@ -1577,8 +1577,8 @@ declare namespace WoWAPI {
          * - **hasAllInfo**
          * @see https://wow.gamepedia.com/API_C_AuctionHouse.GetReplicateItemInfo
          */
-        GetReplicateItemInfo(index: number): [string | null, number | null, number, number, boolean | null, number, string | null, number, number, number,
-            number, string | null, string | null, string | null, string | null, number, number, boolean | null];
+        GetReplicateItemInfo(index: number): LuaMultiReturn<[string | null, number | null, number, number, boolean | null, number, string | null, number, number, number,
+            number, string | null, string | null, string | null, string | null, number, number, boolean | null]>;
 
         /**
          *
@@ -1602,7 +1602,7 @@ declare namespace WoWAPI {
          * - **timeLeftMaxSeconds**
          * @see https://wow.gamepedia.com/API_C_AuctionHouse.GetTimeLeftBandInfo
          */
-        GetTimeLeftBandInfo(timeLeftBand: AUCTION_TIMELEFT): [number, number];
+        GetTimeLeftBandInfo(timeLeftBand: AUCTION_TIMELEFT): LuaMultiReturn<[number, number]>;
 
         /**
          * @see https://wow.gamepedia.com/API_C_AuctionHouse.HasFavorites
@@ -2744,7 +2744,7 @@ declare function GetChatWindowChannels(frameId: number): LuaMultiReturn<[string,
  *  - The name of the channel (Ohklus: seems to be nil for most channels)
  * @see https://wow.gamepedia.com/API_JoinChannelByName
  */
-declare function JoinChannelByName(channelName: string, password?: string, frameId?: number, hasVoice?: boolean): [number, string];
+declare function JoinChannelByName(channelName: string, password?: string, frameId?: number, hasVoice?: boolean): LuaMultiReturn<[number, string]>;
 
 /**
  * Joins the channel with the specified name. A player can be in a maximum of 10 chat channels. In opposite to API_JoinTemporaryChannel
@@ -4654,7 +4654,7 @@ declare namespace WoWAPI {
          * @since 3.0.3
          * @see https://wow.gamepedia.com/ACHIEVEMENT_EARNED
          */
-        ACHIEVEMENT_EARNED: [number];
+        ACHIEVEMENT_EARNED: number;
 
         /**
          * unknown
@@ -11345,7 +11345,7 @@ declare namespace WoWAPI {
         IsValid: boolean;
 
         Clear(): void;
-        GetBagAndSlot(): [number | null, number | null];
+        GetBagAndSlot(): LuaMultiReturn<[number | null, number | null]>;
         SetEquipmentSlot(equipmentSlotIndex: number | null): void;
         GetEquipmentSlot(): number | null;
         IsEquipmentSlot(): boolean;
@@ -11390,7 +11390,7 @@ declare namespace WoWAPI {
          * - **totalLevelXP**
          * @see https://wow.gamepedia.com/API_C_AzeriteItem.GetAzeriteItemXPInfo
          */
-        GetAzeriteItemXPInfo(azeriteItemLocation: ItemLocationMixin): [number, number];
+        GetAzeriteItemXPInfo(azeriteItemLocation: ItemLocationMixin): LuaMultiReturn<[number, number]>;
 
         /**
          *
@@ -11544,7 +11544,7 @@ declare function GetItemQualityColor(quality: WoWAPI.ITEM_QUALITY): LuaMultiRetu
  * - **spellId**: The spell's unique identifier
  * @see https://wow.gamepedia.com/API_GetItemSpell
  */
-declare function GetItemSpell(itemIdentifier: string | number | WoWAPI.ItemLink): [string, string, number];
+declare function GetItemSpell(itemIdentifier: string | number | WoWAPI.ItemLink): LuaMultiReturn<[string, string, number]>;
 
 /**
  * Returns a table of stats for an item
@@ -11617,7 +11617,7 @@ declare function GetTradeTargetItemLink(tradeIndex: number): WoWAPI.ItemLink;
  * Returns usable, noMana
  * @param itemIdentifier Number/String/String - Numeric ID of the item, name of the item, or itemLink of the item to query
  */
-declare function IsUsableItem(itemIdentifier: string | number | WoWAPI.ItemLink): [boolean, boolean];
+declare function IsUsableItem(itemIdentifier: string | number | WoWAPI.ItemLink): LuaMultiReturn<[boolean, boolean]>;
 
 /**
  * Returns whether an item is consumed when used
@@ -11670,7 +11670,7 @@ declare function IsEquippedItemType(itemType: WoWAPI.EquippableItemType): boolea
  * - If the item is not in range, 0; if the item is in range, 1; if the query is invalid, nil
  * @see https://wow.gamepedia.com/API_IsItemInRange
  */
-declare function IsItemInRange(itemIdentifier: string | number | WoWAPI.ItemLink, unit?: WoWAPI.UnitId): [boolean, WoWAPI.Flag];
+declare function IsItemInRange(itemIdentifier: string | number | WoWAPI.ItemLink, unit?: WoWAPI.UnitId): LuaMultiReturn<[boolean, WoWAPI.Flag]>;
 
 /**
  * unknown
@@ -13643,10 +13643,10 @@ declare namespace WoWAPI {
         ClearFog(): void;
         ClearModel(): void;
         GetFacing(): number;
-        GetFogColor(): [number, number, number, number]
+        GetFogColor(): LuaMultiReturn<[number, number, number, number]>
         GetFogFar(): number;
         GetFogNear(): number;
-        GetLight(): [boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
+        GetLight(): LuaMultiReturn<[boolean, boolean, number, number, number, number, number, number, number, number, number, number, number]>;
         GetModel(): string;
         GetModelScale(): number;
         GetPosition(): LuaMultiReturn<[number,number,number]>;
@@ -13679,7 +13679,7 @@ declare namespace WoWAPI {
     }
 
     interface StatusBar extends Frame, UIObject, Region {
-        GetMinMaxValues(): [number,number];
+        GetMinMaxValues(): LuaMultiReturn<[number,number]>;
         GetOrientation: Align;
         GetStatusBarColor: number;
         GetStatusBarTexture(): Texture;
