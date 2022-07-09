@@ -150,8 +150,11 @@ export class Livescripts {
 
         let buildDir = this.path.build.dataset.pick(dataset.fullName).lua
         config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.path).get()
-
         this.path.tsconfig.writeJson(config);
+
+        config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.mod.path).get()
+        config['include'] = ['livescripts','shared']
+        this.mod.path.livescript_tsconfig_temp.writeJson(config)
 
         let foundTs = false;
         this.path.iterateDef(node=>{
@@ -164,24 +167,27 @@ export class Livescripts {
         if(foundTs) {
             term.log(this.logName(),`Compiling ts->lua`)
             wsys.execIn(
-                this.path.get()
+                this.mod.path.get()
             , `node ${ipaths.node_modules.tstl_js.abs()}`
             )
         }
 
-        term.log(this.logName(),`Copying lua sources`)
-        this.path.iterate('RECURSE','BOTH','FULL',node=>{
-            if(node.basename().get() === 'build') {
-                return 'ENDPOINT'
-            }
-            if(node.isFile() && node.endsWith('.lua')) {
-                node.copy(buildDir.join(node.relativeTo(this.path)))
-            }
+        term.log(this.logName(),`Copying lua sources`);
+
+        [this.mod.path.shared,this.mod.path.livescripts].forEach(x=>{
+            x.iterate('RECURSE','BOTH','FULL',node=>{
+                if(node.basename().get() === 'build') {
+                    return 'ENDPOINT'
+                }
+                if(node.isFile() && node.endsWith('.lua')) {
+                    node.copy(buildDir.join(node.relativeTo(this.mod.path)))
+                }
+            })
         })
 
         buildDir.iterate('RECURSE','FILES','FULL', node => {
             let rel = node.relativeTo(buildDir)
-            let file = this.path.join(rel)
+            let file = this.mod.path.join(rel)
             if(!node.basename().startsWith('__') && node.endsWith('.lua') && !file.withExtension('.ts',true).exists() && !file.withExtension('.lua',true).exists()) {
                 if(rel.basename().get() !== 'lualib_bundle.lua') {
                     term.log(this.logName(),`Cleaning up removed lua file ${rel.get()}`)
@@ -215,7 +221,7 @@ export class Livescripts {
                 .join('\n');
 
             if(node.basename().get() === '__inline_main.lua') {
-                lines = lines.split(`build.${dataset.fullName}.inline.`).join('')
+                lines = lines.split(`livescripts.build.${dataset.fullName}.inline.`).join('')
             }
             node.toFile().write(lines,'OVERWRITE');
         });
