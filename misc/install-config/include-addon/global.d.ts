@@ -24,6 +24,7 @@
   * Modified by TSWoW
   */
 
+declare type LuaMultiReturn<T extends any[]> = T & LuaExtension<"__luaMultiReturnBrand">;
 type uint8 = number;
 type uint16 = number;
 type uint32 = number;
@@ -119,9 +120,8 @@ declare function GetAchievementCategory(achivementId: number): number;
  *
  * @param achivementId ID of the achievement to retrieve information for
  * @see https://wow.gamepedia.com/API_GetAchievementComparisonInfo
- * @tupleReturn
  */
-declare function GetAchievementComparisonInfo(achivementId: number): [boolean, number, number, number];
+declare function GetAchievementComparisonInfo(achivementId: number): LuaMultiReturn<[boolean, number, number, number]>;
 
 /**
  * Returns information about the given Achievement's specified criteria
@@ -129,10 +129,9 @@ declare function GetAchievementComparisonInfo(achivementId: number): [boolean, n
  * @param achivementId Achievement ID the queried criteria belongs to
  * @param criteriaIndex Index of the criteria to query, ascending from 1 up to GetAchievementNumCriteria(achievementID).
  * @see https://wow.gamepedia.com/API_GetAchievementCriteriaInfo
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetAchievementCriteriaInfo(achivementId: number, criteriaIndex: number): [string, number, boolean, number, number, string, number, number, string, number, boolean];
+declare function GetAchievementCriteriaInfo(achivementId: number, criteriaIndex: number): LuaMultiReturn<[string, number, boolean, number, number, string, number, number, string, number, boolean]>;
 
 /**
  * Returns information about the given Achievement's specified criteria
@@ -150,12 +149,10 @@ declare function GetAchievementCriteriaInfoByID(achivementId: number, criteriaId
  * @param achivementId ID of the achievement to retrieve information for
  * @param index An offset into the achievement category, between 1 and GetCategoryNumAchievements(categoryID)
  * @see https://wow.gamepedia.com/API_GetAchievementInfo
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetAchievementInfo(achivementId: number, index: number): [number, string, number, boolean, number, number, number, string, number, number, string, boolean, boolean, string];
-// tslint:disable-next-line max-line-length
-declare function GetAchievementInfo(categoryId: number, index: number): [number, string, number, boolean, number, number, number, string, number, number, string, boolean, boolean, string];
+declare function GetAchievementInfo(achivementId: number, index: number): LuaMultiReturn<[number, string, number, boolean, number, number, number, string, number, number, string, boolean, boolean, string]>;
+declare function GetAchievementInfo(categoryId: number, index: number): LuaMultiReturn<[number, string, number, boolean, number, number, number, string, number, number, string, boolean, boolean, string]>;
 
 /**
  * Returns a achievementLink for the specified Achievement
@@ -178,9 +175,8 @@ declare function GetAchievementNumCriteria(achivementId: number): number;
  *
  * @param categoryId The ID of the category to get the info for.
  * @see https://wow.gamepedia.com/API_GetCategoryInfo
- * @tupleReturn
  */
-declare function GetCategoryInfo(categoryId: number): [string, number, number];
+declare function GetCategoryInfo(categoryId: number): LuaMultiReturn<[string, number, number]>;
 
 /**
  * Returns the list of Achievement categories
@@ -196,9 +192,8 @@ declare function GetCategoryList(): number[];
  * @param categoryId Achievement category ID, as returned by GetCategoryList.
  * @param includeAll If true-equivalent, include all achievements, otherwise, only includes those currently visible
  * @see https://wow.gamepedia.com/API_GetCategoryNumAchievements
- * @tupleReturn
  */
-declare function GetCategoryNumAchievements(categoryId: number, includeAll?: boolean): [number, number, number];
+declare function GetCategoryNumAchievements(categoryId: number, includeAll?: boolean): LuaMultiReturn<[number, number, number]>;
 
 /**
  * Return the value of the requested Statistic from the comparison unit
@@ -230,9 +225,8 @@ declare function GetNumComparisonCompletedAchievements(achivementId: number): [n
  * Return the total number of Achievements, and number completed
  *
  * @see https://wow.gamepedia.com/API_GetNumCompletedAchievements
- * @tupleReturn
  */
-declare function GetNumCompletedAchievements(): [number, number];
+declare function GetNumCompletedAchievements(): LuaMultiReturn<[number, number]>;
 
 /**
  * Return the previous achievement in a chain
@@ -274,9 +268,8 @@ declare function GetTotalAchievementPoints(): number;
  * @returns achievementId(s) of achievements you are currently tracking
  * @see https://wow.gamepedia.com/API_GetTrackedAchievements
  * @since 3.0.2
- * @tupleReturn
  */
-declare function GetTrackedAchievements(): [number, number, number, number, number, number, number, number, number, number];
+declare function GetTrackedAchievements(): LuaMultiReturn<[number, number, number, number, number, number, number, number, number, number]>;
 
 /**
  * Returns the total number of tracked achievements
@@ -378,9 +371,8 @@ declare function GetActionBarPage(): ActionBarPage;
  *
  * @returns bottomLeftState, bottomRightState, sideRightState, sideRight2State
  * @see https://wow.gamepedia.com/API_GetActionBarToggles
- * @tupleReturn
  */
-declare function GetActionBarToggles(): [boolean, boolean, boolean, boolean];
+declare function GetActionBarToggles(): LuaMultiReturn<[boolean, boolean, boolean, boolean]>;
 
 /**
  * Returns information about the charges of a charge-accumulating player ability
@@ -388,9 +380,8 @@ declare function GetActionBarToggles(): [boolean, boolean, boolean, boolean];
  * @param slotId The action slot to retrieve data from
  * @returns currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate
  * @see https://wow.gamepedia.com/API_GetActionCharges
- * @tupleReturn
  */
-declare function GetActionCharges(slotId: ActionBarSlotId): [number, number, number, number, number];
+declare function GetActionCharges(slotId: ActionBarSlotId): LuaMultiReturn<[number, number, number, number, number]>;
 
 /**
  * Retrieves the cooldown data of the action specified
@@ -398,9 +389,8 @@ declare function GetActionCharges(slotId: ActionBarSlotId): [number, number, num
  * @param slotId The action slot to retrieve data from
  * @returns start, duration, enable, modRate
  * @see https://wow.gamepedia.com/API_GetActionCooldown
- * @tupleReturn
  */
-declare function GetActionCooldown(slotId: ActionBarSlotId): [number, number, number, number];
+declare function GetActionCooldown(slotId: ActionBarSlotId): LuaMultiReturn<[number, number, number, number]>;
 
 /**
  * Gets the available count for an action, if applicable
@@ -418,9 +408,8 @@ declare function GetActionCount(slotId: ActionBarSlotId): string | number;
  * @param slotId Action slot to retrieve information about.
  * @returns actionType, id, subType
  * @see https://wow.gamepedia.com/API_GetActionInfo
- * @tupleReturn
  */
-declare function GetActionInfo(slotId: ActionBarSlotId): [string, WoWAPI.Unknown, WoWAPI.Unknown];
+declare function GetActionInfo(slotId: ActionBarSlotId): LuaMultiReturn<[string, WoWAPI.Unknown, WoWAPI.Unknown]>;
 
 /**
  * Gets the text label for an action
@@ -529,9 +518,8 @@ declare function IsEquippedAction(slotId: ActionBarSlotId): WoWAPI.Flag | null;
  * @param slotId Action slot to query
  * @returns isUsable, notEnoughMana
  * @see https://wow.gamepedia.com/API_IsUsableAction
- * @tupleReturn
  */
-declare function IsUsableAction(slotId: ActionBarSlotId): [boolean, boolean];
+declare function IsUsableAction(slotId: ActionBarSlotId): LuaMultiReturn<[boolean, boolean]>;
 
 /**
  * Determine if player has a pet with an action bar.
@@ -910,9 +898,8 @@ declare function EnableAllAddOns(): void;
  * OR The name of the AddOn to be queries. You can access Blizzard-provided AddOns through this mechanism
  * @returns Name of an addon the specified addon lists as a required dependency
  * @see https://wow.gamepedia.com/API_GetAddOnDependencies
- * @tupleReturn
  */
-declare function GetAddOnDependencies(indexOrName: number | string): [...string[]];
+declare function GetAddOnDependencies(indexOrName: number | string): LuaMultiReturn<[...string[]]>;
 
 /**
  * Unknown
@@ -930,9 +917,8 @@ declare function GetAddOnEnableState(character: WoWAPI.Unknown, addonIndex: WoWA
  * mechanism OR The name of the AddOn to be queried. You can access Blizzard-provided AddOns through this mechanism
  * @returns name, title, notes, loadable, reason, security, newVersion
  * @see https://wow.gamepedia.com/API_GetAddOnInfo
- * @tupleReturn
  */
-declare function GetAddOnInfo(indexOrName: number | string): [string, string, string, boolean, WoWAPI.ADDON_LOAD_REASON, string, boolean];
+declare function GetAddOnInfo(indexOrName: number | string): LuaMultiReturn<[string, string, string, boolean, WoWAPI.ADDON_LOAD_REASON, string, boolean]>;
 
 /**
  * get addon metadata from the toc file
@@ -950,9 +936,8 @@ declare function GetAddOnMetadata(addonNameOrIndex: string | number, field: stri
  * @param indexOrName The index of the AddOn in the user's AddOn list. Note that you cannot access Blizzard-provided AddOns through this mechanism.
  * OR The name of the AddOn to be queries. You can access Blizzard-provided AddOns through this mechanism
  * @see https://wow.gamepedia.com/API_GetAddOnOptionalDependencies
- * @tupleReturn
  */
-declare function GetAddOnOptionalDependencies(indexOrName: number | string): [...string[]];
+declare function GetAddOnOptionalDependencies(indexOrName: number | string): LuaMultiReturn<[...string[]]>;
 
 /**
  * Get the number of user supplied AddOns
@@ -968,9 +953,8 @@ declare function GetNumAddOns(): number;
  * The name of the addon to be queried. You can query Blizzard-provided addon using this parameter
  * @returns loaded, finished
  * @see https://wow.gamepedia.com/API_IsAddOnLoaded
- * @tupleReturn
  */
-declare function IsAddOnLoaded(indexOrName: number | string): [WoWAPI.Flag, WoWAPI.Flag];
+declare function IsAddOnLoaded(indexOrName: number | string): LuaMultiReturn<[WoWAPI.Flag, WoWAPI.Flag]>;
 
 /**
  * Determine if an AddOn is loaded on demand (via .toc file dependencies or LoadAddOn) rather than at startup
@@ -989,9 +973,8 @@ declare function IsAddOnLoadOnDemand(indexOrName: number | string): WoWAPI.Flag;
  * OR The name of the AddOn to be queries. You can access Blizzard-provided AddOns through this mechanism
  * @returns loaded, reason
  * @see https://wow.gamepedia.com/API_LoadAddOn
- * @tupleReturn
  */
-declare function LoadAddOn(indexOrName: number | string): [WoWAPI.Flag, WoWAPI.ADDON_LOAD_REASON];
+declare function LoadAddOn(indexOrName: number | string): LuaMultiReturn<[WoWAPI.Flag, WoWAPI.ADDON_LOAD_REASON]>;
 
 
 /// <reference path="global.d.ts" />
@@ -1050,9 +1033,8 @@ declare namespace WoWAPI {
  * @param index Which team to get information on, 0 is Green team and 1 is Gold Team
  * @returns teamName, oldTeamRating, newTeamRating, teamRating
  * @see https://wow.gamepedia.com/API_GetBattlefieldTeamInfo
- * @tupleReturn
  */
-declare function GetBattlefieldTeamInfo(index: WoWAPI.ARENA_TEAM): [string, number, number, number];
+declare function GetBattlefieldTeamInfo(index: WoWAPI.ARENA_TEAM): LuaMultiReturn<[string, number, number, number]>;
 
 /**
  * Returns the current arena season. Returns 0 when there is no active season
@@ -1074,9 +1056,8 @@ declare function GetPreviousArenaSeason(): WoWAPI.Unknown;
  *
  * @returns isArena, isRegistered
  * @see https://wow.gamepedia.com/API_IsActiveBattlefieldArena
- * @tupleReturn
  */
-declare function IsActiveBattlefieldArena(): [boolean, boolean];
+declare function IsActiveBattlefieldArena(): LuaMultiReturn<[boolean, boolean]>;
 
 /**
  * Returns a value based on whether the player is the arena team captain
@@ -1881,9 +1862,8 @@ declare function GetBankSlotCost(numSlot: number): number;
 /**
  * Returns information about the number of purchased bank bag slots
  * @see https://wow.gamepedia.com/API_GetNumBankSlots
- * @tupleReturn
  */
-declare function GetNumBankSlots(): [number, WoWAPI.Flag];
+declare function GetNumBankSlots(): LuaMultiReturn<[number, WoWAPI.Flag]>;
 
 
 declare namespace WoWAPI {
@@ -1912,9 +1892,8 @@ declare function CancelBarberShop(): void;
 /**
  * Returns information about the current selection for a barber shop customization
  * @see https://wow.gamepedia.com/API_GetBarberShopStyleInfo
- * @tupleReturn
  */
-declare function GetBarberShopStyleInfo(catId: number): [string, WoWAPI.Unknown, WoWAPI.Unknown, WoWAPI.Flag];
+declare function GetBarberShopStyleInfo(catId: number): LuaMultiReturn<[string, WoWAPI.Unknown, WoWAPI.Unknown, WoWAPI.Flag]>;
 
 /**
  * Returns the total costs of the cosmetic changes
@@ -2002,9 +1981,8 @@ declare function GetBattlefieldEstimatedWaitTime(): number;
  * Used to position the flag icon on the world map and the battlefield minimap
  * @param index Index to get the flag position from
  * @see https://wow.gamepedia.com/API_GetBattlefieldFlagPosition
- * @tupleReturn
  */
-declare function GetBattlefieldFlagPosition(index: number): [number, number, string];
+declare function GetBattlefieldFlagPosition(index: number): LuaMultiReturn<[number, number, string]>;
 
 /**
  * Get shutdown timer for the battlefield instance
@@ -2032,9 +2010,8 @@ declare function GetBattlefieldPortExpiration(index: number): number;
  * Returns information about a player's score in battlegrounds
  * @param playerIndex The characters index in battlegrounds, going from 1 to GetNumBattlefieldScores().
  * @see https://wow.gamepedia.com/API_GetBattlefieldScore
- * @tupleReturn
  */
-declare function GetBattlefieldScore(playerIndex: number): [string, number, number, number, number, number, string, string, string, number, number, string];
+declare function GetBattlefieldScore(playerIndex: number): LuaMultiReturn<[string, number, number, number, number, number, string, string, string, number, number, string]>;
 
 /**
  * Get data from the custom battlefield scoreboard columns
@@ -2050,18 +2027,16 @@ declare function GetBattlefieldStatData(playerIndex: number, columnIndex: number
  * Get list of battleground specific columns on the scoreboard
  * @param columnIndex Column to get data for
  * @see https://wow.gamepedia.com/API_GetBattlefieldStatInfo
- * @tupleReturn
  */
-declare function GetBattlefieldStatInfo(columnIndex: number): [string, string, string];
+declare function GetBattlefieldStatInfo(columnIndex: number): LuaMultiReturn<[string, string, string]>;
 
 /**
  * Get the status of the arena, battleground, or wargame that the player is either queued for or inside
  * @param battlefieldIndex Index of the battlefield you wish to view, in the range of 1 to GetMaxBattlefieldID()
  * @see https://wow.gamepedia.com/API_GetBattlefieldStatus
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetBattlefieldStatus(battlefieldIndex: number): [WoWAPI.BattlefieldStatusType, string, WoWAPI.BattlefieldTeamSize, number, WoWAPI.Unknown, WoWAPI.BattlefieldType, WoWAPI.Unknown, WoWAPI.UnitRoleType];
+declare function GetBattlefieldStatus(battlefieldIndex: number): LuaMultiReturn<[WoWAPI.BattlefieldStatusType, string, WoWAPI.BattlefieldTeamSize, number, WoWAPI.Unknown, WoWAPI.BattlefieldType, WoWAPI.Unknown, WoWAPI.UnitRoleType]>;
 
 /**
  * Get time this player's been in the queue in milliseconds
@@ -2082,9 +2057,8 @@ declare function GetBattlefieldWinner(): WoWAPI.BattlefieldWinType;
  * Returns information about a battleground type
  * @param battlegroundTypeIndex battleground type index, 1 to GetNumBattlegroundTypes().
  * @see https://wow.gamepedia.com/API_GetBattlegroundInfo
- * @tupleReturn
  */
-declare function GetBattlegroundInfo(battlegroundTypeIndex: number): [string, WoWAPI.Flag, WoWAPI.Flag, WoWAPI.Flag, number, string];
+declare function GetBattlegroundInfo(battlegroundTypeIndex: number): LuaMultiReturn<[string, WoWAPI.Flag, WoWAPI.Flag, WoWAPI.Flag, number, string]>;
 
 /**
  * Appears to return the number of scores in the battleground/field scoreboard
@@ -2109,10 +2083,9 @@ declare function GetNumWorldStateUI(): number;
  * Get score and flag status within a battlefield
  * @param worldUiStateIndex between 1 and GetNumWorldStateUI().
  * @see https://wow.gamepedia.com/API_GetWorldStateUIInfo
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetWorldStateUIInfo(worldUiStateIndex: number): [number, WoWAPI.BattlefieldUiStateType, boolean, string, string, string, string, string, string, number, number, number];
+declare function GetWorldStateUIInfo(worldUiStateIndex: number): LuaMultiReturn<[number, WoWAPI.BattlefieldUiStateType, boolean, string, string, string, string, string, string, number, number, number]>;
 
 /**
  * Queues the player, or the player's group, for a battlefield instance
@@ -2167,9 +2140,8 @@ declare namespace WoWAPI {
  * @param bindingIndex index of the binding to query, from 1 to GetNumBindings().
  * @param mode Unknown, defaults to 1
  * @see https://wow.gamepedia.com/API_GetBinding
- * @tupleReturn
  */
-declare function GetBinding(bindingIndex: number, mode?: WoWAPI.Unknown): [string, string, string];
+declare function GetBinding(bindingIndex: number, mode?: WoWAPI.Unknown): LuaMultiReturn<[string, string, string]>;
 
 /**
  * Returns the name of the action performed by the specified binding
@@ -2186,9 +2158,8 @@ declare function GetBindingAction(binding: string, checkOverride?: boolean): str
  * @param command The name of the command to get key bindings for (e.g. MOVEFORWARD, TOGGLEFRIENDSTAB)
  * @returns The string representation(s) of all the key(s) bound to this command (e.g. W, CTRL-F)
  * @see https://wow.gamepedia.com/API_GetBindingKey
- * @tupleReturn
  */
-declare function GetBindingKey(command: string): [...string[]];
+declare function GetBindingKey(command: string): LuaMultiReturn<[...string[]]>;
 
 /**
  * Returns the localized string value for the given key and prefix. Essentially a glorified getglobal() function
@@ -2300,9 +2271,8 @@ declare function CancelItemTempEnchantment(weaponHand: WoWAPI.BuffWeaponHandType
 /**
  * Returns information about the player's current temporary enchants, such as fishing lures or sharpening stones and weightstones produced by blacksmiths
  * @see https://wow.gamepedia.com/API_GetWeaponEnchantInfo
- * @tupleReturn
  */
-declare function GetWeaponEnchantInfo(): [boolean, number, number, number, boolean, number, number, number];
+declare function GetWeaponEnchantInfo(): LuaMultiReturn<[boolean, number, number, number, boolean, number, number, number]>;
 
 declare function UnitName(unitId: WoWAPI.UnitId): string;
 declare function UnitPower(unitId: WoWAPI.UnitId, powerType: number): number;
@@ -2314,10 +2284,9 @@ declare function UnitPowerMax(unitId: WoWAPI.UnitId, powerType: number): number;
  * @param index index (from 1 to 40)
  * @param filter list of filters, separated by spaces or pipes. "HELPFUL" by default
  * @see https://wow.gamepedia.com/API_UnitAura
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function UnitAura(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): [string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, boolean, number];
+declare function UnitAura(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): LuaMultiReturn<[string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, boolean, number]>;
 
 /**
  * Retrieve info about a certain buff on a certain unit
@@ -2325,10 +2294,9 @@ declare function UnitAura(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.
  * @param index index (from 1 to 40)
  * @param filter list of filters, separated by spaces or pipes ("|"). "HELPFUL" by default
  * @see https://wow.gamepedia.com/API_UnitBuff
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function UnitBuff(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): [string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, number, number, number, number];
+declare function UnitBuff(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): LuaMultiReturn<[string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, number, number, number, number]>;
 
 /**
  * Retrieve info about a specified debuff on a certain unit
@@ -2336,10 +2304,9 @@ declare function UnitBuff(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.
  * @param index index (from 1 to 40)
  * @param filter list of filters, separated by spaces or pipes ("|"). "HELPFUL" by default
  * @see https://wow.gamepedia.com/API_UnitBuff
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function UnitDebuff(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): [string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, number, number, number, number];
+declare function UnitDebuff(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): LuaMultiReturn<[string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, number, number, number, number]>;
 
 
 declare namespace WoWAPI {
@@ -2443,16 +2410,14 @@ declare function GetMouseFocus(): WoWAPI.Frame;
 /**
  * Returns the WorldMapAreaID of the currently displayed area map, and whether quest objectives should be shown.
  * @returns mapID,isContinent
- * @tupleReturn
  */
-declare function GetCurrentMapAreaID(): [number, boolean];
+declare function GetCurrentMapAreaID(): LuaMultiReturn<[number, boolean]>;
 
 /**
  * Returns the WorldMapAreaID of the currently displayed area map, and whether quest objectives should be shown.
  * @returns posX,posY
- * @tupleReturn
  */
- declare function GetPlayerMapPosition(unit:WoWAPI.UnitId): [number, number];
+ declare function GetPlayerMapPosition(unit:WoWAPI.UnitId): LuaMultiReturn<[number, number]>;
 
 /**
  * Exits mouse look mode; allows mouse input to move the mouse cursor
@@ -2737,18 +2702,16 @@ declare function DisplayChannelOwner(channelName: string): void;
  * Retrieves all available server channels (zone dependent).
  * @returns channel1, channel2, ...
  * @see https://wow.gamepedia.com/API_EnumerateServerChannels
- * @tupleReturn
  */
-declare function EnumerateServerChannels(): [...string[]];
+declare function EnumerateServerChannels(): LuaMultiReturn<[...string[]]>;
 
 /**
  * Retrieves joined channels
  * @returns id1, name1, disabled1, ...
  * @see https://wow.gamepedia.com/API_GetChannelList
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetChannelList(): [number, string, boolean, number, string, boolean, number, string, boolean, number, string, boolean, number, string, boolean, number, string, boolean];
+declare function GetChannelList(): LuaMultiReturn<[number, string, boolean, number, string, boolean, number, string, boolean, number, string, boolean, number, string, boolean, number, string, boolean]>;
 
 /**
  * Returns information about the specified channel
@@ -2757,19 +2720,17 @@ declare function GetChannelList(): [number, string, boolean, number, string, boo
  * - **return3**: ?, usually 0
  * @param channelIdOrName Channel id to query, e.g. 1 for the chat channel currently addressable using /1 or Name of the channel to query, e.g. "Trade - City".
  * @see https://wow.gamepedia.com/API_GetChannelName
- * @tupleReturn
  */
-declare function GetChannelName(channelIdOrName: number | string): [number, string, number];
+declare function GetChannelName(channelIdOrName: number | string): LuaMultiReturn<[number, string, number]>;
 
 /**
  * Get the channels received by a chat window
  * @param frameId The frame number of the chat frame to be queried (starts at 1).
  * @returns name1, zone1, name2, zone2, ...
  * @see https://wow.gamepedia.com/API_GetChatWindowChannels
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetChatWindowChannels(frameId: number): [string, number, string, number, string, number, string, number, string, number, string, number, string, number];
+declare function GetChatWindowChannels(frameId: number): LuaMultiReturn<[string, number, string, number, string, number, string, number, string, number, string, number, string, number]>;
 
 /**
  * Joins the channel with the specified name. A player can be in a maximum of 10 chat channels. In opposite to API_JoinTemporaryChannel
@@ -2796,9 +2757,8 @@ declare function JoinChannelByName(channelName: string, password?: string, frame
  *  - The type of channel. 0 for a undefined channel, 1 for the zone General channel, etc
  *  - The name of the channel (Ohklus: seems to be nil for most channels)
  * @see https://wow.gamepedia.com/API_JoinPermanentChannel
- * @tupleReturn
  */
-declare function JoinPermanentChannel(channelName: string, password?: string, frameId?: number, hasVoice?: boolean): [number, string];
+declare function JoinPermanentChannel(channelName: string, password?: string, frameId?: number, hasVoice?: boolean): LuaMultiReturn<[number, string]>;
 
 /**
  * Joins the channel with the specified name. A player can be in a maximum of 10 chat channels. In opposite to API_JoinPermanentChannel
@@ -2811,9 +2771,8 @@ declare function JoinPermanentChannel(channelName: string, password?: string, fr
  *  - The type of channel. 0 for a undefined channel, 1 for the zone General channel, etc
  *  - The name of the channel (Ohklus: seems to be nil for most channels)
  * @see https://wow.gamepedia.com/API_JoinTemporaryChannel
- * @tupleReturn
  */
-declare function JoinTemporaryChannel(channelName: string, password?: string, frameId?: number, hasVoice?: boolean): [number, string];
+declare function JoinTemporaryChannel(channelName: string, password?: string, frameId?: number, hasVoice?: boolean): LuaMultiReturn<[number, string]>;
 
 /**
  * Leaves the channel with the specified name
@@ -2942,9 +2901,8 @@ declare function GetCurrentTitle(): number;
  * @param timerIndex timer index, from 1 to MIRRORTIMER_NUMTIMERS (3 as of 3.2). In general, the following correspondence holds:
  * 1 = Fatigue, 2 = Breath, 3 = Feign Death
  * @see https://wow.gamepedia.com/API_GetMirrorTimerInfo
- * @tupleReturn
  */
-declare function GetMirrorTimerInfo(timerIndex: number): [string, number, number, number, WoWAPI.Flag, string];
+declare function GetMirrorTimerInfo(timerIndex: number): LuaMultiReturn<[string, number, number, number, WoWAPI.Flag, string]>;
 
 /**
  * Returns the current value of a mirror timer (fatigue, breath, feign death etc).
@@ -2986,26 +2944,23 @@ declare function GetRangedCritChance(): number;
 /**
  * Returns whether the player is in a rested (earning double XP for kills) or normal state
  * @see https://wow.gamepedia.com/API_GetRestState
- * @tupleReturn
  */
-declare function GetRestState(): [WoWAPI.CharacterRestState, string, number];
+declare function GetRestState(): LuaMultiReturn<[WoWAPI.CharacterRestState, string, number]>;
 
 /**
  * Gets the cooldown information about a Death Knight's Rune
  * @param runeId A number between 1 and 6 denoting which rune to be queried
  * @see https://wow.gamepedia.com/API_GetRuneCooldown
- * @tupleReturn
  */
-declare function GetRuneCooldown(runeId: WoWAPI.CharacterDeathkightRuneType): [number, number, boolean];
+declare function GetRuneCooldown(runeId: WoWAPI.CharacterDeathkightRuneType): LuaMultiReturn<[number, number, boolean]>;
 
 /**
  * Gets the name of the title associated with a title index
  * @param titleId Title ID to return the name of
  * @since 2.0.1
  * @see https://wow.gamepedia.com/API_GetTitleName
- * @tupleReturn
  */
-declare function GetTitleName(titleId: number): [string, boolean];
+declare function GetTitleName(titleId: number): LuaMultiReturn<[string, boolean]>;
 
 /**
  * Returns the number of XP gained from killing mobs until "player" goes from rest state to normal state
@@ -3206,9 +3161,8 @@ declare function GetDodgeChance(): number;
  * This function returns the amount of percentage points Experise reduces the dodge/parry chance by (e.g. a return value of 3.5 means a
  * 3.5% reduction to both dodge and parry probabilities).
  * @see https://wow.gamepedia.com/API_GetExpertise
- * @tupleReturn
  */
-declare function GetExpertise(): [number, number, number];
+declare function GetExpertise(): LuaMultiReturn<[number, number, number]>;
 
 /**
  * Returns the player's haste
@@ -3227,9 +3181,8 @@ declare function GetHitModifier(): number;
  * - **arg1**: mana regeneration when not casting spells
  * - **arg2**: mana regeneration while casting spells
  * @see https://wow.gamepedia.com/API_GetManaRegen
- * @tupleReturn
  */
-declare function GetManaRegen(): [number, number];
+declare function GetManaRegen(): LuaMultiReturn<[number, number]>;
 
 /**
  * Returns the (raw) mastery of the player
@@ -3454,17 +3407,15 @@ declare const ChatTypeInfo: WoWAPI.ChatTypeInfo;
  * Retrieves configuration information about a chat window
  * @param frameIndex The index of the chat window to get information for (starts at 1 to NUM_CHAT_WINDOWS).
  * @see https://wow.gamepedia.com/API_GetChatWindowInfo
- * @tupleReturn
  */
-declare function GetChatWindowInfo(frameIndex: number): [string, number, number, number, number, WoWAPI.Flag, WoWAPI.Flag, number];
+declare function GetChatWindowInfo(frameIndex: number): LuaMultiReturn<[string, number, number, number, number, WoWAPI.Flag, WoWAPI.Flag, number]>;
 
 /**
  * Get the channels received by a chat window.
  * @param frameIndex The frame number of the chat frame to be queried (starts at 1).
  * @see https://wow.gamepedia.com/API_GetChatWindowChannels
- * @tupleReturn
  */
-declare function GetChatWindowChannels(frameIndex: number): [string, number, string, number, string, number];
+declare function GetChatWindowChannels(frameIndex: number): LuaMultiReturn<[string, number, string, number, string, number]>;
 
 /**
  * Blocks further messages from a specified chat channel from appearing in a specific chat frame
@@ -3478,9 +3429,8 @@ declare function RemoveChatWindowChannel(frameIndex: number, channelName: string
  * Returns chat types received by a chat window
  * @param frameIndex Chat window index, ascending from 1
  * @see https://wow.gamepedia.com/API_GetChatWindowMessages
- * @tupleReturn
  */
-declare function GetChatWindowMessages(frameIndex: number): [...string[]];
+declare function GetChatWindowMessages(frameIndex: number): LuaMultiReturn<[...string[]]>;
 
 /**
  * Stops the specified chat window from displaying a specified type of messages
@@ -3507,9 +3457,8 @@ declare function ChangeChatColor(channelName: string, red: number, green: number
  * @param maxResults number of results desired
  * @param cursorPosition position of the cursor within the editbox (i.e. how much of the text string should be matching)
  * @see https://wow.gamepedia.com/API_GetAutoCompleteResults
- * @tupleReturn
  */
-declare function GetAutoCompleteResults(text: string, include: number, exclude: number, maxResults: number, cursorPosition?: number): [...string[]];
+declare function GetAutoCompleteResults(text: string, include: number, exclude: number, maxResults: number, cursorPosition?: number): LuaMultiReturn<[...string[]]>;
 
 /**
  * Return the numeric type index for a specific chat type
@@ -3545,10 +3494,9 @@ declare namespace WoWAPI {
  * @returns r,g,b,hex
  * - **rPerc, gPerc, bPerc**: Number - the value, between 0 and 1, associated with the red, green, and blue - respectively - coordinate in the RGB space
  * - **argbHex**: the ARGB hex code of the color, e.g., 'ff8788ee' for 'WARLOCK'.
- * @tupleReturn
  * @see https://wow.gamepedia.com/API_GetClassColor
  */
-declare function GetClassColor(englishClass: WoWAPI.CLASSES): [number, number, number, string];
+declare function GetClassColor(englishClass: WoWAPI.CLASSES): LuaMultiReturn<[number, number, number, string]>;
 
 
 declare namespace WoWAPI {
@@ -3651,10 +3599,9 @@ declare function DismissCompanion(type: WoWAPI.CompanionType): void;
  * @deprecated use C_MountJournal.GetMountInfoByID()
  * @see https://wow.gamepedia.com/API_GetCompanionInfo
  * @since 3.0.2
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetCompanionInfo(type: WoWAPI.CompanionType, companionIndex: number): [number, string, number, WoWAPI.TexturePath, WoWAPI.Flag, WoWAPI.MountType];
+declare function GetCompanionInfo(type: WoWAPI.CompanionType, companionIndex: number): LuaMultiReturn<[number, string, number, WoWAPI.TexturePath, WoWAPI.Flag, WoWAPI.MountType]>;
 
 /**
  * Returns the number of companions you have
@@ -3695,9 +3642,8 @@ declare function CloseMerchant():void;
  *
  * @param index for the item
  * @see https://wowwiki-archive.fandom.com/wiki/API_GetBuybackItemInfo
- * @tupleReturn
  */
-declare function GetBuybackItemInfo(index:number): [ string, string, number, number];
+declare function GetBuybackItemInfo(index:number): LuaMultiReturn<[ string, string, number, number]>;
 declare function GetBuybackItemLink(index:number): string;
 declare function GetMerchantItemCostInfo (index:number): number;
 
@@ -3707,9 +3653,8 @@ declare function GetMerchantItemCostInfo (index:number): number;
  *
  * @param index for the item
  * @see https://wowwiki-archive.fandom.com/wiki/API_GetMerchantItemCostItem
- * @tupleReturn
  */
-declare function GetMerchantItemCostItem(index:number, itemIndex:number): [string, number, string]
+declare function GetMerchantItemCostItem(index:number, itemIndex:number): LuaMultiReturn<[string, number, string]>
   
 /**
  * Returns information about a merchant's item.
@@ -3717,9 +3662,8 @@ declare function GetMerchantItemCostItem(index:number, itemIndex:number): [strin
  *
  * @param index for the item
  * @see https://wowwiki-archive.fandom.com/wiki/API_GetMerchantItemInfo
- * @tupleReturn
  */
-declare function GetMerchantItemInfo(index:number): [string, string, number, number, number, number, number]
+declare function GetMerchantItemInfo(index:number): LuaMultiReturn<[string, string, number, number, number, number, number]>
 declare function GetMerchantItemLink(index:number): string;
 declare function GetMerchantItemMaxStack(index:number):number;
 declare function GetMerchantNumItems():number;
@@ -3997,9 +3941,8 @@ declare function GetBagName(bagId: WoWAPI.CONTAINER_ID): string;
  * @param slot slot number of the bag item you want the info for
  * @returns startTime, duration, isEnabled
  * @see https://wow.gamepedia.com/API_GetContainerItemCooldown
- * @tupleReturn
  */
-declare function GetContainerItemCooldown(bagId: WoWAPI.CONTAINER_ID, slot: number): [number, number, WoWAPI.Flag];
+declare function GetContainerItemCooldown(bagId: WoWAPI.CONTAINER_ID, slot: number): LuaMultiReturn<[number, number, WoWAPI.Flag]>;
 
 /**
  * Returns current and maximum durability of an item in the character's bags
@@ -4008,9 +3951,8 @@ declare function GetContainerItemCooldown(bagId: WoWAPI.CONTAINER_ID, slot: numb
  * @param slot Index of the bag slot containing the item to query durability of
  * @returns current, maximum
  * @see https://wow.gamepedia.com/API_GetContainerItemDurability
- * @tupleReturn
  */
-declare function GetContainerItemDurability(bagId: WoWAPI.CONTAINER_ID, slot: number): [number, number];
+declare function GetContainerItemDurability(bagId: WoWAPI.CONTAINER_ID, slot: number): LuaMultiReturn<[number, number]>;
 
 /**
  * Returns the item id of the item in a particular container slot.
@@ -4029,10 +3971,9 @@ declare function GetContainerItemID(bagId: WoWAPI.CONTAINER_ID, slot: number): n
  * @param slot index of the slot inside the bag to look up
  * @returns texture, itemCount, locked, quality, readable, lootable, itemLink, isFiltered, noValue, itemID
  * @see https://wow.gamepedia.com/API_GetContainerItemInfo
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetContainerItemInfo(bagId: WoWAPI.CONTAINER_ID, slot: number): [WoWAPI.TexturePath, number, boolean, WoWAPI.ITEM_QUALITY, boolean, boolean, WoWAPI.ItemLink, boolean, boolean, number];
+declare function GetContainerItemInfo(bagId: WoWAPI.CONTAINER_ID, slot: number): LuaMultiReturn<[WoWAPI.TexturePath, number, boolean, WoWAPI.ITEM_QUALITY, boolean, boolean, WoWAPI.ItemLink, boolean, boolean, number]>;
 
 /**
  * Returns a link of the object located in the specified slot of a specified bag
@@ -4060,9 +4001,8 @@ declare function GetContainerNumSlots(bagId: WoWAPI.CONTAINER_ID): number;
  * @param slot Index of the slot within the bag (ascending from 1) to query
  * @returns isQuestItem, questId, isActive
  * @see https://wow.gamepedia.com/API_GetContainerItemQuestInfo
- * @tupleReturn
  */
-declare function GetContainerItemQuestInfo(bagId: WoWAPI.CONTAINER_ID, slot: number): [WoWAPI.Flag, number | null, WoWAPI.Flag];
+declare function GetContainerItemQuestInfo(bagId: WoWAPI.CONTAINER_ID, slot: number): LuaMultiReturn<[WoWAPI.Flag, number | null, WoWAPI.Flag]>;
 
 /**
  * Returns the total number of free slots in the bag an the type of items that can go into it specified by the index
@@ -4070,9 +4010,8 @@ declare function GetContainerItemQuestInfo(bagId: WoWAPI.CONTAINER_ID, slot: num
  * @param bagId the slot containing the bag, e.g. 0 for backpack, etc.
  * @returns numberOfFreeSlots, BagType
  * @see https://wow.gamepedia.com/API_GetContainerNumFreeSlots
- * @tupleReturn
  */
-declare function GetContainerNumFreeSlots(bagId: WoWAPI.CONTAINER_ID): [number, WoWAPI.BAG_TYPE];
+declare function GetContainerNumFreeSlots(bagId: WoWAPI.CONTAINER_ID): LuaMultiReturn<[number, WoWAPI.BAG_TYPE]>;
 
 /**
  * Open all bag frames
@@ -4202,9 +4141,8 @@ declare function GetCoinTextureString(amount: number, fontHeight?: number): stri
  * @returns name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered, rarity
  * @see https://wow.gamepedia.com/API_GetCurrencyInfo
  * @since 3.0.2
- * @tupleReturn
  */
-declare function GetCurrencyInfo(currencyId: number): [string, number, WoWAPI.TexturePath, number, number, number, boolean, WoWAPI.ITEM_QUALITY];
+declare function GetCurrencyInfo(currencyId: number): LuaMultiReturn<[string, number, WoWAPI.TexturePath, number, number, number, boolean, WoWAPI.ITEM_QUALITY]>;
 
 /**
  * Retrieve Information about a currency at index including it's amount
@@ -4214,10 +4152,9 @@ declare function GetCurrencyInfo(currencyId: number): [string, number, WoWAPI.Te
  * @returns name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered, rarity
  * @see https://wow.gamepedia.com/API_GetCurrencyInfo
  * @since 3.0.2
- * @tupleReturn
  */
 // tslint:disable-next-line unified-signatures max-line-length
-declare function GetCurrencyInfo(currencyLinkOrString: WoWAPI.CurrencyLink | string): [string, number, WoWAPI.TexturePath, number, number, number, boolean, WoWAPI.ITEM_QUALITY];
+declare function GetCurrencyInfo(currencyLinkOrString: WoWAPI.CurrencyLink | string): LuaMultiReturn<[string, number, WoWAPI.TexturePath, number, number, number, boolean, WoWAPI.ITEM_QUALITY]>;
 
 /**
  * Get the currencyLink for the specified currencyID
@@ -4247,10 +4184,9 @@ declare function GetCurrencyListSize(): number;
  * @returns name, isHeader, isExpanded, isUnused, isWatched, count, icon, maximum, hasWeeklyLimit, currentWeeklyAmount, unknown, itemID
  * @see https://wow.gamepedia.com/API_GetCurrencyListInfo
  * @since 3.0.2
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetCurrencyListInfo(currencyIndex: number): [string, boolean, boolean, boolean, boolean, number, WoWAPI.TexturePath, number, number, number, WoWAPI.Unknown, number];
+declare function GetCurrencyListInfo(currencyIndex: number): LuaMultiReturn<[string, boolean, boolean, boolean, boolean, number, WoWAPI.TexturePath, number, number, number, WoWAPI.Unknown, number]>;
 
 /**
  * Alters the expanded state of a currency list header.
@@ -4293,9 +4229,8 @@ declare function GetNumWatchedTokens(): number;
  * @returns name, count, icon, currencyID
  * @see https://wow.gamepedia.com/API_GetBackpackCurrencyInfo
  * @since 3.0.2
- * @tupleReturn
  */
-declare function GetBackpackCurrencyInfo(watchedIndex: number): [string, number, WoWAPI.TexturePath, number];
+declare function GetBackpackCurrencyInfo(watchedIndex: number): LuaMultiReturn<[string, number, WoWAPI.TexturePath, number]>;
 
 /**
  * Alters the backpack tracking state of a currency
@@ -4378,67 +4313,58 @@ declare function EquipCursorItem(inventorySlot: WoWAPI.INVENTORY_SLOT_ID): void;
 /**
  * Returns information about what the mouse cursor is holding
  * @see https://wow.gamepedia.com/API_GetCursorInfo
- * @tupleReturn
  */
-declare function GetCursorInfo(): [WoWAPI.CursorInfoType, ...WoWAPI.Unknown[]];
+declare function GetCursorInfo(): LuaMultiReturn<[WoWAPI.CursorInfoType, ...WoWAPI.Unknown[]]>;
 
 /**
  * @returns **item**
  * - **itemId**: Item ID of the item on the cursor
  * - **itemLink**: ItemLink of the item on the cursor
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["item", number, WoWAPI.ItemLink];
+declare function GetCursorInfo(): LuaMultiReturn<["item", number, WoWAPI.ItemLink]>;
 
 /**
  * @returns **spell**
  * - **spellIndex**: The index of the spell in the spell book
  * - **bookType**: The spell book id. Only works for player spells, so this always returns BOOKTYPE_SPELL
  * - **spellId**: Spell ID of the spell on the cursor
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["spell", number, string, number];
+declare function GetCursorInfo(): LuaMultiReturn<["spell", number, string, number]>;
 
 /**
  * @returns **macro**
  * - **index**: The index of the macro on the cursor
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["macro", number];
+declare function GetCursorInfo(): LuaMultiReturn<["macro", number]>;
 
 /**
  * @returns **money**
  * - **amount**: The amount of money in copper
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["money", number];
+declare function GetCursorInfo(): LuaMultiReturn<["money", number]>;
 
 /**
  * @returns **mount**
  * - **useless_index**: this index is not useful since no other API receives it as a parameter
  * - **C_MountJournal index**: index in the C_MountJournal (used by C_MountJournal API functions). These indexes varies with game locale
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["mount", number, number];
+declare function GetCursorInfo(): LuaMultiReturn<["mount", number, number]>;
 
 /**
  * @returns **merchant**
  * - **index**: The index of the merchant item
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["merchant", number];
+declare function GetCursorInfo(): LuaMultiReturn<["merchant", number]>;
 
 /**
  * @returns **battlepet**
  * - **petGUID**: GUID of a battle pet in your collection
- * @tupleReturn
  */
-declare function GetCursorInfo(): ["battlepet", WoWAPI.Guid];
+declare function GetCursorInfo(): LuaMultiReturn<["battlepet", WoWAPI.Guid]>;
 
 /**
  * Returns the amount of copper held on the cursor
  * @see https://wow.gamepedia.com/API_GetCursorMoney
- * @tupleReturn
  */
 declare function GetCursorMoney(): number;
 
@@ -4451,9 +4377,8 @@ declare function GetCursorMoney(): number;
  * Assuming UIParent spans the entire screen, you can convert these coordinates to UIParent offsets by dividing by its effective scale.
  * The following snippet positions a small texture at the cursor's location.
  * @see https://wow.gamepedia.com/API_GetCursorPosition
- * @tupleReturn
  */
-declare function GetCursorPosition(): [number, number];
+declare function GetCursorPosition(): LuaMultiReturn<[number, number]>;
 
 /**
  * Takes the cursor out of repair mode
@@ -4716,9 +4641,8 @@ declare function wipe<T extends object>(table: T): T;
  * @returns link, spellID
  * @see https://wowpedia.fandom.com/wiki/API_GetSpellLink
  * @description Returns the hyperlink for a spell.
- * @tupleReturn
  */
- declare function GetSpellLink(spell:number|string, bookType?:string): [string,number];
+ declare function GetSpellLink(spell:number|string, bookType?:string): LuaMultiReturn<[string,number]>;
 
 
 declare namespace WoWAPI {
@@ -11272,27 +11196,24 @@ declare function ForceGossip(): WoWAPI.Flag;
  * @returns title1, level1, isLowLevel1, isComplete1, isLegendary1, isIgnored1, title2, level2, isLowLevel2, isComplete2, isLegendary2, isIgnored2
  * @see https://wow.gamepedia.com/API_GetGossipActiveQuests
  * @description The number of returned values per quest has increased again to 6
- * @tupleReturn
  */
-declare function GetGossipActiveQuests(): [string, string, boolean, boolean, boolean];
+declare function GetGossipActiveQuests(): LuaMultiReturn<[string, string, boolean, boolean, boolean]>;
 
 /**
  * Returns a list of available quests from an NPC
  *
  * @returns title1, level1, isTrivial1, frequency1, isRepeatable1, isLegendary1, isIgnored1 ...
  * @see https://wow.gamepedia.com/API_GetGossipAvailableQuests
- * @tupleReturn
  */
-declare function GetGossipAvailableQuests(): [string, number, boolean, QUEST_FREQUENCY, boolean, boolean, boolean];
+declare function GetGossipAvailableQuests(): LuaMultiReturn<[string, number, boolean, QUEST_FREQUENCY, boolean, boolean, boolean]>;
 
 /**
  * Get the available gossip items on an NPC (possibly stuff like the BWL and MC orbs too).
  *
  * @returns title1, gossip1, ...
  * @see https://wow.gamepedia.com/API_GetGossipOptions
- * @tupleReturn
  */
-declare function GetGossipOptions(): [string, GOSSIP_TYPE];
+declare function GetGossipOptions(): LuaMultiReturn<[string, GOSSIP_TYPE]>;
 
 /**
  * Get the gossip text
@@ -11360,9 +11281,8 @@ declare function SelectGossipOption(gossipIndex: number): void;
  *
  * @see https://wow.gamepedia.com/API_GetInventoryItemCooldown
  * @returns start, duration, isEnabled
- * @tupleReturn
  */
-declare function GetInventoryItemCooldown(unit: WoWAPI.UnitId, slotId: number): [number, number, WoWAPI.Flag];
+declare function GetInventoryItemCooldown(unit: WoWAPI.UnitId, slotId: number): LuaMultiReturn<[number, number, WoWAPI.Flag]>;
 
 /**
  * Return the texture for an inventory item.
@@ -11377,9 +11297,8 @@ declare function GetInventoryItemTexture(unit: WoWAPI.UnitId, slotId: number): W
  *
  * @see https://wow.gamepedia.com/API_GetInventorySlotInfo
  * @returns slotId, textureName
- * @tupleReturn
  */
-declare function GetInventorySlotInfo(slotName: string): [number, WoWAPI.TexturePath];
+declare function GetInventorySlotInfo(slotName: string): LuaMultiReturn<[number, WoWAPI.TexturePath]>;
 
 
 /// <reference path="auction.d.ts" />
@@ -11546,9 +11465,8 @@ declare function GetContainerItemLink(bagId: WoWAPI.CONTAINER_ID, slotIndex: num
  * - **duration**: The number of seconds the cooldown will last, or zero if no cooldown
  * - **enable**: 1 if the item is ready or on cooldown, 0 if the item is used, but the cooldown didn't start yet (e.g. potion in combat)
  * @see https://wow.gamepedia.com/API_GetItemCooldown
- * @tupleReturn
  */
-declare function GetItemCooldown(itemId: number): [number, number, WoWAPI.Flag];
+declare function GetItemCooldown(itemId: number): LuaMultiReturn<[number, number, WoWAPI.Flag]>;
 
 /**
  * Returns count information for the item
@@ -11601,10 +11519,9 @@ declare function GetItemIcon(itemId: number): WoWAPI.TexturePath;
  * - **itemSetId**: unknown
  * - **isCraftingReagent**: unknown
  * @see https://wow.gamepedia.com/API_GetItemInfo
- * @tupleReturn
  */
 // tslint:disable-next-line max-line-length
-declare function GetItemInfo(itemIdentifier: string | number | WoWAPI.ItemLink): [string, WoWAPI.ItemLink, WoWAPI.ITEM_QUALITY, number, number, string, string, number, WoWAPI.INVENTORY_SLOT_ID, WoWAPI.TexturePath, number, number, number, WoWAPI.BIND_TYPE, number, number, boolean];
+declare function GetItemInfo(itemIdentifier: string | number | WoWAPI.ItemLink): LuaMultiReturn<[string, WoWAPI.ItemLink, WoWAPI.ITEM_QUALITY, number, number, string, string, number, WoWAPI.INVENTORY_SLOT_ID, WoWAPI.TexturePath, number, number, number, WoWAPI.BIND_TYPE, number, number, boolean]>;
 
 /**
  * Returns RGB color codes for an item quality
@@ -11615,9 +11532,8 @@ declare function GetItemInfo(itemIdentifier: string | number | WoWAPI.ItemLink):
  *  - **blue**: The Blue component of the color (0 to 1, inclusive)
  *  - **hex**: The UI escape sequence for this color, without the leading "|c".
  * @see https://wow.gamepedia.com/API_GetItemQualityColor
- * @tupleReturn
  */
-declare function GetItemQualityColor(quality: WoWAPI.ITEM_QUALITY): [number, number, number, string];
+declare function GetItemQualityColor(quality: WoWAPI.ITEM_QUALITY): LuaMultiReturn<[number, number, number, string]>;
 
 /**
  * Return spell information about a specific item
@@ -11937,9 +11853,8 @@ declare function forceinsecure(): void;
  * @param variableName string key to check the taint of. Numbers will be converted to a string; other types will throw an error
  * @returns isSecure, taint
  * @see https://wow.gamepedia.com/API_issecurevariable
- * @tupleReturn
  */
-declare function issecurevariable(table?: object, variableName?: string): [boolean, string];
+declare function issecurevariable(table?: object, variableName?: string): LuaMultiReturn<[boolean, string]>;
 
 /**
  * Calls the specified function without propagating taint to the caller
@@ -11982,9 +11897,8 @@ declare namespace WoWAPI {
  *
  * @see https://wow.gamepedia.com/API_GetSpellCooldown
  * @returns start, duration, enabled, modRate
- * @tupleReturn
  */
-declare function GetSpellCooldown(spellId: number, type: WoWAPI.BookType): [number, number, WoWAPI.Flag, number];
+declare function GetSpellCooldown(spellId: number, type: WoWAPI.BookType): LuaMultiReturn<[number, number, WoWAPI.Flag, number]>;
 
 /**
  * Returns the icon of the specified spell.
@@ -12004,9 +11918,8 @@ declare function GetSpellTexture(spellId: number, type: WoWAPI.BookType): WoWAPI
  * maxRange: The maximum range of the spell.
  *
  * @see https://wow.gamepedia.com/API_GetSpellInfo
- * @tupleReturn
  */
-declare function GetSpellInfo(spell: number | string): [string,string,string,number,number,number];
+declare function GetSpellInfo(spell: number | string): LuaMultiReturn<[string,string,string,number,number,number]>;
 
 /**
  * Execute a console command
@@ -12028,9 +11941,8 @@ declare function DetectWowMouse(): WoWAPI.Unknown;
  *
  * @returns version, build, date, tocversion
  * @see https://wow.gamepedia.com/API_GetBuildInfo
- * @tupleReturn
  */
-declare function GetBuildInfo(): [string, string, string, number];
+declare function GetBuildInfo(): LuaMultiReturn<[string, string, string, number]>;
 
 /**
  * Returns the currently set error handler
@@ -12053,9 +11965,8 @@ declare function GetFramerate(): number;
  *
  * @returns hours, minutes
  * @see https://wow.gamepedia.com/API_GetGameTime
- * @tupleReturn
  */
-declare function GetGameTime(): [number, number];
+declare function GetGameTime(): LuaMultiReturn<[number, number]>;
 
 /**
  * Returns the system uptime of your computer in seconds, with millisecond
@@ -12190,9 +12101,8 @@ declare namespace WoWAPI {
          * - **itemName**: Plain text item name (e.g. "Broken Fang")
          * - **itemLink**: Formatted item link (e.g. "|cff9d9d9d|Hitem:7073:0:0:0:0:0:0:0|h[Broken Fang]|h|r")
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_GetItem
-         * @tupleReturn
          */
-        GetItem(): [string, ItemLink];
+        GetItem(): LuaMultiReturn<[string, ItemLink]>;
 
         /**
          * unknown
@@ -12205,23 +12115,19 @@ declare namespace WoWAPI {
          * - **spellName**: Plain text spell name (e.g. "Explosive Shot")
          * - **spellId**: Integer spell ID (e.g. "60053")
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_GetSpell
-         * @tupleReturn
          */
-        GetSpell(): [string, number];
+        GetSpell(): LuaMultiReturn<[string, number]>;
 
         /**
          * Returns owner frame, anchor
          *
-         * @tupleReturn
          */
-        GetOwner(): [UIObject, Point];
+        GetOwner(): LuaMultiReturn<[UIObject, Point]>;
 
         /**
          * Returns unit name, unit id
-         *
-         * @tupleReturn
          */
-        GetUnit(): [string, UnitId];
+        GetUnit(): LuaMultiReturn<[string, UnitId]>;
 
         /**
          * unknown
@@ -12265,9 +12171,8 @@ declare namespace WoWAPI {
          * - **hasCooldown**: if the item currently has a cooldown
          * - **repairCost**: the cost to repair the item, may be 0 or nil if the item cannot be repaired
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_SetBagItem
-         * @tupleReturn
          */
-        SetBagItem(bag: WoWAPI.CONTAINER_ID, slot: number): [boolean, number];
+        SetBagItem(bag: WoWAPI.CONTAINER_ID, slot: number): LuaMultiReturn<[boolean, number]>;
 
         /**
          * unknown
@@ -12333,9 +12238,8 @@ declare namespace WoWAPI {
          * - **hasCooldown**: unknown
          * - **repairCost**: cost of repairing item
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_SetInventoryItem
-         * @tupleReturn
          */
-        SetInventoryItem(unit: UnitId, slot: number, nameOnly?: Unknown): [boolean, boolean, number];
+        SetInventoryItem(unit: UnitId, slot: number, nameOnly?: Unknown): LuaMultiReturn<[boolean, boolean, number]>;
 
         /**
          * Sets the GameTooltip to show a loot item
@@ -12704,23 +12608,19 @@ declare namespace WoWAPI {
         SetRadians(radians: number): void;
         GetRadians(): number;
         SetOrigin(point: Point, offsetX: number, offsetY: number): void;
-        /** @tupleReturn */
-        GetOrigin(): [Point,number,number]
+        GetOrigin(): LuaMultiReturn<[Point,number,number]>
     }
 
     interface Scale extends UIObject, Animation {
         SetScale(x: number, y: number)
-        /** @tupleReturn */
-        GetScale(): [number,number]
+        GetScale(): LuaMultiReturn<[number,number]>
         SetOrigin(point: Point, offsetX: number, offsetY: number): void;
-        /** @tupleReturn */
-        GetOrigin(): [Point,number,number]
+        GetOrigin(): LuaMultiReturn<[Point,number,number]>
     }
 
     interface Translation extends UIObject, Animation {
         SetOffset(x: number, y: number)
-        /** @tupleReturn */
-        GetOffset(): [number,number]
+        GetOffset(): LuaMultiReturn<[number,number]>
     }
 
     /**
@@ -12736,9 +12636,8 @@ declare namespace WoWAPI {
          *  - **fontHeight**: Font height in pixels. Due to internal graphics engine workings, this will be ridiculously close to an integer number,
          *  but not quite ever fully.
          *  - **fontFlags**: See FontInstance:SetFont().
-         * @tupleReturn
          */
-        GetFont(): [string, number, string];
+        GetFont(): LuaMultiReturn<[string, number, string]>;
 
         /**
          * Gets the text color of of a Font Instance.
@@ -12747,9 +12646,8 @@ declare namespace WoWAPI {
          *  g: The green color
          *  b: The blue color
          *  a?: the alpha (opacity)
-         * @tupleReturn
          */
-        GetTextColor(): [number, number, number, number?];
+        GetTextColor(): LuaMultiReturn<[number, number, number, number?]>;
 
         /**
          * The function is used to set the font to use for displaying text.
@@ -12854,10 +12752,9 @@ declare namespace WoWAPI {
          * Returns information about the anchor point for a region.
          *
          * @see https://wow.gamepedia.com/API_Region_GetPoint
-         * @tupleReturn
          * @returns point, relativeTo, relativePoint, xOfs, yOfs
          */
-        GetPoint(index?: number): [Point, Region, Point, number, number];
+        GetPoint(index?: number): LuaMultiReturn<[Point, Region, Point, number, number]>;
 
         /**
          * Set the object's alpha (opacity) value.
@@ -13233,9 +13130,8 @@ declare namespace WoWAPI {
 
         /**
          * Gets the children of a frame
-         * @tupleReturn
          */
-        GetChildren(): [...UIObject[]];
+        GetChildren(): LuaMultiReturn<[...UIObject[]]>;
 
         /**
          * Returns the Frame Strata the frame is in.
@@ -13412,9 +13308,8 @@ declare namespace WoWAPI {
 
         /**
          * Returns the minimum and maximum values of a slider
-         * @tupleReturn
          */
-        GetMinMaxValues(): [number, number];
+        GetMinMaxValues(): LuaMultiReturn<[number, number]>;
 
         /**
          * Get the current value of the slider
@@ -13754,8 +13649,7 @@ declare namespace WoWAPI {
         GetLight(): [boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
         GetModel(): string;
         GetModelScale(): number;
-        /** @tupleReturn */
-        GetPosition(): [number,number,number];
+        GetPosition(): LuaMultiReturn<[number,number,number]>;
         ReplaceIconTexture(texture: string): void;
         SetCamera(index: number): void;
         SetFacing(facing: number): void;
@@ -13872,10 +13766,8 @@ declare namespace WoWAPI {
     }
 
     interface ColorSelect {
-        /** @tupleReturn */
-        GetColorHSV(): [number,number,number]
-        /** @tupleReturn */
-        GetColorRGB(): [number,number,number]
+        GetColorHSV(): LuaMultiReturn<[number,number,number]>
+        GetColorRGB(): LuaMultiReturn<[number,number,number]>
         GetColorValueTexture(): WoWAPI.Texture
         GetColorValueThumbTexture(): WoWAPI.Texture
         GetColorWheelTexture(): WoWAPI.Texture
@@ -14066,9 +13958,8 @@ declare function UnitGUID(unitId: WoWAPI.UnitId): WoWAPI.Guid;
  * @param unitGUID The GUID of the player you're querying about
  * @see https://wow.gamepedia.com/API_GetPlayerInfoByGUID
  * @since 3.2.0
- * @tupleReturn
  */
-declare function GetPlayerInfoByGUID(unitGUID: WoWAPI.Guid): [string, number, string, number, number, string, string];
+declare function GetPlayerInfoByGUID(unitGUID: WoWAPI.Guid): LuaMultiReturn<[string, number, string, number, number, string, string]>;
 
 /**
  * Returns the name and realm of the specified unit
@@ -14114,9 +14005,8 @@ declare function GetNumSkillLines(): number
  * 11. minLevel - number - Minimum level required to learn this skill.
  * 12. skillCostType - number
  * 13. skillDescription - string - Localized skill description text
- * @tupleReturn
  */
-declare function GetSkillLineInfo(index: number): [string,number,number,number,number,number,number,number,number,number,number,number,string]
+declare function GetSkillLineInfo(index: number): LuaMultiReturn<[string,number,number,number,number,number,number,number,number,number,number,number,string]>
  
 /**
  * Returns the unit's level
@@ -14130,17 +14020,15 @@ declare function UnitLevel(unitId: WoWAPI.UnitId): number;
  * Get the name of the faction (Horde/Alliance) a unit belongs to
  * @param unitId unit you want to get the faction for
  * @see https://wow.gamepedia.com/API_UnitFactionGroup
- * @tupleReturn
  */
-declare function UnitFactionGroup(unitId: WoWAPI.UnitId): [string, string];
+declare function UnitFactionGroup(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string]>;
 
 /**
  * Returns the class of the specified unit
  * @param unitId unit to query, e.g. "player"
  * @see https://wow.gamepedia.com/API_UnitClass
- * @tupleReturn
  */
-declare function UnitClass(unitId: WoWAPI.UnitId): [string, string, number];
+declare function UnitClass(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string, number]>;
 
 /**
  * Returns the current health of the specified unit
