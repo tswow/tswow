@@ -93,6 +93,7 @@ void TSLua::load_bindings(sol::state& ztate)
     load_channel_methods(state);
     load_corpse_methods(state);
     load_packet_methods(state);
+    load_world_packet_methods(state);
     load_damage_metods(state);
     load_group_methods(state);
     load_guild_methods(state);
@@ -115,7 +116,9 @@ void TSLua::load_bindings(sol::state& ztate)
     load_db_json_methods(state);
     load_main_thread_context_methods(state);
     load_global_functions(state);
+    load_mutex_functions(state);
     load_events(state);
+    load_lua_libraries(state);
 }
 
 void TSLua::handle_error(sol::protected_function_result const& res)
@@ -253,6 +256,22 @@ void TSLua::execute_file(std::filesystem::path file)
     file_stack.pop_back();
 }
 
+void TSLua::load_lua_libraries(sol::state & state)
+{
+    // Load lua libraries ( todo: move to "load_bindings" method )
+    std::filesystem::path lualib_bundle_path = LuaLibRoot() / "lualib_bundle.lua";
+    std::filesystem::path LuaORMClasses_path = LuaLibRoot() / "LuaORMClasses.lua";
+
+    if (std::filesystem::exists(lualib_bundle_path))
+    {
+        modules["lualib_bundle"] = state.safe_script_file(lualib_bundle_path.string()).get<sol::table>();
+    }
+
+    if (std::filesystem::exists(LuaORMClasses_path))
+    {
+        state.safe_script_file(LuaORMClasses_path.string());
+    }
+}
 
 sol::table TSLua::require(std::string const& mod)
 {
@@ -309,21 +328,6 @@ void TSLua::Load()
     load_bindings(state);
     state["HAS_TAG"] = L_HAS_TAG;
     state["BROADCAST_PHASE_ID"] = BROADCAST_PHASE_ID;
-
-    // Load lua libraries ( todo: move to "load_bindings" method )
-    std::filesystem::path lualib_bundle_path = LuaLibRoot() / "lualib_bundle.lua";
-    std::filesystem::path LuaORMClasses_path = LuaLibRoot() / "LuaORMClasses.lua";
-
-    if (std::filesystem::exists(lualib_bundle_path))
-    {
-        modules["lualib_bundle"] = state.safe_script_file(lualib_bundle_path.string()).get<sol::table>();
-    }
-
-    if (std::filesystem::exists(LuaORMClasses_path))
-    {
-        state.safe_script_file(LuaORMClasses_path.string());
-    }
-
 
     for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {

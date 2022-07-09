@@ -22,7 +22,7 @@ void TSLua::load_packet_methods(sol::state& state)
     LUA_FIELD(ts_packetwrite, TSPacketWrite, SendToPlayer);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastMap);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastAround);
-    ts_packetwrite.set_function("WriteString", &TSPacketWrite::WriteString);
+    ts_packetwrite.set_function("WriteString", &TSPacketWrite::LWriteString);
 
     auto ts_packetread = state.new_usertype<TSPacketRead>("TSPacketRead");
     LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt8);
@@ -36,5 +36,7 @@ void TSLua::load_packet_methods(sol::state& state)
     LUA_FIELD(ts_packetread, TSPacketRead, ReadFloat);
     LUA_FIELD(ts_packetread, TSPacketRead, ReadDouble);
     LUA_FIELD(ts_packetread, TSPacketRead, Size);
-    ts_packetread.set_function("ReadString", &TSPacketRead::ReadString);
+    ts_packetread.set_function("ReadString", sol::overload(&TSPacketRead::LReadString0,&TSPacketRead::LReadString1));
+
+    state.set_function("CreateCustomPacket", CreateCustomPacket);
 }
