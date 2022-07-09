@@ -43,6 +43,6 @@ public:
 
     TSString stringify()
     {
-        return ToStr(value);
+        return ToStr(*value);
     }
 };
