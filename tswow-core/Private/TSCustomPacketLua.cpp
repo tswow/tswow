@@ -1,4 +1,5 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSCustomPacket.h"
 #include "TSPlayer.h"
 #include "TSMap.h"
@@ -25,6 +26,17 @@ void TSLua::load_packet_methods(sol::state& state)
     ts_packetwrite.set_function("WriteString", &TSPacketWrite::LWriteString);
 
     auto ts_packetread = state.new_usertype<TSPacketRead>("TSPacketRead");
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadUInt8, uint8);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadInt8, int8);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadUInt16, uint16);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadInt16, int16);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadUInt32, uint32);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadInt32, int32);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadUInt64, uint64);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadInt64, int64);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadFloat, float);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadDouble, double);
+
     LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt8);
     LUA_FIELD(ts_packetread, TSPacketRead, ReadInt8);
     LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt16);
