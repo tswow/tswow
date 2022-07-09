@@ -387,9 +387,9 @@ export function InstallPath(pathIn: string, tdb: string) {
                 Events_ts: file('Events.ts'),
                 Events_lua: file('Events.lua'),
                 shared_global_d_ts: file('shared.global.d.ts'),
-                LualibBundle_lua: file('LualibBundle.lua'),
                 RequireStub_lua: file('RequireStub.lua'),
-                tsconfig_json: file('tsconfig.json')
+                tsconfig_json: file('tsconfig.json'),
+                lualib_bundle: file('lualib_bundle.lua'),
             }),
             core: dyndir(core=>({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({
@@ -487,6 +487,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
             events_ts: file('Events.ts'),
             events_d_ts: file('Events.d.ts'),
             events_lua: file('Events.lua'),
+            lualib_bundle: file('lualib_bundle.lua'),
             global_d_ts: file('global.d.ts'),
             tsconfig_json: file('tsconfig.json'),
         }),

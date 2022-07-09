@@ -94,6 +94,16 @@ export namespace Config {
         wsys.execIn(bpaths.lua_events, 'tstl')
         bpaths.lua_events.events_lua.copy(
             ipaths.bin.include_addon.Events_lua)
+        bpaths.lua_events.lualib_bundle.copy(
+            ipaths.bin.include_addon.lualib_bundle)
+        
+        let lualib_bundle = ipaths.bin.include_addon.lualib_bundle.read('utf-8')
+        let index = lualib_bundle.lastIndexOf('return {')
+        lualib_bundle = lualib_bundle.substring(0,index) + 'local ___lualib_bundle = ' + lualib_bundle.substring(index + 'return '.length)
+        lualib_bundle += `tstl_register_module('lualib_bundle',function() return ___lualib_bundle end)`
+        ipaths.bin.include_addon.lualib_bundle.write(
+            lualib_bundle
+        )
 
         ipaths.bin.include_addon.global_d_ts.toFile().write(
             bpaths.lua_events.global_d_ts.readString()

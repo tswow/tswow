@@ -95,12 +95,11 @@ export class Addon {
         let libModules = ipaths.bin.include_addon.readDir()
             .filter(x=>x.endsWith('.lua'))
             .map(x=>x.basename().get())
-            .filter(x=>x !== 'lualib_bundle.lua')
 
         // These must be first for requires to work correctly
         const score = (a: string) => {
-            if(a==='LualibBundle.lua') return 2;
-            if(a==='RequireStub.lua') return 1;
+            if(a==='RequireStub.lua') return 2;
+            if(a==='lualib_bundle.lua') return 1;
             return 0;
         }
         libModules.sort((a,b)=>{
@@ -229,6 +228,9 @@ export class Addon {
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
                     let p = m[1];
+                    if(p === 'lualib_bundle') {
+                        return x;
+                    }
                     if(p.startsWith('addon.lib')) {
                         p = `${p.substring('addon.lib.'.length)}`;
                     } else {
@@ -283,7 +285,6 @@ export class Addon {
         wfs.iterate(ipaths.bin.include_addon,(fpath)=>{
             if(!fpath.endsWith('.lua')) return;
             const fname = wfs.basename(fpath);
-            if(fname==='lualib_bundle.lua') return;
             wfs.copy(fpath,mpath(dataset.path.luaxml.Interface.FrameXML,fname));
         });
         let tocfile = wfs.readLines(dataset.path.luaxml_source.Interface.FrameXML.framexml_toc);

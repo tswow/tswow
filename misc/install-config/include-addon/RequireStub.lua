@@ -35,7 +35,11 @@ function tstl_register_module(name, exportFn)
   preloadFns[name] = exportFn
 end
 
-function require(name)
+function require(name,name1)
+  if not name and name1 then
+    name = name1
+  end
+
   if ends_with(name, "@wartoshika.wow-declarations") then
     return _G
   end
