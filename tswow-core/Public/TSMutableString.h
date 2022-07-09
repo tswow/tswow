@@ -40,6 +40,11 @@ public:
     {
         (*this->str) = value.std_str();
     }
+
+    TSString stringify()
+    {
+        return TSString(*str);
+    }
 private:
     std::string Lget() { return *str; }
     void Lset(std::string const& value) { (*this->str) = value; };
