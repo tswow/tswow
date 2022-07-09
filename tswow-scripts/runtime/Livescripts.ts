@@ -179,6 +179,17 @@ export class Livescripts {
             }
         })
 
+        buildDir.iterate('RECURSE','FILES','FULL', node => {
+            let rel = node.relativeTo(buildDir)
+            let file = this.path.join(rel)
+            if(!node.basename().startsWith('__') && node.endsWith('.lua') && !file.withExtension('.ts',true).exists() && !file.withExtension('.lua',true).exists()) {
+                if(rel.basename().get() !== 'lualib_bundle.lua') {
+                    term.log(this.logName(),`Cleaning up removed lua file ${rel.get()}`)
+                }
+                node.remove();
+            }
+        })
+
         buildDir.copy(this.luaInstallPath(dataset))
 
         // todo: please fix this singleton hell already.
