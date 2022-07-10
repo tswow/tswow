@@ -9237,11 +9237,6 @@ declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTe
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
-/**
- * @deprecated use ID tags instead
- *
- * @nolua This function only works in livescripts
- */
 declare function GetID(table: string, mod: string, name: string): uint32;
 
 /**
