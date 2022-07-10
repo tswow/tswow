@@ -1,9 +1,45 @@
 import * as mysql from 'mysql2';
 import { NodeConfig } from "../runtime/NodeConfig";
+import { GetExistingId } from './ids/Ids';
 import { ipaths } from "./Paths";
 import deasync = require('deasync');
 
+/**
+ * TODO: relies on terrible regex patterns, they can't even handle newlines or anything.
+ *
+ * We should use some kind of actual agnostic parser for this
+ *
+ * @note This function assumes you already called IdPrivate#readFile
+ */
 export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIVESCRIPT'|'LUA') {
+    // ======================================
+    //  GetID
+    // ======================================
+    [
+        /GetID *\( *JSTR *\("(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
+        /GetID *\( *"(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/,
+        /GetID *\( *"(.+?)" *, *"(.+?)" *, *'(.+?)' *\)/,
+
+        /GetID *\( *"(.+?)" *, *'(.+?)' *, *"(.+?)" *\)/,
+        /GetID *\( *"(.+?)" *, *'(.+?)' *, *'(.+?)' *\)/,
+
+        /GetID *\( *'(.+?)' *, *"(.+?)" *, *"(.+?)" *\)/,
+        /GetID *\( *'(.+?)' *, *"(.+?)" *, *'(.+?)' *\)/,
+
+        /GetID *\( *'(.+?)' *, *'(.+?)' *, *"(.+?)" *\)/,
+        /GetID *\( *'(.+?)' *, *'(.+?)' *, *'(.+?)' *\)/,
+    ].forEach(regex=>{
+        while(true) {
+            let m = contents
+                .match(regex)
+            if(!m) break;
+            const [_,table,mod,name] = m;
+            let id = GetExistingId(table,mod,name);
+            contents = contents.replace(m[0],`${id}`)
+        }
+    });
+
+
     [
         /(?:GetIDTagUnique|UTAG) *\( *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
         /(?:GetIDTagUnique|UTAG) *\( *"(.+?)" *, *"(.+?)" *\)/,
@@ -97,7 +133,7 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
         }
     })
 
-        // ======================================
+    // ======================================
     //  World table asserts
     // ======================================
     let checks: {table: string, cols: string}[] = [];

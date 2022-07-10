@@ -1,4 +1,4 @@
-import { GetExistingId, IdPrivate } from "../util/ids/Ids";
+import { IdPrivate } from "../util/ids/Ids";
 import { ApplyTagMacros } from '../util/TagMacros';
 import { dataset } from "./tswow/dataset";
 import { get_tracy_category_color } from './tswow/tracy-categories';
@@ -35,33 +35,6 @@ function match(first, second)
 }
 
 export function postprocess(contents: string): string {
-    // ======================================
-    //  GetID
-    // ======================================
-    [
-        /GetID *\( *JSTR *\("(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
-        /GetID *\( "(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/,
-        /GetID *\( "(.+?)" *, *"(.+?)" *, *'(.+?)' *\)/,
-
-        /GetID *\( "(.+?)" *, *'(.+?)' *, *"(.+?)" *\)/,
-        /GetID *\( "(.+?)" *, *'(.+?)' *, *'(.+?)' *\)/,
-
-        /GetID *\( '(.+?)' *, *"(.+?)" *, *"(.+?)" *\)/,
-        /GetID *\( '(.+?)' *, *"(.+?)" *, *'(.+?)' *\)/,
-
-        /GetID *\( '(.+?)' *, *'(.+?)' *, *"(.+?)" *\)/,
-        /GetID *\( '(.+?)' *, *'(.+?)' *, *'(.+?)' *\)/,
-    ].forEach(regex=>{
-        while(true) {
-            let m = contents
-                .match(regex)
-            if(!m) break;
-            const [_,table,mod,name] = m;
-            let id = GetExistingId(table,mod,name);
-            contents = contents.replace(m[0],`${id}`)
-        }
-    })
-
     // ======================================
     //  Tracy
     // ======================================
@@ -105,6 +78,5 @@ export function postprocess(contents: string): string {
     //  ID Tags
     // ======================================
     contents = ApplyTagMacros(contents, process.argv.find(x=>x.startsWith('--datasetName=')).substring('--datasetName='.length), 'LIVESCRIPT')
-
     return contents;
 }

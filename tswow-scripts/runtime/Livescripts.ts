@@ -202,6 +202,7 @@ export class Livescripts {
         //       this is fine because we're not multithreading.
         class IdPublic extends IdPrivate {
             static readFile = () => IdPrivate.readFile(dataset.path.ids_txt.get());
+            static flushMemory = () => IdPrivate.flushMemory();
         }
         IdPublic.readFile();
 
@@ -225,6 +226,7 @@ export class Livescripts {
             }
             node.toFile().write(lines,'OVERWRITE');
         });
+        IdPublic.flushMemory()
 
         term.success(this.logName(),`Finished building lua`)
     }
