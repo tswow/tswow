@@ -76,7 +76,7 @@ void LoadTSLibraries()
     TS_LOG_INFO("tswow.livescripts", "Reloading livescripts");
     ts_clear_events();
     DataRemover::Run();
-    if (sConfigMgr->GetBoolDefault("TSWoW.EnableLua", false))
+    if (sConfigMgr->GetBoolDefault("TSWoW.EnableLua", true))
     {
         TSLua::Load();
     }
