@@ -73,6 +73,7 @@ export namespace AuthServer {
 
     export async function initializeServer() {
         if(NodeConfig.AutoStartAuthServer) {
+            authserver.setAutoRestart(true)
             await start(NodeConfig.DefaultBuildType);
         }
         StopCommand.addCommand(
