@@ -358,13 +358,36 @@ void TSLua::Load()
         auto main = table["Main"];
         if (main.get_type() == sol::type::function)
         {
-            main(&ts_events);
+            // todo: hack to catch exceptions, we should properly configure sol to give us error results instead
+            try
+            {
+                main(&ts_events);
+            }
+            catch (std::exception const& e)
+            {
+                std::cerr << e.what() << "\n";
+            }
+            catch (...)
+            {
+                std::cerr << "Unknown Lua exception\n";
+            }
         }
 
         auto __inline_main = table["__InlineMain"];
         if (__inline_main.get_type() == sol::type::function)
         {
-            __inline_main(&ts_events);
+            try
+            {
+                __inline_main(&ts_events);
+            }
+            catch (std::exception const& e)
+            {
+                std::cerr << e.what() << "\n";
+            }
+            catch (...)
+            {
+                std::cerr << "Unknown Lua exception\n";
+            }
         }
     }
 }
