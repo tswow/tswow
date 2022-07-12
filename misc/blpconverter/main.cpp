@@ -24,6 +24,8 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <algorithm>
+#include <cctype>
 
 static std::vector<char> read(std::string const& path)
 {
@@ -60,8 +62,14 @@ static void png_to_blp(std::string const& path_in)
     file.write((char*)data, size);
 }
 
-static bool endsWith(const std::string& str, const std::string& suffix)
+static bool endsWith(std::string str, std::string suffix)
 {
+    std::transform(str.begin(), str.end(), str.begin(),
+        [](unsigned char c){ return std::tolower(c); });
+
+    std::transform(suffix.begin(), suffix.end(), suffix.begin(),
+        [](unsigned char c){ return std::tolower(c); });
+
     return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
 }
 static void convert(std::string const& path_in)
