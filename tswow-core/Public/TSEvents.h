@@ -414,6 +414,8 @@ struct TSEvents
             , TSMutable<float>
             , TSMutable<float>
             , TSMutable<float>
+            , TSMutable<float>
+            , TSMutable<float>
             , uint32
         );
         EVENT(OnCalcThreatEarly
