@@ -348,7 +348,19 @@ void TSLua::Load()
                 {
                     continue;
                 }
-                execute_file(file);
+
+                try
+                {
+                    execute_file(file);
+                }
+                catch (std::exception const& e)
+                {
+                    std::cerr << e.what() << "\n";
+                }
+                catch (...)
+                {
+                    std::cerr << "Unknown Lua exception\n";
+                }
             }
         }
     }
