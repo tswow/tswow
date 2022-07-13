@@ -419,4 +419,5 @@ void TSLua::load_events(sol::state& state)
     lua_events["Condition"] = &TSEvents::Condition;
     lua_events["CustomPacket"] = &TSEvents::CustomPacket;
     lua_events["WorldPacket"] = &TSEvents::WorldPacket;
+    lua_events["GameObject"] = &TSEvents::GameObject;
 }
