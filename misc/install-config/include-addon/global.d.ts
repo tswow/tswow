@@ -2286,7 +2286,7 @@ declare function UnitPowerMax(unitId: WoWAPI.UnitId, powerType: number): number;
  * @see https://wow.gamepedia.com/API_UnitAura
  */
 // tslint:disable-next-line max-line-length
-declare function UnitAura(unitId: WoWAPI.UnitId, index: number, filter?: WoWAPI.BuffFilterType & string): LuaMultiReturn<[string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number, boolean, boolean, boolean, boolean, number]>;
+declare function UnitAura(unitId: WoWAPI.UnitId, index: number, rank?: number, filter?: WoWAPI.BuffFilterType & string): LuaMultiReturn<[string, string, WoWAPI.TexturePath, number, WoWAPI.DebuffType, number, number, WoWAPI.UnitId, boolean, boolean, number]>;
 
 /**
  * Retrieve info about a certain buff on a certain unit
@@ -3675,6 +3675,8 @@ declare function RepairAllItems(guildBankRepair?:boolean):void;
 declare function ShowMerchantSellCursor(index:number):void;
 declare function ShowRepairCursor():void;
 declare function GetNumBuybackItems():number;
+
+declare function SetPortraitToTexture(texture:WoWAPI.Texture,path:string):void;
 
 declare const MAX_PLAYER_LEVEL_TABLE: {
     LE_EXPANSION_CLASSIC: 60,
@@ -12541,7 +12543,7 @@ declare namespace WoWAPI {
         IsForbidden(): boolean;
     }
 
-    interface AnimationGroup extends UIObject {
+    interface AnimationGroup extends UIObject, AnimationGroupHookScript, AnimationGroupSetScript {
         Play(): void;
         Pause(): void;
         Stop(): void;
@@ -12561,7 +12563,7 @@ declare namespace WoWAPI {
         CreateAnimation(frameType: "Translation", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Translation;
     }
 
-    interface Animation extends UIObject {
+    interface Animation extends UIObject, AnimationHookScript, AnimationSetScript {
         Play(): void;
         Pause(): void;
         Stop(): void;
@@ -12903,8 +12905,8 @@ declare namespace WoWAPI {
         /**
          * Modifies the region of a texture drawn by the Texture widget.
          */
-        SetTextCoord(left: number, right: number, top: number, bottom: number): void;
-        SetTextCoord(ULx: number, ULy: number, LLx: number, LLy: number, URx: number, URy: number, LRx: number, LRy: number): void;
+        SetTexCoord(left: number, right: number, top: number, bottom: number): void;
+        SetTexCoord(ULx: number, ULy: number, LLx: number, LLy: number, URx: number, URy: number, LRx: number, LRy: number): void;
 
         /**
          * Changes the texture of a Texture widget.
@@ -13040,6 +13042,54 @@ declare namespace WoWAPI {
         SetScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
+	
+	interface ScriptObjectHookScript {
+        HookScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
+        HookScript(event: "OnLoad", handler: (self: T) => void): void;
+		HookScript(event: "OnUpdate", handler: (self: T, elapsed:number) => void): void;
+    }
+	interface ScriptObjectSetScript {
+        SetScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
+        SetScript(event: "OnLoad", handler: (self: T) => void): void;
+		SetScript(event: "OnUpdate", handler: (self: T, elapsed:number) => void): void;
+    }
+	
+	interface AnimationHookScript extends ScriptObjectHookScript {
+		HookScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
+		HookScript(event: "OnFinished", handler: (self: T, requested: boolean) => void): void;
+		HookScript(event: "OnPause", handler: (self: T) => void): void;
+		HookScript(event: "OnPlay", handler: (self: T) => void): void;
+		HookScript(event: "OnStop", handler: (self: T, requested:boolean) => void): void;
+		
+	}
+	
+	interface AnimationSetScript extends ScriptObjectSetScript {
+	    SetScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
+        SetScript(event: "OnFinished", handler: (self: T, requested: boolean) => void): void;
+		SetScript(event: "OnPause", handler: (self: T) => void): void;
+		SetScript(event: "OnPlay", handler: (self: T) => void): void;
+		SetScript(event: "OnStop", handler: (self: T, requested:boolean) => void): void;
+	}
+	
+	interface AnimationGroupHookScript extends ScriptObjectHookScript {
+		HookScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
+		HookScript(event: "OnFinished", handler: (self: T, requested: boolean) => void): void;
+		HookScript(event: "OnPause", handler: (self: T) => void): void;
+		HookScript(event: "OnPlay", handler: (self: T) => void): void;
+		HookScript(event: "OnStop", handler: (self: T, requested:boolean) => void): void;
+		HookScript(event: "OnLoop", handler: (self: T, loopState:number) => void): void;
+		
+	}
+	
+	interface AnimationGroupSetScript extends ScriptObjectSetScript {
+	    SetScript(event: Event.OnAny, handler: (frame: T, ...args: any[]) => void): void;
+        SetScript(event: "OnFinished", handler: (self: T, requested: boolean) => void): void;
+		SetScript(event: "OnPause", handler: (self: T) => void): void;
+		SetScript(event: "OnPlay", handler: (self: T) => void): void;
+		SetScript(event: "OnStop", handler: (self: T, requested:boolean) => void): void;
+		SetScript(event: "OnLoop", handler: (self: T, loopState:number) => void): void;
+	}
+	
 	
     interface Backdrop {
         /**
