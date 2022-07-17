@@ -165,6 +165,15 @@ declare const enum GlyphMask /**@realType:uint32 */ {
 
 declare const enum TriggerCastFlags { } /** SpellDefines.h:TriggerCastFlags */
 
+declare const enum DiminishingLevels {
+    DIMINISHING_LEVEL_1            = 0,
+    DIMINISHING_LEVEL_2            = 1,
+    DIMINISHING_LEVEL_3            = 2,
+    DIMINISHING_LEVEL_IMMUNE       = 3,
+    DIMINISHING_LEVEL_4            = 3,
+    DIMINISHING_LEVEL_TAUNT_IMMUNE = 4,
+};
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -8451,7 +8460,8 @@ declare namespace _hidden {
         OnExitCombat(callback: (unit: TSUnit)=>void);
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
-        OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
+        OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64) => void);
+        OnApplyDiminishingReturn(callback: (target: TSUnit, info: TSSpellInfo, duration: TSMutable<int32>, oldDuration: int32, level: DiminishingLevels, mod: float) => void);
     }
 
     export class Battleground<T> {

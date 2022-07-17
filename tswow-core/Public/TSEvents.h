@@ -443,6 +443,14 @@ struct TSEvents
         EVENT(OnEnterCombatWith, TSUnit me, TSUnit other)
         EVENT(OnExitCombatWith, TSUnit me, TSUnit other)
         EVENT(OnSetTarget, TSUnit, uint64 new_target, uint64 old_target)
+        EVENT(OnApplyDiminishingReturn
+            , TSUnit target
+            , TSSpellInfo info
+            , TSMutable<int32> duration
+            , int32 oldDuration
+            , uint8 level
+            , float mod
+        )
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
