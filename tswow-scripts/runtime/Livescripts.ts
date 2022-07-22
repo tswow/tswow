@@ -154,6 +154,7 @@ export class Livescripts {
 
         config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.mod.path).get()
         config['include'] = ['livescripts','shared']
+        config['compilerOptions']['rootDir'] = this.path.dirname().abs().get();
         this.mod.path.livescript_tsconfig_temp.writeJson(config)
 
         let foundTs = false;
