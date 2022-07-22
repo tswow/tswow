@@ -12,9 +12,7 @@ void TSLua::load_json_methods_t(sol::state& state, sol::usertype<T> & target, st
     LUA_FIELD(target, V, HasBool);
     LUA_FIELD(target, V, SetString);
     LUA_FIELD(target, V, HasString);
-    //LUA_FIELD_OVERLOAD_RET_1_1(target, V, SetJsonObject, std::string const&, TSJsonObject);
     LUA_FIELD(target, V, HasJsonObject);
-    //LUA_FIELD_OVERLOAD_RET_1_1(target, V, SetJsonArray, std::string const&, TSJsonArray);
     LUA_FIELD(target, V, HasJsonArray);
     LUA_FIELD(target, V, Remove);
 
@@ -22,5 +20,15 @@ void TSLua::load_json_methods_t(sol::state& state, sol::usertype<T> & target, st
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetBool, std::string const&, bool);
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetString, std::string const&, std::string const&);
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetJsonObject, std::string const&, TSJsonObject);
-    //LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetJsonArray, std::string const&, TSJsonArray);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, SetJsonObject, std::string const&, TSJsonObject);
+
+    target.set_function("GetJsonArray", sol::overload(
+        [](V& v, std::string const& key, TSJsonArray value) { return v.GetJsonArray(key, value); },
+        [](V& v, std::string const& key) { return v.GetJsonArray(key, TSJsonArray()); }
+    ));
+
+    target.set_function("SetJsonArray", sol::overload(
+        [](V& v, std::string const& key, TSJsonArray value) { return v.SetJsonArray(key, value); },
+        [](V& v, std::string const& key) { return v.SetJsonArray(key, TSJsonArray()); }
+    ));
 }
