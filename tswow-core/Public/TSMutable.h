@@ -41,7 +41,7 @@ public:
         return *(this->value);
     }
 
-    TSString stringify()
+    std::string stringify()
     {
         return ToStr(*value);
     }

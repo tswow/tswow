@@ -19,9 +19,6 @@
 #include <map>
 #include <iostream>
 #include "TSArray.h"
-#include "TSString.h"
-
-struct TSString;
 
 template <typename K, typename V>
 struct TSDictionary {
@@ -133,12 +130,12 @@ public:
     }
   }
 
-  TSString stringify(int indention = 0)
+  std::string stringify(int indention = 0)
   {
-    TSString str = JSTR("{");
+    std::string str = "{";
     if (get_length() > 0)
     {
-      str = str + JSTR("\n");
+      str = str + "\n";
     }
 
     unsigned int ctr = 0;
@@ -146,14 +143,14 @@ public:
     {
       if (++ctr >= get_length())
       {
-        str += spaces(indention+1) + ToStr(e.first, indention+1) + JSTR(":") + ToStr(e.second,indention+1) + JSTR("\n");
+        str += spaces(indention+1) + ToStr(e.first, indention+1) + ":" + ToStr(e.second,indention+1) + "\n";
       }
       else
       {
-        str += spaces(indention+1) + ToStr(e.first,indention+1) + JSTR(":") + ToStr(e.second,indention+1) + JSTR(",\n");
+        str += spaces(indention+1) + ToStr(e.first,indention+1) + ":" + ToStr(e.second,indention+1) + ",\n";
       }
     }
-    return str + spaces(indention)+JSTR("}");
+    return str + spaces(indention)+"}";
   }
 
   friend std::ostream& operator<<(std::ostream& os, TSDictionary<K,V> arr)

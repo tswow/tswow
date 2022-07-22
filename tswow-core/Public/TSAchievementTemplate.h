@@ -20,7 +20,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
-#include "TSString.h"
 #include "TSArray.h"
 
 #include <sol/sol.hpp>
@@ -39,7 +38,7 @@ public:
     uint32 GetEntry();
     int32 GetFaction();
     int32 GetInstanceID();
-    TSArray<TSString> GetTitles();
+    TSArray<std::string> GetTitles();
     uint32 GetCategory();
     uint32 GetPoints();
     uint32 GetFlags();

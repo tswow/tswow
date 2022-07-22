@@ -38,6 +38,7 @@
 #include "TSCustomPacket.h"
 #include "TSMainThreadContext.h"
 #include "TSSpellInfo.h"
+#include "TSArray.h"
 
 #include <cstdint>
 
@@ -81,7 +82,7 @@ struct TSEvents
          EVENTS_HEADER(WorldEvents)
          EVENT(OnOpenStateChange, bool)
          EVENT(OnConfigLoad, bool)
-         EVENT(OnMotdChange, TSString)
+         EVENT(OnMotdChange, std::string const&)
          EVENT(OnShutdownInitiate, uint32, uint32)
          EVENT(OnUpdate, uint32, TSMainThreadContext)
          EVENT(OnStartup)
@@ -182,7 +183,7 @@ struct TSEvents
          EVENT(OnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uint32_t talentRank, uint32_t spellId, TSMutable<bool>)
 
          EVENT(OnGossipSelect, TSPlayer, TSPlayer, uint32_t, uint32_t, TSMutable<bool>)
-         EVENT(OnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, TSString, TSMutable<bool>)
+         EVENT(OnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, std::string const&, TSMutable<bool>)
 
          EVENT(
              OnTradeCompleted
@@ -356,9 +357,9 @@ struct TSEvents
          EVENTS_HEADER(GuildEvents)
          EVENT(OnAddMember, TSGuild, TSPlayer, TSMutable<uint8>)
          EVENT(OnRemoveMember, TSGuild, TSPlayer, bool, bool)
-         EVENT(OnMOTDChanged, TSGuild, TSString)
-         EVENT(OnInfoChanged, TSGuild, TSString)
-         EVENT(OnCreate, TSGuild, TSPlayer, TSString)
+         EVENT(OnMOTDChanged, TSGuild, std::string const&)
+         EVENT(OnInfoChanged, TSGuild, std::string const&)
+         EVENT(OnCreate, TSGuild, TSPlayer, std::string const&)
          EVENT(OnDisband, TSGuild)
          EVENT(OnMemberWitdrawMoney, TSGuild, TSPlayer, TSMutable<uint32>, bool)
          EVENT(OnMemberDepositMoney, TSGuild, TSPlayer, TSMutable<uint32>)
@@ -371,7 +372,7 @@ struct TSEvents
          EVENTS_HEADER(GroupEvents)
          EVENT(OnAddMember, TSGroup, uint64 member_id)
          EVENT(OnInviteMember, TSGroup, uint64 member_id)
-         EVENT(OnRemoveMember, TSGroup, uint64 member_id, uint32, uint64, TSString)
+         EVENT(OnRemoveMember, TSGroup, uint64 member_id, uint32, uint64, std::string const&)
          EVENT(OnChangeLeader, TSGroup, uint64, uint64)
          EVENT(OnDisband, TSGroup)
     } Group;
@@ -547,7 +548,7 @@ struct TSEvents
 
         ID_EVENT(OnGossipHello, TSCreature, TSPlayer, TSMutable<bool>)
         ID_EVENT(OnGossipSelect, TSCreature, TSPlayer, uint32, uint32, TSMutable<bool>)
-        ID_EVENT(OnGossipSelectCode, TSCreature, TSPlayer, uint32, uint32, TSString, TSMutable<bool>)
+        ID_EVENT(OnGossipSelectCode, TSCreature, TSPlayer, uint32, uint32, std::string const&, TSMutable<bool>)
         ID_EVENT(OnQuestAccept, TSCreature, TSPlayer, TSQuest)
         ID_EVENT(OnQuestReward, TSCreature, TSPlayer, TSQuest, uint32)
 
@@ -652,7 +653,7 @@ struct TSEvents
         ID_EVENT(OnGOStateChanged, TSGameObject, uint32)
         ID_EVENT(OnGossipHello, TSGameObject, TSPlayer, TSMutable<bool>)
         ID_EVENT(OnGossipSelect, TSGameObject, TSPlayer, uint32, uint32, TSMutable<bool>)
-        ID_EVENT(OnGossipSelectCode, TSGameObject, TSPlayer, uint32, uint32, TSString, TSMutable<bool>)
+        ID_EVENT(OnGossipSelectCode, TSGameObject, TSPlayer, uint32, uint32, std::string const&, TSMutable<bool>)
         ID_EVENT(OnCreate, TSGameObject, TSMutable<bool>)
         ID_EVENT_FN(OnReload, ReloadGameObject, TSGameObject)
         ID_EVENT(OnRemove, TSGameObject)
@@ -790,7 +791,7 @@ struct TSEvents
          ID_EVENT(OnQuestAccept, TSItem, TSPlayer, TSQuest)
          ID_EVENT(OnGossipHello, TSItem, TSPlayer, TSMutable<bool>)
          ID_EVENT(OnGossipSelect, TSItem, TSPlayer, uint32, uint32, TSMutable<bool>)
-         ID_EVENT(OnGossipSelectCode, TSItem, TSPlayer, uint32, uint32, TSString, TSMutable<bool>)
+         ID_EVENT(OnGossipSelectCode, TSItem, TSPlayer, uint32, uint32, std::string const&, TSMutable<bool>)
          ID_EVENT(OnCanChangeEquipState, TSItemTemplate, TSMutable<bool>)
          ID_EVENT(OnUnequip, TSItem, TSPlayer, bool, TSMutable<uint32> result)
          ID_EVENT(OnBank, TSItem, TSPlayer, uint8 bag, uint8 slot, bool swap, TSMutable<uint32> result)
@@ -854,12 +855,12 @@ struct TSEvents
     struct TestEvents {
         TestEvents* operator->() { return this; }
 
-        std::shared_ptr<TSManualTestBuilder> ManualTest(TSString mod, TSString name)
+        std::shared_ptr<TSManualTestBuilder> ManualTest(std::string const& mod, std::string const& name)
         {
             return RegisterManualTest(mod, name);
         }
 
-        void AutomaticTest(TSString mod, TSString name, TSTestCallback callback)
+        void AutomaticTest(std::string const& mod, std::string const& name, TSTestCallback callback)
         {
             return RegisterAutomaticTest(mod, name, callback);
         }

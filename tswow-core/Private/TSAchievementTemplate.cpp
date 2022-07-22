@@ -36,13 +36,13 @@ int32 TSAchievementEntry::GetInstanceID()
     return m_achievement->mapID;
 #endif
 }
-TSArray<TSString> TSAchievementEntry::GetTitles()
+TSArray<std::string> TSAchievementEntry::GetTitles()
 {
-    TSArray<TSString> arr;
+    TSArray<std::string> arr;
 #ifdef TRINITY
     for (const char* title : m_achievement->Title)
     {
-        arr.push(TSString(title));
+        arr.push(title);
     }
 #elif AZEROTHCORE
     // TODO: enable getting titles

@@ -66,7 +66,7 @@ public:
     void OnStartup() FIRE(World,OnStartup)
     void OnShutdown() FIRE(World,OnShutdown)
     void OnShutdownCancel() FIRE(World,OnShutdownCancel)
-    void OnMotdChange(std::string& newMotd) FIRE(World,OnMotdChange,TSString(newMotd))
+    void OnMotdChange(std::string& newMotd) FIRE(World,OnMotdChange,newMotd)
     void OnShutdownInitiate(ShutdownExitCode code,ShutdownMask mask) FIRE(World,OnShutdownInitiate,code,mask)
     void OnUpdate(uint32 diff) FIRE(World,OnUpdate,diff, TSMainThreadContext())
 };
@@ -224,9 +224,9 @@ public:
     TSGuildScript() : GuildScript("TSGuildScript"){}
     void OnAddMember(Guild* guild,Player* player,uint8& plRank) FIRE(Guild,OnAddMember,TSGuild(guild),TSPlayer(player),TSMutable<uint8>(&plRank))
     void OnRemoveMember(Guild* guild,Player* player,bool isDisbanding,bool isKicked) FIRE(Guild,OnRemoveMember,TSGuild(guild),TSPlayer(player),isDisbanding,isKicked)
-    void OnMOTDChanged(Guild* guild,const std::string& newMotd) FIRE(Guild,OnMOTDChanged,TSGuild(guild),TSString(newMotd))
-    void OnInfoChanged(Guild* guild,const std::string& newInfo) FIRE(Guild,OnInfoChanged,TSGuild(guild),TSString(newInfo))
-    void OnCreate(Guild* guild,Player* leader,const std::string& name) FIRE(Guild,OnCreate,TSGuild(guild),TSPlayer(leader),TSString(name))
+    void OnMOTDChanged(Guild* guild,const std::string& newMotd) FIRE(Guild,OnMOTDChanged,TSGuild(guild),newMotd)
+    void OnInfoChanged(Guild* guild,const std::string& newInfo) FIRE(Guild,OnInfoChanged,TSGuild(guild),newInfo)
+    void OnCreate(Guild* guild,Player* leader,const std::string& name) FIRE(Guild,OnCreate,TSGuild(guild),TSPlayer(leader),name)
     void OnDisband(Guild* guild) FIRE(Guild,OnDisband,TSGuild(guild))
     void OnMemberWitdrawMoney(Guild* guild,Player* player,uint32& amount,bool isRepair) FIRE(Guild,OnMemberWitdrawMoney,TSGuild(guild),TSPlayer(player),TSMutable<uint32>(&amount),isRepair)
     void OnMemberDepositMoney(Guild* guild,Player* player,uint32& amount) FIRE(Guild,OnMemberDepositMoney,TSGuild(guild),TSPlayer(player),TSMutable<uint32>(&amount))
@@ -240,7 +240,7 @@ public:
     TSGroupScript() : GroupScript("TSGroupScript"){}
     void OnAddMember(Group* group,ObjectGuid guid) FIRE(Group,OnAddMember,TSGroup(group),guid.GetRawValue())
     void OnInviteMember(Group* group,ObjectGuid guid) FIRE(Group,OnInviteMember,TSGroup(group),guid.GetRawValue())
-    void OnRemoveMember(Group* group,ObjectGuid guid,RemoveMethod method,ObjectGuid kicker,char const* reason) FIRE(Group,OnRemoveMember,TSGroup(group),guid.GetRawValue(),method,kicker.GetRawValue(),TSString(reason))
+    void OnRemoveMember(Group* group,ObjectGuid guid,RemoveMethod method,ObjectGuid kicker,char const* reason) FIRE(Group,OnRemoveMember,TSGroup(group),guid.GetRawValue(),method,kicker.GetRawValue(),reason)
     void OnChangeLeader(Group* group,ObjectGuid newLeaderGuid,ObjectGuid oldLeaderGuid) FIRE(Group,OnChangeLeader,TSGroup(group),newLeaderGuid.GetRawValue(),oldLeaderGuid.GetRawValue())
     void OnDisband(Group* group) FIRE(Group,OnDisband,TSGroup(group))
 };

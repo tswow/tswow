@@ -32,6 +32,8 @@ export class Preprocessor {
                 return this.preprocessBinaryExpression(<ts.BinaryExpression>node);
             case ts.SyntaxKind.PropertyAccessExpression:
                 return this.preprocessPropertyAccessExpression(<ts.PropertyAccessExpression>node);
+            case ts.SyntaxKind.CallExpression:
+                return this.preprocessCallExpression(<ts.CallExpression>node);
         }
 
         return node;
@@ -122,7 +124,6 @@ export class Preprocessor {
     }
 
     private preprocessBinaryExpression(node: ts.BinaryExpression) {
-
         switch (node.operatorToken.kind) {
             case ts.SyntaxKind.EqualsToken:
 
@@ -142,14 +143,70 @@ export class Preprocessor {
                         return this.fixupParentReferences(newCall, node.parent);
                     }
                 }
-
+                break;
+            case ts.SyntaxKind.PlusToken:
+                let leftType = this.resolver.getTypeAtLocation(node.left)
+                let rightType = this.resolver.getTypeAtLocation(node.right)
+                if(leftType.isStringLiteral() && rightType.isStringLiteral()) {
+                    node = ts.createBinary(ts.createCall(ts.createIdentifier('std::string'),null,[node.left]),ts.SyntaxKind.PlusToken,ts.createCall(ts.createIdentifier('std::string'),null,[node.right]))
+                } else {
+                    let leftStr = this.resolver.isStringType(leftType)
+                    let rightStr = this.resolver.isStringType(rightType)
+                    const TO_STR_FUNC = 'ToStr'
+                    if((leftStr && ! rightStr) || (rightStr && ! leftStr)) {
+                        if(!leftStr) {
+                            node = ts.createBinary(ts.createCall(ts.createIdentifier(TO_STR_FUNC), null, [node.left]), ts.SyntaxKind.PlusToken, node.right);
+                        }
+                        if(!rightStr) {
+                            node = ts.createBinary(node.left, ts.SyntaxKind.PlusToken, ts.createCall(ts.createIdentifier(TO_STR_FUNC), null, [node.right]));
+                        }
+                    }
+                }
                 break;
         }
 
         return node;
     }
 
+    private preprocessCallExpression(node: ts.CallExpression): ts.Expression {
+        if(node.pos < 0) {
+            return node;
+        }
+        if(node.getChildCount() < 2) {
+            return node;
+        }
+        let expr = node.getChildAt(0)
+        if(expr.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+            return node;
+        }
+
+        if(expr.getChildCount() < 2) {
+            return node;
+        }
+
+        let type = this.emitter.resolver.getTypeOf(expr.getChildAt(0))
+        let isString = this.emitter.resolver.isStringType(type);
+        let isNumber = this.emitter.resolver.isNumberType(type);
+        let methodName = expr.getChildAt(2).getText(node.getSourceFile())
+        if(!isString && !isNumber) {
+            return node;
+        }
+        let ident = ts.createIdentifier(`__ts_${isString ? 'string' : 'number'}_${methodName}`)
+        return ts.createCall(ident,node.typeArguments,[expr.getChildAt(0) as ts.Expression, ...node.arguments])
+    }
+
     private preprocessPropertyAccessExpression(node: ts.PropertyAccessExpression): ts.Expression {
+        if(node.pos >= 0) {
+            let firstChild = node.getChildAt(0)
+            let firstChildType = this.resolver.getTypeOf(firstChild);
+            if(this.resolver.isStringType(firstChildType)) {
+                let lastChild = node.getChildAt(node.getChildCount() - 1)
+                if(lastChild.pos >= 0 && lastChild.getText() == 'length') {
+                    return ts.createCall(ts.createIdentifier('__ts_string_length'),null,[node.getChildAt(0) as ts.Expression])
+                }
+            }
+        }
+
         let expression = <ts.Expression>node.expression;
         while (expression.kind === ts.SyntaxKind.ParenthesizedExpression) {
             expression = (<ts.ParenthesizedExpression>expression).expression;

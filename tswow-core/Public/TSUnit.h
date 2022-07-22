@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSArray.h"
 #include "TSWorldObject.h"
 #include "TSItem.h"
@@ -118,8 +117,8 @@ public:
     uint32 GetRaceMask();
     uint32 GetClassMask();
     uint32 GetCreatureType();
-    TSString GetClassAsString(uint8 locale);
-    TSString GetRaceAsString(uint8 locale);
+    std::string GetClassAsString(uint8 locale);
+    std::string GetRaceAsString(uint8 locale);
     uint32 GetFaction();
     TSAura  GetAura(uint32 spellID);
     TSArray<TSUnit> GetFriendlyUnitsInRange(float range);
@@ -132,7 +131,7 @@ public:
     void SetOwnerGUID(uint64 guid);
     void SetPvP(bool apply);
     void SetSheath(uint32 sheathed);
-    void SetName(TSString name);
+    void SetName(std::string const& name);
     void SetSpeed(uint32 type, float rate, bool forced);
     void SetFaction(uint32 factionId);
     void SetLevel(uint8 newlevel);
@@ -163,7 +162,7 @@ public:
     void EmoteState(uint32 emoteId);
     int32 CountPctFromCurHealth(int32 health);
     int32 CountPctFromMaxHealth(int32 health);
-    void SendChatMessageToPlayer(uint8 type, uint32 lang, TSString msg, TSPlayer target);
+    void SendChatMessageToPlayer(uint8 type, uint32 lang, std::string const& msg, TSPlayer target);
     void MoveStop();
     void MoveExpire(bool reset);
     void MoveClear(bool reset);
@@ -184,10 +183,10 @@ public:
     void JumpTo(TSWorldObject obj, float speedZ, bool withOrientation = false);
     void JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward = true);
 
-    void SendUnitWhisper(TSString msg, uint32 lang, TSPlayer receiver, bool bossWhisper);
-    void SendUnitEmote(TSString msg, TSUnit receiver, bool bossEmote);
-    void SendUnitSay(TSString msg, uint32 language);
-    void SendUnitYell(TSString msg, uint32 language);
+    void SendUnitWhisper(std::string const& msg, uint32 lang, TSPlayer receiver, bool bossWhisper);
+    void SendUnitEmote(std::string const& msg, TSUnit receiver, bool bossEmote);
+    void SendUnitSay(std::string const& msg, uint32 language);
+    void SendUnitYell(std::string const& msg, uint32 language);
     void DeMorph();
     void ClearInCombat();
     void StopSpellCast(uint32 spellId);
@@ -210,15 +209,5 @@ public:
     void SetArmor(int32 val);
 private:
     TSLua::Array<TSUnit> LGetControlled();
-    bool LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp);
-    bool LSetCharmedBy1(TSUnit charmer, uint32 type);
-
-    void LJump0(float speedXY, float speedZ, bool forward);
-    void LJump1(float speedXY, float speedZ);
-    void LJumpTo0(TSWorldObject obj, float speedZ, bool withOrientation);
-    void LJumpTo1(TSWorldObject obj, float speedZ);
-    void LJumpTo2(float x, float y, float z, float o, float speedXY, float speedZ, bool forward);
-    void LJumpTo3(float x, float y, float z, float o, float speedXY, float speedZ);
-
     friend class TSLua;
 };

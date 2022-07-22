@@ -130,9 +130,9 @@ bool TSMap::IsRaid()
  *
  * @return string mapName
  */
-TSString TSMap::GetName()
+std::string TSMap::GetName()
 {
-     return TSString(map->GetMapName());
+     return map->GetMapName();
 }
 
 /**
@@ -483,10 +483,6 @@ void TSMap::LDoDelayed(sol::function callback)
 #endif
 }
 
-std::string TSMap::LGetName()
-{
-    return GetName().std_str();
-}
 TSLua::Array<TSPlayer> TSMap::LGetPlayers0(uint32 team)
 {
     return sol::as_table(*GetPlayers(team).vec);

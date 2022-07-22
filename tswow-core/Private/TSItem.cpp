@@ -22,7 +22,6 @@
 
 #include "TSIncludes.h"
 #include "TSItem.h"
-#include "TSString.h"
 #include "TSPlayer.h"
 
 TSItem::TSItem(Item *item) : TSObject(item)
@@ -257,7 +256,7 @@ bool TSItem::IsConjuredConsumable()
  * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the [Item]'s name in
  * @return string itemLink
  */
-TSString TSItem::GetItemLink(uint8 locale)
+std::string TSItem::GetItemLink(uint8 locale)
 {
 #if TRINITY
     const ItemTemplate* temp = item->GetTemplate();
@@ -297,10 +296,10 @@ TSString TSItem::GetItemLink(uint8 locale)
         item->GetEnchantmentId(BONUS_ENCHANTMENT_SLOT) << ":" <<
         item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
         (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
-    return TSString(oss.str());
+    return oss.str();
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSItem::GetItemLink not implemented for AzerothCore");
-    return JSTR("");
+    return "";
 #endif
 }
 
@@ -418,9 +417,9 @@ uint32 TSItem::GetSubClass()
  *
  * @return string name
  */
-TSString TSItem::GetName()
+std::string TSItem::GetName()
 {
-     return TSString(item->GetTemplate()->Name1);
+     return item->GetTemplate()->Name1;
 }
 
 /**
@@ -688,30 +687,4 @@ TSItem CreateItem(uint32 entry, uint32 count)
 TSItemTemplate TSItem::GetTemplate()
 {
     return TSItemTemplate(item->GetTemplate());
-}
-
-// Inherited functions
-
-std::string TSItem::LGetItemLink(uint8 locale)
-{
-    return GetItemLink(locale).std_str();
-}
-
-std::string TSItem::LGetName()
-{
-    return GetName().std_str();
-}
-
-TSItem LCreateItem0(uint32 entry, uint32 count)
-{
-    return CreateItem(entry, count);
-}
-
-TSItem LCreateItem1(uint32 entry)
-{
-    return CreateItem(entry);
-}
-TSItem LCreateItem2()
-{
-    return CreateItem();
 }

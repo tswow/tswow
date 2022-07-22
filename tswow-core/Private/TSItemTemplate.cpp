@@ -58,9 +58,9 @@ void  TSItemTemplate::SetSoundOverrideSubclass(int32 value) {
     info->SoundOverrideSubclass = value;
     info->m_isDirty = true;
 };
-TSString TSItemTemplate::GetName() { return JSTR(info->Name1); };
-void TSItemTemplate::SetName(TSString name) {
-    info->Name1 = name->_value;
+std::string TSItemTemplate::GetName() { return info->Name1; };
+void TSItemTemplate::SetName(std::string const& name) {
+    info->Name1 = name;
     info->m_isDirty = true;
 };
 uint32 TSItemTemplate::GetDisplayInfoID() { return info->DisplayInfoID; };
@@ -243,9 +243,9 @@ void TSItemTemplate::SetBonding(uint32 value) {
     info->Bonding = value;
     info->m_isDirty = true;
 };
-TSString TSItemTemplate::GetDescription() { return JSTR(info->Description); };
-void TSItemTemplate::SetDescription(TSString desc) {
-    info->Description = desc->_value;
+std::string TSItemTemplate::GetDescription() { return info->Description; };
+void TSItemTemplate::SetDescription(std::string const& desc) {
+    info->Description = desc;
     info->m_isDirty = true;
 };
 uint32 TSItemTemplate::GetPageText() { return info->PageText; };
@@ -644,25 +644,6 @@ void TSItemTemplate::Save()
     TS_LOG_ERROR("tswow.api", "TSItemTemplate::SaveItemTemplate not implemented for AzerothCore");
 #endif
 
-}
-
-//Lua functions
-std::string TSItemTemplate::LGetName()
-{
-    return GetName().std_str();
-}
-
-std::string TSItemTemplate::LGetDescription()
-{
-    return GetDescription().std_str();
-}
-int32 TSItemTemplate::LGetFeralBonus0(int32 extraDPS)
-{
-    return GetFeralBonus(extraDPS);
-}
-int32 TSItemTemplate::LGetFeralBonus1()
-{
-    return GetFeralBonus();
 }
 
 void TSItemTemplate::InitializeQueryData()

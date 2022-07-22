@@ -37,7 +37,7 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 #endif
 }
 
-void SendWorldMessage(TSString string)
+void SendWorldMessage(std::string const& string)
 {
     sWorld->SendServerMessage(SERVER_MSG_STRING, string);
 }
@@ -53,11 +53,11 @@ uint64 GetUnixTime()
     return uint64(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
 }
 
-TSString SyncHttpGet(TSString url)
+std::string SyncHttpGet(std::string const& url)
 {
-    http::Request request{url.std_str()};
+    http::Request request{url};
     const auto response = request.send("GET");
-    return TSString(std::string{response.body.begin(), response.body.end()});
+    return std::string{response.body.begin(), response.body.end()};
 }
 
 bool TC_GAME_API IsGameEventActive(uint16_t event_id)
@@ -88,16 +88,6 @@ void StartGameEvent(uint16_t event_id)
 void StopGameEvent(uint16_t event_id)
 {
     sGameEventMgr->StopEvent(event_id, true);
-}
-
-void LSendWorldMessage(std::string const& string)
-{
-    SendWorldMessage(string);
-}
-
-std::string TC_GAME_API LSyncHttpGet(std::string const& url)
-{
-    return SyncHttpGet(url).std_str();
 }
 
 bool HAS_TAG(uint32_t id, std::initializer_list<uint32_t> const& list)

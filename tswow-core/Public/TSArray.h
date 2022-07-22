@@ -20,7 +20,6 @@
 #include <functional>
 #include <vector>
 #include <iostream>
-#include "TSString.h"
 #include "TSStringConvert.h"
 
 // After this many characters, use newlines when stringifying.
@@ -130,7 +129,6 @@ public:
   {
     vec->insert(vec->cbegin(), { args... });
   }
-
 
   TSArray slice(size_t first, size_t last)
   {
@@ -335,16 +333,16 @@ public:
     return os;
   }
 
-  TSString stringify(int indention = 0)
+  std::string stringify(int indention = 0)
   {
-    std::vector<TSString> strs;
+    std::vector<std::string> strs;
     strs.reserve(get_length());
     unsigned int size = 0;
     for (unsigned int i = 0; i < get_length(); ++i)
     {
       strs.push_back(ToStr((*vec)[i],indention));
-      size += strs[i].get_length() + 2; // 2 for " " and ","
-      if (size < ARRAY_STRING_OVERFLOW && strs[i].std_str().find("\n") != std::string::npos)
+      size += strs[i].size() + 2; // 2 for " " and ","
+      if (size < ARRAY_STRING_OVERFLOW && strs[i].find("\n") != std::string::npos)
       {
         size += ARRAY_STRING_OVERFLOW;
       }
@@ -352,7 +350,7 @@ public:
 
     bool multiline = size > ARRAY_STRING_OVERFLOW;
 
-    TSString str = JSTR("[");
+    std::string str = "[";
     if (multiline) str += "\n";
     for (unsigned int i = 0; i < get_length(); ++i)
     {
@@ -360,12 +358,12 @@ public:
       str += ToStr((*this)[i],indention+1);
       if (i < get_length() - 1)
       {
-        str += JSTR(",");
+        str += ",";
       }
       if (multiline) str += "\n";
     }
     if(multiline) str+= spaces(indention);
-    return str + JSTR("]");
+    return str + "]";
   }
 };
 

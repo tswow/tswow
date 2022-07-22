@@ -64,14 +64,14 @@ uint64 TSMail::GetReceiver()
     return mail->receiver;
 }
 
-TSString TSMail::GetSubject()
+std::string TSMail::GetSubject()
 {
-    return TSString(mail->subject);
+    return mail->subject;
 }
 
-TSString TSMail::GetBody()
+std::string TSMail::GetBody()
 {
-    return TSString(mail->body);
+    return mail->body;
 }
 
 TSArray<TSMailItemInfo> TSMail::GetItems()
@@ -161,14 +161,14 @@ void TSMail::SetSender(uint8 type, uint64 guid)
 #endif
 }
 
-void TSMail::SetSubject(TSString subject)
+void TSMail::SetSubject(std::string const& subject)
 {
-    mail->subject = subject.std_str();
+    mail->subject = subject;
 }
 
-void TSMail::SetBody(TSString body)
+void TSMail::SetBody(std::string const& body)
 {
-    mail->body = body.std_str();
+    mail->body = body;
 }
 
 void TSMail::SetState(uint8 state)
@@ -190,21 +190,21 @@ uint16 TSMailDraft::GetTemplateID()
 #endif
 }
 
-TSString TSMailDraft::GetSubject()
+std::string TSMailDraft::GetSubject()
 {
 #ifdef TRINITY
-    return TSString(draft->m_subject);
+    return draft->m_subject;
 #elif AZEROTHCORE
-    return TSString(draft->GetSubject());
+    return draft->GetSubject();
 #endif
 }
 
-TSString TSMailDraft::GetBody()
+std::string TSMailDraft::GetBody()
 {
 #ifdef TRINITY
-    return TSString(draft->m_body);
+    return draft->m_body;
 #elif AZEROTHCORE
-    return TSString(draft->GetBody());
+    return draft->GetBody();
 #endif
 }
 
@@ -250,19 +250,19 @@ void TSMailDraft::SetTemplateID(uint16 id)
 #endif
 }
 
-void TSMailDraft::SetSubject(TSString subject)
+void TSMailDraft::SetSubject(std::string const& subject)
 {
 #if TRINITY
-    draft->m_subject = subject.std_str();
+    draft->m_subject = subject;
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSMailDraft::SetSubject not implemented for AzerothCore");
 #endif
 }
 
-void TSMailDraft::SetBody(TSString body)
+void TSMailDraft::SetBody(std::string const& body)
 {
 #if TRINITY
-    draft->m_body = body.std_str();
+    draft->m_body = body;
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSMailDraft::SetBody not implemented for AzerothCore");
 #endif
@@ -293,15 +293,6 @@ void TSMailDraft::FilterItems(std::function<bool(TSItem)> predicate)
     }
 }
 
-std::string TSMail::LGetSubject()
-{
-    return GetSubject().std_str();
-}
-
-std::string TSMail::LGetBody()
-{
-    return GetBody().std_str();
-}
 TSLua::Array<TSMailItemInfo> TSMail::LGetItems()
 {
     return sol::as_table(*GetItems().vec);
@@ -312,43 +303,11 @@ void TSMail::LFilterItems(sol::protected_function predicate)
         return predicate(item);
     });
 }
-void TSMail::LAddItem0(uint32 entry, uint8 count, TSPlayer player)
-{
-    return AddItem(entry, count, player);
-}
-void TSMail::LAddItem1(uint32 entry, uint8 count)
-{
-    return AddItem(entry, count);
-}
-void TSMail::LSetSubject(std::string const& subject)
-{
-    SetSubject(subject);
-}
-void TSMail::LSetBody(std::string const& body)
-{
-    SetBody(body);
-}
-
-std::string TSMailDraft::LGetSubject()
-{
-    return GetSubject().std_str();
-}
-std::string TSMailDraft::LGetBody()
-{
-    return GetSubject().std_str();
-}
 TSLua::Array<uint64> TSMailDraft::LGetItemKeys()
 {
     return sol::as_table(*GetItemKeys().vec);
 }
-void TSMailDraft::LAddItem0(uint32 entry, uint8 count, TSPlayer player)
-{
-    AddItem(entry, count, player);
-}
-void TSMailDraft::LAddItem1(uint32 entry, uint8 count)
-{
-    AddItem(entry, count);
-}
+
 void TSMailDraft::LFilterItems(sol::protected_function predicate)
 {
     FilterItems([predicate](auto const& item) {

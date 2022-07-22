@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSUnit.h"
 #include "TSPlayer.h"
 #include "TSItem.h"
@@ -56,8 +55,8 @@ struct TC_GAME_API TSMail {
     uint32 GetCOD();
     uint32 GetChecked();
 
-    TSString GetSubject();
-    TSString GetBody();
+    std::string GetSubject();
+    std::string GetBody();
 
     TSArray<TSMailItemInfo> GetItems();
     uint32 GetItemCount();
@@ -68,19 +67,13 @@ struct TC_GAME_API TSMail {
     void SetCOD(uint32 cod);
     void SetChecked(uint32 checked);
     void SetSender(uint8 type, uint64 guid);
-    void SetSubject(TSString subject);
-    void SetBody(TSString body);
+    void SetSubject(std::string const& subject);
+    void SetBody(std::string const& body);
     void SetState(uint8 state);
 
 private:
-    std::string LGetSubject();
-    std::string LGetBody();
     TSLua::Array<TSMailItemInfo> LGetItems();
     void LFilterItems(sol::protected_function predicate);
-    void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
-    void LAddItem1(uint32 entry, uint8 count);
-    void LSetSubject(std::string const& subject);
-    void LSetBody(std::string const& body);
     friend class TSLua;
 };
 
@@ -94,24 +87,20 @@ struct TC_GAME_API TSMailDraft {
     bool operator==(TSMailDraft const& rhs) { return draft == rhs.draft; }
 
     uint16 GetTemplateID();
-    TSString GetSubject();
-    TSString GetBody();
+    std::string GetSubject();
+    std::string GetBody();
     uint32 GetMoney();
     uint32 GetCOD();
     TSArray<uint64> GetItemKeys();
     TSItem GetItem(uint64 item);
 
     void SetTemplateID(uint16 id);
-    void SetSubject(TSString subject);
-    void SetBody(TSString body);
+    void SetSubject(std::string const& subject);
+    void SetBody(std::string const& body);
     void AddItem(uint32 entry, uint8 count, TSPlayer player = TSPlayer(nullptr));
     void FilterItems(std::function<bool(TSItem)> predicate);
 private:
-    std::string LGetSubject();
-    std::string LGetBody();
     TSLua::Array<uint64> LGetItemKeys();
-    void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
-    void LAddItem1(uint32 entry, uint8 count);
     void LFilterItems(sol::protected_function predicate);
     friend class TSLua;
 };

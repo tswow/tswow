@@ -49,12 +49,8 @@ struct TC_GAME_API TSCondition {
     uint32 GetScriptID();
     uint8 GetConditionTarget();
     bool IsNegativeCondition();
-    TSString ToString(bool ext = false);
+    std::string ToString(bool ext = false);
     bool IsNull();
-private:
-    std::string LToString0(bool ext);
-    std::string LToString1();
-    friend class TSLua;
 };
 
 struct ConditionSourceInfo;

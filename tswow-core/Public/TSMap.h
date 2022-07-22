@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSArray.h"
 #include "TSClasses.h"
 #include "TSEntity.h"
@@ -48,7 +47,7 @@ public:
     bool IsEmpty();
     bool IsHeroic();
     bool IsRaid();
-    TSString GetName();
+    std::string GetName();
     float GetHeight(float x, float y, uint32 phasemask);
     int32 GetDifficulty();
     uint32 GetInstanceID();
@@ -75,8 +74,6 @@ public:
     TSEntity * GetData();
     void DoDelayed(std::function<void(TSMap, TSMainThreadContext)> callback);
 private:
-    std::string LGetName();
-
     void LDoDelayed(sol::function callback);
 
     TSLua::Array<TSPlayer> LGetPlayers0(uint32 team);

@@ -1066,15 +1066,15 @@ uint32 TSUnit::GetCreatureType()
  * @param [LocaleConstant] locale = DEFAULT_LOCALE
  * @return string className : class name or nil
  */
-TSString TSUnit::GetClassAsString(uint8 locale)
+std::string TSUnit::GetClassAsString(uint8 locale)
 {
 
 #ifdef TRINITY
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
-    return TSString(entry->Name[locale]);
+    return entry->Name[locale];
 #elif AZEROTHCORE
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
-    return TSString(entry->name[locale]);
+    return entry->name[locale];
 #endif
 }
 
@@ -1098,15 +1098,15 @@ TSString TSUnit::GetClassAsString(uint8 locale)
  * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the race name in
  * @return string raceName : race name or nil
  */
-TSString TSUnit::GetRaceAsString(uint8 locale)
+std::string TSUnit::GetRaceAsString(uint8 locale)
 {
 
 #ifdef TRINITY
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
-    return TSString(entry->Name[locale]);
+    return entry->Name[locale];
 #elif AZEROTHCORE
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
-    return TSString(entry->name[locale]);
+    return entry->name[locale];
 #endif
 }
 
@@ -1304,7 +1304,7 @@ void TSUnit::SetSheath(uint32 sheathed)
  *
  * @param string name : new name
  */
-void TSUnit::SetName(TSString name)
+void TSUnit::SetName(std::string const& name)
 {
     if (name.length() > 0)
         unit->SetName(name.c_str());
@@ -1811,11 +1811,9 @@ int32 TSUnit::CountPctFromMaxHealth(int32 health)
  * @param string msg
  * @param [Player] target
  */
-void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang,TSString _msg,TSPlayer _target)
+void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang, std::string const& msg,TSPlayer _target)
 {
     auto target = _target.player;
-    auto msg = _msg._value;
-
 
     WorldPacket data;
 #if TRINITY
@@ -2014,11 +2012,11 @@ Position pos(x, y, z);
  * @param [Player] receiver : specific [Unit] to receive the message
  * @param bool bossWhisper = false : is a boss whisper
  */
-void TSUnit::SendUnitWhisper(TSString msg,uint32 lang,TSPlayer _receiver,bool bossWhisper)
+void TSUnit::SendUnitWhisper(std::string const& msg,uint32 lang,TSPlayer _receiver,bool bossWhisper)
 {
     auto receiver = _receiver.player;
-    if (msg.get_length() > 0)
-        unit->Whisper(msg._value.c_str(), (Language)lang, receiver, bossWhisper);
+    if (msg.size() > 0)
+        unit->Whisper(msg.c_str(), (Language)lang, receiver, bossWhisper);
 }
 
 /**
@@ -2028,11 +2026,11 @@ void TSUnit::SendUnitWhisper(TSString msg,uint32 lang,TSPlayer _receiver,bool bo
  * @param [Unit] receiver = nil : specific [Unit] to receive the message
  * @param bool bossEmote = false : is a boss emote
  */
-void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
+void TSUnit::SendUnitEmote(std::string const& msg,TSUnit _receiver,bool bossEmote)
 {
     auto receiver = _receiver.unit;
     if (msg.length() > 0)
-        unit->TextEmote(msg.std_str(), receiver, bossEmote);
+        unit->TextEmote(msg, receiver, bossEmote);
 }
 
 /**
@@ -2041,7 +2039,7 @@ void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
  * @param string msg : message for the [Unit] to say
  * @param uint32 language : language for the [Unit] to speak
  */
-void TSUnit::SendUnitSay(TSString msg,uint32 language)
+void TSUnit::SendUnitSay(std::string const& msg,uint32 language)
 {
     if (msg.length() > 0)
         unit->Say(msg.c_str(), (Language)language, unit);
@@ -2053,10 +2051,10 @@ void TSUnit::SendUnitSay(TSString msg,uint32 language)
  * @param string msg : message for the [Unit] to yell
  * @param uint32 language : language for the [Unit] to speak
  */
-void TSUnit::SendUnitYell(TSString msg,uint32 language)
+void TSUnit::SendUnitYell(std::string const& msg,uint32 language)
 {
     if (msg.length() > 0)
-        unit->Yell(msg.std_str(), (Language)language, unit);
+        unit->Yell(msg, (Language)language, unit);
 }
 
 /**
@@ -2571,16 +2569,6 @@ void TSUnit::RemoveCharmedBy(TSUnit charmer)
     unit->RemoveCharmedBy(charmer.unit);
 }
 
-bool TSUnit::LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp)
-{
-    return SetCharmedBy(charmer, type, aurApp);
-}
-
-bool TSUnit::LSetCharmedBy1(TSUnit charmer, uint32 type)
-{
-    return SetCharmedBy(charmer, type);
-}
-
 void TSUnit::KnockbackFrom(float x, float y, float speedXY, float speedZ)
 {
     unit->KnockbackFrom(x, y, speedXY, speedZ);
@@ -2599,33 +2587,4 @@ void TSUnit::JumpTo(TSWorldObject obj, float speedZ, bool withOrientation)
 void TSUnit::JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward)
 {
     unit->JumpTo(speedXY, speedZ, forward, Position{ x,y,z });
-}
-
-void TSUnit::LJump0(float speedXY, float speedZ, bool forward)
-{
-    Jump(speedXY, speedZ, forward);
-}
-
-void TSUnit::LJump1(float speedXY, float speedZ)
-{
-    Jump(speedXY, speedZ);
-}
-void TSUnit::LJumpTo0(TSWorldObject obj, float speedZ, bool withOrientation)
-{
-    JumpTo(obj, speedZ, withOrientation);
-}
-
-void TSUnit::LJumpTo1(TSWorldObject obj, float speedZ)
-{
-    JumpTo(obj, speedZ);
-}
-
-void TSUnit::LJumpTo2(float x, float y, float z, float o, float speedXY, float speedZ, bool forward)
-{
-    JumpTo(x, y, z, o, speedXY, speedZ, forward);
-}
-
-void TSUnit::LJumpTo3(float x, float y, float z, float o, float speedXY, float speedZ)
-{
-    JumpTo(x, y, z, o, speedXY, speedZ);
 }

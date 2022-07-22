@@ -24,7 +24,6 @@
 #include <regex>
 #include <memory>
 #include "TSMain.h"
-#include "TSString.h"
 
 #if TRINITY
 
@@ -39,16 +38,16 @@ public:
 class TC_GAME_API TSAssert {
 public:
     TSAssert * operator->() { return this; }
-    void IsTrue(bool expression, TSString message = JSTR(""));
-    void IsFalse(bool expression, TSString message = JSTR(""));
-    void HasSpell(TSPlayer player, uint32_t spellId, TSString message = JSTR(""));
-    void HasItem(TSPlayer player, uint32_t itemId, uint32_t count = 1, bool checkBank = false, TSString message = JSTR(""));
+    void IsTrue(bool expression, std::string const& message = "");
+    void IsFalse(bool expression, std::string const& message = "");
+    void HasSpell(TSPlayer player, uint32_t spellId, std::string message = "");
+    void HasItem(TSPlayer player, uint32_t itemId, uint32_t count = 1, bool checkBank = false, std::string message = "");
     template <typename T>
-    void Equals(T a, T b, TSString message = JSTR(""))
+    void Equals(T a, T b, std::string const& message = "")
     {
         if (a != b)
         {
-            throw TSTestException(message.std_str());
+            throw TSTestException(message);
         }
     }
 };
@@ -116,7 +115,7 @@ public:
         , uint32_t stepIndex
     );
     TSManualStepBuilder * operator->() { return this; }
-    TSManualStepBuilder * description(TSString description);
+    TSManualStepBuilder * description(std::string const& description);
     TSManualStepBuilder * setup(TSStepSetup setup);
     TSManualStepBuilder * verify(TSTestCallback verify);
 };
@@ -133,8 +132,8 @@ public:
         , std::string const& testName
     );
     TSManualTestBuilder * operator->() { return this; }
-    TSManualTestBuilder * step(TSString name, TSString description);
-    TSManualTestBuilder * step(TSString name, TSStepBuilderCallback callback);
+    TSManualTestBuilder * step(std::string const& name, std::string const& description);
+    TSManualTestBuilder * step(std::string const& name, TSStepBuilderCallback callback);
 };
 
 void TC_GAME_API ClearTest(std::string name);

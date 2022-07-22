@@ -1750,7 +1750,7 @@ export class Emitter {
                      : name
              }
             if(!useAuto && dictMatch) {
-                this.writer.writeString(`TSDictionary<${dictMatch[1] === 'string' ? 'TSString' : dictMatch[1]},${sharedPtrStr(dictMatch[2])}> `)
+                this.writer.writeString(`TSDictionary<${dictMatch[1] === 'string' ? 'std::string' : dictMatch[1]},${sharedPtrStr(dictMatch[2])}> `)
             } else if(arrMatch) {
                 this.writer.writeString(`TSArray<${sharedPtrStr(arrMatch[1])}> `)
             } else {
@@ -1983,7 +1983,7 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.StringLiteral:
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('TSString');
+                this.writer.writeString('std::string');
                 break;
             case ts.SyntaxKind.TypeLiteral:
             case ts.SyntaxKind.ObjectLiteralExpression:
@@ -2323,7 +2323,7 @@ export class Emitter {
                 this.writer.writeString('0');
                 break;
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('JSTR("")');
+                this.writer.writeString('""');
                 break;
             case ts.SyntaxKind.ArrayType:
                 this.writer.writeString('{}');
@@ -2484,7 +2484,7 @@ export class Emitter {
                     this.writer.writeString('void');
                 } else {
                     if (isClassMember && (<ts.Identifier>node.name).text === 'toString') {
-                        this.writer.writeString('TSString');
+                        this.writer.writeString('std::string');
                     } else {
                         // todo: possible to deduce from return statements?
                         this.error(
@@ -3193,8 +3193,8 @@ export class Emitter {
             this.writer.writeString('static ');
         }
 
-        this.writer.writeString(`TSDictionary<TSString,uint32>`
-            +` ${switchName} = CreateDictionary<TSString,uint32>(`);
+        this.writer.writeString(`TSDictionary<std::string,uint32>`
+            +` ${switchName} = CreateDictionary<std::string,uint32>(`);
         this.writer.BeginBlock();
 
         let caseNumber = 0;
@@ -3301,7 +3301,7 @@ export class Emitter {
 
     processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
-        this.writer.writeString(`JSTR("${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}")`);
+        this.writer.writeString(`"${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}"`);
     }
 
     processNoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral): void {
@@ -3613,7 +3613,7 @@ export class Emitter {
                 switch (identifier.text) {
                     case 'Number':
                     case 'String':
-                        this.writer.writeString('TSString');
+                        this.writer.writeString('std::string');
                         break;
                     case 'Boolean':
                         this.writer.writeString('js::');
@@ -3729,14 +3729,14 @@ export class Emitter {
         this.processExpression(node.arguments[1]);
         this.writer.writeString(`;})`);
     }
-    // @swow-end
+    // @tswow-end
 
     processCallExpression(node: ts.CallExpression | ts.NewExpression): void {
         // @tswow-begin
         if(handleTSWoWOverride(this, node)) {
             return;
         }
-        if(node.getChildCount()>0) {
+        if(node.pos > 0 && node.getChildCount()>0) {
             let fsChild = node.getChildAt(0);
             if(fsChild.getChildCount()>0) {
                 let lsGrandchild = fsChild.getChildAt(fsChild.getChildCount()-1);

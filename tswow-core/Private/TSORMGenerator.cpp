@@ -27,11 +27,11 @@ static std::shared_ptr<TSDatabaseResult> query(DatabaseType m_type, std::string 
     switch(m_type)
     {
         case DatabaseType::AUTH:
-            return QueryAuth(TSString(value));
+            return QueryAuth(value);
         case DatabaseType::CHARACTERS:
-            return QueryCharacters(TSString(value));
+            return QueryCharacters(value);
         case DatabaseType::WORLD:
-            return QueryWorld(TSString(value));
+            return QueryWorld(value);
         default: throw std::out_of_range("DatabaseSpec::m_type");
     }
 }

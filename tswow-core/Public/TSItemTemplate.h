@@ -41,8 +41,8 @@ public:
     void SetSubClass(uint32 value);
     int32  GetSoundOverrideSubclass();
     void SetSoundOverrideSubclass(int32 value);
-    TSString GetName();
-    void SetName(TSString name);
+    std::string GetName();
+    void SetName(std::string const& name);
     uint32 GetDisplayInfoID();
     void SetDisplayInfoID(uint32 value);
     uint32 GetQuality();
@@ -119,8 +119,8 @@ public:
     void SetRangedModRange(float value);
     uint32 GetBonding();
     void SetBonding(uint32 value);
-    TSString GetDescription();
-    void SetDescription(TSString value);
+    std::string GetDescription();
+    void SetDescription(std::string const& value);
     uint32 GetPageText();
     void SetPageText(uint32 value);
     uint32 GetLanguageID();
@@ -224,12 +224,6 @@ public:
     ItemTemplate* _GetInfo();
     void InitializeQueryData();
     void Save();
-private:
-    std::string LGetName();
-    std::string LGetDescription();
-    int32 LGetFeralBonus0(int32 extraDPS);
-    int32 LGetFeralBonus1();
-    friend class TSLua;
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);

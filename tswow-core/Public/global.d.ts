@@ -28,7 +28,6 @@ type uint64 = number;
 type int64 = number;
 type bool = boolean;
 type TSArray<T> = T[];
-type TSString = string;
 
 declare const BROADCAST_PHASE_ID: uint32;
 
@@ -220,7 +219,7 @@ declare interface TSAchievementEntry
     GetEntry(): uint32;
     GetFaction(): int32;
     GetInstanceID(): int32;
-    GetTitles(): TSArray<TSString>;
+    GetTitles(): TSArray<string>;
     GetCategory(): uint32;
     GetPoints(): uint32;
     GetFlags(): uint32;
@@ -7404,7 +7403,7 @@ declare interface TSCondition {
     GetScriptID(): uint32;
     GetConditionTarget(): uint8
     IsNegativeCondition(): bool
-    ToString(ext?: bool): TSString
+    ToString(ext?: bool): string
     IsNull(): bool
 }
 

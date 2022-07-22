@@ -15,7 +15,6 @@
  */
 #pragma once
 
-#include "TSString.h"
 #include "TSMain.h"
 #include <memory>
 #include <string>
@@ -41,14 +40,10 @@ public:
     virtual float GetFloat(int index) = 0;
     virtual double GetDouble(int index) = 0;
 
-    virtual TSString GetString(int index) = 0;
+    virtual std::string GetString(int index) = 0;
 
     virtual bool GetRow() = 0;
     virtual bool IsValid() = 0;
-
-private:
-    std::string LGetString(int index);
-    friend class TSLua;
 };
 
 class TC_GAME_API TSPreparedStatementBase;
@@ -124,18 +119,11 @@ public:
     TSPreparedStatementBase * SetFloat(const uint8 index, const float value);
     TSPreparedStatementBase * SetDouble(const uint8 index, const double value);
 
-    TSPreparedStatementBase * SetString(const uint8 index, TSString value);
+    TSPreparedStatementBase * SetString(const uint8 index, std::string const& value);
     TSPreparedStatementBase * operator->() { return this; }
 private:
     PreparedStatementBase* m_statement;
     TSPreparedStatement* m_holder;
-
-    std::shared_ptr<TSDatabaseResult> LSend0();
-    std::shared_ptr<TSDatabaseResult> LSend1(TSWorldDatabaseConnection& con);
-    std::shared_ptr<TSDatabaseResult> LSend2(TSAuthDatabaseConnection& con);
-    std::shared_ptr<TSDatabaseResult> LSend3(TSCharactersDatabaseConnection& con);
-    TSPreparedStatementBase * LSetString(const uint8 index, std::string const& value);
-
     friend class TSPreparedStatement;
     friend class TSPreparedStatementWorld;
     friend class TSPreparedStatementCharacters;
@@ -143,7 +131,6 @@ private:
     friend struct TSWorldDatabaseConnection;
     friend struct TSAuthDatabaseConnection;
     friend struct TSCharactersDatabaseConnection;
-    friend class TSLua;
 };
 
 class TC_GAME_API TSDatabaseConnectionInfo {
@@ -155,24 +142,15 @@ public:
 
     TSDatabaseConnectionInfo* operator->() { return this; }
 
-    TSString User();
-    TSString Password();
-    TSString Database();
-    TSString Host();
-    TSString PortOrSocket();
-    TSString SSL();
+    std::string User();
+    std::string Password();
+    std::string Database();
+    std::string Host();
+    std::string PortOrSocket();
+    std::string SSL();
 
 private:
     MySQLConnectionInfo const* _info;
-
-    std::string LUser();
-    std::string LPassword();
-    std::string LDatabase();
-    std::string LHost();
-    std::string LPortOrSocket();
-    std::string LSSL();
-
-    friend class TSLua;
 };
 
 class WorldDatabaseConnection;
@@ -183,63 +161,43 @@ struct TC_GAME_API TSWorldDatabaseConnection {
     WorldDatabaseConnection* m_connection;
     TSWorldDatabaseConnection(WorldDatabaseConnection*);
     TSWorldDatabaseConnection* operator->() { return this; }
-    std::shared_ptr<TSDatabaseResult> Query(TSString sql);
+    std::shared_ptr<TSDatabaseResult> Query(std::string const& sql);
     std::shared_ptr<TSDatabaseResult> Query(TSPreparedStatementBase * stmnt);
     void Unlock();
-private:
-    std::shared_ptr<TSDatabaseResult> LQuery0(std::string const& sql);
-    std::shared_ptr<TSDatabaseResult> LQuery1(TSPreparedStatementBase * stmnt);
-    friend class TSLua;
 };
 
 struct TC_GAME_API TSAuthDatabaseConnection {
     LoginDatabaseConnection* m_connection;
     TSAuthDatabaseConnection(LoginDatabaseConnection*);
     TSAuthDatabaseConnection* operator->() { return this; }
-    std::shared_ptr<TSDatabaseResult> Query(TSString sql);
+    std::shared_ptr<TSDatabaseResult> Query(std::string const& sql);
     std::shared_ptr<TSDatabaseResult> Query(TSPreparedStatementBase * stmnt);
     void Unlock();
-private:
-    std::shared_ptr<TSDatabaseResult> LQuery0(std::string const& sql);
-    std::shared_ptr<TSDatabaseResult> LQuery1(TSPreparedStatementBase* stmnt);
-    friend class TSLua;
 };
 
 struct TC_GAME_API TSCharactersDatabaseConnection {
     CharacterDatabaseConnection* m_connection;
     TSCharactersDatabaseConnection(CharacterDatabaseConnection*);
     TSCharactersDatabaseConnection* operator->() { return this; }
-    std::shared_ptr<TSDatabaseResult> Query(TSString sql);
+    std::shared_ptr<TSDatabaseResult> Query(std::string const& sql);
     std::shared_ptr<TSDatabaseResult> Query(TSPreparedStatementBase * stmnt);
     void Unlock();
-private:
-    std::shared_ptr<TSDatabaseResult> LQuery0(std::string const& sql);
-    std::shared_ptr<TSDatabaseResult> LQuery1(TSPreparedStatementBase* stmnt);
-    friend class TSLua;
 };
 
 TC_GAME_API TSWorldDatabaseConnection GetWorldDBConnection();
 TC_GAME_API TSAuthDatabaseConnection GetAuthDBConnection();
 TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection();
 
-TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryWorld(TSString query);
-TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryCharacters(TSString query);
-TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryAuth(TSString query);
+TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryWorld(std::string const& query);
+TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryCharacters(std::string const& query);
+TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryAuth(std::string const& query);
 
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> WorldDatabaseInfo();
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> CharactersDatabaseInfo();
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> AuthDatabaseInfo();
 
-TC_GAME_API TSPreparedStatementWorld PrepareWorldQuery(TSString query);
-TC_GAME_API TSPreparedStatementCharacters PrepareCharactersQuery(TSString query);
-TC_GAME_API TSPreparedStatementAuth PrepareAuthQuery(TSString query);
-
-TC_GAME_API std::shared_ptr<TSDatabaseResult> LQueryWorld(std::string const& query);
-TC_GAME_API std::shared_ptr<TSDatabaseResult> LQueryCharacters(std::string const& query);
-TC_GAME_API std::shared_ptr<TSDatabaseResult> LQueryAuth(std::string const& query);
-
-TC_GAME_API TSPreparedStatementWorld LPrepareWorldQuery(std::string const& query);
-TC_GAME_API TSPreparedStatementCharacters LPrepareCharactersQuery(std::string const& query);
-TC_GAME_API TSPreparedStatementAuth LPrepareAuthQuery(std::string const& query);
+TC_GAME_API TSPreparedStatementWorld PrepareWorldQuery(std::string const& query);
+TC_GAME_API TSPreparedStatementCharacters PrepareCharactersQuery(std::string const& query);
+TC_GAME_API TSPreparedStatementAuth PrepareAuthQuery(std::string const& query);
 
 #define LoadRows(cls,query) cls::Load(query)

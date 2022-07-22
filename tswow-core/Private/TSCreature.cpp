@@ -542,9 +542,9 @@ TSPlayer  TSCreature::GetLootRecipient()
  *
  * @return string scriptName
  */
-TSString TSCreature::GetScriptName()
+std::string TSCreature::GetScriptName()
 {
-     return TSString(creature->GetScriptName());
+     return creature->GetScriptName();
 }
 
 /**
@@ -556,9 +556,9 @@ TSString TSCreature::GetScriptName()
  *
  * @return string AIName
  */
-TSString TSCreature::GetAIName()
+std::string TSCreature::GetAIName()
 {
-     return TSString(creature->GetAIName());
+     return creature->GetAIName();
 }
 
 /**
@@ -1443,32 +1443,7 @@ TSOutfit TSCreature::GetOutfitCopy(Outfit settings, int32_t race, int32_t gender
 #endif
 }
 
-
-TSOutfit TSCreature::LGetOutfitCopy0(Outfit settings, int32_t race, int32_t gender)
-{
-    return GetOutfitCopy(settings, race, gender);
-}
-TSOutfit TSCreature::LGetOutfitCopy1(Outfit settings, int32_t race)
-{
-    return GetOutfitCopy(settings, race);
-}
-TSOutfit TSCreature::LGetOutfitCopy2(Outfit settings)
-{
-    return GetOutfitCopy(settings);
-}
-TSOutfit TSCreature::LGetOutfitCopy3()
-{
-    return GetOutfitCopy();
-}
 TSLua::Array<TSUnit> TSCreature::LGetAITargets()
 {
     return sol::as_table(*GetAITargets().vec);
-}
-std::string TSCreature::LGetScriptName()
-{
-    return GetScriptName().std_str();
-}
-std::string TSCreature::LGetAIName()
-{
-    return GetScriptName().std_str();
 }

@@ -8,7 +8,7 @@ void TSLua::load_gameobject_template_methods(sol::state& state)
     LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetType);
     LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetDisplayID);
     LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetGOData);
-    ts_gameobjecttemplate.set_function("GetName", &TSGameObjectTemplate::LGetName);
-    ts_gameobjecttemplate.set_function("GetIconName", &TSGameObjectTemplate::LGetIconName);
-    ts_gameobjecttemplate.set_function("GetCastBarCaption", &TSGameObjectTemplate::LGetCastBarCaption);
+    LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetName);
+    LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetIconName);
+    LUA_FIELD(ts_gameobjecttemplate, TSGameObjectTemplate, GetCastBarCaption);
 }

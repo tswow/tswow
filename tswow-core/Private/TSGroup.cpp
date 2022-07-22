@@ -213,9 +213,9 @@ uint64 TSGroup::GetGUID()
  * @param string name : the [Player]'s name
  * @return uint64 memberGUID
  */
-uint64 TSGroup::GetMemberGUID(TSString name)
+uint64 TSGroup::GetMemberGUID(std::string const& name)
 {
-    return TS_GUID(group->GetMemberGUID(name._value));
+    return TS_GUID(group->GetMemberGUID(name));
 }
 
 /**
@@ -360,9 +360,4 @@ void TSGroup::SetTargetIcon(uint8 icon,uint64 target,uint64 setter)
 TSLua::Array<TSPlayer> TSGroup::LGetMembers()
 {
     return sol::as_table(*GetMembers().vec);
-}
-
-void TSGroup::LSendPacket(TSWorldPacket data, bool ignorePlayersInBg, uint64 ignore)
-{
-    SendPacket(data, ignorePlayersInBg, ignore);
 }

@@ -73,24 +73,24 @@ uint32 TSCreatureTemplate::GetModelID4()
     return ct->Modelid4;
 }
 
-TSString TSCreatureTemplate::GetName()
+std::string TSCreatureTemplate::GetName()
 {
-    return JSTR(ct->Name);
+    return ct->Name;
 }
 
-TSString TSCreatureTemplate::GetTitle()
+std::string TSCreatureTemplate::GetTitle()
 {
 #if TRINITY
-    return JSTR(ct->Title);
+    return ct->Title;
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TScreatureTemplate::GetTitle not implemented for AzerothCore.");
-    return JSTR("");
+    return "";
 #endif
 }
 
-TSString TSCreatureTemplate::GetIconName()
+std::string TSCreatureTemplate::GetIconName()
 {
-    return JSTR(ct->IconName);
+    return ct->IconName;
 }
 uint32 TSCreatureTemplate::GetGossipMenuID()
 {
@@ -269,7 +269,7 @@ uint32 TSCreatureTemplate::GetMaxGold()
 {
     return ct->maxgold;
 }
-TSString TSCreatureTemplate::GetAIName()
+std::string TSCreatureTemplate::GetAIName()
 {
     return ct->AIName;
 }
@@ -426,21 +426,3 @@ TSCreatureTemplate GetCreatureTemplate(uint32 entry)
     return TSCreatureTemplate(
         const_cast<CreatureTemplate*>(sObjectMgr->GetCreatureTemplate(entry)));
 }
-
-std::string TSCreatureTemplate::LGetName()
-{
-    return GetName().std_str();
-}
-std::string TSCreatureTemplate::LGetTitle()
-{
-    return GetTitle().std_str();
-}
-std::string TSCreatureTemplate::LGetIconName()
-{
-    return GetIconName().std_str();
-}
-std::string TSCreatureTemplate::LGetAIName()
-{
-    return GetAIName().std_str();
-}
-

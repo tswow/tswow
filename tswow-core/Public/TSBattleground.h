@@ -18,7 +18,6 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
-#include "TSString.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 #include "TSMap.h"
@@ -57,7 +56,7 @@ public:
     operator bool() const { return map != nullptr && bg != nullptr; }
     TSBattleground* operator->() { return this;}
     uint32 GetBracketID();
-    TSString GetBGName();
+    std::string GetBGName();
     uint32 GetAlivePlayersCountByTeam(uint32 team);
     uint32 GetBonusHonorFromKillCount(uint32 kills);
     uint32 GetEndTime();
@@ -117,48 +116,4 @@ public:
 
     TSGameObject GetBGGameObject(uint32 type, bool logErrors = false);
     TSCreature GetBGCreature(uint32 type, bool logErrors = false);
-private:
-    std::string LGetBGName();
-
-    void LPlaySound0(uint32 sound, uint32 team);
-    void LPlaySound1(uint32 sound);
-
-    void LCastSpell0(uint32 spell, uint32 team);
-    void LCastSpell1(uint32 spell);
-
-    void LRemoveAura0(uint32 aura, uint32 team);
-    void LRemoveAura1(uint32 aura);
-
-    void LRewardHonor0(uint32 honor, uint32 team);
-    void LRewardHonor1(uint32 honor);
-
-    void LRewardReputation0(uint32 faction, uint32 reputation, uint32 team);
-    void LRewardReputation1(uint32 faction, uint32 reputation);
-
-    void LEndBG0(uint32 winnerTeam);
-    void LEndBG1();
-
-    uint32 LGetBGPlayerCount0(uint32 team);
-    uint32 LGetBGPlayerCount1();
-
-    uint32 LGetBGAlivePlayerCount0(uint32 team);
-    uint32 LGetBGAlivePlayerCount1();
-
-    TSCreature LAddCreature0(uint32 entry, uint32 type, float x, float y, float z, float o, uint32 respawnTime, uint32 teamId);
-    TSCreature LAddCreature1(uint32 entry, uint32 type, float x, float y, float z, float o, uint32 respawnTime);
-    TSCreature LAddCreature2(uint32 entry, uint32 type, float x, float y, float z, float o);
-
-    bool LAddObject0(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3, uint32 respawnTime, uint32 goState);
-    bool LAddObject1(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3, uint32 respawnTime);
-    bool LAddObject2(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3);
-
-    void LAddSpiritGuide0(uint32 type, float x, float y, float z, float o, uint32 teamId);
-    void LAddSpiritGuide1(uint32 type, float x, float y, float z, float o);
-
-    TSGameObject LGetBGGameObject0(uint32 type, bool logErrors);
-    TSGameObject LGetBGGameObject1(uint32 type);
-
-    TSCreature LGetBGCreature0(uint32 type, bool logErrors);
-    TSCreature LGetBGCreature1(uint32 type);
-    friend class TSLua;
 };

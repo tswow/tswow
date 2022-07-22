@@ -34,9 +34,9 @@ void TSLua::load_map_methods_t(sol::state& state, sol::usertype<T> & target, std
     LUA_FIELD(target, TSMap, GetAreaID);
     LUA_FIELD(target, TSMap, GetWorldObject);
     LUA_FIELD(target, TSMap, SetWeather);
+    LUA_FIELD(target, TSMap, GetName);
 
     target.set_function("DoDelayed", &TSMap::LDoDelayed);
-    target.set_function("GetName", &TSMap::LGetName);
     target.set_function("GetUnits", &TSMap::GetUnits);
     target.set_function("GetPlayers", sol::overload(
         & TSMap::LGetPlayers0

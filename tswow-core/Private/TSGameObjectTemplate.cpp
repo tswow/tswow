@@ -26,17 +26,17 @@ uint32 TSGameObjectTemplate::GetDisplayID()
     return gt->displayId;
 }
 
-TSString TSGameObjectTemplate::GetName()
+std::string TSGameObjectTemplate::GetName()
 {
     return gt->name;
 }
 
-TSString TSGameObjectTemplate::GetIconName()
+std::string TSGameObjectTemplate::GetIconName()
 {
     return gt->IconName;
 }
 
-TSString TSGameObjectTemplate::GetCastBarCaption()
+std::string TSGameObjectTemplate::GetCastBarCaption()
 {
     return gt->castBarCaption;
 }
@@ -50,21 +50,6 @@ TSGameObjectTemplate GetGameObjectTemplate(uint32 id)
 {
     return TSGameObjectTemplate(const_cast<GameObjectTemplate*>(
         sObjectMgr->GetGameObjectTemplate(id)));
-}
-
-std::string TSGameObjectTemplate::LGetName()
-{
-    return GetName().std_str();
-}
-
-std::string TSGameObjectTemplate::LGetIconName()
-{
-    return GetIconName().std_str();
-}
-
-std::string TSGameObjectTemplate::LGetCastBarCaption()
-{
-    return GetCastBarCaption().std_str();
 }
 
 uint32 TSGameObjectTemplate::GetGOData(uint32 index)

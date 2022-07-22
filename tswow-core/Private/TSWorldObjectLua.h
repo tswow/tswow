@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSWorldObject.h"
 #include "TSEntityLua.h"
 #include "TSWorldEntityLua.h"
@@ -72,24 +73,8 @@ void TSLua::load_world_object_methods_t(sol::state& state, sol::usertype<T> & ta
     LUA_FIELD(target, TSWorldObject, IsActive);
     target.set_function("DoDelayed", &TSWorldObject::LDoDelayed);
 
-    target.set_function("CastSpell", sol::overload(
-          &TSWorldObject::LCastSpell0
-        , &TSWorldObject::LCastSpell1
-    ));
-
-    target.set_function("CastSpellAoF", sol::overload(
-          &TSWorldObject::LCastSpellAoF0
-        , &TSWorldObject::LCastSpellAoF1
-    ));
-
-    target.set_function("CastCustomSpell", sol::overload(
-          &TSWorldObject::LCastCustomSpell0
-        , &TSWorldObject::LCastCustomSpell1
-        , &TSWorldObject::LCastCustomSpell2
-        , &TSWorldObject::LCastCustomSpell3
-        , &TSWorldObject::LCastCustomSpell4
-        , &TSWorldObject::LCastCustomSpell5
-        , &TSWorldObject::LCastCustomSpell6
-    ));
+    //LUA_FIELD_OVERLOAD_2_1(target, TSWorldObject, CastSpell, TSWorldObject, uint32, bool);
+    //LUA_FIELD_OVERLOAD_4_1(target, TSWorldObject, CastSpell, TSWorldObject, float, float, float, uint32, bool);
+    LUA_FIELD_OVERLOAD_2_6(target, TSWorldObject, CastCustomSpell, TSWorldObject, uint32, bool, int32, int32, int32, TSItem, uint64);
     LUA_FIELD(target, TSWorldObject, CastSpell);
 }

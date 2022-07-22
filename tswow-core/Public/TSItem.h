@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSClasses.h"
 #include "TSObject.h"
 #include "TSItemTemplate.h"
@@ -48,7 +47,7 @@ public:
     bool IsArmorVellum();
     bool IsConjuredConsumable();
     TSItemTemplate GetTemplate();
-    TSString GetItemLink(uint8 locale);
+    std::string GetItemLink(uint8 locale);
     uint64 GetOwnerGUID();
     TSPlayer  GetOwner();
     uint32 GetCount();
@@ -60,7 +59,7 @@ public:
     uint32 GetSpellTrigger(uint32 index);
     uint32 GetClass();
     uint32 GetSubClass();
-    TSString GetName();
+    std::string GetName();
     uint32 GetDisplayID();
     uint32 GetQuality();
     uint32 GetBuyCount();
@@ -82,13 +81,6 @@ public:
     bool SetEnchantment(uint32 enchant, uint32 slot);
     bool ClearEnchantment(uint32 slot);
     void SaveToDB();
-private:
-    std::string LGetItemLink(uint8 locale);
-    std::string LGetName();
-    friend class TSLua;
 };
 
 TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);
-TC_GAME_API TSItem LCreateItem0(uint32 entry, uint32 count);
-TC_GAME_API TSItem LCreateItem1(uint32 entry);
-TC_GAME_API TSItem LCreateItem2();

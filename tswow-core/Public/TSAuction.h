@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSArray.h"
 
 #include <sol/sol.hpp>

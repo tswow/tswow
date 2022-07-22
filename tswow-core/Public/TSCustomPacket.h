@@ -6,8 +6,6 @@
 #include "CustomPacketWrite.h"
 #include "CustomPacketBuffer.h"
 
-#include "TSString.h"
-
 class TSWorldObject;
 class TSPlayer;
 class TSMap;
@@ -43,8 +41,8 @@ public:
 	TSPacketWrite * WriteFloat(float value)   { return Write(value); }
 	TSPacketWrite * WriteDouble(double value) { return Write(value); }
 
-	TSPacketWrite* WriteString(TSString str) {
-		write->WriteString(str.c_str(), str.get_length());
+	TSPacketWrite* WriteString(std::string const& str) {
+		write->WriteString(str.c_str(), totalSize_t(str.size()));
 		return this;
 	}
 
@@ -53,9 +51,6 @@ public:
 	void SendToPlayer(TSPlayer player);
 	void BroadcastMap(TSMap map, uint32_t teamOnly = 0);
 	void BroadcastAround(TSWorldObject obj, float range, bool self = true);
-private:
-		TSPacketWrite * LWriteString(std::string const& value);
-		friend class TSLua;
 };
 
 class TC_GAME_API TSPacketRead
@@ -88,16 +83,12 @@ public:
 	float ReadFloat(float def = 0) { return Read(def); }
 	double ReadDouble(double def = 0) { return Read(def); }
 
-	TSString ReadString(TSString def = JSTR(""))
+	std::string ReadString(std::string const& def = "")
 	{
-		return TSString(read->ReadString(def.std_str()));
+		return read->ReadString(def);
 	}
 
 	totalSize_t Size() { return read->Size(); }
-private:
-		std::string LReadString0(std::string const& def);
-		std::string LReadString1();
-		friend class TSLua;
 };
 
 class TSServerBuffer : public CustomPacketBuffer

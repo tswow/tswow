@@ -17,7 +17,6 @@
 #pragma once
 
 #include <string>
-#include "TSString.h"
 
 class TSMutableString
 {
@@ -31,22 +30,18 @@ public:
     }
     TSMutableString* operator->() { return this;}
 
-    TSString get()
+    std::string get()
     {
-        return TSString(*str);
+        return *str;
     }
 
-    void set(TSString value)
+    void set(std::string const& value)
     {
-        (*this->str) = value.std_str();
+        (*this->str) = value;
     }
 
-    TSString stringify()
+    std::string stringify()
     {
-        return TSString(*str);
+        return *str;
     }
-private:
-    std::string Lget() { return *str; }
-    void Lset(std::string const& value) { (*this->str) = value; };
-    friend class TSLua;
 };

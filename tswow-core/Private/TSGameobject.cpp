@@ -368,23 +368,3 @@ TSGameObjectTemplate TSGameObject::GetTemplate()
 {
     return TSGameObjectTemplate(const_cast<GameObjectTemplate*>(go->GetGOInfo()));
 }
-
-void TSGameObject::LDespawn0(bool forced, uint32 delayMs, uint32 respawnSec)
-{
-    Despawn(forced, delayMs, respawnSec);
-}
-
-void TSGameObject::LDespawn1(bool forced, uint32 delayMs)
-{
-    Despawn(forced, delayMs);
-}
-
-void TSGameObject::LDespawn2(bool forced)
-{
-    Despawn(forced);
-}
-
-void TSGameObject::LDespawn3()
-{
-    Despawn();
-}

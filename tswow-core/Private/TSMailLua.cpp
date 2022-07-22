@@ -1,4 +1,5 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSMail.h"
 
 void TSLua::load_mail_methods(sol::state& state)
@@ -25,16 +26,13 @@ void TSLua::load_mail_methods(sol::state& state)
     LUA_FIELD(ts_mail, TSMail, SetChecked);
     LUA_FIELD(ts_mail, TSMail, SetSender);
     LUA_FIELD(ts_mail, TSMail, SetState);
-    ts_mail.set_function("GetSubject", &TSMail::LGetSubject);
-    ts_mail.set_function("GetBody", &TSMail::LGetBody);
+    LUA_FIELD(ts_mail, TSMail, GetSubject);
+    LUA_FIELD(ts_mail, TSMail, GetBody);
+    LUA_FIELD(ts_mail, TSMail, SetSubject);
+    LUA_FIELD(ts_mail, TSMail, SetBody);
     ts_mail.set_function("GetItems", &TSMail::LGetItems);
     ts_mail.set_function("FilterItems", &TSMail::LFilterItems);
-    ts_mail.set_function("AddItem", sol::overload(
-        &TSMail::LAddItem0
-        , &TSMail::LAddItem1
-    ));
-    ts_mail.set_function("SetSubject", &TSMail::LSetSubject);
-    ts_mail.set_function("SetBody", &TSMail::LSetBody);
+    LUA_FIELD_OVERLOAD_2_1(ts_mail, TSMail, AddItem, uint32, uint8, TSPlayer);
 
     auto ts_maildraft = state.new_usertype<TSMailDraft>("TSMailDraft");
     LUA_FIELD(ts_maildraft, TSMailDraft, GetTemplateID);
@@ -44,13 +42,9 @@ void TSLua::load_mail_methods(sol::state& state)
     LUA_FIELD(ts_maildraft, TSMailDraft, SetTemplateID);
     LUA_FIELD(ts_maildraft, TSMailDraft, SetSubject);
     LUA_FIELD(ts_maildraft, TSMailDraft, SetBody);
-
-    ts_maildraft.set_function("GetSubject", &TSMailDraft::LGetSubject);
-    ts_maildraft.set_function("GetBody", &TSMailDraft::LGetBody);
+    LUA_FIELD(ts_maildraft, TSMailDraft, GetSubject);
+    LUA_FIELD(ts_maildraft, TSMailDraft, GetBody);
+    LUA_FIELD_OVERLOAD_2_1(ts_maildraft, TSMailDraft, AddItem, uint32, uint8, TSPlayer);
     ts_maildraft.set_function("GetItemKeys", &TSMailDraft::LGetItemKeys);
-    ts_maildraft.set_function("AddItem", sol::overload(
-        &TSMailDraft::LAddItem0
-        , &TSMailDraft::LAddItem1
-    ));
     ts_maildraft.set_function("FilterItems", &TSMailDraft::LFilterItems);
 }

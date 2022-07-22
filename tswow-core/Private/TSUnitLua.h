@@ -1,7 +1,9 @@
 #pragma once
 
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSUnit.h"
+#include "TSAura.h"
 #include "TSWorldObjectLua.h"
 
 template <typename T>
@@ -167,17 +169,14 @@ void TSLua::load_unit_methods_t(sol::state & state, sol::usertype<T> & target, s
     LUA_FIELD(target, TSUnit, RemoveAllMinionsByEntry);
     LUA_FIELD(target, TSUnit, RemoveCharmedBy);
     LUA_FIELD(target, TSUnit, SetCharm);
-    target.set_function("SetCharmedBy", sol::overload(&TSUnit::LSetCharmedBy0, &TSUnit::LSetCharmedBy1));
+    //LUA_FIELD_RET_OVERLOAD_2_1(target, TSUnit, SetCharmedBy, TSUnit, uint32, TSAuraApplication);
     target.set_function("GetControlled", &TSUnit::LGetControlled);
     LUA_FIELD(target, TSUnit, KnockbackFrom);
-    target.set_function("Jump", sol::overload(
-        &TSUnit::LJump0,
-        &TSUnit::LJump1
-    ));
+    LUA_FIELD_OVERLOAD_2_1(target, TSUnit, Jump, float, float, bool);
     target.set_function("JumpTo", sol::overload(
-        &TSUnit::LJumpTo0,
-        &TSUnit::LJumpTo1,
-        &TSUnit::LJumpTo2,
-        &TSUnit::LJumpTo3
+        [](TSUnit& unit, TSWorldObject obj, float speedZ, bool withOrientation) { return unit.JumpTo(obj, speedZ, withOrientation); },
+        [](TSUnit& unit, TSWorldObject obj, float speedZ) { return unit.JumpTo(obj, speedZ); },
+        [](TSUnit& unit, float x, float y, float z, float o, float speedXY, float speedZ, bool forward) { return unit.JumpTo(x,y,z,o,speedXY,speedZ,forward); },
+        [](TSUnit& unit, float x, float y, float z, float o, float speedXY, float speedZ) { return unit.JumpTo(x,y,z,o,speedXY,speedZ); }
     ));
 }

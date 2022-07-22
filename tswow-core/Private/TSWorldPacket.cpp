@@ -270,13 +270,13 @@ void TSWorldPacket::WriteDouble(double value)
     (*packet) << value;
 }
 
-TSString TSWorldPacket::ReadString()
+std::string TSWorldPacket::ReadString()
 {
     std::string _val;
     (*packet) >> _val;
-    return TSString(_val);
+    return _val;
 }
-TSString TSWorldPacket::ReadString(uint32 index)
+std::string TSWorldPacket::ReadString(uint32 index)
 {
     std::string value = "";
     for (int i = index; i < packet->size(); ++i)
@@ -284,18 +284,18 @@ TSString TSWorldPacket::ReadString(uint32 index)
         uint8 byte = packet->read<uint8>(i);
         if (byte == 0)
         {
-            return TSString(value);
+            return value;
         }
     }
     throw std::runtime_error(
         "string at "+std::to_string(index)+" is never terminated"
     );
 }
-void TSWorldPacket::WriteString(TSString value)
+void TSWorldPacket::WriteString(std::string const& value)
 {
-    (*packet) << value.std_str();
+    (*packet) << value;
 }
-void TSWorldPacket::WriteString(uint32 index, TSString value)
+void TSWorldPacket::WriteString(uint32 index, std::string const& value)
 {
     for (uint32 i = 0; i < value.length(); ++i)
     {
@@ -338,189 +338,4 @@ void TSWorldStatePacket::Remove(uint32 index)
 void TSWorldStatePacket::Clear()
 {
     m_ws->Worldstates.clear();
-}
-
-int8 TSWorldPacket::LReadInt80(uint32 index)
-{
-    return ReadInt8(index);
-}
-int8 TSWorldPacket::LReadInt81()
-{
-    return ReadInt8();
-}
-void TSWorldPacket::LWriteInt80(uint32 index, int8 value)
-{
-    WriteInt8(index, value);
-}
-void TSWorldPacket::LWriteInt81(int8 value)
-{
-    WriteInt8(value);
-}
-
-uint8 TSWorldPacket::LReadUInt80(uint32 index)
-{
-    return ReadUInt8(index);
-}
-uint8 TSWorldPacket::LReadUInt81()
-{
-    return ReadUInt8();
-}
-void TSWorldPacket::LWriteUInt80(uint32 index, uint8 value)
-{
-    WriteUInt8(index, value);
-}
-void TSWorldPacket::LWriteUInt81(uint8 value)
-{
-    WriteUInt8(value);
-}
-
-int16 TSWorldPacket::LReadInt160(uint32 index)
-{
-    return ReadInt16(index);
-}
-int16 TSWorldPacket::LReadInt161()
-{
-    return ReadInt16();
-}
-void TSWorldPacket::LWriteInt160(uint32 index, int16 value)
-{
-    WriteInt16(index, value);
-}
-void TSWorldPacket::LWriteInt161(int16 value)
-{
-    WriteInt16(value);
-}
-
-uint16 TSWorldPacket::LReadUInt160(uint32 index)
-{
-    return ReadUInt16(index);
-}
-uint16 TSWorldPacket::LReadUInt161()
-{
-    return ReadUInt16();
-}
-void TSWorldPacket::LWriteUInt160(uint32 index, uint16 value)
-{
-    WriteUInt16(index, value);
-}
-void TSWorldPacket::LWriteUInt161(uint16 value)
-{
-    WriteUInt16(value);
-}
-
-int32 TSWorldPacket::LReadInt320(uint32 index)
-{
-    return ReadInt32(index);
-}
-int32 TSWorldPacket::LReadInt321()
-{
-    return ReadInt32();
-}
-void TSWorldPacket::LWriteInt320(uint32 index, int32 value)
-{
-    WriteInt32(index, value);
-}
-void TSWorldPacket::LWriteInt321(int32 value)
-{
-    WriteInt32(value);
-}
-
-uint32 TSWorldPacket::LReadUInt320(uint32 index)
-{
-    return ReadUInt32(index);
-}
-uint32 TSWorldPacket::LReadUInt321()
-{
-    return ReadUInt32();
-}
-void TSWorldPacket::LWriteUInt320(uint32 index, uint32 value)
-{
-    WriteUInt32(index, value);
-}
-void TSWorldPacket::LWriteUInt321(uint32 value)
-{
-    WriteUInt32(value);
-}
-
-int64 TSWorldPacket::LReadInt640(uint32 index)
-{
-    return ReadInt64(index);
-}
-int64 TSWorldPacket::LReadInt641()
-{
-    return ReadInt64();
-}
-void TSWorldPacket::LWriteInt640(uint32 index, int64 value)
-{
-    WriteInt64(index, value);
-}
-void TSWorldPacket::LWriteInt641(int64 value)
-{
-    WriteInt64(value);
-}
-
-uint64 TSWorldPacket::LReadUInt640(uint32 index)
-{
-    return ReadUInt64(index);
-}
-uint64 TSWorldPacket::LReadUInt641()
-{
-    return ReadUInt64();
-}
-void TSWorldPacket::LWriteUInt640(uint32 index, uint64 value)
-{
-    WriteUInt64(index, value);
-}
-void TSWorldPacket::LWriteUInt641(uint64 value)
-{
-    WriteUInt64(value);
-}
-float TSWorldPacket::LReadFloat0(uint32 index)
-{
-    return ReadFloat(index);
-}
-float TSWorldPacket::LReadFloat1()
-{
-    return ReadFloat();
-}
-void TSWorldPacket::LWriteFloat0(float value)
-{
-    WriteFloat(value);
-}
-void TSWorldPacket::LWriteFloat1(uint32 index, float value)
-{
-    WriteFloat(index, value);
-}
-
-double TSWorldPacket::LReadDouble0(uint32 index)
-{
-    return ReadDouble(index);
-}
-double TSWorldPacket::LReadDouble1()
-{
-    return ReadDouble();
-}
-void TSWorldPacket::LWriteDouble0(double value)
-{
-    WriteDouble(value);
-}
-void TSWorldPacket::LWriteDouble1(uint32 index, double value)
-{
-    WriteDouble(index, value);
-}
-std::string TSWorldPacket::LReadString0()
-{
-    return ReadString().std_str();
-}
-std::string TSWorldPacket::LReadString1(uint32 index)
-{
-    return ReadString(index).std_str();
-}
-void TSWorldPacket::LWriteString0(std::string const& value)
-{
-    WriteString(TSString(value));
-}
-void TSWorldPacket::LWriteString1(uint32 index, TSString value)
-{
-    WriteString(index, value);
 }

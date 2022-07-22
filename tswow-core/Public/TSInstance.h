@@ -2,7 +2,6 @@
 
 #include "TSMain.h"
 #include "TSBase.h"
-#include "TSString.h"
 #include "TSUnit.h"
 #include "TSMap.h"
 
@@ -54,7 +53,7 @@ public:
     void DoCloseDoorOrButton(uint64 guid);
     void DoRespawnGameObject(uint64 guid, uint32 seconds);
     void DoUpdateWorldState(uint32 worldStateId, uint32 worldStateValue);
-    void DoSendNotify(TSString message);
+    void DoSendNotify(std::string const& message);
     void DoUpdateAchievementCriteria(uint32 type, uint32 miscValue1, uint32 miscValue2, TSUnit unit);
     void DoStartTimedAchievement(uint32 type, uint32 entry);
     void DoStopTimedAchievement(uint32 type, uint32 entry);
@@ -72,18 +71,4 @@ public:
     uint32 GetTeamIDInInstance();
     uint32 GetFactionInInstance();
     TSBossInfo GetBossInfo(uint32 id);
-private:
-    void LDoUseDoorOrButton0(uint64 guid, uint32 withRestoreTime, bool useAlternativeState);
-    void LDoUseDoorOrButton1(uint64 guid, uint32 withRestoreTime);
-    void LDoUseDoorOrButton2(uint64 guid);
-
-    void LDoRemoveAurasDueToSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled);
-    void LDoRemoveAurasDueToSpellOnPlayers1(uint32 spell, bool includePets);
-    void LDoRemoveAurasDueToSpellOnPlayers2(uint32 spell);
-
-    void LDoCastSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled);
-    void LDoCastSpellOnPlayers1(uint32 spell, bool includePets);
-    void LDoCastSpellOnPlayers2(uint32 spell);
-    void LDoSendNotify(std::string const& message);
-    friend class TSLua;
 };

@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSClasses.h"
 #include "TSObject.h"
 #include "TSPosition.h"
@@ -84,7 +83,7 @@ public:
     void PlayDistanceSound(uint32 soundId, TSPlayer player);
 
     TSMap GetMap();
-    TSString GetName();
+    std::string GetName();
     uint32 GetPhaseMask();
     uint64 GetPhaseID();
     void SetPhaseMask(uint32 phaseMask, bool update, uint64 id = 0);
@@ -112,8 +111,8 @@ public:
     bool IsHostileToPlayers();
     bool IsNeutralToAll();
 
-    uint32 CastSpell(TSWorldObject target, uint32 spell, bool triggered);
-    uint32 CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
+    uint32 CastSpell(TSWorldObject target, uint32 spell, bool triggered = false);
+    uint32 CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered = false);
     uint32 CastCustomSpell(
           TSWorldObject target
         , uint32 spell
@@ -131,9 +130,9 @@ public:
     TSCreature GetCreature(uint64 guid);
     TSPlayer GetPlayer(uint64 guid);
 
-    bool HasCollision(TSString id) ;
-    void AddCollision(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
-    TSCollisionEntry * GetCollision(TSString id);
+    bool HasCollision(std::string const& id) ;
+    void AddCollision(std::string const& id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
+    TSCollisionEntry * GetCollision(std::string const& id);
     TSCollisions* GetCollisions();
 
     TSFactionTemplate GetFactionTemplate();
@@ -147,65 +146,6 @@ public:
     void DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback);
 private:
     friend class TSLua;
-
-    uint32 LCastSpell0(TSWorldObject target, uint32 spell, bool triggered);
-    uint32 LCastSpell1(TSWorldObject target, uint32 spell);
-
-    uint32 LCastSpellAoF0(float _x, float _y, float _z, uint32 spell, bool triggered);
-    uint32 LCastSpellAoF1(float _x, float _y, float _z, uint32 spell);
-
-    uint32 LCastCustomSpell0(
-          TSWorldObject target
-        , uint32 spell
-        , bool triggered
-        , int32 bp0
-        , int32 bp1
-        , int32 bp2
-        , TSItem castItem
-        , uint64 originalCaster
-    );
-
-    uint32 LCastCustomSpell1(
-        TSWorldObject target
-        , uint32 spell
-        , bool triggered
-        , int32 bp0
-        , int32 bp1
-        , int32 bp2
-        , TSItem castItem
-    );
-
-    uint32 LCastCustomSpell2(
-        TSWorldObject target
-        , uint32 spell
-        , bool triggered
-        , int32 bp0
-        , int32 bp1
-        , int32 bp2
-    );
-
-    uint32 LCastCustomSpell3(
-          TSWorldObject target
-        , uint32 spell
-        , bool triggered
-        , int32 bp0
-        , int32 bp1
-    );
-
-    uint32 LCastCustomSpell4(
-          TSWorldObject target
-        , uint32 spell
-        , bool triggered
-        , int32 bp0
-    );
-
-    uint32 LCastCustomSpell5(
-          TSWorldObject target
-        , uint32 spell
-        , bool triggered
-    );
-
-    uint32 LCastCustomSpell6(TSWorldObject target, uint32 spell);
     void LDoDelayed(sol::protected_function callback);
 };
 
@@ -213,23 +153,23 @@ class TC_GAME_API TSCollisionEntry {
 public:
     TSDictionary<uint64,uint32> hitmap;
     CollisionCallback callback;
-    TSString name;
+    std::string name;
     uint32_t lastReload;
     uint32_t maxHits;
     float range;
     uint64_t minDelay;
     uint64_t lastHit = 0;
 
-    TSCollisionEntry(TSString name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback);
+    TSCollisionEntry(std::string const& name, float range, uint32_t minDelay,uint32_t maxHits, CollisionCallback callback);
     bool Tick(TSWorldObject value, bool force = true);
 };
 
 class TC_GAME_API TSCollisions {
 public:
     std::vector<TSCollisionEntry> callbacks;
-    TSCollisionEntry* Add(TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
-    bool Contains(TSString id);
-    TSCollisionEntry* Get(TSString id);
+    TSCollisionEntry* Add(std::string const& id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
+    bool Contains(std::string const& id);
+    TSCollisionEntry* Get(std::string const& id);
     void Tick(TSWorldObject obj);
 };
 

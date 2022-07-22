@@ -99,7 +99,7 @@ public:
     return _erases.end();
   }
 
-  TSString stringify(int indention = 0) {
+  std::string stringify(int indention = 0) {
     std::string str = "";
     for (int i = 0; i < indention; ++i) str += " ";
     str += "{\n";
@@ -111,7 +111,7 @@ public:
     }
     for (int i = 0; i < indention; ++i) str += " ";
     str += "}\n";
-    return JSTR(str);
+    return str;
   }
 private:
   std::map<K, DBMapEntry<V>> _map;

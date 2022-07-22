@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSClasses.h"
 
 class TC_GAME_API TSWorldPacket {
@@ -88,67 +87,10 @@ public:
     void WriteDouble(double value);
     void WriteDouble(uint32 index, double value);
 
-    TSString ReadString();
-    TSString ReadString(uint32 index);
-    void WriteString(TSString value);
-    void WriteString(uint32 index, TSString value);
-private:
-    int8 LReadInt80(uint32 index);
-    int8 LReadInt81();
-    void LWriteInt80(uint32 index, int8 value);
-    void LWriteInt81(int8 value);
-
-    uint8 LReadUInt80(uint32 index);
-    uint8 LReadUInt81();
-    void LWriteUInt80(uint32 index, uint8 value);
-    void LWriteUInt81(uint8 value);
-
-    int16 LReadInt160(uint32 index);
-    int16 LReadInt161();
-    void LWriteInt160(uint32 index, int16 value);
-    void LWriteInt161(int16 value);
-
-    uint16 LReadUInt160(uint32 index);
-    uint16 LReadUInt161();
-    void LWriteUInt160(uint32 index, uint16 value);
-    void LWriteUInt161(uint16 value);
-
-    int32 LReadInt320(uint32 index);
-    int32 LReadInt321();
-    void LWriteInt320(uint32 index, int32 value);
-    void LWriteInt321(int32 value);
-
-    uint32 LReadUInt320(uint32 index);
-    uint32 LReadUInt321();
-    void LWriteUInt320(uint32 index, uint32 value);
-    void LWriteUInt321(uint32 value);
-
-    int64 LReadInt640(uint32 index);
-    int64 LReadInt641();
-    void LWriteInt640(uint32 index, int64 value);
-    void LWriteInt641(int64 value);
-
-    uint64 LReadUInt640(uint32 index);
-    uint64 LReadUInt641();
-    void LWriteUInt640(uint32 index, uint64 value);
-    void LWriteUInt641(uint64 value);
-
-    float LReadFloat0(uint32 index);
-    float LReadFloat1();
-    void LWriteFloat0(float value);
-    void LWriteFloat1(uint32 index, float value);
-
-    double LReadDouble0(uint32 index);
-    double LReadDouble1();
-    void LWriteDouble0(double value);
-    void LWriteDouble1(uint32 index, double value);
-
-    std::string LReadString0();
-    std::string LReadString1(uint32 index);
-    void LWriteString0(std::string const& value);
-    void LWriteString1(uint32 index, TSString value);
-
-    friend class TSLua;
+    std::string ReadString();
+    std::string ReadString(uint32 index);
+    void WriteString(std::string const& value);
+    void WriteString(uint32 index, std::string const& value);
 };
 
 namespace WorldPackets {

@@ -19,7 +19,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
-#include "TSString.h"
 
 #include <sol/sol.hpp>
 #include <string>
@@ -47,9 +46,9 @@ public:
     uint32   GetModelID2();
     uint32   GetModelID3();
     uint32   GetModelID4();
-    TSString GetName();
-    TSString GetTitle();
-    TSString GetIconName();
+    std::string GetName();
+    std::string GetTitle();
+    std::string GetIconName();
     uint32   GetGossipMenuID();
     uint8    GetMinLevel();
     uint8    GetMaxLevel();
@@ -96,7 +95,7 @@ public:
     uint32   GetVehicleID();
     uint32   GetMinGold();
     uint32   GetMaxGold();
-    TSString GetAIName();
+    std::string GetAIName();
     uint32   GetMovementType();
 
     float       GetHoverHeight();
@@ -133,12 +132,6 @@ public:
     bool      GetIsSwimAllowed();
     bool      GetIsFlightAllowed();
     bool      GetIsRooted();
-private:
-    std::string LGetName();
-    std::string LGetTitle();
-    std::string LGetIconName();
-    std::string LGetAIName();
-    friend class TSLua;
 };
 
 TC_GAME_API TSCreatureTemplate GetCreatureTemplate(uint32 entry);

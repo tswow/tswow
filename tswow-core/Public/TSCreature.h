@@ -20,7 +20,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSArray.h"
-#include "TSString.h"
 #include "TSUnit.h"
 #include "TSClasses.h"
 #include "TSPosition.h"
@@ -76,8 +75,8 @@ public:
     float GetAggroRange(TSUnit target);
     TSGroup GetLootRecipientGroup();
     TSPlayer GetLootRecipient();
-    TSString GetScriptName();
-    TSString GetAIName();
+    std::string GetScriptName();
+    std::string GetAIName();
     uint32 GetScriptID();
     uint32 GetCreatureSpellCooldownDelay(uint32 spell);
     uint32 GetCorpseDelay();
@@ -145,12 +144,5 @@ public:
     void EquipRanged(uint32_t ranged);
 
 private:
-    TSOutfit LGetOutfitCopy0(Outfit settings, int32_t race, int32_t gender);
-    TSOutfit LGetOutfitCopy1(Outfit settings, int32_t race);
-    TSOutfit LGetOutfitCopy2(Outfit settings);
-    TSOutfit LGetOutfitCopy3();
     TSLua::Array<TSUnit> LGetAITargets();
-    std::string LGetScriptName();
-    std::string LGetAIName();
-    friend class TSLua;
 };

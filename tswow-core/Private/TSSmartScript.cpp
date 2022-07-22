@@ -360,13 +360,13 @@ bool TSCondition::IsNegativeCondition()
     return m_condition->NegativeCondition;
 }
 
-TSString TSCondition::ToString(bool ext)
+std::string TSCondition::ToString(bool ext)
 {
 #if TRINITY
-    return TSString(m_condition->ToString());
+    return m_condition->ToString();
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSCondition::ToString not implemented for AzerothCore");
-    return JSTR("");
+    return "";
 #endif
 }
 
@@ -387,15 +387,6 @@ TSWorldObject TSConditionSourceInfo::GetTarget(uint32 index)
 TSCondition TSConditionSourceInfo::GetLastFailedCondition()
 {
     return TSCondition(const_cast<Condition*>(m_info->mLastFailedCondition));
-}
-
-std::string TSCondition::LToString0(bool ext)
-{
-    return ToString(ext).std_str();
-}
-std::string TSCondition::LToString1()
-{
-    return ToString().std_str();
 }
 
 TSLua::Array<TSWorldObject> TSSmartScriptValues::LGetTargets()
