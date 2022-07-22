@@ -1,11 +1,9 @@
 #include "TSLua.h"
 #include "TSCreatureTemplate.h"
-#include "TSObjectLua.h"
 
 void TSLua::load_creature_template_methods(sol::state& state)
 {
     auto ts_creature_template = state.new_usertype<TSCreatureTemplate>("TSCreatureTemplate");
-    load_entity_methods_t(state, ts_creature_template, "TSCreatureTemplate");
     LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetEntry);
     LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryA);
     LUA_FIELD(ts_creature_template, TSCreatureTemplate, GetDifficultyEntryB);

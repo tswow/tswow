@@ -1,6 +1,5 @@
 #include "TSLua.h"
 #include "TSCreature.h"
-#include "TSUnitLua.h"
 #include "TSCreature.h"
 #include "TSPlayer.h"
 #include "TSGroup.h"
@@ -15,8 +14,6 @@
 void TSLua::load_creature_methods(sol::state & state)
 {
     auto ts_creature = state.new_usertype<TSCreature>("TSCreature", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
-    load_unit_methods_t(state, ts_creature, "TSCreature");
-    
     LUA_FIELD(ts_creature, TSCreature, GetScriptName);
     LUA_FIELD(ts_creature, TSCreature, GetAIName);
     LUA_FIELD(ts_creature, TSCreature, GetAITargets);

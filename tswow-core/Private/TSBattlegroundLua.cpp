@@ -1,6 +1,5 @@
 #include "TSLua.h"
 #include "TSBattleground.h"
-#include "TSMapLua.h"
 #include "TSLuaVarargs.h"
 
 #include "TSGameObject.h"
@@ -19,7 +18,6 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetOfflineRemoveTime);
 
     sol::usertype<TSBattleground> ts_battleground = state.new_usertype<TSBattleground>("TSBattleground", sol::base_classes, sol::bases<TSMap, TSWorldEntityProvider<TSMap>, TSEntityProvider>());
-    load_map_methods_t(state, ts_battleground, "TSBattleground");
     #if TRINITY
     LUA_FIELD(ts_battleground, TSBattleground, GetBracketID);
     #endif

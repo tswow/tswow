@@ -1,8 +1,8 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSItemTemplate.h"
+#include "TSEntityLua.h"
 #include "TSGlobal.h"
-#include "TSObjectLua.h"
 
 void TSLua::load_itemtemplate_methods(sol::state& state)
 {

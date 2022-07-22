@@ -1,7 +1,6 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSInstance.h"
-#include "TSMapLua.h"
 #include "TSVehicle.h"
 #include "TSGameObject.h"
 #include "TSCreature.h"
@@ -21,7 +20,6 @@ void TSLua::load_instance_methods(sol::state& state)
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetDoorsOpenAfterEncounter);
 
     auto ts_instance = state.new_usertype<TSInstance>("TSInstance", sol::base_classes, sol::bases<TSMap, TSWorldEntityProvider<TSMap>, TSEntityProvider>());
-    load_map_methods_t(state, ts_instance, "TSInstance");
     LUA_FIELD(ts_instance, TSInstance, SaveInstanceToDB);
     LUA_FIELD(ts_instance, TSInstance, IsEncounterInProgress);
     LUA_FIELD(ts_instance, TSInstance, GetObjectGUID);
