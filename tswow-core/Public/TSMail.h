@@ -45,15 +45,15 @@ struct TC_GAME_API TSMail {
     TSMail() { mail = nullptr;  }
     operator bool() const { return mail != nullptr; }
     bool operator==(TSMail const& rhs) { return mail == rhs.mail; }
-    uint32 GetID();
-    uint8 GetType();
-    uint16 GetTemplateID();
-    uint64 GetSender();
-    uint64 GetReceiver();
-    uint16 GetState();
-    uint32 GetMoney();
-    uint32 GetCOD();
-    uint32 GetChecked();
+    TSNumber<uint32> GetID();
+    TSNumber<uint8> GetType();
+    TSNumber<uint16> GetTemplateID();
+    TSNumber<uint64> GetSender();
+    TSNumber<uint64> GetReceiver();
+    TSNumber<uint16> GetState();
+    TSNumber<uint32> GetMoney();
+    TSNumber<uint32> GetCOD();
+    TSNumber<uint32> GetChecked();
 
     std::string GetSubject();
     std::string GetBody();
@@ -86,12 +86,12 @@ struct TC_GAME_API TSMailDraft {
     operator bool() const { return draft != nullptr; }
     bool operator==(TSMailDraft const& rhs) { return draft == rhs.draft; }
 
-    uint16 GetTemplateID();
+    TSNumber<uint16> GetTemplateID();
     std::string GetSubject();
     std::string GetBody();
-    uint32 GetMoney();
-    uint32 GetCOD();
-    TSArray<uint64> GetItemKeys();
+    TSNumber<uint32> GetMoney();
+    TSNumber<uint32> GetCOD();
+    TSArray<TSNumber<uint64> > GetItemKeys();
     TSItem GetItem(uint64 item);
 
     void SetTemplateID(uint16 id);
@@ -100,7 +100,7 @@ struct TC_GAME_API TSMailDraft {
     void AddItem(uint32 entry, uint8 count, TSPlayer player = TSPlayer(nullptr));
     void FilterItems(std::function<bool(TSItem)> predicate);
 private:
-    TSLua::Array<uint64> LGetItemKeys();
+    TSLua::Array<TSNumber<uint64>> LGetItemKeys();
     void LFilterItems(sol::protected_function predicate);
     friend class TSLua;
 };

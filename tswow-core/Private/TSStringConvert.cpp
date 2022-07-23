@@ -69,62 +69,62 @@ std::string ToStr(std::string const& val, int indent)
     return val;
 }
 
-double parseInt(std::string const& str)
+TSNumber<int32> parseInt(std::string const& str)
 {
     return double(std::stoi(str));
 }
 
-double parseFloat(std::string const& str)
+TSNumber<float> parseFloat(std::string const& str)
 {
     return std::stof(str);
 }
 
-uint8 ToUInt8(std::string const& value)
+TSNumber<uint8> ToUInt8(std::string const& value)
 {
     return uint8_t(std::stoi(value));
 }
 
-int8 ToInt8(std::string const& value)
+TSNumber<int8> ToInt8(std::string const& value)
 {
     return int8_t(std::stoi(value));
 }
 
-uint16 ToUInt16(std::string const& value)
+TSNumber<uint16> ToUInt16(std::string const& value)
 {
     return uint16_t(std::stoi(value));
 }
 
-int16 ToInt16(std::string const& value)
+TSNumber<int16> ToInt16(std::string const& value)
 {
     return int16_t(std::stoi(value));
 }
 
-uint32 ToUInt32(std::string const& value)
+TSNumber<uint32> ToUInt32(std::string const& value)
 {
     return uint32_t(std::stoul(value));
 }
 
-int32 ToInt32(std::string const& value)
+TSNumber<int32> ToInt32(std::string const& value)
 {
     return int32_t(std::stoi(value));
 }
 
-uint64 ToUInt64(std::string const& value)
+TSNumber<uint64> ToUInt64(std::string const& value)
 {
     return uint64_t(std::stoull(value));
 }
 
-int64 ToInt64(std::string const& value)
+TSNumber<int64> ToInt64(std::string const& value)
 {
     return int64_t(std::stoll(value));
 }
 
-double ToDouble(std::string const& value)
+TSNumber<double> ToDouble(std::string const& value)
 {
     return std::stod(value);
 }
 
-float ToFloat(std::string const& value)
+TSNumber<float> ToFloat(std::string const& value)
 {
     return std::stof(value);
 }

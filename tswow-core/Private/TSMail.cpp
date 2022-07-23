@@ -39,27 +39,27 @@ TSMail::TSMail(Mail* mail)
     this->mail = mail;
 }
 
-uint32 TSMail::GetID()
+TSNumber<uint32> TSMail::GetID()
 {
     return mail->messageID;
 }
 
-uint8 TSMail::GetType()
+TSNumber<uint8> TSMail::GetType()
 {
     return mail->messageType;
 }
 
-uint16 TSMail::GetTemplateID()
+TSNumber<uint16> TSMail::GetTemplateID()
 {
     return mail->mailTemplateId;
 }
 
-uint64 TSMail::GetSender()
+TSNumber<uint64> TSMail::GetSender()
 {
     return mail->sender;
 }
 
-uint64 TSMail::GetReceiver()
+TSNumber<uint64> TSMail::GetReceiver()
 {
     return mail->receiver;
 }
@@ -101,12 +101,12 @@ void TSMail::FilterItems(std::function<bool(TSMailItemInfo)> predicate)
     }
 }
 
-uint16 TSMail::GetState()
+TSNumber<uint16> TSMail::GetState()
 {
     return mail->state;
 }
 
-uint32 TSMail::GetMoney()
+TSNumber<uint32> TSMail::GetMoney()
 {
     return mail->money;
 }
@@ -116,7 +116,7 @@ void TSMail::SetMoney(uint32 money)
     mail->money = money;
 }
 
-uint32 TSMail::GetCOD()
+TSNumber<uint32> TSMail::GetCOD()
 {
     return mail->COD;
 }
@@ -126,7 +126,7 @@ void TSMail::SetCOD(uint32 cod)
     mail->COD = cod;
 }
 
-uint32 TSMail::GetChecked()
+TSNumber<uint32> TSMail::GetChecked()
 {
     return mail->checked;
 }
@@ -181,7 +181,7 @@ TSMailDraft::TSMailDraft(MailDraft* draft)
     this->draft = draft;
 }
 
-uint16 TSMailDraft::GetTemplateID()
+TSNumber<uint16> TSMailDraft::GetTemplateID()
 {
 #ifdef TRINITY
     return draft->m_mailTemplateId;
@@ -208,7 +208,7 @@ std::string TSMailDraft::GetBody()
 #endif
 }
 
-uint32 TSMailDraft::GetMoney()
+TSNumber<uint32> TSMailDraft::GetMoney()
 {
 #ifdef TRINITY
     return draft->m_money;
@@ -217,7 +217,7 @@ uint32 TSMailDraft::GetMoney()
 #endif
 }
 
-uint32 TSMailDraft::GetCOD()
+TSNumber<uint32> TSMailDraft::GetCOD()
 {
 #ifdef TRINITY
     return draft->m_COD;
@@ -226,9 +226,9 @@ uint32 TSMailDraft::GetCOD()
 #endif
 }
 
-TSArray<uint64> TSMailDraft::GetItemKeys()
+TSArray<TSNumber<uint64> > TSMailDraft::GetItemKeys()
 {
-    TSArray<uint64> arr;
+    TSArray<TSNumber<uint64> > arr;
     for(auto& itr : draft->m_items)
     {
         arr.push(TS_GUID(itr.first));
@@ -303,7 +303,7 @@ void TSMail::LFilterItems(sol::protected_function predicate)
         return predicate(item);
     });
 }
-TSLua::Array<uint64> TSMailDraft::LGetItemKeys()
+TSLua::Array<TSNumber<uint64>> TSMailDraft::LGetItemKeys()
 {
     return sol::as_table(*GetItemKeys().vec);
 }

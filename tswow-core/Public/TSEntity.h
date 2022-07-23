@@ -105,7 +105,7 @@ public:
 
     void SetNumber(std::string const& key, double value) { getData()->m_json.SetNumber(key, value); }
     bool HasNumber(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    double GetNumber(std::string const& key, double def = 0) { return getData()->m_json.GetNumber(key, def); }
+    TSNumber<double> GetNumber(std::string const& key, double def = 0) { return getData()->m_json.GetNumber(key, def); }
 
     void SetBool(std::string const& key, bool value) { getData()->m_json.SetBool(key, value); }
     bool HasBool(std::string const& key) { return getData()->m_json.HasBool(key); }
@@ -128,16 +128,16 @@ public:
     void SetUInt64(std::string const& key, uint64_t value) { getData()->m_json.SetNumber(key, double(value)); }
     bool HasUInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
     bool HasUInt64(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    uint32_t GetUInt(std::string const& key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
-    uint64_t GetUInt64(std::string const& key, uint64_t def = 0) { return uint64_t(getData()->m_json.GetNumber(key, double(def))); }
+    TSNumber<uint32> GetUInt(std::string const& key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
+    TSNumber<uint64> GetUInt64(std::string const& key, uint64_t def = 0) { return TSNumber<uint64_t>(getData()->m_json.GetNumber(key, double(def))); }
 
     void SetInt(std::string const& key, int32_t value) { getData()->m_json.SetNumber(key, value); }
     bool HasInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    int32_t GetInt(std::string const& key, int32_t def = 0) { return int32_t(getData()->m_json.GetNumber(key, def)); }
+    TSNumber<int32> GetInt(std::string const& key, int32_t def = 0) { return int32_t(getData()->m_json.GetNumber(key, def)); }
 
     void SetFloat(std::string const& key, float value) { getData()->m_json.SetNumber(key, value); }
     bool HasFloat(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    float GetFloat(std::string const& key, float def = 0) { return float(getData()->m_json.GetNumber(key, def)); }
+    TSNumber<float> GetFloat(std::string const& key, float def = 0) { return float(getData()->m_json.GetNumber(key, def)); }
 
     void Remove(std::string const& key) { getData()->m_json.Remove(key); }
     void LRemoveObject(std::string const& key) { getData()->m_lua_tables.erase(key); }

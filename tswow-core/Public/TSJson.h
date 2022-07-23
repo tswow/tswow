@@ -52,7 +52,7 @@ public:
 
     TSJsonObject SetNumber(std::string const& key, double number);
     bool HasNumber(std::string const& key);
-    double GetNumber(std::string const& key, double def = 0);
+    TSNumber<double> GetNumber(std::string const& key, double def = 0);
 
     TSJsonObject SetString(std::string const& key, std::string const& number);
     bool HasString(std::string const& key);
@@ -70,7 +70,7 @@ public:
     TSJsonObject SetJsonArray(std::string const& key, TSJsonArray value);
     std::string toString(int indents = -1);
     TSJsonObject Remove(std::string const& key);
-    unsigned get_length();
+    TSNumber<unsigned> get_length();
     void Parse(std::string const& json);
 };
 
@@ -99,7 +99,7 @@ public:
 
     TSJsonArray SetNumber(unsigned key, double number);
     bool HasNumber(unsigned key);
-    double GetNumber(unsigned key, double def = 0);
+    TSNumber<double> GetNumber(unsigned key, double def = 0);
     TSJsonArray InsertNumber(unsigned key, double value);
     TSJsonArray PushNumber(double value);
 
@@ -129,7 +129,7 @@ public:
     TSJsonArray Remove(unsigned key);
     void Parse(std::string const& json);
     std::string toString(int indents = -1);
-    unsigned get_length();
+    TSNumber<unsigned> get_length();
 };
 
 struct JsonTag {

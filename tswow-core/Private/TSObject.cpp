@@ -72,7 +72,7 @@ bool TSObject::IsInWorld()
  * @param uint16 index
  * @return int32 value
  */
-int32 TSObject::GetCoreInt32(uint16 index)
+TSNumber<int32> TSObject::GetCoreInt32(uint16 index)
 {
     return obj->GetInt32Value(index);
 }
@@ -83,7 +83,7 @@ int32 TSObject::GetCoreInt32(uint16 index)
  * @param uint16 index
  * @return uint32 value
  */
-uint32 TSObject::GetCoreUInt32(uint16 index)
+TSNumber<uint32> TSObject::GetCoreUInt32(uint16 index)
 {
     return obj->GetUInt32Value(index);
 }
@@ -94,7 +94,7 @@ uint32 TSObject::GetCoreUInt32(uint16 index)
  * @param uint16 index
  * @return float value
  */
-float TSObject::GetCoreFloat(uint16 index)
+TSNumber<float> TSObject::GetCoreFloat(uint16 index)
 {
     return obj->GetFloatValue(index);
 }
@@ -108,7 +108,7 @@ float TSObject::GetCoreFloat(uint16 index)
  * @param uint8 offset : should be 0, 1, 2, or 3
  * @return uint8 value
  */
-uint8 TSObject::GetCoreByte(uint16 index,uint8 offset)
+TSNumber<uint8> TSObject::GetCoreByte(uint16 index,uint8 offset)
 {
     return obj->GetByteValue(index, offset);
 }
@@ -122,7 +122,7 @@ uint8 TSObject::GetCoreByte(uint16 index,uint8 offset)
  * @param uint8 offset : should be 0 or 1
  * @return uint16 value
  */
-uint16 TSObject::GetCoreUInt16(uint16 index,uint8 offset)
+TSNumber<uint16> TSObject::GetCoreUInt16(uint16 index,uint8 offset)
 {
     return obj->GetUInt16Value(index, offset);
 }
@@ -134,7 +134,7 @@ uint16 TSObject::GetCoreUInt16(uint16 index,uint8 offset)
  *
  * @return float scale
  */
-float TSObject::GetScale()
+TSNumber<float> TSObject::GetScale()
 {
 #ifndef AZEROTHCORE
     return obj->GetObjectScale();
@@ -150,7 +150,7 @@ float TSObject::GetScale()
  *
  * @return uint32 entry
  */
-uint32 TSObject::GetEntry()
+TSNumber<uint32> TSObject::GetEntry()
 {
     if (obj == nullptr) return 0;
     return obj->GetEntry();
@@ -168,7 +168,7 @@ uint32 TSObject::GetEntry()
  *
  * @return uint64 guid
  */
-uint64 TSObject::GetGUID()
+TSNumber<uint64> TSObject::GetGUID()
 {
     return TS_GUID(obj->GetGUID());
 }
@@ -185,7 +185,7 @@ uint64 TSObject::GetGUID()
  *
  * @return uint32 guidLow
  */
-uint32 TSObject::GetGUIDLow()
+TSNumber<uint32> TSObject::GetGUIDLow()
 {
 #ifdef TRINITY
     return obj->GetGUID().GetCounter();
@@ -210,7 +210,7 @@ uint32 TSObject::GetGUIDLow()
  *
  * @return uint8 typeID
  */
-uint8 TSObject::GetTypeID()
+TSNumber<uint8> TSObject::GetTypeID()
 {
     return obj->GetTypeId();
 }
@@ -221,7 +221,7 @@ uint8 TSObject::GetTypeID()
  * @param uint16 index
  * @return uint64 value
  */
-uint64 TSObject::GetCoreUInt64(uint16 index)
+TSNumber<uint64> TSObject::GetCoreUInt64(uint16 index)
 {
     return obj->GetUInt64Value(index);
 }

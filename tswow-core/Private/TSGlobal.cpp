@@ -42,12 +42,12 @@ void SendWorldMessage(std::string const& string)
     sWorld->SendServerMessage(SERVER_MSG_STRING, string);
 }
 
-uint32 GetCurrTime()
+TSNumber<uint32> GetCurrTime()
 {
     return getMSTime();
 }
 
-uint64 GetUnixTime()
+TSNumber<uint64> GetUnixTime()
 {
     using namespace std::chrono;
     return uint64(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
@@ -70,9 +70,9 @@ bool TC_GAME_API IsHolidayActive(uint16_t holiday_id)
     return IsHolidayActive(HolidayIds(holiday_id));
 }
 
-TSArray<uint16_t> TC_GAME_API GetActiveGameEvents()
+TSArray<TSNumber<uint16> > TC_GAME_API GetActiveGameEvents()
 {
-    TSArray<uint16_t> arr;
+    TSArray<TSNumber<uint16> > arr;
     for (auto const& evt: sGameEventMgr->GetActiveEventList())
     {
         arr.push(evt);
@@ -114,7 +114,7 @@ bool L_HAS_TAG(uint32_t id, sol::table list)
     return false;
 }
 
-TSLua::Array<uint16_t> TC_GAME_API LGetActiveGameEvents()
+TSLua::Array<TSNumber<uint16>> TC_GAME_API LGetActiveGameEvents()
 {
     return sol::as_table(*GetActiveGameEvents().vec);
 }

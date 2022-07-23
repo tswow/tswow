@@ -17,9 +17,9 @@ void TSLua::load_entity_methods_t(sol::state& state, sol::usertype<T> & target, 
     LUA_FIELD(target, TSEntityProvider, HasFloat);
     LUA_FIELD(target, TSEntityProvider, HasObject);
     
-    LUA_FIELD_OVERLOAD_1_1(target, TSEntityProvider, GetUInt, std::string const&, uint32_t);
-    LUA_FIELD_OVERLOAD_1_1(target, TSEntityProvider, GetInt, std::string const&, int32_t);
-    LUA_FIELD_OVERLOAD_1_1(target, TSEntityProvider, GetFloat, std::string const&, float);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, TSEntityProvider, GetUInt, std::string const&, uint32_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, TSEntityProvider, GetInt, std::string const&, int32_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, TSEntityProvider, GetFloat, std::string const&, float);
 
     target.set_function("GetObject", [=](TSEntityProvider& prov, std::string const& key, sol::table def) {
         return prov.LGetObject(key, def);

@@ -32,10 +32,10 @@ public:
     bool operator==(TSGuild const& rhs) { return guild == rhs.guild; }
     bool IsNull() { return guild == nullptr; };
     TSArray<TSPlayer> GetMembers();
-    uint32 GetMemberCount();
+    TSNumber<uint32> GetMemberCount();
     TSPlayer GetLeader();
-    uint64 GetLeaderGUID();
-    uint32 GetID();
+    TSNumber<uint64> GetLeaderGUID();
+    TSNumber<uint32> GetID();
     std::string GetName();
     std::string GetMOTD();
     std::string GetInfo();

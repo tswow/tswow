@@ -42,7 +42,7 @@ std::string TSChannel::GetName(uint32 locale)
 #endif
 }
 
-uint32 TSChannel::GetID()
+TSNumber<uint32> TSChannel::GetID()
 {
     return channel->GetChannelId();
 }
@@ -73,8 +73,8 @@ bool TSChannel::CheckPassword(std::string const& password) {
     return channel->GetPassword() == password;
 #endif
 }
-uint32 TSChannel::GetNumPlayers() { return channel->GetNumPlayers(); }
-uint8 TSChannel::GetFlags() { return channel->GetFlags(); }
+TSNumber<uint32> TSChannel::GetNumPlayers() { return channel->GetNumPlayers(); }
+TSNumber<uint8> TSChannel::GetFlags() { return channel->GetFlags(); }
 bool TSChannel::HasFlag(uint8 flag) { return channel->HasFlag(flag); }
 void TSChannel::JoinChannel(TSPlayer player, std::string const& password)
 {

@@ -728,7 +728,7 @@ bool TSPlayer::CanParry()
  *
  * @return uint8 specCount
  */
-uint8 TSPlayer::GetSpecsCount(uint32 entry,uint32 mapid,uint32 zone)
+TSNumber<uint8> TSPlayer::GetSpecsCount(uint32 entry,uint32 mapid,uint32 zone)
 {
     return player->GetSpecsCount();
 }
@@ -738,7 +738,7 @@ uint8 TSPlayer::GetSpecsCount(uint32 entry,uint32 mapid,uint32 zone)
  *
  * @return uint32 specId
  */
-uint32 TSPlayer::GetActiveSpec()
+TSNumber<uint32> TSPlayer::GetActiveSpec()
 {
     return player->GetActiveSpec();
 }
@@ -750,7 +750,7 @@ uint32 TSPlayer::GetActiveSpec()
  *
  * @return uint32 phasemask
  */
-uint32 TSPlayer::GetPhaseMaskForSpawn()
+TSNumber<uint32> TSPlayer::GetPhaseMaskForSpawn()
 {
     return player->GetPhaseMaskForSpawn();
 }
@@ -762,7 +762,7 @@ uint32 TSPlayer::GetPhaseMaskForSpawn()
  *
  * @return uint32 arenaPoints
  */
-uint32 TSPlayer::GetArenaPoints()
+TSNumber<uint32> TSPlayer::GetArenaPoints()
 {
     return player->GetArenaPoints();
 }
@@ -772,7 +772,7 @@ uint32 TSPlayer::GetArenaPoints()
  *
  * @return uint32 honorPoints
  */
-uint32 TSPlayer::GetHonorPoints()
+TSNumber<uint32> TSPlayer::GetHonorPoints()
 {
     return player->GetHonorPoints();
 }
@@ -783,7 +783,7 @@ uint32 TSPlayer::GetHonorPoints()
  *
  * @return uint32 blockValue
  */
-uint32 TSPlayer::GetShieldBlockValue()
+TSNumber<uint32> TSPlayer::GetShieldBlockValue()
 {
     return player->GetShieldBlockValue();
 }
@@ -795,7 +795,7 @@ uint32 TSPlayer::GetShieldBlockValue()
  * @param uint32 spellId
  * @return uint32 spellCooldownDelay
  */
-uint32 TSPlayer::GetSpellCooldownDelay(uint32 spellId)
+TSNumber<uint32> TSPlayer::GetSpellCooldownDelay(uint32 spellId)
 {
 
 #ifdef TRINITY
@@ -813,7 +813,7 @@ uint32 TSPlayer::GetSpellCooldownDelay(uint32 spellId)
  *
  * @return uint32 latency
  */
-uint32 TSPlayer::GetLatency()
+TSNumber<uint32> TSPlayer::GetLatency()
 {
     return player->GetSession()->GetLatency();
 }
@@ -824,7 +824,7 @@ uint32 TSPlayer::GetLatency()
  *
  * @return uint32 championingFaction
  */
-uint32 TSPlayer::GetChampioningFaction()
+TSNumber<uint32> TSPlayer::GetChampioningFaction()
 {
     return player->GetChampioningFaction();
 }
@@ -835,7 +835,7 @@ uint32 TSPlayer::GetChampioningFaction()
  *
  * @return uint8 subGroup
  */
-uint8 TSPlayer::GetOriginalSubGroup()
+TSNumber<uint8> TSPlayer::GetOriginalSubGroup()
 {
     return player->GetOriginalSubGroup();
 }
@@ -866,7 +866,7 @@ TSPlayer  TSPlayer::GetNextRandomRaidMember(float radius)
  *
  * @return uint8 subGroup
  */
-uint8 TSPlayer::GetSubGroup()
+TSNumber<uint8> TSPlayer::GetSubGroup()
 {
     return player->GetSubGroup();
 }
@@ -887,7 +887,7 @@ TSGroup  TSPlayer::GetGroupInvite()
  * @param uint32 xp
  * @return uint32 xpBonus
  */
-uint32 TSPlayer::GetXPRestBonus(uint32 xp)
+TSNumber<uint32> TSPlayer::GetXPRestBonus(uint32 xp)
 {
     return player->GetXPRestBonus(xp);
 }
@@ -897,7 +897,7 @@ uint32 TSPlayer::GetXPRestBonus(uint32 xp)
  *
  * @return [BattleGroundTypeId] typeId
  */
-uint32 TSPlayer::GetBGTypeID()
+TSNumber<uint32> TSPlayer::GetBGTypeID()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundTypeId();
@@ -911,7 +911,7 @@ uint32 TSPlayer::GetBGTypeID()
  *
  * @return uint32 battleGroundId
  */
-uint32 TSPlayer::GetBattlegroundID()
+TSNumber<uint32> TSPlayer::GetBattlegroundID()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundId();
@@ -926,7 +926,7 @@ uint32 TSPlayer::GetBattlegroundID()
  * @param uint32 faction
  * @return [ReputationRank] rank
  */
-uint32 TSPlayer::GetReputationRank(uint32 faction)
+TSNumber<uint32> TSPlayer::GetReputationRank(uint32 faction)
 {
     return player->GetReputationRank(faction);
 }
@@ -936,7 +936,7 @@ uint32 TSPlayer::GetReputationRank(uint32 faction)
  *
  * @return uint16 drunkValue
  */
-uint16 TSPlayer::GetDrunkValue()
+TSNumber<uint16> TSPlayer::GetDrunkValue()
 {
     return player->GetDrunkValue();
 }
@@ -947,7 +947,7 @@ uint16 TSPlayer::GetDrunkValue()
  * @param uint32 skill
  * @param int16 bonusVal
  */
-int16 TSPlayer::GetSkillTempBonusValue(uint32 skill)
+TSNumber<int16> TSPlayer::GetSkillTempBonusValue(uint32 skill)
 {
     return player->GetSkillTempBonusValue(skill);
 }
@@ -958,7 +958,7 @@ int16 TSPlayer::GetSkillTempBonusValue(uint32 skill)
  * @param uint32 skill
  * @param int16 bonusVal
  */
-int16 TSPlayer::GetSkillPermBonusValue(uint32 skill)
+TSNumber<int16> TSPlayer::GetSkillPermBonusValue(uint32 skill)
 {
     return player->GetSkillPermBonusValue(skill);
 }
@@ -969,7 +969,7 @@ int16 TSPlayer::GetSkillPermBonusValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 pureVal
  */
-uint16 TSPlayer::GetPureSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetPureSkillValue(uint32 skill)
 {
     return player->GetPureSkillValue(skill);
 }
@@ -980,7 +980,7 @@ uint16 TSPlayer::GetPureSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 baseVal
  */
-uint16 TSPlayer::GetBaseSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetBaseSkillValue(uint32 skill)
 {
     return player->GetBaseSkillValue(skill);
 }
@@ -991,7 +991,7 @@ uint16 TSPlayer::GetBaseSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 val
  */
-uint16 TSPlayer::GetSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetSkillValue(uint32 skill)
 {
     return player->GetSkillValue(skill);
 }
@@ -1002,7 +1002,7 @@ uint16 TSPlayer::GetSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 pureVal
  */
-uint16 TSPlayer::GetPureMaxSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetPureMaxSkillValue(uint32 skill)
 {
     return player->GetPureMaxSkillValue(skill);
 }
@@ -1013,7 +1013,7 @@ uint16 TSPlayer::GetPureMaxSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 val
  */
-uint16 TSPlayer::GetMaxSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetMaxSkillValue(uint32 skill)
 {
     return player->GetMaxSkillValue(skill);
 }
@@ -1023,7 +1023,7 @@ uint16 TSPlayer::GetMaxSkillValue(uint32 skill)
  *
  * @return float bonus
  */
-float TSPlayer::GetManaBonusFromIntellect()
+TSNumber<float> TSPlayer::GetManaBonusFromIntellect()
 {
     return player->GetManaBonusFromIntellect();
 }
@@ -1033,7 +1033,7 @@ float TSPlayer::GetManaBonusFromIntellect()
  *
  * @return float bonus
  */
-float TSPlayer::GetHealthBonusFromStamina()
+TSNumber<float> TSPlayer::GetHealthBonusFromStamina()
 {
     return player->GetHealthBonusFromStamina();
 }
@@ -1044,7 +1044,7 @@ float TSPlayer::GetHealthBonusFromStamina()
  * @param bool isRaid = true : argument is TrinityCore only
  * @return int32 difficulty
  */
-int32 TSPlayer::GetDifficulty(bool isRaid)
+TSNumber<int32> TSPlayer::GetDifficulty(bool isRaid)
 {
 #ifdef TBC
     return player->GetDifficulty();
@@ -1060,7 +1060,7 @@ int32 TSPlayer::GetDifficulty(bool isRaid)
  *
  * @return uint32 guildRank
  */
-uint32 TSPlayer::GetGuildRank()
+TSNumber<uint32> TSPlayer::GetGuildRank()
 {
     return player->GetRank();
 }
@@ -1070,7 +1070,7 @@ uint32 TSPlayer::GetGuildRank()
  *
  * @return uint32 freeTalentPointAmt
  */
-uint32 TSPlayer::GetFreeTalentPoints()
+TSNumber<uint32> TSPlayer::GetFreeTalentPoints()
 {
     return player->GetFreeTalentPoints();
 }
@@ -1091,7 +1091,7 @@ std::string TSPlayer::GetGuildName()
  * @param uint32 faction
  * @return int32 reputationAmt
  */
-int32 TSPlayer::GetReputation(uint32 faction)
+TSNumber<int32> TSPlayer::GetReputation(uint32 faction)
 {
     return player->GetReputationMgr().GetReputation(faction);
 }
@@ -1115,7 +1115,7 @@ TSUnit  TSPlayer::GetComboTarget()
  *
  * @return uint8 comboPoints
  */
-uint8 TSPlayer::GetComboPoints()
+TSNumber<uint8> TSPlayer::GetComboPoints()
 {
     return player->GetComboPoints();
 }
@@ -1125,7 +1125,7 @@ uint8 TSPlayer::GetComboPoints()
  *
  * @return uint32 inGameTime
  */
-uint32 TSPlayer::GetInGameTime()
+TSNumber<uint32> TSPlayer::GetInGameTime()
 {
     return player->GetInGameTime();
 }
@@ -1136,7 +1136,7 @@ uint32 TSPlayer::GetInGameTime()
  * @param uint32 questId
  * @return [QuestStatus] questStatus
  */
-uint32 TSPlayer::GetQuestStatus(uint32 entry)
+TSNumber<uint32> TSPlayer::GetQuestStatus(uint32 entry)
 {
     return player->GetQuestStatus(entry);
 }
@@ -1159,7 +1159,7 @@ bool TSPlayer::GetQuestRewardStatus(uint32 questId)
  * @param int32 entry : entry of required [Creature]
  * @return uint16 count
  */
-uint16 TSPlayer::GetReqKillOrCastCurrentCount(uint32 questId,int32 entry)
+TSNumber<uint16> TSPlayer::GetReqKillOrCastCurrentCount(uint32 questId,int32 entry)
 {
     return player->GetReqKillOrCastCurrentCount(questId, entry);
 }
@@ -1170,7 +1170,7 @@ uint16 TSPlayer::GetReqKillOrCastCurrentCount(uint32 questId,int32 entry)
  * @param uint32 questId
  * @return [QuestStatus] questRewardStatus
  */
-uint32 TSPlayer::GetQuestLevel(TSQuest _quest)
+TSNumber<uint32> TSPlayer::GetQuestLevel(TSQuest _quest)
 {
     auto quest = _quest.quest;
 
@@ -1199,7 +1199,7 @@ TSItem  TSPlayer::GetEquippedItemBySlot(uint8 slot)
  *
  * @return float restBonus
  */
-float TSPlayer::GetRestBonus()
+TSNumber<float> TSPlayer::GetRestBonus()
 {
     return player->GetRestBonus();
 }
@@ -1209,7 +1209,7 @@ float TSPlayer::GetRestBonus()
  *
  * @return uint8 tag
  */
-uint8 TSPlayer::GetChatTag()
+TSNumber<uint8> TSPlayer::GetChatTag()
 {
     return player->GetChatTag();
 }
@@ -1275,7 +1275,7 @@ TSItem  TSPlayer::GetItemByEntry(uint32 entry)
  *
  * @return uint32 textId : key to npc_text database table
  */
-uint32 TSPlayer::GetGossipTextID(TSWorldObject _obj)
+TSNumber<uint32> TSPlayer::GetGossipTextID(TSWorldObject _obj)
 {
     auto obj = _obj.obj;
     return player->GetGossipTextId(obj);
@@ -1300,7 +1300,7 @@ TSUnit  TSPlayer::GetSelection()
  *
  * @return [AccountTypes] gmRank
  */
-uint32 TSPlayer::GetGMRank()
+TSNumber<uint32> TSPlayer::GetGMRank()
 {
     return player->GetSession()->GetSecurity();
 }
@@ -1310,7 +1310,7 @@ uint32 TSPlayer::GetGMRank()
  *
  * @return uint32 guildId
  */
-uint32 TSPlayer::GetGuildID()
+TSNumber<uint32> TSPlayer::GetGuildID()
 {
     return player->GetGuildId();
 }
@@ -1320,7 +1320,7 @@ uint32 TSPlayer::GetGuildID()
  *
  * @return [TeamId] teamId
  */
-uint32 TSPlayer::GetTeam()
+TSNumber<uint32> TSPlayer::GetTeam()
 {
     return player->GetTeamId();
 }
@@ -1332,7 +1332,7 @@ uint32 TSPlayer::GetTeam()
  * @param bool checkinBank = false : also counts the items in player's bank if true
  * @return uint32 itemamount
  */
-uint32 TSPlayer::GetItemCount(uint32 entry,bool checkinBank)
+TSNumber<uint32> TSPlayer::GetItemCount(uint32 entry,bool checkinBank)
 {
     return player->GetItemCount(entry, checkinBank);
 }
@@ -1342,7 +1342,7 @@ uint32 TSPlayer::GetItemCount(uint32 entry,bool checkinBank)
  *
  * @return uint32 lifeTimeKils
  */
-uint32 TSPlayer::GetLifetimeKills()
+TSNumber<uint32> TSPlayer::GetLifetimeKills()
 {
     return player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
 }
@@ -1362,7 +1362,7 @@ std::string TSPlayer::GetPlayerIP()
  *
  * @return uint32 currLevelPlayTime
  */
-uint32 TSPlayer::GetLevelPlayedTime()
+TSNumber<uint32> TSPlayer::GetLevelPlayedTime()
 {
     return player->GetLevelPlayedTime();
 }
@@ -1372,7 +1372,7 @@ uint32 TSPlayer::GetLevelPlayedTime()
  *
  * @return uint32 totalPlayTime
  */
-uint32 TSPlayer::GetTotalPlayedTime()
+TSNumber<uint32> TSPlayer::GetTotalPlayedTime()
 {
     return player->GetTotalPlayedTime();
 }
@@ -1402,7 +1402,7 @@ TSGroup  TSPlayer::GetGroup()
  *
  * @return uint32 accountId
  */
-uint32 TSPlayer::GetAccountID()
+TSNumber<uint32> TSPlayer::GetAccountID()
 {
     return player->GetSession()->GetAccountId();
 }
@@ -1438,7 +1438,7 @@ TSCorpse  TSPlayer::GetCorpse()
  *
  * @return int localeIndex
  */
-int TSPlayer::GetDbLocaleIndex()
+TSNumber<int> TSPlayer::GetDbLocaleIndex()
 {
     return player->GetSession()->GetSessionDbLocaleIndex();
 }
@@ -1448,7 +1448,7 @@ int TSPlayer::GetDbLocaleIndex()
  *
  * @return [LocaleConstant] locale
  */
-uint32 TSPlayer::GetDbcLocale()
+TSNumber<uint32> TSPlayer::GetDbcLocale()
 {
     return player->GetSession()->GetSessionDbcLocale();
 }
@@ -1857,7 +1857,7 @@ void TSPlayer::SetMoney(uint32 amt)
     player->SetMoney(amt);
 }
 
-uint32 TSPlayer::GetMoney()
+TSNumber<uint32> TSPlayer::GetMoney()
 {
     return player->GetMoney();
 }
@@ -2361,7 +2361,7 @@ void TSPlayer::LeaveBG(bool teleToEntryPoint)
  * @param bool guildBank = false
  * @return uint32 totalCost
  */
-uint32 TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod)
+TSNumber<uint32> TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod)
 {
 #if TRINITY
     return player->DurabilityRepair(position, cost, discountMod);
@@ -2378,7 +2378,7 @@ uint32 TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod)
  * @param bool guidBank = false
  * @return uint32 totalCost
  */
-uint32 TSPlayer::DurabilityRepairAll(bool cost,float discountMod,bool guildBank)
+TSNumber<uint32> TSPlayer::DurabilityRepairAll(bool cost,float discountMod,bool guildBank)
 {
 
 #ifdef CLASSIC
@@ -2474,7 +2474,7 @@ void TSPlayer::RemoveFromGroup()
  *
  * @return uint32 resetCost
  */
-uint32 TSPlayer::ResetTalentsCost()
+TSNumber<uint32> TSPlayer::ResetTalentsCost()
 {
 #ifdef CATA
     return player->GetNextResetTalentsCost();
@@ -2938,7 +2938,7 @@ void TSPlayer::SetXP(uint32 xp)
 #endif
 }
 
-uint32 TSPlayer::GetXP()
+TSNumber<uint32> TSPlayer::GetXP()
 {
 #if TRINITY
     return player->GetXP();
@@ -3096,7 +3096,7 @@ bool TSPlayer::CanEquipItem(TSItem _item,uint32 slot,uint32 entry)
     return true;
 }
 
-float TSPlayer::GetAverageItemLevel()
+TSNumber<float> TSPlayer::GetAverageItemLevel()
 {
     return player->GetAverageItemLevel();
 }
@@ -3971,7 +3971,7 @@ void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLev
 #endif
 }
 
-uint8 TSPlayer::GetHairStyle()
+TSNumber<uint8> TSPlayer::GetHairStyle()
 {
 #if TRINITY
     return player->GetHairStyleId();
@@ -3990,7 +3990,7 @@ void TSPlayer::SetHairStyle(uint8 style)
 #endif
 }
 
-uint8 TSPlayer::GetHairColor()
+TSNumber<uint8> TSPlayer::GetHairColor()
 {
 #if TRINITY
     return player->GetHairColorId();
@@ -4008,7 +4008,7 @@ void TSPlayer::SetHairColor(uint8 color)
 #endif
 }
 
-uint8 TSPlayer::GetFacialStyle()
+TSNumber<uint8> TSPlayer::GetFacialStyle()
 {
 #if TRINITY
     return player->GetFacialStyle();
@@ -4028,7 +4028,7 @@ void TSPlayer::SetFacialStyle(uint8 style)
 
 }
 
-uint8 TSPlayer::GetSkinColor()
+TSNumber<uint8> TSPlayer::GetSkinColor()
 {
 #if TRINITY
     return player->GetSkinId();
@@ -4047,7 +4047,7 @@ void TSPlayer::SetSkinColor(uint8 color)
 #endif
 }
 
-uint8 TSPlayer::GetFace()
+TSNumber<uint8> TSPlayer::GetFace()
 {
 #if TRINITY
     return player->GetFaceId();
@@ -4152,7 +4152,7 @@ bool TSPlayer::CanBeLeader()
 #endif
 }
 
-uint32 TSPlayer::GetTalentPointsInTree(uint32 tabId)
+TSNumber<uint32> TSPlayer::GetTalentPointsInTree(uint32 tabId)
 {
 #if TRINITY
     return player->GetTalentPointsInTree(tabId);
@@ -4217,7 +4217,7 @@ player->SummonPet(entry, x, y, z, o, (PetType)petType, despwtime);
 player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
 }*/
 
-uint32 TSPlayer::GetFreeInventorySpace()
+TSNumber<uint32> TSPlayer::GetFreeInventorySpace()
 {
     return player->GetFreeInventorySpace();
 }
@@ -4235,19 +4235,19 @@ TSUnit TSPlayer::GetGlobalSelection()
     }
 }
 
-uint32 TSPlayer::GetQuestRewardTempTalentPoints()
+TSNumber<uint32> TSPlayer::GetQuestRewardTempTalentPoints()
 {
     return player->m_questRewardTalentCount;
 }
 
-uint32 TSPlayer::GetQuestRewardPermTalentPoints()
+TSNumber<uint32> TSPlayer::GetQuestRewardPermTalentPoints()
 {
     return player->m_questRewardPermTalentCount;
 }
 
-TSDictionary<uint32, TSPlayerSpell> TSPlayer::GetSpellMap()
+TSDictionary<TSNumber<uint32>, TSPlayerSpell> TSPlayer::GetSpellMap()
 {
-    TSDictionary<uint32, TSPlayerSpell> map;
+    TSDictionary<TSNumber<uint32>, TSPlayerSpell> map;
     for (auto& [spell, info] : player->GetSpellMap())
     {
         map.set(spell, TSPlayerSpell{ uint8(info.state),info.active,info.dependent,info.disabled });
@@ -4255,7 +4255,7 @@ TSDictionary<uint32, TSPlayerSpell> TSPlayer::GetSpellMap()
     return map;
 }
 
-TSLua::Dictionary<uint32, TSPlayerSpell> TSPlayer::LGetSpellMap()
+TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> TSPlayer::LGetSpellMap()
 {
     return sol::as_table(*GetSpellMap()._map);
 }

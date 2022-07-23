@@ -1979,7 +1979,7 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.NumericLiteral:
             case ts.SyntaxKind.NumberKeyword:
-                this.writer.writeString('float');
+                this.writer.writeString('double');
                 break;
             case ts.SyntaxKind.StringLiteral:
             case ts.SyntaxKind.StringKeyword:
@@ -3150,11 +3150,11 @@ export class Emitter {
         const isInteger = caseExpressions.every(expression => expression.kind === ts.SyntaxKind.NumericLiteral
             && this.isInt((<ts.NumericLiteral>expression).text));
 
-        this.writer.writeString(`switch (`);
+        this.writer.writeString(`switch (uint64(`);
 
         this.processExpression(node.expression);
 
-        this.writer.writeStringNewLine(')');
+        this.writer.writeStringNewLine('))');
 
         this.writer.BeginBlock();
 
@@ -3567,7 +3567,7 @@ export class Emitter {
         }
 
         if (isEnum) {
-            this.writer.writeString('float(');
+            this.writer.writeString('double(');
         }
 
         this.processExpression(node.operand);

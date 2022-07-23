@@ -20,7 +20,7 @@ public:
 
     std::set<TSWorldObject>::iterator begin();
     std::set<TSWorldObject>::iterator end();
-    uint32_t get_length();
+    TSNumber<uint32> get_length();
 
     void forEach(std::function<void(TSWorldObject)> callback);
     void filterInPlace(std::function<bool(TSWorldObject)> callback);

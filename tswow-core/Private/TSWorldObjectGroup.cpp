@@ -35,7 +35,7 @@ std::set<TSWorldObject>::iterator TSWorldObjectGroup::end()
     return entries.end();
 }
 
-uint32 TSWorldObjectGroup::get_length()
+TSNumber<uint32> TSWorldObjectGroup::get_length()
 {
     return entries.size();
 }

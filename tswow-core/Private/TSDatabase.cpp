@@ -67,18 +67,18 @@ public:
 #define TSGet(TC,AC) Get<AC>()
 #endif
 
-    uint8 GetUInt8(int index) final { return field[index].TSGet(GetUInt8, uint8); }
-    uint16 GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
-    uint32 GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
-    uint64 GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSNumber<uint8> GetUInt8(int index) final { return field[index].TSGet(GetUInt8, uint8); }
+    TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
+    TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
+    TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
 
-    int8 GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
-    int16 GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
-    int32 GetInt32(int index) final { return field[index].TSGet(GetInt32,int32); }
-    int64 GetInt64(int index) final { return field[index].TSGet(GetInt64,int64); }
+    TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
+    TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
+    TSNumber<int32> GetInt32(int index) final { return field[index].TSGet(GetInt32,int32); }
+    TSNumber<int64> GetInt64(int index) final { return field[index].TSGet(GetInt64,int64); }
 
-    float GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
-    double GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
+    TSNumber<float> GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
+    TSNumber<double> GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
     std::string GetString(int index) final { 
 #if TRINITY
@@ -125,18 +125,18 @@ public:
         return v;
     }
 
-    uint8 GetUInt8(int index) final { return field[index].TSGet(GetUInt8,uint8); }
-    uint16 GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
-    uint32 GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
-    uint64 GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSNumber<uint8> GetUInt8(int index) final { return field[index].TSGet(GetUInt8,uint8); }
+    TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
+    TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
+    TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
 
-    int8 GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
-    int16 GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
-    int32 GetInt32(int index) final { return field[index].TSGet(GetInt32,uint32); }
-    int64 GetInt64(int index) final { return field[index].TSGet(GetInt64,uint64); }
+    TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
+    TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
+    TSNumber<int32> GetInt32(int index) final { return field[index].TSGet(GetInt32,uint32); }
+    TSNumber<int64> GetInt64(int index) final { return field[index].TSGet(GetInt64,uint64); }
 
-    float GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
-    double GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
+    TSNumber<float> GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
+    TSNumber<double> GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
     std::string GetString(int index) final { 
 #if TRINITY

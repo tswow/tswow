@@ -334,7 +334,7 @@ TSJsonObject TSJsonObject::Remove(std::string const& key)
     return *this;
 }
 
-unsigned TSJsonObject::get_length()
+TSNumber<unsigned> TSJsonObject::get_length()
 {
     return m_tags->size();
 }
@@ -568,7 +568,7 @@ void TSJsonArray::Parse(std::string const& json)
     }
 }
 
-unsigned TSJsonArray::get_length()
+TSNumber<unsigned> TSJsonArray::get_length()
 {
     return m_tags->size();
 }

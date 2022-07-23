@@ -66,7 +66,7 @@ void TSLoot::SetMoney(uint32 money)
     loot->gold = money;
 }
 
-uint32 TSLoot::GetMoney()
+TSNumber<uint32> TSLoot::GetMoney()
 {
     return loot->gold;
 }
@@ -76,7 +76,7 @@ void TSLoot::SetLootType(uint32 lootType)
     loot->loot_type = LootType(lootType);
 }
 
-uint32 TSLoot::GetLootType()
+TSNumber<uint32> TSLoot::GetLootType()
 {
     return loot->loot_type;
 }
@@ -86,7 +86,7 @@ void TSLoot::SetLootOwner(uint64 owner)
     loot->lootOwnerGUID = ObjectGuid(owner);
 }
 
-uint64 TSLoot::GetLootOwner()
+TSNumber<uint64> TSLoot::GetLootOwner()
 {
     return TS_GUID(loot->lootOwnerGUID);
 }
@@ -96,22 +96,22 @@ TSLootItem::TSLootItem(LootItem* item)
     this->item = item;
 }
 
-uint32 TSLootItem::GetItemID()
+TSNumber<uint32> TSLootItem::GetItemID()
 {
     return item->itemid;
 }
 
-uint32 TSLootItem::GetRandomSuffix()
+TSNumber<uint32> TSLootItem::GetRandomSuffix()
 {
     return item->randomSuffix;
 }
 
-int32 TSLootItem::GetRandomPropertyID()
+TSNumber<int32> TSLootItem::GetRandomPropertyID()
 {
     return item->randomPropertyId;
 }
 
-uint8 TSLootItem::GetCount()
+TSNumber<uint8> TSLootItem::GetCount()
 {
     return item->count;
 }
@@ -136,12 +136,12 @@ void TSLootItem::SetCount(uint8 count)
     item->count = count;
 }
 
-uint32 TSLoot::GetItemCount()
+TSNumber<uint32> TSLoot::GetItemCount()
 {
     return loot->items.size();
 }
 
-uint32 TSLoot::GetQuestItemCount()
+TSNumber<uint32> TSLoot::GetQuestItemCount()
 {
     return loot->quest_items.size();
 }
@@ -213,12 +213,12 @@ void TSLoot::LFilter(sol::protected_function predicate)
     });
 }
 
-uint32 TSLootItem::GetFakeRandomSuffix()
+TSNumber<uint32> TSLootItem::GetFakeRandomSuffix()
 {
     return item->fakeRandomSuffix;
 }
 
-uint32 TSLootItem::GetFakeRandomPropertyID()
+TSNumber<uint32> TSLootItem::GetFakeRandomPropertyID()
 {
     return item->fakeRandomPropertyId;
 }

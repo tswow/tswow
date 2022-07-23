@@ -28,9 +28,9 @@ public:
     TSCorpse(Corpse* corpse);
     TSCorpse();
     TSCorpse* operator->() { return this;}
-    uint64 GetOwnerGUID();
-    uint32 GetGhostTime();
-    uint32 GetType();
+    TSNumber<uint64> GetOwnerGUID();
+    TSNumber<uint32> GetGhostTime();
+    TSNumber<uint32> GetType();
     TSLoot GetLoot();
     void ResetGhostTime();
     void SaveToDB();

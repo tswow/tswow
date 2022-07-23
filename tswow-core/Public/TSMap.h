@@ -48,11 +48,11 @@ public:
     bool IsHeroic();
     bool IsRaid();
     std::string GetName();
-    float GetHeight(float x, float y, uint32 phasemask);
-    int32 GetDifficulty();
-    uint32 GetInstanceID();
-    uint32 GetPlayerCount();
-    uint32 GetMapID();
+    TSNumber<float> GetHeight(float x, float y, uint32 phasemask);
+    TSNumber<int32> GetDifficulty();
+    TSNumber<uint32> GetInstanceID();
+    TSNumber<uint32> GetPlayerCount();
+    TSNumber<uint32> GetMapID();
 
     bool IsInstance();
     TSInstance ToInstance();
@@ -68,7 +68,7 @@ public:
     TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
     TSCreature SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
     TSGameObject SpawnGameObject(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
-    uint32 GetAreaID(float x, float y, float z, float phasemask);
+    TSNumber<uint32> GetAreaID(float x, float y, float z, float phasemask);
     TSWorldObject GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
     TSEntity * GetData();

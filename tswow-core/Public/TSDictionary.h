@@ -53,7 +53,7 @@ public:
     return _map->find(key) != _map->end();
   }
 
-  auto get_length() {
+  double get_length() {
     return _map->size();
   }
 

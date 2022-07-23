@@ -34,7 +34,7 @@ class TSEntity;
 class TSUnit;
 class TSMainThreadContext;
 
-#define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
+#define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutableNumber<uint32>,TSCollisionEntry*)>
 
 class TSFactionTemplate;
 
@@ -58,11 +58,11 @@ public:
     TSGameObject GetNearestGameObject(float range, uint32 entry, uint32 hostile);
     TSCreature GetNearestCreature(float range, uint32 entry, uint32 hostile, uint32 dead);
 
-    float GetDistance(TSWorldObject target);
-    float GetDistanceToPoint(float X, float Y, float Z);
+    TSNumber<float> GetDistance(TSWorldObject target);
+    TSNumber<float> GetDistanceToPoint(float X, float Y, float Z);
 
-    float GetDistance2d(TSWorldObject target);
-    float GetDistanceToPoint2d(float X, float Y);
+    TSNumber<float> GetDistance2d(TSWorldObject target);
+    TSNumber<float> GetDistanceToPoint2d(float X, float Y);
 
     TSGameObject  SummonGameObject(uint32 entry, float x, float y, float z, float o, uint32 respawnDelay);
     TSCreature  SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 spawnType, uint32 despawnTimer);
@@ -84,18 +84,18 @@ public:
 
     TSMap GetMap();
     std::string GetName();
-    uint32 GetPhaseMask();
-    uint64 GetPhaseID();
+    TSNumber<uint32> GetPhaseMask();
+    TSNumber<uint64> GetPhaseID();
     void SetPhaseMask(uint32 phaseMask, bool update, uint64 id = 0);
-    uint32 GetInstanceID();
-    uint32 GetAreaID();
-    uint32 GetZoneID();
-    uint32 GetMapID();
-    float GetAngle(TSWorldObject target,float x,float y);
-    float GetX();
-    float GetY();
-    float GetZ();
-    float GetO();
+    TSNumber<uint32> GetInstanceID();
+    TSNumber<uint32> GetAreaID();
+    TSNumber<uint32> GetZoneID();
+    TSNumber<uint32> GetMapID();
+    TSNumber<float> GetAngle(TSWorldObject target,float x,float y);
+    TSNumber<float> GetX();
+    TSNumber<float> GetY();
+    TSNumber<float> GetZ();
+    TSNumber<float> GetO();
     TSPosition GetPosition();
     // TODO: Fix
     //GetExactDistance(TSWorldObject _target, float x1, float y1, float z1);
@@ -111,9 +111,9 @@ public:
     bool IsHostileToPlayers();
     bool IsNeutralToAll();
 
-    uint32 CastSpell(TSWorldObject target, uint32 spell, bool triggered = false);
-    uint32 CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered = false);
-    uint32 CastCustomSpell(
+    TSNumber<uint32> CastSpell(TSWorldObject target, uint32 spell, bool triggered = false);
+    TSNumber<uint32> CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered = false);
+    TSNumber<uint32> CastCustomSpell(
           TSWorldObject target
         , uint32 spell
         , bool triggered = false
@@ -186,7 +186,7 @@ class TC_GAME_API TSWorldObjectCollection
     void filterInPlace(std::function<bool(TSWorldObject)> callback);
     void forEach(std::function<void(TSWorldObject)> callback);
     TSWorldObject find(std::function<bool(TSWorldObject)> callback);
-    uint32 get_length();
+    TSNumber<uint32> get_length();
     TSWorldObject get(uint32 index);
 };
 

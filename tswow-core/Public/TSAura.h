@@ -32,22 +32,22 @@ class ProcEventInfo;
 class TC_GAME_API TSAuraEffect {
     TS_CLASS_DECLARATION(TSAuraEffect,AuraEffect,aura)
     TSUnit GetCaster();
-    uint64 GetCasterGUID();
+    TSNumber<uint64> GetCasterGUID();
     TSAura GetAura();
     TSSpellInfo GetSpellInfo();
-    uint32 GetID();
-    uint32 GetEffectIndex();
-    uint32 GetAmplitude();
-    int32 GetMiscValueB();
-    int32 GetMiscValue();
-    uint32 GetAuraType();
-    int32 GetAmount();
+    TSNumber<uint32> GetID();
+    TSNumber<uint32> GetEffectIndex();
+    TSNumber<uint32> GetAmplitude();
+    TSNumber<int32> GetMiscValueB();
+    TSNumber<int32> GetMiscValue();
+    TSNumber<uint32> GetAuraType();
+    TSNumber<int32> GetAmount();
     void SetAmount(int32 amount);
-    int32 GetPeriodicTimer();
+    TSNumber<int32> GetPeriodicTimer();
     void SetPeriodicTimer(int32 periodicTimer);
-    uint32 GetTickNumber();
-    uint32 GetRemainingTicks();
-    uint32 GetTotalTicks();
+    TSNumber<uint32> GetTickNumber();
+    TSNumber<uint32> GetRemainingTicks();
+    TSNumber<uint32> GetTotalTicks();
     void ResetPeriodic();
     void ResetTicks();
     bool IsPeriodic();
@@ -58,11 +58,11 @@ class TC_GAME_API TSAuraApplication {
     TS_CLASS_DECLARATION(TSAuraApplication,AuraApplication,aura)
     TSUnit GetTarget();
     TSAura GetAura();
-    uint8 GetSlot();
-    uint8 GetFlags();
-    uint8 GetEffectMask();
-    uint8 GetAppliedEffects();
-    uint8 GetRemoveMode();
+    TSNumber<uint8> GetSlot();
+    TSNumber<uint8> GetFlags();
+    TSNumber<uint8> GetEffectMask();
+    TSNumber<uint8> GetAppliedEffects();
+    TSNumber<uint8> GetRemoveMode();
     bool IsPositive();
     bool IsSelfCast();
 };
@@ -77,12 +77,12 @@ public:
     operator bool() const { return aura != nullptr; }
     bool operator==(TSAura const& rhs) { return aura == rhs.aura; }
     TSUnit GetCaster();
-    uint64 GetCasterGUID();
-    uint32 GetCasterLevel();
-    int32 GetDuration();
-    uint32 GetAuraID();
-    int32 GetMaxDuration();
-    uint32 GetStackAmount();
+    TSNumber<uint64> GetCasterGUID();
+    TSNumber<uint32> GetCasterLevel();
+    TSNumber<int32> GetDuration();
+    TSNumber<uint32> GetAuraID();
+    TSNumber<int32> GetMaxDuration();
+    TSNumber<uint32> GetStackAmount();
     TSWorldObject GetOwner();
     TSArray<TSAuraApplication> GetApplications();
     void SetDuration(int32 duration);
@@ -100,12 +100,12 @@ class TC_GAME_API TSProcEventInfo
     TSUnit GetActor();
     TSUnit GetActionTarget();
     TSUnit GetProcTarget();
-    uint32 GetTypeMask();
-    uint32 GetSpellTypeMask();
-    uint32 GetSpellPhaseMask();
-    uint32 GetHitMask();
+    TSNumber<uint32> GetTypeMask();
+    TSNumber<uint32> GetSpellTypeMask();
+    TSNumber<uint32> GetSpellPhaseMask();
+    TSNumber<uint32> GetHitMask();
     TSSpellInfo GetSpellInfo();
-    uint32 GetSchoolMask();
+    TSNumber<uint32> GetSchoolMask();
     TSDamageInfo GetDamageInfo();
     TSHealInfo GetHealInfo();
     TSSpell GetSpell();

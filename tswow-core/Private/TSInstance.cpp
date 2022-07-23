@@ -26,7 +26,7 @@ bool TSInstance::IsEncounterInProgress()
     return m_script->IsEncounterInProgress();
 }
 
-uint64 TSInstance::GetObjectGUID(uint32 type)
+TSNumber<uint64> TSInstance::GetObjectGUID(uint32 type)
 {
     return TS_GUID(m_script->GetObjectGuid(type));
 }
@@ -109,7 +109,7 @@ void TSInstance::SetBossState(uint32 id, uint32 encounterState)
     m_script->SetBossState(id, EncounterState(encounterState));
 }
 
-uint32 TSInstance::GetBossState(uint32 id)
+TSNumber<uint32> TSInstance::GetBossState(uint32 id)
 {
     return m_script->GetBossState(id);
 }
@@ -142,7 +142,7 @@ bool TSInstance::HasPermBoundPlayers()
 #endif
 }
 
-uint32 TSInstance::GetMaxPlayers()
+TSNumber<uint32> TSInstance::GetMaxPlayers()
 {
 #if TRINITY
     return m_script->instance->GetMaxPlayers();
@@ -151,7 +151,7 @@ uint32 TSInstance::GetMaxPlayers()
 #endif
 }
 
-uint32 TSInstance::GetMaxResetDelay()
+TSNumber<uint32> TSInstance::GetMaxResetDelay()
 {
 #if TRINITY
     return m_script->instance->GetMaxResetDelay();
@@ -160,7 +160,7 @@ uint32 TSInstance::GetMaxResetDelay()
 #endif
 }
 
-uint32 TSInstance::GetTeamIDInInstance()
+TSNumber<uint32> TSInstance::GetTeamIDInInstance()
 {
 #if TRINITY
     return m_script->instance->GetTeamIdInInstance();
@@ -170,7 +170,7 @@ uint32 TSInstance::GetTeamIDInInstance()
 #endif
 }
 
-uint32 TSInstance::GetFactionInInstance()
+TSNumber<uint32> TSInstance::GetFactionInInstance()
 {
 #if TRINITY
     return m_script->instance->GetTeamInInstance();
@@ -180,7 +180,7 @@ uint32 TSInstance::GetFactionInInstance()
 #endif
 }
 
-uint32 TSInstance::GetEncounterCount()
+TSNumber<uint32> TSInstance::GetEncounterCount()
 {
     return m_script->GetEncounterCount();
 }
@@ -213,7 +213,7 @@ TSBossInfo::TSBossInfo(BossInfo* info)
     : m_info(info)
 {}
 
-uint32 TSBossInfo::GetBossState()
+TSNumber<uint32> TSBossInfo::GetBossState()
 {
     return m_info->state;
 }

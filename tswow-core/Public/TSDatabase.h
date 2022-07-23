@@ -27,18 +27,18 @@ class TC_GAME_API TSDatabaseResult /* : public std::enable_shared_from_this<TSDa
 public:
     //using std::enable_shared_from_this<TSDatabaseResult>::shared_from_this;
     TSDatabaseResult* operator->(){return this;}
-    virtual uint8 GetUInt8(int index) = 0;
-    virtual uint16 GetUInt16(int index) = 0;
-    virtual uint32 GetUInt32(int index) = 0;
-    virtual uint64 GetUInt64(int index) = 0;
+    virtual TSNumber<uint8> GetUInt8(int index) = 0;
+    virtual TSNumber<uint16> GetUInt16(int index) = 0;
+    virtual TSNumber<uint32> GetUInt32(int index) = 0;
+    virtual TSNumber<uint64> GetUInt64(int index) = 0;
 
-    virtual int8 GetInt8(int index) = 0;
-    virtual int16 GetInt16(int index) = 0;
-    virtual int32 GetInt32(int index) = 0;
-    virtual int64 GetInt64(int index) = 0;
+    virtual TSNumber<int8> GetInt8(int index) = 0;
+    virtual TSNumber<int16> GetInt16(int index) = 0;
+    virtual TSNumber<int32> GetInt32(int index) = 0;
+    virtual TSNumber<int64> GetInt64(int index) = 0;
 
-    virtual float GetFloat(int index) = 0;
-    virtual double GetDouble(int index) = 0;
+    virtual TSNumber<float> GetFloat(int index) = 0;
+    virtual TSNumber<double> GetDouble(int index) = 0;
 
     virtual std::string GetString(int index) = 0;
 

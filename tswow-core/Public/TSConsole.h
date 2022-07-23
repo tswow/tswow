@@ -30,6 +30,25 @@ static struct Console
     }
 
     template <>
+    void log(float value)
+    {
+        log<double>(value);
+    }
+
+    template <>
+    void log(double value)
+    {
+        if (value == std::floor(value))
+        {
+            std::cout << uint64(value);
+        }
+        else
+        {
+            std::cout << value;
+        }
+    }
+
+    template <>
     void log(std::string const& value)
     {
         std::cout << value;

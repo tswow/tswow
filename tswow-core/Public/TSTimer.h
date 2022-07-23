@@ -19,7 +19,7 @@ enum class TimerLoops {
     INDEFINITE = -1,
 };
 
-uint64_t TC_GAME_API now();
+TSNumber<uint64> TC_GAME_API now();
 
 template <typename T>
 class TSTimer;
@@ -67,7 +67,7 @@ public:
         m_stopped = true;
     }
 
-    uint32 GetDelay()
+    TSNumber<uint32> GetDelay()
     {
         return m_delay;
     }
@@ -77,12 +77,12 @@ public:
         m_delay = delay;
     }
 
-    uint64 GetDiff()
+    TSNumber<uint64> GetDiff()
     {
         return m_diff;
     }
 
-    uint32 GetFlags()
+    TSNumber<uint32> GetFlags()
     {
         return m_flags;
     }
@@ -92,7 +92,7 @@ public:
         m_flags = flags;
     }
 
-    int32 GetRepeats()
+    TSNumber<int32> GetRepeats()
     {
         return m_repeats;
     }
@@ -219,7 +219,7 @@ public:
     {
         for (auto itr = m_timers.begin(); itr != m_timers.end();)
         {
-            if (itr->GetFlags() & uint32(TimerFlags::CLEARS_ON_DEATH))
+            if (uint32(itr->GetFlags()) & uint32(TimerFlags::CLEARS_ON_DEATH))
             {
                 if (m_ticking)
                 {
@@ -242,7 +242,7 @@ public:
     {
         for (auto itr = m_timers.begin(); itr != m_timers.end();)
         {
-            if (itr->GetFlags() & uint32(TimerFlags::CLEARS_ON_MAP_CHANGED))
+            if (uint32(itr->GetFlags()) & uint32(TimerFlags::CLEARS_ON_MAP_CHANGED))
             {
                 if (m_ticking)
                 {

@@ -140,7 +140,7 @@ public:
     return indexOf(e) != -1;
   }
 
-  int indexOf(const T& e)
+  double indexOf(const T& e)
   {
     for (int i = 0; i < get_length(); ++i)
     {
@@ -152,7 +152,7 @@ public:
     return -1;
   }
 
-  int lastIndexOf(const T& e)
+  double lastIndexOf(const T& e)
   {
     for (int i = get_length() - 1; i >= 0; --i)
     {

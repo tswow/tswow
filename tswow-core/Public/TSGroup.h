@@ -42,11 +42,11 @@ public:
     bool HasFreeSlotSubGroup(uint8 subGroup);
     bool AddMember(TSPlayer player);
     TSArray<TSPlayer> GetMembers();
-    uint64 GetLeaderGUID();
-    uint64 GetGUID();
-    uint64 GetMemberGUID(std::string const& name);
-    uint32 GetMembersCount();
-    uint8 GetMemberGroup(uint64 guid);
+    TSNumber<uint64> GetLeaderGUID();
+    TSNumber<uint64> GetGUID();
+    TSNumber<uint64> GetMemberGUID(std::string const& name);
+    TSNumber<uint32> GetMembersCount();
+    TSNumber<uint8> GetMemberGroup(uint64 guid);
     void SetLeader(uint64 guid);
     void SendPacket(TSWorldPacket data, bool ignorePlayersInBg, uint64 ignore);
     void SendPacket(std::shared_ptr<TSWorldPacket> data, bool ignorePlayersInBg, uint64 ignore);

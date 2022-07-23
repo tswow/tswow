@@ -220,27 +220,27 @@ double TSDBJsonProvider::GetDBNumber(std::string const& key, double def)
     return get_json()->m_json.GetNumber(key, def);
 }
 
-uint32 TSDBJsonProvider::GetDBUInt32(std::string const& key, uint32 def)
+TSNumber<uint32> TSDBJsonProvider::GetDBUInt32(std::string const& key, uint32 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-uint64 TSDBJsonProvider::GetDBUInt64(std::string const& key, uint64 def)
+TSNumber<uint64> TSDBJsonProvider::GetDBUInt64(std::string const& key, uint64 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-int32 TSDBJsonProvider::GetDBInt32(std::string const& key, int32 def)
+TSNumber<int32> TSDBJsonProvider::GetDBInt32(std::string const& key, int32 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-int64 TSDBJsonProvider::GetDBInt64(std::string const& key, int64 def)
+TSNumber<int64> TSDBJsonProvider::GetDBInt64(std::string const& key, int64 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-float TSDBJsonProvider::GetDBFloat(std::string const& key, float def)
+TSNumber<float> TSDBJsonProvider::GetDBFloat(std::string const& key, float def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }

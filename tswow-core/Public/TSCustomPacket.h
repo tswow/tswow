@@ -68,20 +68,20 @@ public:
 		return read->Read(defaultValue);
 	}
 
-	uint8_t ReadUInt8(uint8_t def = 0) { return Read(def); }
-	int8_t ReadInt8(int8_t def = 0) { return Read(def); }
+	TSNumber<uint8> ReadUInt8(uint8_t def = 0) { return Read(def); }
+	TSNumber<int8> ReadInt8(int8_t def = 0) { return Read(def); }
 
-	uint16_t ReadUInt16(uint16_t def = 0) { return Read(def); }
-	int16_t ReadInt16(int16_t def = 0) { return Read(def); }
+	TSNumber<uint16> ReadUInt16(uint16_t def = 0) { return Read(def); }
+	TSNumber<int16> ReadInt16(int16_t def = 0) { return Read(def); }
 
-	uint32_t ReadUInt32(uint32_t def = 0) { return Read(def); }
-	int32_t ReadInt32(int32_t def = 0) { return Read(def); }
+	TSNumber<uint32> ReadUInt32(uint32_t def = 0) { return Read(def); }
+	TSNumber<int32> ReadInt32(int32_t def = 0) { return Read(def); }
 
-	uint64_t ReadUInt64(uint64_t def = 0) { return Read(def); }
-	int64_t ReadInt64(int64_t def = 0) { return Read(def); }
+	TSNumber<uint64> ReadUInt64(uint64_t def = 0) { return double(Read(def)); }
+	TSNumber<int64> ReadInt64(int64_t def = 0) { return double(Read(def)); }
 
-	float ReadFloat(float def = 0) { return Read(def); }
-	double ReadDouble(double def = 0) { return Read(def); }
+	TSNumber<float> ReadFloat(float def = 0) { return Read(def); }
+	TSNumber<double> ReadDouble(double def = 0) { return Read(def); }
 
 	std::string ReadString(std::string const& def = "")
 	{

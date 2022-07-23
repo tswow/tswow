@@ -11,17 +11,17 @@ TSGameObjectTemplate::TSGameObjectTemplate(GameObjectTemplate * gtIn)
     , gt(gtIn)
 {}
 
-uint32 TSGameObjectTemplate::GetEntry()
+TSNumber<uint32> TSGameObjectTemplate::GetEntry()
 {
     return gt->entry;
 }
 
-uint32 TSGameObjectTemplate::GetType()
+TSNumber<uint32> TSGameObjectTemplate::GetType()
 {
     return gt->type;
 }
 
-uint32 TSGameObjectTemplate::GetDisplayID()
+TSNumber<uint32> TSGameObjectTemplate::GetDisplayID()
 {
     return gt->displayId;
 }
@@ -52,7 +52,7 @@ TSGameObjectTemplate GetGameObjectTemplate(uint32 id)
         sObjectMgr->GetGameObjectTemplate(id)));
 }
 
-uint32 TSGameObjectTemplate::GetGOData(uint32 index)
+TSNumber<uint32> TSGameObjectTemplate::GetGOData(uint32 index)
 {
     return gt->raw.data[index];
 }

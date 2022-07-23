@@ -202,7 +202,7 @@ void ReloadCreature(void(cb)(TSCreature))
 {
     ReloadMapObject<Creature,TSCreature>(cb, UINT32_MAX);
 }
-void ReloadCreature(void(cb)(TSCreature), uint32_t id)
+void ReloadCreature(void(cb)(TSCreature), TSNumber<uint32> id)
 {
     ReloadMapObject<Creature, TSCreature>(cb, id);
 }
@@ -210,7 +210,7 @@ void ReloadCreature(sol::protected_function cb)
 {
     ReloadMapObject<Creature, TSCreature>(cb, UINT32_MAX);
 }
-void ReloadCreature(sol::protected_function cb, uint32_t id)
+void ReloadCreature(sol::protected_function cb, TSNumber<uint32> id)
 {
     ReloadMapObject<Creature, TSCreature>(cb, id);
 }
@@ -219,7 +219,7 @@ void ReloadGameObject(void(cb)(TSGameObject))
 {
     ReloadMapObject<GameObject, TSGameObject>(cb, UINT32_MAX);
 }
-void ReloadGameObject(void(cb)(TSGameObject), uint32_t id)
+void ReloadGameObject(void(cb)(TSGameObject), TSNumber<uint32> id)
 {
     ReloadMapObject<GameObject, TSGameObject>(cb, id);
 }
@@ -227,7 +227,7 @@ void ReloadGameObject(sol::protected_function cb)
 {
     ReloadMapObject<GameObject, TSGameObject>(cb, UINT32_MAX);
 }
-void ReloadGameObject(sol::protected_function cb, uint32_t id)
+void ReloadGameObject(sol::protected_function cb, TSNumber<uint32> id)
 {
     ReloadMapObject<GameObject, TSGameObject>(cb, id);
 }
@@ -237,7 +237,7 @@ void ReloadMap(void(cb)(TSMap))
     _ReloadMap(cb, UINT32_MAX);
 }
 
-void ReloadMap(void(cb)(TSMap), uint32_t id)
+void ReloadMap(void(cb)(TSMap), TSNumber<uint32> id)
 {
     _ReloadMap(cb, id);
 }
@@ -247,7 +247,7 @@ void ReloadMap(sol::protected_function cb)
     _ReloadMap(cb, UINT32_MAX);
 }
 
-void ReloadMap(sol::protected_function cb, uint32_t id)
+void ReloadMap(sol::protected_function cb, TSNumber<uint32> id)
 {
     _ReloadMap(cb, id);
 }
@@ -256,7 +256,7 @@ void ReloadBattleground(void(cb)(TSBattleground))
 {
     _ReloadBattleground(cb, UINT32_MAX);
 }
-void ReloadBattleground(void(cb)(TSBattleground), uint32_t id)
+void ReloadBattleground(void(cb)(TSBattleground), TSNumber<uint32> id)
 {
     _ReloadBattleground(cb, id);
 }
@@ -264,7 +264,7 @@ void ReloadBattleground(sol::protected_function cb)
 {
     _ReloadBattleground(cb, UINT32_MAX);
 }
-void ReloadBattleground(sol::protected_function cb, uint32_t id)
+void ReloadBattleground(sol::protected_function cb, TSNumber<uint32> id)
 {
     _ReloadBattleground(cb, id);
 }
@@ -273,7 +273,7 @@ void ReloadInstance(void(cb)(TSInstance))
 {
     _ReloadInstance(cb, UINT32_MAX);
 }
-void ReloadInstance(void(cb)(TSInstance), uint32_t id)
+void ReloadInstance(void(cb)(TSInstance), TSNumber<uint32> id)
 {
     _ReloadInstance(cb, id);
 }
@@ -281,7 +281,7 @@ void ReloadInstance(sol::protected_function cb)
 {
     _ReloadInstance(cb, UINT32_MAX);
 }
-void ReloadInstance(sol::protected_function cb, uint32_t id)
+void ReloadInstance(sol::protected_function cb, TSNumber<uint32> id)
 {
     _ReloadInstance(cb, id);
 }

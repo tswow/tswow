@@ -79,12 +79,12 @@ TSMap  TSWorldObject::GetMap()
  *
  * @return uint32 phase
  */
-uint32 TSWorldObject::GetPhaseMask()
+TSNumber<uint32> TSWorldObject::GetPhaseMask()
 {
     return obj->GetPhaseMask();
 }
 
-uint64 TSWorldObject::GetPhaseID()
+TSNumber<uint64> TSWorldObject::GetPhaseID()
 {
 #if TRINITY
     return uint32(obj->m_phase_id);
@@ -123,7 +123,7 @@ void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
  *
  * @return uint32 instanceId
  */
-uint32 TSWorldObject::GetInstanceID()
+TSNumber<uint32> TSWorldObject::GetInstanceID()
 {
     return obj->GetInstanceId();
 }
@@ -133,7 +133,7 @@ uint32 TSWorldObject::GetInstanceID()
  *
  * @return uint32 areaId
  */
-uint32 TSWorldObject::GetAreaID()
+TSNumber<uint32> TSWorldObject::GetAreaID()
 {
     return obj->GetAreaId();
 }
@@ -143,7 +143,7 @@ uint32 TSWorldObject::GetAreaID()
  *
  * @return uint32 zoneId
  */
-uint32 TSWorldObject::GetZoneID()
+TSNumber<uint32> TSWorldObject::GetZoneID()
 {
     return obj->GetZoneId();
 }
@@ -153,7 +153,7 @@ uint32 TSWorldObject::GetZoneID()
  *
  * @return uint32 mapId
  */
-uint32 TSWorldObject::GetMapID()
+TSNumber<uint32> TSWorldObject::GetMapID()
 {
     return obj->GetMapId();
 }
@@ -163,7 +163,7 @@ uint32 TSWorldObject::GetMapID()
  *
  * @return float x
  */
-float TSWorldObject::GetX()
+TSNumber<float> TSWorldObject::GetX()
 {
     return obj->GetPositionX();
 }
@@ -173,7 +173,7 @@ float TSWorldObject::GetX()
  *
  * @return float y
  */
-float TSWorldObject::GetY()
+TSNumber<float> TSWorldObject::GetY()
 {
     return obj->GetPositionY();
 }
@@ -183,7 +183,7 @@ float TSWorldObject::GetY()
  *
  * @return float z
  */
-float TSWorldObject::GetZ()
+TSNumber<float> TSWorldObject::GetZ()
 {
     return obj->GetPositionZ();
 }
@@ -193,7 +193,7 @@ float TSWorldObject::GetZ()
  *
  * @return float orientation / facing
  */
-float TSWorldObject::GetO()
+TSNumber<float> TSWorldObject::GetO()
 {
     return obj->GetOrientation();
 }
@@ -209,12 +209,12 @@ float TSWorldObject::GetO()
  *
  * @return float dist : the distance in yards
  */
-float TSWorldObject::GetDistance(TSWorldObject _target)
+TSNumber<float> TSWorldObject::GetDistance(TSWorldObject _target)
 {
     return obj->GetDistance(_target.obj);
 }
 
-float TSWorldObject::GetDistanceToPoint(float X, float Y, float Z)
+TSNumber<float> TSWorldObject::GetDistanceToPoint(float X, float Y, float Z)
 {
     return obj->GetDistance(X, Y, Z);
 }
@@ -230,12 +230,12 @@ float TSWorldObject::GetDistanceToPoint(float X, float Y, float Z)
  *
  * @return float dist : the distance in yards
  */
-float TSWorldObject::GetDistance2d(TSWorldObject _target)
+TSNumber<float> TSWorldObject::GetDistance2d(TSWorldObject _target)
 {
     return obj->GetDistance2d(_target.obj);
 }
 
-float TSWorldObject::GetDistanceToPoint2d(float X, float Y)
+TSNumber<float> TSWorldObject::GetDistanceToPoint2d(float X, float Y)
 {
     return obj->GetDistance2d(X,Y);
 }
@@ -270,7 +270,7 @@ TSPosition TSWorldObject::GetRelativePoint(float dist,float rad) {
  *
  * @return float angle : angle in radians in range 0..2*pi
  */
-float TSWorldObject::GetAngle(TSWorldObject _target,float x,float y)
+TSNumber<float> TSWorldObject::GetAngle(TSWorldObject _target,float x,float y)
 {
     auto target = _target.obj;
 #if defined TRINITY && !AZEROTHCORE
@@ -998,7 +998,7 @@ bool TSCollisionEntry::Tick(TSWorldObject value, bool force)
 
         if(maxHits == 0 || hits < maxHits)
         {
-            callback(value,unit,TSMutable<uint32_t>(&cancelMode), this);
+            callback(value,unit,TSMutableNumber<uint32>(&cancelMode), this);
             if(cancelMode == 2)
             {
                 return true;
@@ -1114,7 +1114,7 @@ bool TSWorldObject::IsNeutralToAll()
  * @param uint32 spell : entry of a spell
  * @param bool triggered = false : if true the spell is instant and has no cost
  */
-uint32 TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool triggered)
+TSNumber<uint32> TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool triggered)
 {
 #if TRINITY
     return obj->CastSpell(_target.obj, spell, triggered);
@@ -1152,7 +1152,7 @@ uint32 TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool trigge
  * @param uint32 spell : entry of a spell
  * @param bool triggered = false : if true the spell is instant and has no cost
  */
-uint32 TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered)
+TSNumber<uint32> TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered)
 {
 #if AZEROTHCORE
     if (Unit* unit = obj->ToUnit())
@@ -1187,7 +1187,7 @@ uint32 TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, b
  * @param [Item] castItem = nil
  * @param uint64 originalCaster = 0
  */
-uint32 TSWorldObject::CastCustomSpell(
+TSNumber<uint32> TSWorldObject::CastCustomSpell(
       TSWorldObject _target
     , uint32 spell
     , bool triggered
@@ -1307,7 +1307,7 @@ void TSWorldObjectCollection::filterInPlace(std::function<bool(TSWorldObject)> c
     }
 }
 
-uint32 TSWorldObjectCollection::get_length()
+TSNumber<uint32> TSWorldObjectCollection::get_length()
 {
     return m_info->size();
 }

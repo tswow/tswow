@@ -55,7 +55,7 @@ TSWorldPacket::~TSWorldPacket()
  *
  * @return uint16 opcode
  */
-uint16 TSWorldPacket::GetOpcode()
+TSNumber<uint16> TSWorldPacket::GetOpcode()
 {
     return packet->GetOpcode();
 }
@@ -65,7 +65,7 @@ uint16 TSWorldPacket::GetOpcode()
  *
  * @return uint32 size
  */
-uint32 TSWorldPacket::GetSize()
+TSNumber<uint32> TSWorldPacket::GetSize()
 {
     return packet->size();
 }
@@ -80,11 +80,11 @@ void TSWorldPacket::SetOpcode(uint32 opcode)
     packet->SetOpcode(opcode);
 }
 
-int8 TSWorldPacket::ReadInt8(uint32 index)
+TSNumber<int8> TSWorldPacket::ReadInt8(uint32 index)
 {
     return packet->read<int8>(index);
 }
-int8 TSWorldPacket::ReadInt8()
+TSNumber<int8> TSWorldPacket::ReadInt8()
 {
     int8 value;
     (*packet) >> value;
@@ -99,11 +99,11 @@ void TSWorldPacket::WriteInt8(int8 value)
     (*packet) << value;
 }
 
-uint8 TSWorldPacket::ReadUInt8(uint32 index)
+TSNumber<uint8> TSWorldPacket::ReadUInt8(uint32 index)
 {
     return packet->read<uint8>(index);
 }
-uint8 TSWorldPacket::ReadUInt8()
+TSNumber<uint8> TSWorldPacket::ReadUInt8()
 {
     uint8 value;
     (*packet) >> value;
@@ -118,11 +118,11 @@ void TSWorldPacket::WriteUInt8(uint8 value)
     (*packet) << value;
 }
 
-int16 TSWorldPacket::ReadInt16(uint32 index)
+TSNumber<int16> TSWorldPacket::ReadInt16(uint32 index)
 {
     return packet->read<int16>(index);
 }
-int16 TSWorldPacket::ReadInt16()
+TSNumber<int16> TSWorldPacket::ReadInt16()
 {
     int16 value;
     (*packet) >> value;
@@ -137,11 +137,11 @@ void TSWorldPacket::WriteInt16(int16 value)
     (*packet) << value;
 }
 
-uint16 TSWorldPacket::ReadUInt16(uint32 index)
+TSNumber<uint16> TSWorldPacket::ReadUInt16(uint32 index)
 {
     return packet->read<uint16>(index);
 }
-uint16 TSWorldPacket::ReadUInt16()
+TSNumber<uint16> TSWorldPacket::ReadUInt16()
 {
     uint16 value;
     (*packet) >> value;
@@ -156,11 +156,11 @@ void TSWorldPacket::WriteUInt16(uint16 value)
     (*packet) << value;
 }
 
-int32 TSWorldPacket::ReadInt32(uint32 index)
+TSNumber<int32> TSWorldPacket::ReadInt32(uint32 index)
 {
     return packet->read<int32>(index);
 }
-int32 TSWorldPacket::ReadInt32()
+TSNumber<int32> TSWorldPacket::ReadInt32()
 {
     int32 value;
     (*packet) >> value;
@@ -175,11 +175,11 @@ void TSWorldPacket::WriteInt32(int32 value)
     (*packet) << value;
 }
 
-uint32 TSWorldPacket::ReadUInt32(uint32 index)
+TSNumber<uint32> TSWorldPacket::ReadUInt32(uint32 index)
 {
     return packet->read<uint32>(index);
 }
-uint32 TSWorldPacket::ReadUInt32()
+TSNumber<uint32> TSWorldPacket::ReadUInt32()
 {
     uint32 value;
     (*packet) >> value;
@@ -194,11 +194,11 @@ void TSWorldPacket::WriteUInt32(uint32 value)
     (*packet) << value;
 }
 
-int64 TSWorldPacket::ReadInt64(uint32 index)
+TSNumber<int64> TSWorldPacket::ReadInt64(uint32 index)
 {
     return packet->read<int64>(index);
 }
-int64 TSWorldPacket::ReadInt64()
+TSNumber<int64> TSWorldPacket::ReadInt64()
 {
     int64 value;
     (*packet) >> value;
@@ -213,11 +213,11 @@ void TSWorldPacket::WriteInt64(int64 value)
     (*packet) << value;
 }
 
-uint64 TSWorldPacket::ReadUInt64(uint32 index)
+TSNumber<uint64> TSWorldPacket::ReadUInt64(uint32 index)
 {
     return packet->read<uint64>(index);
 }
-uint64 TSWorldPacket::ReadUInt64()
+TSNumber<uint64> TSWorldPacket::ReadUInt64()
 {
     uint64 value;
     (*packet) >> value;
@@ -232,11 +232,11 @@ void TSWorldPacket::WriteUInt64(uint64 value)
     (*packet) << value;
 }
 
-float TSWorldPacket::ReadFloat(uint32 index)
+TSNumber<float> TSWorldPacket::ReadFloat(uint32 index)
 {
     return packet->read<float>(index);
 }
-float TSWorldPacket::ReadFloat()
+TSNumber<float> TSWorldPacket::ReadFloat()
 {
     float value;
     (*packet) >> value;
@@ -251,11 +251,11 @@ void TSWorldPacket::WriteFloat(uint32 index, float value)
     packet->put<float>(index, value);
 }
 
-double TSWorldPacket::ReadDouble(uint32 index)
+TSNumber<double> TSWorldPacket::ReadDouble(uint32 index)
 {
     return packet->read<double>(index);
 }
-double TSWorldPacket::ReadDouble()
+TSNumber<double> TSWorldPacket::ReadDouble()
 {
     double value;
     (*packet) >> value;
@@ -315,17 +315,17 @@ void TSWorldStatePacket::push(int32 variableId, int32 value)
     m_ws->Worldstates.emplace_back(variableId, value);
 }
 
-uint32 TSWorldStatePacket::length()
+TSNumber<uint32> TSWorldStatePacket::length()
 {
     return m_ws->Worldstates.size();
 }
 
-int32 TSWorldStatePacket::GetVariable(uint32 index)
+TSNumber<int32> TSWorldStatePacket::GetVariable(uint32 index)
 {
     return m_ws->Worldstates[index].VariableID;
 }
 
-int32 TSWorldStatePacket::GetValue(uint32 index)
+TSNumber<int32> TSWorldStatePacket::GetValue(uint32 index)
 {
     return m_ws->Worldstates[index].Value;
 }

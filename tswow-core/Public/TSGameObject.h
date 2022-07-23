@@ -34,12 +34,12 @@ public:
     bool IsSpawned();
     bool IsTransport();
     bool IsActive();
-    uint32 GetDisplayID();
-    uint32 GetGoState();
-    uint32 GetLootState();
+    TSNumber<uint32> GetDisplayID();
+    TSNumber<uint32> GetGoState();
+    TSNumber<uint32> GetLootState();
     TSPlayer GetLootRecipient();
     TSGroup GetLootRecipientGroup();
-    uint32 GetDBTableGUIDLow();
+    TSNumber<uint32> GetDBTableGUIDLow();
     void SetGoState(uint32 state);
     void SetLootState(uint32 state);
     void SaveToDB();

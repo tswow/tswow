@@ -33,16 +33,16 @@ public:
     bool operator==(TSAreaTriggerEntry const& rhs) {
         return m_entry == rhs.m_entry;
     }
-    uint32 GetEntry();
-    uint32 GetContinentID();
-    float GetX();
-    float GetY();
-    float GetZ();
-    float GetRadius();
-    float GetBoxLength();
-    float GetBoxWidth();
-    float GetBoxHeight();
-    float GetBoxYaw();
+    TSNumber<uint32> GetEntry();
+    TSNumber<uint32> GetContinentID();
+    TSNumber<float> GetX();
+    TSNumber<float> GetY();
+    TSNumber<float> GetZ();
+    TSNumber<float> GetRadius();
+    TSNumber<float> GetBoxLength();
+    TSNumber<float> GetBoxWidth();
+    TSNumber<float> GetBoxHeight();
+    TSNumber<float> GetBoxYaw();
 };
 
 void InitializeAreaTriggerEvents(uint32 entry, TSAreaTriggerEvents* events);

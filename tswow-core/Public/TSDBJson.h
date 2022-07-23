@@ -48,12 +48,12 @@ public:
     void SetDBObject(std::string const& key, TSJsonObject json);
     void SetDBArray(std::string const& key, TSJsonArray arr);
 
-    double GetDBNumber(std::string const& key, double def = 0);
-    uint32 GetDBUInt32(std::string const& key, uint32 def = 0);
-    uint64 GetDBUInt64(std::string const& key, uint64 def = 0);
-    int32 GetDBInt32(std::string const& key, int32 def = 0);
-    int64 GetDBInt64(std::string const& key, int64 def = 0);
-    float GetDBFloat(std::string const& key, float def = 0);
+    TSNumber<double> GetDBNumber(std::string const& key, double def = 0);
+    TSNumber<uint32> GetDBUInt32(std::string const& key, uint32 def = 0);
+    TSNumber<uint64> GetDBUInt64(std::string const& key, uint64 def = 0);
+    TSNumber<int32> GetDBInt32(std::string const& key, int32 def = 0);
+    TSNumber<int64> GetDBInt64(std::string const& key, int64 def = 0);
+    TSNumber<float> GetDBFloat(std::string const& key, float def = 0);
 
     std::string GetDBString(std::string const& key, std::string const& def = "");
     bool GetDBBool(std::string const& key, bool def = false);

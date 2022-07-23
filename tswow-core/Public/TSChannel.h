@@ -31,7 +31,7 @@ public:
     operator bool() const { return channel != nullptr; }
     bool operator==(TSChannel const& rhs) { return channel == rhs.channel; }
     std::string GetName(uint32 locale = 0);
-    uint32 GetID();
+    TSNumber<uint32> GetID();
     bool IsConstant();
     bool IsLFG();
     bool IsAnnounce();
@@ -39,8 +39,8 @@ public:
     void SetDirty();
     void SetPassword(std::string const& password);
     bool CheckPassword(std::string const& password);
-    uint32 GetNumPlayers();
-    uint8 GetFlags();
+    TSNumber<uint32> GetNumPlayers();
+    TSNumber<uint8> GetFlags();
     bool HasFlag(uint8 flag);
     void JoinChannel(TSPlayer player, std::string const& password = "");
     void LeaveChannel(TSPlayer player, bool send = true);

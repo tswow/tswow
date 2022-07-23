@@ -97,6 +97,8 @@ if (WIN32)
     add_definitions(
         -wd4251
         -wd4275
+        -wd4244
+        -wd4267
     )
 endif()
 

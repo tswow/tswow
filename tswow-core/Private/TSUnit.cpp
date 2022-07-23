@@ -592,7 +592,7 @@ TSUnit  TSUnit::GetOwner()
  *
  * @return uint64 ownerGUID
  */
-uint64 TSUnit::GetOwnerGUID()
+TSNumber<uint64> TSUnit::GetOwnerGUID()
 {
     return TS_GUID(unit->GetOwnerGUID());
 }
@@ -602,7 +602,7 @@ uint64 TSUnit::GetOwnerGUID()
  *
  * @return uint32 mountId : displayId of the mount
  */
-uint32 TSUnit::GetMountID()
+TSNumber<uint32> TSUnit::GetMountID()
 {
     return unit->GetMountDisplayId();
 }
@@ -612,7 +612,7 @@ uint32 TSUnit::GetMountID()
  *
  * @return uint64 creatorGUID
  */
-uint64 TSUnit::GetCreatorGUID()
+TSNumber<uint64> TSUnit::GetCreatorGUID()
 {
     return TS_GUID(unit->GetCreatorGUID());
 }
@@ -622,7 +622,7 @@ uint64 TSUnit::GetCreatorGUID()
  *
  * @return uint64 charmerGUID
  */
-uint64 TSUnit::GetCharmerGUID()
+TSNumber<uint64> TSUnit::GetCharmerGUID()
 {
     return TS_GUID(unit->GetCharmerGUID());
 }
@@ -632,7 +632,7 @@ uint64 TSUnit::GetCharmerGUID()
  *
  * @return uint64 charmedGUID
  */
-uint64 TSUnit::GetCharmGUID()
+TSNumber<uint64> TSUnit::GetCharmGUID()
 {
 #if TRINITY
     return unit->GetCharmedGUID();
@@ -646,7 +646,7 @@ uint64 TSUnit::GetCharmGUID()
  *
  * @return uint64 petGUID
  */
-uint64 TSUnit::GetPetGUID(uint32 summonSlot)
+TSNumber<uint64> TSUnit::GetPetGUID(uint32 summonSlot)
 {
     return TS_GUID(unit->m_SummonSlot[summonSlot]);
 }
@@ -661,7 +661,7 @@ TSCreature TSUnit::GetPet(uint32 slot)
  *
  * @return uint64 controllerGUID
  */
-uint64 TSUnit::GetControllerGUID()
+TSNumber<uint64> TSUnit::GetControllerGUID()
 {
     return TS_GUID(unit->GetCharmerOrOwnerGUID());
 }
@@ -676,7 +676,7 @@ TSUnit TSUnit::GetController()
  *
  * @return uint64 controllerGUID
  */
-uint64 TSUnit::GetControllerGUIDS()
+TSNumber<uint64> TSUnit::GetControllerGUIDS()
 {
     return TS_GUID(unit->GetCharmerOrOwnerOrOwnGUID());
 }
@@ -687,7 +687,7 @@ uint64 TSUnit::GetControllerGUIDS()
  * @param uint32 statType
  * @return float stat
  */
-float TSUnit::GetStat(uint32 stat)
+TSNumber<float> TSUnit::GetStat(uint32 stat)
 {
 
     return unit->GetStat((Stats)stat);
@@ -699,7 +699,7 @@ float TSUnit::GetStat(uint32 stat)
  * @param uint32 spellSchool
  * @return uint32 spellPower
  */
-uint32 TSUnit::GetBaseSpellPower(uint32 spellschool)
+TSNumber<uint32> TSUnit::GetBaseSpellPower(uint32 spellschool)
 {
 
     return unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool);
@@ -744,7 +744,7 @@ TSSpell  TSUnit::GetCurrentSpell(uint32 type)
  *
  * @return uint8 standState
  */
-uint8 TSUnit::GetStandState()
+TSNumber<uint8> TSUnit::GetStandState()
 {
 #ifdef TRINITY
     return unit->GetStandState();
@@ -758,7 +758,7 @@ uint8 TSUnit::GetStandState()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetDisplayID()
+TSNumber<uint32> TSUnit::GetDisplayID()
 {
     return unit->GetDisplayId();
 }
@@ -768,7 +768,7 @@ uint32 TSUnit::GetDisplayID()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetNativeDisplayID()
+TSNumber<uint32> TSUnit::GetNativeDisplayID()
 {
     return unit->GetNativeDisplayId();
 }
@@ -778,7 +778,7 @@ uint32 TSUnit::GetNativeDisplayID()
  *
  * @return uint8 level
  */
-uint8 TSUnit::GetLevel()
+TSNumber<uint8> TSUnit::GetLevel()
 {
 #ifdef TRINITY
     return unit->GetLevel();
@@ -792,12 +792,12 @@ uint8 TSUnit::GetLevel()
  *
  * @return uint32 healthAmount
  */
-uint32 TSUnit::GetHealth()
+TSNumber<uint32> TSUnit::GetHealth()
 {
     return unit->GetHealth();
 }
 
-uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
+TSNumber<uint32> TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
 {
 #ifdef TRINITY
     if (powerType == -1)
@@ -833,7 +833,7 @@ uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return uint32 powerAmount
  */
-uint32 TSUnit::GetPower(int type)
+TSNumber<uint32> TSUnit::GetPower(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     return unit->GetPower(power);
@@ -858,7 +858,7 @@ uint32 TSUnit::GetPower(int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return uint32 maxPowerAmount
  */
-uint32 TSUnit::GetMaxPower(int type)
+TSNumber<uint32> TSUnit::GetMaxPower(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     return unit->GetMaxPower(power);
@@ -883,7 +883,7 @@ uint32 TSUnit::GetMaxPower(int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return float powerPct
  */
-float TSUnit::GetPowerPct(int type)
+TSNumber<float> TSUnit::GetPowerPct(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
 
@@ -913,7 +913,7 @@ float TSUnit::GetPowerPct(int type)
  *
  * @return [Powers] powerType
  */
-uint32 TSUnit::GetPowerType()
+TSNumber<uint32> TSUnit::GetPowerType()
 {
 #ifdef TRINITY
     return unit->GetPowerType();
@@ -929,7 +929,7 @@ uint32 TSUnit::GetPowerType()
  *
  * @return uint32 maxHealth
  */
-uint32 TSUnit::GetMaxHealth()
+TSNumber<uint32> TSUnit::GetMaxHealth()
 {
     return unit->GetMaxHealth();
 }
@@ -939,7 +939,7 @@ uint32 TSUnit::GetMaxHealth()
  *
  * @return float healthPct
  */
-float TSUnit::GetHealthPct()
+TSNumber<float> TSUnit::GetHealthPct()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetHealthPct();
@@ -953,7 +953,7 @@ float TSUnit::GetHealthPct()
  *
  * @return uint8 gender : 0 for male, 1 for female and 2 for none
  */
-uint8 TSUnit::GetGender()
+TSNumber<uint8> TSUnit::GetGender()
 {
 #ifdef TRINITY
     return unit->GetGender();
@@ -967,7 +967,7 @@ uint8 TSUnit::GetGender()
  *
  * @return [Races] race
  */
-uint32 TSUnit::GetRace()
+TSNumber<uint32> TSUnit::GetRace()
 {
 #ifdef TRINITY
     return unit->GetRace();
@@ -981,7 +981,7 @@ uint32 TSUnit::GetRace()
  *
  * @return [Classes] class
  */
-uint32 TSUnit::GetClass()
+TSNumber<uint32> TSUnit::GetClass()
 {
 #ifdef TRINITY
     return unit->GetClass();
@@ -995,7 +995,7 @@ uint32 TSUnit::GetClass()
 *
 * @return uint32 racemask
 */
-uint32 TSUnit::GetRaceMask()
+TSNumber<uint32> TSUnit::GetRaceMask()
 {
 #ifdef TRINITY
     return unit->GetRaceMask();
@@ -1009,7 +1009,7 @@ uint32 TSUnit::GetRaceMask()
 *
 * @return uint32 classmask
 */
-uint32 TSUnit::GetClassMask()
+TSNumber<uint32> TSUnit::GetClassMask()
 {
 #ifdef TRINITY
     return unit->GetClassMask();
@@ -1041,7 +1041,7 @@ uint32 TSUnit::GetClassMask()
  *
  * @return [CreatureType] creatureType
  */
-uint32 TSUnit::GetCreatureType()
+TSNumber<uint32> TSUnit::GetCreatureType()
 {
     return unit->GetCreatureType();
 }
@@ -1115,7 +1115,7 @@ std::string TSUnit::GetRaceAsString(uint8 locale)
  *
  * @return uint32 faction
  */
-uint32 TSUnit::GetFaction()
+TSNumber<uint32> TSUnit::GetFaction()
 {
     return unit->GetFaction();
 }
@@ -1184,7 +1184,7 @@ TSVehicle TSUnit::GetVehicle()
  *
  * @return uint64 critterGuid
  */
-uint64 TSUnit::GetCritterGUID()
+TSNumber<uint64> TSUnit::GetCritterGUID()
 {
     return TS_GUID(unit->GetCritterGUID());
 }
@@ -1210,7 +1210,7 @@ uint64 TSUnit::GetCritterGUID()
  * @param [UnitMoveType] type
  * @return float speed
  */
-float TSUnit::GetSpeed(uint32 type)
+TSNumber<float> TSUnit::GetSpeed(uint32 type)
 {
 
 #ifndef TRINITY
@@ -1251,7 +1251,7 @@ float TSUnit::GetSpeed(uint32 type)
  *
  * @return [MovementGeneratorType] movementType
  */
-uint32 TSUnit::GetMovementType()
+TSNumber<uint32> TSUnit::GetMovementType()
 {
     return unit->GetMotionMaster()->GetCurrentMovementGeneratorType();
 }
@@ -1788,7 +1788,7 @@ void TSUnit::EmoteState(uint32 emoteId)
  *
  * @return int32 percentage
  */
-int32 TSUnit::CountPctFromCurHealth(int32 health)
+TSNumber<int32> TSUnit::CountPctFromCurHealth(int32 health)
 {
     return unit->CountPctFromCurHealth(health);
 }
@@ -1798,7 +1798,7 @@ int32 TSUnit::CountPctFromCurHealth(int32 health)
  *
  * @return int32 percentage
  */
-int32 TSUnit::CountPctFromMaxHealth(int32 health)
+TSNumber<int32> TSUnit::CountPctFromMaxHealth(int32 health)
 {
     return unit->CountPctFromMaxHealth(health);
 }
@@ -2494,12 +2494,12 @@ void TSUnit::ScaleThreat(TSUnit victim, float scale, bool raw)
 #endif
 }
 
-uint32 TSUnit::GetResistance(uint32 school)
+TSNumber<uint32> TSUnit::GetResistance(uint32 school)
 {
     return unit->GetResistance(static_cast<SpellSchools>(school));
 }
 
-uint32 TSUnit::GetArmor()
+TSNumber<uint32> TSUnit::GetArmor()
 {
     return unit->GetArmor();
 }

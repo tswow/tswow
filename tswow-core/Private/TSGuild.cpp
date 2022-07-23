@@ -53,7 +53,7 @@ TSArray<TSPlayer> TSGuild::GetMembers()
  *
  * @return uint32 memberCount
  */
-uint32 TSGuild::GetMemberCount()
+TSNumber<uint32> TSGuild::GetMemberCount()
 {
 #if defined TRINITY || AZEROTHCORE
     return guild->GetMemberCount();
@@ -81,7 +81,7 @@ TSPlayer  TSGuild::GetLeader()
  *
  * @return uint64 leaderGUID
  */
-uint64 TSGuild::GetLeaderGUID()
+TSNumber<uint64> TSGuild::GetLeaderGUID()
 {
     return TS_GUID(guild->GetLeaderGUID());
 }
@@ -91,7 +91,7 @@ uint64 TSGuild::GetLeaderGUID()
  *
  * @return uint32 entryId
  */
-uint32 TSGuild::GetID()
+TSNumber<uint32> TSGuild::GetID()
 {
     return guild->GetId();
 }

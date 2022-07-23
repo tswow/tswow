@@ -53,15 +53,15 @@ TSBattlegroundPlayer::TSBattlegroundPlayer()
     , m_offlineRemoveTime(0)
 {}
 
-uint64 TSBattlegroundPlayer::GetGUID()
+TSNumber<uint64> TSBattlegroundPlayer::GetGUID()
 {
     return m_guid;
 }
-uint32 TSBattlegroundPlayer::GetTeam()
+TSNumber<uint32> TSBattlegroundPlayer::GetTeam()
 {
     return m_team;
 }
-int64 TSBattlegroundPlayer::GetOfflineRemoveTime()
+TSNumber<int64> TSBattlegroundPlayer::GetOfflineRemoveTime()
 {
     return m_offlineRemoveTime;
 }
@@ -93,7 +93,7 @@ std::string TSBattleground::GetBGName()
  * @param [Team] team : team ID
  * @return uint32 count
  */
-uint32 TSBattleground::GetAlivePlayersCountByTeam(uint32 team)
+TSNumber<uint32> TSBattleground::GetAlivePlayersCountByTeam(uint32 team)
 {
 
 #ifndef AZEROTHCORE
@@ -109,7 +109,7 @@ uint32 TSBattleground::GetAlivePlayersCountByTeam(uint32 team)
  * @param uint32 kills : amount of kills
  * @return uint32 bonusHonor
  */
-uint32 TSBattleground::GetBonusHonorFromKillCount(uint32 kills)
+TSNumber<uint32> TSBattleground::GetBonusHonorFromKillCount(uint32 kills)
 {
     return bg->GetBonusHonorFromKill(kills);
 }
@@ -119,7 +119,7 @@ uint32 TSBattleground::GetBonusHonorFromKillCount(uint32 kills)
  *
  * @return [BattleGroundBracketId] bracketId
  */
-uint32 TSBattleground::GetBracketID()
+TSNumber<uint32> TSBattleground::GetBracketID()
 {
 #if TRINITY
     return bg->GetBracketId();
@@ -134,7 +134,7 @@ uint32 TSBattleground::GetBracketID()
  *
  * @return uint32 endTime
  */
-uint32 TSBattleground::GetEndTime()
+TSNumber<uint32> TSBattleground::GetEndTime()
 {
 #ifdef CATA
     return bg->GetRemainingTime();
@@ -149,7 +149,7 @@ uint32 TSBattleground::GetEndTime()
  * @param [Team] team : team ID
  * @return uint32 freeSlots
  */
-uint32 TSBattleground::GetFreeSlotsForTeam(uint32 team)
+TSNumber<uint32> TSBattleground::GetFreeSlotsForTeam(uint32 team)
 {
 
 #ifndef AZEROTHCORE
@@ -164,7 +164,7 @@ uint32 TSBattleground::GetFreeSlotsForTeam(uint32 team)
  *
  * @return uint32 instanceId
  */
-uint32 TSBattleground::GetInstanceID()
+TSNumber<uint32> TSBattleground::GetInstanceID()
 {
     return bg->GetInstanceID();
 }
@@ -174,7 +174,7 @@ uint32 TSBattleground::GetInstanceID()
  *
  * @return [BattleGroundTypeId] typeId
  */
-uint32 TSBattleground::GetTypeID()
+TSNumber<uint32> TSBattleground::GetTypeID()
 {
 #ifndef AZEROTHCORE
     return bg->GetTypeID();
@@ -188,7 +188,7 @@ uint32 TSBattleground::GetTypeID()
  *
  * @return uint32 maxLevel
  */
-uint32 TSBattleground::GetMaxLevel()
+TSNumber<uint32> TSBattleground::GetMaxLevel()
 {
     return bg->GetMaxLevel();
 }
@@ -198,7 +198,7 @@ uint32 TSBattleground::GetMaxLevel()
  *
  * @return uint32 minLevel
  */
-uint32 TSBattleground::GetMinLevel()
+TSNumber<uint32> TSBattleground::GetMinLevel()
 {
     return bg->GetMinLevel();
 }
@@ -208,7 +208,7 @@ uint32 TSBattleground::GetMinLevel()
  *
  * @return uint32 maxPlayerCount
  */
-uint32 TSBattleground::GetMaxPlayers()
+TSNumber<uint32> TSBattleground::GetMaxPlayers()
 {
 #ifndef AZEROTHCORE
     return bg->GetMaxPlayers();
@@ -222,7 +222,7 @@ uint32 TSBattleground::GetMaxPlayers()
  *
  * @return uint32 minPlayerCount
  */
-uint32 TSBattleground::GetMinPlayers()
+TSNumber<uint32> TSBattleground::GetMinPlayers()
 {
 #ifndef AZEROTHCORE
     return bg->GetMinPlayers();
@@ -236,7 +236,7 @@ uint32 TSBattleground::GetMinPlayers()
  *
  * @return uint32 maxTeamPlayerCount
  */
-uint32 TSBattleground::GetMaxPlayersPerTeam()
+TSNumber<uint32> TSBattleground::GetMaxPlayersPerTeam()
 {
     return bg->GetMaxPlayersPerTeam();
 }
@@ -246,7 +246,7 @@ uint32 TSBattleground::GetMaxPlayersPerTeam()
  *
  * @return uint32 minTeamPlayerCount
  */
-uint32 TSBattleground::GetMinPlayersPerTeam()
+TSNumber<uint32> TSBattleground::GetMinPlayersPerTeam()
 {
     return bg->GetMinPlayersPerTeam();
 }
@@ -256,7 +256,7 @@ uint32 TSBattleground::GetMinPlayersPerTeam()
  *
  * @return [Team] team
  */
-uint32 TSBattleground::GetWinner()
+TSNumber<uint32> TSBattleground::GetWinner()
 {
     return bg->GetWinner();
 }
@@ -266,7 +266,7 @@ uint32 TSBattleground::GetWinner()
  *
  * @return [BattleGroundStatus] status
  */
-uint32 TSBattleground::GetStatus()
+TSNumber<uint32> TSBattleground::GetStatus()
 {
     return bg->GetStatus();
 }
@@ -323,22 +323,22 @@ void TSBattleground::SetStartPosition(uint32 teamid, float x, float y, float z, 
     bg->SetTeamStartPosition(TeamId(teamid), Position(x, y, z, o));
 }
 
-float TSBattleground::GetStartX(uint32 teamid)
+TSNumber<float> TSBattleground::GetStartX(uint32 teamid)
 {
     return bg->GetTeamStartPosition(TeamId(teamid))->GetPositionX();
 }
 
-float TSBattleground::GetStartY(uint32 teamid)
+TSNumber<float> TSBattleground::GetStartY(uint32 teamid)
 {
     return bg->GetTeamStartPosition(TeamId(teamid))->GetPositionY();
 }
 
-float TSBattleground::GetStartZ(uint32 teamid)
+TSNumber<float> TSBattleground::GetStartZ(uint32 teamid)
 {
     return bg->GetTeamStartPosition(TeamId(teamid))->GetPositionZ();
 }
 
-float TSBattleground::GetStartO(uint32 teamid)
+TSNumber<float> TSBattleground::GetStartO(uint32 teamid)
 {
     return bg->GetTeamStartPosition(TeamId(teamid))->GetOrientation();
 }
@@ -348,7 +348,7 @@ void TSBattleground::SetStartMaxDist(float maxDist)
     bg->SetStartMaxDist(maxDist);
 }
 
-float TSBattleground::GetStartMaxDist()
+TSNumber<float> TSBattleground::GetStartMaxDist()
 {
     return bg->GetStartMaxDist();
 }
@@ -446,7 +446,7 @@ TSGroup TSBattleground::GetBGRaid(uint32 faction)
     return TSGroup(bg->GetBgRaid(TSTeamId(faction)));
 }
 
-uint32 TSBattleground::GetBGPlayerCount(uint32 team)
+TSNumber<uint32> TSBattleground::GetBGPlayerCount(uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
@@ -458,7 +458,7 @@ uint32 TSBattleground::GetBGPlayerCount(uint32 team)
         return bg->GetPlayersCountByTeam(TSTeamId(team));
     }
 }
-uint32 TSBattleground::GetBGAlivePlayerCount(uint32 team)
+TSNumber<uint32> TSBattleground::GetBGAlivePlayerCount(uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
@@ -519,7 +519,7 @@ bool TSBattleground::IsPlayerInBG(uint64 guid)
     return bg->IsPlayerInBattleground(ObjectGuid(guid));
 }
 
-uint32 TSBattleground::GetTeamScore(uint32 team)
+TSNumber<uint32> TSBattleground::GetTeamScore(uint32 team)
 {
     return bg->GetTeamScore(TSTeamId(team));
 }
@@ -529,12 +529,12 @@ void TSBattleground::SendMessage(uint32 entry, uint8 type, TSPlayer source = TSP
     bg->SendMessageToAll(entry, ChatMsg(type), source.player);
 }
 
-uint32 TSBattleground::GetUniqueBracketID()
+TSNumber<uint32> TSBattleground::GetUniqueBracketID()
 {
     return bg->GetUniqueBracketId();
 }
 
-int32 TSBattleground::GetStartDelayTime()
+TSNumber<int32> TSBattleground::GetStartDelayTime()
 {
     return bg->GetStartDelayTime();
 }
@@ -549,7 +549,7 @@ void TSBattleground::SetStartTime(uint32 time)
     bg->SetStartTime(time);
 }
 
-uint32 TSBattleground::GetStartTime()
+TSNumber<uint32> TSBattleground::GetStartTime()
 {
     return bg->GetStartTime();
 }
@@ -570,7 +570,7 @@ bool TSBattleground::RemoveObjectFromWorld(uint32 type)
     return false;
 #endif
 }
-int32 TSBattleground::GetObjectType(uint64 guid)
+TSNumber<int32> TSBattleground::GetObjectType(uint64 guid)
 {
     return bg->GetObjectType(ObjectGuid(guid));
 }

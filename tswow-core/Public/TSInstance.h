@@ -30,7 +30,7 @@ public:
     TSBossInfo(BossInfo* info);
     operator bool() const { return m_info != nullptr; }
     bool operator==(TSBossInfo const& rhs) { return m_info == rhs.m_info; }
-    uint32 GetBossState();
+    TSNumber<uint32> GetBossState();
     TSGuidSet GetMinionGUIDs();
     TSGuidSet GetDoorsOpenDuringEncounter();
     TSGuidSet GetDoorsClosedDuringEncounter();
@@ -48,7 +48,7 @@ public:
     bool IsNull();
     void SaveInstanceToDB();
     bool IsEncounterInProgress();
-    uint64 GetObjectGUID(uint32 type);
+    TSNumber<uint64> GetObjectGUID(uint32 type);
     void DoUseDoorOrButton(uint64 guid, uint32 withRestoreTime = 0, bool useAlternativeState = false);
     void DoCloseDoorOrButton(uint64 guid);
     void DoRespawnGameObject(uint64 guid, uint32 seconds);
@@ -60,15 +60,15 @@ public:
     void DoRemoveAurasDueToSpellOnPlayers(uint32 spell, bool includePets = false, bool includeControlled = false);
     void DoCastSpellOnPlayers(uint32 spell, bool includePets = false, bool includeControlled = false);
     void SetBossState(uint32 id, uint32 encounterState);
-    uint32 GetBossState(uint32 id);
+    TSNumber<uint32> GetBossState(uint32 id);
     void MarkAreaTriggerDone(uint32 id);
     void ResetAreaTriggerDone(uint32 id);
-    uint32 GetEncounterCount();
+    TSNumber<uint32> GetEncounterCount();
     void BindAllPlayers();
     bool HasPermBoundPlayers();
-    uint32 GetMaxPlayers();
-    uint32 GetMaxResetDelay();
-    uint32 GetTeamIDInInstance();
-    uint32 GetFactionInInstance();
+    TSNumber<uint32> GetMaxPlayers();
+    TSNumber<uint32> GetMaxResetDelay();
+    TSNumber<uint32> GetTeamIDInInstance();
+    TSNumber<uint32> GetFactionInInstance();
     TSBossInfo GetBossInfo(uint32 id);
 };

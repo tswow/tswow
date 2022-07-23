@@ -303,7 +303,7 @@ std::string TSItem::GetItemLink(uint8 locale)
 #endif
 }
 
-uint64 TSItem::GetOwnerGUID()
+TSNumber<uint64> TSItem::GetOwnerGUID()
 {
     return TS_GUID(item->GetOwnerGUID());
 }
@@ -323,7 +323,7 @@ TSPlayer  TSItem::GetOwner()
  *
  * @return uint32 count
  */
-uint32 TSItem::GetCount()
+TSNumber<uint32> TSItem::GetCount()
 {
     return item->GetCount();
 }
@@ -333,7 +333,7 @@ uint32 TSItem::GetCount()
  *
  * @return uint32 maxCount
  */
-uint32 TSItem::GetMaxStackCount()
+TSNumber<uint32> TSItem::GetMaxStackCount()
 {
     return item->GetMaxStackCount();
 }
@@ -343,7 +343,7 @@ uint32 TSItem::GetMaxStackCount()
  *
  * @return uint8 slot
  */
-uint8 TSItem::GetSlot()
+TSNumber<uint8> TSItem::GetSlot()
 {
     return item->GetSlot();
 }
@@ -353,7 +353,7 @@ uint8 TSItem::GetSlot()
  *
  * @return uint8 bagSlot
  */
-uint8 TSItem::GetBagSlot()
+TSNumber<uint8> TSItem::GetBagSlot()
 {
     return item->GetBagSlot();
 }
@@ -364,7 +364,7 @@ uint8 TSItem::GetBagSlot()
  * @param [EnchantmentSlot] enchantSlot : the enchant slot specified
  * @return uint32 enchantId : the id of the enchant slot specified
  */
-uint32 TSItem::GetEnchantmentID(uint32 enchant_slot)
+TSNumber<uint32> TSItem::GetEnchantmentID(uint32 enchant_slot)
 {
 
     return item->GetEnchantmentId(EnchantmentSlot(enchant_slot));
@@ -376,7 +376,7 @@ uint32 TSItem::GetEnchantmentID(uint32 enchant_slot)
  * @param uint32 spellIndex : the spell index specified
  * @return uint32 spellId : the id of the spell
  */
-uint32 TSItem::GetSpellID(uint32 index)
+TSNumber<uint32> TSItem::GetSpellID(uint32 index)
 {
     return item->GetTemplate()->Spells[index].SpellId;
 }
@@ -387,7 +387,7 @@ uint32 TSItem::GetSpellID(uint32 index)
  * @param uint32 spellIndex : the spell index specified
  * @return uint32 spellTrigger : the spell trigger of the specified index
  */
-uint32 TSItem::GetSpellTrigger(uint32 index)
+TSNumber<uint32> TSItem::GetSpellTrigger(uint32 index)
 {
     return item->GetTemplate()->Spells[index].SpellTrigger;
 }
@@ -397,7 +397,7 @@ uint32 TSItem::GetSpellTrigger(uint32 index)
  *
  * @return uint32 class
  */
-uint32 TSItem::GetClass()
+TSNumber<uint32> TSItem::GetClass()
 {
     return item->GetTemplate()->Class;
 }
@@ -407,7 +407,7 @@ uint32 TSItem::GetClass()
  *
  * @return uint32 subClass
  */
-uint32 TSItem::GetSubClass()
+TSNumber<uint32> TSItem::GetSubClass()
 {
     return item->GetTemplate()->SubClass;
 }
@@ -427,7 +427,7 @@ std::string TSItem::GetName()
  *
  * @return uint32 displayId
  */
-uint32 TSItem::GetDisplayID()
+TSNumber<uint32> TSItem::GetDisplayID()
 {
     return item->GetTemplate()->DisplayInfoID;
 }
@@ -437,7 +437,7 @@ uint32 TSItem::GetDisplayID()
  *
  * @return uint32 quality
  */
-uint32 TSItem::GetQuality()
+TSNumber<uint32> TSItem::GetQuality()
 {
     return item->GetTemplate()->Quality;
 }
@@ -447,7 +447,7 @@ uint32 TSItem::GetQuality()
  *
  * @return uint32 count
  */
-uint32 TSItem::GetBuyCount()
+TSNumber<uint32> TSItem::GetBuyCount()
 {
     return item->GetTemplate()->BuyCount;
 }
@@ -457,7 +457,7 @@ uint32 TSItem::GetBuyCount()
  *
  * @return uint32 price
  */
-uint32 TSItem::GetBuyPrice()
+TSNumber<uint32> TSItem::GetBuyPrice()
 {
     return item->GetTemplate()->BuyPrice;
 }
@@ -467,7 +467,7 @@ uint32 TSItem::GetBuyPrice()
  *
  * @return uint32 price
  */
-uint32 TSItem::GetSellPrice()
+TSNumber<uint32> TSItem::GetSellPrice()
 {
     return item->GetTemplate()->SellPrice;
 }
@@ -477,7 +477,7 @@ uint32 TSItem::GetSellPrice()
  *
  * @return uint32 inventoryType
  */
-uint32 TSItem::GetInventoryType()
+TSNumber<uint32> TSItem::GetInventoryType()
 {
     return item->GetTemplate()->InventoryType;
 }
@@ -487,7 +487,7 @@ uint32 TSItem::GetInventoryType()
  *
  * @return uint32 allowableClass
  */
-uint32 TSItem::GetAllowableClass()
+TSNumber<uint32> TSItem::GetAllowableClass()
 {
     return item->GetTemplate()->AllowableClass;
 }
@@ -497,7 +497,7 @@ uint32 TSItem::GetAllowableClass()
  *
  * @return uint32 allowableRace
  */
-uint32 TSItem::GetAllowableRace()
+TSNumber<uint32> TSItem::GetAllowableRace()
 {
     return item->GetTemplate()->AllowableRace;
 }
@@ -507,7 +507,7 @@ uint32 TSItem::GetAllowableRace()
  *
  * @return uint32 itemLevel
  */
-uint32 TSItem::GetItemLevel()
+TSNumber<uint32> TSItem::GetItemLevel()
 {
     return item->GetTemplate()->ItemLevel;
 }
@@ -517,13 +517,13 @@ uint32 TSItem::GetItemLevel()
  *
  * @return uint32 requiredLevel
  */
-uint32 TSItem::GetRequiredLevel()
+TSNumber<uint32> TSItem::GetRequiredLevel()
 {
     return item->GetTemplate()->RequiredLevel;
 }
 
 #ifdef WOTLK
-uint32 TSItem::GetStatsCount()
+TSNumber<uint32> TSItem::GetStatsCount()
 {
     return item->GetTemplate()->StatsCount;
 }
@@ -534,13 +534,13 @@ uint32 TSItem::GetStatsCount()
  *
  * @return uint32 randomPropertyId
  */
-uint32 TSItem::GetRandomProperty()
+TSNumber<uint32> TSItem::GetRandomProperty()
 {
     return item->GetTemplate()->RandomProperty;
 }
 
 #ifndef CLASSIC
-int32 TSItem::GetRandomSuffix()
+TSNumber<int32> TSItem::GetRandomSuffix()
 {
     return item->GetTemplate()->RandomSuffix;
 }
@@ -551,7 +551,7 @@ int32 TSItem::GetRandomSuffix()
  *
  * @return uint32 itemSetId
  */
-uint32 TSItem::GetItemSet()
+TSNumber<uint32> TSItem::GetItemSet()
 {
     return item->GetTemplate()->ItemSet;
 }
@@ -561,7 +561,7 @@ uint32 TSItem::GetItemSet()
  *
  * @return uint32 bagSize
  */
-uint32 TSItem::GetBagSize()
+TSNumber<uint32> TSItem::GetBagSize()
 {
     if (Bag* bag = item->ToBag())
         return bag->GetBagSize();

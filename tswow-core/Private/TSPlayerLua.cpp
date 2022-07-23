@@ -297,7 +297,7 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD_OVERLOAD_2_8(ts_player, TSPlayer, GossipSendTextMenu, TSObject, std::string const&, uint32, uint32, uint32, uint32, uint32, uint32, uint32, uint32);
     LUA_FIELD_OVERLOAD_3_8(ts_player, TSPlayer, GossipSendTextMenuGendered, TSObject, std::string const&, std::string const&, uint32, uint32, uint32, uint32, uint32, uint32, uint32, uint32);
     LUA_FIELD(ts_player, TSPlayer, GossipSendPOI);
-    LUA_FIELD_OVERLOAD_0_3(ts_player, TSPlayer, GetOutfitCopy, uint32_t, int32_t, int32_t);
+    LUA_FIELD_OVERLOAD_RET_0_3(ts_player, TSPlayer, GetOutfitCopy, uint32_t, int32_t, int32_t);
     ts_player.set_function("GetSpellMap", &TSPlayer::LGetSpellMap);
 
     ts_player.set_function("SendMail", sol::overload(
