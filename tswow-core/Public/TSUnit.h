@@ -202,6 +202,9 @@ public:
     uint32 GetArmor();
     void SetResistance(uint32 school, int32 val);
     void SetArmor(int32 val);
+    float GetWeaponDamageRange(uint8 attType, uint8 type, uint8 damageIndex = 0);
+    int32 SpellBaseDamageBonusDone(uint32 schoolMask);
+    // uint32 SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     bool LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp);

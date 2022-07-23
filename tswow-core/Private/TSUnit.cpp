@@ -2581,3 +2581,17 @@ bool TSUnit::LSetCharmedBy1(TSUnit charmer, uint32 type)
     return SetCharmedBy(charmer, type);
 }
 
+float TSUnit::GetWeaponDamageRange(uint8 attType, uint8 type, uint8 damageIndex /*= 0*/)
+{
+    return unit->GetWeaponDamageRange(static_cast<WeaponAttackType>(attType), static_cast<WeaponDamageRange>(type), damageIndex);
+}
+
+int32 TSUnit::SpellBaseDamageBonusDone(uint32 schoolMask)
+{
+    return unit->SpellBaseDamageBonusDone(static_cast<SpellSchoolMask>(schoolMask));
+}
+
+// uint32 TSUnit::SpellDamageBonusTaken(TSUnit caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype)
+// {
+//     return unit->SpellDamageBonusTaken(caster.unit, spellProto, pdamage, damagetype);
+// }
