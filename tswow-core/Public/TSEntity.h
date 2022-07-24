@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSBase.h"
 #include "TSJson.h"
 
 #include "sol/sol.hpp"
