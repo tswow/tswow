@@ -268,7 +268,7 @@ export namespace TrinityCore {
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DBUILD_TESTING="OFF"`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
-                +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
+                +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -DWITH_WARNINGS=1`
                 +` -DSCRIPTS=${scripts}`;
                 buildCommand = 'make -j 4';
