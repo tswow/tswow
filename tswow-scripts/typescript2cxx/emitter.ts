@@ -1744,7 +1744,10 @@ export class Emitter {
             }
             // todo: this is terrible, make a generic handler!
              const sharedPtrStr = (name: string) => {
-                 return !['uint8','int8','uint16','int16','uint32','int32','uint64','int64','float','double','string']
+                 if(name === 'string') {
+                     return 'std::string'
+                 }
+                 return !['uint8','int8','uint16','int16','uint32','int32','uint64','int64','float','double']
                      .includes(name) && ! name.startsWith('TS')
                      ? `std::shared_ptr<${name}>`
                      : name
