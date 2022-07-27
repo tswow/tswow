@@ -1959,9 +1959,31 @@ export class Emitter {
         return !same;
     }
 
+    attemptResolveBrokenArrayType(type: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression, node?: ts.Node) {
+        const fail = () => this.error(
+            `Cannot resolve TSArray type parameter, `
+            + `try writing it out explicitly`
+        ,type);
+
+        if(node) {
+            let type = this.resolver.getTypeAtLocation(node)
+            if(this.resolver.isArrayType(type)) {
+                let typenode = this.resolver.typeToTypeNode(type) as ts.ArrayTypeNode;
+                if(typenode.elementType) {
+                    try {
+                        return this.processType(typenode.elementType);
+                    } catch(err) {
+                        fail();
+                    }
+                }
+            }
+            fail();
+        }
+    }
+
     processType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
         auto: boolean = false, skipPointerInType: boolean = false, noTypeName: boolean = false,
-        implementingUnionType: boolean = false): void {
+        implementingUnionType: boolean = false, node?: ts.Node): void {
 
         if (auto) {
             this.writer.writeString('auto');
@@ -1998,10 +2020,7 @@ export class Emitter {
                 if (arrayType.elementType && arrayType.elementType.kind !== ts.SyntaxKind.UndefinedKeyword) {
                     this.processType(arrayType.elementType, false);
                 } else {
-                    this.error(
-                        `Cannot resolve TSArray type parameter, `
-                      + `try writing it out explicitly`
-                    ,type);
+                    this.attemptResolveBrokenArrayType(typeIn,node);
                 }
                 this.writer.writeString('>');
                 break;
@@ -2489,10 +2508,21 @@ export class Emitter {
                     if (isClassMember && (<ts.Identifier>node.name).text === 'toString') {
                         this.writer.writeString('std::string');
                     } else {
-                        // todo: possible to deduce from return statements?
-                        this.error(
+                        // let's try our best to resolve it
+                        const fail = () => this.error(
                               `Unable to resolve return type of function `
                             + `${node.name.getText()}, try writing it out explicitly`, node)
+
+                        let t = this.resolver.typeToTypeNode(this.resolver.getTypeAtLocation(node)) as ts.FunctionTypeNode
+                        if(t) {
+                            try {
+                                return this.processType(t.type)
+                            } catch(err) {
+                                fail();
+                            }
+                        } else {
+                            fail();
+                        }
                     }
                 }
             }
@@ -3459,12 +3489,9 @@ export class Emitter {
             if(!isCreateArray) {
                 this.writer.writeString('TSArray<');
                 if (elementsType) {
-                    this.processType(elementsType, false);
+                    this.processType(elementsType, false, false, false, false, node);
                 } else {
-                    this.error(
-                        `Cannot resolve TSArray type parameter, `
-                        + `try writing it out explicitly`
-                    ,node);
+                    this.attemptResolveBrokenArrayType(elementsType,node)
                 }
                 this.writer.writeString('>');
             }
