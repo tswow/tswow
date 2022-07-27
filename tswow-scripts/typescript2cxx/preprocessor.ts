@@ -168,31 +168,76 @@ export class Preprocessor {
         return node;
     }
 
-    private preprocessCallExpression(node: ts.CallExpression): ts.Expression {
-        if(node.pos < 0) {
+    private preprocessPropertyAccessCall(node: ts.CallExpression, prop: ts.PropertyAccessExpression) {
+        if(prop.getChildCount() < 2) {
             return node;
         }
-        if(node.getChildCount() < 2) {
-            return node;
-        }
-        let expr = node.getChildAt(0)
-        if(expr.kind !== ts.SyntaxKind.PropertyAccessExpression) {
-            return node;
-        }
-
-        if(expr.getChildCount() < 2) {
-            return node;
-        }
-
-        let type = this.emitter.resolver.getTypeOf(expr.getChildAt(0))
+        let type = this.emitter.resolver.getTypeOf(prop.getChildAt(0))
         let isString = this.emitter.resolver.isStringType(type);
         let isNumber = this.emitter.resolver.isNumberType(type);
-        let methodName = expr.getChildAt(2).getText(node.getSourceFile())
+        let methodName = prop.getChildAt(2).getText(node.getSourceFile())
         if(!isString && !isNumber) {
             return node;
         }
         let ident = ts.createIdentifier(`__ts_${isString ? 'string' : 'number'}_${methodName}`)
-        return ts.createCall(ident,node.typeArguments,[expr.getChildAt(0) as ts.Expression, ...node.arguments])
+        return ts.createCall(ident,node.typeArguments,[prop.getChildAt(0) as ts.Expression, ...node.arguments])
+    }
+
+    private preprocessCreateArrayCall(node: ts.CallExpression) {
+        if(node.getChildCount() < 3) {
+            return node;
+        }
+        let arrCont = node.getChildAt(node.getChildCount()-2);
+        if(arrCont.kind !== ts.SyntaxKind.SyntaxList || arrCont.getChildCount() < 1) {
+            return node;
+        }
+
+        let arr = arrCont.getChildAt(0);
+        if(arr.kind !== ts.SyntaxKind.ArrayLiteralExpression) {
+            return node;
+        }
+
+        let arrItems = arr.getChildAt(1)
+        if(arrItems.kind !== ts.SyntaxKind.SyntaxList) {
+            return node;
+        }
+
+        let typestr = node.typeArguments[0].getText(node.getSourceFile());
+        if(!['int','uint8','uint16','uint32','uint64','int8','int16','int32','int64','float'].includes(typestr)) {
+            return node
+        }
+
+        // todo: handle spread operator
+
+        let entries = arrItems.getChildren()
+            .filter(x=>x.kind !== ts.SyntaxKind.CommaToken)
+            .map(x=>ts.createCall(ts.createIdentifier(typestr),null,[x as ts.Expression]))
+        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,entries)
+    }
+
+    private preprocessIdentifierCall(node: ts.CallExpression, ident: ts.Identifier) {
+        switch(ident.text) {
+            case 'CreateArray':
+                return this.preprocessCreateArrayCall(node);
+        }
+        return node;
+    }
+
+    private preprocessCallExpression(node: ts.CallExpression): ts.Expression {
+        if(node.pos < 0) {
+            return node;
+        }
+        if(node.getChildCount() < 1) {
+            return node;
+        }
+
+        let expr = node.getChildAt(0)
+        switch(expr.kind) {
+            case ts.SyntaxKind.Identifier:
+                return this.preprocessIdentifierCall(node, expr as ts.Identifier);
+            case ts.SyntaxKind.PropertyAccessExpression:
+                return this.preprocessPropertyAccessCall(node,expr as ts.PropertyAccessExpression);
+        }
     }
 
     private preprocessPropertyAccessExpression(node: ts.PropertyAccessExpression): ts.Expression {
