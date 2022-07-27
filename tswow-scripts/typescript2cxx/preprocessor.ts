@@ -212,6 +212,9 @@ export class Preprocessor {
         let entries = arrItems.getChildren()
             .filter(x=>x.kind !== ts.SyntaxKind.CommaToken)
             .map(x=>ts.createCall(ts.createIdentifier(typestr),null,[x as ts.Expression]))
+        if(entries.length === 0) {
+            return node;
+        }
         return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,entries)
     }
 
