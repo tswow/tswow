@@ -1744,6 +1744,10 @@ export class Emitter {
             }
             // todo: this is terrible, make a generic handler!
              const sharedPtrStr = (name: string) => {
+                 // todo: this is even more terrible, parse it properly!
+                 if(name.trimEnd().endsWith(']')) {
+                     return `TSArray<${sharedPtrStr(name.substring(0,name.length-2))}>`
+                 }
                  if(name === 'string') {
                      return 'std::string'
                  }
