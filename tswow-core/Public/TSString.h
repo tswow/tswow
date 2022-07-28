@@ -20,4 +20,4 @@ TC_GAME_API double __ts_string_indexOf(std::string const& str, std::string const
 TC_GAME_API double __ts_string_lastIndexOf(std::string const& str, std::string const& sub);
 TC_GAME_API std::string __ts_string_charAt(std::string const& str, double index);
 TC_GAME_API double __ts_string_length(std::string const& str);
-TC_GAME_API TSArray<std::string> __ts_split(std::string const& str, std::string const& delim);
+TC_GAME_API TSArray<std::string> __ts_string_split(std::string const& str, std::string const& delim);
