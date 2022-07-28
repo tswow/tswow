@@ -149,8 +149,8 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     get LEATHER_EQUIP()            { return this.value(4,2) }
     get MAIL_EQUIP()               { return this.value(4,3) }
     get PLATE_EQUIP()              { return this.value(4,4) }
-    get SHIELD_EQUIP()             { return this.value(4,5) }
-    get LIBRAM_EQUIP()             { return this.value(4,6) }
+    get BUCKLER_OBSOLETE()         { return this.value(4,5) }
+    get SHIELD_EQUIP()             { return this.value(4,6) }
     get IDOL_EQUIP()               { return this.value(4,7) }
     get TOTEM_EQUIP()              { return this.value(4,8) }
     get SIGIL_EQUIP()              { return this.value(4,9) }
