@@ -241,6 +241,7 @@ export class Preprocessor {
             case ts.SyntaxKind.PropertyAccessExpression:
                 return this.preprocessPropertyAccessCall(node,expr as ts.PropertyAccessExpression);
         }
+        return node;
     }
 
     private preprocessPropertyAccessExpression(node: ts.PropertyAccessExpression): ts.Expression {
