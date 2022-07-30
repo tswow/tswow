@@ -1733,47 +1733,23 @@ export class Emitter {
             const useAuto = autoAllowed
                 && !!(firstInitializer)
                 && !firstType
-            let dictMatch = firstInitializer
-                ? firstInitializer.getText().match(/^CreateDictionary *< *(.+) *, *(.+) *> *\(/)
-                : undefined
-            let arrMatch = firstInitializer
-                ? firstInitializer.getText().match(/^CreateArray *< *(.+) *> *\(/)
-                : undefined
+
             if(type.isNumberLiteral() && declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
             }
-            // todo: this is terrible, make a generic handler!
-             const sharedPtrStr = (name: string) => {
-                 // todo: this is even more terrible, parse it properly!
-                 if(name.trimEnd().endsWith(']')) {
-                     return `TSArray<${sharedPtrStr(name.substring(0,name.length-2))}>`
-                 }
-                 if(name === 'string') {
-                     return 'std::string'
-                 }
-                 return !['int','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float','double']
-                     .includes(name) && ! name.startsWith('TS')
-                     ? `std::shared_ptr<${name}>`
-                     : name
-             }
-            if(!useAuto && dictMatch) {
-                this.writer.writeString(`TSDictionary<${dictMatch[1] === 'string' ? 'std::string' : dictMatch[1]},${sharedPtrStr(dictMatch[2])}> `)
-            } else if(arrMatch) {
-                this.writer.writeString(`TSArray<${sharedPtrStr(arrMatch[1])}> `)
+
+            this.processPredefineType(effectiveType);
+            if (!forceCaptureRequired) {
+                this.processType(effectiveType, useAuto);
             } else {
-                this.processPredefineType(effectiveType);
-                if (!forceCaptureRequired) {
-                    this.processType(effectiveType, useAuto);
+                // TODO: Not sure if something needs to be done here
+                if (useAuto) {
+                    this.writer.writeString('auto');
                 } else {
-                    // TODO: Not sure if something needs to be done here
-                    if (useAuto) {
-                        this.writer.writeString('auto');
-                    } else {
-                        this.processType(effectiveType, useAuto);
-                    }
+                    this.processType(effectiveType, useAuto);
                 }
-                this.writer.writeString(' ');
             }
+            this.writer.writeString(' ');
         }
 
 
