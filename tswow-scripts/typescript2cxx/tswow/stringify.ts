@@ -17,7 +17,7 @@ export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter)
         const normalTypes = [
             'uint8','uint16','uint32','uint64',
             'int8','int16','int32','int64','bool','boolean',
-            'float','double','string','std::string','TSArray','TSDictionary'];
+            'float','double','number','string','std::string','TSArray','TSDictionary'];
 
         if(member.type.kind == ts.SyntaxKind.FunctionType) {
             return;
