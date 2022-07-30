@@ -202,20 +202,20 @@ export class Preprocessor {
             return node;
         }
 
+        let entries = arrItems.getChildren().filter(x=>x.kind !== ts.SyntaxKind.CommaToken)
+        if(entries.length === 0) {
+            return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,[]);
+        }
+
         let typestr = node.typeArguments[0].getText(node.getSourceFile());
         if(!['int','uint8','uint16','uint32','uint64','int8','int16','int32','int64','float'].includes(typestr)) {
             return node
         }
 
         // todo: handle spread operator
-
-        let entries = arrItems.getChildren()
-            .filter(x=>x.kind !== ts.SyntaxKind.CommaToken)
+        let entriesOut = entries
             .map(x=>ts.createCall(ts.createIdentifier(typestr),null,[x as ts.Expression]))
-        if(entries.length === 0) {
-            return node;
-        }
-        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,entries)
+        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,entriesOut)
     }
 
     private preprocessIdentifierCall(node: ts.CallExpression, ident: ts.Identifier) {
