@@ -215,7 +215,9 @@ export class Preprocessor {
         // todo: handle spread operator
         let entriesOut = entries
             .map(x=>ts.createCall(ts.createIdentifier(typestr),null,[x as ts.Expression]))
-        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,entriesOut)
+        let arrLit = ts.createArrayLiteral(entriesOut);
+        (arrLit as any).__isIntLiteralArray = true;
+        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,[arrLit])
     }
 
     private preprocessIdentifierCall(node: ts.CallExpression, ident: ts.Identifier) {

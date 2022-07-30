@@ -3431,11 +3431,11 @@ export class Emitter {
             && (<ts.BinaryExpression>node.parent).left === node;
         let isTuple = false;
         const type = this.resolver.typeToTypeNode(this.resolver.getOrResolveTypeOf(node));
-        if (type.kind === ts.SyntaxKind.TupleType) {
+        if (type && type.kind === ts.SyntaxKind.TupleType) {
             isTuple = true;
         }
 
-        let elementsType = (<any>node).parent.type;
+        let elementsType = node.parent ? (<any>node).parent.type : undefined;
         if (!elementsType) {
             if (node.elements.length !== 0) {
                 elementsType = this.resolver.typeToTypeNode(this.resolver.getTypeAtLocation(node.elements[0]));
@@ -3465,8 +3465,8 @@ export class Emitter {
         }
 
         if (!isTuple) {
-            let isCreateArray = node.parent.getText().startsWith('CreateArray')
-            if(!isCreateArray) {
+            let isCreateArray = node.parent && node.parent.getText().startsWith('CreateArray')
+            if(!isCreateArray && !(node as any).__isIntLiteralArray) {
                 this.writer.writeString('TSArray<');
                 if (elementsType) {
                     this.processType(elementsType, false, false, false, false, node);
