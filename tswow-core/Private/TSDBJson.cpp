@@ -96,16 +96,6 @@ void TSDBJson::Save()
         stmt->setString(3, m_json.toString());
         CharacterDatabase.Execute(stmt);
     }
-
-    if (m_lua.valid())
-    {
-        auto stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_JSON_DATA);
-        stmt->setUInt32(0, m_type);
-        stmt->setUInt32(1, 1);
-        stmt->setUInt32(2, m_id);
-        stmt->setString(3, lua_to_json(m_lua).dump());
-        CharacterDatabase.Execute(stmt);
-    }
     m_dirty_deleted = false;
 }
 
@@ -136,10 +126,12 @@ void TSDBJson::Load()
                 m_json.Parse(field[1].GetString());
                 break;
             }
+            /*
             case DBJsonTableType::LUA: {
                 m_lua = json_to_lua(nlohmann::json::parse(field[1].GetString()));
                 break;
             }
+            */
             }
         } while (result->NextRow());
     }
@@ -148,21 +140,7 @@ void TSDBJson::Load()
 void TSDBJson::Clear()
 {
     m_json = TSJsonObject();
-    if (m_lua.valid())
-    {
-        m_lua.clear();
-    }
     m_dirty_deleted = true;
-}
-
-sol::table TSDBJson::get_lua()
-{
-    if (m_lua.valid())
-    {
-        return m_lua;
-    }
-    m_lua = TSLua::GetState().create_table();
-    return m_lua;
 }
 
 void TSDBJsonProvider::SetDBNumber(std::string const& key, double value)
@@ -260,10 +238,6 @@ void TSDBJsonProvider::DeleteDBField(std::string const& key)
     TSDBJson* json = get_json();
     json->m_dirty_deleted = true;
     json->m_json.Remove(key);
-    if (json->m_lua.valid())
-    {
-        json->get_lua()[key] = sol::nil;
-    }
 }
 
 void TSDBJsonProvider::SaveDBJson()
@@ -286,3 +260,12 @@ void TSDBJsonProvider::ClearDBJson()
     get_json()->Clear();
 }
 
+TSJsonObject TSDBJsonProvider::GetDBObject(std::string const& key, TSJsonObject def)
+{
+    return get_json()->m_json.GetJsonObject(key, def);
+}
+
+TSJsonArray TSDBJsonProvider::GetDBArray(std::string const& key, TSJsonArray def)
+{
+    return get_json()->m_json.GetJsonArray(key, def);
+}

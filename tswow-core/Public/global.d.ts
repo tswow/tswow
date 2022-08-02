@@ -9214,7 +9214,8 @@ declare interface TSDBJsonProvider {
     /**
      * @lua_only - This method is not available in livescripts.
      */
-    SetDBObject(key: string, value: any): void
+    SetDBObject(key: string, value: TSJsonObject): void
+    SetDBArray(key: string, value: TSJsonArray): void
     GetDBNumber(key: string, def?: double): TSNumber<double>
     GetDBUInt32(key: string, def?: uint32): TSNumber<uint32>
     GetDBInt32(key: string, def?: int32): TSNumber<int32>
@@ -9223,10 +9224,8 @@ declare interface TSDBJsonProvider {
     GetDBFloat(key: string, def?: float): TSNumber<float>
     GetDBString(key: string, def?: string): string;
     GetDBBool(key: string, def?: bool): bool;
-    /**
-     * @lua_only - This method is not available in livescripts.
-     */
-    GetDBObject(key: string, def?: any): any;
+    GetDBObject(key: string, def?: TSJsonObject): TSJsonObject;
+    GetDBArray(key: string, def?: TSJsonArray): TSJsonArray
     DeleteDBField(key: string): void;
     SaveDBJson(): void;
     LoadDBJson(): void;

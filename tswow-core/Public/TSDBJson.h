@@ -10,19 +10,16 @@ enum DBJsonEntityType
 
 enum DBJsonTableType
 {
-    JSON = 0,
-    LUA = 1
+    JSON = 0
 };
 
 // todo: transaction support
 class TSDBJson
 {
-    sol::table m_lua;
     TSJsonObject m_json;
     bool m_dirty_deleted;
     DBJsonEntityType m_type;
     uint32 m_id;
-    sol::table get_lua();
 public:
     TSDBJson(DBJsonEntityType type, uint32 id);
     void Save();
@@ -54,6 +51,9 @@ public:
     TSNumber<int32> GetDBInt32(std::string const& key, int32 def = 0);
     TSNumber<int64> GetDBInt64(std::string const& key, int64 def = 0);
     TSNumber<float> GetDBFloat(std::string const& key, float def = 0);
+
+    TSJsonObject GetDBObject(std::string const& key, TSJsonObject def = TSJsonObject());
+    TSJsonArray GetDBArray(std::string const& key, TSJsonArray def = TSJsonArray());
 
     std::string GetDBString(std::string const& key, std::string const& def = "");
     bool GetDBBool(std::string const& key, bool def = false);
