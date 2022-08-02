@@ -4,6 +4,7 @@
 #include "TSCreature.h"
 #include "TSGameObject.h"
 #include "TSCorpse.h"
+#include "TSLuaVarargs.h"
 
 void TSLua::load_world_object_methods(sol::state& state)
 {
@@ -13,9 +14,11 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD(ts_worldobject, TSWorldObject, GetPlayersInRange);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetUnitsInRange);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetGameObjectsInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetNearestPlayer);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetNearestGameObject);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetNearestCreature);
+
+    LUA_FIELD_OVERLOAD_RET_0_3(ts_worldobject, TSWorldObject, GetNearestPlayer, float, uint32, uint32);
+    LUA_FIELD_OVERLOAD_RET_0_3(ts_worldobject, TSWorldObject, GetNearestGameObject, float, uint32, uint32);
+    LUA_FIELD_OVERLOAD_RET_0_4(ts_worldobject, TSWorldObject, GetNearestCreature, float, uint32, uint32, uint32);
+
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistance);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistanceToPoint);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistance2d);

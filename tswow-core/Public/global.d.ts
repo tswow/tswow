@@ -165,6 +165,18 @@ declare const enum GlyphMask /**@realType:uint32 */ {
 
 declare const enum TriggerCastFlags { } /** SpellDefines.h:TriggerCastFlags */
 
+declare const enum Attitude {
+    BOTH = 0,
+    HOSTILE = 1,
+    FRIENDLY = 2
+}
+
+declare const enum DeathStatus {
+    BOTH = 0,
+    ALIVE = 1,
+    DEAD = 2
+}
+
 declare const enum Opcodes { } /** Opcodes.h:Opcodes */
 
 declare interface TSMutable<T,R> {
@@ -5220,9 +5232,9 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      */
     GetO() : TSNumber<float>
     GetPosition() : TSPosition
-    GetNearestPlayer(range : float,hostile : uint32,dead : uint32) : TSPlayer
-    GetNearestGameObject(range : float,entry : uint32,hostile : uint32) : TSGameObject
-    GetNearestCreature(range : float,entry : uint32,hostile : uint32,dead : uint32) : TSCreature
+    GetNearestPlayer(range?: float,hostile?: uint32 | Attitude,dead?: uint32 | DeathStatus) : TSPlayer
+    GetNearestGameObject(range?: float,entry?: uint32,hostile?: uint32 | Attitude) : TSGameObject
+    GetNearestCreature(range?: float,entry?: uint32, hostile?: uint32 | Attitude, dead?: uint32 | DeathStatus) : TSCreature
 
     /**
      * Returns the distance from this [WorldObject] to another [WorldObject]

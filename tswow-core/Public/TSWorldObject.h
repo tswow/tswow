@@ -54,9 +54,9 @@ public:
     TSArray<TSUnit> GetUnitsInRange(float range, uint32 hostile, uint32 dead);
     TSArray<TSGameObject> GetGameObjectsInRange(float range, uint32 entry, uint32 hostile);
 
-    TSPlayer GetNearestPlayer(float range, uint32 hostile, uint32 dead);
-    TSGameObject GetNearestGameObject(float range, uint32 entry, uint32 hostile);
-    TSCreature GetNearestCreature(float range, uint32 entry, uint32 hostile, uint32 dead);
+    TSPlayer GetNearestPlayer(float range = 533.33333, uint32 hostile = 0, uint32 dead = 1);
+    TSGameObject GetNearestGameObject(float range = 533.33333, uint32 entry = 0, uint32 hostile = 0);
+    TSCreature GetNearestCreature(float range = 533.33333, uint32 entry = 0, uint32 hostile = 0, uint32 dead = 1);
 
     TSNumber<float> GetDistance(TSWorldObject target);
     TSNumber<float> GetDistanceToPoint(float X, float Y, float Z);
