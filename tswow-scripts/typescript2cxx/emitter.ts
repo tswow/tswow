@@ -3643,9 +3643,12 @@ export class Emitter {
             return;
         }
 
-        const wrapIntoRoundBrackets =
-            opCode === ts.SyntaxKind.AmpersandAmpersandToken
-            || opCode === ts.SyntaxKind.BarBarToken;
+        let wrapIntoRoundBrackets =
+               opCode === ts.SyntaxKind.AmpersandAmpersandToken
+            || opCode === ts.SyntaxKind.BarBarToken
+            || opCode === ts.SyntaxKind.PercentToken
+            ;
+
         const op = this.opsMap[node.operatorToken.kind];
         const isFunction = op.substr(0, 2) === '__';
         if (isFunction) {
@@ -3654,6 +3657,9 @@ export class Emitter {
 
         const leftType = this.resolver.getOrResolveTypeOf(node.left);
         const rightType = this.resolver.getOrResolveTypeOf(node.right);
+
+        const isModulo = opCode === ts.SyntaxKind.PercentToken
+        wrapIntoRoundBrackets = wrapIntoRoundBrackets || isModulo;
 
         const isLeftEnum = this.resolver.isTypeFromSymbol(leftType, ts.SyntaxKind.EnumDeclaration);
         const isRightEnum = this.resolver.isTypeFromSymbol(rightType, ts.SyntaxKind.EnumDeclaration);
@@ -3666,6 +3672,9 @@ export class Emitter {
             || opCode === ts.SyntaxKind.PercentEqualsToken);
 
         if (wrapIntoRoundBrackets) {
+            if(isModulo) {
+                this.writer.writeString('int64')
+            }
             this.writer.writeString('(');
         }
 
@@ -3682,6 +3691,9 @@ export class Emitter {
         }
 
         if (wrapIntoRoundBrackets) {
+            if(isModulo) {
+                this.writer.writeString('int64')
+            }
             this.writer.writeString('(');
         }
 
