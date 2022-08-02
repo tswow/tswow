@@ -165,6 +165,8 @@ declare const enum GlyphMask /**@realType:uint32 */ {
 
 declare const enum TriggerCastFlags { } /** SpellDefines.h:TriggerCastFlags */
 
+declare const enum Opcodes { } /** Opcodes.h:Opcodes */
+
 declare interface TSMutable<T,R> {
     constructor(field: R);
     get() : R;
