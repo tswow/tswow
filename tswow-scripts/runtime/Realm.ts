@@ -158,8 +158,11 @@ class RealmManager {
     characters: Connection;
     worldserver: Process;
     bots: Process;
+    lastBuildType: BuildType = DEFAULT_BUILD_TYPE
+    private realm: Realm
 
-    constructor(name: string) {
+    constructor(name: string, realm: Realm) {
+        this.realm = realm;
         this.characters = new Connection(
               NodeConfig.DatabaseSettings('characters',name)
             , 'characters'
@@ -169,6 +172,12 @@ class RealmManager {
             .onFail(err=>{
                 term.error(termCustom('realm',name),err.message)
             })
+            
+        this.worldserver.waitForMessage('ready...')
+            .then(()=>{
+                this.realm.startBots(this.lastBuildType)
+            })
+
         this.bots = new Process(`bots/${name}`)
             .showOutput(true)
             .onFail(err=>{
@@ -182,12 +191,12 @@ export class Realm {
 
     readonly mod: ModuleEndpoint
     readonly name: string
-    lastBuildType: BuildType = DEFAULT_BUILD_TYPE
+    get lastBuildType() { return this.manager().lastBuildType; }
     readonly config: RealmConfig
 
     private manager() {
         return Realm.managers[this.fullName]
-           || (Realm.managers[this.fullName] = new RealmManager(this.fullName))
+           || (Realm.managers[this.fullName] = new RealmManager(this.fullName, this))
     }
 
     get characters() {
@@ -285,7 +294,7 @@ export class Realm {
 
     async start(type: BuildType) {
         term.log(this.logName(),`Starting worlserver for ${this.config.RealmName}...`)
-        this.lastBuildType = type;
+        this.manager().lastBuildType = type;
         await this.connect();
         await this.config.Dataset.setupDatabases('BOTH',false);
         await this.config.Dataset.setupClientData()
@@ -358,7 +367,6 @@ export class Realm {
 
                 break;
         }
-        this.startBots(type)
     }
 
     startBots(type: BuildType) {
