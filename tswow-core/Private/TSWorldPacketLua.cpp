@@ -16,7 +16,10 @@ static TSWorldPacket LCreateWorldPacket1(uint16 opcode)
 
 void TSLua::load_world_packet_methods(sol::state & state)
 {
-    auto ts_world_packet = state.new_usertype<TSWorldPacket>("TSWorldPacket");
+    auto ts_world_packet = state.new_usertype<TSWorldPacket>("TSWorldPacket",sol::factories(
+        [](uint16 opcode, uint32 size) { return std::make_shared<TSWorldPacket>(opcode, size); },
+        [](uint16 opcode) { return std::make_shared<TSWorldPacket>(opcode); }
+    ));
     LUA_FIELD(ts_world_packet, TSWorldPacket, IsNull);
     LUA_FIELD(ts_world_packet, TSWorldPacket, GetOpcode);
     LUA_FIELD(ts_world_packet, TSWorldPacket, GetSize);
