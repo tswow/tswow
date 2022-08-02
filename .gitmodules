@@ -5,3 +5,6 @@
 [submodule "misc/adt-creator"]
 	path = misc/adt-creator
 	url = https://github.com/tswow/adt-creator.git
+[submodule "misc/bots"]
+	path = misc/bots
+	url = https://github.com/tswow/wow-bots.git

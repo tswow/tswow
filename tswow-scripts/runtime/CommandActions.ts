@@ -6,3 +6,4 @@ export const ListCommand = commands.addCommand('list')
 export const StartCommand = commands.addCommand('start')
 export const StopCommand = commands.addCommand('stop')
 export const CleanCommand = commands.addCommand('clean');
+export const SendCommand = commands.addCommand('send');

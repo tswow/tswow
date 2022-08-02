@@ -43,7 +43,8 @@ export function DatasetDirectory(inPath: string, inName: string) {
         }),
         lib: dir({
             lua: dir({}),
-            include_lua: dirn('lualib',{})
+            include_lua: dirn('lualib',{}),
+            bots: dir({})
         }),
         luaxml: dir({
             Interface: dir({
@@ -76,6 +77,7 @@ export function RealmDirectory(inPath: string, inName: string) {
     return generateTree(path.join(inPath,inName),dir({
         worldserver_conf: file('worldserver.conf'),
         worldserver_conf_dist: file('worldserver.conf.dist'),
+        bots_conf: file('bots.conf'),
         config: file(`realm.conf`),
         realm_id: file(`realm.id`),
         core_config: dynfile(type=>{
@@ -159,6 +161,16 @@ export function EndpointDirectory(inPath: string) {
         addon: custom(inPath=>AddonDirectory(mpath(inPath,'addon'))),
         datascripts: custom(inPath=>DatascriptsDirectory(mpath(inPath,'datascripts'))),
         livescripts: custom(inPath=>LivescriptsDirectory(mpath(inPath,'livescripts'))),
+        bots: dir({
+            profiles: dir({
+                global_d_ts: file('global.d.ts'),
+                tsconfig_json: file('tsconfig.json')
+            }),
+            commands: dir({
+                global_d_ts: file('global.d.ts'),
+                tsconfig_json: file('tsconfig.json')
+            })
+        }),
         lua: dir({
             example: file('main.ts'),
             global_d_ts: file('global.d.ts'),
@@ -382,6 +394,10 @@ export function InstallPath(pathIn: string, tdb: string) {
                     })),
                 }),
             }),
+            include_bots: dirn('include-bots',{
+                commands_global_d_ts: file('commands.global.d.ts'),
+                profiles_global_d_ts: file('profiles.global.d.ts')
+            }),
             include_addon: dirn('include-addon',{
                 global_d_ts: file('global.d.ts'),
                 Events_ts: file('Events.ts'),
@@ -409,7 +425,15 @@ export function InstallPath(pathIn: string, tdb: string) {
                     tracy_client: file(`TracyClient.dll`),
                     authserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}authserver.conf.dist`),
                     worldserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}worldserver.conf.dist`),
-
+                    bots_conf: file('bots.conf'),
+                    // todo: linux
+                    bots_app: file('bots-app.exe'),
+                    bots: dir({
+                        global_d_ts: file('global.d.ts')
+                    }),
+                    commands: dir({
+                        global_d_ts: file('global.d.ts')
+                    }),
                     libcrypto: file('libcrypto-1_1-x64.dll'),
                     configs: custom((i)=>generateTree(i,dir({}))),
                 }))
@@ -441,6 +465,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                         , 'assets'
                         , 'addon'
                         , 'shared'
+                        , 'bots'
                     ]
                     let paths: WDirectory[] = [self]
                     self.iterate('RECURSE','DIRECTORIES','FULL',node=>{
@@ -535,13 +560,13 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         boost: dir({
-            boost_1_74_0: dir({
+            boost_1_77_0: dir({
                 lib64_msvc_14_2: dirn('lib64-msvc-14.2',{
-                    fslib: file('libboost_filesystem-vc142-mt-x64-1_74.lib')
+                    fslib: file('libboost_filesystem-vc142-mt-x64-1_77.lib')
                 })
             })
         }),
-        boostArchive: file('boost_1_74_0.zip'),
+        boostArchive: file('boost_1_77_0.zip'),
         tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
@@ -722,7 +747,14 @@ export function SourcePaths(pathIn: string) {
                 addons: dir({}),
                 snippet_example: file('snippet-example.ts')
             }),
-
+            bots: dir({
+                typescript: dir({
+                    profiles_global_d_ts: file('profiles.global.d.ts'),
+                    commands_global_d_ts: file('commands.global.d.ts'),
+                    opcodes_global_d_ts: file('opcodes.global.d.ts'),
+                    shared_global_d_ts: file('shared.global.d.ts'),
+                })
+            }),
             client_extensions: dirn('client-extensions',{
                 CustomPackets: dir({}),
                 lua_51: dirn('lua-5.1',{

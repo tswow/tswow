@@ -22,6 +22,7 @@ import { term } from "../util/Terminal";
 import { Timer } from "../util/Timer";
 import { Addon } from "./Addon";
 import { AuthServer } from "./AuthServer";
+import { Bots } from "./Bots";
 import { Client } from "./Client";
 import { CleanCommand } from "./CommandActions";
 import { Crashes } from "./Crashes";
@@ -95,6 +96,7 @@ export async function main() {
     await Crashes.initialize();
     await PositionsFile.initialize();
     await MiscCommands.initialize();
+    await Bots.initialize();
     await Launcher.initialize();
     Module.cacheEndpoints(false);
     await term.Initialize(

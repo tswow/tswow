@@ -25,6 +25,7 @@ import { EndpointDirectory, ipaths } from '../util/Paths';
 import { term } from '../util/Terminal';
 import { Addon } from './Addon';
 import { Assets } from './Assets';
+import { Bots } from './Bots';
 import { CreateCommand, ListCommand } from './CommandActions';
 import { Datascripts } from './Datascripts';
 import { Dataset, Datasets } from './Dataset';
@@ -63,6 +64,7 @@ const initializedEndpoints = [
   , 'addon'
   , 'shared'
   , 'lua'
+  , 'bots'
 ] as const
 type EndpointType = typeof initializedEndpoints[number];
 
@@ -102,6 +104,10 @@ export class ModuleEndpoint {
 
     get datasets() {
         return new Datasets(this)
+    }
+
+    get bots() {
+        return new Bots(this);
     }
 
     get datascripts() {
@@ -220,6 +226,9 @@ export class Module {
             .filter((x,i,a)=>a.indexOf(x) === i)
             .forEach(x=>{
                 switch(x) {
+                    case 'bots':
+                        this.asEndpoint().bots.initialize()
+                        break
                     case 'addon':
                         this.asEndpoint().addon.initialize()
                         break
@@ -323,6 +332,8 @@ export class Module {
                     , /addon.+?$/
                     , /shared.+?$/
                     , /assets$/
+                    , /bots\\bots/
+                    , /bots\/bots/
                     , /(^|[\/\\])\../
                 ]
             })
@@ -338,6 +349,9 @@ export class Module {
                     let endpoint = this.getEndpoint(dir.dirname().get());
                     if(endpoint) {
                         switch(endpointType) {
+                            case 'bots':
+                                Bots.create(endpoint)
+                                break;
                             case 'datascripts':
                                 Datascripts.create(endpoint)
                                 break;

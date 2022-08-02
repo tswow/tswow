@@ -159,17 +159,22 @@ export class WNode {
         return fs.statSync(this.path).mtimeMs;
     }
 
-    abs(slashType: 'UNCHANGED'|'FORWARD'|'BACKWARD' = 'UNCHANGED') {
-        let abs = wfs.absPath(this.path);
+    slash(slashType: 'FORWARD'|'BACKWARD'|'UNCHANGED') {
         switch(slashType) {
             case 'BACKWARD':
-                abs = abs.split('/').join('\\')
+                this.path = this.path.split('/').join('\\')
                 break;
             case 'FORWARD':
-                abs = abs.split('\\').join('/')
+                this.path = this.path.split('\\').join('/')
+                break;
+            default:
                 break;
         }
-        return this.construct(abs);
+        return this
+    }
+
+    abs(slashType: 'UNCHANGED'|'FORWARD'|'BACKWARD' = 'UNCHANGED') {
+        return this.construct(wfs.absPath(this.path)).slash(slashType);
     }
 
     substring(start: number, end?: number) {
@@ -250,7 +255,10 @@ export class WNode {
         return this;
     }
 
-    get() { return this.path; }
+    get(slashType: 'FORWARD'|'BACKWARD'|'UNCHANGED' = 'UNCHANGED') {
+        return this.construct(this.path).slash(slashType).path;
+    }
+
     exists() { return fs.existsSync(this.path); }
 
     isFile() {

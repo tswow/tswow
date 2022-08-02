@@ -188,11 +188,25 @@ export namespace TrinityCore {
         ipaths.bin.include.global_d_ts.write(gdts);
         spaths.tswow_scripts.wotlk.global_d_ts.write(gdts);
 
+        // bot declarations (so we don't have to build tc to update them)
+        let profileBotGlobal = spaths.misc.bots.typescript.profiles_global_d_ts.readString();
+        let sharedBotGlobal = spaths.misc.bots.typescript.shared_global_d_ts.readString();
+        let opcodesBotGlobal = spaths.misc.bots.typescript.opcodes_global_d_ts.readString();
+        let commandBotGlobal = spaths.misc.bots.typescript.commands_global_d_ts.readString();
+        ipaths.bin.include_bots.profiles_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${profileBotGlobal}`)
+        ipaths.bin.include_bots.commands_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${commandBotGlobal}`)
+
+        // write to modules
         ipaths.modules.module.all().forEach(mod=>{
             mod.endpoints().forEach(ep=>{
                 if(ep.livescripts.exists()) {
                     ipaths.bin.include.global_d_ts
                         .copy(ep.livescripts.global_d_ts)
+                }
+
+                if(ep.bots.exists()) {
+                    ipaths.bin.include_bots.profiles_global_d_ts.copy(ep.bots.profiles.global_d_ts)
+                    ipaths.bin.include_bots.commands_global_d_ts.copy(ep.bots.commands.global_d_ts)
                 }
 
                 if(ep.datascripts.exists()) {
@@ -243,14 +257,14 @@ export namespace TrinityCore {
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                 +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
-                +` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
+                +` -DBOOST_ROOT="${bpaths.boost.boost_1_77_0.abs().get()}"`
                 +` -DTRACY_ENABLE="${tracyEnabled?'ON':'OFF'}"`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-better-timer',[process.argv,args1])?'ON':'OFF'}"`
                 +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
-                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_74_0.abs().get()}`,...process.env}});
+                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_77_0.abs().get()}`,...process.env}});
                 if(generateOnly) return;
                 wsys.exec(buildCommand, 'inherit');
             } else {
@@ -283,14 +297,7 @@ export namespace TrinityCore {
         }
 
         if(isWindows()) {
-            bpaths.TrinityCore.bin(type).scripts
-                .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).scripts)
-
-            bpaths.TrinityCore.configs(type).iterate('FLAT','FILES','FULL',node=>{
-                if(node.endsWith('.dll') || node.endsWith('.conf.dist') || node.endsWith('.pdb') || node.endsWith('.exe')) {
-                    node.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).configs.join(node.basename()))
-                }
-            })
+            bpaths.TrinityCore.configs(type).copy(ipaths.bin.core.pick('trinitycore').build.pick(type))
             bpaths.TrinityCore.tracy_dll(type)
                 .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).tracy_client);
         } else {
@@ -306,7 +313,7 @@ export namespace TrinityCore {
         });
 
         if(isWindows()) {
-            [bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib]
+            [bpaths.boost.boost_1_77_0.lib64_msvc_14_2.fslib]
                 .forEach(x=>{
                     x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))
                 })

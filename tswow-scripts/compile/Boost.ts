@@ -23,42 +23,42 @@ export namespace Boost {
     export async function install() {
         await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
 
-        if(!bpaths.boost.boost_1_74_0.exists())
+        if(!bpaths.boost.boost_1_77_0.exists())
         {
-            await ExtractZip(bpaths.boostArchive.get(),{dir:bpaths.boost.boost_1_74_0.abs().get()});
+            await ExtractZip(bpaths.boostArchive.get(),{dir:bpaths.boost.boost_1_77_0.abs().get()});
         }
 
         // Delete unused libraries
         [
-            , "libboost_test_exec_monitor-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_test_exec_monitor-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_unit_test_framework-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_unit_test_framework-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_wave-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_wave-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_wave-vc142-mt-s-x64-1_72.lib"
-            , "libboost_wave-vc142-mt-x64-1_72.lib"
-            , "libboost_log_setup-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_log_setup-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_log-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_log-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_math_tr1f-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_math_tr1l-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_math_tr1-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_serialization-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_serialization-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_wserialization-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_math_tr1-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_math_tr1l-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_math_tr1f-vc142-mt-gd-x64-1_72.lib"
-            , "libboost_log-vc142-mt-s-x64-1_72.lib"
-            , "libboost_wserialization-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_locale-vc142-mt-sgd-x64-1_72.lib"
-            , "libboost_log_setup-vc142-mt-s-x64-1_72.lib"
-            , "libboost_log_setup-vc142-mt-x64-1_72.lib"
-            , "libboost_locale-vc142-mt-gd-x64-1_72.lib"
+            , "libboost_test_exec_monitor-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_test_exec_monitor-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_unit_test_framework-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_unit_test_framework-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_wave-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_wave-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_wave-vc142-mt-s-x64-1_77.lib"
+            , "libboost_wave-vc142-mt-x64-1_77.lib"
+            , "libboost_log_setup-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_log_setup-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_log-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_log-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_math_tr1f-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_math_tr1l-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_math_tr1-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_serialization-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_serialization-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_wserialization-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_math_tr1-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_math_tr1l-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_math_tr1f-vc142-mt-gd-x64-1_77.lib"
+            , "libboost_log-vc142-mt-s-x64-1_77.lib"
+            , "libboost_wserialization-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_locale-vc142-mt-sgd-x64-1_77.lib"
+            , "libboost_log_setup-vc142-mt-s-x64-1_77.lib"
+            , "libboost_log_setup-vc142-mt-x64-1_77.lib"
+            , "libboost_locale-vc142-mt-gd-x64-1_77.lib"
         ].forEach(x=>{
-            bpaths.boost.boost_1_74_0.lib64_msvc_14_2.join(x)
+            bpaths.boost.boost_1_77_0.lib64_msvc_14_2.join(x)
                 .remove()
         })
 
@@ -66,6 +66,6 @@ export namespace Boost {
             bpaths.boostArchive.remove();
         }
 
-        return bpaths.boost.boost_1_74_0.abs().get();
+        return bpaths.boost.boost_1_77_0.abs().get();
     }
 }

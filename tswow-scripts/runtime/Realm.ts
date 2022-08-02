@@ -157,6 +157,8 @@ export class RealmConfig extends ConfigFile {
 class RealmManager {
     characters: Connection;
     worldserver: Process;
+    bots: Process;
+
     constructor(name: string) {
         this.characters = new Connection(
               NodeConfig.DatabaseSettings('characters',name)
@@ -166,6 +168,11 @@ class RealmManager {
             .showOutput(true)
             .onFail(err=>{
                 term.error(termCustom('realm',name),err.message)
+            })
+        this.bots = new Process(`bots/${name}`)
+            .showOutput(true)
+            .onFail(err=>{
+                term.error(termCustom('bots',name),err.message)
             })
     }
 }
@@ -185,6 +192,10 @@ export class Realm {
 
     get characters() {
         return this.manager().characters;
+    }
+
+    get bots() {
+        return this.manager().bots
     }
 
     get worldserver() {
@@ -332,7 +343,6 @@ export class Realm {
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.Redundancy', 0)
         patchTCConfig(this.path.worldserver_conf.get(), 'RealmID',this.getID())
         patchTCConfig(this.path.worldserver_conf.get(), 'DataDir',this.config.Dataset.path.abs().get())
-
         this.worldserver.setAutoRestart(this.config.AutoRestart);
 
         switch(this.core) {
@@ -345,8 +355,15 @@ export class Realm {
                 this.worldserver.startIn(this.path.get(),
                     wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()),
                         [`-c${wfs.absPath(this.path.worldserver_conf.get())}`]);
+
                 break;
         }
+        this.startBots(type)
+    }
+
+    startBots(type: BuildType) {
+        patchTCConfig(this.path.bots_conf.get(), 'Lua.Path', this.config.Dataset.path.lib.bots.abs().get('FORWARD'))
+        this.bots.startIn(this.path.get(),wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).bots_app.get()))
     }
 
     async connect() {
@@ -367,6 +384,8 @@ export class Realm {
                 .worldserver_conf_dist.copy(this.path.worldserver_conf_dist)
             this.path.worldserver_conf_dist
                 .copyOnNoTarget(this.path.worldserver_conf)
+            ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(NodeConfig.DefaultBuildType)
+                .bots_conf.copyOnNoTarget(this.path.bots_conf)
             this.config.generateIfNotExists()
         } catch(err) {
             term.error(this.logName(),`Error during intialization: ${err.message}`)
@@ -461,7 +480,8 @@ export class Realm {
                 let realm = Identifier.getRealm(args[0]);
                 let message = args.slice(1);
                 realm.worldserver.send(message.join(' '),true);
-            });
+            })
+            ;
 
         ListCommand.addCommand(
               'realm'

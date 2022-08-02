@@ -30,6 +30,7 @@ export type TerminalCategory =
     | 'client'
     | 'lua'
     | 'launcher'
+    | 'bots'
     | CustomCategory
 
 export function termCustom(custom: string);

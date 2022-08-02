@@ -45,7 +45,7 @@ export namespace AzerothCore {
                   + ` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
                   + ` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                   + ` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
-                  + ` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
+                  + ` -DBOOST_ROOT="${bpaths.boost.boost_1_77_0.abs().get()}"`
                   + ` -DTOOLS=ON`
                   + ` -DSCRIPTS=static`
                   + ` -S "${spaths.cores.AzerothCore.get()}"`
@@ -87,7 +87,7 @@ export namespace AzerothCore {
             bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
             bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())));
             [
-                bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib,
+                bpaths.boost.boost_1_77_0.lib64_msvc_14_2.fslib,
                 bpaths.mysql.find_subdir().lib.libmysql_lib,
                 bpaths.openssl.lib.libcrypto_lib
             ].forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())))
