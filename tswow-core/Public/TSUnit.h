@@ -23,6 +23,7 @@
 #include "TSClasses.h"
 #include "TSLua.h"
 #include "TSAura.h"
+#include "TSSpell.h"
 
 class TSAuraApplication;
 
@@ -131,6 +132,14 @@ public:
     float GetTotalAuraMultiplier(uint32 auraType);
     int32 GetMaxPositiveAuraModifier(uint32 auraType);
     int32 GetMaxNegativeAuraModifier(uint32 auraType);
+    void ResetCooldown(uint32 spellId, bool update = true);
+    void ResetAllCooldowns();
+    bool HasCooldown(uint32 spell, uint32 itemId = 0, bool ignoreCategory = false);
+    uint32 GetRemainingCooldown(uint32 spell);
+    void ModifyCooldown(uint32 spell, int32 cooldownModMs);
+    void StartCooldown(uint32 spell, uint32 item = 0, TSSpell spl = TSSpell(), bool onHold = false);
+    void LockSpellSchool(uint32 schoolMask, uint32 lockoutTime);
+    bool IsSchoolLocked(uint32 schoolMask);
     TSArray<TSUnit> GetFriendlyUnitsInRange(float range);
     TSArray<TSUnit> GetUnfriendlyUnitsInRange(float range);
     TSVehicle  GetVehicleKit();

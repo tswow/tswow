@@ -104,6 +104,16 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraMultiplier);
     LUA_FIELD(ts_unit, TSUnit, GetMaxPositiveAuraModifier);
     LUA_FIELD(ts_unit, TSUnit, GetMaxNegativeAuraModifier);
+
+    LUA_FIELD_OVERLOAD_1_1(ts_unit, TSUnit, ResetCooldown, uint32, bool);
+    LUA_FIELD(ts_unit, TSUnit, ResetAllCooldowns);
+    LUA_FIELD_OVERLOAD_RET_1_2(ts_unit, TSUnit, HasCooldown, uint32, uint32, bool);
+    LUA_FIELD(ts_unit, TSUnit, GetRemainingCooldown);
+    LUA_FIELD(ts_unit, TSUnit, ModifyCooldown);
+    LUA_FIELD_OVERLOAD_1_3(ts_unit, TSUnit, StartCooldown, uint32, uint32, TSSpell, bool);
+    LUA_FIELD(ts_unit, TSUnit, LockSpellSchool);
+    LUA_FIELD(ts_unit, TSUnit, IsSchoolLocked);
+
     LUA_FIELD(ts_unit, TSUnit, GetFriendlyUnitsInRange);
     LUA_FIELD(ts_unit, TSUnit, GetUnfriendlyUnitsInRange);
     LUA_FIELD(ts_unit, TSUnit, GetVehicleKit);

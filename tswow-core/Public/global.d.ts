@@ -6475,6 +6475,62 @@ declare interface TSUnit extends TSWorldObject {
     GetMaxNegativeAuraModifier(auraType: AuraType): int32;
 
     /**
+     * Resets the cooldown of a specific spell
+     * @param spellId 
+     * @param update = false
+     */
+    ResetCooldown(spellId: uint32, update?: boolean);
+
+    /**
+     * Resets all spell cooldowns
+     */
+    ResetAllCooldowns(): void;
+
+    /**
+     * @param spell
+     * @param itemId = 0 (no item)
+     * @param ignoreCategory = true
+     */
+    HasCooldown(spell: uint32, itemId?: uint32, ignoreCategory?: bool): boolean
+
+    /**
+     * @param spell
+     * @returns remaining cooldown in milliseconds
+     */
+    GetRemainingCooldown(spell: uint32): uint32;
+
+    /**
+     * @param spell
+     * @param cooldownModMs - how much to change the cooldown in milliseconds
+     */
+    ModifyCooldown(spell: uint32, cooldownModMs: int32): void;
+
+    /**
+     * Starts the cooldown of a new spell
+     * @param spell
+     * @param item
+     * @param spl
+     * @param onHold
+     */
+    StartCooldown(spell: uint32, item?: uint32, spl?: TSSpell, onHold?: boolean): void;
+
+    /**
+     * @param schoolMask - [SpellSchoolMask] of schools
+     * @param lockoutTime
+     * @warn - Accepts [SpellSchoolMask], NOT [SpellSchool]
+     */
+    LockSpellSchool(schoolMask: SpellSchoolMask, lockoutTime: uint32): void;
+
+    /**
+     * Checks if any of the supplied spell schools are locked.
+     * @param schoolMask - [SpellSchoolMask] of affected schools
+     * @param lockoutTime
+     * @return true if any of the supplied spell schools are locked, otherwise not
+     * @warn - Accepts [SpellSchoolMask], NOT [SpellSchool]
+     */
+    IsSchoolLocked(schoolMask: SpellSchoolMask): bool;
+
+    /**
      * Returns [Unit]'s [Vehicle] methods
      *
      * @return [Vehicle] vehicle

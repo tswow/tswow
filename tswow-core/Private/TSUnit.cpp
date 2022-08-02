@@ -35,6 +35,8 @@
 #include "MotionMaster.h"
 #include "Unit.h"
 #include "Player.h"
+#include "SpellHistory.h"
+#include "SpellMgr.h"
 
 #include <memory.h>
 
@@ -2649,4 +2651,44 @@ int32 TSUnit::GetMaxPositiveAuraModifier(uint32 auraType)
 int32 TSUnit::GetMaxNegativeAuraModifier(uint32 auraType)
 {
     return unit->GetMaxNegativeAuraModifier(AuraType(auraType));
+}
+
+void TSUnit::ResetCooldown(uint32 spellId, bool update)
+{
+    unit->GetSpellHistory()->ResetCooldown(spellId, update);
+}
+
+void TSUnit::ResetAllCooldowns()
+{
+    unit->GetSpellHistory()->ResetAllCooldowns();
+}
+
+bool TSUnit::HasCooldown(uint32 spell, uint32 itemId, bool ignoreCategory)
+{
+    return unit->GetSpellHistory()->HasCooldown(spell, itemId, ignoreCategory);
+}
+
+uint32 TSUnit::GetRemainingCooldown(uint32 spell)
+{
+    return unit->GetSpellHistory()->GetRemainingCooldown(sSpellMgr->AssertSpellInfo(spell));
+}
+
+void TSUnit::ModifyCooldown(uint32 spell, int32 cooldownModMs)
+{
+    unit->GetSpellHistory()->ModifyCooldown(spell, cooldownModMs);
+}
+
+void TSUnit::StartCooldown(uint32 spell, uint32 item, TSSpell spl, bool onHold)
+{
+    unit->GetSpellHistory()->StartCooldown(sSpellMgr->AssertSpellInfo(spell), item, spl.spell, onHold);
+}
+
+void TSUnit::LockSpellSchool(uint32 schoolMask, uint32 lockoutTime)
+{
+    unit->GetSpellHistory()->LockSpellSchool(SpellSchoolMask(schoolMask), lockoutTime);
+}
+
+bool TSUnit::IsSchoolLocked(uint32 schoolMask)
+{
+    return unit->GetSpellHistory()->IsSchoolLocked(SpellSchoolMask(schoolMask));
 }
