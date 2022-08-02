@@ -1733,40 +1733,23 @@ export class Emitter {
             const useAuto = autoAllowed
                 && !!(firstInitializer)
                 && !firstType
-            let dictMatch = firstInitializer
-                ? firstInitializer.getText().match(/^CreateDictionary *< *(.+) *, *(.+) *> *\(/)
-                : undefined
-            let arrMatch = firstInitializer
-                ? firstInitializer.getText().match(/^CreateArray *< *(.+) *> *\(/)
-                : undefined
+
             if(type.isNumberLiteral() && declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
             }
-            // todo: this is terrible, make a generic handler!
-             const sharedPtrStr = (name: string) => {
-                 return !['uint8','int8','uint16','int16','uint32','int32','uint64','int64','float','double','string']
-                     .includes(name) && ! name.startsWith('TS')
-                     ? `std::shared_ptr<${name}>`
-                     : name
-             }
-            if(!useAuto && dictMatch) {
-                this.writer.writeString(`TSDictionary<${dictMatch[1] === 'string' ? 'TSString' : dictMatch[1]},${sharedPtrStr(dictMatch[2])}> `)
-            } else if(arrMatch) {
-                this.writer.writeString(`TSArray<${sharedPtrStr(arrMatch[1])}> `)
+
+            this.processPredefineType(effectiveType);
+            if (!forceCaptureRequired) {
+                this.processType(effectiveType, useAuto);
             } else {
-                this.processPredefineType(effectiveType);
-                if (!forceCaptureRequired) {
-                    this.processType(effectiveType, useAuto);
+                // TODO: Not sure if something needs to be done here
+                if (useAuto) {
+                    this.writer.writeString('auto');
                 } else {
-                    // TODO: Not sure if something needs to be done here
-                    if (useAuto) {
-                        this.writer.writeString('auto');
-                    } else {
-                        this.processType(effectiveType, useAuto);
-                    }
+                    this.processType(effectiveType, useAuto);
                 }
-                this.writer.writeString(' ');
             }
+            this.writer.writeString(' ');
         }
 
 
@@ -1956,9 +1939,31 @@ export class Emitter {
         return !same;
     }
 
+    attemptResolveBrokenArrayType(type: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression, node?: ts.Node) {
+        const fail = () => this.error(
+            `Cannot resolve TSArray type parameter, `
+            + `try writing it out explicitly`
+        ,type);
+
+        if(node) {
+            let type = this.resolver.getTypeAtLocation(node)
+            if(this.resolver.isArrayType(type)) {
+                let typenode = this.resolver.typeToTypeNode(type) as ts.ArrayTypeNode;
+                if(typenode.elementType) {
+                    try {
+                        return this.processType(typenode.elementType);
+                    } catch(err) {
+                        fail();
+                    }
+                }
+            }
+            fail();
+        }
+    }
+
     processType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
         auto: boolean = false, skipPointerInType: boolean = false, noTypeName: boolean = false,
-        implementingUnionType: boolean = false): void {
+        implementingUnionType: boolean = false, node?: ts.Node): void {
 
         if (auto) {
             this.writer.writeString('auto');
@@ -1979,11 +1984,11 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.NumericLiteral:
             case ts.SyntaxKind.NumberKeyword:
-                this.writer.writeString('float');
+                this.writer.writeString('double');
                 break;
             case ts.SyntaxKind.StringLiteral:
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('TSString');
+                this.writer.writeString('std::string');
                 break;
             case ts.SyntaxKind.TypeLiteral:
             case ts.SyntaxKind.ObjectLiteralExpression:
@@ -1995,10 +2000,7 @@ export class Emitter {
                 if (arrayType.elementType && arrayType.elementType.kind !== ts.SyntaxKind.UndefinedKeyword) {
                     this.processType(arrayType.elementType, false);
                 } else {
-                    this.error(
-                        `Cannot resolve TSArray type parameter, `
-                      + `try writing it out explicitly`
-                    ,type);
+                    this.attemptResolveBrokenArrayType(typeIn,node);
                 }
                 this.writer.writeString('>');
                 break;
@@ -2323,7 +2325,7 @@ export class Emitter {
                 this.writer.writeString('0');
                 break;
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('JSTR("")');
+                this.writer.writeString('""');
                 break;
             case ts.SyntaxKind.ArrayType:
                 this.writer.writeString('{}');
@@ -2484,12 +2486,23 @@ export class Emitter {
                     this.writer.writeString('void');
                 } else {
                     if (isClassMember && (<ts.Identifier>node.name).text === 'toString') {
-                        this.writer.writeString('TSString');
+                        this.writer.writeString('std::string');
                     } else {
-                        // todo: possible to deduce from return statements?
-                        this.error(
+                        // let's try our best to resolve it
+                        const fail = () => this.error(
                               `Unable to resolve return type of function `
                             + `${node.name.getText()}, try writing it out explicitly`, node)
+
+                        let t = this.resolver.typeToTypeNode(this.resolver.getTypeAtLocation(node)) as ts.FunctionTypeNode
+                        if(t) {
+                            try {
+                                return this.processType(t.type)
+                            } catch(err) {
+                                fail();
+                            }
+                        } else {
+                            fail();
+                        }
                     }
                 }
             }
@@ -3150,11 +3163,11 @@ export class Emitter {
         const isInteger = caseExpressions.every(expression => expression.kind === ts.SyntaxKind.NumericLiteral
             && this.isInt((<ts.NumericLiteral>expression).text));
 
-        this.writer.writeString(`switch (`);
+        this.writer.writeString(`switch (uint64(`);
 
         this.processExpression(node.expression);
 
-        this.writer.writeStringNewLine(')');
+        this.writer.writeStringNewLine('))');
 
         this.writer.BeginBlock();
 
@@ -3193,8 +3206,8 @@ export class Emitter {
             this.writer.writeString('static ');
         }
 
-        this.writer.writeString(`TSDictionary<TSString,uint32>`
-            +` ${switchName} = CreateDictionary<TSString,uint32>(`);
+        this.writer.writeString(`TSDictionary<std::string,uint32>`
+            +` ${switchName} = CreateDictionary<std::string,uint32>(`);
         this.writer.BeginBlock();
 
         let caseNumber = 0;
@@ -3301,7 +3314,7 @@ export class Emitter {
 
     processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
-        this.writer.writeString(`JSTR("${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}")`);
+        this.writer.writeString(`"${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}"`);
     }
 
     processNoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral): void {
@@ -3418,11 +3431,11 @@ export class Emitter {
             && (<ts.BinaryExpression>node.parent).left === node;
         let isTuple = false;
         const type = this.resolver.typeToTypeNode(this.resolver.getOrResolveTypeOf(node));
-        if (type.kind === ts.SyntaxKind.TupleType) {
+        if (type && type.kind === ts.SyntaxKind.TupleType) {
             isTuple = true;
         }
 
-        let elementsType = (<any>node).parent.type;
+        let elementsType = node.parent ? (<any>node).parent.type : undefined;
         if (!elementsType) {
             if (node.elements.length !== 0) {
                 elementsType = this.resolver.typeToTypeNode(this.resolver.getTypeAtLocation(node.elements[0]));
@@ -3452,16 +3465,13 @@ export class Emitter {
         }
 
         if (!isTuple) {
-            let isCreateArray = node.parent.getText().startsWith('CreateArray')
-            if(!isCreateArray) {
+            let isCreateArray = node.parent && node.parent.getText().startsWith('CreateArray')
+            if(!isCreateArray && !(node as any).__isIntLiteralArray) {
                 this.writer.writeString('TSArray<');
                 if (elementsType) {
-                    this.processType(elementsType, false);
+                    this.processType(elementsType, false, false, false, false, node);
                 } else {
-                    this.error(
-                        `Cannot resolve TSArray type parameter, `
-                        + `try writing it out explicitly`
-                    ,node);
+                    this.attemptResolveBrokenArrayType(elementsType,node)
                 }
                 this.writer.writeString('>');
             }
@@ -3567,7 +3577,7 @@ export class Emitter {
         }
 
         if (isEnum) {
-            this.writer.writeString('float(');
+            this.writer.writeString('double(');
         }
 
         this.processExpression(node.operand);
@@ -3613,7 +3623,7 @@ export class Emitter {
                 switch (identifier.text) {
                     case 'Number':
                     case 'String':
-                        this.writer.writeString('TSString');
+                        this.writer.writeString('std::string');
                         break;
                     case 'Boolean':
                         this.writer.writeString('js::');
@@ -3633,9 +3643,12 @@ export class Emitter {
             return;
         }
 
-        const wrapIntoRoundBrackets =
-            opCode === ts.SyntaxKind.AmpersandAmpersandToken
-            || opCode === ts.SyntaxKind.BarBarToken;
+        let wrapIntoRoundBrackets =
+               opCode === ts.SyntaxKind.AmpersandAmpersandToken
+            || opCode === ts.SyntaxKind.BarBarToken
+            || opCode === ts.SyntaxKind.PercentToken
+            ;
+
         const op = this.opsMap[node.operatorToken.kind];
         const isFunction = op.substr(0, 2) === '__';
         if (isFunction) {
@@ -3644,6 +3657,9 @@ export class Emitter {
 
         const leftType = this.resolver.getOrResolveTypeOf(node.left);
         const rightType = this.resolver.getOrResolveTypeOf(node.right);
+
+        const isModulo = opCode === ts.SyntaxKind.PercentToken
+        wrapIntoRoundBrackets = wrapIntoRoundBrackets || isModulo;
 
         const isLeftEnum = this.resolver.isTypeFromSymbol(leftType, ts.SyntaxKind.EnumDeclaration);
         const isRightEnum = this.resolver.isTypeFromSymbol(rightType, ts.SyntaxKind.EnumDeclaration);
@@ -3656,6 +3672,9 @@ export class Emitter {
             || opCode === ts.SyntaxKind.PercentEqualsToken);
 
         if (wrapIntoRoundBrackets) {
+            if(isModulo) {
+                this.writer.writeString('int64')
+            }
             this.writer.writeString('(');
         }
 
@@ -3672,6 +3691,9 @@ export class Emitter {
         }
 
         if (wrapIntoRoundBrackets) {
+            if(isModulo) {
+                this.writer.writeString('int64')
+            }
             this.writer.writeString('(');
         }
 
@@ -3729,14 +3751,14 @@ export class Emitter {
         this.processExpression(node.arguments[1]);
         this.writer.writeString(`;})`);
     }
-    // @swow-end
+    // @tswow-end
 
     processCallExpression(node: ts.CallExpression | ts.NewExpression): void {
         // @tswow-begin
         if(handleTSWoWOverride(this, node)) {
             return;
         }
-        if(node.getChildCount()>0) {
+        if(node.pos > 0 && node.getChildCount()>0) {
             let fsChild = node.getChildAt(0);
             if(fsChild.getChildCount()>0) {
                 let lsGrandchild = fsChild.getChildAt(fsChild.getChildCount()-1);

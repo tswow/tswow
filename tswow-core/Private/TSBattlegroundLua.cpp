@@ -1,6 +1,6 @@
 #include "TSLua.h"
 #include "TSBattleground.h"
-#include "TSMapLua.h"
+#include "TSLuaVarargs.h"
 
 #include "TSGameObject.h"
 #include "TSCreature.h"
@@ -18,7 +18,6 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetOfflineRemoveTime);
 
     sol::usertype<TSBattleground> ts_battleground = state.new_usertype<TSBattleground>("TSBattleground", sol::base_classes, sol::bases<TSMap, TSWorldEntityProvider<TSMap>, TSEntityProvider>());
-    load_map_methods_t(state, ts_battleground, "TSBattleground");
     #if TRINITY
     LUA_FIELD(ts_battleground, TSBattleground, GetBracketID);
     #endif
@@ -68,62 +67,18 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground, TSBattleground, IsHoliday);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGGameObject);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGCreature);
-    ts_battleground.set_function("GetBGName", &TSBattleground::LGetBGName);
-    ts_battleground.set_function("PlaySound", sol::overload(
-        &TSBattleground::LPlaySound0
-        , &TSBattleground::LPlaySound1
-    ));
-    ts_battleground.set_function("CastSpell", sol::overload(
-        &TSBattleground::LCastSpell0
-        , &TSBattleground::LCastSpell1
-    ));
-    ts_battleground.set_function("RemoveAura", sol::overload(
-        &TSBattleground::LRemoveAura0
-        , &TSBattleground::LRemoveAura1
-    ));
-    ts_battleground.set_function("RewardHonor", sol::overload(
-        &TSBattleground::LRewardHonor0
-        , &TSBattleground::LRewardHonor1
-    ));
-
-    ts_battleground.set_function("RewardReputation", sol::overload(
-        &TSBattleground::LRewardReputation0
-        , &TSBattleground::LRewardReputation1
-    ));
-
-    ts_battleground.set_function("EndBG", sol::overload(
-        &TSBattleground::LEndBG0
-        , &TSBattleground::LEndBG1
-    ));
-
-    ts_battleground.set_function("GetBGPlayerCount", sol::overload(
-        &TSBattleground::LGetBGPlayerCount0
-        , &TSBattleground::LGetBGPlayerCount1
-    ));
-    ts_battleground.set_function("GetBGAlivePlayerCount", sol::overload(
-        &TSBattleground::LGetBGAlivePlayerCount0
-        , &TSBattleground::LGetBGAlivePlayerCount1
-    ));
-    ts_battleground.set_function("AddCreature", sol::overload(
-        &TSBattleground::LAddCreature0
-        , &TSBattleground::LAddCreature1
-        , &TSBattleground::LAddCreature2
-    ));
-    ts_battleground.set_function("AddObject", sol::overload(
-        &TSBattleground::LAddObject0
-        , &TSBattleground::LAddObject1
-        , &TSBattleground::LAddObject2
-    ));
-    ts_battleground.set_function("AddSpiritGuide", sol::overload(
-        &TSBattleground::LAddSpiritGuide0
-        , &TSBattleground::LAddSpiritGuide1
-    ));
-    ts_battleground.set_function("GetBGGameObject", sol::overload(
-        &TSBattleground::LGetBGGameObject0
-        , &TSBattleground::LGetBGGameObject1
-    ));
-    ts_battleground.set_function("GetBGCreature", sol::overload(
-        &TSBattleground::LGetBGCreature0
-        , &TSBattleground::LGetBGCreature1
-    ));
+    LUA_FIELD(ts_battleground, TSBattleground, GetBGName);
+    LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, PlaySound, uint32, uint32);
+    LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, CastSpell, uint32, uint32);
+    LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, RemoveAura, uint32, uint32);
+    LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, RewardHonor, uint32, uint32);
+    LUA_FIELD_OVERLOAD_2_1(ts_battleground, TSBattleground, RewardReputation, uint32, uint32, uint32);
+    LUA_FIELD_OVERLOAD_0_1(ts_battleground, TSBattleground, EndBG, uint32);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_battleground, TSBattleground, GetBGPlayerCount, uint32);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_battleground, TSBattleground, GetBGAlivePlayerCount, uint32);
+    LUA_FIELD_OVERLOAD_6_2(ts_battleground, TSBattleground, AddCreature, uint32, uint32, float, float, float, float, uint32, uint32);
+    LUA_FIELD_OVERLOAD_RET_10_2(ts_battleground, TSBattleground, AddObject, uint32, uint32, float, float, float, float, float, float, float, float, uint32, uint32);
+    LUA_FIELD_OVERLOAD_5_1(ts_battleground, TSBattleground, AddSpiritGuide, uint32, float, float, float, float, uint32);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_battleground, TSBattleground, GetBGGameObject, uint32, bool);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_battleground, TSBattleground, GetBGCreature, uint32, bool);
 }

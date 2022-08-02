@@ -18,7 +18,7 @@
 
 #include "TSStringConvert.h"
 
-template <typename T>
+template <typename T, typename R>
 class TSMutable
 {
 private:
@@ -31,18 +31,21 @@ public:
         this->value = value;
     }
 
-    void set(T value)
+    void set(R value)
     {
         *(this->value) = value;
     }
 
-    T get()
+    R get()
     {
         return *(this->value);
     }
 
-    TSString stringify()
+    std::string stringify()
     {
         return ToStr(*value);
     }
 };
+
+template <typename T>
+using TSMutableNumber = TSMutable<T, TSNumber<T>>;

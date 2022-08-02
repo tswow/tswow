@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSArray.h"
 #include "TSWorldObject.h"
 #include "TSItem.h"
@@ -75,17 +74,17 @@ public:
     bool IsCasting();
     bool HasUnitState(uint32 state);
     TSUnit  GetOwner();
-    uint64 GetOwnerGUID();
-    uint32 GetMountID();
-    uint64 GetCreatorGUID();
-    uint64 GetCharmerGUID();
-    uint64 GetCharmGUID();
-    uint64 GetPetGUID(uint32 slot = 0);
+    TSNumber<uint64> GetOwnerGUID();
+    TSNumber<uint32> GetMountID();
+    TSNumber<uint64> GetCreatorGUID();
+    TSNumber<uint64> GetCharmerGUID();
+    TSNumber<uint64> GetCharmGUID();
+    TSNumber<uint64> GetPetGUID(uint32 slot = 0);
     TSCreature GetPet(uint32 slot = 0);
 
     TSUnit GetController();
-    uint64 GetControllerGUID();
-    uint64 GetControllerGUIDS();
+    TSNumber<uint64> GetControllerGUID();
+    TSNumber<uint64> GetControllerGUIDS();
     TSArray<TSUnit> GetControlled();
     void RemoveAllControlled();
     TSUnit GetFirstControlled();
@@ -96,43 +95,43 @@ public:
     bool SetCharmedBy(TSUnit charmer, uint32 type);
     void RemoveCharmedBy(TSUnit charmer);
 
-    float GetStat(uint32 stat);
-    uint32 GetBaseSpellPower(uint32 spellschool);
+    TSNumber<float> GetStat(uint32 stat);
+    TSNumber<uint32> GetBaseSpellPower(uint32 spellschool);
     TSUnit  GetVictim();
     TSSpell  GetCurrentSpell(uint32 type);
-    uint8 GetStandState();
-    uint32 GetDisplayID();
-    uint32 GetNativeDisplayID();
-    uint8 GetLevel();
-    uint32 GetHealth();
-    uint32 PowerSelectorHelper(TSUnit unit, int powerType = -1);
-    uint32 GetPower(int type);
-    uint32 GetMaxPower(int type);
-    float GetPowerPct(int type);
-    uint32 GetPowerType();
-    uint32 GetMaxHealth();
-    float GetHealthPct();
-    uint8 GetGender();
-    uint32 GetRace();
-    uint32 GetClass();
-    uint32 GetRaceMask();
-    uint32 GetClassMask();
-    uint32 GetCreatureType();
-    TSString GetClassAsString(uint8 locale);
-    TSString GetRaceAsString(uint8 locale);
-    uint32 GetFaction();
+    TSNumber<uint8> GetStandState();
+    TSNumber<uint32> GetDisplayID();
+    TSNumber<uint32> GetNativeDisplayID();
+    TSNumber<uint8> GetLevel();
+    TSNumber<uint32> GetHealth();
+    TSNumber<uint32> PowerSelectorHelper(TSUnit unit, int powerType = -1);
+    TSNumber<uint32> GetPower(int type);
+    TSNumber<uint32> GetMaxPower(int type);
+    TSNumber<float> GetPowerPct(int type);
+    TSNumber<uint32> GetPowerType();
+    TSNumber<uint32> GetMaxHealth();
+    TSNumber<float> GetHealthPct();
+    TSNumber<uint8> GetGender();
+    TSNumber<uint32> GetRace();
+    TSNumber<uint32> GetClass();
+    TSNumber<uint32> GetRaceMask();
+    TSNumber<uint32> GetClassMask();
+    TSNumber<uint32> GetCreatureType();
+    std::string GetClassAsString(uint8 locale);
+    std::string GetRaceAsString(uint8 locale);
+    TSNumber<uint32> GetFaction();
     TSAura  GetAura(uint32 spellID);
     TSArray<TSUnit> GetFriendlyUnitsInRange(float range);
     TSArray<TSUnit> GetUnfriendlyUnitsInRange(float range);
     TSVehicle  GetVehicleKit();
     TSVehicle GetVehicle();
-    uint64 GetCritterGUID();
-    float GetSpeed(uint32 type);
-    uint32 GetMovementType();
+    TSNumber<uint64> GetCritterGUID();
+    TSNumber<float> GetSpeed(uint32 type);
+    TSNumber<uint32> GetMovementType();
     void SetOwnerGUID(uint64 guid);
     void SetPvP(bool apply);
     void SetSheath(uint32 sheathed);
-    void SetName(TSString name);
+    void SetName(std::string const& name);
     void SetSpeed(uint32 type, float rate, bool forced);
     void SetFaction(uint32 factionId);
     void SetLevel(uint8 newlevel);
@@ -161,9 +160,9 @@ public:
     void Dismount();
     void PerformEmote(uint32 emoteId);
     void EmoteState(uint32 emoteId);
-    int32 CountPctFromCurHealth(int32 health);
-    int32 CountPctFromMaxHealth(int32 health);
-    void SendChatMessageToPlayer(uint8 type, uint32 lang, TSString msg, TSPlayer target);
+    TSNumber<int32> CountPctFromCurHealth(int32 health);
+    TSNumber<int32> CountPctFromMaxHealth(int32 health);
+    void SendChatMessageToPlayer(uint8 type, uint32 lang, std::string const& msg, TSPlayer target);
     void MoveStop();
     void MoveExpire(bool reset);
     void MoveClear(bool reset);
@@ -184,10 +183,10 @@ public:
     void JumpTo(TSWorldObject obj, float speedZ, bool withOrientation = false);
     void JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward = true);
 
-    void SendUnitWhisper(TSString msg, uint32 lang, TSPlayer receiver, bool bossWhisper);
-    void SendUnitEmote(TSString msg, TSUnit receiver, bool bossEmote);
-    void SendUnitSay(TSString msg, uint32 language);
-    void SendUnitYell(TSString msg, uint32 language);
+    void SendUnitWhisper(std::string const& msg, uint32 lang, TSPlayer receiver, bool bossWhisper);
+    void SendUnitEmote(std::string const& msg, TSUnit receiver, bool bossEmote);
+    void SendUnitSay(std::string const& msg, uint32 language);
+    void SendUnitYell(std::string const& msg, uint32 language);
     void DeMorph();
     void ClearInCombat();
     void StopSpellCast(uint32 spellId);
@@ -204,21 +203,11 @@ public:
     void AddThreat(TSUnit victim, float threat, uint32 spell = 0, uint32 schoolMask = 0, bool ignoreModifiers = true, bool ignoreRedirects = true, bool raw = false);
     void ScaleThreat(TSUnit victim, float scale, bool raw = false);
 
-    uint32 GetResistance(uint32 school);
-    uint32 GetArmor();
+    TSNumber<uint32> GetResistance(uint32 school);
+    TSNumber<uint32> GetArmor();
     void SetResistance(uint32 school, int32 val);
     void SetArmor(int32 val);
 private:
     TSLua::Array<TSUnit> LGetControlled();
-    bool LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp);
-    bool LSetCharmedBy1(TSUnit charmer, uint32 type);
-
-    void LJump0(float speedXY, float speedZ, bool forward);
-    void LJump1(float speedXY, float speedZ);
-    void LJumpTo0(TSWorldObject obj, float speedZ, bool withOrientation);
-    void LJumpTo1(TSWorldObject obj, float speedZ);
-    void LJumpTo2(float x, float y, float z, float o, float speedXY, float speedZ, bool forward);
-    void LJumpTo3(float x, float y, float z, float o, float speedXY, float speedZ);
-
     friend class TSLua;
 };

@@ -37,127 +37,126 @@ TSSmartScriptValues::TSSmartScriptValues (
 #endif
 {}
 
-int32  TSSmartScriptValues::GetEntryOrGUID()
+TSNumber<int32> TSSmartScriptValues::GetEntryOrGUID()
 {
     return m_holder->entryOrGuid;
 }
-uint32 TSSmartScriptValues::GetSourceType()
+TSNumber<uint32> TSSmartScriptValues::GetSourceType()
 {
     return m_holder->source_type;
 }
-uint32 TSSmartScriptValues::GetEventID()
+TSNumber<uint32> TSSmartScriptValues::GetEventID()
 {
     return m_holder->event_id;
 }
-uint32 TSSmartScriptValues::GetLink()
+TSNumber<uint32> TSSmartScriptValues::GetLink()
 {
     return m_holder->link;
 }
-uint32 TSSmartScriptValues::GetEventPhaseMask()
+TSNumber<uint32> TSSmartScriptValues::GetEventPhaseMask()
 {
     return m_holder->event.event_phase_mask;
 }
-uint32 TSSmartScriptValues::GetEventChance()
+TSNumber<uint32> TSSmartScriptValues::GetEventChance()
 {
     return m_holder->event.event_chance;
 }
-uint32 TSSmartScriptValues::GetEventFlags()
+TSNumber<uint32> TSSmartScriptValues::GetEventFlags()
 {
     return m_holder->event.event_flags;
 }
-
-uint32 TSSmartScriptValues::GetActionArgument1()
+TSNumber<uint32> TSSmartScriptValues::GetActionArgument1()
 {
     return m_holder->action.raw.param1;
 }
 
-uint32 TSSmartScriptValues::GetActionArgument2()
+TSNumber<uint32> TSSmartScriptValues::GetActionArgument2()
 {
     return m_holder->action.raw.param2;
 }
 
-uint32 TSSmartScriptValues::GetActionArgument3()
+TSNumber<uint32> TSSmartScriptValues::GetActionArgument3()
 {
     return m_holder->action.raw.param3;
 }
 
-uint32 TSSmartScriptValues::GetActionArgument4()
+TSNumber<uint32> TSSmartScriptValues::GetActionArgument4()
 {
     return m_holder->action.raw.param4;
 }
 
-uint32 TSSmartScriptValues::GetActionArgument5()
+TSNumber<uint32> TSSmartScriptValues::GetActionArgument5()
 {
     return m_holder->action.raw.param5;
 }
 
-uint32 TSSmartScriptValues::GetActionArgument6()
+TSNumber<uint32> TSSmartScriptValues::GetActionArgument6()
 {
     return m_holder->action.raw.param6;
 }
 
-uint32 TSSmartScriptValues::GetEventArgument1()
+TSNumber<uint32> TSSmartScriptValues::GetEventArgument1()
 {
     return m_holder->event.raw.param1;
 }
 
-uint32 TSSmartScriptValues::GetEventArgument2()
+TSNumber<uint32> TSSmartScriptValues::GetEventArgument2()
 {
     return m_holder->event.raw.param2;
 }
 
-uint32 TSSmartScriptValues::GetEventArgument3()
+TSNumber<uint32> TSSmartScriptValues::GetEventArgument3()
 {
     return m_holder->event.raw.param3;
 }
 
-uint32 TSSmartScriptValues::GetEventArgument4()
+TSNumber<uint32> TSSmartScriptValues::GetEventArgument4()
 {
     return m_holder->event.raw.param4;
 }
 
-uint32 TSSmartScriptValues::GetEventArgument5()
+TSNumber<uint32> TSSmartScriptValues::GetEventArgument5()
 {
     return m_holder->event.raw.param5;
 }
 
-uint32 TSSmartScriptValues::GetTargetParam1()
+TSNumber<uint32> TSSmartScriptValues::GetTargetParam1()
 {
     return m_holder->target.raw.param1;
 }
 
-uint32 TSSmartScriptValues::GetTargetParam2()
+TSNumber<uint32> TSSmartScriptValues::GetTargetParam2()
 {
     return m_holder->target.raw.param2;
 }
 
-uint32 TSSmartScriptValues::GetTargetParam3()
+TSNumber<uint32> TSSmartScriptValues::GetTargetParam3()
 {
     return m_holder->target.raw.param3;
 }
-uint32 TSSmartScriptValues::GetTargetParam4()
+TSNumber<uint32> TSSmartScriptValues::GetTargetParam4()
 {
     return m_holder->target.raw.param4;
 }
 
-float TSSmartScriptValues::GetTargetX()
+TSNumber<float> TSSmartScriptValues::GetTargetX()
 {
     return m_holder->target.x;
 }
-float TSSmartScriptValues::GetTargetY()
+TSNumber<float> TSSmartScriptValues::GetTargetY()
 {
     return m_holder->target.y;
 }
-float TSSmartScriptValues::GetTargetZ()
+TSNumber<float> TSSmartScriptValues::GetTargetZ()
 {
     return m_holder->target.z;
 }
 
-uint32 TSSmartScriptValues::GetTimer()
+TSNumber<uint32> TSSmartScriptValues::GetTimer()
 {
     return m_holder->timer;
 }
-uint32 TSSmartScriptValues::GetPriority()
+TSNumber<uint32> TSSmartScriptValues::GetPriority()
 {
 #if TRINITY
     return m_holder->priority;
@@ -237,7 +236,7 @@ void TSSmartScriptValues::StoreCounter(uint32 id, uint32 value, uint32 reset)
 #endif
 }
 
-uint32 TSSmartScriptValues::GetCounterValue(uint32 id)
+TSNumber<uint32> TSSmartScriptValues::GetCounterValue(uint32 id)
 {
     return m_script->GetCounterValue(id);
 }
@@ -247,12 +246,12 @@ TSUnit TSSmartScriptValues::GetUnitArg()
     return TSUnit(m_unit);
 }
 
-uint32 TSSmartScriptValues::GetUIntArg1()
+TSNumber<uint32> TSSmartScriptValues::GetUIntArg1()
 {
     return m_var0;
 }
 
-uint32 TSSmartScriptValues::GetUIntArg2()
+TSNumber<uint32> TSSmartScriptValues::GetUIntArg2()
 {
     return m_var1;
 }
@@ -285,72 +284,72 @@ TSCondition::TSCondition(Condition* condition)
     : m_condition(condition)
 {}
 
-uint32 TSCondition::GetSourceType()
+TSNumber<uint32> TSCondition::GetSourceType()
 {
     return m_condition->SourceType;
 }
 
-uint32 TSCondition::GetSourceGroup()
+TSNumber<uint32> TSCondition::GetSourceGroup()
 {
     return m_condition->SourceGroup;
 }
 
-uint32 TSCondition::GetSouceEntry()
+TSNumber<uint32> TSCondition::GetSouceEntry()
 {
     return m_condition->SourceEntry;
 }
 
-uint32 TSCondition::GetSourceID()
+TSNumber<uint32> TSCondition::GetSourceID()
 {
     return m_condition->SourceId;
 }
 
-uint32 TSCondition::GetElseGroup()
+TSNumber<uint32> TSCondition::GetElseGroup()
 {
     return m_condition->ElseGroup;
 }
 
-uint32 TSCondition::GetConditionType()
+TSNumber<uint32> TSCondition::GetConditionType()
 {
     return m_condition->ConditionType;
 }
 
-uint32 TSCondition::GetConditionValue1()
+TSNumber<uint32> TSCondition::GetConditionValue1()
 {
     return m_condition->ConditionValue1;
 }
 
-uint32 TSCondition::GetConditionValue2()
+TSNumber<uint32> TSCondition::GetConditionValue2()
 {
     return m_condition->ConditionValue2;
 }
 
-uint32 TSCondition::GetConditionValue3()
+TSNumber<uint32> TSCondition::GetConditionValue3()
 {
     return m_condition->ConditionValue3;
 }
 
-uint32 TSCondition::GetErrorType()
+TSNumber<uint32> TSCondition::GetErrorType()
 {
     return m_condition->ErrorType;
 }
 
-uint32 TSCondition::GetErrorTextID()
+TSNumber<uint32> TSCondition::GetErrorTextID()
 {
     return m_condition->ErrorTextId;
 }
 
-uint32 TSCondition::GetReferenceID()
+TSNumber<uint32> TSCondition::GetReferenceID()
 {
     return m_condition->ReferenceId;
 }
 
-uint32 TSCondition::GetScriptID()
+TSNumber<uint32> TSCondition::GetScriptID()
 {
     return m_condition->ScriptId;
 }
 
-uint8 TSCondition::GetConditionTarget()
+TSNumber<uint8> TSCondition::GetConditionTarget()
 {
     return m_condition->ConditionTarget;
 }
@@ -360,13 +359,13 @@ bool TSCondition::IsNegativeCondition()
     return m_condition->NegativeCondition;
 }
 
-TSString TSCondition::ToString(bool ext)
+std::string TSCondition::ToString(bool ext)
 {
 #if TRINITY
-    return TSString(m_condition->ToString());
+    return m_condition->ToString();
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSCondition::ToString not implemented for AzerothCore");
-    return JSTR("");
+    return "";
 #endif
 }
 
@@ -387,15 +386,6 @@ TSWorldObject TSConditionSourceInfo::GetTarget(uint32 index)
 TSCondition TSConditionSourceInfo::GetLastFailedCondition()
 {
     return TSCondition(const_cast<Condition*>(m_info->mLastFailedCondition));
-}
-
-std::string TSCondition::LToString0(bool ext)
-{
-    return ToString(ext).std_str();
-}
-std::string TSCondition::LToString1()
-{
-    return ToString().std_str();
 }
 
 TSLua::Array<TSWorldObject> TSSmartScriptValues::LGetTargets()

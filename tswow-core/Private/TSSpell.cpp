@@ -90,7 +90,7 @@ TSWorldObject TSSpell::GetOriginalOrCurrentCaster()
  *
  * @return int32 castTime
  */
-int32 TSSpell::GetCastTime()
+TSNumber<int32> TSSpell::GetCastTime()
 {
     return spell->GetCastTime();
 }
@@ -100,7 +100,7 @@ int32 TSSpell::GetCastTime()
  *
  * @return uint32 entryId
  */
-uint32 TSSpell::GetEntry()
+TSNumber<uint32> TSSpell::GetEntry()
 {
     return spell->m_spellInfo->Id;
 }
@@ -110,7 +110,7 @@ uint32 TSSpell::GetEntry()
  *
  * @return uint32 powerCost
  */
-uint32 TSSpell::GetPowerCost()
+TSNumber<uint32> TSSpell::GetPowerCost()
 {
     return spell->GetPowerCost();
 }
@@ -120,7 +120,7 @@ uint32 TSSpell::GetPowerCost()
  *
  * @return int32 duration
  */
-int32 TSSpell::GetDuration()
+TSNumber<int32> TSSpell::GetDuration()
 {
 #if defined TRINITY || AZEROTHCORE
     return spell->GetSpellInfo()->GetDuration();
@@ -227,7 +227,7 @@ void TSSpell::Finish()
     spell->finish();
 }
 
-uint32 TSSpell::GetTriggeredCastFlags()
+TSNumber<uint32> TSSpell::GetTriggeredCastFlags()
 {
     return static_cast<uint32>(spell->_triggeredCastFlags);
 }
@@ -247,14 +247,14 @@ bool TSSpell::IsTriggeredByAura(uint32 aura)
 #endif
 }
 
-uint32 TSSpell::GetGlyphSlot()
+TSNumber<uint32> TSSpell::GetGlyphSlot()
 {
     return spell->m_glyphIndex;
 }
 
 TS_CLASS_DEFINITION(TSSpellModifier, SpellModifier, m_mod)
 
-uint32 TSSpellModifier::GetOp()
+TSNumber<uint32> TSSpellModifier::GetOp()
 {
     return m_mod->op;
 }
@@ -262,7 +262,7 @@ void TSSpellModifier::SetOp(uint32 op)
 {
     m_mod->op = static_cast<SpellModOp>(op);
 }
-uint32 TSSpellModifier::GetType()
+TSNumber<uint32> TSSpellModifier::GetType()
 {
     return m_mod->op;
 }
@@ -270,7 +270,7 @@ void TSSpellModifier::SetType(uint32 type)
 {
     m_mod->type = static_cast<SpellModType>(type);
 }
-int32 TSSpellModifier::GetValue()
+TSNumber<int32> TSSpellModifier::GetValue()
 {
     return m_mod->value;
 }
@@ -278,7 +278,7 @@ void TSSpellModifier::SetValue(int32 value)
 {
     m_mod->value = value;
 }
-uint32 TSSpellModifier::GetMaskA()
+TSNumber<uint32> TSSpellModifier::GetMaskA()
 {
     return m_mod->mask.part[0];
 }
@@ -286,7 +286,7 @@ void TSSpellModifier::SetMaskA(uint32 mask)
 {
     m_mod->mask.part[0] = mask;
 }
-uint32 TSSpellModifier::GetMaskB()
+TSNumber<uint32> TSSpellModifier::GetMaskB()
 {
     return m_mod->mask.part[1];
 }
@@ -294,7 +294,7 @@ void TSSpellModifier::SetMaskB(uint32 mask)
 {
     m_mod->mask.part[1] = mask;
 }
-uint32 TSSpellModifier::GetMaskC()
+TSNumber<uint32> TSSpellModifier::GetMaskC()
 {
     return m_mod->mask.part[2];
 }
@@ -302,7 +302,7 @@ void TSSpellModifier::SetMaskC(uint32 mask)
 {
     m_mod->mask.part[2] = mask;
 }
-uint32 TSSpellModifier::GetSpellID()
+TSNumber<uint32> TSSpellModifier::GetSpellID()
 {
     return m_mod->spellId;
 }
@@ -317,53 +317,53 @@ TSAura TSSpellModifier::GetOwnerAura()
 
 TS_CLASS_DEFINITION(TSSpellDestination, SpellDestination, m_dest)
 
-float TSSpellDestination::GetX()
+TSNumber<float> TSSpellDestination::GetX()
 {
     return m_dest->_position.m_positionX;
 }
 
-float TSSpellDestination::GetY()
+TSNumber<float> TSSpellDestination::GetY()
 {
     return m_dest->_position.m_positionY;
 }
 
-float TSSpellDestination::GetZ()
+TSNumber<float> TSSpellDestination::GetZ()
 {
     return m_dest->_position.m_positionZ;
 }
 
-float TSSpellDestination::GetO()
+TSNumber<float> TSSpellDestination::GetO()
 {
     return m_dest->_position.GetOrientation();
 }
 
-float TSSpellDestination::GetMap()
+TSNumber<float> TSSpellDestination::GetMap()
 {
     return m_dest->_position.m_mapId;
 }
 
 
-float TSSpellDestination::GetOffsetX()
+TSNumber<float> TSSpellDestination::GetOffsetX()
 {
     return m_dest->_transportOffset.m_positionX;
 }
 
-float TSSpellDestination::GetOffsetY() 
+TSNumber<float> TSSpellDestination::GetOffsetY()
 {
     return m_dest->_transportOffset.m_positionY;
 }
 
-float TSSpellDestination::GetOffsetZ()
+TSNumber<float> TSSpellDestination::GetOffsetZ()
 {
     return m_dest->_transportOffset.m_positionZ;
 }
 
-float TSSpellDestination::GetOffsetO()
+TSNumber<float> TSSpellDestination::GetOffsetO()
 {
     return m_dest->_transportOffset.GetOrientation();
 }
 
-uint64 TSSpellDestination::GetTransportGUID()
+TSNumber<uint64> TSSpellDestination::GetTransportGUID()
 {
     return m_dest->_transportGUID.GetRawValue();
 }
@@ -385,35 +385,35 @@ bool TSSpellImplicitTargetInfo::IsArea()
     return m_info->IsArea();
 }
 
-uint32 TSSpellImplicitTargetInfo::GetSelectionCategory()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetSelectionCategory()
 {
     return m_info->GetSelectionCategory();
 }
-uint32 TSSpellImplicitTargetInfo::GetReferenceType()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetReferenceType()
 {
     return m_info->GetReferenceType();
 }
-uint32 TSSpellImplicitTargetInfo::GetObjectType()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetObjectType()
 {
     return m_info->GetObjectType();
 }
-uint32 TSSpellImplicitTargetInfo::GetCheckType()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetCheckType()
 {
     return m_info->GetCheckType();
 }
-uint32 TSSpellImplicitTargetInfo::GetDirectionType()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetDirectionType()
 {
     return m_info->GetDirectionType();
 }
-float TSSpellImplicitTargetInfo::CalcDirectionAngle()
+TSNumber<float> TSSpellImplicitTargetInfo::CalcDirectionAngle()
 {
     return m_info->CalcDirectionAngle();
 }
-uint32 TSSpellImplicitTargetInfo::GetTarget()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetTarget()
 {
     return m_info->GetTarget();
 }
-uint32 TSSpellImplicitTargetInfo::GetExplicitTargetMask()
+TSNumber<uint32> TSSpellImplicitTargetInfo::GetExplicitTargetMask()
 {
     bool a;
     bool b;
@@ -443,12 +443,12 @@ TSWorldObject TSDispelInfo::GetDispeller()
     return TSWorldObject(m_info->GetDispeller());
 }
 
-uint32 TSDispelInfo::GetDispellerSpellId()
+TSNumber<uint32> TSDispelInfo::GetDispellerSpellId()
 {
     return m_info->GetDispellerSpellId();
 }
 
-uint8 TSDispelInfo::GetRemovedCharges()
+TSNumber<uint8> TSDispelInfo::GetRemovedCharges()
 {
     return m_info->GetRemovedCharges();
 }
@@ -463,7 +463,7 @@ TSPlayerSpell::TSPlayerSpell(uint8 state, bool active, bool dependent, bool disa
 {}
 
 
-uint8 TSPlayerSpell::GetState()
+TSNumber<uint8> TSPlayerSpell::GetState()
 {
     return m_state;
 }

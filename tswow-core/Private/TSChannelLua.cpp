@@ -1,14 +1,12 @@
 #include "TSLua.h"
 #include "TSChannel.h"
 #include "TSPlayer.h"
+#include "TSLuaVarargs.h"
 
 void TSLua::load_channel_methods(sol::state& state)
 {
     auto ts_channel = state.new_usertype<TSChannel>("TSChannel");
-    ts_channel.set_function("GetName", sol::overload(
-        &TSChannel::LGetName0
-        , &TSChannel::LGetName1
-    ));
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_channel, TSChannel, GetName, uint32);
     LUA_FIELD(ts_channel, TSChannel, GetID);
     LUA_FIELD(ts_channel, TSChannel, IsConstant);
     LUA_FIELD(ts_channel, TSChannel, IsLFG);
@@ -22,11 +20,8 @@ void TSLua::load_channel_methods(sol::state& state)
     LUA_FIELD(ts_channel, TSChannel, LeaveChannel);
     LUA_FIELD(ts_channel, TSChannel, SetInvisible);
     LUA_FIELD(ts_channel, TSChannel, SetOwner);
-    ts_channel.set_function("Say", &TSChannel::LSay);
-    ts_channel.set_function("SetPassword", &TSChannel::LSetPassword);
-    ts_channel.set_function("CheckPassword", &TSChannel::LCheckPassword);
-    ts_channel.set_function("JoinChannel", sol::overload(
-        &TSChannel::LJoinChannel0
-        , &TSChannel::LJoinChannel1
-    ));
+    LUA_FIELD(ts_channel, TSChannel, Say);
+    LUA_FIELD(ts_channel, TSChannel, SetPassword);
+    LUA_FIELD(ts_channel, TSChannel, CheckPassword);
+    LUA_FIELD_OVERLOAD_1_1(ts_channel, TSChannel, JoinChannel, TSPlayer, std::string const&);
 }

@@ -29,14 +29,14 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     const deleteStmnt = () => {
         writer.writeStringNewLine()
         writer.writeStringNewLine(
-            `static ${statementName} DeleteStatement = ${queryName}(JSTR(`)
+            `static ${statementName} DeleteStatement = ${queryName}(`)
         writer.IncreaseIntent()
         writer.writeStringNewLine(`" DELETE FROM \`${entry.tableName}\`"`)
         writer.writeStringNewLine(`" WHERE "`)
         writer.writeStringNewLine(
             `" ${entry.pks().map(x=>`\`${x.dbName()}\` = ?`).join(' AND ')}"`)
         writer.DecreaseIntent()
-        writer.writeStringNewLine(`));`);
+        writer.writeStringNewLine(`);`);
     }
 
     switch(entry.tableType) {
@@ -77,7 +77,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
                 + ` = std::make_shared<${entry.className}>();`
             )
             writer.writeStringNewLine(`value->m_isDirty = false;`)
-            entry.loadFromRes(8,'value','res','c++')
+            writer.writeStringNewLine(entry.loadFromRes(8,'value','res','c++'))
             writer.writeStringNewLine(`container->Add(value);`)
             writer.EndBlock()
             writer.writeStringNewLine(`return container;`)
@@ -91,7 +91,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         case 'DBEntry':
             writer.writeStringNewLine(
                 `TSArray<std::shared_ptr<${entry.className}>>`
-                + ` ${entry.className}::LoadSQL(TSString sql)`
+                + ` ${entry.className}::LoadSQL(std::string const& sql)`
             );
             writer.BeginBlock()
             writer.writeStringNewLine(`auto res = ${entry.sqlQuery(4,'sql','c++',entry.loadSql)};`)
@@ -115,12 +115,12 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     }
 
     // DeleteSQL
-    writer.writeStringNewLine(`void ${entry.className}::DeleteSQL(TSString sql)`)
+    writer.writeStringNewLine(`void ${entry.className}::DeleteSQL(std::string const& sql)`)
     writer.BeginBlock()
     writer.writeStringNewLine(`Query${entry.dbCallName()}(`)
     writer.IncreaseIntent()
     writer.writeStringNewLine(`" DELETE FROM \`${entry.tableName}\`"`)
-    writer.writeStringNewLine(`" " + sql.std_str() +`)
+    writer.writeStringNewLine(`" " + sql +`)
     writer.writeStringNewLine(`";"`)
     writer.DecreaseIntent()
     writer.writeStringNewLine(`);`)
@@ -148,7 +148,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             writer.writeString('\n'+entry.saveFields(12,'c++'))
             writer.writeStringNewLine(`            ->Send(con);`);
             writer.writeStringNewLine(
-                `auto res = con->Query(JSTR("SELECT LAST_INSERT_ID();"));`)
+                `auto res = con->Query("SELECT LAST_INSERT_ID();");`)
             writer.writeStringNewLine(`res->GetRow();`)
             writer.writeStringNewLine(`this->__index = res->GetUInt64(0);`)
             writer.writeStringNewLine(`con->Unlock();`);
@@ -228,15 +228,15 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     if(entry.tableType === 'DBEntry') {
         writer.writeStringNewLine(
               `static TSArray<std::shared_ptr<${entry.className}>>`
-            + ` LoadSQL(TSString sql);`
+            + ` LoadSQL(std::string const& sql);`
         );
     } else {
         writer.writeStringNewLine(
               `static std::shared_ptr<DBContainer<${entry.className}>>`
-            + ` LoadSQL(TSString sql);`
+            + ` LoadSQL(std::string const& sql);`
         );
     }
-    writer.writeStringNewLine(`static void DeleteSQL(TSString sql);`)
+    writer.writeStringNewLine(`static void DeleteSQL(std::string const& sql);`)
     writer.writeStringNewLine(`void Save();`)
     switch(entry.tableType) {
         case 'DBEntry':

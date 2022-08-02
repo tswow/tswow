@@ -136,18 +136,3 @@ TSPacketWrite CreateCustomPacket(
 	);
 	return TSPacketWrite(write);
 }
-
-TSPacketWrite* TSPacketWrite::LWriteString(std::string const& value)
-{
-		return WriteString(value);
-}
-
-std::string TSPacketRead::LReadString0(std::string const& def)
-{
-		return ReadString(def);
-}
-
-std::string TSPacketRead::LReadString1()
-{
-		return ReadString();
-}

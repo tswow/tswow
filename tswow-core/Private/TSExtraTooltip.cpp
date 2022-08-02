@@ -1,6 +1,5 @@
 #include "TSExtraTooltip.h"
 #include "TSPlayer.h"
-#include "TSString.h"
 
 #include "CreatureData.h"
 
@@ -21,7 +20,7 @@ bool handle_extra_tooltip_message(Player* player, Player* receiver, std::string&
     }
 
     if (msg == "tswow_am_i_gm") {
-        TSPlayer(player)->SendAddonMessage(JSTR(""), TSString("tswow_you_are_gm"), 7, TSPlayer(player));
+        TSPlayer(player)->SendAddonMessage("", "tswow_you_are_gm", 7, TSPlayer(player));
         return true;
     }
 
@@ -31,12 +30,11 @@ bool handle_extra_tooltip_message(Player* player, Player* receiver, std::string&
         if (!data) return true;
         int displayId = data->DisplayInfoID;
         TSPlayer(player)->SendAddonMessage(
-            JSTR(""),
-            TSString(
+            "",
                 std::string("tswow_item_response:") +
                 std::to_string(itemId) +
                 ":" +
-                std::to_string(displayId)),
+                std::to_string(displayId),
             7,
             TSPlayer(player));
         return true;
@@ -48,13 +46,13 @@ bool handle_extra_tooltip_message(Player* player, Player* receiver, std::string&
         auto data = sObjectMgr->GetCreatureTemplate(creatureId);
         if (!data) return true;
         TSPlayer(player)->SendAddonMessage(
-            JSTR(""), TSString(
+            "", 
                 std::string("tswow_creature_response:") + std::to_string(creatureId) +
                 ":" + std::to_string(data->faction) +
                 ":" + std::to_string(data->Modelid1) +
                 ":" + std::to_string(data->Modelid2) +
                 ":" + std::to_string(data->Modelid3) +
-                ":" + std::to_string(data->Modelid4)),
+                ":" + std::to_string(data->Modelid4),
             7,
             TSPlayer(player));
         return true;

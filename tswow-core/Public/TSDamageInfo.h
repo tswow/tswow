@@ -35,28 +35,28 @@ public:
     TSUnit GetAttacker();
     TSUnit GetTarget();
 
-    uint32 GetSchool1();
-    uint32 GetSchool2();
+    TSNumber<uint32> GetSchool1();
+    TSNumber<uint32> GetSchool2();
 
-    uint32 GetDamage1();
-    uint32 GetDamage2();
+    TSNumber<uint32> GetDamage1();
+    TSNumber<uint32> GetDamage2();
 
-    uint32 GetAbsorb1();
-    uint32 GetAbsorb2();
+    TSNumber<uint32> GetAbsorb1();
+    TSNumber<uint32> GetAbsorb2();
 
-    uint32 GetResist1();
-    uint32 GetResist2();
+    TSNumber<uint32> GetResist1();
+    TSNumber<uint32> GetResist2();
 
-    uint32 GetBlocked();
-    uint32 GetHitInfo();
-    uint32 GetTargetState();
+    TSNumber<uint32> GetBlocked();
+    TSNumber<uint32> GetHitInfo();
+    TSNumber<uint32> GetTargetState();
 
-    uint32 GetAttackType();
-    uint32 GetProcAttacker();
-    uint32 GetProcVictim();
-    uint32 GetCleanDamage();
+    TSNumber<uint32> GetAttackType();
+    TSNumber<uint32> GetProcAttacker();
+    TSNumber<uint32> GetProcVictim();
+    TSNumber<uint32> GetCleanDamage();
 
-    uint8 GetMeleeHitOutcome();
+    TSNumber<uint8> GetMeleeHitOutcome();
 };
 
 class TC_GAME_API TSSpellDamageInfo {
@@ -68,17 +68,17 @@ public:
     bool operator==(TSSpellDamageInfo const& rhs) { return _info == rhs._info; }
     TSUnit GetAttacker();
     TSUnit GetTarget();
-    uint32 GetSpellID();
-    uint32 GetDamage();
-    uint32 GetOverkill();
-    uint32 GetSchoolMask();
-    uint32 GetAbsorb();
-    uint32 GetResist();
+    TSNumber<uint32> GetSpellID();
+    TSNumber<uint32> GetDamage();
+    TSNumber<uint32> GetOverkill();
+    TSNumber<uint32> GetSchoolMask();
+    TSNumber<uint32> GetAbsorb();
+    TSNumber<uint32> GetResist();
     bool GetPeriodicLog();
     bool GetUnused();
-    uint32 GetBlocked();
-    uint32 GetHitInfo();
-    uint32 GetCleanDamage();
+    TSNumber<uint32> GetBlocked();
+    TSNumber<uint32> GetHitInfo();
+    TSNumber<uint32> GetCleanDamage();
     bool GetFullBlock();
 };
 
@@ -88,12 +88,12 @@ class TC_GAME_API TSHealInfo {
     void SetEffectiveHeal(uint32 amount);
     TSUnit GetHealer();
     TSUnit GetTarget();
-    uint32 GetHeal();
-    uint32 GetEffectiveHeal();
-    uint32 GetAbsorb();
+    TSNumber<uint32> GetHeal();
+    TSNumber<uint32> GetEffectiveHeal();
+    TSNumber<uint32> GetAbsorb();
     TSSpellInfo GetSpellInfo();
-    uint32 GetSchoolMask();
-    uint32 GetHitMask();
+    TSNumber<uint32> GetSchoolMask();
+    TSNumber<uint32> GetHitMask();
 };
 
 class TC_GAME_API TSDamageInfo {
@@ -105,11 +105,11 @@ class TC_GAME_API TSDamageInfo {
     TSUnit GetAttacker();
     TSUnit GetVictim();
     TSSpellInfo GetSpellInfo();
-    uint32 GetSchoolMask();
-    uint32 GetDamageType();
-    uint32 GetAttackType();
-    uint32 GetDamage();
-    uint32 GetAbsorb();
-    uint32 GetBlock();
-    uint32 GetHitMask();
+    TSNumber<uint32> GetSchoolMask();
+    TSNumber<uint32> GetDamageType();
+    TSNumber<uint32> GetAttackType();
+    TSNumber<uint32> GetDamage();
+    TSNumber<uint32> GetAbsorb();
+    TSNumber<uint32> GetBlock();
+    TSNumber<uint32> GetHitMask();
 };

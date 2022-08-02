@@ -35,7 +35,7 @@ TSOutfit & TSOutfit::SetClass(uint8_t Class)
     m_outfit->Class = Class;
     return *this;
 }
-uint8_t TSOutfit::GetClass()
+TSNumber<uint8> TSOutfit::GetClass()
 {
     return m_outfit->Class;
 }
@@ -45,7 +45,7 @@ TSOutfit & TSOutfit::SetFace(uint8_t face)
     m_outfit->face = face;
     return *this;
 }
-uint8_t TSOutfit::GetFace()
+TSNumber<uint8> TSOutfit::GetFace()
 {
     return m_outfit->face;
 }
@@ -55,7 +55,7 @@ TSOutfit & TSOutfit::SetSkin(uint8_t skin)
     m_outfit->skin = skin;
     return *this;
 }
-uint8_t TSOutfit::GetSkin()
+TSNumber<uint8> TSOutfit::GetSkin()
 {
     return m_outfit->skin;
 }
@@ -65,7 +65,7 @@ TSOutfit & TSOutfit::SetHairStyle(uint8_t hair)
     m_outfit->hair = hair;
     return *this;
 }
-uint8_t TSOutfit::GetHairStyle()
+TSNumber<uint8> TSOutfit::GetHairStyle()
 {
     return m_outfit->hair;
 }
@@ -75,7 +75,7 @@ TSOutfit & TSOutfit::SetHairColor(uint8_t hairColor)
     m_outfit->haircolor = hairColor;
     return *this;
 }
-uint8_t TSOutfit::GetHairColor()
+TSNumber<uint8> TSOutfit::GetHairColor()
 {
     return m_outfit->haircolor;
 }
@@ -85,7 +85,7 @@ TSOutfit & TSOutfit::SetSoundID(uint32_t soundId)
     m_outfit->npcsoundsid = soundId;
     return *this;
 }
-uint32_t TSOutfit::GetSoundID()
+TSNumber<uint32> TSOutfit::GetSoundID()
 {
     return m_outfit->npcsoundsid;
 }
@@ -95,20 +95,20 @@ TSOutfit & TSOutfit::SetGuild(uint64_t guild)
     m_outfit->guild = guild;
     return *this;
 }
-uint64_t TSOutfit::GetGuild()
+TSNumber<uint64> TSOutfit::GetGuild()
 {
     return m_outfit->guild;
 }
 
-uint8_t TSOutfit::GetGender()
+TSNumber<uint8> TSOutfit::GetGender()
 {
     return m_outfit->GetGender();
 }
-uint8_t TSOutfit::GetRace()
+TSNumber<uint8> TSOutfit::GetRace()
 {
     return m_outfit->GetRace();
 }
-uint32_t TSOutfit::GetDisplayID()
+TSNumber<uint32> TSOutfit::GetDisplayID()
 {
     return m_outfit->GetDisplayId();
 }
@@ -143,7 +143,7 @@ TSOutfit & TSOutfit::SetItemByDisplayID(uint8_t slot, uint32_t displayId)
     m_outfit->SetItemDisplay(static_cast<EquipmentSlots>(slot), displayId);
     return *this;
 }
-uint32_t TSOutfit::GetDisplayID(uint8_t slot)
+TSNumber<uint32> TSOutfit::GetDisplayID(uint8_t slot)
 {
     return m_outfit->outfitdisplays[slot];
 }
@@ -154,7 +154,7 @@ TSOutfit& TSOutfit::SetFacialStyle(uint8_t facialStyle)
     return *this;
 }
 
-uint8_t TSOutfit::GetFacialStyle()
+TSNumber<uint8> TSOutfit::GetFacialStyle()
 {
     return m_outfit->facialhair;
 }
@@ -338,17 +338,17 @@ void TSOutfit::PItem(TSPlayer& player, uint32_t settings, uint32_t value, uint8_
     }
 }
 
-int32_t TSOutfit::GetMainhand()
+TSNumber<int32> TSOutfit::GetMainhand()
 {
     return m_outfit->mainhand;
 }
 
-int32_t TSOutfit::GetOffhand()
+TSNumber<int32> TSOutfit::GetOffhand()
 {
     return m_outfit->offhand;
 }
 
-int32_t TSOutfit::GetRanged()
+TSNumber<int32> TSOutfit::GetRanged()
 {
     return m_outfit->ranged;
 }
@@ -356,26 +356,6 @@ int32_t TSOutfit::GetRanged()
 TSOutfit CreateOutfit(uint32_t race, uint32_t gender)
 {
     return TSOutfit(race,gender);
-}
-
-void TSOutfit::LApplyCopy0(TSCreature creature, uint32_t settings, int32_t race, int32_t gender)
-{
-    ApplyCopy(creature, settings, race, gender);
-}
-
-void TSOutfit::LApplyCopy1(TSCreature creature, uint32_t settings, int32_t race)
-{
-    ApplyCopy(creature, settings, race);
-}
-
-void TSOutfit::LApplyCopy2(TSCreature creature, uint32_t settings)
-{
-    ApplyCopy(creature, settings);
-}
-
-void TSOutfit::LApplyCopy3(TSCreature creature)
-{
-    ApplyCopy(creature);
 }
 
 #endif

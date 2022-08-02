@@ -162,11 +162,10 @@ export class ORMClass {
     createDatabaseSpec(target: 'lua'|'c++') {
         let arrow = target === 'c++' ? '->' : ':'
         let i = target === 'c++' ? '    ' : ''
-        let strSuffix = target === 'c++' ? '.std_str()' : ''
         let str = ''
         str += `${i}CreateDatabaseSpec(\n`
         str += `${i}    ${this.databaseIndex()},\n`
-        str += `${i}    ${this.capitalizedDbType()}DatabaseInfo()${arrow}Database()${strSuffix},\n`
+        str += `${i}    ${this.capitalizedDbType()}DatabaseInfo()${arrow}Database(),\n`
         str += `${i}    "${this.tableName}",\n`
         str += `${i}    {\n`
         this.fields.forEach(x=>{
@@ -182,7 +181,7 @@ export class ORMClass {
     }
 
     prepareStatement(indents: number, target: 'lua'|'c++', fn: (indents: number, target: 'lua'|'c++') => void) {
-        return `Prepare${this.capitalizedDbType()}Query(${target==='c++' ? 'JSTR(':''}\n${fn.bind(this)(indents,target)}${' '.repeat(indents)}${target === 'c++' ? ')':''})\n`
+        return `Prepare${this.capitalizedDbType()}Query(${target==='c++' ? '(':''}\n${fn.bind(this)(indents,target)}${' '.repeat(indents)}${target === 'c++' ? ')':''})\n`
     }
 
     sqlQuery(indents: number, varName: string, target: 'c++'|'lua', fn: (indents: number, varName: string, target: 'lua'|'c++') => void) {
@@ -233,13 +232,13 @@ export class ORMClass {
             +  `${p}${s}"     ${this.fields.map(x=>`\`${x.dbName()}\``).join(',')}"\n`
             +  `${p}${s}" FROM"\n`
             +  `${p}${s}"     \`${this.tableName}\`"\n`
-            +  `${p}${s}" " ${plus} ${varName}${target === 'c++' ? '.std_str()' : ''} ${plus} ";"\n`
+            +  `${p}${s}" " ${plus} ${varName} ${plus} ";"\n`
     }
 
     deleteSql(indents: number, varName: string, target: 'lua'|'c++') {
         const {p} = this.getPfs(indents,target);
         const plus = target === 'lua' ? '..' : '+'
-        return `${p}" DELETE FROM \`${this.tableName}\` " ${plus} ${varName}${target === 'c++' ?'.std_str()':''} ${plus} ";"\n`
+        return `${p}" DELETE FROM \`${this.tableName}\` " ${plus} ${varName} ${plus} ";"\n`
     }
 
     private getPfs(indents: number, target: 'lua'|'c++') {

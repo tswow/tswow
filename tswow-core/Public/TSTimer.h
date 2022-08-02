@@ -1,7 +1,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSLua.h"
 
 #include "sol/sol.hpp"
@@ -20,7 +19,7 @@ enum class TimerLoops {
     INDEFINITE = -1,
 };
 
-uint64_t TC_GAME_API now();
+TSNumber<uint64> TC_GAME_API now();
 
 template <typename T>
 class TSTimer;
@@ -33,7 +32,7 @@ using TimerCallback = std::function<void(T, TSTimer<T>*)>;
 
 template <typename T>
 class TC_GAME_API TSTimer {
-    TSString m_name;
+    std::string m_name;
     uint32_t m_delay;
     int32_t m_repeats;
     uint64_t m_lastTick;
@@ -44,7 +43,7 @@ class TC_GAME_API TSTimer {
     TimerCallback<T> m_callback = nullptr;
     sol::protected_function m_lua_callback;
 public:
-    TSTimer(TSString name, uint32_t delay, int32_t repeats, uint32 flags, TimerCallback<T> callback)
+    TSTimer(std::string const& name, uint32_t delay, int32_t repeats, uint32 flags, TimerCallback<T> callback)
         : m_name(name)
         , m_delay(delay)
         , m_repeats(repeats)
@@ -53,7 +52,7 @@ public:
         , m_callback(callback)
     {}
 
-    TSTimer(TSString name, uint32_t delay, int32_t repeats, uint32 flags, sol::protected_function callback)
+    TSTimer(std::string const& name, uint32_t delay, int32_t repeats, uint32 flags, sol::protected_function callback)
         : m_name(name)
         , m_delay(delay)
         , m_repeats(repeats)
@@ -68,7 +67,7 @@ public:
         m_stopped = true;
     }
 
-    uint32 GetDelay()
+    TSNumber<uint32> GetDelay()
     {
         return m_delay;
     }
@@ -78,12 +77,12 @@ public:
         m_delay = delay;
     }
 
-    uint64 GetDiff()
+    TSNumber<uint64> GetDiff()
     {
         return m_diff;
     }
 
-    uint32 GetFlags()
+    TSNumber<uint32> GetFlags()
     {
         return m_flags;
     }
@@ -93,7 +92,7 @@ public:
         m_flags = flags;
     }
 
-    int32 GetRepeats()
+    TSNumber<int32> GetRepeats()
     {
         return m_repeats;
     }
@@ -103,7 +102,7 @@ public:
         m_repeats = repeats;
     }
 
-    TSString GetName()
+    std::string GetName()
     {
         return m_name;
     }
@@ -154,7 +153,7 @@ public:
         return false;
     }
 private:
-    std::string LGetName() { return GetName().std_str(); }
+    std::string LGetName() { return GetName(); }
     friend class TSLua;
     friend class TSTimers<T>;
 };
@@ -167,10 +166,10 @@ public:
 
     void add(uint32_t time, int32_t repeats, uint32_t flags, TimerCallback<T> callback)
     {
-        m_timers.push_back(TSTimer<T>(JSTR(""), time, repeats, flags, callback));
+        m_timers.push_back(TSTimer<T>("", time, repeats, flags, callback));
     }
 
-    void add_named(TSString name, uint32_t time, int32_t repeats, uint32_t flags, TimerCallback<T> callback)
+    void add_named(std::string const& name, uint32_t time, int32_t repeats, uint32_t flags, TimerCallback<T> callback)
     {
         for (int i = 0; i < m_timers.size(); ++i)
         {
@@ -192,12 +191,12 @@ public:
 
     void add(uint32_t time, int32_t repeats, uint32_t flags, sol::protected_function callback)
     {
-        m_timers.push_back(TSTimer<T>(JSTR(""), time, repeats, flags, callback));
+        m_timers.push_back(TSTimer<T>("", time, repeats, flags, callback));
     }
 
     void add_named(std::string const& name, uint32_t time, int32_t repeats, uint32_t flags, sol::protected_function callback)
     {
-        TSString nname = TSString(name);
+        std::string nname = name;
         for (int i = 0; i < m_timers.size(); ++i)
         {
             if (m_timers[i].GetName() == nname)
@@ -220,7 +219,7 @@ public:
     {
         for (auto itr = m_timers.begin(); itr != m_timers.end();)
         {
-            if (itr->GetFlags() & uint32(TimerFlags::CLEARS_ON_DEATH))
+            if (uint32(itr->GetFlags()) & uint32(TimerFlags::CLEARS_ON_DEATH))
             {
                 if (m_ticking)
                 {
@@ -243,7 +242,7 @@ public:
     {
         for (auto itr = m_timers.begin(); itr != m_timers.end();)
         {
-            if (itr->GetFlags() & uint32(TimerFlags::CLEARS_ON_MAP_CHANGED))
+            if (uint32(itr->GetFlags()) & uint32(TimerFlags::CLEARS_ON_MAP_CHANGED))
             {
                 if (m_ticking)
                 {
@@ -262,7 +261,7 @@ public:
         }
     }
 
-    void remove(TSString name)
+    void remove(std::string const& name)
     {
         for (auto iter = m_timers.begin(); iter != m_timers.end(); ++iter)
         {

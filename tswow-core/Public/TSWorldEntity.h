@@ -18,7 +18,6 @@
 
 #include "TSTimer.h"
 #include "TSWorldObjectGroup.h"
-#include "TSString.h"
 #include "TSJson.h"
 #include "TSMutable.h"
 
@@ -53,17 +52,17 @@ public:
     TSWorldEntityProvider(TSWorldEntity<T>* entity)
         : m_entity(entity){}
 
-    void AddNamedTimer(TSString name, uint32_t time, int32_t loops, uint32_t flags, TimerCallback<T> callback)
+    void AddNamedTimer(std::string const& name, uint32_t time, int32_t loops, uint32_t flags, TimerCallback<T> callback)
     {
         m_entity->m_timers.add_named(name, time, loops, flags, callback);
     }
 
-    void AddNamedTimer(TSString name, uint32_t time, int32_t loops, TimerCallback<T> callback)
+    void AddNamedTimer(std::string const& name, uint32_t time, int32_t loops, TimerCallback<T> callback)
     {
         m_entity->m_timers.add_named(name, time, loops, 0, callback);
     }
 
-    void AddNamedTimer(TSString name, uint32_t time, TimerCallback<T> callback)
+    void AddNamedTimer(std::string const& name, uint32_t time, TimerCallback<T> callback)
     {
         m_entity->m_timers.add_named(name, time, 1, 0, callback);
     }
@@ -83,17 +82,17 @@ public:
         m_entity->m_timers.add(time, 1, 0, callback);
     }
 
-    void RemoveTimer(TSString name)
+    void RemoveTimer(std::string const& name)
     {
         m_entity->m_timers.remove(name);
     }
 
-    TSWorldObjectGroup * GetEntityGroup(TSString key)
+    TSWorldObjectGroup * GetEntityGroup(std::string const& key)
     {
         return m_entity->m_groups.GetGroup(key);
     }
 
-    void RemoveEntityGroup(TSString key)
+    void RemoveEntityGroup(std::string const& key)
     {
         m_entity->m_groups.RemoveGroup(key);
     }
@@ -103,18 +102,6 @@ public:
         m_entity->m_groups.ClearGroups();
     }
 private:
-    void LRemoveTimer(std::string const& name) { RemoveTimer(name); }
-
-    TSWorldObjectGroup* LGetEntityGroup(std::string const& key)
-    {
-        return m_entity->m_groups.GetGroup(key);
-    }
-
-    void LRemoveEntityGroup(std::string const& key)
-    {
-        m_entity->m_groups.RemoveGroup(key);
-    }
-
     void LAddNamedTimer0(std::string const& name, uint32_t time, int32_t loops, uint32_t flags, sol::protected_function callback)
     {
         m_entity->m_timers.add_named(name, time, loops, flags, callback);
@@ -144,6 +131,5 @@ private:
     {
         m_entity->m_timers.add(time, 1, 0, callback);
     }
-
     friend class TSLua;
 };

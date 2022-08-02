@@ -1,24 +1,34 @@
 #pragma once
 
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 
 template <typename V, typename T>
 void TSLua::load_json_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& /*name*/)
 {
-    target.set_function("SetNumber", &V::LSetNumber);
-    target.set_function("GetNumber", sol::overload(&V::LGetNumber0, &V::LGetNumber1));
-    target.set_function("HasNumber", &V::LHasNumber);
-    target.set_function("SetBool", &V::LSetBool);
-    target.set_function("GetBool", sol::overload(&V::LGetBool0, &V::LGetBool1));
-    target.set_function("HasBool", &V::LHasBool);
-    target.set_function("SetString", &V::LSetString);
-    target.set_function("GetString", sol::overload(&V::LGetString0, &V::LGetString1));
-    target.set_function("HasString", &V::LHasString);
-    target.set_function("SetJsonObject", &V::LSetJsonObject);
-    target.set_function("GetJsonObject", sol::overload(&V::LGetJsonObject0, &V::LGetJsonObject1));
-    target.set_function("HasJsonObject", &V::LHasJsonObject);
-    target.set_function("SetJsonArray", &V::LSetJsonArray);
-    target.set_function("GetJsonArray", sol::overload(&V::LGetJsonArray0, &V::LGetJsonArray1));
-    target.set_function("HasJsonArray", &V::LHasJsonArray);
-    target.set_function("Remove", &V::LRemove);
+    LUA_FIELD(target, V, SetNumber);
+    LUA_FIELD(target, V, HasNumber);
+    LUA_FIELD(target, V, SetBool);
+    LUA_FIELD(target, V, HasBool);
+    LUA_FIELD(target, V, SetString);
+    LUA_FIELD(target, V, HasString);
+    LUA_FIELD(target, V, HasJsonObject);
+    LUA_FIELD(target, V, HasJsonArray);
+    LUA_FIELD(target, V, Remove);
+
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetNumber, std::string const&, double);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetBool, std::string const&, bool);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetString, std::string const&, std::string const&);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetJsonObject, std::string const&, TSJsonObject);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, SetJsonObject, std::string const&, TSJsonObject);
+
+    target.set_function("GetJsonArray", sol::overload(
+        [](V& v, std::string const& key, TSJsonArray value) { return v.GetJsonArray(key, value); },
+        [](V& v, std::string const& key) { return v.GetJsonArray(key, TSJsonArray()); }
+    ));
+
+    target.set_function("SetJsonArray", sol::overload(
+        [](V& v, std::string const& key, TSJsonArray value) { return v.SetJsonArray(key, value); },
+        [](V& v, std::string const& key) { return v.SetJsonArray(key, TSJsonArray()); }
+    ));
 }

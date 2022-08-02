@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSClasses.h"
 #include "TSArray.h"
 
@@ -33,15 +32,15 @@ public:
     bool operator==(TSGuild const& rhs) { return guild == rhs.guild; }
     bool IsNull() { return guild == nullptr; };
     TSArray<TSPlayer> GetMembers();
-    uint32 GetMemberCount();
+    TSNumber<uint32> GetMemberCount();
     TSPlayer GetLeader();
-    uint64 GetLeaderGUID();
-    uint32 GetID();
-    TSString GetName();
-    TSString GetMOTD();
-    TSString GetInfo();
+    TSNumber<uint64> GetLeaderGUID();
+    TSNumber<uint32> GetID();
+    std::string GetName();
+    std::string GetMOTD();
+    std::string GetInfo();
     void SetLeader(TSPlayer player);
-    void SetBankTabText(uint8 tabId, TSString text);
+    void SetBankTabText(uint8 tabId, std::string const& text);
     void SendPacket(TSWorldPacket data);
     void SendPacket(std::shared_ptr<TSWorldPacket> data);
     void SendPacketToRanked(TSWorldPacket data, uint8 ranked);
@@ -52,15 +51,8 @@ public:
     void SetMemberRank(TSPlayer player, uint8 newRank);
 private:
     TSLua::Array<TSPlayer> LGetMembers();
-    std::string LGetName();
-    std::string LGetMOTD();
-    std::string LGetInfo();
-    void LSendPacket(TSWorldPacket data);
-    void LSendPacketToRanked(TSWorldPacket data, uint8 ranked);
-    friend class TSLua;
 };
 
 TSGuild TC_GAME_API GetGuild(uint32 id);
-TSGuild TC_GAME_API GetGuildByName(TSString name);
-TSGuild TC_GAME_API LGetGuildByName(std::string const& name);
+TSGuild TC_GAME_API GetGuildByName(std::string const& name);
 TSGuild TC_GAME_API GetGuildByLeader(uint64 owner);

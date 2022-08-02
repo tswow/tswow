@@ -30,6 +30,9 @@ void TSLua::load_group_methods(sol::state& state)
     LUA_FIELD(ts_group, TSGroup, SetTargetIcon);
     LUA_FIELD(ts_group, TSGroup, IsLFGGroup);
     LUA_FIELD(ts_group, TSGroup, IsBFGroup);
+    ts_group.set_function("SendPacket", sol::overload(
+        [](TSGroup& group, TSWorldPacket data, bool ignorePlayersInBg, uint64 ignore) { group.SendPacket(data, ignorePlayersInBg, ignore); },
+        [](TSGroup& group, std::shared_ptr<TSWorldPacket> data, bool ignorePlayersInBg, uint64 ignore) { group.SendPacket(data, ignorePlayersInBg, ignore); }
+    ));
     ts_group.set_function("GetMembers", &TSGroup::LGetMembers);
-    ts_group.set_function("SendPacket", &TSGroup::LSendPacket);
 }

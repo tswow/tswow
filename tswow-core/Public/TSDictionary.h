@@ -19,9 +19,6 @@
 #include <map>
 #include <iostream>
 #include "TSArray.h"
-#include "TSString.h"
-
-struct TSString;
 
 template <typename K, typename V>
 struct TSDictionary {
@@ -39,16 +36,7 @@ public:
     }
   }
 
-  template <typename T>
-  bool operator ==(T value) { return _map == value; }
-
-  operator bool() { return _map == nullptr; }
-
-  auto& operator[](K index) const {
-    return (*_map)[index];
-  }
-
-  auto& operator[](K index) {
+  V& operator[](K index) {
     return (*_map)[index];
   }
 
@@ -56,7 +44,7 @@ public:
     return _map->find(key) != _map->end();
   }
 
-  auto get_length() {
+  double get_length() {
     return _map->size();
   }
 
@@ -133,12 +121,12 @@ public:
     }
   }
 
-  TSString stringify(int indention = 0)
+  std::string stringify(int indention = 0)
   {
-    TSString str = JSTR("{");
+    std::string str = "{";
     if (get_length() > 0)
     {
-      str = str + JSTR("\n");
+      str = str + "\n";
     }
 
     unsigned int ctr = 0;
@@ -146,14 +134,14 @@ public:
     {
       if (++ctr >= get_length())
       {
-        str += spaces(indention+1) + ToStr(e.first, indention+1) + JSTR(":") + ToStr(e.second,indention+1) + JSTR("\n");
+        str += spaces(indention+1) + ToStr(e.first, indention+1) + ":" + ToStr(e.second,indention+1) + "\n";
       }
       else
       {
-        str += spaces(indention+1) + ToStr(e.first,indention+1) + JSTR(":") + ToStr(e.second,indention+1) + JSTR(",\n");
+        str += spaces(indention+1) + ToStr(e.first,indention+1) + ":" + ToStr(e.second,indention+1) + ",\n";
       }
     }
-    return str + spaces(indention)+JSTR("}");
+    return str + spaces(indention)+"}";
   }
 
   friend std::ostream& operator<<(std::ostream& os, TSDictionary<K,V> arr)
@@ -169,5 +157,4 @@ public:
   }
 
 };
-
 #define CreateDictionary TSDictionary

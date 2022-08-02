@@ -20,7 +20,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
-#include "TSString.h"
 #include "TSArray.h"
 
 #include <sol/sol.hpp>
@@ -36,15 +35,15 @@ public:
     TSAchievementEntry* operator->();
     operator bool() const { return m_achievement != nullptr; }
     bool operator==(TSAchievementEntry const& rhs) { return m_achievement == rhs.m_achievement; }
-    uint32 GetEntry();
-    int32 GetFaction();
-    int32 GetInstanceID();
-    TSArray<TSString> GetTitles();
-    uint32 GetCategory();
-    uint32 GetPoints();
-    uint32 GetFlags();
-    uint32 GetMinimumCriteria();
-    uint32 GetSharesCriteria();
+    TSNumber<uint32> GetEntry();
+    TSNumber<int32> GetFaction();
+    TSNumber<int32> GetInstanceID();
+    TSArray<std::string> GetTitles();
+    TSNumber<uint32> GetCategory();
+    TSNumber<uint32> GetPoints();
+    TSNumber<uint32> GetFlags();
+    TSNumber<uint32> GetMinimumCriteria();
+    TSNumber<uint32> GetSharesCriteria();
 
 private:
     TSLua::Array<std::string> LGetTitles();
@@ -60,19 +59,19 @@ public:
     TSAchievementCriteriaEntry* operator->();
     operator bool() const { return m_criteria != nullptr; }
     bool operator==(TSAchievementCriteriaEntry const& rhs) { return m_criteria == rhs.m_criteria; }
-    uint32 GetEntry();
-    uint32 GetAchievementEntry();
-    uint32 GetType();
-    uint32 GetAssetID();
-    uint32 GetQuantity();
-    uint32 GetAdditionalType1();
-    uint32 GetAdditionalAsset1();
-    uint32 GetAdditionalType2();
-    uint32 GetAdditionalAsset2();
-    uint32 GetFlags();
-    uint32 GetStartEvent();
-    uint32 GetStartAsset();
-    uint32 GetStartTimer();
+    TSNumber<uint32> GetEntry();
+    TSNumber<uint32> GetAchievementEntry();
+    TSNumber<uint32> GetType();
+    TSNumber<uint32> GetAssetID();
+    TSNumber<uint32> GetQuantity();
+    TSNumber<uint32> GetAdditionalType1();
+    TSNumber<uint32> GetAdditionalAsset1();
+    TSNumber<uint32> GetAdditionalType2();
+    TSNumber<uint32> GetAdditionalAsset2();
+    TSNumber<uint32> GetFlags();
+    TSNumber<uint32> GetStartEvent();
+    TSNumber<uint32> GetStartAsset();
+    TSNumber<uint32> GetStartTimer();
 };
 
 struct TSAchievementEvents;

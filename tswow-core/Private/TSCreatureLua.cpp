@@ -1,6 +1,5 @@
 #include "TSLua.h"
 #include "TSCreature.h"
-#include "TSUnitLua.h"
 #include "TSCreature.h"
 #include "TSPlayer.h"
 #include "TSGroup.h"
@@ -10,20 +9,15 @@
 #include "TSVehicle.h"
 #include "TSSpell.h"
 #include "TSCorpse.h"
+#include "TSLuaVarargs.h"
 
 void TSLua::load_creature_methods(sol::state & state)
 {
     auto ts_creature = state.new_usertype<TSCreature>("TSCreature", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
-    load_unit_methods_t(state, ts_creature, "TSCreature");
-    ts_creature.set_function("GetScriptName", &TSCreature::LGetScriptName);
-    ts_creature.set_function("GetAIName", &TSCreature::LGetAIName);
-    ts_creature.set_function("GetAITargets", &TSCreature::LGetAITargets);
-    ts_creature.set_function("GetOutfitCopy", sol::overload(
-        &TSCreature::LGetOutfitCopy0
-        , &TSCreature::LGetOutfitCopy1
-        , &TSCreature::LGetOutfitCopy2
-        , &TSCreature::LGetOutfitCopy3
-    ));
+    LUA_FIELD(ts_creature, TSCreature, GetScriptName);
+    LUA_FIELD(ts_creature, TSCreature, GetAIName);
+    LUA_FIELD(ts_creature, TSCreature, GetAITargets);
+    LUA_FIELD_OVERLOAD_RET_0_3(ts_creature, TSCreature, GetOutfitCopy, Outfit, int32_t, int32_t);
     LUA_FIELD(ts_creature, TSCreature, IsReputationGainDisabled);
     LUA_FIELD(ts_creature, TSCreature, IsReputationGainDisabled);
     LUA_FIELD(ts_creature, TSCreature, CanCompleteQuest);

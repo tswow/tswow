@@ -39,39 +39,39 @@ TSMail::TSMail(Mail* mail)
     this->mail = mail;
 }
 
-uint32 TSMail::GetID()
+TSNumber<uint32> TSMail::GetID()
 {
     return mail->messageID;
 }
 
-uint8 TSMail::GetType()
+TSNumber<uint8> TSMail::GetType()
 {
     return mail->messageType;
 }
 
-uint16 TSMail::GetTemplateID()
+TSNumber<uint16> TSMail::GetTemplateID()
 {
     return mail->mailTemplateId;
 }
 
-uint64 TSMail::GetSender()
+TSNumber<uint64> TSMail::GetSender()
 {
     return mail->sender;
 }
 
-uint64 TSMail::GetReceiver()
+TSNumber<uint64> TSMail::GetReceiver()
 {
     return mail->receiver;
 }
 
-TSString TSMail::GetSubject()
+std::string TSMail::GetSubject()
 {
-    return TSString(mail->subject);
+    return mail->subject;
 }
 
-TSString TSMail::GetBody()
+std::string TSMail::GetBody()
 {
-    return TSString(mail->body);
+    return mail->body;
 }
 
 TSArray<TSMailItemInfo> TSMail::GetItems()
@@ -101,12 +101,12 @@ void TSMail::FilterItems(std::function<bool(TSMailItemInfo)> predicate)
     }
 }
 
-uint16 TSMail::GetState()
+TSNumber<uint16> TSMail::GetState()
 {
     return mail->state;
 }
 
-uint32 TSMail::GetMoney()
+TSNumber<uint32> TSMail::GetMoney()
 {
     return mail->money;
 }
@@ -116,7 +116,7 @@ void TSMail::SetMoney(uint32 money)
     mail->money = money;
 }
 
-uint32 TSMail::GetCOD()
+TSNumber<uint32> TSMail::GetCOD()
 {
     return mail->COD;
 }
@@ -126,7 +126,7 @@ void TSMail::SetCOD(uint32 cod)
     mail->COD = cod;
 }
 
-uint32 TSMail::GetChecked()
+TSNumber<uint32> TSMail::GetChecked()
 {
     return mail->checked;
 }
@@ -161,14 +161,14 @@ void TSMail::SetSender(uint8 type, uint64 guid)
 #endif
 }
 
-void TSMail::SetSubject(TSString subject)
+void TSMail::SetSubject(std::string const& subject)
 {
-    mail->subject = subject.std_str();
+    mail->subject = subject;
 }
 
-void TSMail::SetBody(TSString body)
+void TSMail::SetBody(std::string const& body)
 {
-    mail->body = body.std_str();
+    mail->body = body;
 }
 
 void TSMail::SetState(uint8 state)
@@ -181,7 +181,7 @@ TSMailDraft::TSMailDraft(MailDraft* draft)
     this->draft = draft;
 }
 
-uint16 TSMailDraft::GetTemplateID()
+TSNumber<uint16> TSMailDraft::GetTemplateID()
 {
 #ifdef TRINITY
     return draft->m_mailTemplateId;
@@ -190,25 +190,25 @@ uint16 TSMailDraft::GetTemplateID()
 #endif
 }
 
-TSString TSMailDraft::GetSubject()
+std::string TSMailDraft::GetSubject()
 {
 #ifdef TRINITY
-    return TSString(draft->m_subject);
+    return draft->m_subject;
 #elif AZEROTHCORE
-    return TSString(draft->GetSubject());
+    return draft->GetSubject();
 #endif
 }
 
-TSString TSMailDraft::GetBody()
+std::string TSMailDraft::GetBody()
 {
 #ifdef TRINITY
-    return TSString(draft->m_body);
+    return draft->m_body;
 #elif AZEROTHCORE
-    return TSString(draft->GetBody());
+    return draft->GetBody();
 #endif
 }
 
-uint32 TSMailDraft::GetMoney()
+TSNumber<uint32> TSMailDraft::GetMoney()
 {
 #ifdef TRINITY
     return draft->m_money;
@@ -217,7 +217,7 @@ uint32 TSMailDraft::GetMoney()
 #endif
 }
 
-uint32 TSMailDraft::GetCOD()
+TSNumber<uint32> TSMailDraft::GetCOD()
 {
 #ifdef TRINITY
     return draft->m_COD;
@@ -226,9 +226,9 @@ uint32 TSMailDraft::GetCOD()
 #endif
 }
 
-TSArray<uint64> TSMailDraft::GetItemKeys()
+TSArray<TSNumber<uint64> > TSMailDraft::GetItemKeys()
 {
-    TSArray<uint64> arr;
+    TSArray<TSNumber<uint64> > arr;
     for(auto& itr : draft->m_items)
     {
         arr.push(TS_GUID(itr.first));
@@ -250,19 +250,19 @@ void TSMailDraft::SetTemplateID(uint16 id)
 #endif
 }
 
-void TSMailDraft::SetSubject(TSString subject)
+void TSMailDraft::SetSubject(std::string const& subject)
 {
 #if TRINITY
-    draft->m_subject = subject.std_str();
+    draft->m_subject = subject;
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSMailDraft::SetSubject not implemented for AzerothCore");
 #endif
 }
 
-void TSMailDraft::SetBody(TSString body)
+void TSMailDraft::SetBody(std::string const& body)
 {
 #if TRINITY
-    draft->m_body = body.std_str();
+    draft->m_body = body;
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSMailDraft::SetBody not implemented for AzerothCore");
 #endif
@@ -293,15 +293,6 @@ void TSMailDraft::FilterItems(std::function<bool(TSItem)> predicate)
     }
 }
 
-std::string TSMail::LGetSubject()
-{
-    return GetSubject().std_str();
-}
-
-std::string TSMail::LGetBody()
-{
-    return GetBody().std_str();
-}
 TSLua::Array<TSMailItemInfo> TSMail::LGetItems()
 {
     return sol::as_table(*GetItems().vec);
@@ -312,43 +303,11 @@ void TSMail::LFilterItems(sol::protected_function predicate)
         return predicate(item);
     });
 }
-void TSMail::LAddItem0(uint32 entry, uint8 count, TSPlayer player)
-{
-    return AddItem(entry, count, player);
-}
-void TSMail::LAddItem1(uint32 entry, uint8 count)
-{
-    return AddItem(entry, count);
-}
-void TSMail::LSetSubject(std::string const& subject)
-{
-    SetSubject(subject);
-}
-void TSMail::LSetBody(std::string const& body)
-{
-    SetBody(body);
-}
-
-std::string TSMailDraft::LGetSubject()
-{
-    return GetSubject().std_str();
-}
-std::string TSMailDraft::LGetBody()
-{
-    return GetSubject().std_str();
-}
-TSLua::Array<uint64> TSMailDraft::LGetItemKeys()
+TSLua::Array<TSNumber<uint64>> TSMailDraft::LGetItemKeys()
 {
     return sol::as_table(*GetItemKeys().vec);
 }
-void TSMailDraft::LAddItem0(uint32 entry, uint8 count, TSPlayer player)
-{
-    AddItem(entry, count, player);
-}
-void TSMailDraft::LAddItem1(uint32 entry, uint8 count)
-{
-    AddItem(entry, count);
-}
+
 void TSMailDraft::LFilterItems(sol::protected_function predicate)
 {
     FilterItems([predicate](auto const& item) {

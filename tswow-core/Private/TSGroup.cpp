@@ -192,7 +192,7 @@ TSArray<TSPlayer> TSGroup::GetMembers()
  *
  * @return uint64 leaderGUID
  */
-uint64 TSGroup::GetLeaderGUID()
+TSNumber<uint64> TSGroup::GetLeaderGUID()
 {
     return TS_GUID(group->GetLeaderGUID());
 }
@@ -202,7 +202,7 @@ uint64 TSGroup::GetLeaderGUID()
  *
  * @return uint64 groupGUID
  */
-uint64 TSGroup::GetGUID()
+TSNumber<uint64> TSGroup::GetGUID()
 {
     return TS_GUID(group->TS_GET_GUID());
 }
@@ -213,9 +213,9 @@ uint64 TSGroup::GetGUID()
  * @param string name : the [Player]'s name
  * @return uint64 memberGUID
  */
-uint64 TSGroup::GetMemberGUID(TSString name)
+TSNumber<uint64> TSGroup::GetMemberGUID(std::string const& name)
 {
-    return TS_GUID(group->GetMemberGUID(name._value));
+    return TS_GUID(group->GetMemberGUID(name));
 }
 
 /**
@@ -223,7 +223,7 @@ uint64 TSGroup::GetMemberGUID(TSString name)
  *
  * @return uint32 memberCount
  */
-uint32 TSGroup::GetMembersCount()
+TSNumber<uint32> TSGroup::GetMembersCount()
 {
     return group->GetMembersCount();
 }
@@ -234,7 +234,7 @@ uint32 TSGroup::GetMembersCount()
  * @param uint64 guid : guid of the player
  * @return uint8 subGroupID : a valid subgroup ID or MAX_RAID_SUBGROUPS+1
  */
-uint8 TSGroup::GetMemberGroup(uint64 guid)
+TSNumber<uint8> TSGroup::GetMemberGroup(uint64 guid)
 {
     return group->GetMemberGroup(ObjectGuid(guid));
 }
@@ -360,9 +360,4 @@ void TSGroup::SetTargetIcon(uint8 icon,uint64 target,uint64 setter)
 TSLua::Array<TSPlayer> TSGroup::LGetMembers()
 {
     return sol::as_table(*GetMembers().vec);
-}
-
-void TSGroup::LSendPacket(TSWorldPacket data, bool ignorePlayersInBg, uint64 ignore)
-{
-    SendPacket(data, ignorePlayersInBg, ignore);
 }

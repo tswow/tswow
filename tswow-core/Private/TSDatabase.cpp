@@ -17,7 +17,6 @@
 #include "TSDatabase.h"
 #include "DatabaseEnv.h"
 #include "MySQLConnection.h"
-#include "TSString.h"
 #include "TSConsole.h"
 #include "PreparedStatement.h"
 #include "WorldDatabase.h"
@@ -26,11 +25,6 @@
 #include "QueryResult.h"
 #include <memory>
 #include <algorithm>
-
-std::string TSDatabaseResult::LGetString(int index)
-{
-    return GetString(index).std_str();
-}
 
 class TC_GAME_API TSDatabaseImpl final : public TSDatabaseResult {
     Field* field = nullptr;
@@ -73,22 +67,22 @@ public:
 #define TSGet(TC,AC) Get<AC>()
 #endif
 
-    uint8 GetUInt8(int index) final { return field[index].TSGet(GetUInt8, uint8); }
-    uint16 GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
-    uint32 GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
-    uint64 GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSNumber<uint8> GetUInt8(int index) final { return field[index].TSGet(GetUInt8, uint8); }
+    TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
+    TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
+    TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
 
-    int8 GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
-    int16 GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
-    int32 GetInt32(int index) final { return field[index].TSGet(GetInt32,int32); }
-    int64 GetInt64(int index) final { return field[index].TSGet(GetInt64,int64); }
+    TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
+    TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
+    TSNumber<int32> GetInt32(int index) final { return field[index].TSGet(GetInt32,int32); }
+    TSNumber<int64> GetInt64(int index) final { return field[index].TSGet(GetInt64,int64); }
 
-    float GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
-    double GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
+    TSNumber<float> GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
+    TSNumber<double> GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
-    TSString GetString(int index) final { 
+    std::string GetString(int index) final { 
 #if TRINITY
-        return TSString(field[index].GetString()); 
+        return field[index].GetString(); 
 #elif AZEROTHCORE
         return this->GetString(index);
 #endif
@@ -131,39 +125,39 @@ public:
         return v;
     }
 
-    uint8 GetUInt8(int index) final { return field[index].TSGet(GetUInt8,uint8); }
-    uint16 GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
-    uint32 GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
-    uint64 GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSNumber<uint8> GetUInt8(int index) final { return field[index].TSGet(GetUInt8,uint8); }
+    TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
+    TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
+    TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
 
-    int8 GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
-    int16 GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
-    int32 GetInt32(int index) final { return field[index].TSGet(GetInt32,uint32); }
-    int64 GetInt64(int index) final { return field[index].TSGet(GetInt64,uint64); }
+    TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
+    TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
+    TSNumber<int32> GetInt32(int index) final { return field[index].TSGet(GetInt32,uint32); }
+    TSNumber<int64> GetInt64(int index) final { return field[index].TSGet(GetInt64,uint64); }
 
-    float GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
-    double GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
+    TSNumber<float> GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
+    TSNumber<double> GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
-    TSString GetString(int index) final { 
+    std::string GetString(int index) final { 
 #if TRINITY
-        return TSString(field[index].GetString()); 
+        return field[index].GetString(); 
 #elif AZEROTHCORE
-        return TSString(GetString(index));
+        return GetString(index));
 #endif
     }
 };
 
-std::shared_ptr<TSDatabaseResult> QueryWorld(TSString query)
+std::shared_ptr<TSDatabaseResult> QueryWorld(std::string const& query)
 {
     return std::make_shared<TSDatabaseImpl>(WorldDatabase.Query(query.c_str()));
 }
 
-std::shared_ptr<TSDatabaseResult> QueryCharacters(TSString query)
+std::shared_ptr<TSDatabaseResult> QueryCharacters(std::string const& query)
 {
     return std::make_shared<TSDatabaseImpl>(CharacterDatabase.Query(query.c_str()));
 }
 
-std::shared_ptr<TSDatabaseResult> QueryAuth(TSString query)
+std::shared_ptr<TSDatabaseResult> QueryAuth(std::string const& query)
 {
     return std::make_shared<TSDatabaseImpl>(LoginDatabase.Query(query.c_str()));
 }
@@ -172,19 +166,12 @@ TSDatabaseConnectionInfo::TSDatabaseConnectionInfo(MySQLConnectionInfo const* in
     : _info(info)
 {}
 
-TSString TSDatabaseConnectionInfo::User() { return JSTR(_info->user); }
-TSString TSDatabaseConnectionInfo::Password() { return JSTR(_info->password); }
-TSString TSDatabaseConnectionInfo::Database() { return JSTR(_info->database); }
-TSString TSDatabaseConnectionInfo::Host() { return JSTR(_info->host); }
-TSString TSDatabaseConnectionInfo::PortOrSocket() { return JSTR(_info->port_or_socket); }
-TSString TSDatabaseConnectionInfo::SSL() { return JSTR(_info->ssl); }
-
-std::string TSDatabaseConnectionInfo::LUser() { return _info->user;  }
-std::string TSDatabaseConnectionInfo::LPassword() { return _info->password; }
-std::string TSDatabaseConnectionInfo::LDatabase() { return _info->database; }
-std::string TSDatabaseConnectionInfo::LHost() { return _info->host; }
-std::string TSDatabaseConnectionInfo::LPortOrSocket() { return _info->port_or_socket; }
-std::string TSDatabaseConnectionInfo::LSSL() { return _info->ssl; }
+std::string TSDatabaseConnectionInfo::User() { return _info->user; }
+std::string TSDatabaseConnectionInfo::Password() { return _info->password; }
+std::string TSDatabaseConnectionInfo::Database() { return _info->database; }
+std::string TSDatabaseConnectionInfo::Host() { return _info->host; }
+std::string TSDatabaseConnectionInfo::PortOrSocket() { return _info->port_or_socket; }
+std::string TSDatabaseConnectionInfo::SSL() { return _info->ssl; }
 
 std::shared_ptr<TSDatabaseConnectionInfo> WorldDatabaseInfo()
 {
@@ -338,35 +325,14 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetDouble(const uint8 index, c
     return this;
 }
 
-TSPreparedStatementBase* TSPreparedStatementBase::SetString(const uint8 index, TSString value)
+TSPreparedStatementBase* TSPreparedStatementBase::SetString(const uint8 index, std::string const& value)
 {
 #if TRINITY
-    m_statement->setString(index, value.std_str());
+    m_statement->setString(index, value);
 #elif AZEROTHCORE
-    m_statement->SetData(index, value.std_str());
+    m_statement->SetData(index, value);
 #endif
     return this;
-}
-
-std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend0()
-{
-    return Send();
-}
-std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend1(TSWorldDatabaseConnection& con)
-{
-    return Send(con);
-}
-std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend2(TSAuthDatabaseConnection& con)
-{
-    return Send(con);
-}
-std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::LSend3(TSCharactersDatabaseConnection& con)
-{
-    return Send(con);
-}
-TSPreparedStatementBase* TSPreparedStatementBase::LSetString(const uint8 index, std::string const& value)
-{
-    return SetString(index, TSString(value));
 }
 
 TSPreparedStatementBase TSPreparedStatement::Create()
@@ -441,19 +407,19 @@ TSPreparedStatementAuth::TSPreparedStatementAuth(std::string const& sql)
 #endif
 {}
 
-TC_GAME_API TSPreparedStatementWorld PrepareWorldQuery(TSString query)
+TC_GAME_API TSPreparedStatementWorld PrepareWorldQuery(std::string const& query)
 {
-    return TSPreparedStatementWorld(query.std_str());
+    return TSPreparedStatementWorld(query);
 }
 
-TC_GAME_API TSPreparedStatementCharacters PrepareCharactersQuery(TSString query)
+TC_GAME_API TSPreparedStatementCharacters PrepareCharactersQuery(std::string const& query)
 {
-    return TSPreparedStatementCharacters(query.std_str());
+    return TSPreparedStatementCharacters(query);
 }
 
-TC_GAME_API TSPreparedStatementAuth PrepareAuthQuery(TSString query)
+TC_GAME_API TSPreparedStatementAuth PrepareAuthQuery(std::string const& query)
 {
-    return TSPreparedStatementAuth(query.std_str());
+    return TSPreparedStatementAuth(query);
 }
 
 static QueryResult ResultFromSet(ResultSet* res)
@@ -481,7 +447,7 @@ static PreparedQueryResult PreparedResultFromSet(PreparedResultSet* res)
 TSWorldDatabaseConnection::TSWorldDatabaseConnection(WorldDatabaseConnection* connection)
     : m_connection(connection) {}
 
-std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::Query(TSString sql)
+std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::Query(std::string const& sql)
 {
     return std::make_shared<TSDatabaseImpl>(ResultFromSet(m_connection->Query(sql.c_str())));
 }
@@ -516,7 +482,7 @@ void TSWorldDatabaseConnection::Unlock()
 TSAuthDatabaseConnection::TSAuthDatabaseConnection(LoginDatabaseConnection* connection)
     : m_connection(connection) {}
 
-std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSString sql)
+std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(std::string const& sql)
 {
     return std::make_shared<TSDatabaseImpl>(ResultFromSet(m_connection->Query(sql.c_str())));
 }
@@ -536,36 +502,6 @@ std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSPreparedStat
 #endif
 }
 
-std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::LQuery0(std::string const& sql)
-{
-    return Query(sql);
-}
-
-std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::LQuery1(TSPreparedStatementBase* stmnt)
-{
-    return Query(stmnt);
-}
-
-std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::LQuery0(std::string const& sql)
-{
-    return Query(sql);
-}
-
-std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::LQuery1(TSPreparedStatementBase* stmnt)
-{
-    return Query(stmnt);
-}
-
-std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::LQuery0(std::string const& sql)
-{
-    return Query(sql);
-}
-
-std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::LQuery1(TSPreparedStatementBase* stmnt)
-{
-    return Query(stmnt);
-}
-
 void TSAuthDatabaseConnection::Unlock()
 {
 #if TRINITY
@@ -581,7 +517,7 @@ void TSAuthDatabaseConnection::Unlock()
 TSCharactersDatabaseConnection::TSCharactersDatabaseConnection(CharacterDatabaseConnection* connection)
     : m_connection(connection) {}
 
-std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::Query(TSString sql)
+std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::Query(std::string const& sql)
 {
     return std::make_shared<TSDatabaseImpl>(ResultFromSet(m_connection->Query(sql.c_str())));
 }
@@ -636,33 +572,4 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
 #elif AZEROTHCORE
     return TSCharactersDatabaseConnection(nullptr);
 #endif
-}
-
-std::shared_ptr<TSDatabaseResult> LQueryWorld(std::string const& query)
-{
-    return QueryWorld(query);
-}
-
-std::shared_ptr<TSDatabaseResult> LQueryCharacters(std::string const& query)
-{
-    return QueryCharacters(query);
-}
-std::shared_ptr<TSDatabaseResult> LQueryAuth(std::string const& query)
-{
-    return QueryAuth(query);
-}
-
-TSPreparedStatementWorld LPrepareWorldQuery(std::string const& query)
-{
-    return PrepareWorldQuery(query);
-}
-
-TSPreparedStatementCharacters LPrepareCharactersQuery(std::string const& query)
-{
-    return PrepareCharactersQuery(query);
-}
-
-TSPreparedStatementAuth LPrepareAuthQuery(std::string const& query)
-{
-    return PrepareAuthQuery(query);
 }
