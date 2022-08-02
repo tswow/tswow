@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { wfs } from './FileSystem';
+import { FilePath } from './FileTree';
 
 const PROPERTY_FIELD = '__properties'
 const PROPERTIES_ORDER = '__properties_order'
@@ -325,7 +326,7 @@ export abstract class ConfigFile {
     }
 }
 
-export function patchTCConfig(file: string, property: string, value: any) {
+export function patchTCConfig(file: FilePath, property: string, value: any) {
     const v = wfs.read(file)
     let start = v.indexOf(`\n${property}`);
     let end = v.indexOf('\n',start+1);
@@ -334,6 +335,6 @@ export function patchTCConfig(file: string, property: string, value: any) {
     }
     wfs.write(
           file
-        , `${v.substring(0,start)}\n${property} = ${JSON.stringify(value)}${v.substring(end)}`
+        , `${v.substring(0,start)}\n${property} = ${JSON.stringify(value)}${end >= 0 ? v.substring(end) : ''}`
     )
 }
