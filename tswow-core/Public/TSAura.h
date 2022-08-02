@@ -84,6 +84,7 @@ public:
     TSNumber<int32> GetMaxDuration();
     TSNumber<uint32> GetStackAmount();
     TSWorldObject GetOwner();
+    TSAuraEffect GetEffect(uint8 index);
     TSArray<TSAuraApplication> GetApplications();
     void SetDuration(int32 duration);
     void SetMaxDuration(int32 duration);

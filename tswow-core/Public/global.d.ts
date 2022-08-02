@@ -3236,6 +3236,8 @@ declare interface TSAura {
      */
     GetApplications(): TSArray<TSAuraApplication>
 
+    GetEffect(index: uint8): TSAuraEffect
+
     /**
      * Returns the [Unit] that casted the [Spell] that caused this [Aura] to be applied.
      *

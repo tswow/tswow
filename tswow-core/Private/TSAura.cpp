@@ -378,6 +378,11 @@ void TSAura::Remove()
 #endif
 }
 
+TSAuraEffect TSAura::GetEffect(uint8 index)
+{
+    return TSAuraEffect(aura->GetEffect(index));
+}
+
 TSLua::Array<TSAuraApplication> TSAura::LGetApplications()
 {
     return sol::as_table(*GetApplications().vec);
