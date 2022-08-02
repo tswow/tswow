@@ -19,15 +19,17 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSArray.h"
-#include "TSDamageInfo.h"
-#include "TSUnit.h"
-#include "TSSpell.h"
 
 #include <sol/sol.hpp>
 #include <vector>
 
 class AuraEffect;
 class ProcEventInfo;
+class TSUnit;
+class TSSpell;
+class TSSpellInfo;
+class TSHealInfo;
+class TSDamageInfo;
 
 class TC_GAME_API TSAuraEffect {
     TS_CLASS_DECLARATION(TSAuraEffect,AuraEffect,aura)

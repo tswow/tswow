@@ -22,6 +22,7 @@
 #include "TSItem.h"
 #include "TSClasses.h"
 #include "TSLua.h"
+#include "TSAura.h"
 
 class TSAuraApplication;
 
@@ -69,7 +70,7 @@ public:
     bool IsQuestGiver();
     bool HealthBelowPct(int32 pct);
     bool HealthAbovePct(int32 pct);
-    bool HasAura(uint32 spell);
+    bool HasAura(uint32 spell, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0);
     bool HasAuraType(uint32 auraType);
     bool IsCasting();
     bool HasUnitState(uint32 state);
@@ -120,7 +121,16 @@ public:
     std::string GetClassAsString(uint8 locale);
     std::string GetRaceAsString(uint8 locale);
     TSNumber<uint32> GetFaction();
-    TSAura  GetAura(uint32 spellID);
+    TSArray<TSAuraApplication> GetAuraApplications();
+    TSArray<TSAuraEffect> GetAuraEffectsByType(uint32 type);
+    TSAura  GetAura(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0);
+    TSAura  GetAuraOfRankedSpell(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0);
+    TSAuraApplication GetAuraApplication(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
+    TSAuraApplication GetAuraApplicationOfRankedSpell(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
+    int32 GetTotalAuraModifier(uint32 auraType);
+    float GetTotalAuraMultiplier(uint32 auraType);
+    int32 GetMaxPositiveAuraModifier(uint32 auraType);
+    int32 GetMaxNegativeAuraModifier(uint32 auraType);
     TSArray<TSUnit> GetFriendlyUnitsInRange(float range);
     TSArray<TSUnit> GetUnfriendlyUnitsInRange(float range);
     TSVehicle  GetVehicleKit();

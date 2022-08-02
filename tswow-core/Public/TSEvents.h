@@ -39,6 +39,8 @@
 #include "TSMainThreadContext.h"
 #include "TSSpellInfo.h"
 #include "TSArray.h"
+#include "TSDamageInfo.h"
+#include "TSSpell.h"
 
 #include <cstdint>
 

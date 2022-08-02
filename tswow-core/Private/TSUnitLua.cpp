@@ -51,7 +51,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, IsQuestGiver);
     LUA_FIELD(ts_unit, TSUnit, HealthBelowPct);
     LUA_FIELD(ts_unit, TSUnit, HealthAbovePct);
-    LUA_FIELD(ts_unit, TSUnit, HasAura);
+    LUA_FIELD_OVERLOAD_RET_1_3(ts_unit, TSUnit, HasAura, uint32, uint64, uint64, uint8);
     LUA_FIELD(ts_unit, TSUnit, HasAuraType);
     LUA_FIELD(ts_unit, TSUnit, IsCasting);
     LUA_FIELD(ts_unit, TSUnit, HasUnitState);
@@ -88,7 +88,22 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, GetClassAsString);
     LUA_FIELD(ts_unit, TSUnit, GetRaceAsString);
     LUA_FIELD(ts_unit, TSUnit, GetFaction);
-    LUA_FIELD(ts_unit, TSUnit, GetAura);
+    LUA_FIELD_OVERLOAD_RET_1_3(ts_unit, TSUnit, GetAura, uint32, uint64, uint64, uint8);
+    LUA_FIELD_OVERLOAD_RET_1_3(ts_unit, TSUnit, GetAuraOfRankedSpell, uint32, uint64, uint64, uint8);
+    LUA_FIELD_OVERLOAD_RET_1_4(ts_unit, TSUnit, GetAuraApplication, uint32, uint64, uint64, uint8, TSAuraApplication);
+    LUA_FIELD_OVERLOAD_RET_1_4(ts_unit, TSUnit, GetAuraApplicationOfRankedSpell, uint32, uint64, uint64, uint8, TSAuraApplication);
+    ts_unit.set_function("GetAuraApplications", [](TSUnit& unit) {
+        TSArray<TSAuraApplication> apps = unit.GetAuraApplications();
+        return sol::as_table(*apps.vec);
+    });
+    ts_unit.set_function("GetAuraEffectsByType", [](TSUnit& unit, uint32 type) {
+        TSArray<TSAuraEffect> effs = unit.GetAuraEffectsByType(type);
+        return sol::as_table(*effs.vec);
+    });
+    LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifier);
+    LUA_FIELD(ts_unit, TSUnit, GetTotalAuraMultiplier);
+    LUA_FIELD(ts_unit, TSUnit, GetMaxPositiveAuraModifier);
+    LUA_FIELD(ts_unit, TSUnit, GetMaxNegativeAuraModifier);
     LUA_FIELD(ts_unit, TSUnit, GetFriendlyUnitsInRange);
     LUA_FIELD(ts_unit, TSUnit, GetUnfriendlyUnitsInRange);
     LUA_FIELD(ts_unit, TSUnit, GetVehicleKit);

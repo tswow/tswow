@@ -6420,9 +6420,59 @@ declare interface TSUnit extends TSWorldObject {
      * Returns the [Aura] of the given spell entry on the [Unit] or nil.
      *
      * @param uint32 spellID : entry of the aura spell
+     * @param uint64 casterGuid = 0 (any): guid of the WorldObject that cast the spell
+     * @param uint64 itemCasterGuid = 0 (any): guid of the item that cast the spell
+     * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
      * @return [Aura] aura : aura object or nil
      */
-    GetAura(spellID : uint32) : TSAura
+    GetAura(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8) : TSAura
+
+    /**
+     * Returns the [Aura] of the given spell entry on the [Unit] or nil.
+     *
+     * @param uint32 spellID : entry of the aura spell
+     * @param uint64 casterGuid = 0 (any): guid of the WorldObject that cast the spell
+     * @param uint64 itemCasterGuid = 0 (any): guid of the item that cast the spell
+     * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
+     * @return [Aura] aura : aura object or nil
+     */
+    GetAuraOfRankedSpell(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8) : TSAura
+
+    /**
+     * Returns the [AuraApplication] of the given spell entry on the [Unit] or nil.
+     *
+     * @param uint32 spellID : entry of the aura spell
+     * @param uint64 casterGuid = 0 (any): guid of the WorldObject that cast the spell
+     * @param uint64 itemCasterGuid = 0 (any): guid of the item that cast the spell
+     * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
+     * @param except = null: application to exclude from search result
+     * @return [Aura] aura : aura object or nil
+     */
+    GetAuraApplication(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
+
+    /**
+     * Returns the [AuraApplication] of the given spell entry on the [Unit] or nil.
+     *
+     * @param uint32 spellID : entry of the aura spell
+     * @param uint64 casterGuid = 0 (any): guid of the WorldObject that cast the spell
+     * @param uint64 itemCasterGuid = 0 (any): guid of the item that cast the spell
+     * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
+     * @param except = null: application to exclude from search result
+     * @return [Aura] aura : aura object or nil
+     */
+    GetAuraApplicationOfRankedSpell(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
+
+    /**
+     * Returns all [AuraApplication]s attached to this [Unit].
+     */
+    GetAuraApplications(): TSArray<TSAuraApplication>;
+
+    GetAuraEffectsByType(type: AuraType): TSArray<TSAuraEffect>;
+
+    GetTotalAuraModifier(auraType: AuraType): int32;
+    GetTotalAuraMultiplier(auraType: AuraType): float;
+    GetMaxPositiveAuraModifier(auraType: AuraType): int32;
+    GetMaxNegativeAuraModifier(auraType: AuraType): int32;
 
     /**
      * Returns [Unit]'s [Vehicle] methods
