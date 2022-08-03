@@ -74,6 +74,7 @@ export class CreatureTemplateRegistryClass
             .NormalLoot.set(0)
             .SkinningLoot.set(0)
             .PickpocketLoot.set(0)
+            .ScriptName.set('');
     }
     protected Clone(mod: string, id: string, child: CreatureTemplate, parent: CreatureTemplate): void {
         if(parent.AddonRow.exists()) {

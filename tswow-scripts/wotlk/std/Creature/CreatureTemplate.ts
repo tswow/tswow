@@ -356,4 +356,8 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     get Spawns() {
         return new CreatureTemplateInstances(this);
     }
+
+    get ScriptName() {
+        return this.wrap(this.row.ScriptName);
+    }
 }
