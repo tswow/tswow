@@ -186,6 +186,10 @@ export class Livescripts {
             })
         })
 
+        if(Args.hasFlag('transpile-only',args)) {
+            return;
+        }
+
         buildDir.iterate('RECURSE','FILES','FULL', node => {
             let rel = node.relativeTo(buildDir)
             let file = this.mod.path.join(rel)
