@@ -4,7 +4,6 @@ runs:
   using: "composite"
   steps:
     - name: Install Boost
-      shell: bash
       uses: MarkusJx/install-boost@v2.3.0
       with:
         boost_version: 1.77.0
