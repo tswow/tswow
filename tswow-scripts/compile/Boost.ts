@@ -14,18 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { BOOST_URL, CLEAR_ARCHIVES } from './BuildConfig';
+import { Args } from '../util/Args';
+import { isWindows } from '../util/Platform';
+import { BOOST_URL_WINDOWS, CLEAR_ARCHIVES } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
 
 export namespace Boost {
     export async function install() {
-        await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
+        if(isWindows()) {
+            return installWindows();
+        } else {
+            return installLinux()
+        }
+    }
+
+    export async function installLinux() {
+        let boost = Args.getString('BOOST_ROOT',undefined,process.argv)
+        if(!boost) {
+            throw new Error('Not implemented')
+        } else {
+            return boost
+        }
+    }
+
+    export async function installWindows() {
+        await DownloadFile(BOOST_URL_WINDOWS,bpaths.boostZip.get())
 
         if(!bpaths.boost.boost_1_77_0.exists())
         {
-            await ExtractZip(bpaths.boostArchive.get(),{dir:bpaths.boost.boost_1_77_0.abs().get()});
+            await ExtractZip(bpaths.boostZip.get(),{dir:bpaths.boost.boost_1_77_0.abs().get()});
         }
 
         // Delete unused libraries
@@ -63,7 +82,7 @@ export namespace Boost {
         })
 
         if(CLEAR_ARCHIVES) {
-            bpaths.boostArchive.remove();
+            bpaths.boostZip.remove();
         }
 
         return bpaths.boost.boost_1_77_0.abs().get();

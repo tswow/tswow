@@ -559,6 +559,10 @@ export function BuildPaths(pathIn: string, tdb: string) {
             })
         }),
 
+        // linux
+        boost_1_77_0: dir({}),
+
+        // windows
         boost: dir({
             boost_1_77_0: dir({
                 lib64_msvc_14_2: dirn('lib64-msvc-14.2',{
@@ -566,7 +570,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
                 })
             })
         }),
-        boostArchive: file('boost_1_77_0.zip'),
+        boostZip: file('boost_1_77_0.zip'),
+        boostTarBz2: file('boost_1_77_0.tar.bz2'),
         tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),

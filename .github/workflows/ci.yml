@@ -11,9 +11,14 @@ jobs:
         with:
           submodules: 'recursive'
       - uses: ./.github/actions/setup_ubuntu
+      - name: Install Boost
+        id: install-boost
+        uses: MarkusJx/install-boost@v2.3.0
+        with:
+          boost_version: 1.77.0
       - name: Build tswow
         shell: bash
-        run: npm run build noac
+        run: npm run build noac BOOST_ROOT=${{ steps.install-boost.outputs.BOOST_ROOT }}
 
   windows-msvc-trinitycore:
     runs-on: windows-2019

@@ -3,10 +3,6 @@ description: 'Set up Ubuntu for installing TSWoW'
 runs:
   using: "composite"
   steps:
-    - name: Install Boost
-      uses: MarkusJx/install-boost@v2.3.0
-      with:
-        boost_version: 1.77.0
     - name: Install deps
       shell: bash
       run: sudo apt-get remove --purge mysql-common && sudo apt-get update && sudo apt-get install git clang cmake make gcc g++ libmariadbclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev mariadb-server p7zip libmariadb-client-lgpl-dev-compat

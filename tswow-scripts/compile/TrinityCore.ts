@@ -222,7 +222,7 @@ export namespace TrinityCore {
         })
     }
 
-    export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
+    export async function install(cmake: string, openssl: string, mysql: string, boost:string, type: BuildType, args1: string[]) {
         //
         // Tracy
         //
@@ -257,14 +257,14 @@ export namespace TrinityCore {
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                 +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
-                +` -DBOOST_ROOT="${bpaths.boost.boost_1_77_0.abs().get()}"`
+                +` -DBOOST_ROOT="${boost}"`
                 +` -DTRACY_ENABLE="${tracyEnabled?'ON':'OFF'}"`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-better-timer',[process.argv,args1])?'ON':'OFF'}"`
                 +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
-                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_77_0.abs().get()}`,...process.env}});
+                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${boost}`,...process.env}});
                 if(generateOnly) return;
                 wsys.exec(buildCommand, 'inherit');
             } else {
@@ -279,13 +279,14 @@ export namespace TrinityCore {
                 +` -DCMAKE_C_COMPILER=/usr/bin/clang`
                 +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
                 +` -DBUILD_SHARED_LIBS="ON"`
+                +` -DBOOST_ROOT="${boost}"`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
                 +` -DTRACY_TIMER_FALLBACK="${Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
                 +` -DWITH_WARNINGS=1`
                 +` -DSCRIPTS=${scripts}`;
                 buildCommand = 'make -j 4';
                 await bpaths.TrinityCore.doIn(() => {
-                    wsys.exec(setupCommand, 'inherit');
+                    wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT: `${boost}`,...process.env}});
                     if(generateOnly) return;
                     wsys.exec(buildCommand, 'inherit');
                     wsys.exec('make install', 'inherit');

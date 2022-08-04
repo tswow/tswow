@@ -53,21 +53,21 @@ async function compile(type: string, compileArgs: string[]) {
     term.log('build',`Found OpenSSL at ${openssl}`);
     const mysql = isWindows() ? await MySQL.find() : 'mysql';
     term.log('build',`Found MySQL at ${mysql}`);
-    const boost = isWindows() ? await Boost.install() : 'boost';
+    const boost = await Boost.install()
     if (isWindows()) { await SevenZipInstall.install(); }
     if (isWindows()) { await IMInstall.install() }
 
     if (types.includes('full') || types.includes('release')) {
-        await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs.concat(['dynamic']));
+        await TrinityCore.install(cmake, openssl, mysql, boost, 'RelWithDebInfo', compileArgs.concat(['dynamic']));
     } else {
-        if (type == 'trinitycore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
-        if (isType('trinitycore') || isType('trinitycore-relwithdebinfo')) { await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
-        if (type == 'trinitycore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
+        if (type == 'trinitycore-release') { await TrinityCore.install(cmake, openssl, mysql, boost, 'Release', compileArgs); }
+        if (isType('trinitycore') || isType('trinitycore-relwithdebinfo')) { await TrinityCore.install(cmake, openssl, mysql, boost, 'RelWithDebInfo', compileArgs); }
+        if (type == 'trinitycore-debug') { await TrinityCore.install(cmake, openssl, mysql, boost, 'Debug', compileArgs); }
     }
 
-    if (type == 'azerothcore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
+    if (type == 'azerothcore-release') { await TrinityCore.install(cmake, openssl, mysql, boost, 'Release', compileArgs); }
     if (type == 'azerothcore-relwithdebinfo') { await AzerothCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
-    if (type == 'azerothcore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
+    if (type == 'azerothcore-debug') { await TrinityCore.install(cmake, openssl, mysql, boost, 'Debug', compileArgs); }
 
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
