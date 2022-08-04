@@ -561,6 +561,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         // linux
         boost_1_77_0: dir({}),
+        boost_1_77_0_install: dir({}),
 
         // windows
         boost: dir({

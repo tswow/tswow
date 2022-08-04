@@ -16,7 +16,8 @@
  */
 import { Args } from '../util/Args';
 import { isWindows } from '../util/Platform';
-import { BOOST_URL_WINDOWS, CLEAR_ARCHIVES } from './BuildConfig';
+import { wsys } from '../util/System';
+import { BOOST_URL_LINUX, BOOST_URL_WINDOWS, CLEAR_ARCHIVES } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -33,7 +34,17 @@ export namespace Boost {
     export async function installLinux() {
         let boost = Args.getString('BOOST_ROOT',undefined,process.argv)
         if(!boost) {
-            throw new Error('Not implemented')
+            if(!bpaths.boostTarBz2.exists()) {
+                await DownloadFile(BOOST_URL_LINUX,bpaths.boostTarBz2.get())
+            }
+
+            if(!bpaths.boost_1_77_0_install.exists()) {
+                wsys.execIn(bpaths,`tar --bzip2 -xf ${bpaths.boostTarBz2.basename().get()}`)
+                wsys.execIn(bpaths.boost_1_77_0,`./bootstrap.sh --prefix=${bpaths.boost_1_77_0_install.abs().get()}`)
+                wsys.execIn(bpaths.boost_1_77_0,`./b2 install`)
+            }
+
+            return bpaths.boost_1_77_0_install.abs().get()
         } else {
             return boost
         }
