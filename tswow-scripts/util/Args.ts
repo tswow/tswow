@@ -36,7 +36,7 @@ export namespace Args {
         }
         let v = args.find(x=>x.startsWith(flagname) || x.startsWith(`--${flagname}`));
         if(!v) return defVal
-        return v.match(/.+?\= *(.+?)/)[1]
+        return v.match(/.+?\= *(.+)/)[1]
     }
 
     export function getNumber(flagname: string, defVal: number, args: string[] = process.argv) {
