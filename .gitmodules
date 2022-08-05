@@ -8,3 +8,6 @@
 [submodule "misc/bots"]
 	path = misc/bots
 	url = https://github.com/tswow/wow-bots.git
+[submodule "misc/behavior-tree"]
+	path = misc/behavior-tree
+	url = https://github.com/tswow/behavior-tree.git

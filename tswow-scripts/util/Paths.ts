@@ -753,6 +753,11 @@ export function SourcePaths(pathIn: string) {
                 addons: dir({}),
                 snippet_example: file('snippet-example.ts')
             }),
+
+            behavior_tree: dirn('behavior-tree',{
+                behaviortree_global_d_ts: file('behaviortree.global.d.ts')
+            }),
+
             bots: dir({
                 typescript: dir({
                     profiles_global_d_ts: file('profiles.global.d.ts'),

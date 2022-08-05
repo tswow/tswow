@@ -189,11 +189,12 @@ export namespace TrinityCore {
         spaths.tswow_scripts.wotlk.global_d_ts.write(gdts);
 
         // bot declarations (so we don't have to build tc to update them)
+        let btGlobal = spaths.misc.behavior_tree.behaviortree_global_d_ts.readString();
         let profileBotGlobal = spaths.misc.bots.typescript.profiles_global_d_ts.readString();
         let sharedBotGlobal = spaths.misc.bots.typescript.shared_global_d_ts.readString();
         let opcodesBotGlobal = spaths.misc.bots.typescript.opcodes_global_d_ts.readString();
         let commandBotGlobal = spaths.misc.bots.typescript.commands_global_d_ts.readString();
-        ipaths.bin.include_bots.profiles_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${profileBotGlobal}`)
+        ipaths.bin.include_bots.profiles_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${btGlobal}\n\n${profileBotGlobal}`)
         ipaths.bin.include_bots.commands_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${commandBotGlobal}`)
 
         // write to modules
