@@ -764,6 +764,7 @@ export function SourcePaths(pathIn: string) {
                     commands_global_d_ts: file('commands.global.d.ts'),
                     opcodes_global_d_ts: file('opcodes.global.d.ts'),
                     shared_global_d_ts: file('shared.global.d.ts'),
+                    packets_global_d_ts: file('packets.global.d.ts')
                 })
             }),
             client_extensions: dirn('client-extensions',{

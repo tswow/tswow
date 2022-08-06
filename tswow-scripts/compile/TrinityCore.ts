@@ -194,7 +194,9 @@ export namespace TrinityCore {
         let sharedBotGlobal = spaths.misc.bots.typescript.shared_global_d_ts.readString();
         let opcodesBotGlobal = spaths.misc.bots.typescript.opcodes_global_d_ts.readString();
         let commandBotGlobal = spaths.misc.bots.typescript.commands_global_d_ts.readString();
-        ipaths.bin.include_bots.profiles_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${btGlobal}\n\n${profileBotGlobal}`)
+        let packetsBotGlobal = spaths.misc.bots.typescript.packets_global_d_ts.readString();
+
+        ipaths.bin.include_bots.profiles_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${btGlobal}\n\n${profileBotGlobal}\n\n${packetsBotGlobal}`)
         ipaths.bin.include_bots.commands_global_d_ts.write(`${opcodesBotGlobal}\n\n${sharedBotGlobal}\n\n${commandBotGlobal}`)
 
         // write to modules
