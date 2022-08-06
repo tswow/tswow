@@ -41,3 +41,6 @@ bool TC_GAME_API HAS_TAG(uint32_t id, std::initializer_list<uint32_t> const& lis
 bool TC_GAME_API L_HAS_TAG(uint32_t id, sol::table);
 
 TSLua::Array<TSNumber<uint16> > TC_GAME_API LGetActiveGameEvents();
+
+TSNumber<uint32> TC_GAME_API CreateAccount(std::string const& username, std::string const& password, std::string const& email = "");
+TSNumber<uint32> TC_GAME_API GetAccountID(std::string const& username);

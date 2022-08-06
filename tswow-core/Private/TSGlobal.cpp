@@ -16,9 +16,9 @@
 
 #include "TSGlobal.h"
 #include "ObjectAccessor.h"
-
 #include "HTTPRequest.h"
 
+#include "AccountMgr.h"
 #include "Mail.h"
 #include "Item.h"
 #include "Player.h"
@@ -118,3 +118,14 @@ TSLua::Array<TSNumber<uint16>> TC_GAME_API LGetActiveGameEvents()
 {
     return sol::as_table(*GetActiveGameEvents().vec);
 }
+
+TSNumber<uint32> CreateAccount(std::string const& name, std::string const& password, std::string const& email)
+{
+    return uint32(sAccountMgr->CreateAccount(name, password, email));
+}
+
+TSNumber<uint32> TC_GAME_API GetAccountID(std::string const& username)
+{
+    return sAccountMgr->GetId(username);
+}
+

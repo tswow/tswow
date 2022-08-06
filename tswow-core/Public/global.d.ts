@@ -177,6 +177,8 @@ declare const enum DeathStatus {
     DEAD = 2
 }
 
+declare const enum AccountOpResult { } /** AccountMgr.h: AccountOpResult */
+
 declare const enum Opcodes { } /** Opcodes.h:Opcodes */
 
 declare interface TSMutable<T,R> {
@@ -9347,6 +9349,8 @@ declare function SyncHttpGet(url: string): string;
 declare function IsGameEventActive(event: uint16): boolean
 declare function IsHolidayActive(holiday: uint16): boolean
 declare function GetActiveGameEvents(): TSArray<uint16>
+declare function CreateAccount(username: string, password: string, email: string): AccountOpResult;
+declare function GetAccountID(username: string): number;
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 

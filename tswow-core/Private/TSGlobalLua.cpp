@@ -13,6 +13,17 @@ void TSLua::load_global_functions(sol::state& state)
     state.set_function("StartGameEvent", StartGameEvent);
     state.set_function("StopGameEvent", StopGameEvent);
     state.set_function("GetActiveGameEvents", LGetActiveGameEvents);
+    state.set_function("CreateAccount", sol::overload(
+        [](std::string const& username, std::string const& password, std::string const& email)
+        {
+            return CreateAccount(username, password, email);
+        },
+        [](std::string const& username, std::string const& password)
+        {
+            return CreateAccount(username, password);
+        }
+    ));
+    state.set_function("GetAccountID", GetAccountID);
     state.set_function("HAS_TAG", L_HAS_TAG);
     state.safe_script("function CreateArray(v) return v end");
     state.safe_script("function CreateDictionary(v) return v end");
