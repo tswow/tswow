@@ -48,12 +48,12 @@ protected:
 template <typename T /* : TSMultiRowTable*/>
 class DBContainer {
 public:
-    uint32 Size()
+    TSNumber<uint32> Size()
     {
         return m_size;
     }
 
-    uint32 TotalSize()
+    TSNumber<uint32> TotalSize()
     {
         return m_values.size();
     }

@@ -75,32 +75,32 @@ public:
     );
 
     TSOutfit& SetClass(uint8_t Class);
-    uint8_t GetClass();
+    TSNumber<uint8> GetClass();
 
     TSOutfit& SetFace(uint8_t face);
-    uint8_t GetFace();
+    TSNumber<uint8> GetFace();
 
     TSOutfit& SetSkin(uint8_t face);
-    uint8_t GetSkin();
+    TSNumber<uint8> GetSkin();
 
     TSOutfit& SetHairStyle(uint8_t face);
-    uint8_t GetHairStyle();
+    TSNumber<uint8> GetHairStyle();
 
     TSOutfit& SetFacialStyle(uint8_t facialStyle);
-    uint8_t GetFacialStyle();
+    TSNumber<uint8> GetFacialStyle();
 
     TSOutfit& SetHairColor(uint8_t face);
-    uint8_t GetHairColor();
+    TSNumber<uint8> GetHairColor();
 
     TSOutfit& SetSoundID(uint32_t soundId);
-    uint32_t GetSoundID();
+    TSNumber<uint32> GetSoundID();
 
     TSOutfit& SetGuild(uint64_t guild);
-    uint64_t GetGuild();
+    TSNumber<uint64> GetGuild();
 
-    uint8_t GetGender();
-    uint8_t GetRace();
-    uint32_t GetDisplayID();
+    TSNumber<uint8> GetGender();
+    TSNumber<uint8> GetRace();
+    TSNumber<uint32> GetDisplayID();
 
     void SetDisplayID(uint32 displayID);
 
@@ -116,11 +116,11 @@ public:
     TSOutfit& ClearOffhand();
     TSOutfit& ClearRanged();
 
-    int32_t GetMainhand();
-    int32_t GetOffhand();
-    int32_t GetRanged();
+    TSNumber<int32> GetMainhand();
+    TSNumber<int32> GetOffhand();
+    TSNumber<int32> GetRanged();
 
-    uint32_t GetDisplayID(uint8_t slot);
+    TSNumber<uint32> GetDisplayID(uint8_t slot);
 
     TSOutfit& ApplyRef(TSCreature creature);
 
@@ -145,12 +145,6 @@ private:
         , uint32_t value
         , uint8_t slot
     );
-
-    void LApplyCopy0(TSCreature creature, uint32_t settings, int32_t race, int32_t gender);
-    void LApplyCopy1(TSCreature creature, uint32_t settings, int32_t race);
-    void LApplyCopy2(TSCreature creature, uint32_t settings);
-    void LApplyCopy3(TSCreature creature);
-    friend class TSLua;
 #endif
 };
 

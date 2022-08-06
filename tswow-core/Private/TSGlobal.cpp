@@ -37,27 +37,27 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 #endif
 }
 
-void SendWorldMessage(TSString string)
+void SendWorldMessage(std::string const& string)
 {
     sWorld->SendServerMessage(SERVER_MSG_STRING, string);
 }
 
-uint32 GetCurrTime()
+TSNumber<uint32> GetCurrTime()
 {
     return getMSTime();
 }
 
-uint64 GetUnixTime()
+TSNumber<uint64> GetUnixTime()
 {
     using namespace std::chrono;
     return uint64(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
 }
 
-TSString SyncHttpGet(TSString url)
+std::string SyncHttpGet(std::string const& url)
 {
-    http::Request request{url.std_str()};
+    http::Request request{url};
     const auto response = request.send("GET");
-    return TSString(std::string{response.body.begin(), response.body.end()});
+    return std::string{response.body.begin(), response.body.end()};
 }
 
 bool TC_GAME_API IsGameEventActive(uint16_t event_id)
@@ -70,9 +70,9 @@ bool TC_GAME_API IsHolidayActive(uint16_t holiday_id)
     return IsHolidayActive(HolidayIds(holiday_id));
 }
 
-TSArray<uint16_t> TC_GAME_API GetActiveGameEvents()
+TSArray<TSNumber<uint16> > TC_GAME_API GetActiveGameEvents()
 {
-    TSArray<uint16_t> arr;
+    TSArray<TSNumber<uint16> > arr;
     for (auto const& evt: sGameEventMgr->GetActiveEventList())
     {
         arr.push(evt);
@@ -88,16 +88,6 @@ void StartGameEvent(uint16_t event_id)
 void StopGameEvent(uint16_t event_id)
 {
     sGameEventMgr->StopEvent(event_id, true);
-}
-
-void LSendWorldMessage(std::string const& string)
-{
-    SendWorldMessage(string);
-}
-
-std::string TC_GAME_API LSyncHttpGet(std::string const& url)
-{
-    return SyncHttpGet(url).std_str();
 }
 
 bool HAS_TAG(uint32_t id, std::initializer_list<uint32_t> const& list)
@@ -124,7 +114,7 @@ bool L_HAS_TAG(uint32_t id, sol::table list)
     return false;
 }
 
-TSLua::Array<uint16_t> TC_GAME_API LGetActiveGameEvents()
+TSLua::Array<TSNumber<uint16>> TC_GAME_API LGetActiveGameEvents()
 {
     return sol::as_table(*GetActiveGameEvents().vec);
 }

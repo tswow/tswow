@@ -1,7 +1,8 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSItemTemplate.h"
+#include "TSEntityLua.h"
 #include "TSGlobal.h"
-#include "TSObjectLua.h"
 
 void TSLua::load_itemtemplate_methods(sol::state& state)
 {
@@ -202,13 +203,9 @@ void TSLua::load_itemtemplate_methods(sol::state& state)
     LUA_FIELD(ts_itemtemplate, TSItemTemplate, SetSpellPPMRate);
     LUA_FIELD(ts_itemtemplate, TSItemTemplate, GetSpellTrigger);
     LUA_FIELD(ts_itemtemplate, TSItemTemplate, SetSpellTrigger);
-
-    ts_itemtemplate.set_function("GetFeralBonus", sol::overload(
-        &TSItemTemplate::LGetFeralBonus0
-        , &TSItemTemplate::LGetFeralBonus1
-    ));
-    ts_itemtemplate.set_function("GetName", &TSItemTemplate::LGetName);
-    ts_itemtemplate.set_function("GetDescription", &TSItemTemplate::LGetDescription);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_itemtemplate, TSItemTemplate, GetFeralBonus, int32);
+    LUA_FIELD(ts_itemtemplate, TSItemTemplate, GetName);
+    LUA_FIELD(ts_itemtemplate, TSItemTemplate, GetDescription);
     state.set_function("GetItemTemplate", &GetItemTemplate);
     state.set_function("CreateItemTemplate", &CreateItemTemplate);
 }

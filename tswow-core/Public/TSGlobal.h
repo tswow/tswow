@@ -19,23 +19,20 @@
 #include "TSArray.h"
 #include "TSItem.h"
 #include "TSBase.h"
-#include "TSString.h"
 #include "TSLua.h"
 
 TSItemTemplate TC_GAME_API CreateItemTemplate(uint32 entry,uint32 copyItemID = 38);
 
-void TC_GAME_API SendWorldMessage(TSString string);
-void TC_GAME_API LSendWorldMessage(std::string const& string);
+void TC_GAME_API SendWorldMessage(std::string const& string);
 
-uint32 TC_GAME_API GetCurrTime();
-uint64 TC_GAME_API GetUnixTime();
+TSNumber<uint32> TC_GAME_API GetCurrTime();
+TSNumber<uint64> TC_GAME_API GetUnixTime();
 
-TSString TC_GAME_API SyncHttpGet(TSString url);
-std::string TC_GAME_API LSyncHttpGet(std::string const& url);
+std::string TC_GAME_API SyncHttpGet(std::string const& url);
 
 bool TC_GAME_API IsGameEventActive(uint16_t event_id);
 bool TC_GAME_API IsHolidayActive(uint16_t holiday_id);
-TSArray<uint16_t> TC_GAME_API GetActiveGameEvents();
+TSArray<TSNumber<uint16>> TC_GAME_API GetActiveGameEvents();
 
 void TC_GAME_API StartGameEvent(uint16_t event_id);
 void TC_GAME_API StopGameEvent(uint16_t event_id);
@@ -43,4 +40,4 @@ void TC_GAME_API StopGameEvent(uint16_t event_id);
 bool TC_GAME_API HAS_TAG(uint32_t id, std::initializer_list<uint32_t> const& list);
 bool TC_GAME_API L_HAS_TAG(uint32_t id, sol::table);
 
-TSLua::Array<uint16_t> TC_GAME_API LGetActiveGameEvents();
+TSLua::Array<TSNumber<uint16> > TC_GAME_API LGetActiveGameEvents();

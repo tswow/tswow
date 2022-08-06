@@ -58,7 +58,7 @@ export function postprocess(contents: string): string {
         }
 
         [
-            /TS_ZONE_SCOPED_N *\( *(.+?) *, *JSTR *\( *"(.+?)" *\) *\)/,
+            /TS_ZONE_SCOPED_N *\( *(.+?) *, *\( *"(.+?)" *\) *\)/,
             /TS_ZONE_SCOPED_N *\( *(.+?) *, *"(.+?)" *\)/,
             /TS_ZONE_SCOPED_N *\( *(.+?) *, *'(.+?)' *\)/,
         ].forEach(regex=>{

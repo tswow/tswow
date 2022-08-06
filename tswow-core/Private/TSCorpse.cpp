@@ -36,7 +36,7 @@ TSCorpse::TSCorpse() : TSWorldObject()
  *
  * @return uint64 ownerGUID
  */
-uint64 TSCorpse::GetOwnerGUID()
+TSNumber<uint64> TSCorpse::GetOwnerGUID()
 {
     return TS_GUID(corpse->GetOwnerGUID());
 }
@@ -46,7 +46,7 @@ uint64 TSCorpse::GetOwnerGUID()
  *
  * @return uint32 ghostTime
  */
-uint32 TSCorpse::GetGhostTime()
+TSNumber<uint32> TSCorpse::GetGhostTime()
 {
     return corpse->GetGhostTime();
 }
@@ -62,7 +62,7 @@ uint32 TSCorpse::GetGhostTime()
  *
  * @return [CorpseType] corpseType
  */
-uint32 TSCorpse::GetType()
+TSNumber<uint32> TSCorpse::GetType()
 {
     return corpse->GetType();
 }

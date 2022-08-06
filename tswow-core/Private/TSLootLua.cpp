@@ -1,4 +1,5 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSLoot.h"
 
 void TSLua::load_loot_methods(sol::state& state)
@@ -18,12 +19,7 @@ void TSLua::load_loot_methods(sol::state& state)
     LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomPropertyID);
 
     auto ts_loot = state.new_usertype<TSLoot>("TSLoot");
-    ts_loot.set_function("AddItem", sol::overload(
-        &TSLoot::LAddItem0
-        , &TSLoot::LAddItem1
-        , &TSLoot::LAddItem2
-        , &TSLoot::LAddItem3
-    ));
+    LUA_FIELD_OVERLOAD_3_3(ts_loot, TSLoot, AddItem, uint32, uint8, uint8, uint16, bool, uint8);
     ts_loot.set_function("Filter", &TSLoot::LFilter);
     LUA_FIELD(ts_loot, TSLoot, Clear);
     LUA_FIELD(ts_loot, TSLoot, IsLooted);

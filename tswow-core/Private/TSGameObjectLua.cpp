@@ -1,8 +1,7 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSGameObject.h"
 #include "TSGameObjectTemplate.h"
-#include "TSWorldObjectLua.h"
-
 #include "TSPlayer.h"
 #include "TSGroup.h"
 #include "TSWorldObject.h"
@@ -16,7 +15,6 @@
 void TSLua::load_gameobject_methods(sol::state& state)
 {
     auto ts_gameobject = state.new_usertype<TSGameObject>("TSGameObject", sol::base_classes, sol::bases<TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
-    load_world_object_methods_t(state, ts_gameobject, "TSGameObject");
     LUA_FIELD(ts_gameobject, TSGameObject, HasQuest);
     LUA_FIELD(ts_gameobject, TSGameObject, IsSpawned);
     LUA_FIELD(ts_gameobject, TSGameObject, IsTransport);
@@ -38,10 +36,5 @@ void TSLua::load_gameobject_methods(sol::state& state)
     LUA_FIELD(ts_gameobject, TSGameObject, FireSmartEvent);
     LUA_FIELD(ts_gameobject, TSGameObject, IsAIEnabled);
     LUA_FIELD(ts_gameobject, TSGameObject, GetTemplate);
-    ts_gameobject.set_function("Despawn", sol::overload(
-          &TSGameObject::LDespawn0
-        , &TSGameObject::LDespawn1
-        , &TSGameObject::LDespawn2
-        , &TSGameObject::LDespawn3
-    ));
+    LUA_FIELD_OVERLOAD_0_3(ts_gameobject, TSGameObject, Despawn, bool, uint32, uint32);
 }

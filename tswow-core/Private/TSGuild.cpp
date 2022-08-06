@@ -53,7 +53,7 @@ TSArray<TSPlayer> TSGuild::GetMembers()
  *
  * @return uint32 memberCount
  */
-uint32 TSGuild::GetMemberCount()
+TSNumber<uint32> TSGuild::GetMemberCount()
 {
 #if defined TRINITY || AZEROTHCORE
     return guild->GetMemberCount();
@@ -81,7 +81,7 @@ TSPlayer  TSGuild::GetLeader()
  *
  * @return uint64 leaderGUID
  */
-uint64 TSGuild::GetLeaderGUID()
+TSNumber<uint64> TSGuild::GetLeaderGUID()
 {
     return TS_GUID(guild->GetLeaderGUID());
 }
@@ -91,7 +91,7 @@ uint64 TSGuild::GetLeaderGUID()
  *
  * @return uint32 entryId
  */
-uint32 TSGuild::GetID()
+TSNumber<uint32> TSGuild::GetID()
 {
     return guild->GetId();
 }
@@ -101,9 +101,9 @@ uint32 TSGuild::GetID()
  *
  * @return string guildName
  */
-TSString TSGuild::GetName()
+std::string TSGuild::GetName()
 {
-     return TSString(guild->GetName());
+     return guild->GetName();
 }
 
 /**
@@ -111,9 +111,9 @@ TSString TSGuild::GetName()
  *
  * @return string guildMOTD
  */
-TSString TSGuild::GetMOTD()
+std::string TSGuild::GetMOTD()
 {
-     return TSString(guild->GetMOTD());
+     return guild->GetMOTD();
 }
 
 /**
@@ -121,12 +121,12 @@ TSString TSGuild::GetMOTD()
  *
  * @return string guildInfo
  */
-TSString TSGuild::GetInfo()
+std::string TSGuild::GetInfo()
 {
 #if defined TRINITY || AZEROTHCORE
-     return TSString(guild->GetInfo());
+     return guild->GetInfo();
 #else
-     return TSString(guild->GetGINFO());
+     return guild->GetGINFO();
 #endif
 }
 
@@ -155,10 +155,10 @@ void TSGuild::SetLeader(TSPlayer _player)
  * @param uint8 tabId : the ID of the tab specified
  * @param string info : the information to be set to the bank tab
  */
-void TSGuild::SetBankTabText(uint8 tabId,TSString text)
+void TSGuild::SetBankTabText(uint8 tabId,std::string const& text)
 {
 #if defined TRINITY || AZEROTHCORE
-    guild->SetBankTabText(tabId, text._value);
+    guild->SetBankTabText(tabId, text);
 #else
     guild->SetGuildBankTabText(tabId, text);
 #endif
@@ -283,41 +283,12 @@ TSLua::Array<TSPlayer> TSGuild::LGetMembers()
     return sol::as_table(*GetMembers().vec);
 }
 
-std::string TSGuild::LGetName()
-{
-    return GetName().std_str();
-}
-std::string TSGuild::LGetMOTD()
-{
-    return GetMOTD().std_str();
-}
-
-std::string TSGuild::LGetInfo()
-{
-    return GetInfo().std_str();
-}
-
-void TSGuild::LSendPacket(TSWorldPacket data)
-{
-    SendPacket(data);
-}
-
-void TSGuild::LSendPacketToRanked(TSWorldPacket data, uint8 ranked)
-{
-    SendPacketToRanked(data, ranked);
-}
-
 TSGuild GetGuild(uint32 id)
 {
     return TSGuild(sGuildMgr->GetGuildById(id));
 }
 
-TSGuild GetGuildByName(TSString name)
-{
-    return TSGuild(sGuildMgr->GetGuildByName(name.std_str()));
-}
-
-TSGuild LGetGuildByName(std::string const& name)
+TSGuild GetGuildByName(std::string const& name)
 {
     return TSGuild(sGuildMgr->GetGuildByName(name));
 }

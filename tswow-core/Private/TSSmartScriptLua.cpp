@@ -1,4 +1,5 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSSmartScript.h"
 
 #include "TSUnit.h"
@@ -23,10 +24,7 @@ void TSLua::load_smartscript_methods(sol::state& state)
     LUA_FIELD(ts_condition, TSCondition, GetConditionTarget);
     LUA_FIELD(ts_condition, TSCondition, IsNegativeCondition);
     LUA_FIELD(ts_condition, TSCondition, IsNull);
-    ts_condition.set_function("ToString", sol::overload(
-        &TSCondition::LToString0
-        , &TSCondition::LToString1
-    ));
+    LUA_FIELD_OVERLOAD_0_1(ts_condition, TSCondition, ToString, bool);
 
     auto ts_conditionsourceinfo = state.new_usertype<TSConditionSourceInfo>("TSConditionSourceInfo");
     LUA_FIELD(ts_conditionsourceinfo, TSConditionSourceInfo, GetTarget);

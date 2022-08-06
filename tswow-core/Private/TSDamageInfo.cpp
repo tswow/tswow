@@ -25,7 +25,7 @@ TSUnit TSMeleeDamageInfo::GetTarget()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetSchool1()
+TSNumber<uint32> TSMeleeDamageInfo::GetSchool1()
 {
 #if TRINITY
     return _info->Damages[0].DamageSchoolMask;
@@ -35,7 +35,7 @@ uint32 TSMeleeDamageInfo::GetSchool1()
 
 }
 
-uint32 TSMeleeDamageInfo::GetSchool2()
+TSNumber<uint32> TSMeleeDamageInfo::GetSchool2()
 {
 #if TRINITY
     return _info->Damages[1].DamageSchoolMask;
@@ -45,7 +45,7 @@ uint32 TSMeleeDamageInfo::GetSchool2()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetDamage1()
+TSNumber<uint32> TSMeleeDamageInfo::GetDamage1()
 {
 #if TRINITY
     return _info->Damages[0].Damage;
@@ -54,7 +54,7 @@ uint32 TSMeleeDamageInfo::GetDamage1()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetDamage2()
+TSNumber<uint32> TSMeleeDamageInfo::GetDamage2()
 {
 #if TRINITY
     return _info->Damages[1].Damage;
@@ -64,7 +64,7 @@ uint32 TSMeleeDamageInfo::GetDamage2()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetAbsorb1()
+TSNumber<uint32> TSMeleeDamageInfo::GetAbsorb1()
 {
 #if TRINITY
     return _info->Damages[0].Absorb;
@@ -73,7 +73,7 @@ uint32 TSMeleeDamageInfo::GetAbsorb1()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetAbsorb2()
+TSNumber<uint32> TSMeleeDamageInfo::GetAbsorb2()
 {
 #if TRINITY
     return _info->Damages[1].Absorb;
@@ -83,7 +83,7 @@ uint32 TSMeleeDamageInfo::GetAbsorb2()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetResist1()
+TSNumber<uint32> TSMeleeDamageInfo::GetResist1()
 {
 #if TRINITY
     return _info->Damages[0].Resist;
@@ -93,7 +93,7 @@ uint32 TSMeleeDamageInfo::GetResist1()
 
 }
 
-uint32 TSMeleeDamageInfo::GetResist2()
+TSNumber<uint32> TSMeleeDamageInfo::GetResist2()
 {
 #if TRINITY
     return _info->Damages[1].Resist;
@@ -103,7 +103,7 @@ uint32 TSMeleeDamageInfo::GetResist2()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetBlocked()
+TSNumber<uint32> TSMeleeDamageInfo::GetBlocked()
 {
 #if TRINITY
     return _info->Blocked;
@@ -112,17 +112,17 @@ uint32 TSMeleeDamageInfo::GetBlocked()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetHitInfo()
+TSNumber<uint32> TSMeleeDamageInfo::GetHitInfo()
 {
     return _info->HitInfo;
 }
 
-uint32 TSMeleeDamageInfo::GetTargetState()
+TSNumber<uint32> TSMeleeDamageInfo::GetTargetState()
 {
     return _info->TargetState;
 }
 
-uint32 TSMeleeDamageInfo::GetAttackType()
+TSNumber<uint32> TSMeleeDamageInfo::GetAttackType()
 {
 #if TRINITY
     return _info->AttackType;
@@ -131,7 +131,7 @@ uint32 TSMeleeDamageInfo::GetAttackType()
 #endif 
 }
 
-uint32 TSMeleeDamageInfo::GetProcAttacker()
+TSNumber<uint32> TSMeleeDamageInfo::GetProcAttacker()
 {
 #if TRINITY
     return _info->ProcAttacker;
@@ -140,7 +140,7 @@ uint32 TSMeleeDamageInfo::GetProcAttacker()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetProcVictim()
+TSNumber<uint32> TSMeleeDamageInfo::GetProcVictim()
 {
 #if TRINITY
     return _info->ProcVictim;
@@ -149,7 +149,7 @@ uint32 TSMeleeDamageInfo::GetProcVictim()
 #endif
 }
 
-uint32 TSMeleeDamageInfo::GetCleanDamage()
+TSNumber<uint32> TSMeleeDamageInfo::GetCleanDamage()
 {
 #if TRINITY
     return _info->CleanDamage;
@@ -158,7 +158,7 @@ uint32 TSMeleeDamageInfo::GetCleanDamage()
 #endif
 }
 
-uint8 TSMeleeDamageInfo::GetMeleeHitOutcome()
+TSNumber<uint8> TSMeleeDamageInfo::GetMeleeHitOutcome()
 {
 #if TRINITY
     return _info->HitOutCome;
@@ -181,7 +181,7 @@ TSUnit TSSpellDamageInfo::GetTarget()
     return TSUnit(_info->target);
 }
 
-uint32 TSSpellDamageInfo::GetSpellID()
+TSNumber<uint32> TSSpellDamageInfo::GetSpellID()
 {
 #if TRINITY
     return _info->SpellID;
@@ -190,27 +190,27 @@ uint32 TSSpellDamageInfo::GetSpellID()
 #endif
 }
 
-uint32 TSSpellDamageInfo::GetDamage()
+TSNumber<uint32> TSSpellDamageInfo::GetDamage()
 {
     return _info->damage;
 }
 
-uint32 TSSpellDamageInfo::GetOverkill()
+TSNumber<uint32> TSSpellDamageInfo::GetOverkill()
 {
     return _info->overkill;
 }
 
-uint32 TSSpellDamageInfo::GetSchoolMask()
+TSNumber<uint32> TSSpellDamageInfo::GetSchoolMask()
 {
     return _info->schoolMask;
 }
 
-uint32 TSSpellDamageInfo::GetAbsorb()
+TSNumber<uint32> TSSpellDamageInfo::GetAbsorb()
 {
     return _info->absorb;
 }
 
-uint32 TSSpellDamageInfo::GetResist()
+TSNumber<uint32> TSSpellDamageInfo::GetResist()
 {
     return _info->resist;
 }
@@ -231,17 +231,17 @@ bool TSSpellDamageInfo::GetUnused()
     return _info->unused;
 }
 
-uint32 TSSpellDamageInfo::GetBlocked()
+TSNumber<uint32> TSSpellDamageInfo::GetBlocked()
 {
     return _info->blocked;
 }
 
-uint32 TSSpellDamageInfo::GetHitInfo()
+TSNumber<uint32> TSSpellDamageInfo::GetHitInfo()
 {
     return _info->HitInfo;
 }
 
-uint32 TSSpellDamageInfo::GetCleanDamage()
+TSNumber<uint32> TSSpellDamageInfo::GetCleanDamage()
 {
     return _info->cleanDamage;
 }
@@ -279,11 +279,11 @@ TSUnit TSHealInfo::GetTarget()
 {
     return TSUnit(m_info->GetTarget());
 }
-uint32 TSHealInfo::GetHeal()
+TSNumber<uint32> TSHealInfo::GetHeal()
 {
     return m_info->GetHeal();
 }
-uint32 TSHealInfo::GetEffectiveHeal()
+TSNumber<uint32> TSHealInfo::GetEffectiveHeal()
 {
 #if TRINITY
     return m_info->GetEffectiveHeal();
@@ -291,7 +291,7 @@ uint32 TSHealInfo::GetEffectiveHeal()
     TS_LOG_ERROR("tswow.api", "TSHealInfo::GetEffectiveHeal not implemented for AzerothCore");
 #endif
 }
-uint32 TSHealInfo::GetAbsorb()
+TSNumber<uint32> TSHealInfo::GetAbsorb()
 {
     return m_info->GetAbsorb();
 }
@@ -299,11 +299,11 @@ TSSpellInfo TSHealInfo::GetSpellInfo()
 {
     return TSSpellInfo(m_info->GetSpellInfo());
 }
-uint32 TSHealInfo::GetSchoolMask()
+TSNumber<uint32> TSHealInfo::GetSchoolMask()
 {
     return static_cast<uint32_t>(m_info->GetSchoolMask());
 }
-uint32 TSHealInfo::GetHitMask()
+TSNumber<uint32> TSHealInfo::GetHitMask()
 {
 #if TRINITY
     return m_info->GetHitMask();
@@ -344,32 +344,32 @@ TSSpellInfo TSDamageInfo::GetSpellInfo()
 {
     return TSSpellInfo(m_info->GetSpellInfo());
 }
-uint32 TSDamageInfo::GetSchoolMask()
+TSNumber<uint32> TSDamageInfo::GetSchoolMask()
 {
     return static_cast<uint32>(m_info->GetSchoolMask());
 }
-uint32 TSDamageInfo::GetDamageType()
+TSNumber<uint32> TSDamageInfo::GetDamageType()
 {
     return static_cast<uint32>(m_info->GetDamageType());
 }
-uint32 TSDamageInfo::GetAttackType()
+TSNumber<uint32> TSDamageInfo::GetAttackType()
 {
     return static_cast<uint32>(m_info->GetAttackType());
 }
 
-uint32 TSDamageInfo::GetDamage()
+TSNumber<uint32> TSDamageInfo::GetDamage()
 {
     return m_info->GetDamage();
 }
-uint32 TSDamageInfo::GetAbsorb()
+TSNumber<uint32> TSDamageInfo::GetAbsorb()
 {
     return m_info->GetAbsorb();
 }
-uint32 TSDamageInfo::GetBlock()
+TSNumber<uint32> TSDamageInfo::GetBlock()
 {
     return m_info->GetBlock();
 }
-uint32 TSDamageInfo::GetHitMask()
+TSNumber<uint32> TSDamageInfo::GetHitMask()
 {
 #if TRINITY
     return m_info->GetHitMask();

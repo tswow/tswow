@@ -23,7 +23,7 @@ void TSLua::load_packet_methods(sol::state& state)
     LUA_FIELD(ts_packetwrite, TSPacketWrite, SendToPlayer);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastMap);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastAround);
-    ts_packetwrite.set_function("WriteString", &TSPacketWrite::LWriteString);
+    LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteString);
 
     auto ts_packetread = state.new_usertype<TSPacketRead>("TSPacketRead");
     LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadUInt8, uint8);
@@ -36,19 +36,7 @@ void TSLua::load_packet_methods(sol::state& state)
     LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadInt64, int64);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadFloat, float);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadDouble, double);
-
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt8);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadInt8);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt16);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadInt16);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt32);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadInt32);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadUInt64);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadInt64);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadFloat);
-    LUA_FIELD(ts_packetread, TSPacketRead, ReadDouble);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_packetread, TSPacketRead, ReadString, std::string const&);
     LUA_FIELD(ts_packetread, TSPacketRead, Size);
-    ts_packetread.set_function("ReadString", sol::overload(&TSPacketRead::LReadString0,&TSPacketRead::LReadString1));
-
     state.set_function("CreateCustomPacket", CreateCustomPacket);
 }

@@ -154,6 +154,7 @@ export class Livescripts {
 
         config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.mod.path).get()
         config['include'] = ['livescripts','shared']
+        config['compilerOptions']['rootDir'] = this.path.dirname().abs().get();
         this.mod.path.livescript_tsconfig_temp.writeJson(config)
 
         let foundTs = false;
@@ -184,6 +185,11 @@ export class Livescripts {
                 }
             })
         })
+
+        if(Args.hasFlag('transpile-only',args)) {
+            term.log(this.logName(),`Successfully transpiled LiveScript Lua`)
+            return;
+        }
 
         buildDir.iterate('RECURSE','FILES','FULL', node => {
             let rel = node.relativeTo(buildDir)
@@ -252,7 +258,8 @@ export class Livescripts {
             throw new Error(`Failed to compile LiveScripts`);
         }
 
-        if(args.includes('--transpile-only')) {
+        if(Args.hasFlag('transpile-only',args)) {
+            term.log(this.logName(),`Successfully transpiled LiveScript C++`)
             return;
         }
 
@@ -325,14 +332,17 @@ export class Livescripts {
         // Init
         this.initialize();
         const timer = Timer.start();
+        const isTranspileOnly = Args.hasFlag('transpile-only',args)
 
         // Delete old versions of the scripts
-        this.luaInstallPath(dataset).remove();
-        BUILD_TYPES.forEach(x=>{
-            dataset.path.lib.join(x,this.mod.fullName+'.dll').remove();
-            dataset.path.lib.join(x,this.mod.fullName+'.so').remove();
-            dataset.path.lib.join(x,this.mod.fullName+'.pdb').remove();
-        })
+        if(!isTranspileOnly) {
+            this.luaInstallPath(dataset).remove();
+            BUILD_TYPES.forEach(x=>{
+                dataset.path.lib.join(x,this.mod.fullName+'.dll').remove();
+                dataset.path.lib.join(x,this.mod.fullName+'.so').remove();
+                dataset.path.lib.join(x,this.mod.fullName+'.pdb').remove();
+            })
+        }
 
         // Build datascripts
         if(this.mod.datascripts.exists() && ! Args.hasFlag('--no-inline',args) && this.config.InlineScripts) {
@@ -356,9 +366,11 @@ export class Livescripts {
         }
 
         // Reload
-        dataset.realms()
-            .filter(x=>x.worldserver.isRunning())
-            .forEach(x=>x.worldserver.send(`reload livescripts`))
+        if(!isTranspileOnly) {
+            dataset.realms()
+                .filter(x=>x.worldserver.isRunning())
+                .forEach(x=>x.worldserver.send(`reload livescripts`))
+        }
 
         term.log(this.logName(),`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)
     }

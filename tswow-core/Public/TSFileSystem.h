@@ -17,10 +17,9 @@
 
 #include "TSBase.h"
 #include "TSMain.h"
-#include "TSString.h"
 
-TC_GAME_API TSString ReadFile(TSString file, TSString def = JSTR(""));
-TC_GAME_API void WriteFile(TSString file, TSString value);
-TC_GAME_API void AppendFile(TSString file, TSString value);
-TC_GAME_API bool FileExists(TSString file);
-TC_GAME_API TSArray<TSString> ReadDirectory(TSString directory);
+TC_GAME_API std::string ReadFile(std::string const& file, std::string const& def = "");
+TC_GAME_API void WriteFile(std::string const& file, std::string const& value);
+TC_GAME_API void AppendFile(std::string const& file, std::string const& value);
+TC_GAME_API bool FileExists(std::string const& file);
+TC_GAME_API TSArray<std::string> ReadDirectory(std::string const& directory);

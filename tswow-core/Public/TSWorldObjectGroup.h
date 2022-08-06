@@ -20,7 +20,7 @@ public:
 
     std::set<TSWorldObject>::iterator begin();
     std::set<TSWorldObject>::iterator end();
-    uint32_t get_length();
+    TSNumber<uint32> get_length();
 
     void forEach(std::function<void(TSWorldObject)> callback);
     void filterInPlace(std::function<bool(TSWorldObject)> callback);
@@ -29,7 +29,7 @@ public:
 class TC_GAME_API TSWorldObjectGroups {
     std::map<std::string, TSWorldObjectGroup> groups;
 public:
-    TSWorldObjectGroup* GetGroup(TSString key);
-    void RemoveGroup(TSString key);
+    TSWorldObjectGroup* GetGroup(std::string const& key);
+    void RemoveGroup(std::string const& key);
     void ClearGroups();
 };

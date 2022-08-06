@@ -80,16 +80,4 @@ private:
 
     template <typename C, typename T>
     static void load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_map_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_object_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_world_object_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_unit_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 };

@@ -18,14 +18,19 @@ void TSLua::load_guild_methods(sol::state& state)
     LUA_FIELD(ts_guild, TSGuild, AddMember);
     LUA_FIELD(ts_guild, TSGuild, DeleteMember);
     LUA_FIELD(ts_guild, TSGuild, SetMemberRank);
-    ts_guild.set_function("GetMembers", &TSGuild::LGetMembers);
-    ts_guild.set_function("GetName", &TSGuild::LGetName);
-    ts_guild.set_function("GetMOTD", &TSGuild::LGetMOTD);
-    ts_guild.set_function("GetInfo", &TSGuild::LGetInfo);
-    ts_guild.set_function("SendPacket", &TSGuild::LSendPacket);
-    ts_guild.set_function("SendPacketToRanked", &TSGuild::LSendPacketToRanked);
-
-    state.set_function("GetGuildByName", LGetGuildByName);
+    LUA_FIELD(ts_guild, TSGuild, GetMembers);
+    LUA_FIELD(ts_guild, TSGuild, GetName);
+    LUA_FIELD(ts_guild, TSGuild, GetMOTD);
+    LUA_FIELD(ts_guild, TSGuild, GetInfo);
+    ts_guild.set_function("SendPacket", sol::overload(
+        [](TSGuild& guild, TSWorldPacket data) { guild.SendPacket(data); },
+        [](TSGuild& guild, std::shared_ptr<TSWorldPacket> data) { guild.SendPacket(data); }
+    ));
+    ts_guild.set_function("SendPacketToRanked", sol::overload(
+        [](TSGuild& guild, TSWorldPacket data, uint8 ranked) { guild.SendPacketToRanked(data, ranked); },
+        [](TSGuild& guild, std::shared_ptr<TSWorldPacket> data, uint8 ranked) { guild.SendPacketToRanked(data, ranked); }
+    ));
+    state.set_function("GetGuildByName", GetGuildByName);
     state.set_function("GetGuild", GetGuild);
     state.set_function("GetGuildByLeader", GetGuildByLeader);
 }

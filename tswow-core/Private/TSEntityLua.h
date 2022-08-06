@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSEntity.h"
 #include "TSJsonLua.h"
 
@@ -8,16 +9,18 @@ template <typename T>
 void TSLua::load_entity_methods_t(sol::state& state, sol::usertype<T> & target, std::string const& name)
 {
     load_json_methods_t<TSEntityProvider, T>(state, target, name);
-    target.set_function("SetUInt", &TSEntityProvider::LSetUInt);
-    target.set_function("GetUInt", sol::overload(&TSEntityProvider::LGetUInt0, &TSEntityProvider::LGetUInt1));
-    target.set_function("HasUInt", &TSEntityProvider::LHasUInt);
-    target.set_function("SetInt", &TSEntityProvider::LSetInt);
-    target.set_function("GetInt", sol::overload(&TSEntityProvider::LGetInt0, &TSEntityProvider::LGetInt1));
-    target.set_function("HasInt", &TSEntityProvider::LHasInt);
-    target.set_function("SetFloat", &TSEntityProvider::LSetFloat);
-    target.set_function("GetFloat", sol::overload(&TSEntityProvider::LGetFloat0, &TSEntityProvider::LGetFloat1));
-    target.set_function("HasFloat", &TSEntityProvider::LHasFloat);
-    target.set_function("HasObject", &TSEntityProvider::LHasObject);
+    LUA_FIELD(target, TSEntityProvider, SetUInt);
+    LUA_FIELD(target, TSEntityProvider, HasUInt);
+    LUA_FIELD(target, TSEntityProvider, SetInt);
+    LUA_FIELD(target, TSEntityProvider, HasInt);
+    LUA_FIELD(target, TSEntityProvider, SetFloat);
+    LUA_FIELD(target, TSEntityProvider, HasFloat);
+    LUA_FIELD(target, TSEntityProvider, HasObject);
+    
+    LUA_FIELD_OVERLOAD_RET_1_1(target, TSEntityProvider, GetUInt, std::string const&, uint32_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, TSEntityProvider, GetInt, std::string const&, int32_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, TSEntityProvider, GetFloat, std::string const&, float);
+
     target.set_function("GetObject", [=](TSEntityProvider& prov, std::string const& key, sol::table def) {
         return prov.LGetObject(key, def);
     });

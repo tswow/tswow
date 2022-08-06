@@ -44,7 +44,7 @@ static void writeArray(TSJsonArray self, nlohmann::json& json)
             json.push_back(std::get<double>(value.m_value));
             break;
         case JsonType::STRING:
-            json.push_back(std::get<TSString>(value.m_value));
+            json.push_back(std::get<std::string>(value.m_value));
             break;
         case JsonType::BOOL:
             json.push_back(std::get<bool>(value.m_value));
@@ -89,7 +89,7 @@ static void readArray(TSJsonArray self, nlohmann::json const& source)
             self.PushBool(val);
             break;
         case nlohmann::json::value_t::string:
-            self.PushString(TSString(val));
+            self.PushString(val);
             break;
         case nlohmann::json::value_t::object: {
             TSJsonObject obj;
@@ -120,7 +120,7 @@ static void writeObject(TSJsonObject self, nlohmann::json& target)
             target[pair.first] = std::get<double>(pair.second.m_value);
             break;
         case JsonType::STRING:
-            target[pair.first] = std::get<TSString>(pair.second.m_value);
+            target[pair.first] = std::get<std::string>(pair.second.m_value);
             break;
         case JsonType::BOOL:
             target[pair.first] = std::get<bool>(pair.second.m_value);
@@ -152,28 +152,28 @@ static void readObject(TSJsonObject self, nlohmann::json const& source)
         case nlohmann::json::value_t::number_float:
         case nlohmann::json::value_t::number_integer:
         case nlohmann::json::value_t::number_unsigned:
-            self.SetNumber(TSString(pair.key()), pair.value());
+            self.SetNumber(pair.key(), pair.value());
             break;
         case nlohmann::json::value_t::boolean:
-            self.SetBool(TSString(pair.key()), pair.value());
+            self.SetBool(pair.key(), pair.value());
             break;
         case nlohmann::json::value_t::string:
-            self.SetString(TSString(pair.key()), TSString(pair.value()));
+            self.SetString(pair.key(), pair.value());
             break;
         case nlohmann::json::value_t::object: {
             TSJsonObject obj;
             readObject(obj, pair.value());
-            self.SetJsonObject(TSString(pair.key()), obj);
+            self.SetJsonObject(pair.key(), obj);
             break;
         }
         case nlohmann::json::value_t::array: {
             TSJsonArray arr;
             readArray(arr, pair.value());
-            self.SetJsonArray(TSString(pair.key()), arr);
+            self.SetJsonArray(pair.key(), arr);
             break;
         }
         case nlohmann::json::value_t::null: {
-            self.SetNull(TSString(pair.key()));
+            self.SetNull(pair.key());
         }
         }
     }
@@ -198,7 +198,7 @@ bool TSJsonObject::IsValid()
 }
 
 template <typename T>
-T TSJsonObject::get(TSString key, JsonType type, T value)
+T TSJsonObject::get(std::string const& key, JsonType type, T value)
 {
     if (contains(key, type))
     {
@@ -211,104 +211,104 @@ T TSJsonObject::get(TSString key, JsonType type, T value)
 }
 
 template <typename T>
-TSJsonObject TSJsonObject::set(TSString key, JsonType type, T value)
+TSJsonObject TSJsonObject::set(std::string const& key, JsonType type, T value)
 {
     (*m_tags)[key] = JsonTag(type, value);
     return *this;
 }
 
-bool TSJsonObject::contains(TSString key, JsonType type)
+bool TSJsonObject::contains(std::string const& key, JsonType type)
 {
-    return m_tags->find(key.std_str()) != m_tags->end()
-        && (*m_tags)[key.std_str()].m_type == type;
+    return m_tags->find(key) != m_tags->end()
+        && (*m_tags)[key].m_type == type;
 }
 
-TSJsonObject TSJsonObject::SetBool(TSString key, bool value)
+TSJsonObject TSJsonObject::SetBool(std::string const& key, bool value)
 {
     return set(key, JsonType::BOOL, value);
 }
-bool TSJsonObject::HasBool(TSString key)
+bool TSJsonObject::HasBool(std::string const& key)
 {
     return contains(key, JsonType::BOOL);
 }
 
-bool TSJsonObject::GetBool(TSString key, bool def)
+bool TSJsonObject::GetBool(std::string const& key, bool def)
 {
     return get(key, JsonType::BOOL, def);
 }
 
-TSJsonObject TSJsonObject::SetNumber(TSString key, double value)
+TSJsonObject TSJsonObject::SetNumber(std::string const& key, double value)
 {
     return set(key, JsonType::NUMBER, value);
 }
-bool TSJsonObject::HasNumber(TSString key)
+bool TSJsonObject::HasNumber(std::string const& key)
 {
     return contains(key, JsonType::NUMBER);
 }
 
-double TSJsonObject::GetNumber(TSString key, double def)
+double TSJsonObject::GetNumber(std::string const& key, double def)
 {
     return get(key, JsonType::NUMBER, def);
 }
 
-TSJsonObject TSJsonObject::SetString(TSString key, TSString value)
+TSJsonObject TSJsonObject::SetString(std::string const& key, std::string const& value)
 {
     return set(key, JsonType::STRING, value);
 }
-bool TSJsonObject::HasString(TSString key)
+bool TSJsonObject::HasString(std::string const& key)
 {
     return contains(key, JsonType::STRING);
 }
 
-TSString TSJsonObject::GetString(TSString key, TSString def)
+std::string TSJsonObject::GetString(std::string const& key, std::string const& def)
 {
     return get(key, JsonType::STRING, def);
 }
 
-TSJsonObject TSJsonObject::SetNull(TSString key)
+TSJsonObject TSJsonObject::SetNull(std::string const& key)
 {
     return set(key, JsonType::NULL_LITERAL, nullptr);
 }
 
-bool TSJsonObject::HasNull(TSString key)
+bool TSJsonObject::HasNull(std::string const& key)
 {
     return contains(key, JsonType::NULL_LITERAL);
 }
 
-TSJsonObject TSJsonObject::SetJsonObject(TSString key, TSJsonObject value)
+TSJsonObject TSJsonObject::SetJsonObject(std::string const& key, TSJsonObject value)
 {
     return set(key, JsonType::OBJECT, value);
 }
 
-bool TSJsonObject::HasJsonObject(TSString key)
+bool TSJsonObject::HasJsonObject(std::string const& key)
 {
     return contains(key, JsonType::OBJECT);
 }
 
-TSJsonObject TSJsonObject::GetJsonObject(TSString key, TSJsonObject value)
+TSJsonObject TSJsonObject::GetJsonObject(std::string const& key, TSJsonObject value)
 {
     return get(key, JsonType::OBJECT, value);
 }
 
-TSJsonObject TSJsonObject::SetJsonArray(TSString key, TSJsonArray value = TSJsonArray())
+TSJsonObject TSJsonObject::SetJsonArray(std::string const& key, TSJsonArray value = TSJsonArray())
 {
     return set(key, JsonType::LIST, value);
 }
 
-bool TSJsonObject::HasJsonArray(TSString key)
+bool TSJsonObject::HasJsonArray(std::string const& key)
 {
     return contains(key, JsonType::LIST);
 }
 
-TSJsonArray TSJsonObject::GetJsonArray(TSString key, TSJsonArray value = TSJsonArray())
+TSJsonArray TSJsonObject::GetJsonArray(std::string const& key, TSJsonArray value = TSJsonArray())
 {
     return get(key, JsonType::LIST, value);
 }
 
-void TSJsonObject::Parse(TSString json)
+void TSJsonObject::Parse(std::string const& json)
 {
     try {
-        readObject(*this, nlohmann::json::parse(json.std_str()));
+        readObject(*this, nlohmann::json::parse(json));
         m_is_valid = true;
     }
     catch (std::exception e)
@@ -317,24 +317,24 @@ void TSJsonObject::Parse(TSString json)
     }
 }
 
-TSString TSJsonObject::toString(int indents)
+std::string TSJsonObject::toString(int indents)
 {
     if (m_tags->size() == 0)
     {
-        return JSTR("{}");
+        return "{}";
     }
     nlohmann::json json = nlohmann::json::object();
     writeObject(*this, json);
-    return TSString(indents >= 0 ? json.dump(indents) : json.dump());
+    return indents >= 0 ? json.dump(indents) : json.dump();
 }
 
-TSJsonObject TSJsonObject::Remove(TSString key)
+TSJsonObject TSJsonObject::Remove(std::string const& key)
 {
-    m_tags->erase(key.std_str());
+    m_tags->erase(key);
     return *this;
 }
 
-unsigned TSJsonObject::get_length()
+TSNumber<unsigned> TSJsonObject::get_length()
 {
     return m_tags->size();
 }
@@ -444,7 +444,7 @@ TSJsonArray TSJsonArray::PushNumber(double value)
     return push(JsonType::NUMBER, value);
 }
 
-TSJsonArray TSJsonArray::SetString(unsigned key, TSString value)
+TSJsonArray TSJsonArray::SetString(unsigned key, std::string const& value)
 {
     return set(key, JsonType::STRING, value);
 }
@@ -454,7 +454,7 @@ bool TSJsonArray::HasString(unsigned key)
     return contains(key, JsonType::STRING);
 }
 
-TSString TSJsonArray::GetString(unsigned key, TSString def)
+std::string TSJsonArray::GetString(unsigned key, std::string const& def)
 {
     return get(key, JsonType::STRING, def);
 }
@@ -479,12 +479,12 @@ TSJsonArray TSJsonArray::PushNull()
     return push(JsonType::NULL_LITERAL, nullptr);
 }
 
-TSJsonArray TSJsonArray::InsertString(unsigned key, TSString value)
+TSJsonArray TSJsonArray::InsertString(unsigned key, std::string const& value)
 {
     return insert(key, JsonType::STRING, value);
 }
 
-TSJsonArray TSJsonArray::PushString(TSString value)
+TSJsonArray TSJsonArray::PushString(std::string const& value)
 {
     return push(JsonType::STRING, value);
 }
@@ -539,15 +539,15 @@ TSJsonArray TSJsonArray::PushJsonArray(TSJsonArray value)
     return push(JsonType::LIST, value);
 }
 
-TSString TSJsonArray::toString(int indents)
+std::string TSJsonArray::toString(int indents)
 {
     if (m_tags->size() == 0)
     {
-        return JSTR("[]");
+        return "[]";
     }
     nlohmann::json json = nlohmann::json::array();
     writeArray(*this, json);
-    return TSString(indents >= 0 ? json.dump(indents) : json.dump());
+    return indents >= 0 ? json.dump(indents) : json.dump();
 }
 
 TSJsonArray TSJsonArray::Remove(unsigned key)
@@ -556,10 +556,10 @@ TSJsonArray TSJsonArray::Remove(unsigned key)
     return *this;
 }
 
-void TSJsonArray::Parse(TSString json)
+void TSJsonArray::Parse(std::string const& json)
 {
     try {
-        readArray(*this, nlohmann::json::parse(json.std_str()));
+        readArray(*this, nlohmann::json::parse(json));
         m_is_valid = true;
     }
     catch (std::exception e)
@@ -568,232 +568,7 @@ void TSJsonArray::Parse(TSString json)
     }
 }
 
-unsigned TSJsonArray::get_length()
+TSNumber<unsigned> TSJsonArray::get_length()
 {
     return m_tags->size();
 }
-
-TSJsonObject TSJsonObject::LSetBool(std::string const& key, bool value)
-{
-    return SetBool(key, value);
-}
-bool TSJsonObject::LHasBool(std::string const& key)
-{
-    return HasBool(key);
-}
-bool TSJsonObject::LGetBool0(std::string const& key, bool def)
-{
-    return GetBool(key, def);
-}
-bool TSJsonObject::LGetBool1(std::string const& key)
-{
-    return GetBool(key);
-}
-
-TSJsonObject TSJsonObject::LSetNumber(std::string const& key, double number)
-{
-    return SetNumber(key, number);
-}
-bool TSJsonObject::LHasNumber(std::string const& key)
-{
-    return HasNumber(key);
-}
-double TSJsonObject::LGetNumber0(std::string const& key, double def)
-{
-    return GetNumber(key, def);
-}
-double TSJsonObject::LGetNumber1(std::string const& key)
-{
-    return GetNumber(key);
-}
-
-TSJsonObject TSJsonObject::LSetString(std::string const& key, std::string const& number)
-{
-    return SetString(key, number);
-}
-bool TSJsonObject::LHasString(std::string const& key)
-{
-    return HasString(key);
-}
-std::string TSJsonObject::LGetString0(std::string const& key, std::string const& def)
-{
-    return GetString(key, def);
-}
-std::string TSJsonObject::LGetString1(std::string const& key)
-{
-    return GetString(key);
-}
-
-TSJsonObject TSJsonObject::LSetNull(std::string const& key)
-{
-    return SetNull(key);
-}
-bool TSJsonObject::lHasNull(std::string const& key)
-{
-    return HasNull(key);
-}
-
-TSJsonObject TSJsonObject::LSetJsonObject(std::string const& key, TSJsonObject value)
-{
-    return SetJsonObject(key, value);
-}
-bool TSJsonObject::LHasJsonObject(std::string const& key)
-{
-    return HasJsonObject(key);
-}
-TSJsonObject TSJsonObject::LGetJsonObject0(std::string const& key, TSJsonObject value)
-{
-    return GetJsonObject(key, value);
-}
-TSJsonObject TSJsonObject::LGetJsonObject1(std::string const& key)
-{
-    return GetJsonObject(key);
-}
-
-TSJsonArray TSJsonObject::LGetJsonArray0(std::string const& key, TSJsonArray arr)
-{
-    return GetJsonArray(key, arr);
-}
-TSJsonArray TSJsonObject::LGetJsonArray1(std::string const& key)
-{
-    return GetJsonArray(key);
-}
-bool TSJsonObject::LHasJsonArray(std::string const& key)
-{
-    return HasJsonArray(key);
-}
-TSJsonObject TSJsonObject::LSetJsonArray(std::string const& key, TSJsonArray value)
-{
-    return SetJsonArray(key, value);
-}
-std::string TSJsonObject::LtoString0(int indents)
-{
-    return toString(indents);
-}
-std::string TSJsonObject::LtoString1()
-{
-    return toString();
-}
-TSJsonObject TSJsonObject::LRemove(std::string const& key)
-{
-    return Remove(key);
-}
-
-bool TSJsonArray::LGetBool0(unsigned key, bool def)
-{
-    return GetBool(key, def);
-}
-bool TSJsonArray::LGetBool1(unsigned key)
-{
-    return GetBool(key);
-}
-double TSJsonArray::LGetNumber0(unsigned key, double def)
-{
-    return GetNumber(key, def);
-}
-double TSJsonArray::LGetNumber1(unsigned key)
-{
-    return GetNumber(key);
-}
-
-std::string TSJsonArray::LGetString0(unsigned key, std::string const& def)
-{
-    return GetString(key, def);
-}
-std::string TSJsonArray::LGetString1(unsigned key)
-{
-    return GetString(key);
-}
-
-TSJsonArray TSJsonArray::LInsertString(unsigned key, std::string const& value)
-{
-    return InsertString(key, value);
-}
-TSJsonArray TSJsonArray::LPushString(std::string const& value)
-{
-    return PushString(value);
-}
-
-TSJsonArray TSJsonArray::LSetJsonObject0(unsigned key, TSJsonObject value)
-{
-    return SetJsonObject(key, value);
-}
-TSJsonArray TSJsonArray::LSetJsonObject1(unsigned key)
-{
-    return SetJsonObject(key);
-}
-TSJsonObject TSJsonArray::LGetJsonObject0(unsigned key, TSJsonObject value)
-{
-    return GetJsonObject(key, value);
-}
-TSJsonObject TSJsonArray::LGetJsonObject1(unsigned key)
-{
-    return GetJsonObject(key);
-}
-TSJsonArray TSJsonArray::LInsertJsonObject0(unsigned key, TSJsonObject value)
-{
-    return InsertJsonObject(key, value);
-}
-TSJsonArray TSJsonArray::LInsertJsonObject1(unsigned key)
-{
-    return InsertJsonObject(key);
-}
-
-TSJsonArray TSJsonArray::LPushJsonObject0(TSJsonObject value)
-{
-    return PushJsonObject(value);
-}
-TSJsonArray TSJsonArray::LPushJsonObject1()
-{
-    return PushJsonObject();
-}
-
-TSJsonArray TSJsonArray::LSetJsonArray0(unsigned key, TSJsonArray arr)
-{
-    return SetJsonArray(key, arr);
-}
-TSJsonArray TSJsonArray::LSetJsonArray1(unsigned key)
-{
-    return SetJsonArray(key);
-}
-
-TSJsonArray TSJsonArray::LGetJsonArray0(unsigned key, TSJsonArray value)
-{
-    return GetJsonArray(key, value);
-}
-TSJsonArray TSJsonArray::LGetJsonArray1(unsigned key)
-{
-    return GetJsonArray(key);
-}
-TSJsonArray TSJsonArray::LInsertJsonArray0(unsigned key, TSJsonArray value)
-{
-    return InsertJsonArray(key, value);
-}
-TSJsonArray TSJsonArray::LInsertJsonArray1(unsigned key)
-{
-    return InsertJsonArray(key);
-}
-
-TSJsonArray TSJsonArray::LPushJsonArray0(TSJsonArray value)
-{
-    return PushJsonArray(value);
-}
-TSJsonArray TSJsonArray::LPushJsonArray1()
-{
-    return PushJsonArray();
-}
-
-TSString TSJsonArray::LtoString0(int indents)
-{
-    return toString(indents);
-}
-TSString TSJsonArray::LtoString1()
-{
-    return toString();
-}
-
-TSJsonArray TSJsonArray::LSetString(unsigned key, std::string const& number)
-{
-    return SetString(key, number);
-}
-

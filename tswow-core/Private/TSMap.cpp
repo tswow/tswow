@@ -130,9 +130,9 @@ bool TSMap::IsRaid()
  *
  * @return string mapName
  */
-TSString TSMap::GetName()
+std::string TSMap::GetName()
 {
-     return TSString(map->GetMapName());
+     return map->GetMapName();
 }
 
 /**
@@ -144,7 +144,7 @@ TSString TSMap::GetName()
  * @param float y
  * @return float z
  */
-float TSMap::GetHeight(float x,float y,uint32 phasemask)
+TSNumber<float> TSMap::GetHeight(float x,float y,uint32 phasemask)
 {
 #if (defined(TBC) || defined(CLASSIC))
     return map->GetHeight(x, y, MAX_HEIGHT);
@@ -160,7 +160,7 @@ float TSMap::GetHeight(float x,float y,uint32 phasemask)
  *
  * @return int32 difficulty
  */
-int32 TSMap::GetDifficulty()
+TSNumber<int32> TSMap::GetDifficulty()
 {
 #ifndef CLASSIC
     return map->GetDifficulty();
@@ -174,7 +174,7 @@ int32 TSMap::GetDifficulty()
  *
  * @return uint32 instanceId
  */
-uint32 TSMap::GetInstanceID()
+TSNumber<uint32> TSMap::GetInstanceID()
 {
     return map->GetInstanceId();
 }
@@ -184,7 +184,7 @@ uint32 TSMap::GetInstanceID()
  *
  * @return uint32 playerCount
  */
-uint32 TSMap::GetPlayerCount()
+TSNumber<uint32> TSMap::GetPlayerCount()
 {
     return map->GetPlayersCountExceptGMs();
 }
@@ -194,7 +194,7 @@ uint32 TSMap::GetPlayerCount()
  *
  * @return uint32 mapId
  */
-uint32 TSMap::GetMapID()
+TSNumber<uint32> TSMap::GetMapID()
 {
     return map->GetId();
 }
@@ -208,7 +208,7 @@ uint32 TSMap::GetMapID()
  * @param uint32 phasemask = PHASEMASK_NORMAL
  * @return uint32 areaId
  */
-uint32 TSMap::GetAreaID(float x,float y,float z,float phasemask)
+TSNumber<uint32> TSMap::GetAreaID(float x,float y,float z,float phasemask)
 {
     return map->GetAreaId(phasemask, x, y, z);
 }
@@ -483,10 +483,6 @@ void TSMap::LDoDelayed(sol::function callback)
 #endif
 }
 
-std::string TSMap::LGetName()
-{
-    return GetName().std_str();
-}
 TSLua::Array<TSPlayer> TSMap::LGetPlayers0(uint32 team)
 {
     return sol::as_table(*GetPlayers(team).vec);
