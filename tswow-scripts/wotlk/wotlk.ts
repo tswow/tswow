@@ -25,6 +25,7 @@ import { AreaRegistry } from "./std/Area/Area";
 import { AreaGroupRegistry } from "./std/Area/AreaGroup";
 import { WMOAreaRegistry } from "./std/Area/WMOArea";
 import { AreaTriggerRegistry } from "./std/AreaTrigger/AreaTrigger";
+import { BotRegistry } from './std/Bots/Bots';
 import { BroadcastTextRegistry } from "./std/BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./std/BroadcastText/CreatureText";
 import { ClassRegistry } from "./std/Class/ClassRegistry";
@@ -180,6 +181,7 @@ export const std = {
     TotemCategory: TotemCategoryRegistry,
     BroadcastTexts: BroadcastTextRegistry,
     CreatureTexts: CreatureTextRegistry,
+    Bots: BotRegistry,
     Keys: KeyRegistry,
     SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,

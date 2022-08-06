@@ -94,6 +94,9 @@ export const Ids = {
     /** Starts at 39 , Highest base value is 38 */
     Language: new StaticIDGenerator('Languages',39),
 
+    /** Starts at 1 */
+    Bots: new StaticIDGenerator('Bots',1),
+
     /** Start at 80900, Highest base value is 80864, capped at 1999999 */
     Spell: new StaticIDGenerator('Spell',80900),
 

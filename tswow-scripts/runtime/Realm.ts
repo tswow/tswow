@@ -371,6 +371,7 @@ export class Realm {
 
     startBots(type: BuildType) {
         patchTCConfig(this.path.bots_conf.get(), 'Lua.Path', this.config.Dataset.path.lib.bots.abs().get('FORWARD'))
+        patchTCConfig(this.path.bots_conf.get(), 'Accounts.Path', this.config.Dataset.path.accounts_json.abs().get('FORWARD'))
         this.bots.startIn(this.path.get(),wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).bots_app.get()))
     }
 

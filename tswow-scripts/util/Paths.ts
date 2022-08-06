@@ -41,6 +41,7 @@ export function DatasetDirectory(inPath: string, inName: string) {
         dbc_temp: dir({
             dbc: dir({}),
         }),
+        accounts_json: file('accounts.json'),
         lib: dir({
             lua: dir({}),
             include_lua: dirn('lualib',{}),
