@@ -89,17 +89,26 @@ export class Bots {
                         }
                     })
 
+                    let lualib_bundle: string|undefined;
                     if(buildPath.exists()) {
                         buildPath.iterate('RECURSE','FILES','FULL', node => {
                             let rel = node.relativeTo(buildPath)
+                            if(rel.get() === 'lualib_bundle.lua') {
+                                lualib_bundle = node.toFile().readString();
+                            }
                             let file = subPath.join(rel)
                             if(node.endsWith('.lua') && !file.withExtension('.ts',true).exists() && !file.withExtension('.lua',true).exists()) {
-                                term.log('bots',`Cleaning up removed lua file ${rel.get()}`)
+                                if(rel.get() !== 'lualib_bundle.lua') {
+                                    term.log('bots',`Cleaning up removed lua file ${rel.get()}`)
+                                }
                                 node.remove();
                             }
                         })
                         let installPath = dataset.path.lib.bots.join(name,x.mod.fullName)
                         buildPath.copy(installPath);
+                        if(lualib_bundle) {
+                            dataset.path.lib.bots.join(name,'lualib_bundle.lua').toFile().write(lualib_bundle)
+                        }
                         installPath.iterate('RECURSE','FILES','ABSOLUTE',(node)=>{
                             if(!node.isFile() || !node.endsWith('.lua')) {
                                 return;
