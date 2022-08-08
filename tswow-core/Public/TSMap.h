@@ -48,7 +48,8 @@ public:
     bool IsHeroic();
     bool IsRaid();
     std::string GetName();
-    TSNumber<float> GetHeight(float x, float y, uint32 phasemask);
+    TSNumber<float> GetGridHeight(float x, float y);
+    TSNumber<float> GetHeight(float x, float y, uint32 phasemask = 0);
     TSNumber<int32> GetDifficulty();
     TSNumber<uint32> GetInstanceID();
     TSNumber<uint32> GetPlayerCount();

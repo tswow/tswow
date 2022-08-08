@@ -135,6 +135,11 @@ std::string TSMap::GetName()
      return map->GetMapName();
 }
 
+TSNumber<float> TSMap::GetGridHeight(float x, float y)
+{
+    return map->GetGridHeight(x, y);
+}
+
 /**
  * Returns the height of the [Map] at the given X and Y coordinates.
  *

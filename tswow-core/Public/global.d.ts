@@ -3999,6 +3999,13 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     GetHeight(x : float,y : float,phasemask : uint32) : TSNumber<float>
 
     /**
+     * Returns the height of the [Map] at the given X and Y coordinates, ignoring VMaps
+     * @param x
+     * @param y
+     */
+    GetGridHeight(x : float,y : float) : TSNumber<float>
+
+    /**
      * Returns the difficulty of the [Map].
      *
      * Always returns 0 if the expansion is pre-TBC.
