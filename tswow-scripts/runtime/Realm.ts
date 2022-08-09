@@ -149,9 +149,17 @@ export class RealmConfig extends ConfigFile {
           name: 'Realm.AutoRestart'
         , description: 'Whether to restart the worldserver if it crashes'
         , examples: [[true,''],[false,'']]
-        , note: 'See possible values here: https://trinitycore.atlassian.net/wiki/spaces/tc/pages/2130016/realmlist#realmlist-timezone'
+        , note: ''
     })
     AutoRestart: boolean = this.undefined();
+
+    @Property({
+          name: 'Realm.AutostartBots'
+        , description: 'Whether to automatically start bots for this realm'
+        , examples: [[true,''],[false,'']]
+        , note: ''
+    })
+    AutostartBots: boolean = this.undefined();
 }
 
 class RealmManager {
@@ -175,7 +183,9 @@ class RealmManager {
             
         this.worldserver.waitForMessage('ready...')
             .then(()=>{
-                this.realm.startBots(this.lastBuildType)
+                if(this.realm.config.AutostartBots) {
+                    this.realm.startBots(this.lastBuildType)
+                }
             })
 
         this.bots = new Process(`bots/${name}`)
@@ -370,6 +380,7 @@ export class Realm {
     }
 
     startBots(type: BuildType) {
+        patchTCConfig(this.path.bots_conf.get(), 'Data.Path',this.config.Dataset.path.abs().get('FORWARD'))
         patchTCConfig(this.path.bots_conf.get(), 'Lua.Path', this.config.Dataset.path.lib.bots.abs().get('FORWARD'))
         patchTCConfig(this.path.bots_conf.get(), 'Accounts.Path', this.config.Dataset.path.accounts_json.abs().get('FORWARD'))
         this.bots.startIn(this.path.get(),wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).bots_app.get()))
