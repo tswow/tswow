@@ -319,7 +319,7 @@ export namespace TrinityCore {
         });
 
         if(isWindows()) {
-            [bpaths.boost.boost_1_77_0.lib64_msvc_14_2.fslib]
+            [bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib]
                 .forEach(x=>{
                     x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))
                 })

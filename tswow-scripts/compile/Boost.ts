@@ -27,7 +27,8 @@ export namespace Boost {
         if(isWindows()) {
             return installWindows();
         } else {
-            return installLinux()
+            // note: not needed yet
+            //return installLinux()
         }
     }
 
@@ -53,9 +54,9 @@ export namespace Boost {
     export async function installWindows() {
         await DownloadFile(BOOST_URL_WINDOWS,bpaths.boostZip.get())
 
-        if(!bpaths.boost.boost_1_77_0.exists())
+        if(!bpaths.boost.boost_1_74_0.exists())
         {
-            await ExtractZip(bpaths.boostZip.get(),{dir:bpaths.boost.boost_1_77_0.abs().get()});
+            await ExtractZip(bpaths.boostZip.get(),{dir:bpaths.boost.boost_1_74_0.abs().get()});
         }
 
         // Delete unused libraries
@@ -88,7 +89,7 @@ export namespace Boost {
             , "libboost_log_setup-vc142-mt-x64-1_77.lib"
             , "libboost_locale-vc142-mt-gd-x64-1_77.lib"
         ].forEach(x=>{
-            bpaths.boost.boost_1_77_0.lib64_msvc_14_2.join(x)
+            bpaths.boost.boost_1_74_0.lib64_msvc_14_2.join(x)
                 .remove()
         })
 
@@ -96,6 +97,6 @@ export namespace Boost {
             bpaths.boostZip.remove();
         }
 
-        return bpaths.boost.boost_1_77_0.abs().get();
+        return bpaths.boost.boost_1_74_0.abs().get();
     }
 }

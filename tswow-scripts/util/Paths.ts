@@ -566,13 +566,13 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         // windows
         boost: dir({
-            boost_1_77_0: dir({
+            boost_1_74_0: dir({
                 lib64_msvc_14_2: dirn('lib64-msvc-14.2',{
-                    fslib: file('libboost_filesystem-vc142-mt-x64-1_77.lib')
+                    fslib: file('libboost_filesystem-vc142-mt-x64-1_74.lib')
                 })
             })
         }),
-        boostZip: file('boost_1_77_0.zip'),
+        boostZip: file('boost_1_74_0.zip'),
         boostTarBz2: file('boost_1_77_0.tar.bz2'),
         tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
         tdbSql: file(tdb),
