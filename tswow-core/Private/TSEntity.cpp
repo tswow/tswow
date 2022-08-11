@@ -26,7 +26,7 @@ TSCompiledClass::TSCompiledClass()
     ptr = nullptr;
 }
 
-bool TSCompiledClasses::HasObject(TSString key)
+bool TSCompiledClasses::HasObject(std::string const& key)
 {
     return m_map.find(key) != m_map.end();
 }

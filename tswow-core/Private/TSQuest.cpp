@@ -102,7 +102,7 @@ bool TSQuest::IsRepeatable()
  *
  * @return uint32 entryId
  */
-uint32 TSQuest::GetID()
+TSNumber<uint32> TSQuest::GetID()
 {
     return quest->GetQuestId();
 }
@@ -112,7 +112,7 @@ uint32 TSQuest::GetID()
  *
  * @return uint32 level
  */
-uint32 TSQuest::GetLevel()
+TSNumber<uint32> TSQuest::GetLevel()
 {
     return quest->GetQuestLevel();
 }
@@ -122,7 +122,7 @@ uint32 TSQuest::GetLevel()
  *
  * @return uint32 minLevel
  */
-uint32 TSQuest::GetMinLevel()
+TSNumber<uint32> TSQuest::GetMinLevel()
 {
     return quest->GetMinLevel();
 }
@@ -132,7 +132,7 @@ uint32 TSQuest::GetMinLevel()
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetNextQuestID()
+TSNumber<int32> TSQuest::GetNextQuestID()
 {
     return quest->GetNextQuestId();
 }
@@ -142,7 +142,7 @@ int32 TSQuest::GetNextQuestID()
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetPrevQuestID()
+TSNumber<int32> TSQuest::GetPrevQuestID()
 {
     return quest->GetPrevQuestId();
 }
@@ -152,7 +152,7 @@ int32 TSQuest::GetPrevQuestID()
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetNextQuestInChain()
+TSNumber<int32> TSQuest::GetNextQuestInChain()
 {
     return quest->GetNextQuestInChain();
 }
@@ -162,7 +162,7 @@ int32 TSQuest::GetNextQuestInChain()
  *
  * @return [QuestFlags] flags
  */
-uint32 TSQuest::GetFlags()
+TSNumber<uint32> TSQuest::GetFlags()
 {
 #if defined TRINITY || AZEROTHCORE
     return quest->GetFlags();
@@ -178,7 +178,7 @@ uint32 TSQuest::GetFlags()
  *
  * @return uint32 type
  */
-uint32 TSQuest::GetType()
+TSNumber<uint32> TSQuest::GetType()
 {
     return quest->GetType();
 }

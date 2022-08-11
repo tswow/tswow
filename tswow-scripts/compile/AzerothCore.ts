@@ -25,6 +25,9 @@ import { copyExtLibs } from "./CommonCore";
 import { bpaths, spaths } from "./CompilePaths";
 import { TrinityCore } from "./TrinityCore";
 
+/**
+ * Note: TSWoW does **not** support azerothcore at this moment, and have no plans to do so.
+ */
 export namespace AzerothCore {
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
         if(Args.hasFlag('noac',[args1,process.argv])) {

@@ -176,7 +176,7 @@ export class DBCBuffer {
     }
 
     readbool(offset: number) {
-        return this.rows.writeUInt32LE(offset) !== 0;
+        return this.rows.readUInt32LE(offset) !== 0;
     }
 
     writestring(str: string, offset: number) {

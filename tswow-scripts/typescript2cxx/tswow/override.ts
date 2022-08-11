@@ -102,7 +102,12 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
 }
 
 export function handleTSWoWOverride(emitter: Emitter, node: ts.CallExpression|ts.NewExpression) {
-    const text = node.getText()
+    let text: string;
+    try {
+        text = node.getText();
+    } catch(err) {
+        return;
+    }
     if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined) {
         TSWOW_OVERRIDE_FUNCTIONS[text](emitter,node);
         return true;

@@ -34,12 +34,12 @@ public:
     bool IsSpawned();
     bool IsTransport();
     bool IsActive();
-    uint32 GetDisplayID();
-    uint32 GetGoState();
-    uint32 GetLootState();
+    TSNumber<uint32> GetDisplayID();
+    TSNumber<uint32> GetGoState();
+    TSNumber<uint32> GetLootState();
     TSPlayer GetLootRecipient();
     TSGroup GetLootRecipientGroup();
-    uint32 GetDBTableGUIDLow();
+    TSNumber<uint32> GetDBTableGUIDLow();
     void SetGoState(uint32 state);
     void SetLootState(uint32 state);
     void SaveToDB();
@@ -52,10 +52,4 @@ public:
     void FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj);
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
-private:
-    friend class TSLua;
-    void LDespawn0(bool forced, uint32 delayMs, uint32 respawnSec);
-    void LDespawn1(bool forced, uint32 delayMs);
-    void LDespawn2(bool forced);
-    void LDespawn3();
 };

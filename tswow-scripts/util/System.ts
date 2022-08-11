@@ -100,9 +100,9 @@ export namespace wsys {
      *               'pipe' will return output as a string instead)
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
-    export function exec(program: string, stdio: 'ignore'|'inherit'|'pipe' = 'pipe') {
+    export function exec(program: string, stdio: 'ignore'|'inherit'|'pipe' = 'pipe', settings: child_process.ExecSyncOptionsWithBufferEncoding = {}) {
         let str = '';
-        const data = child_process.execSync(program, {stdio: stdio});
+        const data = child_process.execSync(program, {stdio: stdio, ...settings});
         if( data !== undefined && data !== null ) {
             str = data.toString();
         }
@@ -118,10 +118,10 @@ export namespace wsys {
      *               'pipe' will return output as a string instead)
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
-    export function execIn(dirname: FilePath, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
+    export function execIn(dirname: FilePath, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit', settings: child_process.ExecSyncOptionsWithBufferEncoding = {})  {
         let str = '';
         const data = child_process.execSync(program,
-            {stdio: stdio, cwd: wfs.absPath(dirname)});
+            {stdio: stdio, cwd: wfs.absPath(dirname), ...settings});
         if(stdio==='pipe' && data !== null && data !== undefined) {
             str = data.toString();
         }

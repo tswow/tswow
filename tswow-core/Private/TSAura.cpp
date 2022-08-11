@@ -32,7 +32,7 @@ TSUnit TSAuraEffect::GetCaster()
     return TSUnit(aura->GetCaster());
 }
 
-uint64 TSAuraEffect::GetCasterGUID()
+TSNumber<uint64> TSAuraEffect::GetCasterGUID()
 {
     return TS_GUID(aura->GetCasterGUID());
 }
@@ -47,37 +47,37 @@ TSSpellInfo TSAuraEffect::GetSpellInfo()
     return TSSpellInfo(aura->GetSpellInfo());
 }
 
-uint32 TSAuraEffect::GetID()
+TSNumber<uint32> TSAuraEffect::GetID()
 {
     return aura->GetId();
 }
 
-uint32 TSAuraEffect::GetEffectIndex()
+TSNumber<uint32> TSAuraEffect::GetEffectIndex()
 {
     return aura->GetEffIndex();
 }
 
-uint32 TSAuraEffect::GetAmplitude()
+TSNumber<uint32> TSAuraEffect::GetAmplitude()
 {
     return aura->GetAmplitude();
 }
 
-int32 TSAuraEffect::GetMiscValueB()
+TSNumber<int32> TSAuraEffect::GetMiscValueB()
 {
     return aura->GetMiscValueB();
 }
 
-int32 TSAuraEffect::GetMiscValue()
+TSNumber<int32> TSAuraEffect::GetMiscValue()
 {
     return aura->GetMiscValue();
 }
 
-uint32 TSAuraEffect::GetAuraType()
+TSNumber<uint32> TSAuraEffect::GetAuraType()
 {
     return aura->GetAuraType();
 }
 
-int32 TSAuraEffect::GetAmount()
+TSNumber<int32> TSAuraEffect::GetAmount()
 {
     return aura->GetAmount();
 }
@@ -87,7 +87,7 @@ void TSAuraEffect::SetAmount(int32 amount)
     aura->SetAmount(amount);
 }
 
-int32 TSAuraEffect::GetPeriodicTimer()
+TSNumber<int32> TSAuraEffect::GetPeriodicTimer()
 {
     return aura->GetPeriodicTimer();
 }
@@ -97,12 +97,12 @@ void TSAuraEffect::SetPeriodicTimer(int32 periodicTimer)
     aura->SetPeriodicTimer(periodicTimer);
 }
 
-uint32 TSAuraEffect::GetTickNumber()
+TSNumber<uint32> TSAuraEffect::GetTickNumber()
 {
     return aura->GetTickNumber();
 }
 
-uint32 TSAuraEffect::GetRemainingTicks()
+TSNumber<uint32> TSAuraEffect::GetRemainingTicks()
 {
 #if TRINITY
     return aura->GetRemainingTicks();
@@ -112,7 +112,7 @@ uint32 TSAuraEffect::GetRemainingTicks()
 #endif
 }
 
-uint32 TSAuraEffect::GetTotalTicks()
+TSNumber<uint32> TSAuraEffect::GetTotalTicks()
 {
     return aura->GetTotalTicks();
 }
@@ -144,22 +144,22 @@ TSAura TSAuraApplication::GetAura()
     return aura->GetBase();
 }
 
-uint8 TSAuraApplication::GetSlot()
+TSNumber<uint8> TSAuraApplication::GetSlot()
 {
     return aura->GetSlot();
 }
 
-uint8 TSAuraApplication::GetFlags()
+TSNumber<uint8> TSAuraApplication::GetFlags()
 {
     return aura->GetFlags();
 }
 
-uint8 TSAuraApplication::GetEffectMask()
+TSNumber<uint8> TSAuraApplication::GetEffectMask()
 {
     return aura->GetEffectMask();
 }
 
-uint8 TSAuraApplication::GetAppliedEffects()
+TSNumber<uint8> TSAuraApplication::GetAppliedEffects()
 {
     return aura->GetEffectsToApply();
 }
@@ -178,7 +178,7 @@ bool TSAuraApplication::IsSelfCast()
 #endif
 }
 
-uint8 TSAuraApplication::GetRemoveMode()
+TSNumber<uint8> TSAuraApplication::GetRemoveMode()
 {
     return uint8(aura->GetRemoveMode());
 }
@@ -222,7 +222,7 @@ TSUnit  TSAura::GetCaster()
  *
  * @return string caster_guid : the GUID of the Unit as a decimal string
  */
-uint64 TSAura::GetCasterGUID()
+TSNumber<uint64> TSAura::GetCasterGUID()
 {
     return TS_GUID(aura->GetCasterGUID());
 }
@@ -232,7 +232,7 @@ uint64 TSAura::GetCasterGUID()
  *
  * @return uint32 caster_level
  */
-uint32 TSAura::GetCasterLevel()
+TSNumber<uint32> TSAura::GetCasterLevel()
 {
 #ifdef TRINITY
     return aura->GetCaster()->GetLevel();
@@ -246,7 +246,7 @@ uint32 TSAura::GetCasterLevel()
  *
  * @return int32 duration : amount of time left in milliseconds
  */
-int32 TSAura::GetDuration()
+TSNumber<int32> TSAura::GetDuration()
 {
 #if defined TRINITY || AZEROTHCORE
     return aura->GetDuration();
@@ -260,7 +260,7 @@ int32 TSAura::GetDuration()
  *
  * @return uint32 aura_id
  */
-uint32 TSAura::GetAuraID()
+TSNumber<uint32> TSAura::GetAuraID()
 {
     return aura->GetId();
 }
@@ -273,7 +273,7 @@ uint32 TSAura::GetAuraID()
  *
  * @return int32 max_duration : the maximum duration of the Aura, in milliseconds
  */
-int32 TSAura::GetMaxDuration()
+TSNumber<int32> TSAura::GetMaxDuration()
 {
 #if defined TRINITY || AZEROTHCORE
     return aura->GetMaxDuration();
@@ -289,7 +289,7 @@ int32 TSAura::GetMaxDuration()
  *
  * @return uint32 stack_amount
  */
-uint32 TSAura::GetStackAmount()
+TSNumber<uint32> TSAura::GetStackAmount()
 {
     return aura->GetStackAmount();
 }
@@ -378,6 +378,11 @@ void TSAura::Remove()
 #endif
 }
 
+TSAuraEffect TSAura::GetEffect(uint8 index)
+{
+    return TSAuraEffect(aura->GetEffect(index));
+}
+
 TSLua::Array<TSAuraApplication> TSAura::LGetApplications()
 {
     return sol::as_table(*GetApplications().vec);
@@ -400,22 +405,22 @@ TSUnit TSProcEventInfo::GetProcTarget()
     return m_info->GetProcTarget();
 }
 
-uint32 TSProcEventInfo::GetTypeMask()
+TSNumber<uint32> TSProcEventInfo::GetTypeMask()
 {
     return m_info->GetTypeMask();
 }
 
-uint32 TSProcEventInfo::GetSpellTypeMask()
+TSNumber<uint32> TSProcEventInfo::GetSpellTypeMask()
 {
     return m_info->GetSpellTypeMask();
 }
 
-uint32 TSProcEventInfo::GetSpellPhaseMask()
+TSNumber<uint32> TSProcEventInfo::GetSpellPhaseMask()
 {
     return m_info->GetSpellPhaseMask();
 }
 
-uint32 TSProcEventInfo::GetHitMask()
+TSNumber<uint32> TSProcEventInfo::GetHitMask()
 {
     return m_info->GetHitMask();
 }
@@ -425,7 +430,7 @@ TSSpellInfo TSProcEventInfo::GetSpellInfo()
     return TSSpellInfo(m_info->GetSpellInfo());
 }
 
-uint32 TSProcEventInfo::GetSchoolMask()
+TSNumber<uint32> TSProcEventInfo::GetSchoolMask()
 {
     return static_cast<uint32>(m_info->GetSchoolMask());
 }

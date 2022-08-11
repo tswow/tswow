@@ -31,18 +31,18 @@ struct TC_GAME_API TSLootItem {
     operator bool() const { return item != nullptr; }
     bool operator==(TSLootItem const& rhs) { return item == rhs.item; }
 
-    uint32 GetItemID();
-    uint32 GetRandomSuffix();
-    int32 GetRandomPropertyID();
-    uint8 GetCount();
+    TSNumber<uint32> GetItemID();
+    TSNumber<uint32> GetRandomSuffix();
+    TSNumber<int32> GetRandomPropertyID();
+    TSNumber<uint8> GetCount();
 
     void SetItemID(uint32 itemId);
     void SetRandomSuffix(uint32 randomSuffix);
     void SetRandomPropertyID(int32 propertyId);
     void SetCount(uint8 count);
 
-    uint32 GetFakeRandomSuffix();
-    uint32 GetFakeRandomPropertyID();
+    TSNumber<uint32> GetFakeRandomSuffix();
+    TSNumber<uint32> GetFakeRandomPropertyID();
     void SetFakeRandomSuffix(uint32 fakeRandomSuffix);
     void SetFakeRandomPropertyID(uint32 fakePropertyId);
 };
@@ -64,17 +64,17 @@ class TC_GAME_API TSLoot {
         void AddLooter(uint64 looter);
         void RemoveLooter(uint64 looter);
 
-        uint32 GetLootType();
+        TSNumber<uint32> GetLootType();
         void SetLootType(uint32 lootType);
 
-        uint32 GetMoney();
+        TSNumber<uint32> GetMoney();
         void SetMoney(uint32 money);
 
-        uint64 GetLootOwner();
+        TSNumber<uint64> GetLootOwner();
         void SetLootOwner(uint64 owner);
 
-        uint32 GetItemCount();
-        uint32 GetQuestItemCount();
+        TSNumber<uint32> GetItemCount();
+        TSNumber<uint32> GetQuestItemCount();
 
         TSLootItem GetItem(uint32 index);
         TSLootItem GetQuestItem(uint32 index);
@@ -84,10 +84,6 @@ class TC_GAME_API TSLoot {
         bool GetGeneratesNormally();
         void SetGeneratesNormally(bool normal);
 private:
-    void LAddItem0(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode, bool needsQuest, uint8 groupId);
-    void LAddItem1(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode, bool needsQuest);
-    void LAddItem2(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode);
-    void LAddItem3(uint32 id, uint8 minCount, uint8 maxCount);
     void LFilter(sol::protected_function predicate);
     friend class TSLua;
 };

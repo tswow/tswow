@@ -19,7 +19,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
-#include "TSString.h"
 
 #include <sol/sol.hpp>
 #include <string>
@@ -36,109 +35,103 @@ public:
     bool operator==(TSCreatureTemplate const& rhs) { return ct == rhs.ct; }
 
 
-    uint32   GetEntry();
-    uint32   GetDifficultyEntryA();
-    uint32   GetDifficultyEntryB();
-    uint32   GetDifficultyEntryC();
+    TSNumber<uint32> GetEntry();
+    TSNumber<uint32> GetDifficultyEntryA();
+    TSNumber<uint32> GetDifficultyEntryB();
+    TSNumber<uint32> GetDifficultyEntryC();
 
-    uint32   GetKillCreditA();
-    uint32   GetKillCreditB();
-    uint32   GetModelID1();
-    uint32   GetModelID2();
-    uint32   GetModelID3();
-    uint32   GetModelID4();
-    TSString GetName();
-    TSString GetTitle();
-    TSString GetIconName();
-    uint32   GetGossipMenuID();
-    uint8    GetMinLevel();
-    uint8    GetMaxLevel();
-    uint32   GetExpansion();
-    uint32   GetFaction();
-    uint32   GetNPCFlag();
-    float    GetSpeedWalk();
-    float    GetSpeedRun();
-    float    GetScale();
-    uint32   GetRank();
-    uint32   GetDamageSchool();
-    uint32   GetBaseAttackTime();
-    uint32   GetRangeAttackTime();
-    float    GetBaseVariance();
-    float    GetRangeVariance();
-    uint32   GetUnitClass();                                     // enum Classes. Note only 4 classes are known for creatures.
-    uint32   GetUnitFlags();                                     // enum UnitFlags mask values
-    uint32   GetUnitFlags2();                                    // enum UnitFlags2 mask values
-    uint32   GetDynamicFlags();
-    uint32   GetFamily();                                 // enum CreatureFamily values (optional)
-    uint32   GetType();                                           // enum CreatureType values
-    uint32   GetTypeFlags();                                     // enum CreatureTypeFlags mask values
-    uint32   GetLootID();
-    uint32   GetPickpocketLootID();
-    uint32   GetSkinLootID();
+    TSNumber<uint32> GetKillCreditA();
+    TSNumber<uint32> GetKillCreditB();
+    TSNumber<uint32> GetModelID1();
+    TSNumber<uint32> GetModelID2();
+    TSNumber<uint32> GetModelID3();
+    TSNumber<uint32> GetModelID4();
+    std::string GetName();
+    std::string GetTitle();
+    std::string GetIconName();
+    TSNumber<uint32> GetGossipMenuID();
+    TSNumber<uint8> GetMinLevel();
+    TSNumber<uint8> GetMaxLevel();
+    TSNumber<uint32> GetExpansion();
+    TSNumber<uint32> GetFaction();
+    TSNumber<uint32> GetNPCFlag();
+    TSNumber<float> GetSpeedWalk();
+    TSNumber<float> GetSpeedRun();
+    TSNumber<float> GetScale();
+    TSNumber<uint32> GetRank();
+    TSNumber<uint32> GetDamageSchool();
+    TSNumber<uint32> GetBaseAttackTime();
+    TSNumber<uint32> GetRangeAttackTime();
+    TSNumber<float> GetBaseVariance();
+    TSNumber<float> GetRangeVariance();
+    TSNumber<uint32> GetUnitClass();                                     // enum Classes. Note only 4 classes are known for creatures.
+    TSNumber<uint32> GetUnitFlags();                                     // enum UnitFlags mask values
+    TSNumber<uint32> GetUnitFlags2();                                    // enum UnitFlags2 mask values
+    TSNumber<uint32> GetDynamicFlags();
+    TSNumber<uint32> GetFamily();                                 // enum CreatureFamily values (optional)
+    TSNumber<uint32> GetType();                                           // enum CreatureType values
+    TSNumber<uint32> GetTypeFlags();                                     // enum CreatureTypeFlags mask values
+    TSNumber<uint32> GetLootID();
+    TSNumber<uint32> GetPickpocketLootID();
+    TSNumber<uint32> GetSkinLootID();
 
-    int32    GetNormalResistance();
-    int32    GetHolyResistance();
-    int32    GetFireResistance();
-    int32    GetNatureResistance();
-    int32    GetFrostResistance();
-    int32    GetShadowResistance();
-    int32    GetArcaneResistance();
+    TSNumber<int32> GetNormalResistance();
+    TSNumber<int32> GetHolyResistance();
+    TSNumber<int32> GetFireResistance();
+    TSNumber<int32> GetNatureResistance();
+    TSNumber<int32> GetFrostResistance();
+    TSNumber<int32> GetShadowResistance();
+    TSNumber<int32> GetArcaneResistance();
 
-    uint32   GetSpellA();
-    uint32   GetSpellB();
-    uint32   GetSpellC();
-    uint32   GetSpellD();
-    uint32   GetSpellE();
-    uint32   GetSpellF();
-    uint32   GetSpellG();
-    uint32   GetSpellH();
-    uint32   GetPetSpellDataID();
-    uint32   GetVehicleID();
-    uint32   GetMinGold();
-    uint32   GetMaxGold();
-    TSString GetAIName();
-    uint32   GetMovementType();
+    TSNumber<uint32> GetSpellA();
+    TSNumber<uint32> GetSpellB();
+    TSNumber<uint32> GetSpellC();
+    TSNumber<uint32> GetSpellD();
+    TSNumber<uint32> GetSpellE();
+    TSNumber<uint32> GetSpellF();
+    TSNumber<uint32> GetSpellG();
+    TSNumber<uint32> GetSpellH();
+    TSNumber<uint32> GetPetSpellDataID();
+    TSNumber<uint32> GetVehicleID();
+    TSNumber<uint32> GetMinGold();
+    TSNumber<uint32> GetMaxGold();
+    std::string GetAIName();
+    TSNumber<uint32> GetMovementType();
 
-    float       GetHoverHeight();
-    float       GetModHealth();
-    float       GetModMana();
-    float       GetModArmor();
-    float       GetModDamage();
-    float       GetModExperience();
+    TSNumber<float> GetHoverHeight();
+    TSNumber<float> GetModHealth();
+    TSNumber<float> GetModMana();
+    TSNumber<float> GetModArmor();
+    TSNumber<float> GetModDamage();
+    TSNumber<float> GetModExperience();
     bool        GetRacialLeader();
-    uint32      GetMovementID();
+    TSNumber<uint32> GetMovementID();
     bool        GetRegenHealth();
-    uint32      GetMechanicImmuneMask();
-    uint32      GetSpellSchoolImmuneMask();
-    uint32      GetFlagsExtra();
-    uint32      GetScriptID();
-    uint32      GetRandomValidModelID() const;
-    uint32      GetFirstValidModelID() const;
-    uint32      GetFirstInvisibleModel() const;
-    uint32      GetFirstVisibleModel() const;
+    TSNumber<uint32> GetMechanicImmuneMask();
+    TSNumber<uint32> GetSpellSchoolImmuneMask();
+    TSNumber<uint32> GetFlagsExtra();
+    TSNumber<uint32> GetScriptID();
+    TSNumber<uint32> GetRandomValidModelID() const;
+    TSNumber<uint32> GetFirstValidModelID() const;
+    TSNumber<uint32> GetFirstInvisibleModel() const;
+    TSNumber<uint32> GetFirstVisibleModel() const;
     TSEntity * GetData();
-    uint32      GetRequiredLootSkill() const;
+    TSNumber<uint32> GetRequiredLootSkill() const;
     bool        GetIsExotic() const;
     bool        GetIsTameable(bool canTameExotic) const;
 
     // CreatureMovementData
-    uint32    GetGroundMovement();
-    uint32    GetFlightMovement();
+    TSNumber<uint32> GetGroundMovement();
+    TSNumber<uint32> GetFlightMovement();
     bool      GetSwims();
     bool      GetRooted();
-    uint32    GetChaseMovement();
-    uint32    GetRandomMovement();
-    uint32    GetInteractionPauseTimer();
+    TSNumber<uint32> GetChaseMovement();
+    TSNumber<uint32> GetRandomMovement();
+    TSNumber<uint32> GetInteractionPauseTimer();
     bool      GetIsGroundAllowed();
     bool      GetIsSwimAllowed();
     bool      GetIsFlightAllowed();
     bool      GetIsRooted();
-private:
-    std::string LGetName();
-    std::string LGetTitle();
-    std::string LGetIconName();
-    std::string LGetAIName();
-    friend class TSLua;
 };
 
 TC_GAME_API TSCreatureTemplate GetCreatureTemplate(uint32 entry);

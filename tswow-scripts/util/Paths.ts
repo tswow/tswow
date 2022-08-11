@@ -42,7 +42,8 @@ export function DatasetDirectory(inPath: string, inName: string) {
             dbc: dir({}),
         }),
         lib: dir({
-            lua: dir({})
+            lua: dir({}),
+            include_lua: dirn('lualib',{})
         }),
         luaxml: dir({
             Interface: dir({
@@ -111,10 +112,12 @@ export function LivescriptsDirectory(inPath: string) {
         tsconfig: file('tsconfig.json'),
         /** @todo: how to handle these names? */
         entry: file(`livescripts.ts`),
+        livecripts_conf: file(`livescripts.conf`),
         built_library: file(``),
         built_pdb: file(``),
         build: dir({
             dataset: dyndir(dataset=>({
+                lua: dir({}),
                 built_libs: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(type)=>({
                     // todo: linux
                     library: custom((value)=>
@@ -285,7 +288,8 @@ export function InstallPath(pathIn: string, tdb: string) {
             scripts: dir({
                 addons: dir({
                     addons: dir({
-                        require_preload: file('RequirePreload.js')
+                        require_preload: file('RequirePreload.js'),
+                        lua_orm: file('LuaORM.js')
                     })
                 }),
                 tests: dir({}),
@@ -349,6 +353,8 @@ export function InstallPath(pathIn: string, tdb: string) {
                 }),
                 lua: dir({})
             }),
+            include_lua: dirn('include-lua',{
+            }),
             BLPConverter: dir({
                 blpconverter: file('blpconverter.exe')
             }),
@@ -381,9 +387,9 @@ export function InstallPath(pathIn: string, tdb: string) {
                 Events_ts: file('Events.ts'),
                 Events_lua: file('Events.lua'),
                 shared_global_d_ts: file('shared.global.d.ts'),
-                LualibBundle_lua: file('LualibBundle.lua'),
                 RequireStub_lua: file('RequireStub.lua'),
-                tsconfig_json: file('tsconfig.json')
+                tsconfig_json: file('tsconfig.json'),
+                lualib_bundle: file('lualib_bundle.lua'),
             }),
             core: dyndir(core=>({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({
@@ -481,8 +487,11 @@ export function BuildPaths(pathIn: string, tdb: string) {
             events_ts: file('Events.ts'),
             events_d_ts: file('Events.d.ts'),
             events_lua: file('Events.lua'),
+            lualib_bundle: file('lualib_bundle.lua'),
             global_d_ts: file('global.d.ts'),
             tsconfig_json: file('tsconfig.json'),
+        }),
+        include_lua: dirn('include-lua',{
         }),
         zlib: dir({
             include: dir({}),
@@ -587,7 +596,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         TrinityCore: dir({
             sol_headers: dirn('_deps/sol2-src/include',{}),
-            lua_headers: dirn('_deps/lua51-src/src',{}),
+            lua_headers: dirn('_deps/lua-src',{ src: dir({})}),
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
             lib_linux: dirn('install/trinitycore/lib',{}),
@@ -704,6 +713,7 @@ export function SourcePaths(pathIn: string) {
                     LualibBundle_lua: file('LualibBundle.lua'),
                     RequireStub_lua: file('RequireStub.lua'),
                 }),
+                include_lua: dirn('include-lua',{}),
                 characters_create: file('characters_create.sql'),
                 auth_create: file('auth_create.sql'),
                 package_json: file('package.json'),

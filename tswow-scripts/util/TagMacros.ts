@@ -1,6 +1,45 @@
+import * as mysql from 'mysql2';
+import { NodeConfig } from "../runtime/NodeConfig";
+import { GetExistingId } from './ids/Ids';
 import { ipaths } from "./Paths";
+import deasync = require('deasync');
 
-export function ApplyTagMacros(contents: string, type: 'LIVESCRIPT'|'LUA') {
+/**
+ * TODO: relies on terrible regex patterns, they can't even handle newlines or anything.
+ *
+ * We should use some kind of actual agnostic parser for this
+ *
+ * @note This function assumes you already called IdPrivate#readFile
+ */
+export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIVESCRIPT'|'LUA') {
+    // ======================================
+    //  GetID
+    // ======================================
+    [
+        /GetID *\( *JSTR *\("(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
+        /GetID *\( *"(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/,
+        /GetID *\( *"(.+?)" *, *"(.+?)" *, *'(.+?)' *\)/,
+
+        /GetID *\( *"(.+?)" *, *'(.+?)' *, *"(.+?)" *\)/,
+        /GetID *\( *"(.+?)" *, *'(.+?)' *, *'(.+?)' *\)/,
+
+        /GetID *\( *'(.+?)' *, *"(.+?)" *, *"(.+?)" *\)/,
+        /GetID *\( *'(.+?)' *, *"(.+?)" *, *'(.+?)' *\)/,
+
+        /GetID *\( *'(.+?)' *, *'(.+?)' *, *"(.+?)" *\)/,
+        /GetID *\( *'(.+?)' *, *'(.+?)' *, *'(.+?)' *\)/,
+    ].forEach(regex=>{
+        while(true) {
+            let m = contents
+                .match(regex)
+            if(!m) break;
+            const [_,table,mod,name] = m;
+            let id = GetExistingId(table,mod,name);
+            contents = contents.replace(m[0],`${id}`)
+        }
+    });
+
+
     [
         /(?:GetIDTagUnique|UTAG) *\( *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
         /(?:GetIDTagUnique|UTAG) *\( *"(.+?)" *, *"(.+?)" *\)/,
@@ -93,5 +132,93 @@ export function ApplyTagMacros(contents: string, type: 'LIVESCRIPT'|'LUA') {
             contents = contents.replace(m[0],`HAS_TAG(${item}, {${values.join(',')}})`);
         }
     })
+
+    // ======================================
+    //  World table asserts
+    // ======================================
+    let checks: {table: string, cols: string}[] = [];
+    [
+        /ASSERT_WORLD_TABLE *\( *"(.+?)" *, *"(.+?)" *\)/,
+        /ASSERT_WORLD_TABLE *\( *'(.+?)' *, *'(.+?)' *\)/,
+        /ASSERT_WORLD_TABLE *\( *"(.+?)" *, *'(.+?)' *\)/,
+        /ASSERT_WORLD_TABLE *\( *'(.+?)' *, *"(.+?)" *\)/,
+        /ASSERT_WORLD_TABLE *\( *"(.+?)" *\)/,
+        /ASSERT_WORLD_TABLE *\( *'(.+?)' *\)/,
+        /ASSERT_WORLD_TABLE *\( *JSTR *\( *"(.+?)" *\) *, *JSTR *\( *"(.+?)" *\) *\)/,
+        /ASSERT_WORLD_TABLE *\( *JSTR *\( *"(.+?)" *\) *\)/,
+    ].forEach((check)=>{
+        while(true) {
+            let m = contents.match(check)
+            if(!m) break;
+            contents = contents.replace(m[0],'')
+            checks.push({table:m[1],cols:m[2]||""})
+        }
+    })
+
+    if(checks.length > 0) {
+        const settings = NodeConfig.DatabaseSettings('world',datasetName)
+        const connection = mysql.createConnection(settings);
+        const syncQuery = deasync(connection.query.bind(connection))
+        const errors: string[] = []
+
+        checks.forEach(({table,cols})=>{
+            const tableRes = syncQuery(`
+                SELECT * from \`information_schema\`.\`TABLES\`
+                    WHERE \`TABLE_SCHEMA\` = "${settings.database}"
+                        AND \`TABLE_NAME\` = "${table}";
+            `);
+            if(tableRes.length===0) {
+                errors.push(`Missing table "${table}"`);
+                return;
+            }
+
+            if(cols.length == 0) {
+                return;
+            }
+
+            const colRes = syncQuery(`
+                SELECT * FROM \`information_schema\`.\`COLUMNS\`
+                    WHERE \`TABLE_SCHEMA\` = "${settings.database}"
+                        AND \`TABLE_NAME\` = "${table}";
+            `)
+
+            cols.split('').forEach((colTok,i)=>{
+                i++;
+                let arg = colRes.find(x=>x.ORDINAL_POSITION == i);
+                let argName = {i:'int',f:'float',s:'string',b:'bool','*':'blank'}[colTok]
+                if(!argName) {
+                    throw new Error(`Invalid type character: ${colTok} (expected i, f, s, b or *)`)
+                }
+
+                if(!arg) {
+                    errors.push(`Missing ${argName} column ${i} in "${table}"`)
+                    return;
+                }
+
+                if(colTok==='*') {
+                    return;
+                }
+
+                let matches = {
+                      i:['tinyint','smallint','mediumint','int','bigint','bit']
+                    , f:['float','double','decimal']
+                    , s:['varchar','char','tinytext','text','text','mediumtext','longtext','json']
+                }
+                matches.f = matches.f.concat(matches.i)
+
+                let match = matches[colTok];
+                let datatype = arg.DATA_TYPE.toLowerCase();
+                if(!match.includes(datatype)) {
+                    errors.push(`Column type mismatch ${i} in "${table}" (expected ${argName}, but is ${datatype})`)
+                }
+            })
+        })
+        if(errors.length > 0) {
+            throw new Error(
+                `Database Assert Errors:\n    ${errors.join('\n    ')}\n`)
+        }
+        connection.end();
+    }
+
     return contents;
 }

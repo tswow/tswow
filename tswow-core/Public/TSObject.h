@@ -53,11 +53,11 @@ public:
     bool operator==(TSObject const& rhs) { return obj == rhs.obj; }
     bool IsNull() { return obj == nullptr; };
     bool IsInWorld();
-    float GetScale();
-    uint32 GetEntry();
-    uint64 GetGUID();
-    uint32 GetGUIDLow();
-    uint8 GetTypeID();
+    TSNumber<float> GetScale();
+    TSNumber<uint32> GetEntry();
+    TSNumber<uint64> GetGUID();
+    TSNumber<uint32> GetGUIDLow();
+    TSNumber<uint8> GetTypeID();
     void SetScale(float size);
 
     void SetFlag(uint16 index, uint32 flag);
@@ -72,12 +72,12 @@ public:
     void SetCoreUInt16(uint16 index, uint8 offset, uint16 value);
     void SetCoreUInt64(uint16 index, uint64 value);
 
-    uint8 GetCoreByte(uint16 index, uint8 offset);
-    int32 GetCoreInt32(uint16 index);
-    uint32 GetCoreUInt32(uint16 index);
-    float GetCoreFloat(uint16 index);
-    uint16 GetCoreUInt16(uint16 index, uint8 offset);
-    uint64 GetCoreUInt64(uint16 index);
+    TSNumber<uint8> GetCoreByte(uint16 index, uint8 offset);
+    TSNumber<int32> GetCoreInt32(uint16 index);
+    TSNumber<uint32> GetCoreUInt32(uint16 index);
+    TSNumber<float> GetCoreFloat(uint16 index);
+    TSNumber<uint16> GetCoreUInt16(uint16 index, uint8 offset);
+    TSNumber<uint64> GetCoreUInt64(uint16 index);
 
     TSPlayer ToPlayer();
     TSUnit ToUnit();

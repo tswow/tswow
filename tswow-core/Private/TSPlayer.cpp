@@ -728,7 +728,7 @@ bool TSPlayer::CanParry()
  *
  * @return uint8 specCount
  */
-uint8 TSPlayer::GetSpecsCount(uint32 entry,uint32 mapid,uint32 zone)
+TSNumber<uint8> TSPlayer::GetSpecsCount(uint32 entry,uint32 mapid,uint32 zone)
 {
     return player->GetSpecsCount();
 }
@@ -738,7 +738,7 @@ uint8 TSPlayer::GetSpecsCount(uint32 entry,uint32 mapid,uint32 zone)
  *
  * @return uint32 specId
  */
-uint32 TSPlayer::GetActiveSpec()
+TSNumber<uint32> TSPlayer::GetActiveSpec()
 {
     return player->GetActiveSpec();
 }
@@ -750,7 +750,7 @@ uint32 TSPlayer::GetActiveSpec()
  *
  * @return uint32 phasemask
  */
-uint32 TSPlayer::GetPhaseMaskForSpawn()
+TSNumber<uint32> TSPlayer::GetPhaseMaskForSpawn()
 {
     return player->GetPhaseMaskForSpawn();
 }
@@ -762,7 +762,7 @@ uint32 TSPlayer::GetPhaseMaskForSpawn()
  *
  * @return uint32 arenaPoints
  */
-uint32 TSPlayer::GetArenaPoints()
+TSNumber<uint32> TSPlayer::GetArenaPoints()
 {
     return player->GetArenaPoints();
 }
@@ -772,7 +772,7 @@ uint32 TSPlayer::GetArenaPoints()
  *
  * @return uint32 honorPoints
  */
-uint32 TSPlayer::GetHonorPoints()
+TSNumber<uint32> TSPlayer::GetHonorPoints()
 {
     return player->GetHonorPoints();
 }
@@ -783,7 +783,7 @@ uint32 TSPlayer::GetHonorPoints()
  *
  * @return uint32 blockValue
  */
-uint32 TSPlayer::GetShieldBlockValue()
+TSNumber<uint32> TSPlayer::GetShieldBlockValue()
 {
     return player->GetShieldBlockValue();
 }
@@ -795,7 +795,7 @@ uint32 TSPlayer::GetShieldBlockValue()
  * @param uint32 spellId
  * @return uint32 spellCooldownDelay
  */
-uint32 TSPlayer::GetSpellCooldownDelay(uint32 spellId)
+TSNumber<uint32> TSPlayer::GetSpellCooldownDelay(uint32 spellId)
 {
 
 #ifdef TRINITY
@@ -813,7 +813,7 @@ uint32 TSPlayer::GetSpellCooldownDelay(uint32 spellId)
  *
  * @return uint32 latency
  */
-uint32 TSPlayer::GetLatency()
+TSNumber<uint32> TSPlayer::GetLatency()
 {
     return player->GetSession()->GetLatency();
 }
@@ -824,7 +824,7 @@ uint32 TSPlayer::GetLatency()
  *
  * @return uint32 championingFaction
  */
-uint32 TSPlayer::GetChampioningFaction()
+TSNumber<uint32> TSPlayer::GetChampioningFaction()
 {
     return player->GetChampioningFaction();
 }
@@ -835,7 +835,7 @@ uint32 TSPlayer::GetChampioningFaction()
  *
  * @return uint8 subGroup
  */
-uint8 TSPlayer::GetOriginalSubGroup()
+TSNumber<uint8> TSPlayer::GetOriginalSubGroup()
 {
     return player->GetOriginalSubGroup();
 }
@@ -866,7 +866,7 @@ TSPlayer  TSPlayer::GetNextRandomRaidMember(float radius)
  *
  * @return uint8 subGroup
  */
-uint8 TSPlayer::GetSubGroup()
+TSNumber<uint8> TSPlayer::GetSubGroup()
 {
     return player->GetSubGroup();
 }
@@ -887,7 +887,7 @@ TSGroup  TSPlayer::GetGroupInvite()
  * @param uint32 xp
  * @return uint32 xpBonus
  */
-uint32 TSPlayer::GetXPRestBonus(uint32 xp)
+TSNumber<uint32> TSPlayer::GetXPRestBonus(uint32 xp)
 {
     return player->GetXPRestBonus(xp);
 }
@@ -897,7 +897,7 @@ uint32 TSPlayer::GetXPRestBonus(uint32 xp)
  *
  * @return [BattleGroundTypeId] typeId
  */
-uint32 TSPlayer::GetBGTypeID()
+TSNumber<uint32> TSPlayer::GetBGTypeID()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundTypeId();
@@ -911,7 +911,7 @@ uint32 TSPlayer::GetBGTypeID()
  *
  * @return uint32 battleGroundId
  */
-uint32 TSPlayer::GetBattlegroundID()
+TSNumber<uint32> TSPlayer::GetBattlegroundID()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundId();
@@ -926,7 +926,7 @@ uint32 TSPlayer::GetBattlegroundID()
  * @param uint32 faction
  * @return [ReputationRank] rank
  */
-uint32 TSPlayer::GetReputationRank(uint32 faction)
+TSNumber<uint32> TSPlayer::GetReputationRank(uint32 faction)
 {
     return player->GetReputationRank(faction);
 }
@@ -936,7 +936,7 @@ uint32 TSPlayer::GetReputationRank(uint32 faction)
  *
  * @return uint16 drunkValue
  */
-uint16 TSPlayer::GetDrunkValue()
+TSNumber<uint16> TSPlayer::GetDrunkValue()
 {
     return player->GetDrunkValue();
 }
@@ -947,7 +947,7 @@ uint16 TSPlayer::GetDrunkValue()
  * @param uint32 skill
  * @param int16 bonusVal
  */
-int16 TSPlayer::GetSkillTempBonusValue(uint32 skill)
+TSNumber<int16> TSPlayer::GetSkillTempBonusValue(uint32 skill)
 {
     return player->GetSkillTempBonusValue(skill);
 }
@@ -958,7 +958,7 @@ int16 TSPlayer::GetSkillTempBonusValue(uint32 skill)
  * @param uint32 skill
  * @param int16 bonusVal
  */
-int16 TSPlayer::GetSkillPermBonusValue(uint32 skill)
+TSNumber<int16> TSPlayer::GetSkillPermBonusValue(uint32 skill)
 {
     return player->GetSkillPermBonusValue(skill);
 }
@@ -969,7 +969,7 @@ int16 TSPlayer::GetSkillPermBonusValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 pureVal
  */
-uint16 TSPlayer::GetPureSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetPureSkillValue(uint32 skill)
 {
     return player->GetPureSkillValue(skill);
 }
@@ -980,7 +980,7 @@ uint16 TSPlayer::GetPureSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 baseVal
  */
-uint16 TSPlayer::GetBaseSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetBaseSkillValue(uint32 skill)
 {
     return player->GetBaseSkillValue(skill);
 }
@@ -991,7 +991,7 @@ uint16 TSPlayer::GetBaseSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 val
  */
-uint16 TSPlayer::GetSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetSkillValue(uint32 skill)
 {
     return player->GetSkillValue(skill);
 }
@@ -1002,7 +1002,7 @@ uint16 TSPlayer::GetSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 pureVal
  */
-uint16 TSPlayer::GetPureMaxSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetPureMaxSkillValue(uint32 skill)
 {
     return player->GetPureMaxSkillValue(skill);
 }
@@ -1013,7 +1013,7 @@ uint16 TSPlayer::GetPureMaxSkillValue(uint32 skill)
  * @param uint32 skill
  * @return uint16 val
  */
-uint16 TSPlayer::GetMaxSkillValue(uint32 skill)
+TSNumber<uint16> TSPlayer::GetMaxSkillValue(uint32 skill)
 {
     return player->GetMaxSkillValue(skill);
 }
@@ -1023,7 +1023,7 @@ uint16 TSPlayer::GetMaxSkillValue(uint32 skill)
  *
  * @return float bonus
  */
-float TSPlayer::GetManaBonusFromIntellect()
+TSNumber<float> TSPlayer::GetManaBonusFromIntellect()
 {
     return player->GetManaBonusFromIntellect();
 }
@@ -1033,7 +1033,7 @@ float TSPlayer::GetManaBonusFromIntellect()
  *
  * @return float bonus
  */
-float TSPlayer::GetHealthBonusFromStamina()
+TSNumber<float> TSPlayer::GetHealthBonusFromStamina()
 {
     return player->GetHealthBonusFromStamina();
 }
@@ -1044,7 +1044,7 @@ float TSPlayer::GetHealthBonusFromStamina()
  * @param bool isRaid = true : argument is TrinityCore only
  * @return int32 difficulty
  */
-int32 TSPlayer::GetDifficulty(bool isRaid)
+TSNumber<int32> TSPlayer::GetDifficulty(bool isRaid)
 {
 #ifdef TBC
     return player->GetDifficulty();
@@ -1060,7 +1060,7 @@ int32 TSPlayer::GetDifficulty(bool isRaid)
  *
  * @return uint32 guildRank
  */
-uint32 TSPlayer::GetGuildRank()
+TSNumber<uint32> TSPlayer::GetGuildRank()
 {
     return player->GetRank();
 }
@@ -1070,7 +1070,7 @@ uint32 TSPlayer::GetGuildRank()
  *
  * @return uint32 freeTalentPointAmt
  */
-uint32 TSPlayer::GetFreeTalentPoints()
+TSNumber<uint32> TSPlayer::GetFreeTalentPoints()
 {
     return player->GetFreeTalentPoints();
 }
@@ -1080,9 +1080,9 @@ uint32 TSPlayer::GetFreeTalentPoints()
  *
  * @return string guildName
  */
-TSString TSPlayer::GetGuildName()
+std::string TSPlayer::GetGuildName()
 {
-     return TSString(eGuildMgr->GetGuildNameById(player->GetGuildId()));
+     return eGuildMgr->GetGuildNameById(player->GetGuildId());
 }
 
 /**
@@ -1091,7 +1091,7 @@ TSString TSPlayer::GetGuildName()
  * @param uint32 faction
  * @return int32 reputationAmt
  */
-int32 TSPlayer::GetReputation(uint32 faction)
+TSNumber<int32> TSPlayer::GetReputation(uint32 faction)
 {
     return player->GetReputationMgr().GetReputation(faction);
 }
@@ -1115,7 +1115,7 @@ TSUnit  TSPlayer::GetComboTarget()
  *
  * @return uint8 comboPoints
  */
-uint8 TSPlayer::GetComboPoints()
+TSNumber<uint8> TSPlayer::GetComboPoints()
 {
     return player->GetComboPoints();
 }
@@ -1125,7 +1125,7 @@ uint8 TSPlayer::GetComboPoints()
  *
  * @return uint32 inGameTime
  */
-uint32 TSPlayer::GetInGameTime()
+TSNumber<uint32> TSPlayer::GetInGameTime()
 {
     return player->GetInGameTime();
 }
@@ -1136,7 +1136,7 @@ uint32 TSPlayer::GetInGameTime()
  * @param uint32 questId
  * @return [QuestStatus] questStatus
  */
-uint32 TSPlayer::GetQuestStatus(uint32 entry)
+TSNumber<uint32> TSPlayer::GetQuestStatus(uint32 entry)
 {
     return player->GetQuestStatus(entry);
 }
@@ -1159,7 +1159,7 @@ bool TSPlayer::GetQuestRewardStatus(uint32 questId)
  * @param int32 entry : entry of required [Creature]
  * @return uint16 count
  */
-uint16 TSPlayer::GetReqKillOrCastCurrentCount(uint32 questId,int32 entry)
+TSNumber<uint16> TSPlayer::GetReqKillOrCastCurrentCount(uint32 questId,int32 entry)
 {
     return player->GetReqKillOrCastCurrentCount(questId, entry);
 }
@@ -1170,7 +1170,7 @@ uint16 TSPlayer::GetReqKillOrCastCurrentCount(uint32 questId,int32 entry)
  * @param uint32 questId
  * @return [QuestStatus] questRewardStatus
  */
-uint32 TSPlayer::GetQuestLevel(TSQuest _quest)
+TSNumber<uint32> TSPlayer::GetQuestLevel(TSQuest _quest)
 {
     auto quest = _quest.quest;
 
@@ -1199,7 +1199,7 @@ TSItem  TSPlayer::GetEquippedItemBySlot(uint8 slot)
  *
  * @return float restBonus
  */
-float TSPlayer::GetRestBonus()
+TSNumber<float> TSPlayer::GetRestBonus()
 {
     return player->GetRestBonus();
 }
@@ -1209,7 +1209,7 @@ float TSPlayer::GetRestBonus()
  *
  * @return uint8 tag
  */
-uint8 TSPlayer::GetChatTag()
+TSNumber<uint8> TSPlayer::GetChatTag()
 {
     return player->GetChatTag();
 }
@@ -1275,7 +1275,7 @@ TSItem  TSPlayer::GetItemByEntry(uint32 entry)
  *
  * @return uint32 textId : key to npc_text database table
  */
-uint32 TSPlayer::GetGossipTextID(TSWorldObject _obj)
+TSNumber<uint32> TSPlayer::GetGossipTextID(TSWorldObject _obj)
 {
     auto obj = _obj.obj;
     return player->GetGossipTextId(obj);
@@ -1300,7 +1300,7 @@ TSUnit  TSPlayer::GetSelection()
  *
  * @return [AccountTypes] gmRank
  */
-uint32 TSPlayer::GetGMRank()
+TSNumber<uint32> TSPlayer::GetGMRank()
 {
     return player->GetSession()->GetSecurity();
 }
@@ -1310,7 +1310,7 @@ uint32 TSPlayer::GetGMRank()
  *
  * @return uint32 guildId
  */
-uint32 TSPlayer::GetGuildID()
+TSNumber<uint32> TSPlayer::GetGuildID()
 {
     return player->GetGuildId();
 }
@@ -1320,7 +1320,7 @@ uint32 TSPlayer::GetGuildID()
  *
  * @return [TeamId] teamId
  */
-uint32 TSPlayer::GetTeam()
+TSNumber<uint32> TSPlayer::GetTeam()
 {
     return player->GetTeamId();
 }
@@ -1332,7 +1332,7 @@ uint32 TSPlayer::GetTeam()
  * @param bool checkinBank = false : also counts the items in player's bank if true
  * @return uint32 itemamount
  */
-uint32 TSPlayer::GetItemCount(uint32 entry,bool checkinBank)
+TSNumber<uint32> TSPlayer::GetItemCount(uint32 entry,bool checkinBank)
 {
     return player->GetItemCount(entry, checkinBank);
 }
@@ -1342,7 +1342,7 @@ uint32 TSPlayer::GetItemCount(uint32 entry,bool checkinBank)
  *
  * @return uint32 lifeTimeKils
  */
-uint32 TSPlayer::GetLifetimeKills()
+TSNumber<uint32> TSPlayer::GetLifetimeKills()
 {
     return player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
 }
@@ -1352,9 +1352,9 @@ uint32 TSPlayer::GetLifetimeKills()
  *
  * @return string ip
  */
-TSString TSPlayer::GetPlayerIP()
+std::string TSPlayer::GetPlayerIP()
 {
-     return TSString(player->GetSession()->GetRemoteAddress());
+     return player->GetSession()->GetRemoteAddress();
 }
 
 /**
@@ -1362,7 +1362,7 @@ TSString TSPlayer::GetPlayerIP()
  *
  * @return uint32 currLevelPlayTime
  */
-uint32 TSPlayer::GetLevelPlayedTime()
+TSNumber<uint32> TSPlayer::GetLevelPlayedTime()
 {
     return player->GetLevelPlayedTime();
 }
@@ -1372,7 +1372,7 @@ uint32 TSPlayer::GetLevelPlayedTime()
  *
  * @return uint32 totalPlayTime
  */
-uint32 TSPlayer::GetTotalPlayedTime()
+TSNumber<uint32> TSPlayer::GetTotalPlayedTime()
 {
     return player->GetTotalPlayedTime();
 }
@@ -1402,7 +1402,7 @@ TSGroup  TSPlayer::GetGroup()
  *
  * @return uint32 accountId
  */
-uint32 TSPlayer::GetAccountID()
+TSNumber<uint32> TSPlayer::GetAccountID()
 {
     return player->GetSession()->GetAccountId();
 }
@@ -1412,7 +1412,7 @@ uint32 TSPlayer::GetAccountID()
  *
  * @return string accountName
  */
-TSString TSPlayer::GetAccountName()
+std::string TSPlayer::GetAccountName()
 {
     std::string accName;
 #ifndef AZEROTHCORE
@@ -1420,7 +1420,7 @@ TSString TSPlayer::GetAccountName()
 #else
     (AccountMgr::GetName(player->GetSession()->GetAccountId(), accName));
 #endif
-    return TSString(accName);
+    return accName;
 }
 
 /**
@@ -1438,7 +1438,7 @@ TSCorpse  TSPlayer::GetCorpse()
  *
  * @return int localeIndex
  */
-int TSPlayer::GetDbLocaleIndex()
+TSNumber<int> TSPlayer::GetDbLocaleIndex()
 {
     return player->GetSession()->GetSessionDbLocaleIndex();
 }
@@ -1448,7 +1448,7 @@ int TSPlayer::GetDbLocaleIndex()
  *
  * @return [LocaleConstant] locale
  */
-uint32 TSPlayer::GetDbcLocale()
+TSNumber<uint32> TSPlayer::GetDbcLocale()
 {
     return player->GetSession()->GetSessionDbcLocale();
 }
@@ -1857,7 +1857,7 @@ void TSPlayer::SetMoney(uint32 amt)
     player->SetMoney(amt);
 }
 
-uint32 TSPlayer::GetMoney()
+TSNumber<uint32> TSPlayer::GetMoney()
 {
     return player->GetMoney();
 }
@@ -2361,7 +2361,7 @@ void TSPlayer::LeaveBG(bool teleToEntryPoint)
  * @param bool guildBank = false
  * @return uint32 totalCost
  */
-uint32 TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod)
+TSNumber<uint32> TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod)
 {
 #if TRINITY
     return player->DurabilityRepair(position, cost, discountMod);
@@ -2378,7 +2378,7 @@ uint32 TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod)
  * @param bool guidBank = false
  * @return uint32 totalCost
  */
-uint32 TSPlayer::DurabilityRepairAll(bool cost,float discountMod,bool guildBank)
+TSNumber<uint32> TSPlayer::DurabilityRepairAll(bool cost,float discountMod,bool guildBank)
 {
 
 #ifdef CLASSIC
@@ -2474,7 +2474,7 @@ void TSPlayer::RemoveFromGroup()
  *
  * @return uint32 resetCost
  */
-uint32 TSPlayer::ResetTalentsCost()
+TSNumber<uint32> TSPlayer::ResetTalentsCost()
 {
 #ifdef CATA
     return player->GetNextResetTalentsCost();
@@ -2860,10 +2860,10 @@ void TSPlayer::RemoveQuest(uint32 entry)
  * @param [Player] receiver : is the [Player] that will receive the whisper, if TrinityCore
  * @param uint64 guid : is the GUID of a [Player] that will receive the whisper, not TrinityCore
  */
-void TSPlayer::Whisper(TSString _text,uint32 lang,TSPlayer _receiver,uint64 guid)
+void TSPlayer::Whisper(std::string const& _text,uint32 lang,TSPlayer _receiver,uint64 guid)
 {
     auto receiver = _receiver.player;
-    auto text = _text._value;
+    auto text = _text;
     player->Whisper(text, (Language)lang, receiver);
 }
 
@@ -2872,10 +2872,8 @@ void TSPlayer::Whisper(TSString _text,uint32 lang,TSPlayer _receiver,uint64 guid
  *
  * @param string emoteText
  */
-void TSPlayer::TextEmote(TSString _text)
+void TSPlayer::TextEmote(std::string const& text)
 {
-    auto text = _text._value;
-
     player->TextEmote(text);
 }
 
@@ -2885,9 +2883,8 @@ void TSPlayer::TextEmote(TSString _text)
  * @param string text : text for the [Player] to yells
  * @param uint32 lang : language the [Player] will speak
  */
-void TSPlayer::Yell(TSString _text,uint32 lang)
+void TSPlayer::Yell(std::string const& text,uint32 lang)
 {
-    auto text = _text._value;
     player->Yell(text, (Language)lang);
 }
 
@@ -2897,9 +2894,8 @@ void TSPlayer::Yell(TSString _text,uint32 lang)
  * @param string text : text for the [Player] to say
  * @param uint32 lang : language the [Player] will speak
  */
-void TSPlayer::Say(TSString _text,uint32 lang)
+void TSPlayer::Say(std::string const& text,uint32 lang)
 {
-    auto text = _text._value;
     player->Say(text, (Language)lang);
 }
 
@@ -2942,7 +2938,7 @@ void TSPlayer::SetXP(uint32 xp)
 #endif
 }
 
-uint32 TSPlayer::GetXP()
+TSNumber<uint32> TSPlayer::GetXP()
 {
 #if TRINITY
     return player->GetXP();
@@ -3100,7 +3096,7 @@ bool TSPlayer::CanEquipItem(TSItem _item,uint32 slot,uint32 entry)
     return true;
 }
 
-float TSPlayer::GetAverageItemLevel()
+TSNumber<float> TSPlayer::GetAverageItemLevel()
 {
     return player->GetAverageItemLevel();
 }
@@ -3332,10 +3328,10 @@ void TSPlayer::ResetAllCooldowns()
  *
  * @param string message
  */
-void TSPlayer::SendBroadcastMessage(TSString message)
+void TSPlayer::SendBroadcastMessage(std::string const& message)
 {
     if (message.length() > 0)
-        ChatHandler(player->GetSession()).SendSysMessage(message._value.c_str());
+        ChatHandler(player->GetSession()).SendSysMessage(message.c_str());
 }
 
 /**
@@ -3343,9 +3339,8 @@ void TSPlayer::SendBroadcastMessage(TSString message)
  *
  * @param string message
  */
-void TSPlayer::SendAreaTriggerMessage(TSString _msg)
+void TSPlayer::SendAreaTriggerMessage(std::string const& msg)
 {
-    auto msg = _msg._value;
     if (msg.length() > 0)
         player->GetSession()->SendAreaTriggerMessage("%s", msg.c_str());
 }
@@ -3355,9 +3350,8 @@ void TSPlayer::SendAreaTriggerMessage(TSString _msg)
  *
  * @param string message
  */
-void TSPlayer::SendNotification(TSString _msg)
+void TSPlayer::SendNotification(std::string const& msg)
 {
-    auto msg = _msg._value;
     if (msg.length() > 0)
         player->GetSession()->SendNotification("%s", msg.c_str());
 }
@@ -3398,12 +3392,9 @@ void TSPlayer::SendPacketPlayer(TSWorldPacket _data,bool selfOnly)
  * @param [Player] receiver
  *
  */
-void TSPlayer::SendAddonMessage(TSString _prefix,TSString _message,uint8 channel,TSPlayer _receiver)
+void TSPlayer::SendAddonMessage(std::string const& prefix, std::string const& message,uint8 channel,TSPlayer _receiver)
 {
     auto receiver = _receiver.player;
-    auto prefix = _prefix._value;
-    auto message = _message._value;
-
     std::string fullmsg = prefix + "\t" + message;
 
 WorldPacket data(SMSG_MESSAGECHAT, 100);
@@ -3517,10 +3508,10 @@ void TSPlayer::ResurrectPlayer(float percent,bool sickness)
  * @param string popup = nil : if non empty string, a popup with given text shown on click
  * @param uint32 money = 0 : required money in copper
  */
-void TSPlayer::GossipMenuAddItem(uint32 _icon,TSString msg,uint32 _sender,uint32 _intid,bool _code,TSString _promptMsg,uint32 _money)
+void TSPlayer::GossipMenuAddItem(uint32 _icon, std::string const& msg,uint32 _sender,uint32 _intid,bool _code, std::string const& _promptMsg,uint32 _money)
 {
 #if defined TRINITY || AZEROTHCORE
-    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg._value, _sender, _intid, _promptMsg._value, _money, _code);
+    player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg, _sender, _intid, _promptMsg, _money, _code);
 #else
 #ifndef CLASSIC
     player->PlayerTalkClass->GetGossipMenu().AddMenuItem(_icon, msg._value, _sender, _intid, _promptMsg._value, _money, _code);
@@ -3570,7 +3561,7 @@ void TSPlayer::GossipSendMenu(uint32 npc_text,TSObject _sender,uint32 menu_id)
 
 void TSPlayer::GossipSendTextMenu(
       TSObject sender
-    , TSString text
+    , std::string const& text
     , uint32 language
     , uint32 emote0
     , uint32 emote0Delay
@@ -3584,8 +3575,8 @@ void TSPlayer::GossipSendTextMenu(
         Gender::GENDER_FEMALE;
     GossipSendTextMenuGendered(
           sender
-        , isFemale ? JSTR("") : text
-        , isFemale ? text : JSTR("")
+        , isFemale ? "" : text
+        , isFemale ? text : ""
         , language
         , emote0, emote0Delay
         , emote1, emote1Delay
@@ -3596,8 +3587,8 @@ void TSPlayer::GossipSendTextMenu(
 
 void TSPlayer::GossipSendTextMenuGendered(
       TSObject sender
-    , TSString male
-    , TSString female
+    , std::string const& male
+    , std::string const& female
     , uint32 language
     , uint32 emote0
     , uint32 emote0Delay
@@ -3612,13 +3603,13 @@ void TSPlayer::GossipSendTextMenuGendered(
         , 4                                   // text id
         + (8*4*MAX_GOSSIP_TEXT_OPTIONS)       // emotes/languages
         + ((MAX_GOSSIP_TEXT_OPTIONS-1)*2)     // empty strings
-        + male.get_length() + 1               // male message + null
-        + female.get_length() + 1             // female message + null
+        + male.size() + 1               // male message + null
+        + female.size() + 1             // female message + null
     );
     packet << CUSTOM_GOSSIP_TEXT;
     packet << uint32(100);
-    packet << male.std_str();
-    packet << female.std_str();
+    packet << male;
+    packet << female;
     packet << language;
     packet << emote0;
     packet << emote0Delay;
@@ -3671,10 +3662,8 @@ void TSPlayer::StartTaxi(uint32 pathId)
  * @param uint32 data
  * @param string iconText
  */
-void TSPlayer::GossipSendPOI(float x,float y,uint32 icon,uint32 flags,uint32 data,TSString _iconText)
+void TSPlayer::GossipSendPOI(float x,float y,uint32 icon,uint32 flags,uint32 data, std::string const& iconText)
 {
-    auto iconText = _iconText._value;
-
 WorldPacket packet(SMSG_GOSSIP_POI, 4 + 4 + 4 + 4 + 4 + 10);
     packet << flags;
     packet << x;
@@ -3869,10 +3858,10 @@ void TSPlayer::SendMovieStart(uint32 MovieId)
 }
 #endif
 
-void TSPlayer::SendMail(uint8 senderType, uint64 from, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
+void TSPlayer::SendMail(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
     MailSender sender(MailMessageType(senderType),from);
-    MailDraft draft(subject.std_str(),body.std_str());
+    MailDraft draft(subject,body);
     draft.AddMoney(money);
     draft.AddCOD(cod);
     CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
@@ -3982,7 +3971,7 @@ void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLev
 #endif
 }
 
-uint8 TSPlayer::GetHairStyle()
+TSNumber<uint8> TSPlayer::GetHairStyle()
 {
 #if TRINITY
     return player->GetHairStyleId();
@@ -4001,7 +3990,7 @@ void TSPlayer::SetHairStyle(uint8 style)
 #endif
 }
 
-uint8 TSPlayer::GetHairColor()
+TSNumber<uint8> TSPlayer::GetHairColor()
 {
 #if TRINITY
     return player->GetHairColorId();
@@ -4019,7 +4008,7 @@ void TSPlayer::SetHairColor(uint8 color)
 #endif
 }
 
-uint8 TSPlayer::GetFacialStyle()
+TSNumber<uint8> TSPlayer::GetFacialStyle()
 {
 #if TRINITY
     return player->GetFacialStyle();
@@ -4039,7 +4028,7 @@ void TSPlayer::SetFacialStyle(uint8 style)
 
 }
 
-uint8 TSPlayer::GetSkinColor()
+TSNumber<uint8> TSPlayer::GetSkinColor()
 {
 #if TRINITY
     return player->GetSkinId();
@@ -4058,7 +4047,7 @@ void TSPlayer::SetSkinColor(uint8 color)
 #endif
 }
 
-uint8 TSPlayer::GetFace()
+TSNumber<uint8> TSPlayer::GetFace()
 {
 #if TRINITY
     return player->GetFaceId();
@@ -4163,7 +4152,7 @@ bool TSPlayer::CanBeLeader()
 #endif
 }
 
-uint32 TSPlayer::GetTalentPointsInTree(uint32 tabId)
+TSNumber<uint32> TSPlayer::GetTalentPointsInTree(uint32 tabId)
 {
 #if TRINITY
     return player->GetTalentPointsInTree(tabId);
@@ -4227,278 +4216,10 @@ player->SummonPet(entry, x, y, z, o, (PetType)petType, despwtime);
 
 player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
 }*/
-// Inherited from Unit
-// Inherited from WorldObject
-// Inherited from Object
 
-std::string TSPlayer::LGetGuildName()
-{
-    return GetGuildName().std_str();
-}
-std::string TSPlayer::LGetPlayerIP()
-{
-    return GetPlayerIP().std_str();
-}
-std::string TSPlayer::LGetAccountName()
-{
-    return GetAccountName().std_str();
-}
-void TSPlayer::LWhisper(std::string const& text, uint32 lang, TSPlayer receiver, uint64 guid)
-{
-    Whisper(text, lang, receiver, guid);
-}
-void TSPlayer::LTextEmote(std::string const& text)
-{
-    TextEmote(text);
-}
-void TSPlayer::LYell(std::string const& text, uint32 lang)
-{
-    Yell(text, lang);
-}
-void TSPlayer::LSay(std::string const& text, uint32 lang)
-{
-    Say(text, lang);
-}
-void TSPlayer::LSendBroadcastMessage(std::string const& message)
-{
-    SendBroadcastMessage(message);
-}
-void TSPlayer::LSendAreaTriggerMessage(std::string const& msg)
-{
-    SendAreaTriggerMessage(msg);
-}
-void TSPlayer::LSendNotification(std::string const& msg)
-{
-    SendNotification(msg);
-}
-void TSPlayer::LSendAddonMessage(std::string const& prefix, std::string const& message, uint8 channel, TSPlayer receiver)
-{
-    SendAddonMessage(prefix, message, channel, receiver);
-}
-
-void TSPlayer::LGossipMenuAddItem0(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code, std::string const& _promptMsg, uint32 _money)
-{
-    GossipMenuAddItem(_icon, msg, _sender, _intid, _code, _promptMsg, _money);
-}
-void TSPlayer::LGossipMenuAddItem1(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code, std::string const& _promptMsg)
-{
-    GossipMenuAddItem(_icon, msg, _sender, _intid, _code, _promptMsg);
-}
-void TSPlayer::LGossipMenuAddItem2(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code)
-{
-    GossipMenuAddItem(_icon, msg, _sender, _intid, _code);
-}
-void TSPlayer::LGossipMenuAddItem3(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid)
-{
-    GossipMenuAddItem(_icon, msg, _sender, _intid);
-}
-void TSPlayer::LGossipMenuAddItem4(uint32 _icon, std::string const& msg, uint32 _sender)
-{
-    GossipMenuAddItem(_icon, msg, _sender);
-}
-void TSPlayer::LGossipMenuAddItem5(uint32 _icon, std::string const& msg)
-{
-    GossipMenuAddItem(_icon, msg);
-}
-
-void TSPlayer::LGossipSendTextMenu0(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay, uint32 menu_id)
-{
-    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay, menu_id);
-}
-void TSPlayer::LGossipSendTextMenu1(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay)
-{
-    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay);
-}
-void TSPlayer::LGossipSendTextMenu2(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2)
-{
-    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay, emote2);
-}
-void TSPlayer::LGossipSendTextMenu3(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay)
-{
-    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay);
-}
-void TSPlayer::LGossipSendTextMenu4(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1)
-{
-    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1);
-}
-void TSPlayer::LGossipSendTextMenu5(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay)
-{
-    GossipSendTextMenu(sender, str, language, emote0, emote0Delay);
-}
-void TSPlayer::LGossipSendTextMenu6(TSObject sender, std::string const& str, uint32 language, uint32 emote0)
-{
-    GossipSendTextMenu(sender, str, language, emote0);
-}
-void TSPlayer::LGossipSendTextMenu7(TSObject sender, std::string const& str, uint32 language)
-{
-    GossipSendTextMenu(sender, str, language);
-}
-void TSPlayer::LGossipSendTextMenu8(TSObject sender, std::string const& str)
-{
-    GossipSendTextMenu(sender, str);
-}
-
-void TSPlayer::LGossipSendTextMenuGendered0(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay, uint32 menu_id)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay, menu_id);
-}
-void TSPlayer::LGossipSendTextMenuGendered1(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay);
-}
-void TSPlayer::LGossipSendTextMenuGendered2(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay, emote2);
-}
-void TSPlayer::LGossipSendTextMenuGendered3(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay);
-}
-void TSPlayer::LGossipSendTextMenuGendered4(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1);
-}
-void TSPlayer::LGossipSendTextMenuGendered5(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay);
-}
-void TSPlayer::LGossipSendTextMenuGendered6(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0)
-{
-    GossipSendTextMenuGendered(sender, male, female, language, emote0);
-}
-void TSPlayer::LGossipSendTextMenuGendered7(TSObject sender, std::string const& male, std::string const& female, uint32 language)
-{
-    GossipSendTextMenuGendered(sender, male, female, language);
-}
-void TSPlayer::LGossipSendTextMenuGendered8(TSObject sender, std::string const& male, std::string const& female)
-{
-    GossipSendTextMenuGendered(sender, male, female);
-}
-
-void TSPlayer::LGossipSendPOI(float x, float y, uint32 icon, uint32 flags, uint32 data, std::string const& iconText)
-{
-    GossipSendPOI(x, y, icon, flags, data, iconText);
-}
-
-void TSPlayer::LSendMail0(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, sol::table items)
-{
-    TSArray<TSItem> tsitems;
-    for (auto const& item : items)
-    {
-        tsitems.push(item.second.as<TSItem>());
-    }
-    SendMail(senderType, from, subject, body, money, cod, delay, tsitems);
-}
-void TSPlayer::LSendMail1(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay)
-{
-    SendMail(senderType, from, subject, body, money, cod, delay);
-}
-void TSPlayer::LSendMail2(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod)
-{
-    SendMail(senderType, from, subject, body, money, cod);
-}
-void TSPlayer::LSendMail3(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money)
-{
-    SendMail(senderType, from, subject, body, money);
-}
-void TSPlayer::LSendMail4(uint8 senderType, uint64 from, std::string const& subject, std::string const& body)
-{
-    SendMail(senderType, from, subject, body);
-}
-
-TSOutfit TSPlayer::LGetOutfitCopy0(uint32_t settings, int32_t race, int32_t gender)
-{
-    return GetOutfitCopy(settings, race, gender);
-}
-TSOutfit TSPlayer::LGetOutfitCopy1(uint32_t settings, int32_t race)
-{
-    return GetOutfitCopy(settings, race);
-}
-TSOutfit TSPlayer::LGetOutfitCopy2(uint32_t settings)
-{
-    return GetOutfitCopy(settings);
-}
-TSOutfit TSPlayer::LGetOutfitCopy3()
-{
-    return GetOutfitCopy();
-}
-
-void TSPlayer::LKillPlayer0(bool durability)
-{
-    KillPlayer(durability);
-}
-void TSPlayer::LKillPlayer1()
-{
-    KillPlayer();
-}
-
-TSItem TSPlayer::LAddItem0(uint32 itemId, uint32 itemCount, int32 propertyId)
-{
-    return AddItem(itemId, itemCount, propertyId);
-}
-TSItem TSPlayer::LAddItem1(uint32 itemId, uint32 itemCount)
-{
-    return AddItem(itemId, itemCount);
-}
-
-void TSPlayer::LAddItemToSlotRaw0(uint8 bag, uint8 slot, uint32 itemId, uint32 count, int32 propertyId)
-{
-    AddItemToSlotRaw(bag, slot, itemId, count, propertyId);
-}
-void TSPlayer::LAddItemToSlotRaw1(uint8 bag, uint8 slot, uint32 itemId, uint32 count)
-{
-    AddItemToSlotRaw(bag, slot, itemId, count);
-}
-
-void TSPlayer::LRemoveItem0(TSItem item, uint32 itemCount)
-{
-    RemoveItem(item, itemCount);
-}
-void TSPlayer::LRemoveItem1(TSItem item)
-{
-    RemoveItem(item);
-}
-
-void TSPlayer::LRemoveItemByEntry0(uint32 entry, uint32 itemCount)
-{
-    RemoveItemByEntry(entry, itemCount);
-}
-void TSPlayer::LRemoveItemByEntry1(uint32 entry)
-{
-    RemoveItemByEntry(entry);
-}
-
-void TSPlayer::LLearnClassSpells0(bool trainer, bool quests, bool limitQuestsByLevel)
-{
-    LearnClassSpells(trainer, quests, limitQuestsByLevel);
-}
-void TSPlayer::LLearnClassSpells1(bool trainer, bool quests)
-{
-    LearnClassSpells(trainer, quests);
-}
-
-void TSPlayer::LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id)
-{
-    GossipSendMenu(npc_text, sender, menu_id);
-}
-void TSPlayer::LGossipSendMenu1(uint32 npc_text, TSObject sender)
-{
-    GossipSendMenu(npc_text, sender);
-}
-
-uint32 TSPlayer::GetFreeInventorySpace()
+TSNumber<uint32> TSPlayer::GetFreeInventorySpace()
 {
     return player->GetFreeInventorySpace();
-}
-
-void TSPlayer::LSendItemQueryPacket0(uint32 entry)
-{
-    SendItemQueryPacket(entry);
-}
-
-void TSPlayer::LSendItemQueryPacket1(TSItemTemplate item)
-{
-    SendItemQueryPacket(item);
 }
 
 TSUnit TSPlayer::GetGlobalSelection()
@@ -4514,19 +4235,19 @@ TSUnit TSPlayer::GetGlobalSelection()
     }
 }
 
-uint32 TSPlayer::GetQuestRewardTempTalentPoints()
+TSNumber<uint32> TSPlayer::GetQuestRewardTempTalentPoints()
 {
     return player->m_questRewardTalentCount;
 }
 
-uint32 TSPlayer::GetQuestRewardPermTalentPoints()
+TSNumber<uint32> TSPlayer::GetQuestRewardPermTalentPoints()
 {
     return player->m_questRewardPermTalentCount;
 }
 
-TSDictionary<uint32, TSPlayerSpell> TSPlayer::GetSpellMap()
+TSDictionary<TSNumber<uint32>, TSPlayerSpell> TSPlayer::GetSpellMap()
 {
-    TSDictionary<uint32, TSPlayerSpell> map;
+    TSDictionary<TSNumber<uint32>, TSPlayerSpell> map;
     for (auto& [spell, info] : player->GetSpellMap())
     {
         map.set(spell, TSPlayerSpell{ uint8(info.state),info.active,info.dependent,info.disabled });
@@ -4534,7 +4255,7 @@ TSDictionary<uint32, TSPlayerSpell> TSPlayer::GetSpellMap()
     return map;
 }
 
-TSLua::Dictionary<uint32, TSPlayerSpell> TSPlayer::LGetSpellMap()
+TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> TSPlayer::LGetSpellMap()
 {
     return sol::as_table(*GetSpellMap()._map);
 }

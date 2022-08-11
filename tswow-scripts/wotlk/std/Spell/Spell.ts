@@ -210,15 +210,6 @@ export class Spell extends MainEntityID<SpellRow> {
         ) as _hidden.Spell<this>
     }
 
-    get InlineLua() {
-        return getInlineID(
-              this
-            , this.ID
-            , 'Spell'
-            , 'lua'
-        ) as _hidden.Spell<this>
-    }
-
     clear() {
         this.row
             .ActiveIconID.set(0)

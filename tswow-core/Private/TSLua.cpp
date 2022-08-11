@@ -18,13 +18,23 @@ sol::state& TSLua::GetState()
     return state;
 }
 
-std::filesystem::path TSLua::LuaRoot()
+static std::filesystem::path LibRoot()
 {
 #if AZEROTHCORE
-    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
+    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib";
 #elif TRINITY
-    return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
+    return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib";
 #endif
+}
+
+std::filesystem::path TSLua::LuaRoot()
+{
+    return LibRoot() / "lua";
+}
+
+static std::filesystem::path LuaLibRoot()
+{
+    return LibRoot() / "lualib";
 }
 
 static bool ends_with(std::string const& value, std::string const& ending)
@@ -83,6 +93,7 @@ void TSLua::load_bindings(sol::state& ztate)
     load_channel_methods(state);
     load_corpse_methods(state);
     load_packet_methods(state);
+    load_world_packet_methods(state);
     load_damage_metods(state);
     load_group_methods(state);
     load_guild_methods(state);
@@ -105,7 +116,9 @@ void TSLua::load_bindings(sol::state& ztate)
     load_db_json_methods(state);
     load_main_thread_context_methods(state);
     load_global_functions(state);
+    load_mutex_functions(state);
     load_events(state);
+    load_lua_libraries(state);
 }
 
 void TSLua::handle_error(sol::protected_function_result const& res)
@@ -243,9 +256,30 @@ void TSLua::execute_file(std::filesystem::path file)
     file_stack.pop_back();
 }
 
+void TSLua::load_lua_libraries(sol::state & state)
+{
+    // Load lua libraries ( todo: move to "load_bindings" method )
+    std::filesystem::path lualib_bundle_path = LuaLibRoot() / "lualib_bundle.lua";
+    std::filesystem::path LuaORMClasses_path = LuaLibRoot() / "LuaORMClasses.lua";
+
+    if (std::filesystem::exists(lualib_bundle_path))
+    {
+        modules["lualib_bundle"] = state.safe_script_file(lualib_bundle_path.string()).get<sol::table>();
+    }
+
+    if (std::filesystem::exists(LuaORMClasses_path))
+    {
+        state.safe_script_file(LuaORMClasses_path.string());
+    }
+}
 
 sol::table TSLua::require(std::string const& mod)
 {
+    if (mod == "lualib_bundle")
+    {
+        return modules["lualib_bundle"];
+    }
+
     std::filesystem::path path = std::filesystem::absolute(FindLuaModule(mod));
     if (path.empty())
     {
@@ -254,7 +288,13 @@ sol::table TSLua::require(std::string const& mod)
 
     if (std::find(file_stack.begin(), file_stack.end(), path) != file_stack.end())
     {
-        throw std::runtime_error("Circular dependency from module " + mod);
+        std::string error_str = "";
+        for (std::filesystem::path const& file : file_stack)
+        {
+            error_str += "    " +file.string() + "->\n";
+        }
+        error_str += "    " + path.string();
+        throw std::runtime_error("Circular dependency:" + error_str);
     }
 
     auto itr = modules.find(path);
@@ -286,7 +326,6 @@ void TSLua::Load()
         return TSLua::require(name);
     });
     load_bindings(state);
-    state["TSEvents"] = &ts_events;
     state["HAS_TAG"] = L_HAS_TAG;
     state["BROADCAST_PHASE_ID"] = BROADCAST_PHASE_ID;
 
@@ -304,17 +343,63 @@ void TSLua::Load()
             if (file.is_regular_file() && file.path().extension() == ".lua")
             {
                 cur_directory = file.path().parent_path();
-                execute_file(file);
+                // don't load any accidental lualib_bundles
+                if (file.path().filename() == "lualib_bundle.lua")
+                {
+                    continue;
+                }
+
+                try
+                {
+                    execute_file(file);
+                }
+                catch (std::exception const& e)
+                {
+                    std::cerr << e.what() << "\n";
+                }
+                catch (...)
+                {
+                    std::cerr << "Unknown Lua exception\n";
+                }
             }
         }
     }
 
     for (auto& [_,table] : modules)
     {
-        auto v = table["Main"];
-        if (v.get_type() == sol::type::function)
+        auto main = table["Main"];
+        if (main.get_type() == sol::type::function)
         {
-            v(&ts_events);
+            // todo: hack to catch exceptions, we should properly configure sol to give us error results instead
+            try
+            {
+                main(&ts_events);
+            }
+            catch (std::exception const& e)
+            {
+                std::cerr << e.what() << "\n";
+            }
+            catch (...)
+            {
+                std::cerr << "Unknown Lua exception\n";
+            }
+        }
+
+        auto __inline_main = table["__InlineMain"];
+        if (__inline_main.get_type() == sol::type::function)
+        {
+            try
+            {
+                __inline_main(&ts_events);
+            }
+            catch (std::exception const& e)
+            {
+                std::cerr << e.what() << "\n";
+            }
+            catch (...)
+            {
+                std::cerr << "Unknown Lua exception\n";
+            }
         }
     }
 }

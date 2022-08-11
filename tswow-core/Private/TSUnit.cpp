@@ -35,6 +35,8 @@
 #include "MotionMaster.h"
 #include "Unit.h"
 #include "Player.h"
+#include "SpellHistory.h"
+#include "SpellMgr.h"
 
 #include <memory.h>
 
@@ -528,9 +530,9 @@ bool TSUnit::HealthAbovePct(int32 pct)
  * @param uint32 spell : entry of the aura spell
  * @return bool hasAura
  */
-bool TSUnit::HasAura(uint32 spell)
+bool TSUnit::HasAura(uint32 spell, uint64_t casterGUID , uint64_t itemCasterGUID, uint8 reqEffMask)
 {
-    return unit->HasAura(spell);
+    return unit->HasAura(spell, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask);
 }
 
 /**
@@ -592,7 +594,7 @@ TSUnit  TSUnit::GetOwner()
  *
  * @return uint64 ownerGUID
  */
-uint64 TSUnit::GetOwnerGUID()
+TSNumber<uint64> TSUnit::GetOwnerGUID()
 {
     return TS_GUID(unit->GetOwnerGUID());
 }
@@ -602,7 +604,7 @@ uint64 TSUnit::GetOwnerGUID()
  *
  * @return uint32 mountId : displayId of the mount
  */
-uint32 TSUnit::GetMountID()
+TSNumber<uint32> TSUnit::GetMountID()
 {
     return unit->GetMountDisplayId();
 }
@@ -612,7 +614,7 @@ uint32 TSUnit::GetMountID()
  *
  * @return uint64 creatorGUID
  */
-uint64 TSUnit::GetCreatorGUID()
+TSNumber<uint64> TSUnit::GetCreatorGUID()
 {
     return TS_GUID(unit->GetCreatorGUID());
 }
@@ -622,7 +624,7 @@ uint64 TSUnit::GetCreatorGUID()
  *
  * @return uint64 charmerGUID
  */
-uint64 TSUnit::GetCharmerGUID()
+TSNumber<uint64> TSUnit::GetCharmerGUID()
 {
     return TS_GUID(unit->GetCharmerGUID());
 }
@@ -632,7 +634,7 @@ uint64 TSUnit::GetCharmerGUID()
  *
  * @return uint64 charmedGUID
  */
-uint64 TSUnit::GetCharmGUID()
+TSNumber<uint64> TSUnit::GetCharmGUID()
 {
 #if TRINITY
     return unit->GetCharmedGUID();
@@ -646,7 +648,7 @@ uint64 TSUnit::GetCharmGUID()
  *
  * @return uint64 petGUID
  */
-uint64 TSUnit::GetPetGUID(uint32 summonSlot)
+TSNumber<uint64> TSUnit::GetPetGUID(uint32 summonSlot)
 {
     return TS_GUID(unit->m_SummonSlot[summonSlot]);
 }
@@ -661,7 +663,7 @@ TSCreature TSUnit::GetPet(uint32 slot)
  *
  * @return uint64 controllerGUID
  */
-uint64 TSUnit::GetControllerGUID()
+TSNumber<uint64> TSUnit::GetControllerGUID()
 {
     return TS_GUID(unit->GetCharmerOrOwnerGUID());
 }
@@ -676,7 +678,7 @@ TSUnit TSUnit::GetController()
  *
  * @return uint64 controllerGUID
  */
-uint64 TSUnit::GetControllerGUIDS()
+TSNumber<uint64> TSUnit::GetControllerGUIDS()
 {
     return TS_GUID(unit->GetCharmerOrOwnerOrOwnGUID());
 }
@@ -687,7 +689,7 @@ uint64 TSUnit::GetControllerGUIDS()
  * @param uint32 statType
  * @return float stat
  */
-float TSUnit::GetStat(uint32 stat)
+TSNumber<float> TSUnit::GetStat(uint32 stat)
 {
 
     return unit->GetStat((Stats)stat);
@@ -699,7 +701,7 @@ float TSUnit::GetStat(uint32 stat)
  * @param uint32 spellSchool
  * @return uint32 spellPower
  */
-uint32 TSUnit::GetBaseSpellPower(uint32 spellschool)
+TSNumber<uint32> TSUnit::GetBaseSpellPower(uint32 spellschool)
 {
 
     return unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool);
@@ -744,7 +746,7 @@ TSSpell  TSUnit::GetCurrentSpell(uint32 type)
  *
  * @return uint8 standState
  */
-uint8 TSUnit::GetStandState()
+TSNumber<uint8> TSUnit::GetStandState()
 {
 #ifdef TRINITY
     return unit->GetStandState();
@@ -758,7 +760,7 @@ uint8 TSUnit::GetStandState()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetDisplayID()
+TSNumber<uint32> TSUnit::GetDisplayID()
 {
     return unit->GetDisplayId();
 }
@@ -768,7 +770,7 @@ uint32 TSUnit::GetDisplayID()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetNativeDisplayID()
+TSNumber<uint32> TSUnit::GetNativeDisplayID()
 {
     return unit->GetNativeDisplayId();
 }
@@ -778,7 +780,7 @@ uint32 TSUnit::GetNativeDisplayID()
  *
  * @return uint8 level
  */
-uint8 TSUnit::GetLevel()
+TSNumber<uint8> TSUnit::GetLevel()
 {
 #ifdef TRINITY
     return unit->GetLevel();
@@ -792,12 +794,12 @@ uint8 TSUnit::GetLevel()
  *
  * @return uint32 healthAmount
  */
-uint32 TSUnit::GetHealth()
+TSNumber<uint32> TSUnit::GetHealth()
 {
     return unit->GetHealth();
 }
 
-uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
+TSNumber<uint32> TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
 {
 #ifdef TRINITY
     if (powerType == -1)
@@ -833,7 +835,7 @@ uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return uint32 powerAmount
  */
-uint32 TSUnit::GetPower(int type)
+TSNumber<uint32> TSUnit::GetPower(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     return unit->GetPower(power);
@@ -858,7 +860,7 @@ uint32 TSUnit::GetPower(int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return uint32 maxPowerAmount
  */
-uint32 TSUnit::GetMaxPower(int type)
+TSNumber<uint32> TSUnit::GetMaxPower(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     return unit->GetMaxPower(power);
@@ -883,7 +885,7 @@ uint32 TSUnit::GetMaxPower(int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return float powerPct
  */
-float TSUnit::GetPowerPct(int type)
+TSNumber<float> TSUnit::GetPowerPct(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
 
@@ -913,7 +915,7 @@ float TSUnit::GetPowerPct(int type)
  *
  * @return [Powers] powerType
  */
-uint32 TSUnit::GetPowerType()
+TSNumber<uint32> TSUnit::GetPowerType()
 {
 #ifdef TRINITY
     return unit->GetPowerType();
@@ -929,7 +931,7 @@ uint32 TSUnit::GetPowerType()
  *
  * @return uint32 maxHealth
  */
-uint32 TSUnit::GetMaxHealth()
+TSNumber<uint32> TSUnit::GetMaxHealth()
 {
     return unit->GetMaxHealth();
 }
@@ -939,7 +941,7 @@ uint32 TSUnit::GetMaxHealth()
  *
  * @return float healthPct
  */
-float TSUnit::GetHealthPct()
+TSNumber<float> TSUnit::GetHealthPct()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetHealthPct();
@@ -953,7 +955,7 @@ float TSUnit::GetHealthPct()
  *
  * @return uint8 gender : 0 for male, 1 for female and 2 for none
  */
-uint8 TSUnit::GetGender()
+TSNumber<uint8> TSUnit::GetGender()
 {
 #ifdef TRINITY
     return unit->GetGender();
@@ -967,7 +969,7 @@ uint8 TSUnit::GetGender()
  *
  * @return [Races] race
  */
-uint32 TSUnit::GetRace()
+TSNumber<uint32> TSUnit::GetRace()
 {
 #ifdef TRINITY
     return unit->GetRace();
@@ -981,7 +983,7 @@ uint32 TSUnit::GetRace()
  *
  * @return [Classes] class
  */
-uint32 TSUnit::GetClass()
+TSNumber<uint32> TSUnit::GetClass()
 {
 #ifdef TRINITY
     return unit->GetClass();
@@ -995,7 +997,7 @@ uint32 TSUnit::GetClass()
 *
 * @return uint32 racemask
 */
-uint32 TSUnit::GetRaceMask()
+TSNumber<uint32> TSUnit::GetRaceMask()
 {
 #ifdef TRINITY
     return unit->GetRaceMask();
@@ -1009,7 +1011,7 @@ uint32 TSUnit::GetRaceMask()
 *
 * @return uint32 classmask
 */
-uint32 TSUnit::GetClassMask()
+TSNumber<uint32> TSUnit::GetClassMask()
 {
 #ifdef TRINITY
     return unit->GetClassMask();
@@ -1041,7 +1043,7 @@ uint32 TSUnit::GetClassMask()
  *
  * @return [CreatureType] creatureType
  */
-uint32 TSUnit::GetCreatureType()
+TSNumber<uint32> TSUnit::GetCreatureType()
 {
     return unit->GetCreatureType();
 }
@@ -1066,15 +1068,15 @@ uint32 TSUnit::GetCreatureType()
  * @param [LocaleConstant] locale = DEFAULT_LOCALE
  * @return string className : class name or nil
  */
-TSString TSUnit::GetClassAsString(uint8 locale)
+std::string TSUnit::GetClassAsString(uint8 locale)
 {
 
 #ifdef TRINITY
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
-    return TSString(entry->Name[locale]);
+    return entry->Name[locale];
 #elif AZEROTHCORE
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
-    return TSString(entry->name[locale]);
+    return entry->name[locale];
 #endif
 }
 
@@ -1098,15 +1100,15 @@ TSString TSUnit::GetClassAsString(uint8 locale)
  * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the race name in
  * @return string raceName : race name or nil
  */
-TSString TSUnit::GetRaceAsString(uint8 locale)
+std::string TSUnit::GetRaceAsString(uint8 locale)
 {
 
 #ifdef TRINITY
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
-    return TSString(entry->Name[locale]);
+    return entry->Name[locale];
 #elif AZEROTHCORE
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
-    return TSString(entry->name[locale]);
+    return entry->name[locale];
 #endif
 }
 
@@ -1115,7 +1117,7 @@ TSString TSUnit::GetRaceAsString(uint8 locale)
  *
  * @return uint32 faction
  */
-uint32 TSUnit::GetFaction()
+TSNumber<uint32> TSUnit::GetFaction()
 {
     return unit->GetFaction();
 }
@@ -1126,10 +1128,19 @@ uint32 TSUnit::GetFaction()
  * @param uint32 spellID : entry of the aura spell
  * @return [Aura] aura : aura object or nil
  */
-TSAura  TSUnit::GetAura(uint32 spellID)
+TSAura  TSUnit::GetAura(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask)
 {
 #if defined TRINITY || AZEROTHCORE
-     return TSAura(unit->GetAura(spellID));
+     return TSAura(unit->GetAura(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask));
+#else
+     return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
+#endif
+}
+
+TSAura  TSUnit::GetAuraOfRankedSpell(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask)
+{
+#if defined TRINITY || AZEROTHCORE
+     return TSAura(unit->GetAuraOfRankedSpell(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask));
 #else
      return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
 #endif
@@ -1184,7 +1195,7 @@ TSVehicle TSUnit::GetVehicle()
  *
  * @return uint64 critterGuid
  */
-uint64 TSUnit::GetCritterGUID()
+TSNumber<uint64> TSUnit::GetCritterGUID()
 {
     return TS_GUID(unit->GetCritterGUID());
 }
@@ -1210,7 +1221,7 @@ uint64 TSUnit::GetCritterGUID()
  * @param [UnitMoveType] type
  * @return float speed
  */
-float TSUnit::GetSpeed(uint32 type)
+TSNumber<float> TSUnit::GetSpeed(uint32 type)
 {
 
 #ifndef TRINITY
@@ -1251,7 +1262,7 @@ float TSUnit::GetSpeed(uint32 type)
  *
  * @return [MovementGeneratorType] movementType
  */
-uint32 TSUnit::GetMovementType()
+TSNumber<uint32> TSUnit::GetMovementType()
 {
     return unit->GetMotionMaster()->GetCurrentMovementGeneratorType();
 }
@@ -1304,7 +1315,7 @@ void TSUnit::SetSheath(uint32 sheathed)
  *
  * @param string name : new name
  */
-void TSUnit::SetName(TSString name)
+void TSUnit::SetName(std::string const& name)
 {
     if (name.length() > 0)
         unit->SetName(name.c_str());
@@ -1788,7 +1799,7 @@ void TSUnit::EmoteState(uint32 emoteId)
  *
  * @return int32 percentage
  */
-int32 TSUnit::CountPctFromCurHealth(int32 health)
+TSNumber<int32> TSUnit::CountPctFromCurHealth(int32 health)
 {
     return unit->CountPctFromCurHealth(health);
 }
@@ -1798,7 +1809,7 @@ int32 TSUnit::CountPctFromCurHealth(int32 health)
  *
  * @return int32 percentage
  */
-int32 TSUnit::CountPctFromMaxHealth(int32 health)
+TSNumber<int32> TSUnit::CountPctFromMaxHealth(int32 health)
 {
     return unit->CountPctFromMaxHealth(health);
 }
@@ -1811,11 +1822,9 @@ int32 TSUnit::CountPctFromMaxHealth(int32 health)
  * @param string msg
  * @param [Player] target
  */
-void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang,TSString _msg,TSPlayer _target)
+void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang, std::string const& msg,TSPlayer _target)
 {
     auto target = _target.player;
-    auto msg = _msg._value;
-
 
     WorldPacket data;
 #if TRINITY
@@ -2014,11 +2023,11 @@ Position pos(x, y, z);
  * @param [Player] receiver : specific [Unit] to receive the message
  * @param bool bossWhisper = false : is a boss whisper
  */
-void TSUnit::SendUnitWhisper(TSString msg,uint32 lang,TSPlayer _receiver,bool bossWhisper)
+void TSUnit::SendUnitWhisper(std::string const& msg,uint32 lang,TSPlayer _receiver,bool bossWhisper)
 {
     auto receiver = _receiver.player;
-    if (msg.get_length() > 0)
-        unit->Whisper(msg._value.c_str(), (Language)lang, receiver, bossWhisper);
+    if (msg.size() > 0)
+        unit->Whisper(msg.c_str(), (Language)lang, receiver, bossWhisper);
 }
 
 /**
@@ -2028,11 +2037,11 @@ void TSUnit::SendUnitWhisper(TSString msg,uint32 lang,TSPlayer _receiver,bool bo
  * @param [Unit] receiver = nil : specific [Unit] to receive the message
  * @param bool bossEmote = false : is a boss emote
  */
-void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
+void TSUnit::SendUnitEmote(std::string const& msg,TSUnit _receiver,bool bossEmote)
 {
     auto receiver = _receiver.unit;
     if (msg.length() > 0)
-        unit->TextEmote(msg.std_str(), receiver, bossEmote);
+        unit->TextEmote(msg, receiver, bossEmote);
 }
 
 /**
@@ -2041,7 +2050,7 @@ void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
  * @param string msg : message for the [Unit] to say
  * @param uint32 language : language for the [Unit] to speak
  */
-void TSUnit::SendUnitSay(TSString msg,uint32 language)
+void TSUnit::SendUnitSay(std::string const& msg,uint32 language)
 {
     if (msg.length() > 0)
         unit->Say(msg.c_str(), (Language)language, unit);
@@ -2053,10 +2062,10 @@ void TSUnit::SendUnitSay(TSString msg,uint32 language)
  * @param string msg : message for the [Unit] to yell
  * @param uint32 language : language for the [Unit] to speak
  */
-void TSUnit::SendUnitYell(TSString msg,uint32 language)
+void TSUnit::SendUnitYell(std::string const& msg,uint32 language)
 {
     if (msg.length() > 0)
-        unit->Yell(msg.std_str(), (Language)language, unit);
+        unit->Yell(msg, (Language)language, unit);
 }
 
 /**
@@ -2496,12 +2505,12 @@ void TSUnit::ScaleThreat(TSUnit victim, float scale, bool raw)
 #endif
 }
 
-uint32 TSUnit::GetResistance(uint32 school)
+TSNumber<uint32> TSUnit::GetResistance(uint32 school)
 {
     return unit->GetResistance(static_cast<SpellSchools>(school));
 }
 
-uint32 TSUnit::GetArmor()
+TSNumber<uint32> TSUnit::GetArmor()
 {
     return unit->GetArmor();
 }
@@ -2571,27 +2580,124 @@ void TSUnit::RemoveCharmedBy(TSUnit charmer)
     unit->RemoveCharmedBy(charmer.unit);
 }
 
-bool TSUnit::LSetCharmedBy0(TSUnit charmer, uint32 type, TSAuraApplication aurApp)
+void TSUnit::KnockbackFrom(float x, float y, float speedXY, float speedZ)
 {
-    return SetCharmedBy(charmer, type, aurApp);
+    unit->KnockbackFrom(x, y, speedXY, speedZ);
 }
 
-bool TSUnit::LSetCharmedBy1(TSUnit charmer, uint32 type)
+void TSUnit::Jump(float speedXY, float speedZ, bool forward)
 {
-    return SetCharmedBy(charmer, type);
+    unit->JumpTo(speedXY, speedZ, forward);
 }
 
+void TSUnit::JumpTo(TSWorldObject obj, float speedZ, bool withOrientation)
+{
+    unit->JumpTo(obj->obj, speedZ, withOrientation);
+}
 float TSUnit::GetWeaponDamageRange(uint8 attType, uint8 type, uint8 damageIndex /*= 0*/)
 {
     return unit->GetWeaponDamageRange(static_cast<WeaponAttackType>(attType), static_cast<WeaponDamageRange>(type), damageIndex);
+}
+
+void TSUnit::JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward)
+{
+    unit->JumpTo(speedXY, speedZ, forward, Position{ x,y,z });
+}
+
+TSAuraApplication TSUnit::GetAuraApplication(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask, TSAuraApplication except)
+{
+    return TSAuraApplication(unit->GetAuraApplication(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask, except.aura));
+}
+
+TSAuraApplication TSUnit::GetAuraApplicationOfRankedSpell(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask, TSAuraApplication except)
+{
+    return TSAuraApplication(unit->GetAuraApplicationOfRankedSpell(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask, except.aura));
+}
+
+TSArray<TSAuraApplication> TSUnit::GetAuraApplications()
+{
+    TSArray<TSAuraApplication> applications;
+    applications.reserve(unit->GetAppliedAuras().size());
+    for (auto const& [_, app] : unit->GetAppliedAuras())
+    {
+        applications.push(TSAuraApplication(app));
+    }
+    return applications;
+}
+
+TSArray<TSAuraEffect> TSUnit::GetAuraEffectsByType(uint32 type)
+{
+    TSArray<TSAuraEffect> effects;
+    Unit::AuraEffectList & list = unit->GetAuraEffectsByType(AuraType(type));
+    effects.reserve(list.size());
+    for (AuraEffect* eff : list)
+    {
+        effects.push(eff);
+    }
+    return effects;
+}
+
+int32 TSUnit::GetTotalAuraModifier(uint32 auraType)
+{
+    return unit->GetTotalAuraModifier(AuraType(auraType));
+}
+
+float TSUnit::GetTotalAuraMultiplier(uint32 auraType)
+{
+    return unit->GetTotalAuraMultiplier(AuraType(auraType));
+}
+
+int32 TSUnit::GetMaxPositiveAuraModifier(uint32 auraType)
+{
+    return unit->GetMaxPositiveAuraModifier(AuraType(auraType));
+}
+
+int32 TSUnit::GetMaxNegativeAuraModifier(uint32 auraType)
+{
+    return unit->GetMaxNegativeAuraModifier(AuraType(auraType));
+}
+
+void TSUnit::ResetCooldown(uint32 spellId, bool update)
+{
+    unit->GetSpellHistory()->ResetCooldown(spellId, update);
+}
+
+void TSUnit::ResetAllCooldowns()
+{
+    unit->GetSpellHistory()->ResetAllCooldowns();
+}
+
+bool TSUnit::HasCooldown(uint32 spell, uint32 itemId, bool ignoreCategory)
+{
+    return unit->GetSpellHistory()->HasCooldown(spell, itemId, ignoreCategory);
+}
+
+uint32 TSUnit::GetRemainingCooldown(uint32 spell)
+{
+    return unit->GetSpellHistory()->GetRemainingCooldown(sSpellMgr->AssertSpellInfo(spell));
+}
+
+void TSUnit::ModifyCooldown(uint32 spell, int32 cooldownModMs)
+{
+    unit->GetSpellHistory()->ModifyCooldown(spell, cooldownModMs);
+}
+
+void TSUnit::StartCooldown(uint32 spell, uint32 item, TSSpell spl, bool onHold)
+{
+    unit->GetSpellHistory()->StartCooldown(sSpellMgr->AssertSpellInfo(spell), item, spl.spell, onHold);
+}
+
+void TSUnit::LockSpellSchool(uint32 schoolMask, uint32 lockoutTime)
+{
+    unit->GetSpellHistory()->LockSpellSchool(SpellSchoolMask(schoolMask), lockoutTime);
+}
+
+bool TSUnit::IsSchoolLocked(uint32 schoolMask)
+{
+    return unit->GetSpellHistory()->IsSchoolLocked(SpellSchoolMask(schoolMask));
 }
 
 int32 TSUnit::SpellBaseDamageBonusDone(uint32 schoolMask)
 {
     return unit->SpellBaseDamageBonusDone(static_cast<SpellSchoolMask>(schoolMask));
 }
-
-// uint32 TSUnit::SpellDamageBonusTaken(TSUnit caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype)
-// {
-//     return unit->SpellDamageBonusTaken(caster.unit, spellProto, pdamage, damagetype);
-// }

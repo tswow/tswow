@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSArray.h"
 
 #include <sol/sol.hpp>
@@ -34,21 +33,21 @@ struct TC_GAME_API TSAuctionEntry {
     operator bool() const { return entry != nullptr; }
     bool operator==(TSAuctionEntry const& rhs) { return entry == rhs.entry; }
 
-    uint32 GetID();
-    uint8 GetHouseID();
-    uint64 GetItemID();
-    uint32 GetItemEntry();
-    uint32 GetItemCount();
-    uint64 GetOwnerID();
-    uint32 GetStartBid();
-    uint32 GetBid();
-    uint32 GetBuyout();
-    uint64 GetExpireTime();
-    uint64 GetBidder();
-    uint32 GetDeposit();
-    uint32 GetETime();
-    TSArray<uint64> GetBidders();
-    uint32 GetFlags();
+    TSNumber<uint32> GetID();
+    TSNumber<uint8> GetHouseID();
+    TSNumber<uint64> GetItemID();
+    TSNumber<uint32> GetItemEntry();
+    TSNumber<uint32> GetItemCount();
+    TSNumber<uint64> GetOwnerID();
+    TSNumber<uint32> GetStartBid();
+    TSNumber<uint32> GetBid();
+    TSNumber<uint32> GetBuyout();
+    TSNumber<uint64> GetExpireTime();
+    TSNumber<uint64> GetBidder();
+    TSNumber<uint32> GetDeposit();
+    TSNumber<uint32> GetETime();
+    TSArray<TSNumber<uint64>> GetBidders();
+    TSNumber<uint32> GetFlags();
 
     void SetItemID(uint64 itemId);
     void SetItemEntry(uint32 itemEntry);
@@ -62,7 +61,7 @@ struct TC_GAME_API TSAuctionEntry {
     void SetETime(uint32 eTime);
     void SetFlags(uint32 flags);
 private:
-    TSLua::Array<uint64> LGetBidders();
+    TSLua::Array<TSNumber<uint64> > LGetBidders();
     friend class TSLua;
 };
 
@@ -73,13 +72,13 @@ struct TC_GAME_API TSAuctionHouseObject {
     TSAuctionHouseObject* operator->(){return this;}
     operator bool() const { return obj != nullptr; }
     bool operator==(TSAuctionHouseObject const& rhs) { return obj == rhs.obj; }
-    TSArray<uint32> GetKeys();
+    TSArray<TSNumber<uint32>> GetKeys();
     TSAuctionEntry GetEntry(uint32 key);
     bool RemoveAuction(uint32 key);
     bool RemoveAuction(TSAuctionEntry entry);
     uint32 GetCount();
     void AddAuction(TSAuctionEntry entry);
 private:
-    TSLua::Array<uint32> LGetKeys();
+    TSLua::Array<TSNumber<uint32>> LGetKeys();
     friend class TSLua;
 };

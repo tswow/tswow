@@ -21,6 +21,9 @@
  * SOFTWARE.
  */
 
+const lualib_bundle = require('lualib_bundle')
+const __unpack = lualib_bundle.__TS__Unpack
+
 class EventHolder {
     events: {[key: string]: ((...args: any[])=>void)[]} = {}
     messageEvents: {[key: number]: ((...args: any[])=>void)[]} = {}
@@ -41,7 +44,7 @@ function addEvent(frame: any, name: string, callback: (...args: any[])=>void) {
         let holder = eventHolders[frame.GetName()] = new EventHolder();
         frame.SetScript('OnEvent',(frameInner: any,eventName: any,...args: any[])=>{
             for(let event of holder.events[eventName]) {
-                event(__TS__Unpack(args));
+                event(__unpack(args));
             }
         });
     }

@@ -95,7 +95,7 @@ bool TSGameObject::IsActive()
  *
  * @return uint32 displayId
  */
-uint32 TSGameObject::GetDisplayID()
+TSNumber<uint32> TSGameObject::GetDisplayID()
 {
     return go->GetDisplayId();
 }
@@ -114,7 +114,7 @@ uint32 TSGameObject::GetDisplayID()
  *
  * @return [GOState] goState
  */
-uint32 TSGameObject::GetGoState()
+TSNumber<uint32> TSGameObject::GetGoState()
 {
     return go->GetGoState();
 }
@@ -134,7 +134,7 @@ uint32 TSGameObject::GetGoState()
  *
  * @return [LootState] lootState
  */
-uint32 TSGameObject::GetLootState()
+TSNumber<uint32> TSGameObject::GetLootState()
 {
     return go->getLootState();
 }
@@ -172,7 +172,7 @@ TSGroup  TSGameObject::GetLootRecipientGroup()
  *
  * @return uint32 dbguid
  */
-uint32 TSGameObject::GetDBTableGUIDLow()
+TSNumber<uint32> TSGameObject::GetDBTableGUIDLow()
 {
 #ifdef TRINITY
     return go->GetSpawnId();
@@ -367,24 +367,4 @@ bool TSGameObject::IsAIEnabled()
 TSGameObjectTemplate TSGameObject::GetTemplate()
 {
     return TSGameObjectTemplate(const_cast<GameObjectTemplate*>(go->GetGOInfo()));
-}
-
-void TSGameObject::LDespawn0(bool forced, uint32 delayMs, uint32 respawnSec)
-{
-    Despawn(forced, delayMs, respawnSec);
-}
-
-void TSGameObject::LDespawn1(bool forced, uint32 delayMs)
-{
-    Despawn(forced, delayMs);
-}
-
-void TSGameObject::LDespawn2(bool forced)
-{
-    Despawn(forced);
-}
-
-void TSGameObject::LDespawn3()
-{
-    Despawn();
 }

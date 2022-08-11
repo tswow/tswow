@@ -199,7 +199,6 @@ export class Client {
                 // user placed a new exe that's actually clean
                 wowbin = exebin
                 hash = CLEAN_CLIENT_MD5
-                console.log("Write the new buffer");
                 this.path.wow_exe_clean.writeBuffer(wowbin);
             } else {
                 term.warn('client',

@@ -22,17 +22,17 @@ TSAuctionEntry::TSAuctionEntry(AuctionEntry* entry)
     this->entry = entry;
 }
 
-uint32 TSAuctionEntry::GetID()
+TSNumber<uint32> TSAuctionEntry::GetID()
 {
     return entry->Id;
 }
 
-uint8 TSAuctionEntry::GetHouseID()
+TSNumber<uint8> TSAuctionEntry::GetHouseID()
 {
     return entry->houseId;
 }
 
-uint64 TSAuctionEntry::GetItemID()
+TSNumber<uint64> TSAuctionEntry::GetItemID()
 {
 #if TRINITY
     return entry->itemGUIDLow;
@@ -41,7 +41,7 @@ uint64 TSAuctionEntry::GetItemID()
 #endif
 }
 
-uint32 TSAuctionEntry::GetItemEntry()
+TSNumber<uint32> TSAuctionEntry::GetItemEntry()
 {
 #if TRINITY
     return entry->itemEntry;
@@ -50,47 +50,47 @@ uint32 TSAuctionEntry::GetItemEntry()
 #endif
 }
 
-uint32 TSAuctionEntry::GetItemCount()
+TSNumber<uint32> TSAuctionEntry::GetItemCount()
 {
     return entry->itemCount;
 }
 
-uint64 TSAuctionEntry::GetOwnerID()
+TSNumber<uint64> TSAuctionEntry::GetOwnerID()
 {
     return TS_GUID(entry->owner);
 }
 
-uint32 TSAuctionEntry::GetStartBid()
+TSNumber<uint32> TSAuctionEntry::GetStartBid()
 {
     return entry->startbid;
 }
 
-uint32 TSAuctionEntry::GetBid()
+TSNumber<uint32> TSAuctionEntry::GetBid()
 {
     return entry->bid;
 }
 
-uint32 TSAuctionEntry::GetBuyout()
+TSNumber<uint32> TSAuctionEntry::GetBuyout()
 {
     return entry->buyout;
 }
 
-uint64 TSAuctionEntry::GetExpireTime()
+TSNumber<uint64> TSAuctionEntry::GetExpireTime()
 {
     return (uint64) entry->expire_time;
 }
 
-uint64 TSAuctionEntry::GetBidder()
+TSNumber<uint64> TSAuctionEntry::GetBidder()
 {
     return TS_GUID(entry->bidder);
 }
 
-uint32 TSAuctionEntry::GetDeposit()
+TSNumber<uint32> TSAuctionEntry::GetDeposit()
 {
     return entry->deposit;
 }
 
-uint32 TSAuctionEntry::GetETime()
+TSNumber<uint32> TSAuctionEntry::GetETime()
 {
 #if TRINITY
     return entry->etime;
@@ -99,9 +99,9 @@ uint32 TSAuctionEntry::GetETime()
 #endif
 }
 
-TSArray<uint64> TSAuctionEntry::GetBidders()
+TSArray<TSNumber<uint64> > TSAuctionEntry::GetBidders()
 {
-    TSArray<uint64> arr;
+    TSArray<TSNumber<uint64> > arr;
 #if TRINITY
     for(auto& bidder: entry->bidders)
     {
@@ -114,7 +114,7 @@ TSArray<uint64> TSAuctionEntry::GetBidders()
     return arr;
 }
 
-uint32 TSAuctionEntry::GetFlags()
+TSNumber<uint32> TSAuctionEntry::GetFlags()
 {
 #if TRINITY
     return entry->Flags;
@@ -196,9 +196,9 @@ void TSAuctionEntry::SetFlags(uint32 flags)
 #endif
 }
 
-TSArray<uint32> TSAuctionHouseObject::GetKeys()
+TSArray<TSNumber<uint32> > TSAuctionHouseObject::GetKeys()
 {
-    TSArray<uint32> keys;
+    TSArray<TSNumber<uint32>> keys;
     keys.vec->reserve(obj->Getcount());
     int ctr = 0;
     for(auto i = obj->GetAuctionsBegin(); i != obj->GetAuctionsEnd();++i)
@@ -235,12 +235,12 @@ void TSAuctionHouseObject::AddAuction(TSAuctionEntry entry)
     obj->AddAuction(entry->entry);
 }
 
-TSLua::Array<uint64> TSAuctionEntry::LGetBidders()
+TSLua::Array<TSNumber<uint64>> TSAuctionEntry::LGetBidders()
 {
     return sol::as_table(*GetBidders().vec);
 }
 
-TSLua::Array<uint32> TSAuctionHouseObject::LGetKeys()
+TSLua::Array<TSNumber<uint32>> TSAuctionHouseObject::LGetKeys()
 {
     return sol::as_table(*GetKeys().vec);
 }

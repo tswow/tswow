@@ -70,7 +70,7 @@ TSUnit  TSVehicle::GetOwner()
  *
  * @return uint32 entry
  */
-uint32 TSVehicle::GetEntry()
+TSNumber<uint32> TSVehicle::GetEntry()
 {
 #if defined TRINITY
     return vehicle->GetVehicleInfo()->ID;

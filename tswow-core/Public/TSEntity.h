@@ -16,7 +16,7 @@
  */
 #pragma once
 
-#include "TSString.h"
+#include "TSBase.h"
 #include "TSJson.h"
 
 #include "sol/sol.hpp"
@@ -38,18 +38,18 @@ struct TC_GAME_API TSCompiledClass {
 class TC_GAME_API TSCompiledClasses {
     std::map<std::string, TSCompiledClass> m_map;
 public:
-    bool HasObject(TSString key);
+    bool HasObject(std::string const& key);
     void clear();
 
     template <typename T>
-    std::shared_ptr<T> SetObject(TSString key, std::shared_ptr<T> item)
+    std::shared_ptr<T> SetObject(std::string const& key, std::shared_ptr<T> item)
     {
-        m_map[key.std_str()] = TSCompiledClass(std::static_pointer_cast<void>(item));
+        m_map[key] = TSCompiledClass(std::static_pointer_cast<void>(item));
         return item;
     }
 
     template <typename T>
-    std::shared_ptr<T> GetObject(TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
+    std::shared_ptr<T> GetObject(std::string const& key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
     {
         auto itr = m_map.find(key);
         if(itr == m_map.end())
@@ -88,104 +88,59 @@ public:
     {}
 
     template <typename T>
-    std::shared_ptr<T> SetObject(TSString key, std::shared_ptr<T> item)
+    std::shared_ptr<T> SetObject(std::string const& key, std::shared_ptr<T> item)
     {
         return getData()->m_compiledClasses.SetObject(key, item);
     }
 
     template <typename T>
-    std::shared_ptr<T> GetObject(TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
+    std::shared_ptr<T> GetObject(std::string const& key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
     {
         return getData()->m_compiledClasses.GetObject(key,defaultValue);
     }
 
-    bool HasObject(TSString key)
+    bool HasObject(std::string const& key)
     {
         return getData()->m_compiledClasses.HasObject(key);
     }
 
-    void SetNumber(TSString key, double value) { getData()->m_json.SetNumber(key, value); }
-    bool HasNumber(TSString key) { return getData()->m_json.HasNumber(key); }
-    double GetNumber(TSString key, double def = 0) { return getData()->m_json.GetNumber(key, def); }
+    void SetNumber(std::string const& key, double value) { getData()->m_json.SetNumber(key, value); }
+    bool HasNumber(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    TSNumber<double> GetNumber(std::string const& key, double def = 0) { return getData()->m_json.GetNumber(key, def); }
 
-    void SetBool(TSString key, bool value) { getData()->m_json.SetBool(key, value); }
-    bool HasBool(TSString key) { return getData()->m_json.HasBool(key); }
-    bool GetBool(TSString key, bool def = false) { return getData()->m_json.GetBool(key, def); }
+    void SetBool(std::string const& key, bool value) { getData()->m_json.SetBool(key, value); }
+    bool HasBool(std::string const& key) { return getData()->m_json.HasBool(key); }
+    bool GetBool(std::string const& key, bool def = false) { return getData()->m_json.GetBool(key, def); }
 
-    void SetString(TSString key, TSString value) { getData()->m_json.SetString(key, value); }
-    bool HasString(TSString key) { return getData()->m_json.HasString(key); }
-    TSString GetString(TSString key, TSString def = JSTR("")) { return getData()->m_json.GetString(key, def); }
+    void SetString(std::string const& key, std::string const& value) { getData()->m_json.SetString(key, value); }
+    bool HasString(std::string const& key) { return getData()->m_json.HasString(key); }
+    std::string GetString(std::string const& key, std::string const& def = "") { return getData()->m_json.GetString(key, def); }
 
-    void SetJsonObject(TSString key, TSJsonObject value) { getData()->m_json.SetJsonObject(key, value); }
-    bool HasJsonObject(TSString key) { return getData()->m_json.HasJsonObject(key); }
-    TSJsonObject GetJsonObject(TSString key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.GetJsonObject(key, def); }
+    void SetJsonObject(std::string const& key, TSJsonObject value = TSJsonObject()) { getData()->m_json.SetJsonObject(key, value); }
+    bool HasJsonObject(std::string const& key) { return getData()->m_json.HasJsonObject(key); }
+    TSJsonObject GetJsonObject(std::string const& key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.GetJsonObject(key, def); }
 
-    void SetJsonArray(TSString key, TSJsonArray value) { getData()->m_json.SetJsonArray(key, value); }
-    bool HasJsonArray(TSString key) { return getData()->m_json.HasJsonArray(key); }
-    TSJsonArray GetJsonArray(TSString key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.GetJsonArray(key, def); }
-
-    // backwards compatibility
-    void SetUInt(TSString key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
-    void SetUInt64(TSString key, uint64_t value) { getData()->m_json.SetNumber(key, double(value)); }
-    bool HasUInt(TSString key) { return getData()->m_json.HasNumber(key); }
-    bool HasUInt64(TSString key) { return getData()->m_json.HasNumber(key); }
-    uint32_t GetUInt(TSString key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
-    uint64_t GetUInt64(TSString key, uint64_t def = 0) { return uint64_t(getData()->m_json.GetNumber(key, double(def))); }
-
-    void SetInt(TSString key, int32_t value) { getData()->m_json.SetNumber(key, value); }
-    bool HasInt(TSString key) { return getData()->m_json.HasNumber(key); }
-    int32_t GetInt(TSString key, int32_t def = 0) { return int32_t(getData()->m_json.GetNumber(key, def)); }
-
-    void SetFloat(TSString key, float value) { getData()->m_json.SetNumber(key, value); }
-    bool HasFloat(TSString key) { return getData()->m_json.HasNumber(key); }
-    float GetFloat(TSString key, float def = 0) { return float(getData()->m_json.GetNumber(key, def)); }
-
-    void Remove(TSString key) { getData()->m_json.Remove(key); }
-
-private:
-    void LSetNumber(std::string const& key, double value) { getData()->m_json.SetNumber(key, value); }
-    bool LHasNumber(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    double LGetNumber0(std::string const& key, double def) { return getData()->m_json.GetNumber(key, def); }
-    double LGetNumber1(std::string const& key) { return getData()->m_json.GetNumber(key); }
-
-    void LSetBool(std::string const& key, bool value) { getData()->m_json.SetBool(key, value); }
-    bool LHasBool(std::string const& key) { return getData()->m_json.HasBool(key); }
-    bool LGetBool0(std::string const& key, bool def) { return getData()->m_json.GetBool(key, def); }
-    bool LGetBool1(std::string const& key) { return getData()->m_json.GetBool(key); }
-
-    void LSetString(std::string const& key, std::string const& value) { getData()->m_json.SetString(key, value); }
-    bool LHasString(std::string const& key) { return getData()->m_json.HasString(key); }
-    std::string LGetString0(std::string const& key, std::string const& def) { return getData()->m_json.GetString(key, def); }
-    std::string LGetString1(std::string const& key) { return getData()->m_json.GetString(key); }
-
-    void LSetJsonObject(std::string const& key, TSJsonObject value) { getData()->m_json.SetJsonObject(key, value); }
-    bool LHasJsonObject(std::string const& key) { return getData()->m_json.HasJsonObject(key); }
-    TSJsonObject LGetJsonObject0(std::string const& key, TSJsonObject def) { return getData()->m_json.GetJsonObject(key, def); }
-    TSJsonObject LGetJsonObject1(std::string const& key) { return getData()->m_json.GetJsonObject(key); }
-
-    void LSetJsonArray(std::string const& key, TSJsonArray value) { getData()->m_json.SetJsonArray(key, value); }
-    bool LHasJsonArray(std::string const& key) { return getData()->m_json.HasJsonArray(key); }
-    TSJsonArray LGetJsonArray0(std::string const& key, TSJsonArray def) { return getData()->m_json.GetJsonArray(key, def); }
-    TSJsonArray LGetJsonArray1(std::string const& key) { return GetJsonArray(key); }
+    void SetJsonArray(std::string const& key, TSJsonArray value = TSJsonArray()) { getData()->m_json.SetJsonArray(key, value); }
+    bool HasJsonArray(std::string const& key) { return getData()->m_json.HasJsonArray(key); }
+    TSJsonArray GetJsonArray(std::string const& key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.GetJsonArray(key, def); }
 
     // backwards compatibility
-    void LSetUInt(std::string const& key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
-    bool LHasUInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    uint32_t LGetUInt0(std::string const& key, uint32_t def) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
-    uint32_t LGetUInt1(std::string const& key) { return uint32_t(getData()->m_json.GetNumber(key)); }
+    void SetUInt(std::string const& key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
+    void SetUInt64(std::string const& key, uint64_t value) { getData()->m_json.SetNumber(key, double(value)); }
+    bool HasUInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    bool HasUInt64(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    TSNumber<uint32> GetUInt(std::string const& key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
+    TSNumber<uint64> GetUInt64(std::string const& key, uint64_t def = 0) { return TSNumber<uint64_t>(getData()->m_json.GetNumber(key, double(def))); }
 
-    void LSetInt(std::string const& key, int32_t value) { getData()->m_json.SetNumber(key, value); }
-    bool LHasInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    int32_t LGetInt0(std::string const& key, int32_t def) { return int32_t(getData()->m_json.GetNumber(key, def)); }
-    int32_t LGetInt1(std::string const& key) { return int32_t(getData()->m_json.GetNumber(key)); }
+    void SetInt(std::string const& key, int32_t value) { getData()->m_json.SetNumber(key, value); }
+    bool HasInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    TSNumber<int32> GetInt(std::string const& key, int32_t def = 0) { return int32_t(getData()->m_json.GetNumber(key, def)); }
 
-    void LSetFloat(std::string const& key, float value) { getData()->m_json.SetNumber(key, value); }
-    bool LHasFloat(std::string const& key) { return getData()->m_json.HasNumber(key); }
-    float LGetFloat0(std::string const& key, float def) { return float(getData()->m_json.GetNumber(key, def)); }
-    float LGetFloat1(std::string const& key) { return float(getData()->m_json.GetNumber(key)); }
+    void SetFloat(std::string const& key, float value) { getData()->m_json.SetNumber(key, value); }
+    bool HasFloat(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    TSNumber<float> GetFloat(std::string const& key, float def = 0) { return float(getData()->m_json.GetNumber(key, def)); }
 
-    void LRemove(std::string const& key) { getData()->m_json.Remove(key); }
-
+    void Remove(std::string const& key) { getData()->m_json.Remove(key); }
     void LRemoveObject(std::string const& key) { getData()->m_lua_tables.erase(key); }
     void LSetObject(std::string const& key, sol::table table) { getData()->m_lua_tables[key] = { table }; }
     bool LHasObject(std::string const& key) {

@@ -94,6 +94,7 @@ export class SoundEntryRegistryClass
          .SoundType.set(0)
          .Volume.set(0)
          .Advanced.set(0)
+         .Files.clearAll()
     }
     protected Entity(r: SoundEntriesRow): SoundEntry {
         return new SoundEntry(r);
@@ -120,6 +121,7 @@ export class SoundEntryRegistryClass
             )
             .DirectoryBase.set(directory)
             .Volume.set(volume)
+            .Files.clearAll()
             .Files.addAll(files,frequency)
             .DistanceCutoff.set(40)
             .MinDistance.set(8)

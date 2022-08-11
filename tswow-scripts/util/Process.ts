@@ -54,6 +54,8 @@ export class Process {
     private _listeners: ((message: string) => void)[] = [];
     private _onFail: ((err: Error)=>void)|undefined = undefined;
     private _isStopping: boolean = false;
+    private _autoRestart: boolean = false;
+    private _lastStart?: {directory : FilePath, program: string, args: string[]} = undefined
 
     private _lineBuffers = {
         stderr: {value: '', idx: 0},
@@ -80,6 +82,11 @@ export class Process {
         return new Process(name,bufferSize)
             .showOutput(true)
             .startIn(directory,program,args)
+    }
+
+    setAutoRestart(autoRestart: boolean) {
+        this._autoRestart = autoRestart;
+        return this;
     }
 
     isRunning() {
@@ -194,6 +201,7 @@ export class Process {
         , args: string[] = []
     ) {
         await this.stop();
+        this._lastStart = {directory,program,args};
         this._isStopping = false;
         const proc = child_process.spawn(
               program
@@ -226,14 +234,19 @@ export class Process {
                 }
             }
             proc.on('error', (err) => {
-                if(this._onFail) this._onFail(err)
+                this.fail(err)
                 onDestroyed();
+                this.postFail();
             });
             proc.on('exit', (code) => {
-                if(code !== 0 && code !== null && this._onFail) {
-                    this._onFail(new Error('Process error code '+code))
+                let failed = code !== 0 && code !== null
+                if(failed) {
+                    this.fail(new Error('Process error code '+code))
                 }
                 onDestroyed()
+                if(failed) {
+                    this.postFail()
+                }
             });
         });
     }
@@ -256,6 +269,20 @@ export class Process {
         this._curString = this._curString + line;
         this._listeners.forEach(x=>x(line))
         Object.values(this._waiters).forEach(x=>x(this._curString))
+    }
+
+    private fail(error: any) {
+        if(this._onFail) {
+            this._onFail(error);
+        }
+
+    }
+
+    private postFail() {
+        if(this._autoRestart && this._lastStart) {
+            term.log('process',`Automatically restarting ${this._lastStart.program}`)
+            this.startIn(this._lastStart.directory, this._lastStart.program, this._lastStart.args);
+        }
     }
 
     /**

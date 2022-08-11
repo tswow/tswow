@@ -242,8 +242,6 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
 
     get InlineScripts() { return getInlineID(this, this.ID, 'Creature', 'livescript') as _hidden.Creature<this> }
 
-    get InlineLua() { return getInlineID(this, this.ID, 'Creature', 'lua') as _hidden.Creature<this> }
-
     /**
      * - 0 = does not regenerate health
      * - 1 = regenerates health

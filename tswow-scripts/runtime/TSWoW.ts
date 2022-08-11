@@ -29,7 +29,6 @@ import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
 import { Launcher } from "./Launcher";
 import { Livescripts } from "./Livescripts";
-import { Lua } from "./Lua";
 import { MapData } from "./MapData";
 import { MiscCommands } from "./MiscCommands";
 import { Module } from "./Modules";
@@ -39,6 +38,7 @@ import { Package } from "./Package";
 import { PositionsFile } from "./PositionsFile";
 import { Realm } from "./Realm";
 import { Snippets } from "./Snippets";
+import { applyTSTLHack } from "./TSTLHack";
 
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
@@ -77,6 +77,7 @@ export async function main() {
         process.exit(0)
     }
 
+    applyTSTLHack();
     Module.cacheEndpoints(true);
     await mysql.initialize();
     await Dataset.initialize()
@@ -94,7 +95,6 @@ export async function main() {
     await Crashes.initialize();
     await PositionsFile.initialize();
     await MiscCommands.initialize();
-    await Lua.initialize();
     await Launcher.initialize();
     Module.cacheEndpoints(false);
     await term.Initialize(

@@ -38,6 +38,9 @@
 #include "TSCustomPacket.h"
 #include "TSMainThreadContext.h"
 #include "TSSpellInfo.h"
+#include "TSArray.h"
+#include "TSDamageInfo.h"
+#include "TSSpell.h"
 
 #include <cstdint>
 
@@ -45,29 +48,29 @@ void TC_GAME_API ReloadPlayer(void(ptr)(TSPlayer, bool));
 void TC_GAME_API ReloadPlayer(sol::protected_function);
 
 void TC_GAME_API ReloadCreature(void(ptr)(TSCreature));
-void TC_GAME_API ReloadCreature(void(ptr)(TSCreature), uint32_t id);
+void TC_GAME_API ReloadCreature(void(ptr)(TSCreature), TSNumber<uint32> id);
 void TC_GAME_API ReloadCreature(sol::protected_function);
-void TC_GAME_API ReloadCreature(sol::protected_function, uint32_t id);
+void TC_GAME_API ReloadCreature(sol::protected_function, TSNumber<uint32> id);
 
 void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject));
-void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject), uint32_t id);
+void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject), TSNumber<uint32> id);
 void TC_GAME_API ReloadGameObject(sol::protected_function);
-void TC_GAME_API ReloadGameObject(sol::protected_function, uint32_t id);
+void TC_GAME_API ReloadGameObject(sol::protected_function, TSNumber<uint32> id);
 
 void TC_GAME_API ReloadMap(void(ptr)(TSMap));
-void TC_GAME_API ReloadMap(void(ptr)(TSMap), uint32_t id);
+void TC_GAME_API ReloadMap(void(ptr)(TSMap), TSNumber<uint32> id);
 void TC_GAME_API ReloadMap(sol::protected_function);
-void TC_GAME_API ReloadMap(sol::protected_function, uint32_t id);
+void TC_GAME_API ReloadMap(sol::protected_function, TSNumber<uint32> id);
 
 void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground));
-void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground), uint32_t id);
+void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground), TSNumber<uint32> id);
 void TC_GAME_API ReloadBattleground(sol::protected_function);
-void TC_GAME_API ReloadBattleground(sol::protected_function, uint32_t id);
+void TC_GAME_API ReloadBattleground(sol::protected_function, TSNumber<uint32> id);
 
 void TC_GAME_API ReloadInstance(void(ptr)(TSInstance));
-void TC_GAME_API ReloadInstance(void(ptr)(TSInstance), uint32_t id);
+void TC_GAME_API ReloadInstance(void(ptr)(TSInstance), TSNumber<uint32> id);
 void TC_GAME_API ReloadInstance(sol::protected_function);
-void TC_GAME_API ReloadInstance(sol::protected_function, uint32_t id);
+void TC_GAME_API ReloadInstance(sol::protected_function, TSNumber<uint32> id);
 
 struct TSEvents
 {
@@ -81,16 +84,16 @@ struct TSEvents
          EVENTS_HEADER(WorldEvents)
          EVENT(OnOpenStateChange, bool)
          EVENT(OnConfigLoad, bool)
-         EVENT(OnMotdChange, TSString)
-         EVENT(OnShutdownInitiate, uint32, uint32)
-         EVENT(OnUpdate, uint32, TSMainThreadContext)
+         EVENT(OnMotdChange, std::string const&)
+         EVENT(OnShutdownInitiate, TSNumber<uint32>, TSNumber<uint32>)
+         EVENT(OnUpdate, TSNumber<uint32>, TSMainThreadContext)
          EVENT(OnStartup)
          EVENT(OnShutdownCancel)
          EVENT(OnShutdown)
          EVENT(OnCalcHonor
-             , TSMutable<float> honor
-             , uint8 level
-             , float multiplier
+             , TSMutableNumber<float> honor
+             , TSNumber<uint8> level
+             , TSNumber<float> multiplier
          )
     } World;
 
@@ -115,7 +118,7 @@ struct TSEvents
         EVENT(OnUninstall, TSVehicle)
         EVENT(OnReset, TSVehicle)
         EVENT(OnInstallAccessory, TSVehicle, TSCreature)
-        EVENT(OnAddPassenger, TSVehicle, TSUnit, int8)
+        EVENT(OnAddPassenger, TSVehicle, TSUnit, TSNumber<uint8>)
         EVENT(OnRemovePassenger, TSVehicle, TSUnit)
     } Vehicle;
 
@@ -126,8 +129,8 @@ struct TSEvents
             , TSPlayer
             , TSAchievementEntry
             , TSAchievementCriteriaEntry
-            , uint32 progressType
-            , uint32 timeElapsed
+            , TSNumber<uint32> progressType
+            , TSNumber<uint32> timeElapsed
             , bool timedCompleted
         )
         ID_EVENT(OnComplete, TSPlayer, TSAchievementEntry)
@@ -139,50 +142,50 @@ struct TSEvents
          EVENT(OnPVPKill, TSPlayer, TSPlayer)
          EVENT(OnCreatureKill, TSPlayer, TSCreature)
          EVENT(OnPlayerKilledByCreature, TSCreature, TSPlayer)
-         EVENT(OnLevelChanged, TSPlayer, uint8)
-         EVENT(OnFreeTalentPointsChanged, TSPlayer, uint32)
-         EVENT(OnTalentsResetEarly, TSPlayer, TSMutable<bool>)
+         EVENT(OnLevelChanged, TSPlayer, TSNumber<uint8>)
+         EVENT(OnFreeTalentPointsChanged, TSPlayer, TSNumber<uint32>)
+         EVENT(OnTalentsResetEarly, TSPlayer, TSMutable<bool,bool>)
          EVENT(OnTalentsReset, TSPlayer, bool)
          EVENT(OnTalentsResetLate, TSPlayer, bool /*noCost*/)
-         EVENT(OnMoneyChanged, TSPlayer, TSMutable<int32>)
-         EVENT(OnMoneyLimit, TSPlayer, int32)
-         EVENT(OnGiveXP, TSPlayer, TSMutable<uint32>, TSUnit)
-         EVENT(OnReputationChange, TSPlayer, uint32, TSMutable<int32>, bool)
+         EVENT(OnMoneyChanged, TSPlayer, TSMutableNumber<int32>)
+         EVENT(OnMoneyLimit, TSPlayer, TSNumber<int32>)
+         EVENT(OnGiveXP, TSPlayer, TSMutableNumber<uint32>, TSUnit)
+         EVENT(OnReputationChange, TSPlayer, TSNumber<uint32>, TSMutableNumber<int32>, bool)
          EVENT(OnDuelRequest, TSPlayer, TSPlayer)
          EVENT(OnDuelStart, TSPlayer, TSPlayer)
-         EVENT(OnDuelEnd, TSPlayer, TSPlayer, uint32)
-         EVENT(OnSay, TSPlayer, TSMutableString, uint32, uint32)
-         EVENT(OnWhisper, TSPlayer, TSPlayer, TSMutableString, uint32, uint32)
-         EVENT(OnChatGroup, TSPlayer, TSGroup, TSMutableString, uint32, uint32)
-         EVENT(OnChatGuild, TSPlayer, TSGuild, TSMutableString, uint32, uint32)
-         EVENT(OnChat, TSPlayer, TSChannel, TSMutableString, uint32, uint32)
-         EVENT(OnCommand, TSPlayer, TSMutableString, TSMutable<bool>)
-         EVENT(OnEmote, TSPlayer, uint32)
-         EVENT(OnTextEmote, TSPlayer, uint32, uint32, uint64)
+         EVENT(OnDuelEnd, TSPlayer, TSPlayer, TSNumber<uint32>)
+         EVENT(OnSay, TSPlayer, TSMutableString, TSNumber<uint32>, TSNumber<uint32>)
+         EVENT(OnWhisper, TSPlayer, TSPlayer, TSMutableString, TSNumber<uint32>, TSNumber<uint32>)
+         EVENT(OnChatGroup, TSPlayer, TSGroup, TSMutableString, TSNumber<uint32>, TSNumber<uint32>)
+         EVENT(OnChatGuild, TSPlayer, TSGuild, TSMutableString, TSNumber<uint32>, TSNumber<uint32>)
+         EVENT(OnChat, TSPlayer, TSChannel, TSMutableString, TSNumber<uint32>, TSNumber<uint32>)
+         EVENT(OnCommand, TSPlayer, TSMutableString, TSMutable<bool,bool>)
+         EVENT(OnEmote, TSPlayer, TSNumber<uint32>)
+         EVENT(OnTextEmote, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint64>)
          EVENT(OnSpellCast, TSPlayer, TSSpell, bool)
          EVENT(OnLogin, TSPlayer, bool)
          EVENT_FN(OnReload, ReloadPlayer, TSPlayer, bool)
          EVENT(OnLogout, TSPlayer)
          EVENT(OnCreateEarly, TSPlayer)
          EVENT(OnCreate, TSPlayer)
-         EVENT(OnDelete, uint64, uint32)
-         EVENT(OnFailedDelete, uint64, uint32)
+         EVENT(OnDelete, TSNumber<uint64>, TSNumber<uint32>)
+         EVENT(OnFailedDelete, TSNumber<uint64>, TSNumber<uint32>)
          EVENT(OnSave, TSPlayer)
-         EVENT(OnBindToInstance, TSPlayer, uint32, uint32, bool, uint8)
-         EVENT(OnUpdateZone, TSPlayer, uint32, uint32)
+         EVENT(OnBindToInstance, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, bool, TSNumber<uint8>)
+         EVENT(OnUpdateZone, TSPlayer, TSNumber<uint32>, TSNumber<uint32>)
          EVENT(OnMapChanged, TSPlayer)
-         EVENT(OnQuestObjectiveProgress, TSPlayer, TSQuest, uint32, uint16)
-         EVENT(OnQuestStatusChange, TSPlayer, uint32)
-         EVENT(OnMovieComplete, TSPlayer, uint32)
+         EVENT(OnQuestObjectiveProgress, TSPlayer, TSQuest, TSNumber<uint32>, TSNumber<uint16>)
+         EVENT(OnQuestStatusChange, TSPlayer, TSNumber<uint32>)
+         EVENT(OnMovieComplete, TSPlayer, TSNumber<uint32>)
          EVENT(OnPlayerRepop, TSPlayer)
-         EVENT(OnSendMail, TSPlayer, TSMailDraft, TSMutable<uint32>)
+         EVENT(OnSendMail, TSPlayer, TSMailDraft, TSMutableNumber<uint32>)
 
-         EVENT(OnGenerateItemLoot, TSPlayer, TSItem, TSLoot, uint32)
+         EVENT(OnGenerateItemLoot, TSPlayer, TSItem, TSLoot, TSNumber<uint32>)
          EVENT(OnLootCorpse, TSPlayer, TSCorpse)
-         EVENT(OnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uint32_t talentRank, uint32_t spellId, TSMutable<bool>)
+         EVENT(OnLearnTalent, TSPlayer, TSNumber<uint32> tabId, TSNumber<uint32> talentId, TSNumber<uint32> talentRank, TSNumber<uint32> spellId, TSMutable<bool,bool>)
 
-         EVENT(OnGossipSelect, TSPlayer, TSPlayer, uint32_t, uint32_t, TSMutable<bool>)
-         EVENT(OnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, TSString, TSMutable<bool>)
+         EVENT(OnGossipSelect, TSPlayer, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)
+         EVENT(OnGossipSelectCode, TSPlayer, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, std::string const&, TSMutable<bool,bool>)
 
          EVENT(
              OnTradeCompleted
@@ -190,189 +193,189 @@ struct TSEvents
              , TSPlayer him
              , TSArray<TSItem> myItems
              , TSArray<TSItem> hisItems
-             , uint32 myMoney
-             , uint32 hisMoney
+             , TSNumber<uint32> myMoney
+             , TSNumber<uint32> hisMoney
          );
 
          EVENT(OnUpdateDodgePercentage
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateBlockPercentage
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateParryPercentage
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateArmor
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateMaxHealth
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateMaxPower
              , TSPlayer
-             , TSMutable<float>
-             , int8 power
-             , float bonus
+             , TSMutableNumber<float>
+             , TSNumber<int8> power
+             , TSNumber<float> bonus
          )
          EVENT(OnUpdateManaRegen
              , TSPlayer
-             , TSMutable<float>
-             , TSMutable<float>
-             , TSMutable<int32>
+             , TSMutableNumber<float>
+             , TSMutableNumber<float>
+             , TSMutableNumber<int32>
          );
         EVENT(OnUpdateMeleeHitChance
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateRuneRegen
              , TSPlayer
-             , TSMutable<float>
-             , uint32 runeType
+             , TSMutableNumber<float>
+             , TSNumber<uint32> runeType
          )
          EVENT(OnUpdateExpertise
              , TSPlayer
-             , TSMutable<int32>
-             , uint32 attackType
+             , TSMutableNumber<int32>
+             , TSNumber<uint32> attackType
              , TSItem
          )
          EVENT(OnUpdateSpellCrit
              , TSPlayer
-             , TSMutable<float>
-             , uint32 school
+             , TSMutableNumber<float>
+             , TSNumber<uint32> school
          )
          EVENT(OnUpdateArmorPenetration
              , TSPlayer
-             , TSMutable<int32>
+             , TSMutableNumber<int32>
          )
          EVENT(OnUpdateMeleeHitChances
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateRangedHitChances
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateSpellHitChances
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateResistance
              , TSPlayer
-             , TSMutable<float>
-             , uint32 school
+             , TSMutableNumber<float>
+             , TSNumber<uint32> school
          )
          EVENT(OnUpdateShieldBlock
              , TSPlayer
-             , TSMutable<uint32>
+             , TSMutableNumber<uint32>
          )
          EVENT(OnUpdateCrit
              , TSPlayer
-             , TSMutable<float>
-             , uint32 attackType
+             , TSMutableNumber<float>
+             , TSNumber<uint32> attackType
          )
          EVENT(OnCalcGreyLevel
              , TSPlayer killer
-             , TSMutable<uint8> greyLevel
+             , TSMutableNumber<uint8> greyLevel
          )
          EVENT(OnCalcZeroDiff
              , TSPlayer killer
-             , TSMutable<uint8> zeroDiff
+             , TSMutableNumber<uint8> zeroDiff
          )
          EVENT(OnCalcGroupGain
              , TSPlayer killer
-             , TSMutable<float> groupRate
-             , uint32 count
+             , TSMutableNumber<float> groupRate
+             , TSNumber<uint32> count
              , bool isRaid
          )
 
          EVENT(OnCalcStaminaHealthBonus
              , TSPlayer
-             , TSMutable<float>
-             , float
-             , float
+             , TSMutableNumber<float>
+             , TSNumber<float>
+             , TSNumber<float>
          );
         EVENT(OnCalcIntellectManaBonus
              , TSPlayer
-             , TSMutable<float>
-             , float
-             , float
+             , TSMutableNumber<float>
+             , TSNumber<float>
+             , TSNumber<float>
          );
          EVENT(OnCalcSkillGainChance
              , TSPlayer
-             , TSMutable<int>
-             , int
-             , int
-             , int
-             , int
-             , int
+             , TSMutableNumber<int32>
+             , TSNumber<int>
+             , TSNumber<int>
+             , TSNumber<int>
+             , TSNumber<int>
+             , TSNumber<int>
          )
 
          EVENT(OnUpdateAttackPower
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateRangedAttackPower
              , TSPlayer
-             , TSMutable<float>
+             , TSMutableNumber<float>
          )
 
          EVENT(OnCalcTalentPoints
              , TSPlayer
-             , TSMutable<uint32>
+             , TSMutableNumber<uint32>
          )
 
          EVENT(OnGlyphInitForLevel
              , TSPlayer
-             , TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
+             , TSMutableNumber<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
          )
 
          EVENT(OnReputationPriceDiscount
             , TSPlayer player
             , TSFactionTemplate faction
             , TSCreature creature
-            , TSMutable<float> money
+            , TSMutableNumber<float> money
          )
     } Player;
 
     struct AccountEvents
     {
          EVENTS_HEADER(AccountEvents)
-         EVENT(OnAccountLogin, uint32)
-         EVENT(OnFailedAccountLogin, uint32)
-         EVENT(OnEmailChange, uint32)
-         EVENT(OnFailedEmailChange, uint32)
-         EVENT(OnPasswordChange, uint32)
-         EVENT(OnFailedPasswordChange, uint32)
+         EVENT(OnAccountLogin, TSNumber<uint32>)
+         EVENT(OnFailedAccountLogin, TSNumber<uint32>)
+         EVENT(OnEmailChange, TSNumber<uint32>)
+         EVENT(OnFailedEmailChange, TSNumber<uint32>)
+         EVENT(OnPasswordChange, TSNumber<uint32>)
+         EVENT(OnFailedPasswordChange, TSNumber<uint32>)
     } Account;
 
     struct GuildEvents
     {
          EVENTS_HEADER(GuildEvents)
-         EVENT(OnAddMember, TSGuild, TSPlayer, TSMutable<uint8>)
+         EVENT(OnAddMember, TSGuild, TSPlayer, TSMutableNumber<uint8>)
          EVENT(OnRemoveMember, TSGuild, TSPlayer, bool, bool)
-         EVENT(OnMOTDChanged, TSGuild, TSString)
-         EVENT(OnInfoChanged, TSGuild, TSString)
-         EVENT(OnCreate, TSGuild, TSPlayer, TSString)
+         EVENT(OnMOTDChanged, TSGuild, std::string const&)
+         EVENT(OnInfoChanged, TSGuild, std::string const&)
+         EVENT(OnCreate, TSGuild, TSPlayer, std::string const&)
          EVENT(OnDisband, TSGuild)
-         EVENT(OnMemberWitdrawMoney, TSGuild, TSPlayer, TSMutable<uint32>, bool)
-         EVENT(OnMemberDepositMoney, TSGuild, TSPlayer, TSMutable<uint32>)
-         EVENT(OnEvent, TSGuild, uint8, uint32, uint32, uint8)
-         EVENT(OnBankEvent, TSGuild, uint8, uint8, uint32, uint32, uint16, uint8)
+         EVENT(OnMemberWitdrawMoney, TSGuild, TSPlayer, TSMutableNumber<uint32>, bool)
+         EVENT(OnMemberDepositMoney, TSGuild, TSPlayer, TSMutableNumber<uint32>)
+         EVENT(OnEvent, TSGuild, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint8>)
+         EVENT(OnBankEvent, TSGuild, TSNumber<uint8>, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint16>, TSNumber<uint8>)
     } Guild;
 
     struct GroupEvents
     {
          EVENTS_HEADER(GroupEvents)
-         EVENT(OnAddMember, TSGroup, uint64 member_id)
-         EVENT(OnInviteMember, TSGroup, uint64 member_id)
-         EVENT(OnRemoveMember, TSGroup, uint64 member_id, uint32, uint64, TSString)
-         EVENT(OnChangeLeader, TSGroup, uint64, uint64)
+         EVENT(OnAddMember, TSGroup, TSNumber<uint64> member_id)
+         EVENT(OnInviteMember, TSGroup, TSNumber<uint64> member_id)
+         EVENT(OnRemoveMember, TSGroup, TSNumber<uint64> member_id, TSNumber<uint32>, TSNumber<uint64>, std::string const&)
+         EVENT(OnChangeLeader, TSGroup, TSNumber<uint64>, TSNumber<uint64>)
          EVENT(OnDisband, TSGroup)
     } Group;
 
@@ -381,59 +384,59 @@ struct TSEvents
         EVENTS_HEADER(UnitEvents)
         EVENT(OnCalcMissChance
             , TSUnit
-            , TSMutable<float>
+            , TSMutableNumber<float>
         )
         EVENT(OnCalcHeal
             , TSUnit
             , TSUnit
-            , TSMutable<uint32>
+            , TSMutableNumber<uint32>
         )
         EVENT(OnMeleeDamageEarly
             , TSMeleeDamageInfo
-            , TSMutable<uint32>
-            , uint32
-            , uint32
+            , TSMutableNumber<uint32>
+            , TSNumber<uint32>
+            , TSNumber<uint32>
         )
         EVENT(OnMeleeDamageLate
             , TSMeleeDamageInfo
-            , TSMutable<uint32>
-            , uint32
-            , uint32
+            , TSMutableNumber<uint32>
+            , TSNumber<uint32>
+            , TSNumber<uint32>
         )
         EVENT(OnCalcMeleeCrit
             , TSUnit
             , TSUnit
-            , TSMutable<float>
-            , uint32
+            , TSMutableNumber<float>
+            , TSNumber<uint32>
         )
         EVENT(OnCalcMeleeOutcome
             , TSUnit
             , TSUnit
-            , TSMutable<float>
-            , TSMutable<float>
-            , TSMutable<float>
-            , TSMutable<float>
-            , TSMutable<float>
-            , uint32
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSNumber<uint32>
         );
         EVENT(OnCalcThreatEarly
             , TSUnit
             , TSUnit
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , TSSpellInfo
             , bool
         );
         EVENT(OnCalcThreatLate
             , TSUnit
             , TSUnit
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , TSSpellInfo
             , bool
         );
         EVENT(OnCalcScaleThreat
             , TSUnit
             , TSUnit
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , bool
         );
         EVENT(OnDeathEarly, TSUnit victim, TSUnit killer)
@@ -442,72 +445,72 @@ struct TSEvents
         EVENT(OnExitCombat, TSUnit unit)
         EVENT(OnEnterCombatWith, TSUnit me, TSUnit other)
         EVENT(OnExitCombatWith, TSUnit me, TSUnit other)
-        EVENT(OnSetTarget, TSUnit, uint64 new_target, uint64 old_target)
+        EVENT(OnSetTarget, TSUnit, TSNumber<uint64> new_target, TSNumber<uint64> old_target)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
     {
         EVENTS_HEADER(SpellEvents)
-        TSRegistryRef& get_registry_ref(uint32_t id) override;
+        TSRegistryRef& get_registry_ref(uint32 id) override;
         ID_EVENT(OnCast, TSSpell)
-        ID_EVENT(OnCheckCast, TSSpell, TSMutable<uint8>)
-        ID_EVENT(OnSuccessfulDispel, TSSpell, uint32)
-        ID_EVENT(OnEffect, TSSpell, TSMutable<bool> preventDefault, TSSpellEffectInfo, uint32 mode, TSUnit unitTarget, TSItem itemTarget, TSGameObject gameObjectTarget, TSCorpse corpseTarget)
+        ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>)
+        ID_EVENT(OnSuccessfulDispel, TSSpell, TSNumber<uint32>)
+        ID_EVENT(OnEffect, TSSpell, TSMutable<bool,bool> preventDefault, TSSpellEffectInfo, TSNumber<uint32> mode, TSUnit unitTarget, TSItem itemTarget, TSGameObject gameObjectTarget, TSCorpse corpseTarget)
         ID_EVENT(OnEffectApplyGlyph
             , TSSpell
-            , TSMutable<bool> isLocked
+            , TSMutable<bool,bool> isLocked
         )
         ID_EVENT(OnHit, TSSpell)
         ID_EVENT(OnTick, TSAuraEffect)
-        ID_EVENT(OnRemove, TSAuraEffect, TSAuraApplication, uint32)
-        ID_EVENT(OnApply, TSAuraEffect, TSAuraApplication, uint32)
-        ID_EVENT(OnDamageEarly, TSSpell, TSMutable<int32>, TSSpellDamageInfo, uint32, bool, uint32 effectMask)
-        ID_EVENT(OnDamageLate, TSSpell, TSMutable<uint32>, TSSpellDamageInfo, uint32, bool, uint32 effectMask)
-        ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSMutable<uint32>)
+        ID_EVENT(OnRemove, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
+        ID_EVENT(OnApply, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
+        ID_EVENT(OnDamageEarly, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
+        ID_EVENT(OnDamageLate, TSSpell, TSMutableNumber<uint32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
+        ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcSpellPowerLevelPenalty
             , TSSpellInfo spell
-            , TSMutable<float> penalty
+            , TSMutableNumber<float> penalty
             , TSUnit caster
         )
-        ID_EVENT(OnTrainerSend, TSSpellInfo spell, uint32 trainerId, TSPlayer receiver, TSMutable<bool> allowTrain)
-        ID_EVENT(OnCalcMiss, TSSpell, TSUnit, TSMutable<uint32>, TSMutable<uint32>)
-        ID_EVENT(OnCalcCrit, TSSpell, TSMutable<float>)
-        ID_EVENT(OnCalcAuraCrit, TSAuraEffect, TSMutable<float>)
-        ID_EVENT(OnCalcReflect, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
-        ID_EVENT(OnCalcHit, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
-        ID_EVENT(OnCalcResist, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
-        ID_EVENT(OnCalcMeleeMiss, TSSpellInfo, TSMutable<float>, TSUnit, TSUnit, uint8 attackType, int32 skillDiff)
+        ID_EVENT(OnTrainerSend, TSSpellInfo spell, TSNumber<uint32> trainerId, TSPlayer receiver, TSMutable<bool,bool> allowTrain)
+        ID_EVENT(OnCalcMiss, TSSpell, TSUnit, TSMutableNumber<uint32>, TSMutableNumber<uint32>)
+        ID_EVENT(OnCalcCrit, TSSpell, TSMutableNumber<float>)
+        ID_EVENT(OnCalcAuraCrit, TSAuraEffect, TSMutableNumber<float>)
+        ID_EVENT(OnCalcReflect, TSSpellInfo, TSMutableNumber<int32>, TSWorldObject, TSUnit)
+        ID_EVENT(OnCalcHit, TSSpellInfo, TSMutableNumber<int32>, TSWorldObject, TSUnit)
+        ID_EVENT(OnCalcResist, TSSpellInfo, TSMutableNumber<int32>, TSWorldObject, TSUnit)
+        ID_EVENT(OnCalcMeleeMiss, TSSpellInfo, TSMutableNumber<float>, TSUnit, TSUnit, TSNumber<uint8> attackType, TSNumber<int32> skillDiff)
 
-        ID_EVENT(OnCheckAreaTarget, TSAura, TSUnit, TSMutable<bool> result, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnCheckEffectProc, TSAuraEffect, TSAuraApplication, TSProcEventInfo, TSMutable<bool> result, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnCheckProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool> result, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectPeriodic, TSAuraEffect, TSAuraApplication, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectProc, TSAuraEffect, TSAuraApplication, TSProcEventInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnPrepareProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool> prepare, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool> handled, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnAfterDispel, TSAura, TSDispelInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnAfterEffectApply, TSAuraEffect, TSAuraApplication, uint32 modes, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnAfterEffectProc, TSAuraEffect, TSAuraApplication, TSProcEventInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnAfterEffectRemove, TSAuraEffect, TSAuraApplication, uint32 modes, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnAfterProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnDispel, TSAura, TSDispelInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectAbsorb, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutable<uint32> absorbAmount, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectAfterAbsorb, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutable<uint32> absorbAmount, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectAfterManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutable<uint32> absorbAmount, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectCalcAmount, TSAuraEffect, TSMutable<int32> amount, TSMutable<bool> canBeRecalculated, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectCalcPeriodic, TSAuraEffect, TSMutable<bool> isPeriodic, TSMutable<int32> amplitude, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectCalcSpellMod, TSAuraEffect, TSSpellModifier, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutable<uint32> absorbAmount, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnEffectSplit, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutable<uint32> splitAmount, TSMutable<bool> cancelDefault)
+        ID_EVENT(OnCheckAreaTarget, TSAura, TSUnit, TSMutable<bool,bool> result, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnCheckEffectProc, TSAuraEffect, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> result, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnCheckProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> result, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectPeriodic, TSAuraEffect, TSAuraApplication, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectProc, TSAuraEffect, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnPrepareProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> prepare, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> handled, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnAfterDispel, TSAura, TSDispelInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnAfterEffectApply, TSAuraEffect, TSAuraApplication, TSNumber<uint32> modes, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnAfterEffectProc, TSAuraEffect, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnAfterEffectRemove, TSAuraEffect, TSAuraApplication, TSNumber<uint32> modes, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnAfterProc, TSAuraApplication, TSProcEventInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnDispel, TSAura, TSDispelInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectAbsorb, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectAfterAbsorb, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectAfterManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectCalcAmount, TSAuraEffect, TSMutableNumber<int32> amount, TSMutable<bool,bool> canBeRecalculated, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectCalcPeriodic, TSAuraEffect, TSMutable<bool,bool> isPeriodic, TSMutableNumber<int32> amplitude, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectCalcSpellMod, TSAuraEffect, TSSpellModifier, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnEffectSplit, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> splitAmount, TSMutable<bool,bool> cancelDefault)
 
-        ID_EVENT(OnAfterCast, TSSpell, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnAfterHit, TSSpell, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnBeforeCast, TSSpell, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnBeforeHit, TSSpell, uint32, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnDestinationTargetSelect, TSSpell, TSSpellDestination, uint32 index, TSSpellImplicitTargetInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, uint32 index, TSSpellImplicitTargetInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, uint32 index, TSSpellImplicitTargetInfo, TSMutable<bool> cancelDefault)
-        ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutable<uint32> resistAmount, TSMutable<int32> absorbAmount, TSMutable<bool> cancelDefault)
+        ID_EVENT(OnAfterCast, TSSpell, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnAfterHit, TSSpell, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnBeforeCast, TSSpell, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnBeforeHit, TSSpell, TSNumber<uint32>, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnDestinationTargetSelect, TSSpell, TSSpellDestination, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
@@ -526,116 +529,116 @@ struct TSEvents
         ID_EVENT(OnSummonDies, TSCreature, TSCreature, TSUnit)
         ID_EVENT(OnHitBySpell, TSCreature, TSWorldObject, TSSpellInfo)
         ID_EVENT(OnSpellHitTarget, TSCreature, TSWorldObject, TSSpellInfo)
-        ID_EVENT(OnSpellCastFinished, TSCreature, TSSpellInfo, uint32)
+        ID_EVENT(OnSpellCastFinished, TSCreature, TSSpellInfo, TSNumber<uint32>)
         ID_EVENT(OnJustAppeared, TSCreature)
         ID_EVENT(OnCharmed, TSCreature, bool)
         ID_EVENT(OnReachedHome, TSCreature)
-        ID_EVENT(OnReceiveEmote, TSCreature, TSPlayer, uint32)
+        ID_EVENT(OnReceiveEmote, TSCreature, TSPlayer, TSNumber<uint32>)
         ID_EVENT(OnOwnerAttacked, TSCreature, TSUnit)
         ID_EVENT(OnOwnerAttacks, TSCreature, TSUnit)
-        ID_EVENT(OnCorpseRemoved, TSCreature, uint32)
-        ID_EVENT(OnWaypointStarted, TSCreature, uint32, uint32)
-        ID_EVENT(OnWaypointReached, TSCreature, uint32, uint32)
-        ID_EVENT(OnWaypointPathEnded, TSCreature, uint32, uint32)
-        ID_EVENT(OnPassengerBoarded, TSCreature, TSUnit, int8, bool)
+        ID_EVENT(OnCorpseRemoved, TSCreature, TSNumber<uint32>)
+        ID_EVENT(OnWaypointStarted, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
+        ID_EVENT(OnWaypointReached, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
+        ID_EVENT(OnWaypointPathEnded, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
+        ID_EVENT(OnPassengerBoarded, TSCreature, TSUnit, TSNumber<int8>, bool)
         ID_EVENT(OnSpellClick, TSCreature, TSUnit, bool)
-        ID_EVENT(OnUpdateAI, TSCreature, uint32)
+        ID_EVENT(OnUpdateAI, TSCreature, TSNumber<uint32>)
         ID_EVENT(OnGenerateLoot, TSCreature, TSPlayer)
-        ID_EVENT(OnCreate, TSCreature, TSMutable<bool>)
+        ID_EVENT(OnCreate, TSCreature, TSMutable<bool,bool>)
         ID_EVENT_FN(OnReload, ReloadCreature, TSCreature)
         ID_EVENT(OnRemove, TSCreature)
 
-        ID_EVENT(OnGossipHello, TSCreature, TSPlayer, TSMutable<bool>)
-        ID_EVENT(OnGossipSelect, TSCreature, TSPlayer, uint32, uint32, TSMutable<bool>)
-        ID_EVENT(OnGossipSelectCode, TSCreature, TSPlayer, uint32, uint32, TSString, TSMutable<bool>)
+        ID_EVENT(OnGossipHello, TSCreature, TSPlayer, TSMutable<bool,bool>)
+        ID_EVENT(OnGossipSelect, TSCreature, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)
+        ID_EVENT(OnGossipSelectCode, TSCreature, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, std::string const&, TSMutable<bool,bool>)
         ID_EVENT(OnQuestAccept, TSCreature, TSPlayer, TSQuest)
-        ID_EVENT(OnQuestReward, TSCreature, TSPlayer, TSQuest, uint32)
+        ID_EVENT(OnQuestReward, TSCreature, TSPlayer, TSQuest, TSNumber<uint32>)
 
-        ID_EVENT(OnCanGeneratePickPocketLoot, TSCreature, TSPlayer, TSMutable<bool>)
+        ID_EVENT(OnCanGeneratePickPocketLoot, TSCreature, TSPlayer, TSMutable<bool,bool>)
         ID_EVENT(OnGeneratePickPocketLoot, TSCreature, TSPlayer, TSLoot)
         ID_EVENT(OnGenerateSkinningLoot, TSCreature, TSPlayer, TSLoot)
 
         ID_EVENT(OnUpdateLvlDepMaxHealth
             , TSCreature
-            , TSMutable<uint32> maxHealth
-            , float rankHealthMod
-            , uint32 basehp
+            , TSMutableNumber<uint32> maxHealth
+            , TSNumber<float> rankHealthMod
+            , TSNumber<uint32> basehp
         )
         // extension: add "ForceMana" mutable after maxMana for ignoring creature class (not sure it works well)
         ID_EVENT(OnUpdateLvlDepMaxMana
             , TSCreature
-            , TSMutable<uint32> maxMana
-            , float baseMana
+            , TSMutableNumber<uint32> maxMana
+            , TSNumber<float> baseMana
         )
         ID_EVENT(OnUpdateLvlDepBaseDamage
             , TSCreature
-            , TSMutable<float> baseMinDamage
-            , TSMutable<float> baseMaxDamage
-            , float baseDamageIn
+            , TSMutableNumber<float> baseMinDamage
+            , TSMutableNumber<float> baseMaxDamage
+            , TSNumber<float> baseDamageIn
         )
         ID_EVENT(OnUpdateLvlDepArmor
             , TSCreature
-            , TSMutable<float> armorOut
-            , float baseArmor
+            , TSMutableNumber<float> armorOut
+            , TSNumber<float> baseArmor
         )
         ID_EVENT(OnUpdateLvlDepAttackPower
             , TSCreature
-            , TSMutable<uint32> attackPower
-            , TSMutable<uint32> rangedAttackPower
+            , TSMutableNumber<uint32> attackPower
+            , TSMutableNumber<uint32> rangedAttackPower
         )
-        ID_EVENT(OnSendVendorItem, TSCreature vendor, TSItemTemplate item, TSPlayer player, TSMutable<bool> shouldSend)
+        ID_EVENT(OnSendVendorItem, TSCreature vendor, TSItemTemplate item, TSPlayer player, TSMutable<bool,bool> shouldSend)
         ID_EVENT(OnUpdateResistance
             , TSCreature
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , bool isGuardian
-            , uint32 school
+            , TSNumber<uint32> school
         )
         ID_EVENT(OnUpdateArmor
             , TSCreature
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , bool isGuardian
         )
         ID_EVENT(OnUpdateMaxHealth
             , TSCreature
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , bool isGuardian
         )
         ID_EVENT(OnUpdateMaxPower
             , TSCreature
-            , TSMutable<float>
+            , TSMutableNumber<float>
             , bool isGuardian
-            , int8 powerType
+            , TSNumber<int8> powerType
         )
         ID_EVENT(OnUpdateAttackPowerDamage
             , TSCreature
-            , TSMutable<float> base
-            , TSMutable<float> mod
-            , TSMutable<float> multiplier
+            , TSMutableNumber<float> base
+            , TSMutableNumber<float> mod
+            , TSMutableNumber<float> multiplier
             , bool isGuardian
             , bool ranged
         )
         ID_EVENT(OnUpdateDamagePhysical
             , TSCreature
-            , TSMutable<float>
-            , TSMutable<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
             , bool isGuardian
-            , uint8 attType
+            , TSNumber<uint8> attType
         )
         ID_EVENT(OnCalcColorCode
             , TSCreature
-            , TSMutable<uint8> code
+            , TSMutableNumber<uint8> code
             , TSPlayer
-            , uint32 playerLevel
-            , uint32 creatureLevel
+            , TSNumber<uint32> playerLevel
+            , TSNumber<uint32> creatureLevel
         )
         ID_EVENT(OnCalcGain
             , TSCreature victim
-            , TSMutable<uint32>
+            , TSMutableNumber<uint32>
             , TSPlayer killer
         )
         ID_EVENT(OnCalcBaseGain
             , TSCreature victim
-            , TSMutable<uint32>
+            , TSMutableNumber<uint32>
             , TSPlayer killer
         )
     } Creature;
@@ -644,21 +647,21 @@ struct TSEvents
     {
         EVENTS_HEADER(GameObjectEvents)
         TSRegistryRef& get_registry_ref(uint32_t id) override;
-        ID_EVENT(OnUpdate, TSGameObject, uint32)
+        ID_EVENT(OnUpdate, TSGameObject, TSNumber<uint32>)
         ID_EVENT(OnDialogStatus, TSGameObject, TSPlayer)
         ID_EVENT(OnDestroyed, TSGameObject, TSWorldObject)
         ID_EVENT(OnDamaged, TSGameObject, TSWorldObject)
-        ID_EVENT(OnLootStateChanged, TSGameObject, uint32, TSUnit)
-        ID_EVENT(OnGOStateChanged, TSGameObject, uint32)
-        ID_EVENT(OnGossipHello, TSGameObject, TSPlayer, TSMutable<bool>)
-        ID_EVENT(OnGossipSelect, TSGameObject, TSPlayer, uint32, uint32, TSMutable<bool>)
-        ID_EVENT(OnGossipSelectCode, TSGameObject, TSPlayer, uint32, uint32, TSString, TSMutable<bool>)
-        ID_EVENT(OnCreate, TSGameObject, TSMutable<bool>)
+        ID_EVENT(OnLootStateChanged, TSGameObject, TSNumber<uint32>, TSUnit)
+        ID_EVENT(OnGOStateChanged, TSGameObject, TSNumber<uint32>)
+        ID_EVENT(OnGossipHello, TSGameObject, TSPlayer, TSMutable<bool,bool>)
+        ID_EVENT(OnGossipSelect, TSGameObject, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)
+        ID_EVENT(OnGossipSelectCode, TSGameObject, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, std::string const&, TSMutable<bool,bool>)
+        ID_EVENT(OnCreate, TSGameObject, TSMutable<bool,bool>)
         ID_EVENT_FN(OnReload, ReloadGameObject, TSGameObject)
         ID_EVENT(OnRemove, TSGameObject)
-        ID_EVENT(OnUse, TSGameObject, TSUnit, TSMutable<bool>)
+        ID_EVENT(OnUse, TSGameObject, TSUnit, TSMutable<bool,bool>)
         ID_EVENT(OnQuestAccept, TSGameObject, TSPlayer, TSQuest)
-        ID_EVENT(OnQuestReward, TSGameObject, TSPlayer, TSQuest, uint32)
+        ID_EVENT(OnQuestReward, TSGameObject, TSPlayer, TSQuest, TSNumber<uint32>)
         ID_EVENT(OnGenerateLoot, TSGameObject, TSPlayer)
         ID_EVENT(OnGenerateFishLoot, TSGameObject, TSPlayer, TSLoot, bool)
     } GameObject;
@@ -667,13 +670,13 @@ struct TSEvents
         EVENTS_HEADER(MapEvents)
         ID_EVENT(OnCreate, TSMap)
         ID_EVENT_FN(OnReload, ReloadMap, TSMap)
-        ID_EVENT(OnUpdate, TSMap, uint32)
-        ID_EVENT(OnUpdateDelayed, TSMap, uint32, TSMainThreadContext)
+        ID_EVENT(OnUpdate, TSMap, TSNumber<uint32>)
+        ID_EVENT(OnUpdateDelayed, TSMap, TSNumber<uint32>, TSMainThreadContext)
         ID_EVENT(OnPlayerEnter, TSMap, TSPlayer)
         ID_EVENT(OnPlayerLeave, TSMap, TSPlayer)
-        ID_EVENT(OnCreatureCreate, TSMap, TSCreature, TSMutable<bool>)
+        ID_EVENT(OnCreatureCreate, TSMap, TSCreature, TSMutable<bool,bool>)
         ID_EVENT(OnCreatureRemove, TSMap, TSCreature)
-        ID_EVENT(OnGameObjectCreate, TSMap, TSGameObject, TSMutable<bool>)
+        ID_EVENT(OnGameObjectCreate, TSMap, TSGameObject, TSMutable<bool,bool>)
         ID_EVENT(OnGameObjectRemove, TSMap, TSGameObject)
         ID_EVENT(OnCheckEncounter, TSMap, TSPlayer)
     } Map;
@@ -681,56 +684,56 @@ struct TSEvents
     struct BattlegroundEvents : public TSMappedEventsDirect
     {
         EVENTS_HEADER(BattlegroundEvents)
-        ID_EVENT(OnCanCreate, TSBattleground, TSMutable<bool>)
+        ID_EVENT(OnCanCreate, TSBattleground, TSMutable<bool,bool>)
         ID_EVENT(OnCreate, TSBattleground)
         ID_EVENT_FN(OnReload, ReloadBattleground, TSBattleground)
         ID_EVENT(OnAddPlayer, TSBattleground, TSPlayer)
         ID_EVENT(OnPlayerLogin, TSBattleground, TSPlayer)
         ID_EVENT(OnPlayerLogout, TSBattleground, TSPlayer)
-        ID_EVENT(OnUpdateScore, TSBattleground, TSPlayer, uint32_t type, bool isAddHonor, TSMutable<uint32> value)
-        ID_EVENT(OnUpdateEarly, TSBattleground, uint32 diff)
-        ID_EVENT(OnUpdateLate, TSBattleground, uint32 diff)
+        ID_EVENT(OnUpdateScore, TSBattleground, TSPlayer, TSNumber<uint32> type, bool isAddHonor, TSMutableNumber<uint32> value)
+        ID_EVENT(OnUpdateEarly, TSBattleground, TSNumber<uint32> diff)
+        ID_EVENT(OnUpdateLate, TSBattleground, TSNumber<uint32> diff)
         ID_EVENT(OnKillPlayer, TSBattleground, TSPlayer victim, TSPlayer killer)
-        ID_EVENT(OnEndEarly, TSBattleground, TSMutable<uint32> winner)
-        ID_EVENT(OnEndLate, TSBattleground, uint32 winner)
+        ID_EVENT(OnEndEarly, TSBattleground, TSMutableNumber<uint32> winner)
+        ID_EVENT(OnEndLate, TSBattleground, TSNumber<uint32> winner)
         ID_EVENT(OnAddGameObject
             , TSBattleground
-            , uint32 type
-            , TSMutable<uint32> entry
-            , TSMutable<uint8> goState
-            , TSMutable<float> x
-            , TSMutable<float> y
-            , TSMutable<float> z
-            , TSMutable<float> o
-            , TSMutable<float> rot0
-            , TSMutable<float> rot1
-            , TSMutable<float> rot2
-            , TSMutable<float> rot3
+            , TSNumber<uint32> type
+            , TSMutableNumber<uint32> entry
+            , TSMutableNumber<uint8> goState
+            , TSMutableNumber<float> x
+            , TSMutableNumber<float> y
+            , TSMutableNumber<float> z
+            , TSMutableNumber<float> o
+            , TSMutableNumber<float> rot0
+            , TSMutableNumber<float> rot1
+            , TSMutableNumber<float> rot2
+            , TSMutableNumber<float> rot3
         )
         ID_EVENT(OnAddCreature
             , TSBattleground
-            , uint32 type
-            , TSMutable<uint32> entry
-            , TSMutable<float> x
-            , TSMutable<float> y
-            , TSMutable<float> z
-            , TSMutable<float> o
-            , TSMutable<uint32_t> respawnTime
+            , TSNumber<uint32> type
+            , TSMutableNumber<uint32> entry
+            , TSMutableNumber<float> x
+            , TSMutableNumber<float> y
+            , TSMutableNumber<float> z
+            , TSMutableNumber<float> o
+            , TSMutableNumber<uint32> respawnTime
         )
         ID_EVENT(OnAddSpiritGuide
             , TSBattleground
-            , uint32 type
-            , TSMutable<uint32> entry
-            , TSMutable<uint8> teamId
-            , TSMutable<float> x
-            , TSMutable<float> y
-            , TSMutable<float> z
-            , TSMutable<float> o
+            , TSNumber<uint32> type
+            , TSMutableNumber<uint32> entry
+            , TSMutableNumber<uint8> teamId
+            , TSMutableNumber<float> x
+            , TSMutableNumber<float> y
+            , TSMutableNumber<float> z
+            , TSMutableNumber<float> o
         )
         ID_EVENT(OnKillCreature, TSBattleground, TSCreature victim, TSPlayer killer)
-        ID_EVENT(OnRemovePlayer, TSBattleground, uint64 guid, TSPlayer, uint32 team)
-        ID_EVENT(OnPlayerUnderMap, TSBattleground, TSPlayer, TSMutable<bool> handled)
-        ID_EVENT(OnGenericEvent, TSBattleground, TSWorldObject, uint32 eventId, TSWorldObject invoker)
+        ID_EVENT(OnRemovePlayer, TSBattleground, TSNumber<uint64> guid, TSPlayer, TSNumber<uint32> team)
+        ID_EVENT(OnPlayerUnderMap, TSBattleground, TSPlayer, TSMutable<bool,bool> handled)
+        ID_EVENT(OnGenericEvent, TSBattleground, TSWorldObject, TSNumber<uint32> eventId, TSWorldObject invoker)
         ID_EVENT(OnClickFlag, TSBattleground, TSPlayer, TSGameObject flag_obj)
         ID_EVENT(OnDropFlag, TSBattleground, TSPlayer)
         ID_EVENT(OnDestroyGate, TSBattleground, TSPlayer destroyer, TSGameObject target)
@@ -740,22 +743,22 @@ struct TSEvents
         // requires special handling functions
         ID_EVENT(OnAchievementCriteria
             , TSBattleground
-            , uint32 criteriaId
+            , TSNumber<uint32> criteriaId
             , TSPlayer player
             , TSUnit target
-            , uint32 miscvalueA
-            , TSMutable<bool> handled
+            , TSNumber<uint32> miscvalueA
+            , TSMutable<bool,bool> handled
         )
-        ID_EVENT(OnAreaTrigger, TSBattleground, TSPlayer, uint32 trigger, TSMutable<bool> handled)
+        ID_EVENT(OnAreaTrigger, TSBattleground, TSPlayer, TSNumber<uint32> trigger, TSMutable<bool,bool> handled)
         ID_EVENT(
             OnWeight
-            , uint32 bgType
-            , TSMutable<float> weight
-            , uint32 origType
+            , TSNumber<uint32> bgType
+            , TSMutableNumber<float> weight
+            , TSNumber<uint32> origType
         )
         ID_EVENT(
             OnSelect
-            , TSMutable<uint32> bgType
+            , TSMutableNumber<uint32> bgType
         )
     } Battleground;
 
@@ -766,13 +769,13 @@ struct TSEvents
         ID_EVENT_FN(OnReload, ReloadInstance, TSInstance)
         ID_EVENT(OnLoad, TSInstance)
         ID_EVENT(OnSave, TSInstance)
-        ID_EVENT(OnUpdate, TSInstance, uint32 diff)
+        ID_EVENT(OnUpdate, TSInstance, TSNumber<uint32> diff)
         ID_EVENT(OnPlayerEnter, TSInstance, TSPlayer)
         ID_EVENT(OnPlayerLeave, TSInstance, TSPlayer)
-        ID_EVENT(OnBossStateChange, TSInstance, uint32 id, uint32 state)
-        ID_EVENT(OnCanKillBoss, TSInstance, uint32 bossId, TSPlayer player, TSMutable<bool> canKill)
+        ID_EVENT(OnBossStateChange, TSInstance, TSNumber<uint32> id, TSNumber<uint32> state)
+        ID_EVENT(OnCanKillBoss, TSInstance, TSNumber<uint32> bossId, TSPlayer player, TSMutable<bool,bool> canKill)
         ID_EVENT(OnFillInitialWorldStates, TSInstance, TSWorldStatePacket)
-        ID_EVENT(OnSetBossNumber, TSInstance, TSMutable<uint32>)
+        ID_EVENT(OnSetBossNumber, TSInstance, TSMutableNumber<uint32>)
         ID_EVENT(OnLoadBossBoundaries, TSInstance)
         ID_EVENT(OnLoadMinionData, TSInstance)
         ID_EVENT(OnLoadDoorData, TSInstance)
@@ -783,23 +786,23 @@ struct TSEvents
      {
          EVENTS_HEADER(ItemEvents)
          TSRegistryRef& get_registry_ref(uint32_t id);
-         ID_EVENT(OnUse, TSItem, TSPlayer, void*, TSMutable<bool>)
-         ID_EVENT(OnExpire, TSItemTemplate, TSPlayer, TSMutable<bool>)
-         ID_EVENT(OnRemove, TSItem, TSPlayer, TSMutable<bool>)
-         ID_EVENT(OnCastSpell, TSItem, TSPlayer, TSUnit, TSSpellInfo, TSMutable<bool>)
+         ID_EVENT(OnUse, TSItem, TSPlayer, void*, TSMutable<bool,bool>)
+         ID_EVENT(OnExpire, TSItemTemplate, TSPlayer, TSMutable<bool,bool>)
+         ID_EVENT(OnRemove, TSItem, TSPlayer, TSMutable<bool,bool>)
+         ID_EVENT(OnCastSpell, TSItem, TSPlayer, TSUnit, TSSpellInfo, TSMutable<bool,bool>)
          ID_EVENT(OnQuestAccept, TSItem, TSPlayer, TSQuest)
-         ID_EVENT(OnGossipHello, TSItem, TSPlayer, TSMutable<bool>)
-         ID_EVENT(OnGossipSelect, TSItem, TSPlayer, uint32, uint32, TSMutable<bool>)
-         ID_EVENT(OnGossipSelectCode, TSItem, TSPlayer, uint32, uint32, TSString, TSMutable<bool>)
-         ID_EVENT(OnCanChangeEquipState, TSItemTemplate, TSMutable<bool>)
-         ID_EVENT(OnUnequip, TSItem, TSPlayer, bool, TSMutable<uint32> result)
-         ID_EVENT(OnBank, TSItem, TSPlayer, uint8 bag, uint8 slot, bool swap, TSMutable<uint32> result)
-         ID_EVENT(OnCanEquip, TSItem, TSPlayer, uint8 slot, bool swap, TSMutable<uint32> result)
-         ID_EVENT(OnEquip, TSItem, TSPlayer, uint8 slot, bool isMerge)
-         ID_EVENT(OnCanUse, TSItem, TSPlayer, TSMutable<uint32> result)
-         ID_EVENT(OnCanUseType, TSItemTemplate, TSPlayer, TSMutable<uint32> result)
-         ID_EVENT(OnLFGRollEarly, TSItemTemplate, TSWorldObject looted, TSPlayer looter, TSMutable<int32> result)
-         ID_EVENT(OnDestroyEarly, TSItem, TSPlayer, TSMutable<bool>)
+         ID_EVENT(OnGossipHello, TSItem, TSPlayer, TSMutable<bool,bool>)
+         ID_EVENT(OnGossipSelect, TSItem, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)
+         ID_EVENT(OnGossipSelectCode, TSItem, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, std::string const&, TSMutable<bool,bool>)
+         ID_EVENT(OnCanChangeEquipState, TSItemTemplate, TSMutable<bool,bool>)
+         ID_EVENT(OnUnequip, TSItem, TSPlayer, bool, TSMutableNumber<uint32> result)
+         ID_EVENT(OnBank, TSItem, TSPlayer, TSNumber<uint8> bag, TSNumber<uint8> slot, bool swap, TSMutableNumber<uint32> result)
+         ID_EVENT(OnCanEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool swap, TSMutableNumber<uint32> result)
+         ID_EVENT(OnEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool isMerge)
+         ID_EVENT(OnCanUse, TSItem, TSPlayer, TSMutableNumber<uint32> result)
+         ID_EVENT(OnCanUseType, TSItemTemplate, TSPlayer, TSMutableNumber<uint32> result)
+         ID_EVENT(OnLFGRollEarly, TSItemTemplate, TSWorldObject looted, TSPlayer looter, TSMutableNumber<int32> result)
+         ID_EVENT(OnDestroyEarly, TSItem, TSPlayer, TSMutable<bool,bool>)
          ID_EVENT(OnTakenAsLoot, TSItem, TSLootItem, TSLoot, TSPlayer)
      } Item;
 
@@ -808,58 +811,58 @@ struct TSEvents
         EVENTS_HEADER(QuestEvents)
         TSRegistryRef& get_registry_ref(uint32_t id) override;
         ID_EVENT(OnAccept, TSQuest, TSPlayer, TSObject questgiver)
-        ID_EVENT(OnReward, TSQuest, TSPlayer, TSObject questgiver, uint32 value)
+        ID_EVENT(OnReward, TSQuest, TSPlayer, TSObject questgiver, TSNumber<uint32> value)
         ID_EVENT(OnSpellFinish, TSQuest, TSPlayer, TSSpell)
-        ID_EVENT(OnObjectiveProgress, TSQuest, TSPlayer, uint32, uint16)
+        ID_EVENT(OnObjectiveProgress, TSQuest, TSPlayer, TSNumber<uint32>, TSNumber<uint16>)
         ID_EVENT(OnStatusChanged, TSQuest, TSPlayer)
-        ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutable<uint32>)
+        ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
     } Quest;
 #if TRINITY
     struct AreaTriggerEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(AreaTriggerEvents)
-        ID_EVENT(OnTrigger, uint8, TSPlayer, TSMutable<bool>)
+        ID_EVENT(OnTrigger, TSNumber<uint8>, TSPlayer, TSMutable<bool,bool>)
     } AreaTrigger;
 #endif
 
     struct GameEventsEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(GameEventsEvents)
-        ID_EVENT(OnStart,uint16 /*event_id*/)
+        ID_EVENT(OnStart, TSNumber<uint16>/*event_id*/)
         // todo: can we get a next_event_id here?
-        ID_EVENT(OnUpdateState,uint16 cur_event_id)
-        ID_EVENT(OnEnd,uint16 cur_event_id)
+        ID_EVENT(OnUpdateState, TSNumber<uint16> cur_event_id)
+        ID_EVENT(OnEnd, TSNumber<uint16> cur_event_id)
     } GameEvent;
 
     struct SmartActionEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(SmartActionEvents)
-        ID_EVENT(OnActivateEarly, TSSmartScriptValues, TSMutable<bool> cancelAction, TSMutable<bool> cancelLink)
-        ID_EVENT(OnActivateLate, TSSmartScriptValues, TSMutable<bool> cancelLink)
+        ID_EVENT(OnActivateEarly, TSSmartScriptValues, TSMutable<bool,bool> cancelAction, TSMutable<bool,bool> cancelLink)
+        ID_EVENT(OnActivateLate, TSSmartScriptValues, TSMutable<bool,bool> cancelLink)
     } SmartAction;
 
     struct ConditionEvents: public TSMappedEventsDirect {
         EVENTS_HEADER(ConditionEvents)
-        ID_EVENT(OnCheck, TSCondition condition, TSConditionSourceInfo, TSMutable<bool> condMeets)
+        ID_EVENT(OnCheck, TSCondition condition, TSConditionSourceInfo, TSMutable<bool,bool> condMeets)
     } Condition;
 
     struct CustomPacketEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(CustomPacketEvents)
-        ID_EVENT(OnReceive, uint32 opcode, TSPacketRead, TSPlayer)
+        ID_EVENT(OnReceive, TSNumber<uint32> opcode, TSPacketRead, TSPlayer)
     } CustomPacket;
 
     struct WorldPacketEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(WorldPacketEvents)
-        ID_EVENT(OnReceive, uint32 opcode, TSWorldPacket, TSPlayer)
+        ID_EVENT(OnReceive, TSNumber<uint32> opcode, TSWorldPacket, TSPlayer)
         ID_EVENT(OnSend, TSWorldPacket, TSPlayer)
     } WorldPacket;
 #if TRINITY
     struct TestEvents {
         TestEvents* operator->() { return this; }
 
-        std::shared_ptr<TSManualTestBuilder> ManualTest(TSString mod, TSString name)
+        std::shared_ptr<TSManualTestBuilder> ManualTest(std::string const& mod, std::string const& name)
         {
             return RegisterManualTest(mod, name);
         }
 
-        void AutomaticTest(TSString mod, TSString name, TSTestCallback callback)
+        void AutomaticTest(std::string const& mod, std::string const& name, TSTestCallback callback)
         {
             return RegisterAutomaticTest(mod, name, callback);
         }

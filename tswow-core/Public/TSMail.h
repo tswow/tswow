@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSUnit.h"
 #include "TSPlayer.h"
 #include "TSItem.h"
@@ -46,18 +45,18 @@ struct TC_GAME_API TSMail {
     TSMail() { mail = nullptr;  }
     operator bool() const { return mail != nullptr; }
     bool operator==(TSMail const& rhs) { return mail == rhs.mail; }
-    uint32 GetID();
-    uint8 GetType();
-    uint16 GetTemplateID();
-    uint64 GetSender();
-    uint64 GetReceiver();
-    uint16 GetState();
-    uint32 GetMoney();
-    uint32 GetCOD();
-    uint32 GetChecked();
+    TSNumber<uint32> GetID();
+    TSNumber<uint8> GetType();
+    TSNumber<uint16> GetTemplateID();
+    TSNumber<uint64> GetSender();
+    TSNumber<uint64> GetReceiver();
+    TSNumber<uint16> GetState();
+    TSNumber<uint32> GetMoney();
+    TSNumber<uint32> GetCOD();
+    TSNumber<uint32> GetChecked();
 
-    TSString GetSubject();
-    TSString GetBody();
+    std::string GetSubject();
+    std::string GetBody();
 
     TSArray<TSMailItemInfo> GetItems();
     uint32 GetItemCount();
@@ -68,19 +67,13 @@ struct TC_GAME_API TSMail {
     void SetCOD(uint32 cod);
     void SetChecked(uint32 checked);
     void SetSender(uint8 type, uint64 guid);
-    void SetSubject(TSString subject);
-    void SetBody(TSString body);
+    void SetSubject(std::string const& subject);
+    void SetBody(std::string const& body);
     void SetState(uint8 state);
 
 private:
-    std::string LGetSubject();
-    std::string LGetBody();
     TSLua::Array<TSMailItemInfo> LGetItems();
     void LFilterItems(sol::protected_function predicate);
-    void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
-    void LAddItem1(uint32 entry, uint8 count);
-    void LSetSubject(std::string const& subject);
-    void LSetBody(std::string const& body);
     friend class TSLua;
 };
 
@@ -93,25 +86,21 @@ struct TC_GAME_API TSMailDraft {
     operator bool() const { return draft != nullptr; }
     bool operator==(TSMailDraft const& rhs) { return draft == rhs.draft; }
 
-    uint16 GetTemplateID();
-    TSString GetSubject();
-    TSString GetBody();
-    uint32 GetMoney();
-    uint32 GetCOD();
-    TSArray<uint64> GetItemKeys();
+    TSNumber<uint16> GetTemplateID();
+    std::string GetSubject();
+    std::string GetBody();
+    TSNumber<uint32> GetMoney();
+    TSNumber<uint32> GetCOD();
+    TSArray<TSNumber<uint64> > GetItemKeys();
     TSItem GetItem(uint64 item);
 
     void SetTemplateID(uint16 id);
-    void SetSubject(TSString subject);
-    void SetBody(TSString body);
+    void SetSubject(std::string const& subject);
+    void SetBody(std::string const& body);
     void AddItem(uint32 entry, uint8 count, TSPlayer player = TSPlayer(nullptr));
     void FilterItems(std::function<bool(TSItem)> predicate);
 private:
-    std::string LGetSubject();
-    std::string LGetBody();
-    TSLua::Array<uint64> LGetItemKeys();
-    void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
-    void LAddItem1(uint32 entry, uint8 count);
+    TSLua::Array<TSNumber<uint64>> LGetItemKeys();
     void LFilterItems(sol::protected_function predicate);
     friend class TSLua;
 };
