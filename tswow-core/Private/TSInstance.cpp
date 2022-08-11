@@ -26,7 +26,7 @@ bool TSInstance::IsEncounterInProgress()
     return m_script->IsEncounterInProgress();
 }
 
-uint64 TSInstance::GetObjectGUID(uint32 type)
+TSNumber<uint64> TSInstance::GetObjectGUID(uint32 type)
 {
     return TS_GUID(m_script->GetObjectGuid(type));
 }
@@ -59,7 +59,7 @@ void TSInstance::DoUpdateWorldState(uint32 worldStateId, uint32 worldStateValue)
     m_script->DoUpdateWorldState(worldStateId, worldStateValue);
 }
 
-void TSInstance::DoSendNotify(TSString message)
+void TSInstance::DoSendNotify(std::string const& message)
 {
     m_script->DoSendNotifyToInstance(message.c_str());
 }
@@ -109,7 +109,7 @@ void TSInstance::SetBossState(uint32 id, uint32 encounterState)
     m_script->SetBossState(id, EncounterState(encounterState));
 }
 
-uint32 TSInstance::GetBossState(uint32 id)
+TSNumber<uint32> TSInstance::GetBossState(uint32 id)
 {
     return m_script->GetBossState(id);
 }
@@ -142,7 +142,7 @@ bool TSInstance::HasPermBoundPlayers()
 #endif
 }
 
-uint32 TSInstance::GetMaxPlayers()
+TSNumber<uint32> TSInstance::GetMaxPlayers()
 {
 #if TRINITY
     return m_script->instance->GetMaxPlayers();
@@ -151,7 +151,7 @@ uint32 TSInstance::GetMaxPlayers()
 #endif
 }
 
-uint32 TSInstance::GetMaxResetDelay()
+TSNumber<uint32> TSInstance::GetMaxResetDelay()
 {
 #if TRINITY
     return m_script->instance->GetMaxResetDelay();
@@ -160,7 +160,7 @@ uint32 TSInstance::GetMaxResetDelay()
 #endif
 }
 
-uint32 TSInstance::GetTeamIDInInstance()
+TSNumber<uint32> TSInstance::GetTeamIDInInstance()
 {
 #if TRINITY
     return m_script->instance->GetTeamIdInInstance();
@@ -170,7 +170,7 @@ uint32 TSInstance::GetTeamIDInInstance()
 #endif
 }
 
-uint32 TSInstance::GetFactionInInstance()
+TSNumber<uint32> TSInstance::GetFactionInInstance()
 {
 #if TRINITY
     return m_script->instance->GetTeamInInstance();
@@ -180,7 +180,7 @@ uint32 TSInstance::GetFactionInInstance()
 #endif
 }
 
-uint32 TSInstance::GetEncounterCount()
+TSNumber<uint32> TSInstance::GetEncounterCount()
 {
     return m_script->GetEncounterCount();
 }
@@ -213,7 +213,7 @@ TSBossInfo::TSBossInfo(BossInfo* info)
     : m_info(info)
 {}
 
-uint32 TSBossInfo::GetBossState()
+TSNumber<uint32> TSBossInfo::GetBossState()
 {
     return m_info->state;
 }
@@ -285,54 +285,4 @@ bool TSBossInfo::IsWithinBoundary(TSWorldObject obj)
     TS_LOG_ERROR("tswow.api", "TSBossInfo::IsWithinBoundary not implemented for AzerothCore");
 #endif
     return true;
-}
-
-void TSInstance::LDoUseDoorOrButton0(uint64 guid, uint32 withRestoreTime, bool useAlternativeState)
-{
-    DoUseDoorOrButton(guid, withRestoreTime, useAlternativeState);
-}
-
-void TSInstance::LDoUseDoorOrButton1(uint64 guid, uint32 withRestoreTime)
-{
-    DoUseDoorOrButton(guid, withRestoreTime);
-}
-
-void TSInstance::LDoUseDoorOrButton2(uint64 guid)
-{
-    DoUseDoorOrButton(guid);
-}
-
-void TSInstance::LDoRemoveAurasDueToSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled)
-{
-    DoRemoveAurasDueToSpellOnPlayers(spell, includePets, includeControlled);
-}
-
-void TSInstance::LDoRemoveAurasDueToSpellOnPlayers1(uint32 spell, bool includePets)
-{
-    DoRemoveAurasDueToSpellOnPlayers(spell, includePets);
-}
-
-void TSInstance::LDoRemoveAurasDueToSpellOnPlayers2(uint32 spell)
-{
-    DoRemoveAurasDueToSpellOnPlayers(spell);
-}
-
-void TSInstance::LDoCastSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled)
-{
-    DoCastSpellOnPlayers(spell, includePets, includeControlled);
-}
-
-void TSInstance::LDoCastSpellOnPlayers1(uint32 spell, bool includePets)
-{
-    DoCastSpellOnPlayers(spell, includePets);
-}
-
-void TSInstance::LDoCastSpellOnPlayers2(uint32 spell)
-{
-    DoCastSpellOnPlayers(spell);
-}
-
-void TSInstance::LDoSendNotify(std::string const& message)
-{
-    DoSendNotify(message);
 }

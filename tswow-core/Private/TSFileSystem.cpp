@@ -1,6 +1,5 @@
 #include "TSFileSystem.h"
 
-#include "TSString.h"
 #include "TSArray.h"
 
 #include <boost/filesystem.hpp>
@@ -9,14 +8,14 @@
 
 namespace fs = boost::filesystem;
 
-TSString ReadFile(TSString file, TSString def)
+std::string ReadFile(std::string const& file, std::string const& def)
 {
-    if(!fs::exists(file.std_str()))
+    if(!fs::exists(file))
     {
         return def;
     }
 
-    std::ifstream t(file.std_str());
+    std::ifstream t(file);
     std::string str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
     return str;
@@ -32,45 +31,46 @@ void mkdirs(std::string const& pathstr)
     }
 }
 
-bool FileExists(TSString file)
+bool FileExists(std::string const& file)
 {
-    return fs::exists(file.std_str());
+    return fs::exists(file);
 }
 
-void WriteFile(TSString file, TSString value)
+void WriteFile(std::string const& file, std::string const& value)
 {
-    mkdirs(file.std_str());
-    std::ofstream(file.std_str()) << value.std_str();
+    mkdirs(file);
+    std::ofstream(file) << value;
 }
 
-void AppendFile(TSString file, TSString value)
+void AppendFile(std::string const& file, std::string const& value)
 {
-    mkdirs(file.std_str());
+    mkdirs(file);
     std::ofstream outfile;
-    outfile.open(file.std_str(), std::ios_base::app); // append instead of overwrite
-    outfile << value.std_str();
+    outfile.open(file, std::ios_base::app); // append instead of overwrite
+    outfile << value;
 }
 
-TSArray<TSString> ReadDirectory(TSString directory)
+TSArray<std::string> ReadDirectory(std::string const& dir)
 {
-    TSArray<TSString> arr;
+    TSArray<std::string> arr;
+    std::string directory = dir;
 
-    if(directory.get_length() == 0)
+    if(directory.size() == 0)
     {
-        directory = JSTR("./");
+        directory = "./";
     }
 
-    if(!fs::exists(directory.std_str()))
+    if(!fs::exists(directory))
     {
         return arr;
     }
 
     boost::filesystem::recursive_directory_iterator end;
-    for (boost::filesystem::recursive_directory_iterator dir(directory.std_str()); dir != end; ++dir)
+    for (boost::filesystem::recursive_directory_iterator dir(directory); dir != end; ++dir)
     {
         if(boost::filesystem::is_regular_file(dir->path()))
         {
-            arr.push(TSString(dir->path().string()));
+            arr.push((dir->path().string()));
         }
     }
     return arr;

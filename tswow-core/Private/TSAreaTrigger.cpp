@@ -27,7 +27,7 @@ TSAreaTriggerEntry::TSAreaTriggerEntry(AreaTriggerEntry* entry)
 : m_entry(entry)
 {}
 
-uint32 TSAreaTriggerEntry::GetEntry()
+TSNumber<uint32> TSAreaTriggerEntry::GetEntry()
 {
 #if TRINITY
     return m_entry->ID;
@@ -36,41 +36,41 @@ uint32 TSAreaTriggerEntry::GetEntry()
 #endif
 }
 
-uint32 TSAreaTriggerEntry::GetContinentID()
+TSNumber<uint32> TSAreaTriggerEntry::GetContinentID()
 {
     return m_entry->ContinentID;
 }
 
-float TSAreaTriggerEntry::GetX()
+TSNumber<float> TSAreaTriggerEntry::GetX()
 {
     return m_entry->Pos.X;
 }
 
-float TSAreaTriggerEntry::GetY()
+TSNumber<float> TSAreaTriggerEntry::GetY()
 {
     return m_entry->Pos.Y;
 }
-float TSAreaTriggerEntry::GetZ()
+TSNumber<float> TSAreaTriggerEntry::GetZ()
 {
     return m_entry->Pos.Z;
 }
-float TSAreaTriggerEntry::GetRadius()
+TSNumber<float> TSAreaTriggerEntry::GetRadius()
 {
     return m_entry->Radius;
 }
-float TSAreaTriggerEntry::GetBoxLength()
+TSNumber<float> TSAreaTriggerEntry::GetBoxLength()
 {
     return m_entry->BoxLength;
 }
-float TSAreaTriggerEntry::GetBoxWidth()
+TSNumber<float> TSAreaTriggerEntry::GetBoxWidth()
 {
     return m_entry->BoxWidth;
 }
-float TSAreaTriggerEntry::GetBoxHeight()
+TSNumber<float> TSAreaTriggerEntry::GetBoxHeight()
 {
     return m_entry->BoxHeight;
 }
-float TSAreaTriggerEntry::GetBoxYaw()
+TSNumber<float> TSAreaTriggerEntry::GetBoxYaw()
 {
     return m_entry->BoxYaw;
 }

@@ -157,47 +157,47 @@ std::pair<bool,std::string> TSAutomaticTest::run(Player * player) const
     }
 }
 
-void TSAssert::IsTrue(bool expression, TSString message)
+void TSAssert::IsTrue(bool expression, std::string const& message)
 {
     if (!expression)
     {
-        throw TSTestException(message.std_str());
+        throw TSTestException(message);
     }
 }
 
-void TSAssert::IsFalse(bool expression, TSString message)
+void TSAssert::IsFalse(bool expression, std::string const& message)
 {
     if (expression)
     {
-        throw TSTestException(message.std_str());
+        throw TSTestException(message);
     }
 }
 
-void TSAssert::HasItem(TSPlayer player, uint32_t itemId, uint32_t count, bool checkBank, TSString message)
+void TSAssert::HasItem(TSPlayer player, uint32_t itemId, uint32_t count, bool checkBank, std::string message)
 {
     if (!player.HasItem(itemId, count, checkBank))
     {
-        if (message.get_length() == 0)
+        if (message.size() == 0)
         {
             message =
                 player->GetName()
-                + JSTR(" does not have item")
-                + TSString(std::to_string(itemId));
+                + " does not have item"
+                + std::to_string(itemId);
         }
         throw TSTestException(message);
     }
 }
 
-void TSAssert::HasSpell(TSPlayer player, uint32_t spellId, TSString message)
+void TSAssert::HasSpell(TSPlayer player, uint32_t spellId, std::string message)
 {
     if (!player.HasSpell(spellId))
     {
-        if (message.get_length() == 0)
+        if (message.size() == 0)
         {
             message =
                   player->GetName()
-                + JSTR(" does not have spell ")
-                + TSString(std::to_string(spellId));
+                + " does not have spell "
+                + std::to_string(spellId);
         }
         throw TSTestException(message);
     }
@@ -326,9 +326,9 @@ TSManualStepBuilder::TSManualStepBuilder(
     m_step = const_cast<TSManualStep*>(step);
 }
 
-TSManualStepBuilder * TSManualStepBuilder::description(TSString description)
+TSManualStepBuilder * TSManualStepBuilder::description(std::string const& description)
 {
-    m_step->m_description = description.std_str();
+    m_step->m_description = description;
     return this;
 }
 
@@ -353,24 +353,24 @@ TSManualTestBuilder::TSManualTestBuilder(
 {
 }
 
-TSManualTestBuilder* TSManualTestBuilder::step(TSString name, TSString description)
+TSManualTestBuilder* TSManualTestBuilder::step(std::string const& name, std::string const& description)
 {
     TSManualStepBuilder builder(
           m_modName
         , m_testName
-        , name.std_str()
+        , name
         , m_stepCtr++
     );
-    builder.description(description.std_str());
+    builder.description(description);
     return this;
 }
 
-TSManualTestBuilder* TSManualTestBuilder::step(TSString name, TSStepBuilderCallback callback)
+TSManualTestBuilder* TSManualTestBuilder::step(std::string const& name, TSStepBuilderCallback callback)
 {
     TSManualStepBuilder builder(
           m_modName
         , m_testName
-        , name.std_str()
+        , name
         , m_stepCtr++
     );
     callback(&builder);

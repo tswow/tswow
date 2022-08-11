@@ -1,3 +1,4 @@
+import { sort } from "../../../data";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
@@ -107,3 +108,10 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         });
     }
 }
+
+sort('TaxiPathNodes', () => {
+    // todo: temporary hack that limits amount of pathids and steps to 64k because quicksort is slow as a dog for this table.
+    DBC.TaxiPathNode.binarySort(0,(r1) => {
+        return (r1.PathID.get() << 16) + r1.NodeIndex.get()
+    })
+})

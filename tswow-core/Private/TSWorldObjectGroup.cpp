@@ -35,7 +35,7 @@ std::set<TSWorldObject>::iterator TSWorldObjectGroup::end()
     return entries.end();
 }
 
-uint32 TSWorldObjectGroup::get_length()
+TSNumber<uint32> TSWorldObjectGroup::get_length()
 {
     return entries.size();
 }
@@ -73,23 +73,23 @@ void TSWorldObjectGroup::Clear()
     entries.clear();
 }
 
-TSWorldObjectGroup* TSWorldObjectGroups::GetGroup(TSString key)
+TSWorldObjectGroup* TSWorldObjectGroups::GetGroup(std::string const& key)
 {
-    if (groups.find(key.std_str()) == groups.end())
+    if (groups.find(key) == groups.end())
     {
-        groups[key.std_str()] = TSWorldObjectGroup();
+        groups[key] = TSWorldObjectGroup();
     }
-    return &groups[key.std_str()];
+    return &groups[key];
 }
 
-void TSWorldObjectGroups::RemoveGroup(TSString key)
+void TSWorldObjectGroups::RemoveGroup(std::string const& key)
 {
-    if (groups.find(key.std_str()) == groups.end())
+    if (groups.find(key) == groups.end())
     {
         return;
     }
-    groups[key.std_str()].Clear();
-    groups.erase(key.std_str());
+    groups[key].Clear();
+    groups.erase(key);
 }
 
 void TSWorldObjectGroups::ClearGroups()

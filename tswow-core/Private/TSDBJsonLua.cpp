@@ -1,52 +1,26 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSDBJson.h"
 
 void TSLua::load_db_json_methods(sol::state& state)
 {
     auto ts_db_json = state.new_usertype<TSDBJsonProvider>("TSDBJsonProvider");
-    ts_db_json.set_function("SetDBNumber" , &TSDBJsonProvider::LSetDBNumber);
-    ts_db_json.set_function("SetDBUInt32" , &TSDBJsonProvider::LSetDBUInt32);
-    ts_db_json.set_function("SetDBInt32"  , &TSDBJsonProvider::LSetDBInt32);
-    ts_db_json.set_function("SetDBUInt64" , &TSDBJsonProvider::LSetDBUInt64);
-    ts_db_json.set_function("SetDBInt64"  , &TSDBJsonProvider::LSetDBInt64);
-    ts_db_json.set_function("SetDBFloat"  , &TSDBJsonProvider::LSetDBFloat);
-    ts_db_json.set_function("SetDBString" , &TSDBJsonProvider::LSetDBString);
-    ts_db_json.set_function("SetDBBool"   , &TSDBJsonProvider::LSetDBBool);
-    ts_db_json.set_function("SetDBObject" , &TSDBJsonProvider::LSetDBObject);
-    ts_db_json.set_function("GetDBNumber", sol::overload(
-        &TSDBJsonProvider::LGetDBNumber0,
-        &TSDBJsonProvider::LGetDBNumber1
-    ));
-    ts_db_json.set_function("GetDBUInt32", sol::overload(
-        &TSDBJsonProvider::LGetDBUInt320,
-        &TSDBJsonProvider::LGetDBUInt321
-    ));
-    ts_db_json.set_function("GetDBInt32", sol::overload(
-        &TSDBJsonProvider::LGetDBInt320,
-        &TSDBJsonProvider::LGetDBInt321
-    ));
-    ts_db_json.set_function("GetDBUInt64", sol::overload(
-        &TSDBJsonProvider::LGetDBUInt640,
-        &TSDBJsonProvider::LGetDBUInt641
-    ));
-    ts_db_json.set_function("GetDBInt64", sol::overload(
-        &TSDBJsonProvider::LGetDBInt640,
-        &TSDBJsonProvider::LGetDBInt641
-    ));
-    ts_db_json.set_function("GetDBFloat", sol::overload(
-        &TSDBJsonProvider::LGetDBFloat0,
-        &TSDBJsonProvider::LGetDBFloat1
-    ));
-    ts_db_json.set_function("GetDBString", sol::overload(
-        &TSDBJsonProvider::LGetDBString0,
-        &TSDBJsonProvider::LGetDBString1
-    ));
-    ts_db_json.set_function("GetDBBool", sol::overload(
-        &TSDBJsonProvider::LGetDBBool0,
-        &TSDBJsonProvider::LGetDBBool1
-    ));
-    ts_db_json.set_function("GetDBObject" , sol::overload(
-        &TSDBJsonProvider::LGetDBObject0,
-        &TSDBJsonProvider::LGetDBObject1
-    ));
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBNumber);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBUInt32);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBInt32);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBUInt64);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBInt64);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBFloat);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBBool);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBObject);
+    LUA_FIELD(ts_db_json, TSDBJsonProvider, SetDBArray);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBNumber, std::string const&, double);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBUInt32, std::string const&, uint32_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBInt32, std::string const&, int32_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBUInt64, std::string const&, uint64_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBInt64, std::string const&, int64_t);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBFloat, std::string const&, float);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBBool, std::string const&, bool);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBObject, std::string const&, TSJsonObject);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_db_json, TSDBJsonProvider, GetDBArray, std::string const&, TSJsonArray);
 }

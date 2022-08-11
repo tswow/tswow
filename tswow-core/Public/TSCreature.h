@@ -20,7 +20,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSArray.h"
-#include "TSString.h"
 #include "TSUnit.h"
 #include "TSClasses.h"
 #include "TSPosition.h"
@@ -66,30 +65,30 @@ public:
     bool IsDamageEnoughForLootingAndReward();
     bool CanStartAttack(TSUnit target, bool force);
     bool HasLootMode(uint16 lootMode);
-    float GetAttackDistance(TSUnit _target);
-    uint32 GetRespawnDelay();
-    float GetWanderRadius();
+    TSNumber<float> GetAttackDistance(TSUnit _target);
+    TSNumber<uint32> GetRespawnDelay();
+    TSNumber<float> GetWanderRadius();
     void UpdateLevelDependantStats();
-    uint32 GetWaypointPath();
-    uint32 GetCurrentWaypointID();
-    uint32 GetDefaultMovementType();
-    float GetAggroRange(TSUnit target);
+    TSNumber<uint32> GetWaypointPath();
+    TSNumber<uint32> GetCurrentWaypointID();
+    TSNumber<uint32> GetDefaultMovementType();
+    TSNumber<float> GetAggroRange(TSUnit target);
     TSGroup GetLootRecipientGroup();
     TSPlayer GetLootRecipient();
-    TSString GetScriptName();
-    TSString GetAIName();
-    uint32 GetScriptID();
-    uint32 GetCreatureSpellCooldownDelay(uint32 spell);
-    uint32 GetCorpseDelay();
+    std::string GetScriptName();
+    std::string GetAIName();
+    TSNumber<uint32> GetScriptID();
+    TSNumber<uint32> GetCreatureSpellCooldownDelay(uint32 spell);
+    TSNumber<uint32> GetCorpseDelay();
     TSPosition GetHomePosition();
     void SetHomePosition(float x, float y, float z, float o);
     TSUnit GetAITarget(uint32 targetType, bool playerOnly, uint32 position, float dist, int32 aura);
     TSArray<TSUnit> GetAITargets();
-    int GetAITargetsCount();
-    uint32 GetNPCFlags();
-    uint32 GetShieldBlockValue();
-    uint16 GetLootMode();
-    uint32 GetDBTableGUIDLow();
+    TSNumber<int> GetAITargetsCount();
+    TSNumber<uint32> GetNPCFlags();
+    TSNumber<uint32> GetShieldBlockValue();
+    TSNumber<uint16> GetLootMode();
+    TSNumber<uint32> GetDBTableGUIDLow();
     void SetNPCFlags(uint32 flags);
     void SetDisableGravity(bool disable);
     void SetLootMode(uint16 lootMode);
@@ -115,14 +114,14 @@ public:
     void FleeToGetAssistance();
     void AttackStart(TSUnit target);
     void SetReactState(uint8 state);
-    uint8 GetReactState();
+    TSNumber<uint8> GetReactState();
     void SaveToDB();
     TSUnit SelectVictim();
     void UpdateEntry(uint32 entry, uint32 dataGuidLow);
     void ResetLootMode();
     void RemoveLootMode(uint16 lootMode);
     void AddLootMode(uint16 lootMode);
-    uint32 GetCreatureFamily();
+    TSNumber<uint32> GetCreatureFamily();
     TSLoot GetLoot();
     TSCreatureTemplate GetTemplate();
     void SetOutfit(TSOutfit const& outfit);
@@ -136,21 +135,14 @@ public:
     bool IsAIEnabled();
     void SetLootRecipient(TSUnit unit, bool withGroup = true);
 
-    uint32_t GetMainhandEquip();
-    uint32_t GetOffhandEquip();
-    uint32_t GetRangedEquip();
+    TSNumber<uint32> GetMainhandEquip();
+    TSNumber<uint32> GetOffhandEquip();
+    TSNumber<uint32> GetRangedEquip();
 
     void EquipMainhand(uint32_t mainhand);
     void EquipOffhand(uint32_t offhand);
     void EquipRanged(uint32_t ranged);
 
 private:
-    TSOutfit LGetOutfitCopy0(Outfit settings, int32_t race, int32_t gender);
-    TSOutfit LGetOutfitCopy1(Outfit settings, int32_t race);
-    TSOutfit LGetOutfitCopy2(Outfit settings);
-    TSOutfit LGetOutfitCopy3();
     TSLua::Array<TSUnit> LGetAITargets();
-    std::string LGetScriptName();
-    std::string LGetAIName();
-    friend class TSLua;
 };

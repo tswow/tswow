@@ -17,7 +17,6 @@
 #pragma once
 
 #include "TSMain.h"
-#include "TSString.h"
 #include "TSClasses.h"
 #include "TSObject.h"
 #include "TSItemTemplate.h"
@@ -48,47 +47,40 @@ public:
     bool IsArmorVellum();
     bool IsConjuredConsumable();
     TSItemTemplate GetTemplate();
-    TSString GetItemLink(uint8 locale);
-    uint64 GetOwnerGUID();
+    std::string GetItemLink(uint8 locale);
+    TSNumber<uint64> GetOwnerGUID();
     TSPlayer  GetOwner();
-    uint32 GetCount();
-    uint32 GetMaxStackCount();
-    uint8 GetSlot();
-    uint8 GetBagSlot();
-    uint32 GetEnchantmentID(uint32 enchant_slot);
-    uint32 GetSpellID(uint32 index);
-    uint32 GetSpellTrigger(uint32 index);
-    uint32 GetClass();
-    uint32 GetSubClass();
-    TSString GetName();
-    uint32 GetDisplayID();
-    uint32 GetQuality();
-    uint32 GetBuyCount();
-    uint32 GetBuyPrice();
-    uint32 GetSellPrice();
-    uint32 GetInventoryType();
-    uint32 GetAllowableClass();
-    uint32 GetAllowableRace();
-    uint32 GetItemLevel();
-    uint32 GetRequiredLevel();
-    uint32 GetStatsCount();
-    uint32 GetRandomProperty();
-    int32 GetRandomSuffix();
-    uint32 GetItemSet();
-    uint32 GetBagSize();
+    TSNumber<uint32> GetCount();
+    TSNumber<uint32> GetMaxStackCount();
+    TSNumber<uint8> GetSlot();
+    TSNumber<uint8> GetBagSlot();
+    TSNumber<uint32> GetEnchantmentID(uint32 enchant_slot);
+    TSNumber<uint32> GetSpellID(uint32 index);
+    TSNumber<uint32> GetSpellTrigger(uint32 index);
+    TSNumber<uint32> GetClass();
+    TSNumber<uint32> GetSubClass();
+    std::string GetName();
+    TSNumber<uint32> GetDisplayID();
+    TSNumber<uint32> GetQuality();
+    TSNumber<uint32> GetBuyCount();
+    TSNumber<uint32> GetBuyPrice();
+    TSNumber<uint32> GetSellPrice();
+    TSNumber<uint32> GetInventoryType();
+    TSNumber<uint32> GetAllowableClass();
+    TSNumber<uint32> GetAllowableRace();
+    TSNumber<uint32> GetItemLevel();
+    TSNumber<uint32> GetRequiredLevel();
+    TSNumber<uint32> GetStatsCount();
+    TSNumber<uint32> GetRandomProperty();
+    TSNumber<int32> GetRandomSuffix();
+    TSNumber<uint32> GetItemSet();
+    TSNumber<uint32> GetBagSize();
     void SetOwner(TSPlayer player);
     void SetBinding(bool soulbound);
     void SetCount(uint32 count);
     bool SetEnchantment(uint32 enchant, uint32 slot);
     bool ClearEnchantment(uint32 slot);
     void SaveToDB();
-private:
-    std::string LGetItemLink(uint8 locale);
-    std::string LGetName();
-    friend class TSLua;
 };
 
 TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);
-TC_GAME_API TSItem LCreateItem0(uint32 entry, uint32 count);
-TC_GAME_API TSItem LCreateItem1(uint32 entry);
-TC_GAME_API TSItem LCreateItem2();

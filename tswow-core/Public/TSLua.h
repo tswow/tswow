@@ -45,6 +45,7 @@ private:
     static void load_channel_methods(sol::state & state);
     static void load_corpse_methods(sol::state & state);
     static void load_packet_methods(sol::state & state);
+    static void load_world_packet_methods(sol::state & state);
     static void load_damage_metods(sol::state & state);
     static void load_group_methods(sol::state & state);
     static void load_guild_methods(sol::state & state);
@@ -67,6 +68,8 @@ private:
     static void load_faction_template_methods(sol::state& state);
     static void load_db_json_methods(sol::state& state);
     static void load_global_functions(sol::state& state);
+    static void load_mutex_functions(sol::state& state);
+    static void load_lua_libraries(sol::state& state);
     static void load_main_thread_context_methods(sol::state& state);
 
     template <typename C, typename T>
@@ -77,16 +80,4 @@ private:
 
     template <typename C, typename T>
     static void load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_map_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_object_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_world_object_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
-
-    template <typename T>
-    static void load_unit_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 };

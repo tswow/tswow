@@ -146,15 +146,6 @@ export class GameObjectTemplate extends TransformedEntityID<gameobject_templateR
             , 'livescript'
         ) as _hidden.GameObject<this>
     }
-
-    get InlineLua() {
-        return getInlineID(
-              this
-            , this.ID
-            , 'GameObject'
-            , 'lua'
-        ) as _hidden.GameObject<this>
-    }
 }
 
 export class GameObjectPlain extends GameObjectTemplate {

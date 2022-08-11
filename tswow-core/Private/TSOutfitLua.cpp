@@ -1,4 +1,5 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSOutfit.h"
 
 #include "TSPlayer.h"
@@ -39,15 +40,10 @@ void TSLua::load_outfit_methods(sol::state& state)
     LUA_FIELD(ts_outfit, TSOutfit, GetMainhand);
     LUA_FIELD(ts_outfit, TSOutfit, GetOffhand);
     LUA_FIELD(ts_outfit, TSOutfit, GetRanged);
-    //LUA_FIELD(ts_outfit, TSOutfit, GetDisplayID);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_outfit, TSOutfit, GetDisplayID, uint8_t);
     LUA_FIELD(ts_outfit, TSOutfit, SetDisplayID);
     LUA_FIELD(ts_outfit, TSOutfit, ApplyRef);
-    ts_outfit.set_function("ApplyCopy", sol::overload(
-        &TSOutfit::LApplyCopy0
-        , &TSOutfit::LApplyCopy1
-        , &TSOutfit::LApplyCopy2
-        , &TSOutfit::LApplyCopy3
-    ));
+    LUA_FIELD_OVERLOAD_1_3(ts_outfit, TSOutfit, ApplyCopy, TSCreature, uint32_t, int32_t, int32_t);
     state.set_function("CreateOutfit", &CreateOutfit);
 #endif
 }

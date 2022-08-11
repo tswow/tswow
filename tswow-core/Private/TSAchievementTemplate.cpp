@@ -14,12 +14,12 @@ TSAchievementEntry* TSAchievementEntry::operator->()
     return this;
 }
 
-uint32 TSAchievementEntry::GetEntry()
+TSNumber<uint32> TSAchievementEntry::GetEntry()
 {
     return m_achievement->ID;
 }
 
-int32 TSAchievementEntry::GetFaction()
+TSNumber<int32> TSAchievementEntry::GetFaction()
 {
 #ifdef TRINITY
     return m_achievement->Faction;
@@ -28,7 +28,7 @@ int32 TSAchievementEntry::GetFaction()
 #endif
 }
 
-int32 TSAchievementEntry::GetInstanceID()
+TSNumber<int32> TSAchievementEntry::GetInstanceID()
 {
 #ifdef TRINITY
     return m_achievement->InstanceID;
@@ -36,13 +36,13 @@ int32 TSAchievementEntry::GetInstanceID()
     return m_achievement->mapID;
 #endif
 }
-TSArray<TSString> TSAchievementEntry::GetTitles()
+TSArray<std::string> TSAchievementEntry::GetTitles()
 {
-    TSArray<TSString> arr;
+    TSArray<std::string> arr;
 #ifdef TRINITY
     for (const char* title : m_achievement->Title)
     {
-        arr.push(TSString(title));
+        arr.push(title);
     }
 #elif AZEROTHCORE
     // TODO: enable getting titles
@@ -50,7 +50,7 @@ TSArray<TSString> TSAchievementEntry::GetTitles()
 #endif
     return arr;
 }
-uint32 TSAchievementEntry::GetCategory()
+TSNumber<uint32> TSAchievementEntry::GetCategory()
 {
 #ifdef TRINITY
     return m_achievement->Category;
@@ -58,7 +58,7 @@ uint32 TSAchievementEntry::GetCategory()
     return m_achievement->categoryId;
 #endif
 }
-uint32 TSAchievementEntry::GetPoints()
+TSNumber<uint32> TSAchievementEntry::GetPoints()
 {
 #ifdef TRINITY
     return m_achievement->Points;
@@ -66,7 +66,7 @@ uint32 TSAchievementEntry::GetPoints()
     return m_achievement->points;
 #endif
 }
-uint32 TSAchievementEntry::GetFlags()
+TSNumber<uint32> TSAchievementEntry::GetFlags()
 {
 #ifdef TRINITY
     return m_achievement->Flags;
@@ -74,7 +74,7 @@ uint32 TSAchievementEntry::GetFlags()
     return m_achievement->flags;
 #endif
 }
-uint32 TSAchievementEntry::GetMinimumCriteria()
+TSNumber<uint32> TSAchievementEntry::GetMinimumCriteria()
 {
 #ifdef TRINITY
     return m_achievement->MinimumCriteria;
@@ -82,7 +82,7 @@ uint32 TSAchievementEntry::GetMinimumCriteria()
     return m_achievement->count;
 #endif
 }
-uint32 TSAchievementEntry::GetSharesCriteria()
+TSNumber<uint32> TSAchievementEntry::GetSharesCriteria()
 {
 #ifdef TRINITY
     return m_achievement->SharesCriteria;
@@ -98,11 +98,11 @@ TSAchievementCriteriaEntry* TSAchievementCriteriaEntry::operator->()
 {
     return this;
 }
-uint32 TSAchievementCriteriaEntry::GetEntry()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetEntry()
 {
     return m_criteria->ID;
 }
-uint32 TSAchievementCriteriaEntry::GetAchievementEntry()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetAchievementEntry()
 {
 #ifdef TRINITY
     return m_criteria->AchievementID;
@@ -111,7 +111,7 @@ uint32 TSAchievementCriteriaEntry::GetAchievementEntry()
 #endif
 }
 
-uint32 TSAchievementCriteriaEntry::GetType()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetType()
 {
 #ifdef TRINITY
     return m_criteria->Type;
@@ -120,7 +120,7 @@ uint32 TSAchievementCriteriaEntry::GetType()
 #endif
 }
 
-uint32 TSAchievementCriteriaEntry::GetAssetID()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetAssetID()
 {
 #ifdef TRINITY
     return m_criteria->Asset.ID;
@@ -128,7 +128,7 @@ uint32 TSAchievementCriteriaEntry::GetAssetID()
     return m_criteria->raw.field3;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetQuantity()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetQuantity()
 {
 #ifdef TRINITY
     return m_criteria->Quantity;
@@ -136,7 +136,7 @@ uint32 TSAchievementCriteriaEntry::GetQuantity()
     return m_criteria->raw.count;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetAdditionalType1()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetAdditionalType1()
 {
 #ifdef TRINITY
     return m_criteria->AdditionalRequirements[0].Type;
@@ -144,7 +144,7 @@ uint32 TSAchievementCriteriaEntry::GetAdditionalType1()
     return m_criteria->additionalRequirements[0].additionalRequirement_type;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetAdditionalAsset1()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetAdditionalAsset1()
 {
 #ifdef TRINITY
     return m_criteria->AdditionalRequirements[0].Asset;
@@ -152,7 +152,7 @@ uint32 TSAchievementCriteriaEntry::GetAdditionalAsset1()
     return m_criteria->additionalRequirements[0].additionalRequirement_value;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetAdditionalType2()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetAdditionalType2()
 {
 #ifdef TRINITY
     return m_criteria->AdditionalRequirements[1].Type;
@@ -160,7 +160,7 @@ uint32 TSAchievementCriteriaEntry::GetAdditionalType2()
     return m_criteria->additionalRequirements[1].additionalRequirement_type;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetAdditionalAsset2()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetAdditionalAsset2()
 {
 #ifdef TRINITY
     return m_criteria->AdditionalRequirements[1].Asset;
@@ -169,7 +169,7 @@ uint32 TSAchievementCriteriaEntry::GetAdditionalAsset2()
 #endif
 
 }
-uint32 TSAchievementCriteriaEntry::GetFlags()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetFlags()
 {
 #ifdef TRINITY
     return m_criteria->Flags;
@@ -177,7 +177,7 @@ uint32 TSAchievementCriteriaEntry::GetFlags()
     return m_criteria->flags;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetStartEvent()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetStartEvent()
 {
 #ifdef TRINITY
     return m_criteria->StartEvent;
@@ -185,7 +185,7 @@ uint32 TSAchievementCriteriaEntry::GetStartEvent()
     return m_criteria->timerStartEvent;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetStartAsset()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetStartAsset()
 {
 #ifdef TRINITY
     return m_criteria->StartAsset;
@@ -193,7 +193,7 @@ uint32 TSAchievementCriteriaEntry::GetStartAsset()
     return m_criteria->timerStartEvent;
 #endif
 }
-uint32 TSAchievementCriteriaEntry::GetStartTimer()
+TSNumber<uint32> TSAchievementCriteriaEntry::GetStartTimer()
 {
 #ifdef TRINITY
     return m_criteria->StartTimer;

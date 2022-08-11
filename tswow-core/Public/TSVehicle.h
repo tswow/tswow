@@ -28,7 +28,7 @@ public:
     bool IsNull() { return vehicle == nullptr; };
     bool IsOnBoard(TSUnit passenger);
     TSUnit GetOwner();
-    uint32 GetEntry();
+    TSNumber<uint32> GetEntry();
     TSUnit GetPassenger(int8 seatId);
     void AddPassenger(TSUnit passenger, int8 seatId);
     void RemovePassenger(TSUnit passenger);

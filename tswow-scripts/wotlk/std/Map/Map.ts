@@ -105,15 +105,6 @@ export class Map extends TransformedEntityID<MapRow,MapPlain> {
             , 'livescript'
         ) as _hidden.Map<this>
     }
-
-    get InlineLua() {
-        return getInlineID(
-              this
-            , this.ID
-            , 'MapID'
-            , 'lua'
-        ) as _hidden.Map<this>
-    }
 }
 
 export class MapPlain extends Map {}
@@ -204,15 +195,6 @@ export class BattlegroundMap extends Map {
             , 'livescript'
         ) as _hidden.Battleground<this>
     }
-
-    get InlineLuaBG() {
-        return getInlineID(
-              this
-            , this.BattlegroundID
-            , 'BattlegroundID'
-            , 'lua'
-        ) as _hidden.Battleground<this>
-    }
 }
 
 export class DungeonAddon extends MaybeSQLEntity<DungeonMap,instance_addonRow> {
@@ -262,15 +244,6 @@ export class DungeonMap extends Map {
     get Difficulties() { return new PVEDifficulties(this); }
 
     get InlineScriptsDungeon() {
-        return getInlineID(
-            this
-          , this.ID
-          , 'Instance'
-          , 'livescript'
-      ) as _hidden.Instance<this>
-    }
-
-    get InlineLuaDungeon() {
         return getInlineID(
             this
           , this.ID

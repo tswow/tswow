@@ -9,6 +9,10 @@ runs:
         Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\dotnet";
         Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\LLVM";
         Clear-Recyclebin -Force;
+    - name: Select node version
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.13.1
     - name: Setup Build Directory
       uses: DamianReeves/write-file-action@v1.0
       with:

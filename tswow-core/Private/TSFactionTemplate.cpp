@@ -5,42 +5,42 @@
 
 TS_CLASS_DEFINITION(TSFactionTemplate, FactionTemplateEntry, m_faction)
 
-uint32 TSFactionTemplate::GetID()
+TSNumber<uint32> TSFactionTemplate::GetID()
 {
     return m_faction->ID;
 }
 
-uint32 TSFactionTemplate::GetFaction()
+TSNumber<uint32> TSFactionTemplate::GetFaction()
 {
     return m_faction->Faction;
 }
 
-uint32 TSFactionTemplate::GetFlags()
+TSNumber<uint32> TSFactionTemplate::GetFlags()
 {
     return m_faction->Flags;
 }
 
-uint32 TSFactionTemplate::GetFactionGroup()
+TSNumber<uint32> TSFactionTemplate::GetFactionGroup()
 {
     return m_faction->FactionGroup;
 }
 
-uint32 TSFactionTemplate::GetFriendGroup()
+TSNumber<uint32> TSFactionTemplate::GetFriendGroup()
 {
     return m_faction->FriendGroup;
 }
 
-uint32 TSFactionTemplate::GetEnemyGroup()
+TSNumber<uint32> TSFactionTemplate::GetEnemyGroup()
 {
     return m_faction->EnemyGroup;
 }
 
-uint32 TSFactionTemplate::GetEnemy(uint32 index)
+TSNumber<uint32> TSFactionTemplate::GetEnemy(uint32 index)
 {
     return m_faction->Enemies[index];
 }
 
-uint32 TSFactionTemplate::GetFriend(uint32 index)
+TSNumber<uint32> TSFactionTemplate::GetFriend(uint32 index)
 {
     return m_faction->Friend[index];
 }

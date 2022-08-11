@@ -412,7 +412,7 @@ bool TSCreature::HasLootMode(uint16 lootMode)
  *
  * @return uint32 respawnDelay : the respawn delay, in seconds
  */
-uint32 TSCreature::GetRespawnDelay()
+TSNumber<uint32> TSCreature::GetRespawnDelay()
 {
     return creature->GetRespawnDelay();
 }
@@ -423,7 +423,7 @@ uint32 TSCreature::GetRespawnDelay()
  *
  * @return float wanderRadius
  */
-float TSCreature::GetWanderRadius()
+TSNumber<float> TSCreature::GetWanderRadius()
 {
 #if defined TRINITY || AZEROTHCORE
     return creature->GetWanderDistance();
@@ -438,7 +438,7 @@ float TSCreature::GetWanderRadius()
  *
  * @return uint32 pathId
  */
-uint32 TSCreature::GetWaypointPath()
+TSNumber<uint32> TSCreature::GetWaypointPath()
 {
     return creature->GetWaypointPath();
 }
@@ -449,7 +449,7 @@ uint32 TSCreature::GetWaypointPath()
  *
  * @return uint32 wpId
  */
-uint32 TSCreature::GetCurrentWaypointID()
+TSNumber<uint32> TSCreature::GetCurrentWaypointID()
 {
 #ifdef TRINITY
     return creature->GetCurrentWaypointInfo().first;
@@ -465,7 +465,7 @@ uint32 TSCreature::GetCurrentWaypointID()
  *
  * @return [MovementGeneratorType] defaultMovementType
  */
-uint32 TSCreature::GetDefaultMovementType()
+TSNumber<uint32> TSCreature::GetDefaultMovementType()
 {
     return creature->GetDefaultMovementType();
 }
@@ -476,7 +476,7 @@ uint32 TSCreature::GetDefaultMovementType()
  * @param [Unit] target
  * @return float aggroRange
  */
-float TSCreature::GetAggroRange(TSUnit _target)
+TSNumber<float> TSCreature::GetAggroRange(TSUnit _target)
 {
     auto target = _target.unit;
 
@@ -498,7 +498,7 @@ float TSCreature::GetAggroRange(TSUnit _target)
  * @param [Unit] target
  * @return float attackDistance
  */
-float TSCreature::GetAttackDistance(TSUnit _target)
+TSNumber<float> TSCreature::GetAttackDistance(TSUnit _target)
 {
 #if TRINITY
     auto target = _target.unit;
@@ -542,9 +542,9 @@ TSPlayer  TSCreature::GetLootRecipient()
  *
  * @return string scriptName
  */
-TSString TSCreature::GetScriptName()
+std::string TSCreature::GetScriptName()
 {
-     return TSString(creature->GetScriptName());
+     return creature->GetScriptName();
 }
 
 /**
@@ -556,9 +556,9 @@ TSString TSCreature::GetScriptName()
  *
  * @return string AIName
  */
-TSString TSCreature::GetAIName()
+std::string TSCreature::GetAIName()
 {
-     return TSString(creature->GetAIName());
+     return creature->GetAIName();
 }
 
 /**
@@ -569,7 +569,7 @@ TSString TSCreature::GetAIName()
  *
  * @return uint32 scriptID
  */
-uint32 TSCreature::GetScriptID()
+TSNumber<uint32> TSCreature::GetScriptID()
 {
     return creature->GetScriptId();
 }
@@ -580,7 +580,7 @@ uint32 TSCreature::GetScriptID()
  * @param uint32 spellID
  * @return uint32 cooldown : the cooldown, in milliseconds
  */
-uint32 TSCreature::GetCreatureSpellCooldownDelay(uint32 spell)
+TSNumber<uint32> TSCreature::GetCreatureSpellCooldownDelay(uint32 spell)
 {
 
 #ifdef TRINITY
@@ -603,7 +603,7 @@ uint32 TSCreature::GetCreatureSpellCooldownDelay(uint32 spell)
  *
  * @return uint32 corpseDelay : the delay, in seconds
  */
-uint32 TSCreature::GetCorpseDelay()
+TSNumber<uint32> TSCreature::GetCorpseDelay()
 {
     return creature->GetCorpseDelay();
 }
@@ -814,7 +814,7 @@ TSArray<TSUnit> TSCreature::GetAITargets()
  *
  * @return int targetsCount
  */
-int TSCreature::GetAITargetsCount()
+TSNumber<int> TSCreature::GetAITargetsCount()
 {
 #ifdef TRINITY
     return creature->GetThreatManager().GetThreatenedByMeList().size();
@@ -833,7 +833,7 @@ int TSCreature::GetAITargetsCount()
  *
  * @return [NPCFlags] npcFlags
  */
-uint32 TSCreature::GetNPCFlags()
+TSNumber<uint32> TSCreature::GetNPCFlags()
 {
     return creature->GetUInt32Value(UNIT_NPC_FLAGS);
 }
@@ -844,14 +844,14 @@ uint32 TSCreature::GetNPCFlags()
  *
  * @return uint32 shieldBlockValue
  */
-uint32 TSCreature::GetShieldBlockValue()
+TSNumber<uint32> TSCreature::GetShieldBlockValue()
 {
     return creature->GetShieldBlockValue();
 }
 #endif
 
 #if defined(TRINITY) || AZEROTHCORE
-uint16 TSCreature::GetLootMode()
+TSNumber<uint16> TSCreature::GetLootMode()
 {
     return creature->GetLootMode();
 }
@@ -862,7 +862,7 @@ uint16 TSCreature::GetLootMode()
  *
  * @return uint32 dbguid
  */
-uint32 TSCreature::GetDBTableGUIDLow()
+TSNumber<uint32> TSCreature::GetDBTableGUIDLow()
 {
 #ifdef TRINITY
     return creature->GetSpawnId();
@@ -1189,7 +1189,7 @@ void TSCreature::SetReactState(uint8 state)
     creature->SetReactState(static_cast<ReactStates>(state));
 }
 
-uint8 TSCreature::GetReactState()
+TSNumber<uint8> TSCreature::GetReactState()
 {
      return static_cast<uint8>(creature->GetReactState());
 }
@@ -1317,7 +1317,7 @@ void TSCreature::AddLootMode(uint16 lootMode)
  *
  * @return [CreatureFamily] creatureFamily
  */
-uint32 TSCreature::GetCreatureFamily()
+TSNumber<uint32> TSCreature::GetCreatureFamily()
 {
     uint32 entry = creature->GetEntry();
 
@@ -1408,17 +1408,17 @@ void TSCreature::EquipRanged(uint32_t ranged)
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
 }
 
-uint32_t TSCreature::GetMainhandEquip()
+TSNumber<uint32> TSCreature::GetMainhandEquip()
 {
     return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0);
 }
 
-uint32_t TSCreature::GetOffhandEquip()
+TSNumber<uint32> TSCreature::GetOffhandEquip()
 {
     return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1);
 }
 
-uint32_t TSCreature::GetRangedEquip()
+TSNumber<uint32> TSCreature::GetRangedEquip()
 {
     return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2);
 }
@@ -1443,32 +1443,7 @@ TSOutfit TSCreature::GetOutfitCopy(Outfit settings, int32_t race, int32_t gender
 #endif
 }
 
-
-TSOutfit TSCreature::LGetOutfitCopy0(Outfit settings, int32_t race, int32_t gender)
-{
-    return GetOutfitCopy(settings, race, gender);
-}
-TSOutfit TSCreature::LGetOutfitCopy1(Outfit settings, int32_t race)
-{
-    return GetOutfitCopy(settings, race);
-}
-TSOutfit TSCreature::LGetOutfitCopy2(Outfit settings)
-{
-    return GetOutfitCopy(settings);
-}
-TSOutfit TSCreature::LGetOutfitCopy3()
-{
-    return GetOutfitCopy();
-}
 TSLua::Array<TSUnit> TSCreature::LGetAITargets()
 {
     return sol::as_table(*GetAITargets().vec);
-}
-std::string TSCreature::LGetScriptName()
-{
-    return GetScriptName().std_str();
-}
-std::string TSCreature::LGetAIName()
-{
-    return GetScriptName().std_str();
 }

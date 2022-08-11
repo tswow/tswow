@@ -3,7 +3,6 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
-#include "TSString.h"
 
 #include <sol/sol.hpp>
 
@@ -17,22 +16,17 @@ public:
     operator bool() const { return gt != nullptr; }
     bool operator==(TSGameObjectTemplate const& rhs) { return gt == rhs.gt; }
 
-    uint32 GetEntry();
-    uint32 GetType();
-    uint32 GetDisplayID();
+    TSNumber<uint32> GetEntry();
+    TSNumber<uint32> GetType();
+    TSNumber<uint32> GetDisplayID();
 
-    TSString GetName();
-    TSString GetIconName();
-    TSString GetCastBarCaption();
+    std::string GetName();
+    std::string GetIconName();
+    std::string GetCastBarCaption();
 
-    uint32 GetGOData(uint32 index);
+    TSNumber<uint32> GetGOData(uint32 index);
 
     TSEntity * GetData();
-private:
-    std::string LGetName();
-    std::string LGetIconName();
-    std::string LGetCastBarCaption();
-    friend class TSLua;
 };
 
 TSGameObjectTemplate TC_GAME_API GetGameObjectTemplate(uint32 id);

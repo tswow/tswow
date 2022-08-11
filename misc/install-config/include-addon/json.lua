@@ -26,11 +26,12 @@
 
 TSJSON = { _version = "0.1.2" }
 local NULL_LITERAL = "__null_literal_"
+local lualib = require('lualib_bundle')
 
 -------------------------------------------------------------------------------
 -- Class
 -------------------------------------------------------------------------------
-TSJsonObject = __TS__Class()
+TSJsonObject = lualib.__TS__Class()
 TSJsonObject.name = "TSJsonObject"
 function TSJsonObject.prototype.____constructor(self,table,valid)
   table._is_array = false
@@ -50,8 +51,8 @@ function TSJsonObject.prototype.toString(self)
       if not fst then str = str .. "," end
       fst = false
       str = str .. '"'..k..'":'
-      if(self:hasObject(k)) then str = str .. __TS__New(TSJsonObject,v,true):toString()
-      elseif(self:hasArray(k)) then str = str .. __TS__New(TSJsonArray,v,true):toString()
+      if(self:hasObject(k)) then str = str .. lualib.__TS__New(TSJsonObject,v,true):toString()
+      elseif(self:hasArray(k)) then str = str .. lualib.__TS__New(TSJsonArray,v,true):toString()
       elseif(self:hasString(k)) then str = str .. '"'..self:getString(k)..'"'
       elseif(self:hasNull(k)) then str = str .. "null"
       elseif(self:hasBool(k)) then 
@@ -68,7 +69,7 @@ function TSJsonObject.prototype.__tostring(self)
   return self:toString()
 end
 
-__TS__SetDescriptor(
+lualib.__TS__SetDescriptor(
     TSJsonObject.prototype,
     "length",
     {
@@ -166,10 +167,10 @@ end
 
 function TSJsonObject.prototype.getObject(self,key,def)
   if not self:hasObject(key) then
-    if def == nil then def = __TS__New(TSJsonObject,{},true) end
+    if def == nil then def = lualib.__TS__New(TSJsonObject,{},true) end
     return def
   else
-    return __TS__New(TSJsonObject,self._table[key],true)
+    return lualib.__TS__New(TSJsonObject,self._table[key],true)
   end
 end
 
@@ -185,16 +186,16 @@ end
 
 function TSJsonObject.prototype.getArray(self,key,def)
   if not self:hasArray(key) then
-    if def == nil then def = __TS__New(TSJsonArray,{},true) end
+    if def == nil then def = lualib.__TS__New(TSJsonArray,{},true) end
     return def
   else
-    return __TS__New(TSJsonArray,self._table[key],true)
+    return lualib.__TS__New(TSJsonArray,self._table[key],true)
   end
 end
 
-TSJsonArray = __TS__Class()
+TSJsonArray = lualib.__TS__Class()
 TSJsonArray.name = "TSJsonArray"
-__TS__ClassExtends(TSJsonArray,TSJsonObject)
+lualib.__TS__ClassExtends(TSJsonArray,TSJsonObject)
 
 function TSJsonArray.prototype.____constructor(self,table,valid)
   table._is_array = true
@@ -213,8 +214,8 @@ function TSJsonArray.prototype.toString(self)
     if k ~= '_is_array' then
       if not fst then str = str .. "," end
       fst = false
-      if(self:hasObject(k-1)) then str = str .. __TS__New(TSJsonObject,v,true):toString()
-      elseif(self:hasArray(k-1)) then str = str .. __TS__New(TSJsonArray,v,true):toString()
+      if(self:hasObject(k-1)) then str = str .. lualib.__TS__New(TSJsonObject,v,true):toString()
+      elseif(self:hasArray(k-1)) then str = str .. lualib.__TS__New(TSJsonArray,v,true):toString()
       elseif(self:hasString(k-1)) then str = str .. '"'..v..'"'
       elseif(self:hasNull(k-1)) then str = str .. 'null'
       elseif(self:hasBool(k-1)) then 
@@ -320,10 +321,10 @@ end
 
 function TSJsonArray.prototype.getObject(self,index,def)
   if not self:hasObject(index) then
-    if def == nil then def = __TS__New(TSJsonObject,{},true) end
+    if def == nil then def = lualib.__TS__New(TSJsonObject,{},true) end
     return def
   else
-    return __TS__New(TSJsonObject,self._table[index+1],true)
+    return lualib.__TS__New(TSJsonObject,self._table[index+1],true)
   end
 end
 
@@ -340,10 +341,10 @@ end
 
 function TSJsonArray.prototype.getArray(self,index,def)
   if not self:hasArray(index) then
-    if def == nil then def = __TS__New(TSJsonArray,{},true) end
+    if def == nil then def = lualib.__TS__New(TSJsonArray,{},true) end
     return def
   else
-    return __TS__New(TSJsonArray,self._table[index+1],true)
+    return lualib.__TS__New(TSJsonArray,self._table[index+1],true)
   end
 end
 
@@ -771,18 +772,18 @@ end
 function TSJSON:parseObject(str)
   local worked,res = pcall(function() return parseInternal(str) end)
   if not worked then
-    return __TS__New(TSJsonObject,{}, false)
+    return lualib.__TS__New(TSJsonObject,{}, false)
   else
-    return __TS__New(TSJsonObject,res, true)
+    return lualib.__TS__New(TSJsonObject,res, true)
   end
 end
 
 function TSJSON:parseArray(str)
   local worked,res = pcall(function() return parseInternal(str) end)
   if not worked then
-    return __TS__New(TSJsonArray,{}, false)
+    return lualib.__TS__New(TSJsonArray,{}, false)
   else
-    return __TS__New(TSJsonArray,res, true)
+    return lualib.__TS__New(TSJsonArray,res, true)
   end
 end
 

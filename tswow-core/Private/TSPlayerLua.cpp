@@ -1,6 +1,6 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSPlayer.h"
-#include "TSUnitLua.h"
 #include "TSDBJson.h"
 
 #include "TSPlayer.h"
@@ -26,7 +26,6 @@
 void TSLua::load_player_methods(sol::state& state)
 {
     auto ts_player = state.new_usertype <TSPlayer>("TSPlayer", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject,TSEntityProvider,TSWorldEntityProvider<TSWorldObject>, TSDBJsonProvider>());
-    load_unit_methods_t(state, ts_player, "TSPlayer");
     LUA_FIELD(ts_player, TSPlayer, GetTalentPointsInTree);
     LUA_FIELD(ts_player, TSPlayer, CanTitanGrip);
     LUA_FIELD(ts_player, TSPlayer, HasTalent);
@@ -181,8 +180,8 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, SendCreatureQueryPacket);
     LUA_FIELD(ts_player, TSPlayer, SendGameObjectQueryPacket);
     ts_player.set_function("SendItemQueryPacket", sol::overload(
-          &TSPlayer::LSendItemQueryPacket0
-        , &TSPlayer::LSendItemQueryPacket1
+          [](TSPlayer& player, uint32 entry) { return player.SendItemQueryPacket(entry); }
+        , [](TSPlayer& player, TSItemTemplate item) { return player.SendItemQueryPacket(item); }
     ));
     LUA_FIELD(ts_player, TSPlayer, SendSpiritResurrect);
     LUA_FIELD(ts_player, TSPlayer, SendTabardVendorActivate);
@@ -275,88 +274,52 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, GetFreeInventorySpace);
     LUA_FIELD(ts_player, TSPlayer, GetQuestRewardTempTalentPoints);
     LUA_FIELD(ts_player, TSPlayer, GetQuestRewardPermTalentPoints);
-    ts_player.set_function("GetPlayerIP", &TSPlayer::LGetPlayerIP);
-    ts_player.set_function("GetGuildName", &TSPlayer::LGetGuildName);
-    ts_player.set_function("GetAccountName", &TSPlayer::LGetAccountName);
-    ts_player.set_function("KillPlayer", sol::overload(
-        &TSPlayer::LKillPlayer0
-        , &TSPlayer::LKillPlayer1
-    ));
-    ts_player.set_function("Whisper", &TSPlayer::LWhisper);
-    ts_player.set_function("TextEmote", &TSPlayer::LTextEmote);
-    ts_player.set_function("Yell", &TSPlayer::LYell);
-    ts_player.set_function("Say", &TSPlayer::LSay);
-    ts_player.set_function("AddItem", sol::overload(
-        &TSPlayer::LAddItem0
-        , &TSPlayer::LAddItem1
-    ));
-    ts_player.set_function("AddItemToSlotRaw", sol::overload(
-        &TSPlayer::LAddItemToSlotRaw0
-        , &TSPlayer::LAddItemToSlotRaw1
-    ));
-    ts_player.set_function("RemoveItem", sol::overload(
-        &TSPlayer::LRemoveItem0
-        , &TSPlayer::LRemoveItem1
-    ));
-    ts_player.set_function("RemoveItemByEntry", sol::overload(
-        &TSPlayer::LRemoveItemByEntry0
-        , &TSPlayer::LRemoveItemByEntry1
-    ));
-    ts_player.set_function("SendBroadcastMessage", &TSPlayer::LSendBroadcastMessage);
-    ts_player.set_function("SendAreaTriggerMessage", &TSPlayer::LSendAreaTriggerMessage);
-    ts_player.set_function("SendNotification", &TSPlayer::LSendNotification);
-    ts_player.set_function("SendAddonMessage", &TSPlayer::LSendAddonMessage);
-    ts_player.set_function("LearnClassSpells", sol::overload(
-        &TSPlayer::LLearnClassSpells0
-        , &TSPlayer::LLearnClassSpells1
-    ));
-    ts_player.set_function("GossipMenuAddItem", sol::overload(
-        &TSPlayer::LGossipMenuAddItem0
-        , &TSPlayer::LGossipMenuAddItem1
-        , &TSPlayer::LGossipMenuAddItem2
-        , &TSPlayer::LGossipMenuAddItem3
-        , &TSPlayer::LGossipMenuAddItem4
-        , &TSPlayer::LGossipMenuAddItem5
-    ));
-    ts_player.set_function("GossipSendMenu", sol::overload(
-        &TSPlayer::LGossipSendMenu0
-        , &TSPlayer::LGossipSendMenu1
-    ));
-    ts_player.set_function("GossipSendTextMenu", sol::overload(
-        &TSPlayer::LGossipSendTextMenu0
-        , &TSPlayer::LGossipSendTextMenu1
-        , &TSPlayer::LGossipSendTextMenu2
-        , &TSPlayer::LGossipSendTextMenu3
-        , &TSPlayer::LGossipSendTextMenu4
-        , &TSPlayer::LGossipSendTextMenu5
-        , &TSPlayer::LGossipSendTextMenu6
-        , &TSPlayer::LGossipSendTextMenu7
-        , &TSPlayer::LGossipSendTextMenu8
-    ));
-    ts_player.set_function("GossipSendTextMenuGendered", sol::overload(
-        &TSPlayer::LGossipSendTextMenuGendered0
-        , &TSPlayer::LGossipSendTextMenuGendered1
-        , &TSPlayer::LGossipSendTextMenuGendered2
-        , &TSPlayer::LGossipSendTextMenuGendered3
-        , &TSPlayer::LGossipSendTextMenuGendered4
-        , &TSPlayer::LGossipSendTextMenuGendered5
-        , &TSPlayer::LGossipSendTextMenuGendered6
-        , &TSPlayer::LGossipSendTextMenuGendered7
-        , &TSPlayer::LGossipSendTextMenuGendered8
-    ));
-    ts_player.set_function("GossipSendPOI", &TSPlayer::LGossipSendPOI);
-    ts_player.set_function("SendMail", sol::overload(
-        &TSPlayer::LSendMail0
-        , &TSPlayer::LSendMail1
-        , &TSPlayer::LSendMail2
-        , &TSPlayer::LSendMail3
-        , &TSPlayer::LSendMail4
-    ));
-    ts_player.set_function("GetOutfitCopy", sol::overload(
-        &TSPlayer::LGetOutfitCopy0
-        , &TSPlayer::LGetOutfitCopy1
-        , &TSPlayer::LGetOutfitCopy2
-        , &TSPlayer::LGetOutfitCopy3
-    ));
+    LUA_FIELD(ts_player, TSPlayer, GetPlayerIP);
+    LUA_FIELD(ts_player, TSPlayer, GetGuildName);
+    LUA_FIELD(ts_player, TSPlayer, GetAccountName);
+    LUA_FIELD_OVERLOAD_0_1(ts_player, TSPlayer, KillPlayer, bool);
+    LUA_FIELD(ts_player, TSPlayer, Whisper);
+    LUA_FIELD(ts_player, TSPlayer, TextEmote);
+    LUA_FIELD(ts_player, TSPlayer, Yell);
+    LUA_FIELD(ts_player, TSPlayer, Say);
+    LUA_FIELD_OVERLOAD_2_1(ts_player, TSPlayer, AddItem, uint32, uint32, int32);
+    LUA_FIELD_OVERLOAD_4_1(ts_player, TSPlayer, AddItemToSlotRaw, uint8, uint8, uint32, uint32, int32);
+    LUA_FIELD_OVERLOAD_1_1(ts_player, TSPlayer, RemoveItem, TSItem, uint32);
+    LUA_FIELD_OVERLOAD_1_1(ts_player, TSPlayer, RemoveItemByEntry, uint32, uint32);
+    LUA_FIELD(ts_player, TSPlayer, SendBroadcastMessage);
+    LUA_FIELD(ts_player, TSPlayer, SendAreaTriggerMessage);
+    LUA_FIELD(ts_player, TSPlayer, SendNotification);
+    LUA_FIELD(ts_player, TSPlayer, SendAddonMessage);
+    LUA_FIELD_OVERLOAD_2_1(ts_player, TSPlayer, LearnClassSpells, bool, bool, bool);
+    LUA_FIELD_OVERLOAD_2_1(ts_player, TSPlayer, LearnClassSpells, bool, bool, bool);
+    LUA_FIELD_OVERLOAD_2_5(ts_player, TSPlayer, GossipMenuAddItem, uint32, std::string const&, uint32, uint32, bool, std::string const&, uint32);
+    LUA_FIELD_OVERLOAD_2_1(ts_player, TSPlayer, GossipSendMenu, uint32, TSObject, uint32);
+    LUA_FIELD_OVERLOAD_2_8(ts_player, TSPlayer, GossipSendTextMenu, TSObject, std::string const&, uint32, uint32, uint32, uint32, uint32, uint32, uint32, uint32);
+    LUA_FIELD_OVERLOAD_3_8(ts_player, TSPlayer, GossipSendTextMenuGendered, TSObject, std::string const&, std::string const&, uint32, uint32, uint32, uint32, uint32, uint32, uint32, uint32);
+    LUA_FIELD(ts_player, TSPlayer, GossipSendPOI);
+    LUA_FIELD_OVERLOAD_RET_0_3(ts_player, TSPlayer, GetOutfitCopy, uint32_t, int32_t, int32_t);
     ts_player.set_function("GetSpellMap", &TSPlayer::LGetSpellMap);
+
+    ts_player.set_function("SendMail", sol::overload(
+        [](TSPlayer& player, uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, sol::table items ) {
+            TSArray<TSItem> tsitems;
+            for (auto const& item : items)
+            {
+                tsitems.push(item.second.as<TSItem>());
+            }
+            return player.SendMail(senderType,from,subject,body,money,cod,delay, tsitems);
+        },
+        [](TSPlayer& player, uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay) {
+            return player.SendMail(senderType,from,subject,body,money,cod,delay);
+        },
+        [](TSPlayer& player, uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod) {
+            return player.SendMail(senderType,from,subject,body,money,cod);
+        },
+        [](TSPlayer& player, uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money) {
+            return player.SendMail(senderType,from,subject,body,money);
+        },
+        [](TSPlayer& player, uint8 senderType, uint64 from, std::string const& subject, std::string const& body) {
+            return player.SendMail(senderType,from,subject,body);
+        }
+    ));
 }

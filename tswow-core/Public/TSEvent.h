@@ -202,7 +202,18 @@ private:
 				{\
 						for(auto cb: lua_cbs[ref])\
 						{\
-								TSLua::handle_error(cb(__VA_ARGS__));\
+								try\
+								{\
+										TSLua::handle_error(cb(__VA_ARGS__));\
+								}\
+								catch (std::exception const& e)\
+								{\
+										std::cerr << e.what() << "\n";\
+								}\
+								catch (...)\
+								{\
+										std::cerr << "Unknown Lua error\n";\
+								}\
 						}\
 				}\
 		}

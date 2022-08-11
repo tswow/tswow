@@ -66,7 +66,7 @@ public:
     void OnStartup() FIRE(World,OnStartup)
     void OnShutdown() FIRE(World,OnShutdown)
     void OnShutdownCancel() FIRE(World,OnShutdownCancel)
-    void OnMotdChange(std::string& newMotd) FIRE(World,OnMotdChange,TSString(newMotd))
+    void OnMotdChange(std::string& newMotd) FIRE(World,OnMotdChange,newMotd)
     void OnShutdownInitiate(ShutdownExitCode code,ShutdownMask mask) FIRE(World,OnShutdownInitiate,code,mask)
     void OnUpdate(uint32 diff) FIRE(World,OnUpdate,diff, TSMainThreadContext())
 };
@@ -79,7 +79,7 @@ public:
         FIRE(Unit,OnCalcHeal
             , TSUnit(healer)
             , TSUnit(reciever)
-            , TSMutable<uint32>(&gain)
+            , TSMutableNumber<uint32>(&gain)
         );
     }
 };
@@ -145,11 +145,11 @@ public:
     void OnLevelChanged(Player* player,uint8 oldLevel) FIRE(Player,OnLevelChanged,TSPlayer(player),oldLevel)
     void OnFreeTalentPointsChanged(Player* player,uint32 points) FIRE(Player,OnFreeTalentPointsChanged,TSPlayer(player),points)
     void OnTalentsReset(Player* player,bool noCost) FIRE(Player,OnTalentsReset,TSPlayer(player),noCost)
-    void OnMoneyChanged(Player* player,int32& amount) FIRE(Player,OnMoneyChanged,TSPlayer(player),TSMutable<int32>(&amount))
+    void OnMoneyChanged(Player* player,int32& amount) FIRE(Player,OnMoneyChanged,TSPlayer(player),TSMutableNumber<int32>(&amount))
     void OnMoneyLimit(Player* player,int32 amount) FIRE(Player,OnMoneyLimit,TSPlayer(player),amount)
-    void OnGiveXP(Player* player,uint32& amount,Unit* victim) FIRE(Player,OnGiveXP,TSPlayer(player),TSMutable<uint32>(&amount),TSUnit(victim))
+    void OnGiveXP(Player* player,uint32& amount,Unit* victim) FIRE(Player,OnGiveXP,TSPlayer(player),TSMutableNumber<uint32>(&amount),TSUnit(victim))
 #if TRINITY
-    void OnReputationChange(Player* player,uint32 factionId,int32& standing,bool incremental) FIRE(Player,OnReputationChange,TSPlayer(player),factionId,TSMutable<int32>(&standing),incremental)
+    void OnReputationChange(Player* player,uint32 factionId,int32& standing,bool incremental) FIRE(Player,OnReputationChange,TSPlayer(player),factionId,TSMutableNumber<int32>(&standing),incremental)
 #endif
     void OnDuelRequest(Player* target,Player* challenger) FIRE(Player,OnDuelRequest,TSPlayer(target),TSPlayer(challenger))
     void OnDuelStart(Player* player1,Player* player2) FIRE(Player,OnDuelStart,TSPlayer(player1),TSPlayer(player2))
@@ -222,14 +222,14 @@ class TSGuildScript : public GuildScript
 {
 public:
     TSGuildScript() : GuildScript("TSGuildScript"){}
-    void OnAddMember(Guild* guild,Player* player,uint8& plRank) FIRE(Guild,OnAddMember,TSGuild(guild),TSPlayer(player),TSMutable<uint8>(&plRank))
+    void OnAddMember(Guild* guild,Player* player,uint8& plRank) FIRE(Guild,OnAddMember,TSGuild(guild),TSPlayer(player),TSMutableNumber<uint8>(&plRank))
     void OnRemoveMember(Guild* guild,Player* player,bool isDisbanding,bool isKicked) FIRE(Guild,OnRemoveMember,TSGuild(guild),TSPlayer(player),isDisbanding,isKicked)
-    void OnMOTDChanged(Guild* guild,const std::string& newMotd) FIRE(Guild,OnMOTDChanged,TSGuild(guild),TSString(newMotd))
-    void OnInfoChanged(Guild* guild,const std::string& newInfo) FIRE(Guild,OnInfoChanged,TSGuild(guild),TSString(newInfo))
-    void OnCreate(Guild* guild,Player* leader,const std::string& name) FIRE(Guild,OnCreate,TSGuild(guild),TSPlayer(leader),TSString(name))
+    void OnMOTDChanged(Guild* guild,const std::string& newMotd) FIRE(Guild,OnMOTDChanged,TSGuild(guild),newMotd)
+    void OnInfoChanged(Guild* guild,const std::string& newInfo) FIRE(Guild,OnInfoChanged,TSGuild(guild),newInfo)
+    void OnCreate(Guild* guild,Player* leader,const std::string& name) FIRE(Guild,OnCreate,TSGuild(guild),TSPlayer(leader),name)
     void OnDisband(Guild* guild) FIRE(Guild,OnDisband,TSGuild(guild))
-    void OnMemberWitdrawMoney(Guild* guild,Player* player,uint32& amount,bool isRepair) FIRE(Guild,OnMemberWitdrawMoney,TSGuild(guild),TSPlayer(player),TSMutable<uint32>(&amount),isRepair)
-    void OnMemberDepositMoney(Guild* guild,Player* player,uint32& amount) FIRE(Guild,OnMemberDepositMoney,TSGuild(guild),TSPlayer(player),TSMutable<uint32>(&amount))
+    void OnMemberWitdrawMoney(Guild* guild,Player* player,uint32& amount,bool isRepair) FIRE(Guild,OnMemberWitdrawMoney,TSGuild(guild),TSPlayer(player),TSMutableNumber<uint32>(&amount),isRepair)
+    void OnMemberDepositMoney(Guild* guild,Player* player,uint32& amount) FIRE(Guild,OnMemberDepositMoney,TSGuild(guild),TSPlayer(player),TSMutableNumber<uint32>(&amount))
     void OnEvent(Guild* guild,uint8 eventType,ObjectGuid::LowType playerGuid1,ObjectGuid::LowType playerGuid2,uint8 newRank) FIRE(Guild,OnEvent,TSGuild(guild),eventType,playerGuid1,playerGuid2,newRank)
     void OnBankEvent(Guild* guild,uint8 eventType,uint8 tabId,ObjectGuid::LowType playerGuid,uint32 itemOrMoney,uint16 itemStackCount,uint8 destTabId) FIRE(Guild,OnBankEvent,TSGuild(guild),eventType,tabId,playerGuid,itemOrMoney,itemStackCount,destTabId)
 };
@@ -240,7 +240,7 @@ public:
     TSGroupScript() : GroupScript("TSGroupScript"){}
     void OnAddMember(Group* group,ObjectGuid guid) FIRE(Group,OnAddMember,TSGroup(group),guid.GetRawValue())
     void OnInviteMember(Group* group,ObjectGuid guid) FIRE(Group,OnInviteMember,TSGroup(group),guid.GetRawValue())
-    void OnRemoveMember(Group* group,ObjectGuid guid,RemoveMethod method,ObjectGuid kicker,char const* reason) FIRE(Group,OnRemoveMember,TSGroup(group),guid.GetRawValue(),method,kicker.GetRawValue(),TSString(reason))
+    void OnRemoveMember(Group* group,ObjectGuid guid,RemoveMethod method,ObjectGuid kicker,char const* reason) FIRE(Group,OnRemoveMember,TSGroup(group),guid.GetRawValue(),method,kicker.GetRawValue(),reason)
     void OnChangeLeader(Group* group,ObjectGuid newLeaderGuid,ObjectGuid oldLeaderGuid) FIRE(Group,OnChangeLeader,TSGroup(group),newLeaderGuid.GetRawValue(),oldLeaderGuid.GetRawValue())
     void OnDisband(Group* group) FIRE(Group,OnDisband,TSGroup(group))
 };

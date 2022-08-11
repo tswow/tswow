@@ -1,4 +1,5 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSJson.h"
 #include "TSJsonLua.h"
 
@@ -27,57 +28,22 @@ void TSLua::load_json_methods(sol::state& state)
     LUA_FIELD(ts_jsonarray, TSJsonArray, PushNull);
     LUA_FIELD(ts_jsonarray, TSJsonArray, HasJsonObject);
     LUA_FIELD(ts_jsonarray, TSJsonArray, SetJsonObject);
+    LUA_FIELD(ts_jsonarray, TSJsonArray, SetString);
+    LUA_FIELD(ts_jsonarray, TSJsonArray, InsertString);
+    LUA_FIELD(ts_jsonarray, TSJsonArray, PushString);
 
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetBool, unsigned, bool);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetNumber, unsigned, double);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetString, unsigned, std::string const&);
 
-    ts_jsonarray.set_function("GetBool", sol::overload(
-        &TSJsonArray::LGetBool0
-        , &TSJsonArray::LGetBool1
-    ));
-    ts_jsonarray.set_function("GetNumber", sol::overload(
-        &TSJsonArray::LGetNumber0
-        , &TSJsonArray::LGetNumber1
-    ));
-    ts_jsonarray.set_function("GetString", sol::overload(
-        &TSJsonArray::LGetString0
-        , &TSJsonArray::LGetString1
-    ));
-    ts_jsonarray.set_function("SetString", &TSJsonArray::LSetString);
-    ts_jsonarray.set_function("InsertString", &TSJsonArray::LInsertString);
-    ts_jsonarray.set_function("LPushString", &TSJsonArray::LPushString),
-        ts_jsonarray.set_function("SetJsonObject", sol::overload(
-            &TSJsonArray::LSetJsonObject0
-            , &TSJsonArray::LSetJsonObject1
-        ));
-    ts_jsonarray.set_function("GetJsonObject", sol::overload(
-        &TSJsonArray::LGetJsonObject0
-        , &TSJsonArray::LGetJsonObject1
-    ));
-    ts_jsonarray.set_function("InsertJsonObject", sol::overload(
-        &TSJsonArray::LInsertJsonObject0
-        , &TSJsonArray::LInsertJsonObject1
-    ));
-    ts_jsonarray.set_function("PushJsonObject", sol::overload(
-        &TSJsonArray::LPushJsonObject0
-        , &TSJsonArray::LPushJsonObject1
-    ));
-    ts_jsonarray.set_function("SetJsonArray", sol::overload(
-        &TSJsonArray::LSetJsonArray0
-        , &TSJsonArray::LSetJsonArray1
-    ));
-    ts_jsonarray.set_function("GetJsonArray", sol::overload(
-        &TSJsonArray::LGetJsonArray0
-        , &TSJsonArray::LGetJsonArray1
-    ));
-    ts_jsonarray.set_function("InsertJsonArray", sol::overload(
-        &TSJsonArray::LInsertJsonArray0
-        , &TSJsonArray::LInsertJsonArray1
-    ));
-    ts_jsonarray.set_function("PushJsonArray", sol::overload(
-        &TSJsonArray::LPushJsonArray0
-        , &TSJsonArray::LPushJsonArray1
-    ));
-    ts_jsonarray.set_function("toString", sol::overload(
-        &TSJsonArray::LtoString0
-        , &TSJsonArray::LtoString1
-    ));
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, SetJsonObject, unsigned, TSJsonObject);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetJsonObject, unsigned, TSJsonObject);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, InsertJsonObject, unsigned, TSJsonObject);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_jsonarray, TSJsonArray, PushJsonObject, TSJsonObject);
+
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, SetJsonArray, unsigned, TSJsonArray);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetJsonArray, unsigned, TSJsonArray);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, InsertJsonArray, unsigned, TSJsonArray);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_jsonarray, TSJsonArray, PushJsonArray, TSJsonArray);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_jsonarray, TSJsonArray, toString, int);
 }

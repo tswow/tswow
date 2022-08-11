@@ -23,277 +23,277 @@ TSCreatureTemplate::TSCreatureTemplate(CreatureTemplate * ctIn)
     , ct(ctIn)
 {}
 
-uint32 TSCreatureTemplate::GetEntry()
+TSNumber<uint32> TSCreatureTemplate::GetEntry()
 {
     return ct->Entry;
 }
 
-uint32 TSCreatureTemplate::GetDifficultyEntryA()
+TSNumber<uint32> TSCreatureTemplate::GetDifficultyEntryA()
 {
     return ct->DifficultyEntry[0];
 }
 
-uint32 TSCreatureTemplate::GetDifficultyEntryB()
+TSNumber<uint32> TSCreatureTemplate::GetDifficultyEntryB()
 {
     return ct->DifficultyEntry[1];
 }
 
-uint32 TSCreatureTemplate::GetDifficultyEntryC()
+TSNumber<uint32> TSCreatureTemplate::GetDifficultyEntryC()
 {
     return ct->DifficultyEntry[2];
 }
 
-uint32 TSCreatureTemplate::GetKillCreditA()
+TSNumber<uint32> TSCreatureTemplate::GetKillCreditA()
 {
     return ct->KillCredit[0];
 }
 
-uint32 TSCreatureTemplate::GetKillCreditB()
+TSNumber<uint32> TSCreatureTemplate::GetKillCreditB()
 {
     return ct->KillCredit[1];
 }
 
-uint32 TSCreatureTemplate::GetModelID1()
+TSNumber<uint32> TSCreatureTemplate::GetModelID1()
 {
     return ct->Modelid1;
 }
 
-uint32 TSCreatureTemplate::GetModelID2()
+TSNumber<uint32> TSCreatureTemplate::GetModelID2()
 {
     return ct->Modelid2;
 }
 
-uint32 TSCreatureTemplate::GetModelID3()
+TSNumber<uint32> TSCreatureTemplate::GetModelID3()
 {
     return ct->Modelid3;
 }
 
-uint32 TSCreatureTemplate::GetModelID4()
+TSNumber<uint32> TSCreatureTemplate::GetModelID4()
 {
     return ct->Modelid4;
 }
 
-TSString TSCreatureTemplate::GetName()
+std::string TSCreatureTemplate::GetName()
 {
-    return JSTR(ct->Name);
+    return ct->Name;
 }
 
-TSString TSCreatureTemplate::GetTitle()
+std::string TSCreatureTemplate::GetTitle()
 {
 #if TRINITY
-    return JSTR(ct->Title);
+    return ct->Title;
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TScreatureTemplate::GetTitle not implemented for AzerothCore.");
-    return JSTR("");
+    return "";
 #endif
 }
 
-TSString TSCreatureTemplate::GetIconName()
+std::string TSCreatureTemplate::GetIconName()
 {
-    return JSTR(ct->IconName);
+    return ct->IconName;
 }
-uint32 TSCreatureTemplate::GetGossipMenuID()
+TSNumber<uint32> TSCreatureTemplate::GetGossipMenuID()
 {
     return ct->GossipMenuId;
 }
 
-uint8 TSCreatureTemplate::GetMinLevel()
+TSNumber<uint8> TSCreatureTemplate::GetMinLevel()
 {
     return ct->minlevel;
 }
-uint8 TSCreatureTemplate::GetMaxLevel()
+TSNumber<uint8> TSCreatureTemplate::GetMaxLevel()
 {
     return ct->maxlevel;
 }
-uint32 TSCreatureTemplate::GetExpansion()
+TSNumber<uint32> TSCreatureTemplate::GetExpansion()
 {
     return ct->expansion;
 }
-uint32 TSCreatureTemplate::GetFaction()
+TSNumber<uint32> TSCreatureTemplate::GetFaction()
 {
     return ct->faction;
 }
-uint32 TSCreatureTemplate::GetNPCFlag()
+TSNumber<uint32> TSCreatureTemplate::GetNPCFlag()
 {
     return ct->npcflag;
 }
-float TSCreatureTemplate::GetSpeedWalk()
+TSNumber<float> TSCreatureTemplate::GetSpeedWalk()
 {
     return ct->speed_walk;
 }
-float TSCreatureTemplate::GetSpeedRun()
+TSNumber<float> TSCreatureTemplate::GetSpeedRun()
 {
     return ct->speed_run;
 }
-float TSCreatureTemplate::GetScale()
+TSNumber<float> TSCreatureTemplate::GetScale()
 {
     return ct->scale;
 }
-uint32 TSCreatureTemplate::GetRank()
+TSNumber<uint32> TSCreatureTemplate::GetRank()
 {
     return ct->rank;
 }
-uint32 TSCreatureTemplate::GetDamageSchool()
+TSNumber<uint32> TSCreatureTemplate::GetDamageSchool()
 {
     return ct->dmgschool;
 }
-uint32 TSCreatureTemplate::GetBaseAttackTime()
+TSNumber<uint32> TSCreatureTemplate::GetBaseAttackTime()
 {
     return ct->BaseAttackTime;
 }
-uint32 TSCreatureTemplate::GetRangeAttackTime()
+TSNumber<uint32> TSCreatureTemplate::GetRangeAttackTime()
 {
     return ct->RangeAttackTime;
 }
-float TSCreatureTemplate::GetBaseVariance()
+TSNumber<float> TSCreatureTemplate::GetBaseVariance()
 {
     return ct->BaseVariance;
 }
-float TSCreatureTemplate::GetRangeVariance()
+TSNumber<float> TSCreatureTemplate::GetRangeVariance()
 {
     return ct->RangeVariance;
 }
-uint32 TSCreatureTemplate::GetUnitClass()
+TSNumber<uint32> TSCreatureTemplate::GetUnitClass()
 {
     return ct->unit_class;
 }
-uint32 TSCreatureTemplate::GetUnitFlags()
+TSNumber<uint32> TSCreatureTemplate::GetUnitFlags()
 {
     return ct->unit_flags;
 }
-uint32 TSCreatureTemplate::GetUnitFlags2()
+TSNumber<uint32> TSCreatureTemplate::GetUnitFlags2()
 {
     return ct->unit_flags2;
 }
-uint32 TSCreatureTemplate::GetDynamicFlags()
+TSNumber<uint32> TSCreatureTemplate::GetDynamicFlags()
 {
     return ct->dynamicflags;
 }
-uint32 TSCreatureTemplate::GetFamily()
+TSNumber<uint32> TSCreatureTemplate::GetFamily()
 {
     return ct->family;
 }
-uint32 TSCreatureTemplate::GetType()
+TSNumber<uint32> TSCreatureTemplate::GetType()
 {
     return ct->type;
 }
-uint32 TSCreatureTemplate::GetTypeFlags()
+TSNumber<uint32> TSCreatureTemplate::GetTypeFlags()
 {
     return ct->type_flags;
 }
-uint32 TSCreatureTemplate::GetLootID()
+TSNumber<uint32> TSCreatureTemplate::GetLootID()
 {
     return ct->lootid;
 }
-uint32 TSCreatureTemplate::GetPickpocketLootID()
+TSNumber<uint32> TSCreatureTemplate::GetPickpocketLootID()
 {
     return ct->pickpocketLootId;
 }
-uint32 TSCreatureTemplate::GetSkinLootID()
+TSNumber<uint32> TSCreatureTemplate::GetSkinLootID()
 {
     return ct->SkinLootId;
 }
-int32 TSCreatureTemplate::GetNormalResistance()
+TSNumber<int32> TSCreatureTemplate::GetNormalResistance()
 {
     return ct->SkinLootId;
 }
-int32 TSCreatureTemplate::GetHolyResistance()
+TSNumber<int32> TSCreatureTemplate::GetHolyResistance()
 {
     return ct->resistance[0];
 }
-int32 TSCreatureTemplate::GetFireResistance()
+TSNumber<int32> TSCreatureTemplate::GetFireResistance()
 {
     return ct->resistance[1];
 }
-int32 TSCreatureTemplate::GetNatureResistance()
+TSNumber<int32> TSCreatureTemplate::GetNatureResistance()
 {
     return ct->resistance[2];
 }
-int32 TSCreatureTemplate::GetFrostResistance()
+TSNumber<int32> TSCreatureTemplate::GetFrostResistance()
 {
     return ct->resistance[3];
 }
-int32 TSCreatureTemplate::GetShadowResistance()
+TSNumber<int32> TSCreatureTemplate::GetShadowResistance()
 {
     return ct->resistance[4];
 }
-int32 TSCreatureTemplate::GetArcaneResistance()
+TSNumber<int32> TSCreatureTemplate::GetArcaneResistance()
 {
     return ct->resistance[5];
 }
-uint32 TSCreatureTemplate::GetSpellA()
+TSNumber<uint32> TSCreatureTemplate::GetSpellA()
 {
     return ct->spells[0];
 }
-uint32 TSCreatureTemplate::GetSpellB()
+TSNumber<uint32> TSCreatureTemplate::GetSpellB()
 {
     return ct->spells[1];
 }
-uint32 TSCreatureTemplate::GetSpellC()
+TSNumber<uint32> TSCreatureTemplate::GetSpellC()
 {
     return ct->spells[2];
 }
-uint32 TSCreatureTemplate::GetSpellD()
+TSNumber<uint32> TSCreatureTemplate::GetSpellD()
 {
     return ct->spells[3];
 }
-uint32 TSCreatureTemplate::GetSpellE()
+TSNumber<uint32> TSCreatureTemplate::GetSpellE()
 {
     return ct->spells[4];
 }
-uint32 TSCreatureTemplate::GetSpellF()
+TSNumber<uint32> TSCreatureTemplate::GetSpellF()
 {
     return ct->spells[5];
 }
-uint32 TSCreatureTemplate::GetSpellG()
+TSNumber<uint32> TSCreatureTemplate::GetSpellG()
 {
     return ct->spells[6];
 }
-uint32 TSCreatureTemplate::GetSpellH()
+TSNumber<uint32> TSCreatureTemplate::GetSpellH()
 {
     return ct->spells[7];
 }
-uint32 TSCreatureTemplate::GetPetSpellDataID()
+TSNumber<uint32> TSCreatureTemplate::GetPetSpellDataID()
 {
     return ct->PetSpellDataId;
 }
-uint32 TSCreatureTemplate::GetVehicleID()
+TSNumber<uint32> TSCreatureTemplate::GetVehicleID()
 {
     return ct->VehicleId;
 }
-uint32 TSCreatureTemplate::GetMinGold()
+TSNumber<uint32> TSCreatureTemplate::GetMinGold()
 {
     return ct->mingold;
 }
-uint32 TSCreatureTemplate::GetMaxGold()
+TSNumber<uint32> TSCreatureTemplate::GetMaxGold()
 {
     return ct->maxgold;
 }
-TSString TSCreatureTemplate::GetAIName()
+std::string TSCreatureTemplate::GetAIName()
 {
     return ct->AIName;
 }
-uint32 TSCreatureTemplate::GetMovementType()
+TSNumber<uint32> TSCreatureTemplate::GetMovementType()
 {
     return ct->MovementType;
 }
-float TSCreatureTemplate::GetHoverHeight()
+TSNumber<float> TSCreatureTemplate::GetHoverHeight()
 {
     return ct->HoverHeight;
 }
-float TSCreatureTemplate::GetModHealth()
+TSNumber<float> TSCreatureTemplate::GetModHealth()
 {
     return ct->ModHealth;
 }
-float TSCreatureTemplate::GetModMana()
+TSNumber<float> TSCreatureTemplate::GetModMana()
 {
     return ct->ModMana;
 }
-float TSCreatureTemplate::GetModArmor()
+TSNumber<float> TSCreatureTemplate::GetModArmor()
 {
     return ct->ModArmor;
 }
-float TSCreatureTemplate::GetModDamage()
+TSNumber<float> TSCreatureTemplate::GetModDamage()
 {
 #if TRINITY
     return ct->ModDamage;
@@ -301,7 +301,7 @@ float TSCreatureTemplate::GetModDamage()
     return  ct->DamageModifier;
 #endif
 }
-float TSCreatureTemplate::GetModExperience()
+TSNumber<float> TSCreatureTemplate::GetModExperience()
 {
     return ct->ModExperience;
 }
@@ -309,7 +309,7 @@ bool TSCreatureTemplate::GetRacialLeader()
 {
     return ct->RacialLeader;
 }
-uint32 TSCreatureTemplate::GetMovementID()
+TSNumber<uint32> TSCreatureTemplate::GetMovementID()
 {
     return ct->movementId;
 }
@@ -317,31 +317,31 @@ bool TSCreatureTemplate::GetRegenHealth()
 {
     return ct->RegenHealth;
 }
-uint32 TSCreatureTemplate::GetMechanicImmuneMask()
+TSNumber<uint32> TSCreatureTemplate::GetMechanicImmuneMask()
 {
     return ct->MechanicImmuneMask;
 }
-uint32 TSCreatureTemplate::GetSpellSchoolImmuneMask()
+TSNumber<uint32> TSCreatureTemplate::GetSpellSchoolImmuneMask()
 {
     return ct->SpellSchoolImmuneMask;
 }
-uint32 TSCreatureTemplate::GetFlagsExtra()
+TSNumber<uint32> TSCreatureTemplate::GetFlagsExtra()
 {
     return ct->flags_extra;
 }
-uint32 TSCreatureTemplate::GetScriptID()
+TSNumber<uint32> TSCreatureTemplate::GetScriptID()
 {
     return ct->ScriptID;
 }
-uint32 TSCreatureTemplate::GetRandomValidModelID() const
+TSNumber<uint32> TSCreatureTemplate::GetRandomValidModelID() const
 {
     return ct->GetRandomValidModelId();
 }
-uint32 TSCreatureTemplate::GetFirstValidModelID() const
+TSNumber<uint32> TSCreatureTemplate::GetFirstValidModelID() const
 {
     return ct->GetFirstValidModelId();
 }
-uint32 TSCreatureTemplate::GetFirstInvisibleModel() const
+TSNumber<uint32> TSCreatureTemplate::GetFirstInvisibleModel() const
 {
 #if TRINITY
     return ct->GetFirstInvisibleModel();
@@ -349,7 +349,7 @@ uint32 TSCreatureTemplate::GetFirstInvisibleModel() const
     TS_LOG_ERROR("tswow.api", "TSCreatureTemplate::GetFirstInvisibleModel not implemented for AzerothCore");
 #endif
 }
-uint32 TSCreatureTemplate::GetFirstVisibleModel() const
+TSNumber<uint32> TSCreatureTemplate::GetFirstVisibleModel() const
 {
 #if TRINITY
     return ct->GetFirstVisibleModel();
@@ -361,7 +361,7 @@ TSEntity * TSCreatureTemplate::GetData()
 {
     return &ct->m_tsEntity;
 }
-uint32 TSCreatureTemplate::GetRequiredLootSkill() const
+TSNumber<uint32> TSCreatureTemplate::GetRequiredLootSkill() const
 {
     return ct->GetRequiredLootSkill();
 }
@@ -376,11 +376,11 @@ bool TSCreatureTemplate::GetIsTameable(bool canTameExotic) const
 
 
 // CreatureMovementData
-uint32 TSCreatureTemplate::GetGroundMovement()
+TSNumber<uint32> TSCreatureTemplate::GetGroundMovement()
 {
     return static_cast<uint32>(ct->Movement.Ground);
 }
-uint32 TSCreatureTemplate::GetFlightMovement()
+TSNumber<uint32> TSCreatureTemplate::GetFlightMovement()
 {
     return static_cast<uint32>(ct->Movement.Flight);
 }
@@ -392,15 +392,15 @@ bool TSCreatureTemplate::GetRooted()
 {
     return ct->Movement.Rooted;
 }
-uint32 TSCreatureTemplate::GetChaseMovement()
+TSNumber<uint32> TSCreatureTemplate::GetChaseMovement()
 {
     return static_cast<uint32>(ct->Movement.Chase);
 }
-uint32 TSCreatureTemplate::GetRandomMovement()
+TSNumber<uint32> TSCreatureTemplate::GetRandomMovement()
 {
     return static_cast<uint32>(ct->Movement.Random);
 }
-uint32 TSCreatureTemplate::GetInteractionPauseTimer()
+TSNumber<uint32> TSCreatureTemplate::GetInteractionPauseTimer()
 {
     return ct->Movement.InteractionPauseTimer;
 }
@@ -426,21 +426,3 @@ TSCreatureTemplate GetCreatureTemplate(uint32 entry)
     return TSCreatureTemplate(
         const_cast<CreatureTemplate*>(sObjectMgr->GetCreatureTemplate(entry)));
 }
-
-std::string TSCreatureTemplate::LGetName()
-{
-    return GetName().std_str();
-}
-std::string TSCreatureTemplate::LGetTitle()
-{
-    return GetTitle().std_str();
-}
-std::string TSCreatureTemplate::LGetIconName()
-{
-    return GetIconName().std_str();
-}
-std::string TSCreatureTemplate::LGetAIName()
-{
-    return GetAIName().std_str();
-}
-

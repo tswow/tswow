@@ -3,6 +3,10 @@ description: 'Set up Ubuntu for installing TSWoW'
 runs:
   using: "composite"
   steps:
+    - name: Select node version
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.13.1
     - name: Install deps
       shell: bash
       run: sudo apt-get remove --purge mysql-common && sudo apt-get update && sudo apt-get install git clang cmake make gcc g++ libmariadbclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mariadb-server p7zip libmariadb-client-lgpl-dev-compat

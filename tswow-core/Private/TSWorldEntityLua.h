@@ -1,11 +1,13 @@
 #pragma once
 
 #include "TSLua.h"
+#include "TSEntityLua.h"
 #include "TSWorldEntity.h"
 
 template <typename C, typename T>
 void TSLua::load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name)
 {
+    load_entity_methods_t(state, target, name);
     LUA_FIELD(target, TSWorldEntityProvider<C>, GetEntityGroup);
     LUA_FIELD(target, TSWorldEntityProvider<C>, RemoveEntityGroup);
     LUA_FIELD(target, TSWorldEntityProvider<C>, ClearEntityGroup);

@@ -32,6 +32,8 @@ export class Preprocessor {
                 return this.preprocessBinaryExpression(<ts.BinaryExpression>node);
             case ts.SyntaxKind.PropertyAccessExpression:
                 return this.preprocessPropertyAccessExpression(<ts.PropertyAccessExpression>node);
+            case ts.SyntaxKind.CallExpression:
+                return this.preprocessCallExpression(<ts.CallExpression>node);
         }
 
         return node;
@@ -122,7 +124,6 @@ export class Preprocessor {
     }
 
     private preprocessBinaryExpression(node: ts.BinaryExpression) {
-
         switch (node.operatorToken.kind) {
             case ts.SyntaxKind.EqualsToken:
 
@@ -142,14 +143,121 @@ export class Preprocessor {
                         return this.fixupParentReferences(newCall, node.parent);
                     }
                 }
-
+                break;
+            case ts.SyntaxKind.PlusToken:
+                let leftType = this.resolver.getTypeAtLocation(node.left)
+                let rightType = this.resolver.getTypeAtLocation(node.right)
+                if(leftType.isStringLiteral() && rightType.isStringLiteral()) {
+                    node = ts.createBinary(ts.createCall(ts.createIdentifier('std::string'),null,[node.left]),ts.SyntaxKind.PlusToken,ts.createCall(ts.createIdentifier('std::string'),null,[node.right]))
+                } else {
+                    let leftStr = this.resolver.isStringType(leftType)
+                    let rightStr = this.resolver.isStringType(rightType)
+                    const TO_STR_FUNC = 'ToStr'
+                    if((leftStr && ! rightStr) || (rightStr && ! leftStr)) {
+                        if(!leftStr) {
+                            node = ts.createBinary(ts.createCall(ts.createIdentifier(TO_STR_FUNC), null, [node.left]), ts.SyntaxKind.PlusToken, node.right);
+                        }
+                        if(!rightStr) {
+                            node = ts.createBinary(node.left, ts.SyntaxKind.PlusToken, ts.createCall(ts.createIdentifier(TO_STR_FUNC), null, [node.right]));
+                        }
+                    }
+                }
                 break;
         }
 
         return node;
     }
 
+    private preprocessPropertyAccessCall(node: ts.CallExpression, prop: ts.PropertyAccessExpression) {
+        if(prop.getChildCount() < 2) {
+            return node;
+        }
+        let type = this.emitter.resolver.getTypeOf(prop.getChildAt(0))
+        let isString = this.emitter.resolver.isStringType(type);
+        let isNumber = this.emitter.resolver.isNumberType(type);
+        let methodName = prop.getChildAt(2).getText(node.getSourceFile())
+        if(!isString && !isNumber) {
+            return node;
+        }
+        let ident = ts.createIdentifier(`__ts_${isString ? 'string' : 'number'}_${methodName}`)
+        return ts.createCall(ident,node.typeArguments,[prop.getChildAt(0) as ts.Expression, ...node.arguments])
+    }
+
+    private preprocessCreateArrayCall(node: ts.CallExpression) {
+        if(node.getChildCount() < 3) {
+            return node;
+        }
+        let arrCont = node.getChildAt(node.getChildCount()-2);
+        if(arrCont.kind !== ts.SyntaxKind.SyntaxList || arrCont.getChildCount() < 1) {
+            return node;
+        }
+
+        let arr = arrCont.getChildAt(0);
+        if(arr.kind !== ts.SyntaxKind.ArrayLiteralExpression) {
+            return node;
+        }
+
+        let arrItems = arr.getChildAt(1)
+        if(arrItems.kind !== ts.SyntaxKind.SyntaxList) {
+            return node;
+        }
+
+        let entries = arrItems.getChildren().filter(x=>x.kind !== ts.SyntaxKind.CommaToken)
+        if(entries.length === 0) {
+            return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,[]);
+        }
+
+        let typestr = node.typeArguments[0].getText(node.getSourceFile());
+        if(!['int','uint8','uint16','uint32','uint64','int8','int16','int32','int64','float'].includes(typestr)) {
+            return node
+        }
+
+        // todo: handle spread operator
+        let entriesOut = entries
+            .map(x=>ts.createCall(ts.createIdentifier(typestr),null,[x as ts.Expression]))
+        let arrLit = ts.createArrayLiteral(entriesOut);
+        (arrLit as any).__isIntLiteralArray = true;
+        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,[arrLit])
+    }
+
+    private preprocessIdentifierCall(node: ts.CallExpression, ident: ts.Identifier) {
+        switch(ident.text) {
+            case 'CreateArray':
+                return this.preprocessCreateArrayCall(node);
+        }
+        return node;
+    }
+
+    private preprocessCallExpression(node: ts.CallExpression): ts.Expression {
+        if(node.pos < 0) {
+            return node;
+        }
+        if(node.getChildCount() < 1) {
+            return node;
+        }
+
+        let expr = node.getChildAt(0)
+        switch(expr.kind) {
+            case ts.SyntaxKind.Identifier:
+                return this.preprocessIdentifierCall(node, expr as ts.Identifier);
+            case ts.SyntaxKind.PropertyAccessExpression:
+                return this.preprocessPropertyAccessCall(node,expr as ts.PropertyAccessExpression);
+        }
+        return node;
+    }
+
     private preprocessPropertyAccessExpression(node: ts.PropertyAccessExpression): ts.Expression {
+        if(node.pos >= 0) {
+            let firstChild = node.getChildAt(0)
+            let firstChildType = this.resolver.getTypeOf(firstChild);
+            if(this.resolver.isStringType(firstChildType)) {
+                let lastChild = node.getChildAt(node.getChildCount() - 1)
+                if(lastChild.pos >= 0 && lastChild.getText() == 'length') {
+                    return ts.createCall(ts.createIdentifier('__ts_string_length'),null,[node.getChildAt(0) as ts.Expression])
+                }
+            }
+        }
+
         let expression = <ts.Expression>node.expression;
         while (expression.kind === ts.SyntaxKind.ParenthesizedExpression) {
             expression = (<ts.ParenthesizedExpression>expression).expression;

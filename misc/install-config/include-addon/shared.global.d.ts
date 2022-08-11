@@ -58,3 +58,4 @@ declare class TSPacketRead {
 }
 
 declare function CreateCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
+declare function require(str: string): any

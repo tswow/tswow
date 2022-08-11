@@ -1,11 +1,11 @@
 #pragma once
 
-#include "TSString.h"
+#include <string>
 
 class TSClass
 {
 public:
-  virtual TSString stringify(int indention = 0) { return JSTR("[TSClass (stringify not implemented)]"); };
+  virtual std::string stringify(int indention = 0) { return "[TSClass (stringify not implemented)]"; };
 };
 
 class DBTable : public TSClass

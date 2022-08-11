@@ -60,6 +60,16 @@ export namespace Config {
         spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
         spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
+        // Serverside lua includes
+        spaths.misc.install_config.include_lua.copy(bpaths.include_lua),
+        wsys.execIn(bpaths.include_lua,'tstl')
+        bpaths.include_lua.iterate('RECURSE','FILES','FULL', node => {
+            if(['.ts','.json'].find(x=>node.endsWith(x))) {
+                return;
+            }
+            node.copy(ipaths.bin.include_lua.join(node.relativeTo(bpaths.include_lua)))
+        })
+
         // Addon includes
         spaths.misc.install_config.include_addon.copy(ipaths.bin.include_addon)
         ipaths.bin.include_addon.join('Events.ts').remove();
@@ -84,6 +94,16 @@ export namespace Config {
         wsys.execIn(bpaths.lua_events, 'tstl')
         bpaths.lua_events.events_lua.copy(
             ipaths.bin.include_addon.Events_lua)
+        bpaths.lua_events.lualib_bundle.copy(
+            ipaths.bin.include_addon.lualib_bundle)
+        
+        let lualib_bundle = ipaths.bin.include_addon.lualib_bundle.read('utf-8')
+        let index = lualib_bundle.lastIndexOf('return {')
+        lualib_bundle = lualib_bundle.substring(0,index) + 'local ___lualib_bundle = ' + lualib_bundle.substring(index + 'return '.length)
+        lualib_bundle += `tstl_register_module('lualib_bundle',function() return ___lualib_bundle end)`
+        ipaths.bin.include_addon.lualib_bundle.write(
+            lualib_bundle
+        )
 
         ipaths.bin.include_addon.global_d_ts.toFile().write(
             bpaths.lua_events.global_d_ts.readString()

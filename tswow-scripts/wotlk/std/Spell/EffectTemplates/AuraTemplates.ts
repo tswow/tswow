@@ -696,7 +696,7 @@ export class ModSpellDamageOfStatPercent extends PercentBase {
         return makeMaskCell32(SchoolMask,this, this.owner.MiscValueA);
     }
     get Stat() {
-        return makeEnumCell(StatMod,this, this.owner.MiscValueA);
+        return makeEnumCell(StatMod,this, this.owner.MiscValueB);
     }
 }
 // 175

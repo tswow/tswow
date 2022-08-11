@@ -1,6 +1,6 @@
 #include "TSLua.h"
+#include "TSLuaVarargs.h"
 #include "TSInstance.h"
-#include "TSMapLua.h"
 #include "TSVehicle.h"
 #include "TSGameObject.h"
 #include "TSCreature.h"
@@ -20,7 +20,6 @@ void TSLua::load_instance_methods(sol::state& state)
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetDoorsOpenAfterEncounter);
 
     auto ts_instance = state.new_usertype<TSInstance>("TSInstance", sol::base_classes, sol::bases<TSMap, TSWorldEntityProvider<TSMap>, TSEntityProvider>());
-    load_map_methods_t(state, ts_instance, "TSInstance");
     LUA_FIELD(ts_instance, TSInstance, SaveInstanceToDB);
     LUA_FIELD(ts_instance, TSInstance, IsEncounterInProgress);
     LUA_FIELD(ts_instance, TSInstance, GetObjectGUID);
@@ -46,20 +45,8 @@ void TSLua::load_instance_methods(sol::state& state)
     LUA_FIELD(ts_instance, TSInstance, GetTeamIDInInstance);
     LUA_FIELD(ts_instance, TSInstance, GetFactionInInstance);
     LUA_FIELD(ts_instance, TSInstance, GetBossInfo);
-    ts_instance.set_function("DoCastSpellOnPlayers", sol::overload(
-        &TSInstance::LDoCastSpellOnPlayers0
-        , &TSInstance::LDoCastSpellOnPlayers1
-        , &TSInstance::LDoCastSpellOnPlayers2
-    ));
-    ts_instance.set_function("DoUseDoorOrButton", sol::overload(
-        &TSInstance::LDoUseDoorOrButton0
-        , &TSInstance::LDoUseDoorOrButton1
-        , &TSInstance::LDoUseDoorOrButton2
-    ));
-    ts_instance.set_function("DoSendNotify", &TSInstance::LDoSendNotify);
-    ts_instance.set_function("DoRemoveAurasDueToSpellOnPlayers", sol::overload(
-        &TSInstance::LDoRemoveAurasDueToSpellOnPlayers0
-        , &TSInstance::LDoRemoveAurasDueToSpellOnPlayers1
-        , &TSInstance::LDoRemoveAurasDueToSpellOnPlayers2
-    ));
+    LUA_FIELD(ts_instance, TSInstance, DoSendNotify);
+    LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoCastSpellOnPlayers, uint32, bool, bool);
+    LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoUseDoorOrButton, uint64, uint32, bool);
+    LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoRemoveAurasDueToSpellOnPlayers, uint32, bool, bool);
 }

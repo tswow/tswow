@@ -34,27 +34,23 @@ struct TC_GAME_API TSCondition {
     TSCondition* operator->() { return this; }
     operator bool() const { return m_condition != nullptr; }
     bool operator==(TSCondition const& rhs) { return m_condition == rhs.m_condition; }
-    uint32 GetSourceType();
-    uint32 GetSourceGroup();
-    uint32 GetSouceEntry();
-    uint32 GetSourceID();
-    uint32 GetElseGroup();
-    uint32 GetConditionType();
-    uint32 GetConditionValue1();
-    uint32 GetConditionValue2();
-    uint32 GetConditionValue3();
-    uint32 GetErrorType();
-    uint32 GetErrorTextID();
-    uint32 GetReferenceID();
-    uint32 GetScriptID();
-    uint8 GetConditionTarget();
+    TSNumber<uint32> GetSourceType();
+    TSNumber<uint32> GetSourceGroup();
+    TSNumber<uint32> GetSouceEntry();
+    TSNumber<uint32> GetSourceID();
+    TSNumber<uint32> GetElseGroup();
+    TSNumber<uint32> GetConditionType();
+    TSNumber<uint32> GetConditionValue1();
+    TSNumber<uint32> GetConditionValue2();
+    TSNumber<uint32> GetConditionValue3();
+    TSNumber<uint32> GetErrorType();
+    TSNumber<uint32> GetErrorTextID();
+    TSNumber<uint32> GetReferenceID();
+    TSNumber<uint32> GetScriptID();
+    TSNumber<uint8> GetConditionTarget();
     bool IsNegativeCondition();
-    TSString ToString(bool ext = false);
+    std::string ToString(bool ext = false);
     bool IsNull();
-private:
-    std::string LToString0(bool ext);
-    std::string LToString1();
-    friend class TSLua;
 };
 
 struct ConditionSourceInfo;
@@ -81,8 +77,8 @@ private:
     SmartScriptHolder* m_holder;
     SmartScript * m_script;
     Unit * m_unit;
-    uint32 m_var0;
-    uint32 m_var1;
+    TSNumber<uint32> m_var0;
+    TSNumber<uint32> m_var1;
     bool m_bvar;
     SpellInfo const* m_spell;
     GameObject* m_gameObject;
@@ -105,48 +101,48 @@ public:
     );
     TSSmartScriptValues * operator->() { return this; }
 
-    int32 GetEntryOrGUID();
-    uint32 GetSourceType();
-    uint32 GetEventID();
-    uint32 GetLink();
-    uint32 GetEventPhaseMask();
-    uint32 GetEventChance();
-    uint32 GetEventFlags();
+    TSNumber<int32> GetEntryOrGUID();
+    TSNumber<uint32> GetSourceType();
+    TSNumber<uint32> GetEventID();
+    TSNumber<uint32> GetLink();
+    TSNumber<uint32> GetEventPhaseMask();
+    TSNumber<uint32> GetEventChance();
+    TSNumber<uint32> GetEventFlags();
 
-    uint32 GetActionArgument1();
-    uint32 GetActionArgument2();
-    uint32 GetActionArgument3();
-    uint32 GetActionArgument4();
-    uint32 GetActionArgument5();
-    uint32 GetActionArgument6();
+    TSNumber<uint32> GetActionArgument1();
+    TSNumber<uint32> GetActionArgument2();
+    TSNumber<uint32> GetActionArgument3();
+    TSNumber<uint32> GetActionArgument4();
+    TSNumber<uint32> GetActionArgument5();
+    TSNumber<uint32> GetActionArgument6();
 
-    uint32 GetEventArgument1();
-    uint32 GetEventArgument2();
-    uint32 GetEventArgument3();
-    uint32 GetEventArgument4();
-    uint32 GetEventArgument5();
+    TSNumber<uint32> GetEventArgument1();
+    TSNumber<uint32> GetEventArgument2();
+    TSNumber<uint32> GetEventArgument3();
+    TSNumber<uint32> GetEventArgument4();
+    TSNumber<uint32> GetEventArgument5();
 
-    uint32 GetTargetParam1();
-    uint32 GetTargetParam2();
-    uint32 GetTargetParam3();
-    uint32 GetTargetParam4();
+    TSNumber<uint32> GetTargetParam1();
+    TSNumber<uint32> GetTargetParam2();
+    TSNumber<uint32> GetTargetParam3();
+    TSNumber<uint32> GetTargetParam4();
 
-    float GetTargetX();
-    float GetTargetY();
-    float GetTargetZ();
+    TSNumber<float> GetTargetX();
+    TSNumber<float> GetTargetY();
+    TSNumber<float> GetTargetZ();
 
-    uint32 GetTimer();
-    uint32 GetPriority();
+    TSNumber<uint32> GetTimer();
+    TSNumber<uint32> GetPriority();
 
     TSUnit GetLastInvoker();
     TSArray<TSWorldObject> GetTargets();
     void StoreTargetList(TSArray<TSWorldObject> objects, uint32 id);
     TSArray<TSWorldObject> GetTargetList(uint32 id, TSWorldObject ref);
     void StoreCounter(uint32 id, uint32 value, uint32 reset);
-    uint32 GetCounterValue(uint32 id);
+    TSNumber<uint32> GetCounterValue(uint32 id);
     TSUnit GetUnitArg();
-    uint32 GetUIntArg1();
-    uint32 GetUIntArg2();
+    TSNumber<uint32> GetUIntArg1();
+    TSNumber<uint32> GetUIntArg2();
     bool GetBoolArg();
     TSSpellInfo GetSpellArg();
     TSGameObject GetGameObjectArg();

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { WDirectory, WNode } from '../../util/FileTree';
+import { WFile } from '../../util/FileTree';
 import { ipaths } from '../../util/Paths';
 import { CodeWriter } from "../codewriter";
 import { TRANSPILER_CHANGES } from '../version';
@@ -31,20 +31,17 @@ export function writeLoader(outDir: string) {
     const loc1 = path.join(livescripts,mainHeader)
     const loc2 = path.join(livescripts,'build',datasetName,'cpp','livescripts',mainHeader)
     const mainExists = fs.existsSync(loc1) || fs.existsSync(loc2)
-    const inlinePath = path.join(livescripts,'build',datasetName,'inline');
 
-    let inlines: WNode[] = []
-    new WDirectory(inlinePath).iterate('RECURSE','FILES','FULL',node=>{
-       inlines.push(node.withExtension('').relativeTo(inlinePath));
-    })
+    const inlinePath = new WFile(livescripts).join('build',datasetName,'inline','__inline_main.ts');
 
     const cpp = new CodeWriter();
     if(mainExists) {
         cpp.writeStringNewLine(`#include "${mainHeader}"`)
     }
-    inlines.forEach(x=>{
-        cpp.writeStringNewLine(`#include "build/${datasetName}/inline/${x}.h"`)
-    })
+
+    if(inlinePath.exists()) {
+        cpp.writeStringNewLine(`#include "build/${datasetName}/inline/__inline_main.h"`)
+    }
     cpp.writeStringNewLine(`#include "TCLoader.h"`);
     cpp.writeStringNewLine(`char const* GetScriptModuleRevisionHash()`)
     cpp.BeginBlock();
@@ -60,10 +57,9 @@ export function writeLoader(outDir: string) {
         cpp.writeStringNewLine(`Main(handlers);`);
     }
 
-    inlines.forEach(x=>{
-        cpp.writeStringNewLine(`__inline_${x.split('/').join('_').split('\\').join('_').split('.').join('_').split('-').join('_')}(handlers);`)
-    })
-
+    if(inlinePath.exists()) {
+        cpp.writeStringNewLine('__InlineMain(handlers);');
+    }
     cpp.EndBlock();
     cpp.writeStringNewLine(`void AddScripts(){}`);
     cpp.writeStringNewLine(`char const* GetScriptModule()`);

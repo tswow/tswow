@@ -96,16 +96,6 @@ void TSDBJson::Save()
         stmt->setString(3, m_json.toString());
         CharacterDatabase.Execute(stmt);
     }
-
-    if (m_lua.valid())
-    {
-        auto stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_JSON_DATA);
-        stmt->setUInt32(0, m_type);
-        stmt->setUInt32(1, 1);
-        stmt->setUInt32(2, m_id);
-        stmt->setString(3, lua_to_json(m_lua).dump());
-        CharacterDatabase.Execute(stmt);
-    }
     m_dirty_deleted = false;
 }
 
@@ -133,13 +123,15 @@ void TSDBJson::Load()
             {
             case DBJsonTableType::JSON: {
                 m_json = TSJsonObject();
-                m_json.Parse(TSString(field[1].GetString()));
+                m_json.Parse(field[1].GetString());
                 break;
             }
+            /*
             case DBJsonTableType::LUA: {
                 m_lua = json_to_lua(nlohmann::json::parse(field[1].GetString()));
                 break;
             }
+            */
             }
         } while (result->NextRow());
     }
@@ -148,251 +140,104 @@ void TSDBJson::Load()
 void TSDBJson::Clear()
 {
     m_json = TSJsonObject();
-    if (m_lua.valid())
-    {
-        m_lua.clear();
-    }
     m_dirty_deleted = true;
 }
 
-sol::table TSDBJson::get_lua()
-{
-    if (m_lua.valid())
-    {
-        return m_lua;
-    }
-    m_lua = TSLua::GetState().create_table();
-    return m_lua;
-}
-
-void TSDBJsonProvider::SetDBNumber(TSString key, double value)
+void TSDBJsonProvider::SetDBNumber(std::string const& key, double value)
 {
     get_json()->m_json.SetNumber(key,value);
 }
 
-void TSDBJsonProvider::SetDBUInt32(TSString key, uint32 value)
+void TSDBJsonProvider::SetDBUInt32(std::string const& key, uint32 value)
 {
     get_json()->m_json.SetNumber(key,value);
 }
 
-void TSDBJsonProvider::SetDBUInt64(TSString key, uint64 value)
+void TSDBJsonProvider::SetDBUInt64(std::string const& key, uint64 value)
 {
     get_json()->m_json.SetNumber(key,value);
 }
 
-void TSDBJsonProvider::SetDBInt32(TSString key, int32 value)
+void TSDBJsonProvider::SetDBInt32(std::string const& key, int32 value)
 {
     get_json()->m_json.SetNumber(key,value);
 }
 
-void TSDBJsonProvider::SetDBInt64(TSString key, int64 value)
+void TSDBJsonProvider::SetDBInt64(std::string const& key, int64 value)
 {
     get_json()->m_json.SetNumber(key,value);
 }
 
-void TSDBJsonProvider::SetDBFloat(TSString key, float value)
+void TSDBJsonProvider::SetDBFloat(std::string const& key, float value)
 {
     get_json()->m_json.SetNumber(key,value);
 }
 
-void TSDBJsonProvider::SetDBString(TSString key, TSString value)
+void TSDBJsonProvider::SetDBString(std::string const& key, std::string const& value)
 {
     get_json()->m_json.SetString(key,value);
 }
 
-void TSDBJsonProvider::SetDBBool(TSString key, bool value)
+void TSDBJsonProvider::SetDBBool(std::string const& key, bool value)
 {
     get_json()->m_json.SetBool(key,value);
 }
 
-void TSDBJsonProvider::SetDBObject(TSString key, TSJsonObject value)
+void TSDBJsonProvider::SetDBObject(std::string const& key, TSJsonObject value)
 {
     get_json()->m_json.SetJsonObject(key,value);
 }
 
-void TSDBJsonProvider::SetDBArray(TSString key, TSJsonArray arr)
+void TSDBJsonProvider::SetDBArray(std::string const& key, TSJsonArray arr)
 {
     get_json()->m_json.SetJsonArray(key,arr);
 }
 
-double TSDBJsonProvider::GetDBNumber(TSString key, double def)
+double TSDBJsonProvider::GetDBNumber(std::string const& key, double def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-uint32 TSDBJsonProvider::GetDBUInt32(TSString key, uint32 def)
+TSNumber<uint32> TSDBJsonProvider::GetDBUInt32(std::string const& key, uint32 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-uint64 TSDBJsonProvider::GetDBUInt64(TSString key, uint64 def)
+TSNumber<uint64> TSDBJsonProvider::GetDBUInt64(std::string const& key, uint64 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-int32 TSDBJsonProvider::GetDBInt32(TSString key, int32 def)
+TSNumber<int32> TSDBJsonProvider::GetDBInt32(std::string const& key, int32 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-int64 TSDBJsonProvider::GetDBInt64(TSString key, int64 def)
+TSNumber<int64> TSDBJsonProvider::GetDBInt64(std::string const& key, int64 def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-float TSDBJsonProvider::GetDBFloat(TSString key, float def)
+TSNumber<float> TSDBJsonProvider::GetDBFloat(std::string const& key, float def)
 {
     return get_json()->m_json.GetNumber(key, def);
 }
 
-TSString TSDBJsonProvider::GetDBString(TSString key, TSString def)
+std::string TSDBJsonProvider::GetDBString(std::string const& key, std::string const& def)
 {
     return get_json()->m_json.GetString(key, def);
 }
 
-bool TSDBJsonProvider::GetDBBool(TSString key, bool def)
+bool TSDBJsonProvider::GetDBBool(std::string const& key, bool def)
 {
     return get_json()->m_json.GetBool(key, def);
 }
 
-void TSDBJsonProvider::LSetDBNumber(std::string const& key, double value)
-{
-    get_json()->m_json.SetNumber(TSString(key), value);
-}
-
-void TSDBJsonProvider::LSetDBString(std::string const& key, std::string const& value)
-{
-    get_json()->m_json.SetString(TSString(key), TSString(value));
-}
-
-void TSDBJsonProvider::LSetDBBool(std::string const& key, bool value)
-{
-    get_json()->m_json.SetBool(TSString(key), value);
-}
-
-void TSDBJsonProvider::LSetDBObject(std::string const& key, sol::table table)
-{
-    get_json()->get_lua()[key] = table;
-}
-
-double TSDBJsonProvider::LGetDBNumber0(std::string const& key, double def)
-{
-    return get_json()->m_json.GetNumber(key, def);
-}
-
-uint32 TSDBJsonProvider::LGetDBUInt320(std::string const& key, uint32 def)
-{
-    return get_json()->m_json.GetNumber(key, def);
-}
-
-uint64 TSDBJsonProvider::LGetDBUInt640(std::string const& key, uint64 def)
-{
-    return get_json()->m_json.GetNumber(key, def);
-}
-
-int32 TSDBJsonProvider::LGetDBInt320(std::string const& key, int32 def)
-{
-    return get_json()->m_json.GetNumber(key, def);
-}
-
-int64 TSDBJsonProvider::LGetDBInt640(std::string const& key, int64 def)
-{
-    return get_json()->m_json.GetNumber(key, def);
-}
-
-float TSDBJsonProvider::LGetDBFloat0(std::string const& key, float def)
-{
-    return get_json()->m_json.GetNumber(key, def);
-}
-
-double TSDBJsonProvider::LGetDBNumber1(std::string const& key)
-{
-    return get_json()->m_json.GetNumber(key);
-}
-
-uint32 TSDBJsonProvider::LGetDBUInt321(std::string const& key)
-{
-    return get_json()->m_json.GetNumber(key);
-}
-uint64 TSDBJsonProvider::LGetDBUInt641(std::string const& key)
-{
-    return get_json()->m_json.GetNumber(key);
-}
-
-int32 TSDBJsonProvider::LGetDBInt321(std::string const& key)
-{
-    return get_json()->m_json.GetNumber(key);
-}
-
-int64 TSDBJsonProvider::LGetDBInt641(std::string const& key)
-{
-    return get_json()->m_json.GetNumber(key);
-}
-
-float TSDBJsonProvider::LGetDBFloat1(std::string const& key)
-{
-    return get_json()->m_json.GetNumber(key);
-}
-
-std::string TSDBJsonProvider::LGetDBString0(std::string const& key, std::string const def)
-{
-    return get_json()->m_json.GetString(key, def);
-}
-
-std::string TSDBJsonProvider::LGetDBString1(std::string const& key)
-{
-    return get_json()->m_json.GetString(key);
-}
-
-bool TSDBJsonProvider::LGetDBBool0(std::string const& key, bool def)
-{
-    return get_json()->m_json.GetBool(key, def);
-}
-
-bool TSDBJsonProvider::LGetDBBool1(std::string const& key)
-{
-    return get_json()->m_json.GetBool(key);
-}
-
-sol::table TSDBJsonProvider::LGetDBObject0(std::string const& key, sol::table table)
-{
-    sol::table lua = get_json()->get_lua();
-
-    auto val = lua[key];
-    if (val.valid() && val.get_type() == sol::type::table)
-    {
-        return val;
-    }
-    else
-    {
-        lua[key] = table;
-        return table;
-    }
-}
-
-sol::table TSDBJsonProvider::LGetDBObject1(std::string const& key)
-{
-    sol::table lua = get_json()->get_lua();
-    auto val = lua[key];
-    if (val.valid() && val.get_type() == sol::type::table)
-    {
-        return val;
-    }
-    else
-    {
-        return lua[key] = TSLua::GetState().create_table();
-    }
-}
-
-void TSDBJsonProvider::DeleteDBField(TSString key)
+void TSDBJsonProvider::DeleteDBField(std::string const& key)
 {
     TSDBJson* json = get_json();
     json->m_dirty_deleted = true;
     json->m_json.Remove(key);
-    if (json->m_lua.valid())
-    {
-        json->get_lua()[key.std_str()] = sol::nil;
-    }
 }
 
 void TSDBJsonProvider::SaveDBJson()
@@ -410,37 +255,17 @@ void TSDBJsonProvider::DeleteDBJson()
     get_json()->Delete();
 }
 
-void TSDBJsonProvider::LDeleteDBField(std::string const& key)
-{
-    DeleteDBField(TSString(key));
-}
-
 void TSDBJsonProvider::ClearDBJson()
 {
     get_json()->Clear();
 }
 
-void TSDBJsonProvider::LSetDBUInt32(std::string const& key, uint32 value)
+TSJsonObject TSDBJsonProvider::GetDBObject(std::string const& key, TSJsonObject def)
 {
-    SetDBUInt32(key, value);
+    return get_json()->m_json.GetJsonObject(key, def);
 }
 
-void TSDBJsonProvider::LSetDBInt32(std::string const& key, int32 value)
+TSJsonArray TSDBJsonProvider::GetDBArray(std::string const& key, TSJsonArray def)
 {
-    SetDBInt32(key, value);
-}
-
-void TSDBJsonProvider::LSetDBUInt64(std::string const& key, uint64 value)
-{
-    SetDBUInt64(key, value);
-}
-
-void TSDBJsonProvider::LSetDBInt64(std::string const& key, int64 value)
-{
-    SetDBInt64(key, value);
-}
-
-void TSDBJsonProvider::LSetDBFloat(std::string const& key, float value)
-{
-    SetDBFloat(key, value);
+    return get_json()->m_json.GetJsonArray(key, def);
 }
