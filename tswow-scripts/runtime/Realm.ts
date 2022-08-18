@@ -148,7 +148,7 @@ export class RealmConfig extends ConfigFile {
     @Property({
           name: 'Realm.AutoRestart'
         , description: 'Whether to restart the worldserver if it crashes'
-        , examples: [[true,''],[false,'']]
+        , examples: [[false,'']]
         , note: 'See possible values here: https://trinitycore.atlassian.net/wiki/spaces/tc/pages/2130016/realmlist#realmlist-timezone'
     })
     AutoRestart: boolean = this.undefined();

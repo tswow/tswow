@@ -32,6 +32,8 @@ export namespace AuthServer {
     }
 
     export async function start(type: BuildType = NodeConfig.DefaultBuildType) {
+        authserver.setAutoRestart(NodeConfig.AutoRestartAuthServer)
+
         await stop();
         if(authserver.isRunning()) {
             throw new Error(`Something else started the auth server while it was stopping`);
@@ -73,7 +75,6 @@ export namespace AuthServer {
 
     export async function initializeServer() {
         if(NodeConfig.AutoStartAuthServer) {
-            authserver.setAutoRestart(true)
             await start(NodeConfig.DefaultBuildType);
         }
         StopCommand.addCommand(
