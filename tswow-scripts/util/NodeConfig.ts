@@ -160,10 +160,10 @@ export class NodeConfigClass extends ConfigFile {
         const makeSettings = (str: string, suffix?: string)=>{
             const [host,port,user,password] = str.split(';')
             let prefix = this.DatabasePrefix.length > 0
-                ? `${this.DatabasePrefix}.`
+                ? `${this.DatabasePrefix}_`
                 : ''
             name = name
-                ? `${name}.`
+                ? `${name.replace('.', '_')}_`
                 : ''
             return {
                   host
@@ -179,9 +179,9 @@ export class NodeConfigClass extends ConfigFile {
             case 'characters':
                 return makeSettings(this.DatabaseCharacters,'characters')
             case 'world':
-                return makeSettings(this.DatabaseWorldDest,'world.dest')
+                return makeSettings(this.DatabaseWorldDest,'world_dest')
             case 'world_source':
-                return makeSettings(this.DatabaseWorldSource,'world.source')
+                return makeSettings(this.DatabaseWorldSource,'world_source')
         }
     }
 
