@@ -8155,6 +8155,21 @@ declare namespace _hidden {
             spell: TSSpellInfo
             , player: TSPlayer
         )=>void): T
+
+        OnHealLate(callback : (
+            spell: TSSpellInfo
+            , healer: TSUnit
+            , target: TSUnit
+            , amount: TSNumber<uint32>
+            , critical: bool
+        )=>void): T
+        OnHealLate(id: EventID, callback : (
+            spell: TSSpellInfo
+            , healer: TSUnit
+            , target: TSUnit
+            , amount: TSNumber<uint32>
+            , critical: bool
+        )=>void): T
     }
 
     export class Creature<T> {
