@@ -134,7 +134,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
 
     /** Only applicable if item is a shield */
-    get BlockChance() { return this.wrap(this.row.block); }
+    get Block() { return this.wrap(this.row.block); }
     get ItemSet() { return ItemSetRegistry.ref(this, this.row.itemset); }
     get Resistances() { return new ItemResistance(this); }
     get Stats() { return new ItemStats(this); }
