@@ -7876,7 +7876,7 @@ declare namespace _hidden {
             , faction: TSFactionTemplate
             , creature: TSCreature
             , money: TSMutableNumber<float>
-         ) => void);
+        ) => void);
     }
 
     export class Account<T> {
@@ -8146,6 +8146,15 @@ declare namespace _hidden {
 
         OnResistAbsorbCalculate(callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
         OnResistAbsorbCalculate(id: EventID, callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
+    
+        OnLearn(callback : (
+            spell: TSSpellInfo
+            , player: TSPlayer
+        )=>void): T
+        OnLearn(id: EventID, callback : (
+            spell: TSSpellInfo
+            , player: TSPlayer
+        )=>void): T
     }
 
     export class Creature<T> {

@@ -511,6 +511,7 @@ struct TSEvents
         ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+        ID_EVENT(OnLearn, TSSpellInfo, TSPlayer)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
