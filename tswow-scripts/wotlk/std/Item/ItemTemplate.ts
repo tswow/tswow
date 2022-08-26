@@ -293,7 +293,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .Area.set(0)
          .Armor.set(0)
          .BagFamily.set(0)
-         .BlockChance.set(0)
+         .Block.set(0)
          .Bonding.NO_BOUNDS.set()
          .Class.JUNK.set()
          .ClassMask.set(-1)
