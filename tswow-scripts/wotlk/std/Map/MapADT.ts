@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { AllModules } from "../../../data/Settings";
+import { isWindows } from "../../../util/Platform";
 import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Map } from "./Map";
@@ -81,6 +82,10 @@ export class MapADT<T extends Map> extends CellSystem<T> {
     }
 
     add(mod: string, blobs: [minx: number, miny: number, maxx: number, maxy: number, teleportName?: string][]) {
+        if(!isWindows()) {
+            console.log(`ADT generation is not yet implemented for linux, skipping adt generation.`)
+            return;
+        }
         mod = mod.split('.').join(path.sep)
         if(this.owner.Directory.get().split(/[\n \r\t]/).join('').length === 0) {
             throw new Error(
