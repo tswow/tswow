@@ -12721,9 +12721,12 @@ declare namespace WoWAPI {
         GetBottom(): number;
 
         /**
-         * Get the coordinates of the center of this frame - Moved in 1.10.
+         * Returns the distance from the bottom-left corner of the screen to the center of a Region, using the region's own coordinate space (ie, dependent on effective scale).
+         *
+         * @see https://wow.gamepedia.com/API_Region_GetPoint
+         * @returns number, number
          */
-        GetCenter(): number;
+        GetCenter(): LuaMultiReturn<[number, number]>;
 
         /**
          * Returns the distance from the bottom/left edge of the screen to the requested edge of an object, scaled with the objects's effective scale.
@@ -13187,6 +13190,22 @@ declare namespace WoWAPI {
          * Returns the Frame Strata the frame is in.
          */
         GetFrameStrata(): FrameStrata;
+        
+        /**
+         * Returns the region's scale relative to its immediate parent (if it has one)
+         * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
+         * @see https://wowpedia.fandom.com/wiki/API_Region_GetScale
+         * @returns number
+         */
+        GetScale()
+
+        /**
+         * Returns the region's net scale, inclusive of its parent's effective scale
+         * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
+         * @see https://wowpedia.fandom.com/wiki/API_Region_GetScale
+         * @returns number
+         */
+        GetEffectiveScale()
 
         /**
          * returns whether the flag is enabled or not
