@@ -13190,22 +13190,22 @@ declare namespace WoWAPI {
          * Returns the Frame Strata the frame is in.
          */
         GetFrameStrata(): FrameStrata;
-		
-		/**
+        
+        /**
          * Returns the region's scale relative to its immediate parent (if it has one)
          * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
          * @see https://wowpedia.fandom.com/wiki/API_Region_GetScale
          * @returns number
          */
-		GetScale()
-		
-		/**
+        GetScale()
+
+        /**
          * Returns the region's net scale, inclusive of its parent's effective scale
          * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
          * @see https://wowpedia.fandom.com/wiki/API_Region_GetScale
          * @returns number
          */
-		GetEffectiveScale()
+        GetEffectiveScale()
 
         /**
          * returns whether the flag is enabled or not
