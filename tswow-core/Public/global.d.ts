@@ -177,16 +177,9 @@ declare const enum DeathStatus {
     DEAD = 2
 }
 
-declare const enum LineOfSightChecks {
-    LINEOFSIGHT_CHECK_VMAP      = 0x1, // check static floor layout data
-    LINEOFSIGHT_CHECK_GOBJECT   = 0x2, // check dynamic game object data
-    LINEOFSIGHT_ALL_CHECKS      = (LINEOFSIGHT_CHECK_VMAP | LINEOFSIGHT_CHECK_GOBJECT)
-}
+declare const enum LineOfSightChecks { } /** SharedDefines.h:LineOfSightChecks */
 
-declare const enum VMapModelIgnoreFlags {
-    Nothing = 0x00,
-    M2      = 0x01
-}
+declare const enum VMapModelIgnoreFlags { } /** ModelIgnoreFlags.h:ModelIgnoreFlags */
 
 declare const enum Opcodes { } /** Opcodes.h:Opcodes */
 
@@ -4665,7 +4658,7 @@ declare interface TSInstance extends TSMap {
     GetTeamIDInInstance(): TSNumber<uint32>
     GetFactionInInstance(): TSNumber<uint32>
     GetBossInfo(id: uint32): TSBossInfo
-    RemoveFromMap(player:TSPlayer,remove:boolean): void
+    RemoveFromMap(player:TSPlayer, deleteFromWorld: boolean): void
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -7010,7 +7003,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param float z
      * @param bool genPath = true : if true, generates path
      */
-    MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool,finalAngle: float) : void
+    MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool,finalAngle?: float) : void
 
     /**
      * The [Unit] will take off from the ground and fly to the coordinates.
