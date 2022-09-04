@@ -3926,6 +3926,21 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     GetPlayer(guid: uint32): TSPlayer;
 
     /**
+     * Check if 2 positions are within LoS of each other, following different checks.
+     * 
+     * @param x1
+     * @param y1
+     * @param z1
+     * @param x2
+     * @param y2
+     * @param z2
+     * @param phasemask
+     * @param checks
+     * @param ignoreFlags
+     */
+    IsInLineOfSight(x1: double, y1: double, z1: double, x2: double, y2: double, z2: double, phasemask: uint32, checks: LineOfSightChecks, ignoreFlags: VMapModelIgnoreFlags )
+
+    /**
      * Returns `true` if the [Map] is an arena [BattleGround], `false` otherwise.
      *
      * @return bool isArena
@@ -4639,6 +4654,7 @@ declare interface TSInstance extends TSMap {
     GetTeamIDInInstance(): TSNumber<uint32>
     GetFactionInInstance(): TSNumber<uint32>
     GetBossInfo(id: uint32): TSBossInfo
+    RemoveFromMap(player:TSPlayer,remove:boolean): void
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -6531,6 +6547,13 @@ declare interface TSUnit extends TSWorldObject {
     IsSchoolLocked(schoolMask: SpellSchoolMask): bool;
 
     /**
+     * Return angle towards point given from Unit.
+     * 
+     * @param x
+     * @param y
+     */
+    GetRelativeAngle(x: float, y: float): float;
+    /**
      * Returns [Unit]'s [Vehicle] methods
      *
      * @return [Vehicle] vehicle
@@ -6976,7 +6999,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param float z
      * @param bool genPath = true : if true, generates path
      */
-    MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool) : void
+    MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool,finalAngle: float) : void
 
     /**
      * The [Unit] will take off from the ground and fly to the coordinates.

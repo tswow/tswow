@@ -16,7 +16,6 @@
  */
 #include "TSIncludes.h"
 #include "TSMap.h"
-#include "TSMap.h"
 #include "TSPlayer.h"
 #include "TSWorldObject.h"
 #include "TSGameObject.h"
@@ -472,6 +471,11 @@ TSGameObject TSMap::GetGameObject(uint64 guid)
 TSPlayer TSMap::GetPlayer(uint64 guid)
 {
     return TSPlayer(ObjectAccessor::GetPlayer(map, ObjectGuid(guid)));
+}
+
+bool TSMap::IsInLineOfSight(float x1,float y1,float z1, float x2, float y2, float z2, uint32 phasemask, uint32 checks, uint32 ignoreFlags)
+{
+    return map->isInLineOfSight( x1,  y1,  z1,  x2,  y2,  z2,  phasemask, static_cast<LineOfSightChecks>(checks), static_cast<VMAP::ModelIgnoreFlags>(ignoreFlags));
 }
 
 void TSMap::LDoDelayed(sol::function callback)
