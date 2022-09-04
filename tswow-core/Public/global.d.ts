@@ -177,6 +177,17 @@ declare const enum DeathStatus {
     DEAD = 2
 }
 
+declare const enum LineOfSightChecks {
+    LINEOFSIGHT_CHECK_VMAP      = 0x1, // check static floor layout data
+    LINEOFSIGHT_CHECK_GOBJECT   = 0x2, // check dynamic game object data
+    LINEOFSIGHT_ALL_CHECKS      = (LINEOFSIGHT_CHECK_VMAP | LINEOFSIGHT_CHECK_GOBJECT)
+}
+
+declare const enum VMapModelIgnoreFlags {
+    Nothing = 0x00,
+    M2      = 0x01
+}
+
 declare const enum Opcodes { } /** Opcodes.h:Opcodes */
 
 declare interface TSMutable<T,R> {
