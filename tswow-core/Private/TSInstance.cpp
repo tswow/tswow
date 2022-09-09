@@ -16,6 +16,11 @@ bool TSInstance::IsNull()
     return m_script == nullptr || map == nullptr;
 }
 
+void TSInstance::RemoveFromMap(TSPlayer player, bool deleteFromWorld)
+{
+    map->RemovePlayerFromMap(player.player, deleteFromWorld);
+}
+
 void TSInstance::SaveInstanceToDB()
 {
     m_script->SaveToDB();
