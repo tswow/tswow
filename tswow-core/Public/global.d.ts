@@ -4433,7 +4433,7 @@ declare class TSItem extends TSObject {
 }
 
 declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityProvider<TSBattlegroundPlayer>{
-    GetGUID(): TSNumber<uint64>
+    GetGUID(): uint64
     GetTeam(): TeamId;
     GetOfflineRemovalTime(): TSNumber<uint64>
 }
@@ -5624,7 +5624,7 @@ declare class TSObject extends TSEntityProvider {
      *
      * @return uint64 guid
      */
-    GetGUID() : TSNumber<uint64>
+    GetGUID() : uint64
 
     /**
      * Returns the low-part of the [Object]'s GUID.

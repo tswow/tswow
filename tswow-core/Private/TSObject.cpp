@@ -168,7 +168,7 @@ TSNumber<uint32> TSObject::GetEntry()
  *
  * @return uint64 guid
  */
-TSNumber<uint64> TSObject::GetGUID()
+uint64 TSObject::GetGUID()
 {
     return TS_GUID(obj->GetGUID());
 }

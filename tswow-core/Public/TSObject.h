@@ -55,7 +55,7 @@ public:
     bool IsInWorld();
     TSNumber<float> GetScale();
     TSNumber<uint32> GetEntry();
-    TSNumber<uint64> GetGUID();
+    uint64 GetGUID();
     TSNumber<uint32> GetGUIDLow();
     TSNumber<uint8> GetTypeID();
     void SetScale(float size);
