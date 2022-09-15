@@ -1530,7 +1530,7 @@ void TSPlayer::ApplyItemMods(TSItem item, uint8 slot, bool apply, bool updateAur
 void TSPlayer::UpdateCache()
 {
     #if TRINITY
-    QueryResult result = CharacterDatabase.PQuery("SELECT * FROM custom_item_stats");
+    QueryResult result = CharacterDatabase.PQuery("SELECT * FROM custom_item_template");
     do
     {
         Field* fields = result->Fetch();
