@@ -13985,6 +13985,19 @@ declare function CreateFrame(frameType: "Cooldown", frameName?: string, parentFr
 declare function CreateFrame(frameType: "ColorSelect", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ColorSelect;
 
 /**
+ * Draws a line with the defined texture between two points.
+ * @param texture WoWAPI.Texture to use, texture path example "Interface\\TaxiFrame\\UI-Taxi-Line"
+ * @param canvasFrame Canvas Frame (for anchoring)
+ * @param sx X position for the start point of the line
+ * @param sy Y position for the start point of the line
+ * @param ex X position for the end point of the line
+ * @param ey Y position for the end point of the line
+ * @param width Width of the line
+ * @param relPoint Relative point on canvas to interpret coords (Default BOTTOMLEFT)
+ */
+declare function DrawRouteLine(texture:WoWAPI.Texture, canvasFrame:WoWAPI.Frame, sx:number, sy:number, ex:number, ey:number, width:number, relPoint?:WoWAPI.Point);
+
+/**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.
  * The optional position argument (number) allows addons to insert top-level panels at arbitrary positions in the category list.
  *
