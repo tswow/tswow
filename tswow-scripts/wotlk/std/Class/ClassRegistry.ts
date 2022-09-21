@@ -174,14 +174,13 @@ export class ClassRegistryClass
             add(c: {Data:number}): any;
             queryAll(g: any): GtItem[];
         }
-
+		
         // Copy over stats
         const p = (size: number, dbc: GTFile) =>
             dbc.queryAll({})
-            .filter((x,i)=>x.index>=parent*size && x.index<parent*size+size)
+            .filter((x,i)=>x.index>=(parent-1)*size && x.index<(parent-1)*size+size)
         const g = (size: number, dbc: GTFile) =>
             p(size,dbc).forEach((x)=>x.clone().Data.set(x.Data.get()))
-
         g(100,DBC.GtChanceToMeleeCrit)
         g(100,DBC.GtChanceToSpellCrit)
         g(100,DBC.GtOCTRegenHP)
@@ -192,7 +191,7 @@ export class ClassRegistryClass
         g(1,DBC.GtChanceToSpellCritBase)
         g(320,DBC.GtCombatRatings)
         DBC.GtOCTClassCombatRatingScalar.queryAll({})
-            .filter((x)=>x.index>=parent*32 && x.index < parent*32+32)
+            .filter((x)=>x.index>=(parent-1)*32 && x.index < (parent-1)*32+32)
             .forEach((x,i)=>{
                 const g = x.clone({ID: (classIndex+1)*32+i})
             });
