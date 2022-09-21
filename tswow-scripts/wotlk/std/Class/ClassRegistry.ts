@@ -174,7 +174,7 @@ export class ClassRegistryClass
             add(c: {Data:number}): any;
             queryAll(g: any): GtItem[];
         }
-		
+
         // Copy over stats
         const p = (size: number, dbc: GTFile) =>
             dbc.queryAll({})
