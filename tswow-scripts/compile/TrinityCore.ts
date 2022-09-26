@@ -229,7 +229,7 @@ export namespace TrinityCore {
         //
         // Tracy
         //
-        const tracyEnabled = !Args.hasFlag(['notracy','no-tracy'],[process.argv,args1])
+        const tracyEnabled = Args.hasFlag(['tracy','tracy-enable'],[process.argv,args1])
 
         if(Args.hasFlag('notc',[process.argv,args1])) {
             return;

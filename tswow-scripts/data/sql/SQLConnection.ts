@@ -121,7 +121,12 @@ export class Connection {
 
     read(query: string) {
         if(this.sync===undefined) {
-            throw new Error(`Tried to read from a disconnected adapter`);
+            throw new Error(
+                  `Tried to read from a disconnected adapter.\n`
+                + `This typically indicates that your node_modules folder is corrupt. Try deleting it, re-run 'npm i' and restart TSWoW.\n`
+                + `\n`
+                + `If the problem persists, please report this as a bug.`
+            );
         }
         SqlConnection.log(this.settings.database,query);
         return this.syncQuery(query);

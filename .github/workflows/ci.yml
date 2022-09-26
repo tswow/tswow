@@ -25,15 +25,11 @@ jobs:
       - uses: ./.github/actions/setup_windows
       - name: Build tswow
         run: npm run build-release clean-archives noac tracy=*
-      - uses: ./.github/actions/publish_windows
+      - name: Publish release
+        if: github.ref == 'refs/heads/master'
+        run: node .github/scripts/upload-release.js
         env:
-          TSWOW_UPLOAD_URL: ${{secrets.TSWOW_UPLOAD_URL}}
-          EVENT_NAME: ${{github.event_name}}
-        if: "${{ env.TSWOW_UPLOAD_URL != '' && env.EVENT_NAME != 'pull_request'}}"
-        with:
-          core: 'trinitycore'
-          token: ${{secrets.GITHUB_TOKEN}}
-          upload-url: ${{ secrets.TSWOW_UPLOAD_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   #windows-msvc-azerothcore:
   #  runs-on: windows-2019

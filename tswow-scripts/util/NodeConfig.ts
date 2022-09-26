@@ -68,6 +68,13 @@ export class NodeConfigClass extends ConfigFile {
     AutoStartAuthServer!: boolean
 
     @Property({
+        name: 'AutoRestart.AuthServer'
+      , description: 'Whether the authserver should be automatically restarted if it crashes.'
+      , examples: [[false,'']]
+    })
+    AutoRestartAuthServer!: boolean
+
+    @Property({
       name: 'AutoStart.LauncherServer'
     , description: 'Whether the launcher server should be automatically started'
     , examples: [[true,'']]

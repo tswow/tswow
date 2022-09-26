@@ -29,6 +29,7 @@ import { BotRegistry } from './std/Bots/Bots';
 import { BroadcastTextRegistry } from "./std/BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./std/BroadcastText/CreatureText";
 import { ClassRegistry } from "./std/Class/ClassRegistry";
+import { CreatureDisplayInfoRegistry } from "./std/Creature/CreatureDisplayInfo";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./std/Creature/Creatures";
 import { CreatureOutfitsRegistry } from "./std/CreatureOutfits/CreatureOutfitsRegistry";
 import { CurrencyRegistry } from "./std/Currency/Currency";
@@ -114,6 +115,7 @@ export const std = {
     /** Individual creatures placed in the world */
     CreatureInstances: CreatureInstanceRegistry,
     CreatureOutfits: CreatureOutfitsRegistry,
+    CreatureDisplayInfo: CreatureDisplayInfoRegistry,
     TalentTrees: TalentTreeRegistry,
     Factions: FactionRegistry,
     Scripts: SmartScripts,

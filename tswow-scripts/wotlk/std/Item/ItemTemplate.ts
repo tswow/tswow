@@ -134,7 +134,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
 
     /** Only applicable if item is a shield */
-    get BlockChance() { return this.wrap(this.row.block); }
+    get Block() { return this.wrap(this.row.block); }
     get ItemSet() { return ItemSetRegistry.ref(this, this.row.itemset); }
     get Resistances() { return new ItemResistance(this); }
     get Stats() { return new ItemStats(this); }
@@ -293,7 +293,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .Area.set(0)
          .Armor.set(0)
          .BagFamily.set(0)
-         .BlockChance.set(0)
+         .Block.set(0)
          .Bonding.NO_BOUNDS.set()
          .Class.JUNK.set()
          .ClassMask.set(-1)

@@ -216,6 +216,13 @@ export namespace mysql {
                 && (x.host === 'localhost' || x.host === '127.0.0.1')
         )
 
+        if(settings.length === 0) {
+            throw new Error(
+                  `Node.conf missing local database on port ${NodeConfig.DatabaseHostedPort}.`
+                + ` If you changed Database.HostedPort In node.conf,`
+                + `check that you have also changed any or all Database.* fields as well`);
+        }
+
         const users: {[key: string]: /*password:*/ string} = {}
         settings.forEach(x=>{
             if(users[x.user] !== undefined && users[x.user] !== x.password) {
@@ -223,6 +230,11 @@ export namespace mysql {
             }
             users[x.user] = x.password
         })
+
+        if(Object.entries(users).length === 0) {
+            throw new Error(`No database users found, check your Node.conf`)
+        }
+
         const [user,pass] = Object.entries(users).find(()=>true);
 
         wfs.write(ipaths.bin.mysql_startup.get(),
