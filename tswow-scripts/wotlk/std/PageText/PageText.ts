@@ -58,7 +58,7 @@ export class PageTextRegistryClass
         return SQL.page_text
     }
     protected ids(): DynamicIDGenerator {
-        return Ids.PageTextMaterial
+        return Ids.page_text
     }
     Clear(entity: PageText): void {
         entity.Text.clear()
