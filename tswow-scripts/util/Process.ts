@@ -232,6 +232,11 @@ export class Process {
                         delete processes[proc.pid]
                     }
                 }
+
+                if(this._autoRestart && this._lastStart) {
+                    term.log('process',`Automatically restarting ${this._lastStart.program}`)
+                    this.startIn(this._lastStart.directory, this._lastStart.program, this._lastStart.args);
+                }
             }
             proc.on('error', (err) => {
                 this.fail(err)
@@ -279,10 +284,6 @@ export class Process {
     }
 
     private postFail() {
-        if(this._autoRestart && this._lastStart) {
-            term.log('process',`Automatically restarting ${this._lastStart.program}`)
-            this.startIn(this._lastStart.directory, this._lastStart.program, this._lastStart.args);
-        }
     }
 
     /**
