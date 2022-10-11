@@ -192,6 +192,7 @@ public:
 
 	void SetBindPoint(float x, float y, float z, uint32 mapId, uint32 areaId);
 	void SetKnownTitle(uint32 id);
+	void UnlockAchievement(uint32 entry);
 	void ResetPetTalents(int32 pType);
 	void ResetAchievements();
 	void SendShowMailBox(uint64 guid);

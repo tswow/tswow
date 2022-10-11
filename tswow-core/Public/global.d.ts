@@ -1415,6 +1415,13 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     SetKnownTitle(id : uint32) : void
 
     /**
+     * Unlocks the specified achievement for the [Player]s
+     *
+     * @param uint32 entry
+     */
+    UnlockAchievement(entry : uint32) : void
+
+    /**
      * Resets the [Player]s pets talent points
      */
     ResetPetTalents(pType : int32) : void
