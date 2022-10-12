@@ -17,7 +17,7 @@ function getCellSign(num: number, signed: boolean)
         return num + 4294967296;
     }
 
-    if (num >= 4294967296 && signed)
+    if (num > 2147483647 && signed)
     {
         return num - 4294967296;
     }
@@ -418,7 +418,7 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     flip() {
-        this.cell.set(MaskCell32Impl.flip(this.get()))
+        this.set(MaskCell32Impl.flip(this.get()));
         return this.owner;
     }
 
@@ -432,9 +432,7 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     setBit(no: number, value: Bit) {
-        this.cell.set(
-            MaskCell32Impl.setBit(no,value as boolean,this.get())
-        )
+        this.set(MaskCell32Impl.setBit(no,value as boolean,this.get()))
         return this.owner;
     }
 
