@@ -175,7 +175,7 @@ export class Connection {
                     promises.push(new Promise((res,rej)=>{
                         this.async.execute(x.query,y, err => {
                             if(err) {
-                                err.message = `(For SQL "${x.query}" with values (${JSON.stringify(y)}))\n${err.message}`
+                                err.message = `(For SQL "${x.query}" with values (${JSON.stringify(y,(_,value)=> typeof(value) == 'bigint' ? value.toString() : value)}))\n${err.message}`
                                 rej(err);
                             } else {
                                 res();
