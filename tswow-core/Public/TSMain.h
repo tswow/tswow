@@ -82,3 +82,8 @@ public:\
     clsName::clsName(ptrType const* _##ptrName) : ptrName(const_cast<ptrType*>(_##ptrName)) {} \
     clsName::clsName() : ptrName(nullptr) {} \
     bool clsName::IsNull() { return ptrName == nullptr; }
+
+#define TS_CLASS_DEFINITION_ENTITY_PROVIDER(clsName, ptrType, ptrName) \
+    clsName::clsName(ptrType const* _##ptrName) : TSEntityProvider(const_cast<TSEntity*>(&_##ptrName->m_tsEntity)) , ptrName(const_cast<ptrType*>(_##ptrName)) {} \
+    clsName::clsName() : TSEntityProvider(nullptr), ptrName(nullptr) {} \
+    bool clsName::IsNull() { return ptrName == nullptr; }

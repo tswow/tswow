@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSEntity.h"
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSPosition.h"
@@ -29,7 +30,7 @@ class SpellImplicitTargetInfo;
 class DispelInfo;
 class TSAura;
 
-class TC_GAME_API TSSpell {
+class TC_GAME_API TSSpell : public TSEntityProvider {
 public:
     Spell * spell;
     TSSpell(Spell *spell);

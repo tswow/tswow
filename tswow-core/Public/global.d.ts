@@ -3230,7 +3230,7 @@ declare interface TSCreature extends TSUnit {
     UpdateLevelDependantStats(): void;
 }
 
-declare interface TSAura {
+declare interface TSAura extends TSEntityProvider {
     IsNull() : bool
 
     /**
@@ -3336,7 +3336,7 @@ declare interface TSAura {
     Remove() : void
 }
 
-declare interface TSAuraEffect {
+declare interface TSAuraEffect extends TSEntityProvider {
     GetCaster(): TSUnit;
     GetCasterGUID(): TSNumber<uint64>
     GetAura(): TSAura;
@@ -3359,7 +3359,7 @@ declare interface TSAuraEffect {
     IsPeriodic(): boolean;
 }
 
-declare interface TSAuraApplication {
+declare interface TSAuraApplication extends TSEntityProvider {
     GetTarget(): TSUnit;
     GetAura(): TSAura;
     GetSlot(): TSNumber<uint8>;
@@ -4845,7 +4845,7 @@ declare interface TSGameObject extends TSWorldObject {
     SetRespawnTime(respawn : int32) : void
 }
 
-declare interface TSSpell {
+declare interface TSSpell extends TSEntityProvider {
 	//soonTM
 	GetSpellInfo() : TSSpellInfo
 
