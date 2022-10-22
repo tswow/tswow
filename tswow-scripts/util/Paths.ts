@@ -477,6 +477,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
         release_7z: file('release.7z'),
         terminal_history: file('terminal-history.txt'),
         ClientExtensionsDll: file('ClientExtensions.dll'),
+        client_extensions: dirn('client-extensions',{
+            dll_path: file('ClientExtensions/Release/ClientExtensions.dll')
+        }),
         scripts_config: dirn('scripts-config',{
             typescript2cxx: dir({}),
             wow: dir({}),
