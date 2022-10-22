@@ -64,7 +64,7 @@ export class TalentTreeRegistryClass
 
     forClass(cls: EnumCon<keyof typeof ClassIDs>) {
         let classId = makeEnum(ClassIDs,cls);
-        return this.filter(e=>e.row.OrderIndex.get() & (1<<(classId-1)))
+        return this.filter(e=>e.row.ClassMask.get() & (1<<(classId-1))).sort((a,b)=>a.OrderIndex.get() > b.OrderIndex.get() ? 1 : -1)
     }
 }
 
