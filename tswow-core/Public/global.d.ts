@@ -8803,7 +8803,7 @@ declare namespace _hidden {
     }
 
     export class WorldPacket {
-        OnReceive(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnReceive(callback: (opcode: TSNumber<uint32>, packet: TSWorldPacket, player: TSPlayer)=>void);
         OnReceive(id: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
 
         OnSend(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
