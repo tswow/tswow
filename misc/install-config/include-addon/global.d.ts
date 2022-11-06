@@ -12721,9 +12721,12 @@ declare namespace WoWAPI {
         GetBottom(): number;
 
         /**
-         * Get the coordinates of the center of this frame - Moved in 1.10.
+         * Returns the distance from the bottom-left corner of the screen to the center of a Region, using the region's own coordinate space (ie, dependent on effective scale).
+         *
+         * @see https://wow.gamepedia.com/API_Region_GetPoint
+         * @returns number, number
          */
-        GetCenter(): number;
+        GetCenter(): LuaMultiReturn<[number, number]>;
 
         /**
          * Returns the distance from the bottom/left edge of the screen to the requested edge of an object, scaled with the objects's effective scale.
@@ -13187,6 +13190,22 @@ declare namespace WoWAPI {
          * Returns the Frame Strata the frame is in.
          */
         GetFrameStrata(): FrameStrata;
+        
+        /**
+         * Returns the region's scale relative to its immediate parent (if it has one)
+         * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
+         * @see https://wowpedia.fandom.com/wiki/API_Region_GetScale
+         * @returns number
+         */
+        GetScale()
+
+        /**
+         * Returns the region's net scale, inclusive of its parent's effective scale
+         * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
+         * @see https://wowpedia.fandom.com/wiki/API_Region_GetScale
+         * @returns number
+         */
+        GetEffectiveScale()
 
         /**
          * returns whether the flag is enabled or not
@@ -13964,6 +13983,19 @@ declare function CreateFrame(frameType: "Minimap", frameName?: string, parentFra
 declare function CreateFrame(frameType: "MessageFrame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.MessageFrame;
 declare function CreateFrame(frameType: "Cooldown", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Cooldown;
 declare function CreateFrame(frameType: "ColorSelect", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ColorSelect;
+
+/**
+ * Draws a line with the defined texture between two points.
+ * @param texture WoWAPI.Texture to use, texture path example "Interface\\TaxiFrame\\UI-Taxi-Line"
+ * @param canvasFrame Canvas Frame (for anchoring)
+ * @param sx X position for the start point of the line
+ * @param sy Y position for the start point of the line
+ * @param ex X position for the end point of the line
+ * @param ey Y position for the end point of the line
+ * @param width Width of the line
+ * @param relPoint Relative point on canvas to interpret coords (Default BOTTOMLEFT)
+ */
+declare function DrawRouteLine(texture:WoWAPI.Texture, canvasFrame:WoWAPI.Frame, sx:number, sy:number, ex:number, ey:number, width:number, relPoint?:WoWAPI.Point);
 
 /**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.

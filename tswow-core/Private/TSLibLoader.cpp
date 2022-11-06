@@ -20,12 +20,6 @@ typedef void (*LibFuncPtr)(TSEvents*);
 
 struct TSEvents;
 
-static std::string buildType;
-void SetBinPath(std::string const& path)
-{
-    buildType = fs::path(path).parent_path().filename().string();
-}
-
 struct DataRemover {
     static void RemoveData(WorldObject* obj)
     {
@@ -80,5 +74,5 @@ void LoadTSLibraries()
     {
         TSLua::Load();
     }
-    TSLivescripts::Load(buildType);
+    TSLivescripts::Load();
 }

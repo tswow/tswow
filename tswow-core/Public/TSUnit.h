@@ -192,7 +192,8 @@ public:
     void MoveChase(TSUnit target, float dist, float angle);
     void MoveConfused();
     void MoveFleeing(TSUnit target, uint32 time);
-    void MoveTo(uint32 id, float x, float y, float z, bool genPath);
+    void MoveTo(uint32 id, float x, float y, float z, bool genPath, float finalAngle = 0);
+    float GetRelativeAngle(float x, float y);
     void MoveTakeoff(uint32 id, float x, float y, float z);
     void MoveLand(uint32 id, float x, float y, float z);
     void MoveJump(float x, float y, float z, float zSpeed, float maxHeight, uint32 id);

@@ -33,12 +33,12 @@ struct TSLibrary
 
 static std::map<fs::path, TSLibrary> libraries;
 
-void TSLivescripts::Load(std::string const& buildType)
+void TSLivescripts::Load()
 {
 #if AZEROTHCORE
-    fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / buildType;
+    fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / LIVESCRIPT_BUILD_TYPE;
 #elif TRINITY
-    fs::path libPath = fs::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / buildType;
+    fs::path libPath = fs::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / LIVESCRIPT_BUILD_TYPE;
 #endif
     // Unload libraries
     for(auto & [path,lib] : libraries)
@@ -63,7 +63,7 @@ void TSLivescripts::Load(std::string const& buildType)
         std::string modName = file.filename().string();
         modName = modName.substr(0, modName.find_last_of("."));
 
-        fs::path realmLibDir = fs::current_path() / "lib" / buildType;
+        fs::path realmLibDir = fs::current_path() / "lib" / LIVESCRIPT_BUILD_TYPE;
         fs::path pdbPathIn = file.parent_path() / (modName + ".pdb");
         fs::path libPathOut = realmLibDir / (modName + DL_EXT);
         fs::path pdbPathOut = realmLibDir / (modName + ".pdb");

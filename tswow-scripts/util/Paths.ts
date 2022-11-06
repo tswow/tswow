@@ -20,7 +20,7 @@ import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.22061/TDB_full_world_335.22061_2022_06_01.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.22101/TDB_full_world_335.22101_2022_10_17.7z"
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
@@ -477,6 +477,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
         release_7z: file('release.7z'),
         terminal_history: file('terminal-history.txt'),
         ClientExtensionsDll: file('ClientExtensions.dll'),
+        client_extensions: dirn('client-extensions',{
+            dll_path: file('ClientExtensions/Release/ClientExtensions.dll')
+        }),
         scripts_config: dirn('scripts-config',{
             typescript2cxx: dir({}),
             wow: dir({}),

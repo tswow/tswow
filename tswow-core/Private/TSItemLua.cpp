@@ -1,12 +1,14 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSItem.h"
+#include "TSObject.h"
+#include "TSEntity.h"
 
 #include "TSPlayer.h"
 
 void TSLua::load_item_methods(sol::state& state)
 {
-    auto ts_item = state.new_usertype < TSItem>("TSItem");
+    auto ts_item = state.new_usertype < TSItem>("TSItem", sol::base_classes, sol::bases<TSObject, TSEntityProvider>());
     LUA_FIELD(ts_item, TSItem, IsSoulBound);
     LUA_FIELD(ts_item, TSItem, GetItemLink);
     LUA_FIELD(ts_item, TSItem, GetName);

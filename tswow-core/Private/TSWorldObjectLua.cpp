@@ -73,10 +73,9 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD(ts_worldobject, TSWorldObject, IsActive);
     ts_worldobject.set_function("DoDelayed", &TSWorldObject::LDoDelayed);
 
-    //LUA_FIELD_OVERLOAD_2_1(target, TSWorldObject, CastSpell, TSWorldObject, uint32, bool);
-    //LUA_FIELD_OVERLOAD_4_1(target, TSWorldObject, CastSpell, TSWorldObject, float, float, float, uint32, bool);
-    //LUA_FIELD_OVERLOAD_2_6(ts_worldobject, TSWorldObject, CastCustomSpell, TSWorldObject, uint32, bool, int32, int32, int32, TSItem, uint64);
-    LUA_FIELD(ts_worldobject, TSWorldObject, CastSpell);
+    LUA_FIELD_OVERLOAD_2_6(ts_worldobject, TSWorldObject, CastCustomSpell, TSWorldObject, uint32, bool, int32, int32, int32, TSItem, uint64);
+    LUA_FIELD_OVERLOAD_2_1(ts_worldobject, TSWorldObject, CastSpell, TSWorldObject, uint32, bool);
+    LUA_FIELD_OVERLOAD_4_1(ts_worldobject, TSWorldObject, CastSpellAoF, float, float, float, uint32, bool);
 
     auto ts_mutable_worldobject = state.new_usertype<TSMutableWorldObject>("TSMutableWorldObject");
     LUA_FIELD(ts_mutable_worldobject, TSMutableWorldObject, get);

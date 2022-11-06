@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCUIntCell } from '../../data/dbc/DBCCell'
+import { DBCFile } from '../../data/dbc/DBCFile'
+import { DBCRow } from '../../data/dbc/DBCRow'
 import { float, int } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
 import { PrimaryKey } from '../../data/table/PrimaryKey'
-import { DBCFloatCell, DBCIntCell, DBCKeyCell } from '../../data/dbc/DBCCell'
-import { DBCFile } from '../../data/dbc/DBCFile'
-import { DBCRow } from '../../data/dbc/DBCRow'
 
  /**
   * Main row definition
@@ -38,7 +38,7 @@ export class VehicleSeatRow extends DBCRow<VehicleSeatCreator,VehicleSeatQuery> 
     /**
      * No comment (yet!)
      */
-    get Flags() { return new DBCIntCell(this,this.buffer,this.offset+4)}
+    get Flags() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
 
     /**
      * No comment (yet!)
@@ -258,7 +258,7 @@ export class VehicleSeatRow extends DBCRow<VehicleSeatCreator,VehicleSeatQuery> 
     /**
      * No comment (yet!)
      */
-    get FlagsB() { return new DBCIntCell(this,this.buffer,this.offset+180)}
+    get FlagsB() { return new DBCUIntCell(this,this.buffer,this.offset+180)}
 
     /**
      * No comment (yet!)

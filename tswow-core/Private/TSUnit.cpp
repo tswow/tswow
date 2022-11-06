@@ -1961,9 +1961,14 @@ void TSUnit::MoveFleeing(TSUnit _target,uint32 time)
  * @param float z
  * @param bool genPath = true : if true, generates path
  */
-void TSUnit::MoveTo(uint32 id,float x,float y,float z,bool genPath)
+void TSUnit::MoveTo(uint32 id,float x,float y,float z,bool genPath,float finalAngle)
 {
-    unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
+    unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath, finalAngle);
+}
+
+float TSUnit::GetRelativeAngle(float x, float y)
+{
+    return unit->GetRelativeAngle(x,y);
 }
 
 /**
