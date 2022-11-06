@@ -177,6 +177,10 @@ declare const enum DeathStatus {
     DEAD = 2
 }
 
+declare const enum LineOfSightChecks { } /** SharedDefines.h:LineOfSightChecks */
+
+declare const enum VMapModelIgnoreFlags { } /** ModelIgnoreFlags.h:ModelIgnoreFlags */
+
 declare const enum Opcodes { } /** Opcodes.h:Opcodes */
 
 declare interface TSMutable<T,R> {
@@ -3233,7 +3237,7 @@ declare interface TSCreature extends TSUnit {
     UpdateLevelDependantStats(): void;
 }
 
-declare interface TSAura {
+declare interface TSAura extends TSEntityProvider {
     IsNull() : bool
 
     /**
@@ -3339,7 +3343,7 @@ declare interface TSAura {
     Remove() : void
 }
 
-declare interface TSAuraEffect {
+declare interface TSAuraEffect extends TSEntityProvider {
     GetCaster(): TSUnit;
     GetCasterGUID(): TSNumber<uint64>
     GetAura(): TSAura;
@@ -3362,7 +3366,7 @@ declare interface TSAuraEffect {
     IsPeriodic(): boolean;
 }
 
-declare interface TSAuraApplication {
+declare interface TSAuraApplication extends TSEntityProvider {
     GetTarget(): TSUnit;
     GetAura(): TSAura;
     GetSlot(): TSNumber<uint8>;
@@ -3931,6 +3935,21 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * Returns a player in this map by its guid
      */
     GetPlayer(guid: uint32): TSPlayer;
+
+    /**
+     * Check if 2 positions are within LoS of each other, following different checks.
+     * 
+     * @param x1
+     * @param y1
+     * @param z1
+     * @param x2
+     * @param y2
+     * @param z2
+     * @param phasemask
+     * @param checks
+     * @param ignoreFlags
+     */
+    IsInLineOfSight(x1: double, y1: double, z1: double, x2: double, y2: double, z2: double, phasemask: uint32, checks: LineOfSightChecks, ignoreFlags: VMapModelIgnoreFlags )
 
     /**
      * Returns `true` if the [Map] is an arena [BattleGround], `false` otherwise.
@@ -4646,6 +4665,7 @@ declare interface TSInstance extends TSMap {
     GetTeamIDInInstance(): TSNumber<uint32>
     GetFactionInInstance(): TSNumber<uint32>
     GetBossInfo(id: uint32): TSBossInfo
+    RemoveFromMap(player:TSPlayer, deleteFromWorld: boolean): void
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -4832,7 +4852,7 @@ declare interface TSGameObject extends TSWorldObject {
     SetRespawnTime(respawn : int32) : void
 }
 
-declare interface TSSpell {
+declare interface TSSpell extends TSEntityProvider {
 	//soonTM
 	GetSpellInfo() : TSSpellInfo
 
@@ -6538,6 +6558,13 @@ declare interface TSUnit extends TSWorldObject {
     IsSchoolLocked(schoolMask: SpellSchoolMask): bool;
 
     /**
+     * Return angle towards point given from Unit.
+     * 
+     * @param x
+     * @param y
+     */
+    GetRelativeAngle(x: float, y: float): float;
+    /**
      * Returns [Unit]'s [Vehicle] methods
      *
      * @return [Vehicle] vehicle
@@ -6983,7 +7010,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param float z
      * @param bool genPath = true : if true, generates path
      */
-    MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool) : void
+    MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool,finalAngle?: float) : void
 
     /**
      * The [Unit] will take off from the ground and fly to the coordinates.
@@ -7952,8 +7979,8 @@ declare namespace _hidden {
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
         OnRemove(id: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
 
-        OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
-        OnApply(id: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
+        OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: AuraEffectHandleMode)=>void): T;
+        OnApply(id: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: AuraEffectHandleMode)=>void): T;
 
         OnCalcMeleeMiss(callback: (spell: TSSpellInfo, miss: TSMutableNumber<float>, attacker: TSUnit, victim: TSUnit, attackType: WeaponAttackType, skillDiff: int32)=>void): T
         OnCalcMeleeMiss(id: EventID, callback: (spell: TSSpellInfo, miss: TSMutableNumber<float>, attacker: TSUnit, victim: TSUnit, attackType: WeaponAttackType, skillDiff: int32)=>void): T
@@ -8810,7 +8837,7 @@ declare namespace _hidden {
     }
 
     export class WorldPacket {
-        OnReceive(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnReceive(callback: (opcode: TSNumber<uint32>, packet: TSWorldPacket, player: TSPlayer)=>void);
         OnReceive(id: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
 
         OnSend(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);

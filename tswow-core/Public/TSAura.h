@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSEntity.h"
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSArray.h"
@@ -31,7 +32,7 @@ class TSSpellInfo;
 class TSHealInfo;
 class TSDamageInfo;
 
-class TC_GAME_API TSAuraEffect {
+class TC_GAME_API TSAuraEffect : public TSEntityProvider {
     TS_CLASS_DECLARATION(TSAuraEffect,AuraEffect,aura)
     TSUnit GetCaster();
     TSNumber<uint64> GetCasterGUID();
@@ -56,7 +57,7 @@ class TC_GAME_API TSAuraEffect {
 };
 
 class AuraApplication;
-class TC_GAME_API TSAuraApplication {
+class TC_GAME_API TSAuraApplication : public TSEntityProvider {
     TS_CLASS_DECLARATION(TSAuraApplication,AuraApplication,aura)
     TSUnit GetTarget();
     TSAura GetAura();
@@ -69,7 +70,7 @@ class TC_GAME_API TSAuraApplication {
     bool IsSelfCast();
 };
 
-class TC_GAME_API TSAura {
+class TC_GAME_API TSAura : public TSEntityProvider {
 public:
     Aura *aura;
     TSAura(Aura *aura);

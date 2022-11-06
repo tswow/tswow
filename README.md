@@ -6,7 +6,7 @@ With TSWoW, you use the TypeScript programming language and the VSCodium editor 
 
 ## Who is TSWoW for?
 
-- Modding Beginners - We have [crash course](https://tswow.github.io/tswow-wiki/home/) aimed just at getting new people started!
+- Modding Beginners - We have [crash course](https://tswow.github.io/tswow-wiki/) aimed just at getting new people started!
 
 - Modding Veterans - TSWoW is primarily aimed at making modding more efficient and powerful. You will very fast realize the power of improving your workflow using programming.
 
@@ -20,7 +20,7 @@ TSWoW is a **programming environment**, and the language we use is _TypeScript_.
 
 ## Links for getting started
 
-[Introduction & Installation](https://tswow.github.io/tswow-wiki/home/)
+[Introduction & Installation](https://tswow.github.io/tswow-wiki/)
 
 [Issues](https://github.com/tswow/tswow/issues)
 

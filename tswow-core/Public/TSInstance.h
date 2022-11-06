@@ -46,6 +46,7 @@ public:
     TSInstance* operator->() { return this; }
     operator bool() const { return map != nullptr && m_script != nullptr; }
     bool IsNull();
+    void RemoveFromMap(TSPlayer player, bool deleteFromWorld);
     void SaveInstanceToDB();
     bool IsEncounterInProgress();
     TSNumber<uint64> GetObjectGUID(uint32 type);

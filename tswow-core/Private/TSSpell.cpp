@@ -32,13 +32,14 @@
 #include "Player.h"
 
 TSSpell::TSSpell(Spell *spell)
-{
-    this->spell = spell;
-}
+    : TSEntityProvider(&spell->m_tsEntity)
+    , spell(spell)
+{}
 
 TSSpell::TSSpell()
+    : TSEntityProvider(nullptr)
+    , spell(nullptr)
 {
-    this->spell = nullptr;
 }
 
 /**

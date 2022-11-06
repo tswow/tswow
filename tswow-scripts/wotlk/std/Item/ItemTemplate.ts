@@ -37,6 +37,7 @@ import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
 import { PageTextRegistry } from "../PageText/PageText";
+import { RaceMask } from "../Race/RaceType";
 import { RegistryStatic } from "../Refs/Registry";
 import { TotemCategoryRegistry } from "../TotemCategory/TotemCategory";
 import { BagFamily } from "./BagFamily";
@@ -169,7 +170,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     get RequiredSpell() { return this.wrap(this.row.requiredspell); }
     get RequiredHonorRank() { return this.wrap(this.row.requiredhonorrank); }
     get ClassMask() { return makeMaskCell32(ClassMask, this, this.row.AllowableClass, true); }
-    get RaceMask() { return this.wrap(this.row.AllowableRace); }
+    get RaceMask() { return makeMaskCell32(RaceMask, this, this.row.AllowableRace, true); }
     get MaxCount() { return this.wrap(this.row.maxcount); }
     get MaxStack() { return this.wrap(this.row.stackable); }
     get Bonding() {

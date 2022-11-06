@@ -72,7 +72,7 @@ async function compile(type: string, compileArgs: string[]) {
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
     if (isWindows() && isType('adtcreator')) { await ADTCreator.create(cmake); }
-    if (isType('client-extensions')) { await ClientExtensions.find(); }
+    if (isType('client-extensions')) { await ClientExtensions.create(cmake); }
 
     if (!buildingScripts && isType('scripts')) {
         await Scripts.build();
@@ -121,6 +121,7 @@ async function main() {
             , 'clean-build'
             , 'release'
             , 'adtcreator'
+            , 'client-extensions'
         ];
 
     for (const val of installedPrograms) {

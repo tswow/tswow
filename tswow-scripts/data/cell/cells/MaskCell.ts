@@ -5,6 +5,26 @@ import { CellReadOnly } from "./CellReadOnly";
 import { CellRoot } from "./CellRoot";
 import { makePrototype } from "./PrototypeRegistry";
 
+function getUnsigned(value: number)
+{
+    return value < 0 ? value + 4294967296 : value;
+}
+
+function getCellSign(num: number, signed: boolean)
+{
+    if(num < 0 && !signed)
+    {
+        return num + 4294967296;
+    }
+
+    if (num > 2147483647 && signed)
+    {
+        return num - 4294967296;
+    }
+
+    return num;
+}
+
 export type Bit = boolean | 1 | 0
 
 export class MaskPartReadOnly<T,D extends MaskCell32ReadOnly<T>> {
@@ -296,19 +316,10 @@ export abstract class MaskCellReadOnly<T> extends CellRoot<T> {
 
 
 const MaskCell32Impl = {
-
-    unsign32(signed: boolean, old: number) {
-        return (signed && old === -1) ? 0xffffffff : old;
-    },
-
-    sign32(signed: boolean, old: number) {
-        return (signed && old === 0xffffffff) ? -1 : old;
-    },
-
-    bits_from(mask: number, signed: boolean = false) {
+    bits_from(mask: number) {
         let bits: number[] = []
         for(let i=0;i<32;++i) {
-            if((signed && mask === -1) || (mask&(1<<i))) {
+            if(this.getBit(i, mask)) {
                 bits.push(i)
             }
         }
@@ -333,67 +344,47 @@ const MaskCell32Impl = {
         return found;
     },
 
-    ToString(signed: boolean, value: number) {
-        return (signed && value == -1)
-            ? '1'.repeat(32)
-            : value.toString(2)
+    ToString(value: number) {
+        return value.toString(2)
     },
 
-    set(signed: boolean, value: number) {
-        return this.sign32(signed,value);
-    },
-
-    setBit(signed: boolean, no: number, value: boolean, oldValue: number) {
-        if(value) {
-            if(!signed || oldValue != -1) {
-                return this.set(signed, (oldValue | 1 << no)>>>0);
-            }
-        } else {
-            if(signed && oldValue == -1 && no < 32 && no >= 0) {
-                return 0xffffffff
-            }
-            return this.set(signed, (oldValue & ~(1 << no))>>>0);
+    setBit(no: number, value: boolean, oldValue: number) {
+        if(value)
+        {
+            return (oldValue | ((1 << no) >>> 0)) >>> 0;
         }
-        return oldValue;
+        else
+        {
+            return oldValue & (~((1 << no) >>> 0) >>> 0) >>> 0;
+        }
     },
 
-    getBit(signed: boolean, no: number, oldValue: number) {
-        return (signed && oldValue == -1)
-            || ((oldValue) & ((1 << no))>>>0) !== 0;
+    getBit(no: number, oldValue: number) {
+        return (oldValue & ((1 << no)) >>> 0) !== 0;
     },
 
-    flip(signed: boolean, oldValue: number) {
-        return (signed && oldValue === 0) ? -1 : (~oldValue)>>>0
+    flip(oldValue: number) {
+        return (~oldValue)>>>0
     },
 
-    or(signed: boolean, mask: number, oldValue: number) {
-        if(signed && oldValue === -1) return -1;
-        let v = (oldValue | mask)>>>0;
-        return this.sign32(signed,v);
+    or(mask: number, oldValue: number) {
+        return (oldValue | mask) >>> 0
     },
 
-    not(signed: boolean, mask: number, oldValue: number) {
-        let v = this.unsign32(signed,oldValue);
-        v = v & (~mask>>>0)
-        return this.sign32(signed,v);
+    not(mask: number, oldValue: number) {
+        return (oldValue & ~mask) >>> 0
     },
 
-    and(signed: boolean, mask: number, oldValue: number) {
-        let v = this.unsign32(signed,oldValue);
-        v = (v & mask)>>>0;
-        return this.sign32(signed,v);
+    and(mask: number, oldValue: number) {
+        return (oldValue & mask) >>> 0;
     },
 
-    xor(signed: boolean, mask: number, oldValue: number) {
-        let v = this.unsign32(signed,oldValue);
-        v = (v ^ mask)>>>0;
-        return this.sign32(signed,v);
+    xor(mask: number, oldValue: number) {
+        return (oldValue ^ mask) >>> 0;
     },
 
-    nor(signed: boolean, mask: number, oldValue: number) {
-        let v = this.unsign32(signed,oldValue);
-        v = ~(mask|v)>>>0;
-        return this.sign32(signed,v);
+    nor(mask: number, oldValue: number) {
+        return ~(oldValue|mask) >>> 0;
     },
 
     mask(bits: number|number[]) {
@@ -408,8 +399,8 @@ export type MaskMode =
 export class MaskCell32<T> extends MaskCell<T> {
     static AllBits = 0xffffffff;
 
-    extract_bits(mask: number, signed: boolean = false) {
-        return this.multibits(MaskCell32Impl.bits_from(mask,signed));
+    extract_bits(mask: number) {
+        return this.multibits(MaskCell32Impl.bits_from(getUnsigned(mask)));
     }
 
     extract_bit(mask: number) {
@@ -427,11 +418,12 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     flip() {
-        return this.set(MaskCell32Impl.flip(this.signed, this.cell.get()))
+        this.set(MaskCell32Impl.flip(this.get()));
+        return this.owner;
     }
 
     toString() {
-        return MaskCell32Impl.ToString(this.signed, this.cell.get());
+        return MaskCell32Impl.ToString(this.get());
     }
 
     clearAll() {
@@ -440,14 +432,12 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     setBit(no: number, value: Bit) {
-        this.cell.set(
-            MaskCell32Impl.setBit(this.signed,no,value as boolean,this.cell.get())
-        )
+        this.set(MaskCell32Impl.setBit(no,value as boolean,this.get()))
         return this.owner;
     }
 
     getBit(no: number): boolean {
-        return MaskCell32Impl.getBit(this.signed, no, this.cell.get());
+        return MaskCell32Impl.getBit(no, this.get());
     }
 
     get(): number;
@@ -456,17 +446,17 @@ export class MaskCell32<T> extends MaskCell<T> {
     get(num?: number, mode?: MaskMode): number {
         switch(mode) {
             case 'AND':
-                return MaskCell32Impl.and(this.signed,num,this.cell.get());
+                return MaskCell32Impl.and(getUnsigned(num),this.get());
             case 'NOR':
-                return MaskCell32Impl.nor(this.signed,num,this.cell.get());
+                return MaskCell32Impl.nor(getUnsigned(num),this.get());
             case 'NOT':
-                return MaskCell32Impl.not(this.signed,num,this.cell.get());
+                return MaskCell32Impl.not(getUnsigned(num),this.get());
             case 'OR':
-                return MaskCell32Impl.or(this.signed,num,this.cell.get());
+                return MaskCell32Impl.or(getUnsigned(num),this.get());
             case 'XOR':
-                return MaskCell32Impl.xor(this.signed,num,this.cell.get());
+                return MaskCell32Impl.xor(getUnsigned(num),this.get());
             default:
-                return this.cell.get();
+                return getUnsigned(this.cell.get())
         }
     }
 
@@ -480,9 +470,9 @@ export class MaskCell32<T> extends MaskCell<T> {
 
     set(value: number, mode?: MaskMode) {
         if(!mode) {
-            this.cell.set(MaskCell32Impl.set(this.signed,value));
+            this.cell.set(getCellSign(value, this.signed));
         } else {
-            this.cell.set(this.get(value,mode));
+            this.cell.set(getCellSign(this.get(value,mode), this.signed));
         }
         return this.owner;
     }
@@ -507,45 +497,45 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
     }
 
     toString() {
-        return MaskCell32Impl.ToString(this.signed, this.cell.get());
+        return MaskCell32Impl.ToString(this.get());
     }
 
     getBit(no: number): boolean {
-        return MaskCell32Impl.getBit(this.signed, no, this.cell.get());
+        return MaskCell32Impl.getBit(no, this.get());
     }
 
     get(): number {
-        return this.cell.get();
+        return getUnsigned(this.cell.get());
     }
 
-    extract_bits(mask: number, signed: boolean = false) {
-        return this.multibits(MaskCell32Impl.bits_from(mask,signed));
+    extract_bits(mask: number) {
+        return this.multibits(MaskCell32Impl.bits_from(getUnsigned(mask)));
     }
 
     extract_bit(mask: number) {
-        return this.bit(MaskCell32Impl.bit_from(mask));
+        return this.bit(MaskCell32Impl.bit_from(getUnsigned(mask)));
     }
 
     getOr(mask: number) {
-        return MaskCell32Impl.or(this.signed,mask,this.cell.get());
+        return MaskCell32Impl.or(getUnsigned(mask),this.get());
     }
     protected setOr(mask: number) { return this.set(this.getOr(mask)); }
 
     getNot(mask: number) {
-        return MaskCell32Impl.not(this.signed,mask,this.cell.get())
+        return MaskCell32Impl.not(getUnsigned(mask),this.get())
     }
     protected setNot(mask: number) { return this.set(this.getNot(mask)); }
 
     getAnd(mask: number) {
-        return MaskCell32Impl.and(this.signed,mask,this.cell.get())
+        return MaskCell32Impl.and(getUnsigned(mask),this.get())
     }
 
     protected setAnd(mask: number) {
-        return this.set(this.getAnd(mask));
+        return this.set(this.getAnd(getUnsigned(mask)));
     }
 
     getXor(mask: number) {
-        return MaskCell32Impl.xor(this.signed,mask,this.cell.get())
+        return MaskCell32Impl.xor(getUnsigned(mask),this.get())
     }
 
     protected setXor(mask: number) {
@@ -553,7 +543,7 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
     }
 
     getNor(mask: number) {
-        return MaskCell32Impl.nor(this.signed,mask,this.cell.get())
+        return MaskCell32Impl.nor(getUnsigned(mask),this.get())
     }
 
     protected setNor(mask: number) {
@@ -562,16 +552,16 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
 
 
     protected set(value: number) {
-        CellReadOnly.set(this.cell, MaskCell32Impl.set(this.signed, value));
+        CellReadOnly.set(this.cell, getCellSign(value, this.signed))
         return this.owner;
     }
 
     protected flip() {
-        return this.set(MaskCell32Impl.flip(this.signed, this.cell.get()))
+        return this.set(MaskCell32Impl.flip(this.get()))
     }
 
     protected setBit(no: number, value: Bit): T {
-        CellReadOnly.set(this.cell,MaskCell32Impl.setBit(this.signed,no,value as boolean,this.cell.get()))
+        CellReadOnly.set(this.cell,getCellSign(MaskCell32Impl.setBit(no,value as boolean,this.get()), this.signed))
         return this.owner;
     }
 
@@ -660,7 +650,7 @@ export function makeMaskCell32ReadOnly<T,Enum>(obj: Enum, owner: T, cell: CellRe
     return mask as MaskCellRead<T,Enum>
 }
 
-export function getBits<T>(obj: any, mask: MaskCon<T>, signed = false) {
+export function getBits<T>(obj: any, mask: MaskCon<T>) {
     let numMask = makeMask(obj,mask);
-    return MaskCell32Impl.bits_from(numMask,signed);
+    return MaskCell32Impl.bits_from(getUnsigned(numMask));
 }

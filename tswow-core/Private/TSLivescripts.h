@@ -7,5 +7,5 @@
 class TSLivescripts
 {
 public:
-    static void Load(std::string const& buildType);
+    static void Load();
 };
