@@ -69,3 +69,4 @@
 #include "TSDBJson.h"
 #include "TSFileSystem.h"
 #include "TSNumber.h"
+#include "TSFactionTemplate.h"
