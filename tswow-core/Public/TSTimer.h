@@ -212,6 +212,7 @@ public:
                 }
             }
         }
+
         m_timers.push_back(TSTimer<T>(name, time, repeats, flags, callback));
     }
 
@@ -251,7 +252,7 @@ public:
                 }
                 else
                 {
-                    m_timers.erase(itr);
+                    itr = m_timers.erase(itr);
                 }
             }
             else
@@ -273,7 +274,7 @@ public:
                 }
                 else
                 {
-                    m_timers.erase(iter);
+                    iter = m_timers.erase(iter);
                     return;
                 }
             }
@@ -283,20 +284,17 @@ public:
     void tick(T context)
     {
         m_ticking = true;
-        auto it = m_timers.begin();
-        while (it != m_timers.end())
+        int size = m_timers.size();
+
+        for (int i = 0; i < size; ++i)
         {
-            if (it->Tick(context))
+            if (m_timers[i].Tick(context))
             {
-                it = m_timers.erase(it);
-            }
-            else
-            {
-                ++it;
+                m_timers[i].m_deleted = true;
             }
         }
 
-        for (it = m_timers.begin(); it != m_timers.end();)
+        for (auto it = m_timers.begin(); it != m_timers.end();)
         {
             if (it->m_deleted)
             {
