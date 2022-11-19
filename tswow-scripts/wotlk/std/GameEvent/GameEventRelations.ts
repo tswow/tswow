@@ -310,7 +310,7 @@ export class GameObjectQuestGameEvent extends GameEventRelationBase<game_event_g
     get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
     get GameObject() {
         // is GOQuestGiver?
-        return GORegistry.Plain.readOnlyRef(this, this.row.id);
+        return GORegistry.Generic.readOnlyRef(this, this.row.id);
     }
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.quest); }
 }
