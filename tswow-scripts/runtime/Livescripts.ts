@@ -285,7 +285,7 @@ export class Livescripts {
 
             const cmake_generate =
             (isWindows()
-                ? `"bin/cmake/bin/cmake.exe" -DCMAKE_GENERATOR="Visual Studio 16 2019"`
+                ? `"bin/cmake/bin/cmake.exe" -G "Visual Studio 17 2022" -DCMAKE_GENERATOR="Visual Studio 17 2022"`
                 : 'cmake')
             + ` -DTRACY_ENABLE="${Args.hasFlag('tracy',args) ? 'ON': 'OFF'}"`
             + ` -S ${builddir.cpp.abs()}`
