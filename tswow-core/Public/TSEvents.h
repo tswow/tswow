@@ -111,15 +111,15 @@ struct TSEvents
         EVENT(OnAuctionExpire, TSAuctionHouseObject, TSAuctionEntry)
     } AuctionHouse;
 
-    struct VehicleEvents
+    struct VehicleEvents : public TSMappedEventsRegistry
     {
         EVENTS_HEADER(VehicleEvents)
-        EVENT(OnInstall, TSVehicle)
-        EVENT(OnUninstall, TSVehicle)
-        EVENT(OnReset, TSVehicle)
-        EVENT(OnInstallAccessory, TSVehicle, TSCreature)
-        EVENT(OnAddPassenger, TSVehicle, TSUnit, TSNumber<uint8>)
-        EVENT(OnRemovePassenger, TSVehicle, TSUnit)
+        TSRegistryRef& get_registry_ref(uint32_t id) override;
+        ID_EVENT(OnInstall, TSVehicle)
+        ID_EVENT(OnUninstall, TSVehicle)
+        ID_EVENT(OnReset, TSVehicle)
+        ID_EVENT(OnAddPassenger, TSVehicle, TSUnit, TSNumber<uint8>)
+        ID_EVENT(OnRemovePassenger, TSVehicle, TSUnit, TSNumber<uint8>)
     } Vehicle;
 
     struct AchievementEvents : public TSMappedEventsDirect

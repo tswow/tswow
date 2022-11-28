@@ -26,12 +26,11 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(auction_events, AuctionEvents, OnAuctionExpire);
 
     auto vehicle_events = state.new_usertype<TSEvents::VehicleEvents>("VehicleEvents");
-    LUA_HANDLE(vehicle_events, VehicleEvents, OnInstall);
-    LUA_HANDLE(vehicle_events, VehicleEvents, OnUninstall);
-    LUA_HANDLE(vehicle_events, VehicleEvents, OnReset);
-    LUA_HANDLE(vehicle_events, VehicleEvents, OnInstallAccessory);
-    LUA_HANDLE(vehicle_events, VehicleEvents, OnAddPassenger);
-    LUA_HANDLE(vehicle_events, VehicleEvents, OnRemovePassenger);
+    LUA_MAPPED_HANDLE(vehicle_events, VehicleEvents, OnInstall);
+    LUA_MAPPED_HANDLE(vehicle_events, VehicleEvents, OnUninstall);
+    LUA_MAPPED_HANDLE(vehicle_events, VehicleEvents, OnReset);
+    LUA_MAPPED_HANDLE(vehicle_events, VehicleEvents, OnAddPassenger);
+    LUA_MAPPED_HANDLE(vehicle_events, VehicleEvents, OnRemovePassenger);
 
     auto achievement_events = state.new_usertype<TSEvents::AchievementEvents>("AchievementEvents");
     LUA_HANDLE(achievement_events, AchievementEvents, OnComplete);

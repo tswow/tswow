@@ -7704,7 +7704,6 @@ declare namespace _hidden {
         OnInstall(callback: (veh : TSVehicle)=>void);
         OnUninstall(callback: (veh : TSVehicle)=>void);
         OnReset(callback: (veh : TSVehicle)=>void);
-        OnInstallAccessory(callback: (veh : TSVehicle,accessory : TSCreature)=>void);
         OnAddPassenger(callback: (veh : TSVehicle,passenger : TSUnit,seatId : int8)=>void);
         OnRemovePassenger(callback: (veh : TSVehicle,passenger : TSUnit)=>void);
     }
@@ -9036,7 +9035,7 @@ declare namespace _hidden {
 declare class TSEvents {
     World: _hidden.World<void>;
     AreaTrigger: _hidden.AreaTrigger<void>;
-    //Vehicle: _hidden.Vehicle;
+    Vehicle: _hidden.Vehicle<void>;
     Achievement: _hidden.Achievement<void>;
     Player: _hidden.Player<void>;
     Account: _hidden.Account<void>;
@@ -9062,7 +9061,7 @@ declare class TSEvents {
     static World: _hidden.World<void>;
     static AreaTriggers: _hidden.AreaTrigger<void>;
     static AreaTriggerID: _hidden.AreaTrigger<void>;
-    //Vehicle: _hidden.Vehicle;
+    static Vehicle: _hidden.Vehicle<void>;
     static Achievement: _hidden.Achievement<void>;
     static Player: _hidden.Player<void>;
     static Account: _hidden.Account<void>;

@@ -116,18 +116,6 @@ public:
     //bool OnConditionCheck(Condition const* condition,ConditionSourceInfo& sourceInfo) FIRE_RETURN(ConditionOnConditionCheck,bool,TODO_FIXME,,condition,TSMutable<ConditionSourceInfo>(sourceInfo))
 };
 
-class TSVehicleScript : public VehicleScript
-{
-public:
-    TSVehicleScript() : VehicleScript("TSVehicleScript"){}
-    void OnInstall(Vehicle* veh) FIRE(Vehicle,OnInstall,TSVehicle(veh))
-    void OnUninstall(Vehicle* veh) FIRE(Vehicle,OnUninstall,TSVehicle(veh))
-    void OnReset(Vehicle* veh) FIRE(Vehicle,OnReset,TSVehicle(veh))
-    void OnInstallAccessory(Vehicle* veh,Creature* accessory) FIRE(Vehicle,OnInstallAccessory,TSVehicle(veh),TSCreature(accessory))
-    void OnAddPassenger(Vehicle* veh,Unit* passenger,int8 seatId) FIRE(Vehicle,OnAddPassenger,TSVehicle(veh),TSUnit(passenger),seatId)
-    void OnRemovePassenger(Vehicle* veh,Unit* passenger) FIRE(Vehicle,OnRemovePassenger,TSVehicle(veh),TSUnit(passenger))
-};
-
 class TSAchievementCriteriaScript : public AchievementCriteriaScript
 {
 public:
@@ -256,7 +244,6 @@ void TSLoadScriptMgrEvents()
     //new TSWeatherScript();
     new TSAuctionHouseScript();
     //new TSConditionScript();
-    //new TSVehicleScript();
     //new TSAchievementCriteriaScript();
     new TSPlayerScript();
     new TSAccountScript();
