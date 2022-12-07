@@ -1,4 +1,4 @@
-import { BuildType, DEFAULT_BUILD_TYPE } from "../util/BuildType";
+import { BuildType } from "../util/BuildType";
 import { commands } from "../util/Commands";
 import { ConfigFile, patchTCConfig, Property, Section } from "../util/ConfigFile";
 import { EmulatorCore } from "../util/EmulatorCore";
@@ -175,7 +175,7 @@ export class Realm {
 
     readonly mod: ModuleEndpoint
     readonly name: string
-    lastBuildType: BuildType = DEFAULT_BUILD_TYPE
+    lastBuildType: BuildType = NodeConfig.DefaultBuildType
     readonly config: RealmConfig
 
     private manager() {
