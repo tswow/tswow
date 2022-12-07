@@ -22,7 +22,7 @@ import { SQL } from "../../SQLFiles"
 import { CreatureTextGroup, CreatureTextRegistry } from "../BroadcastText/CreatureText"
 import { b2i } from "../Misc/BasicConversion"
 import { ReactState, resolveReactState } from "../Misc/ReactState"
-import { SmartScript } from "./SmartScript"
+import { getRealEntryOrGuid, SmartScript } from "./SmartScript"
 import { resolveSummonType, SummonType } from "./SummonType"
 
 export const ACTION_TYPES : {[key:string]:string} = {
@@ -357,7 +357,7 @@ export class ActionType {
      */
     setTalkGroup(callback: (group: CreatureTextGroup,duration: Cell<number,any>, unk: Cell<number,any>)=>void) {
         this.row.action_type.set(1)
-        const group = CreatureTextRegistry.load(this.row.entryorguid.get())
+        const group = CreatureTextRegistry.load(getRealEntryOrGuid(this.row))
             .Texts.addGet();
         callback(group,this.row.action_param2,this.row.action_param3);
         this.row.action_param1.set(group.Group)
@@ -378,7 +378,7 @@ export class ActionType {
             this.row.action_param1.set(textsOrGroupId)
             return this.main;
         }
-        const rows = SQL.creature_text.queryAll({CreatureID:this.row.entryorguid.get()})
+        const rows = SQL.creature_text.queryAll({CreatureID:getRealEntryOrGuid(this.row)})
         const id = rows.length===0 ? 0 :
             rows.sort((a,b)=>b.GroupID>a.GroupID?1:-1)[0].GroupID.get()+1
 
@@ -389,7 +389,7 @@ export class ActionType {
         for(let i=0;i<textsOrGroupId.length;++i) {
             iterLocConstructor(textsOrGroupId[i],(lang, value) => {
                 if(lang === 'enGB' || lang === 'enCN' || lang === 'enTW') {
-                    SQL.creature_text.add(this.row.entryorguid.get(),id,i,
+                    SQL.creature_text.add(getRealEntryOrGuid(this.row),id,i,
                         {
                             Duration:Duration,
                             Text: value,
@@ -398,7 +398,7 @@ export class ActionType {
                             comment: 'tswow'
                         })
                 } else {
-                    SQL.creature_text_locale.add(this.row.entryorguid.get(),id,i,lang,{
+                    SQL.creature_text_locale.add(getRealEntryOrGuid(this.row),id,i,lang,{
                         Text: value,
                     })
                 }

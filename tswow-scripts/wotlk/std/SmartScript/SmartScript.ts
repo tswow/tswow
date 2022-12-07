@@ -34,6 +34,13 @@ function findId(type: number, entry: number) {
     return oldest.id.get()+1;
 }
 
+export function getRealEntryOrGuid(row: smart_scriptsRow)
+{
+    return row.source_type.get() == 9
+        ? Math.floor(row.entryorguid.get() / 100)
+        : row.entryorguid.get()
+}
+
 export class SmartScript extends CellSystemTop {
     @Transient
     readonly row: smart_scriptsRow
@@ -41,6 +48,16 @@ export class SmartScript extends CellSystemTop {
     constructor(row: smart_scriptsRow) {
         super();
         this.row = row;
+    }
+
+    get EntityEntryOrGUID()
+    {
+        return getRealEntryOrGuid(this.row);
+    }
+
+    get EntryOrGUID()
+    {
+        return this.row.entryorguid.get();
     }
 
     get ConditionSelf() {
@@ -69,8 +86,6 @@ export class SmartScript extends CellSystemTop {
     get Action() { return new ActionType(this, this.row); }
     get Target() { return new TargetType(this, this.row); }
     get Event() { return new EventType(this, this.row); }
-
-    get end() { return this.owner; }
 
     then() {
         // Find the last part of the existing chain and append to it
