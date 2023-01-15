@@ -57,6 +57,11 @@ TSRegistryRef& TSEvents::CreatureEvents::get_registry_ref(uint32_t id)
     return const_cast<TSRegistryRef&>(sObjectMgr->GetCreatureTemplate(id)->events);
 }
 
+TSRegistryRef& TSEvents::VehicleEvents::get_registry_ref(uint32_t id)
+{
+    return const_cast<TSRegistryRef&>(sObjectMgr->GetCreatureTemplate(id)->events);
+}
+
 TSRegistryRef& TSEvents::GameObjectEvents::get_registry_ref(uint32_t id)
 {
     return const_cast<TSRegistryRef&>(sObjectMgr->GetGameObjectTemplate(id)->events);

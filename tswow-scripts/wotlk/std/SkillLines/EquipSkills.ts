@@ -27,19 +27,57 @@ export class EquipSkill extends CellSystemTop {
              .ClassMaskForbidden.set(cls,'NOT')
     }
 
-    enable(cls?: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits) {
-        this.Skill.get().enable(cls,race,(rci)=>{
-            rci.Flags.IS_CLASS_LINE.set(true)
-        });
-        this.enableAbil(cls,race);
+    /**
+     * @warning this enables the skill to be learnt by all races of the matched classes
+     */
+    enableClass(cls?: MaskCon<keyof typeof ClassMask>) {
+        if(this.Skill.get().RaceClassInfos.length === 0) {
+            this.Skill.get().enable(cls,MaskCell32.AllBits);
+        } else {
+            this.Skill.get().RaceClassInfos.forEach(x=>x.ClassMask.add(cls).RaceMask.add(MaskCell32.AllBits))
+        }
+        this.enableAbil(cls,MaskCell32.AllBits);
         return this;
     }
 
-    enableAutolearn(cls?: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits, rank?: number) {
-        this.Skill.get().enableAutolearn(cls,race,rank,(rci)=>{
-            rci.Flags.IS_CLASS_LINE.set(true)
-        });
-        this.enableAbil(cls,race);
+    /**
+     * @warning this enables the skill to be learnt by all classes of the matched races
+     */
+    enableRace(race?: MaskCon<keyof typeof RaceMask>) {
+        if(this.Skill.get().RaceClassInfos.length === 0) {
+            this.Skill.get().enable(MaskCell32.AllBits,race);
+        } else {
+            this.Skill.get().RaceClassInfos.forEach(x=>x.ClassMask.add(MaskCell32.AllBits).RaceMask.add(race))
+        }
+        this.enableAbil(MaskCell32.AllBits,race);
+        return this;
+    }
+
+    /**
+     * @warning this enables the skill to be learnt by all races of the matched classes (race parameter only decides what races learn it by default)
+     */
+    enableAutolearnClass(cls: MaskCon<keyof typeof ClassMask>, autoLearnRace: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits, rank: number = 1) {
+        if(this.Skill.get().RaceClassInfos.length === 0) {
+            this.Skill.get().enable(cls,MaskCell32.AllBits);
+        } else {
+            this.Skill.get().RaceClassInfos.forEach(x=>x.ClassMask.add(cls).RaceMask.add(MaskCell32.AllBits))
+        }
+        this.Skill.get().Autolearn.addGet(cls,autoLearnRace).Rank.set(rank);
+        this.enableAbil(cls,MaskCell32.AllBits);
+        return this;
+    }
+
+    /**
+     * @warning this enables the skill to be learnt by all classes of the matched classes (class parameter only decides what classes learn it by default)
+     */
+    enableAutolearnRace(race: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits, autoLearnCls: MaskCon<keyof typeof ClassMask> = MaskCell32.AllBits, rank: number = 1) {
+        if(this.Skill.get().RaceClassInfos.length === 0) {
+            this.Skill.get().enable(MaskCell32.AllBits,race);
+        } else {
+            this.Skill.get().RaceClassInfos.forEach(x=>x.ClassMask.add(MaskCell32.AllBits).RaceMask.add(race))
+        }
+        this.Skill.get().Autolearn.addGet(autoLearnCls,race).Rank.set(rank);
+        this.enableAbil(MaskCell32.AllBits,race);
         return this;
     }
 

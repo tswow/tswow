@@ -12,7 +12,7 @@ runs:
     - name: Select node version
       uses: actions/setup-node@v3
       with:
-        node-version: 16.13.1
+        node-version: 18.12.1
     - name: Setup Build Directory
       uses: DamianReeves/write-file-action@v1.0
       with:

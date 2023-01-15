@@ -117,6 +117,7 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, GetChatTag);
     LUA_FIELD(ts_player, TSPlayer, SetBankBagSlotCount);
     LUA_FIELD(ts_player, TSPlayer, GetItemByPos);
+    LUA_FIELD(ts_player, TSPlayer, GetItemByEntry);
     LUA_FIELD(ts_player, TSPlayer, GetItemByGUID);
     LUA_FIELD(ts_player, TSPlayer, GetGossipTextID);
     LUA_FIELD(ts_player, TSPlayer, GetSelection);

@@ -74,6 +74,7 @@ export function cleanSQL() {
     col('playercreateinfo_action')
     col('mail_loot_template')
     col('fishing_loot_template')
+    col('creature_loot_template')
     col('disenchant_loot_template')
     col('gameobject_loot_template')
     col('item_loot_template')

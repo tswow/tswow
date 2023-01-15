@@ -102,7 +102,7 @@ export class GameObjectInstance extends MainEntityID<gameobjectRow> {
     get EncounterSpawn() { return implicitGameObjectState(this) }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get GameEvents() { return new GameObjectGameEventsForward(this); }
-    get Template() { return GORegistry.Plain.ref(this, this.row.id); }
+    get Template() { return GORegistry.Generic.ref(this, this.row.id); }
     @Transient
     protected get Addon() { return GameObjectAddonRow.addon(this); }
     @Transient

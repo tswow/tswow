@@ -208,7 +208,7 @@ export class ConditionNearCreature extends ConditionBase {
 
 export class ConditionNearGameObject extends ConditionBase {
     get GOTemplate() {
-        return GORegistry.Plain.readOnlyRef(this, this.v1);
+        return GORegistry.Generic.readOnlyRef(this, this.v1);
     }
     get Distance() { return this.v2; }
 }

@@ -19,7 +19,7 @@ import { TDB_URL } from "../util/Paths";
 
 // Dependency locations
 
-export const CMAKE_DOWNLOAD_URL = 'https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip';
+export const CMAKE_DOWNLOAD_URL = 'https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-windows-x86_64.zip';
 export const SZIP_DOWNLOAD_URL = 'https://www.7-zip.org/a/7za920.zip';
 export const OPENSSL_DOWNLOAD_URL = 'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip';
 export const SOURCE_ADT_URL = 'https://github.com/tswow/misc/releases/download/adt-template/source.adt'

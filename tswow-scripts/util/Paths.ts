@@ -505,7 +505,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         cmake: dir({
         }),
 
-        cmakeArchive: file('cmake-3.18.3-win64-x64.zip'),
+        cmakeArchive: file('cmake-3.25.0-win64-x64.zip'),
         mysqlArchive: file('mysql-5.7.32-winx64.zip'),
 
         sourceAdt: file('source.adt'),

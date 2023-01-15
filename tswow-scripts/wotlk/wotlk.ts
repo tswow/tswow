@@ -70,6 +70,7 @@ import { EquipSkills } from "./std/SkillLines/EquipSkills";
 import { SkillLineRegistry } from "./std/SkillLines/SkillLines";
 import { SkillTiersRegistry } from "./std/SkillTiers/SkillTiers";
 import { SmartScripts } from "./std/SmartScript/SmartScript";
+import { ActionListRegistry } from "./std/SmartScript/TimedActionList";
 import { SoundAmbienceRegistry } from "./std/Sound/SoundAmbience";
 import { SoundEntryRegistry } from "./std/Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./std/Sound/ZoneIntroMusic";
@@ -186,6 +187,7 @@ export const std = {
     SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,
     Tags: Tags,
+    TimedActionListBuilder: ActionListRegistry,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: _DBC,
     /** Used to load external dbc files for conversion purposes. */
