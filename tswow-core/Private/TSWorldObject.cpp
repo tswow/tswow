@@ -1344,3 +1344,24 @@ TSFactionTemplate TSWorldObject::GetFactionTemplate()
 {
     return TSFactionTemplate(obj->GetFactionTemplateEntry());
 }
+
+
+TSLua::Array<TSWorldObject> TSWorldObject::LGetCreaturesInRange()
+{
+    return sol::as_table(*GetCreaturesInRange().vec);
+}
+
+TSLua::Array<TSWorldObject> TSWorldObject::LGetUnitsInRange()
+{
+    return sol::as_table(*GetUnitsInRange().vec);
+}
+
+TSLua::Array<TSWorldObject> TSWorldObject::LGetGameObjectsInRange()
+{
+    return sol::as_table(*GetGameObjectsInRange().vec);
+}
+
+TSLua::Array<TSWorldObject> TSWorldObject::LGetPlayersInRange()
+{
+    return sol::as_table(*GetPlayersInRange().vec);
+}

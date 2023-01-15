@@ -147,6 +147,10 @@ public:
 private:
     friend class TSLua;
     void LDoDelayed(sol::protected_function callback);
+    TSLua::Array<TSWorldObject> LGetCreaturesInRange();
+    TSLua::Array<TSWorldObject> LGetUnitsInRange();
+    TSLua::Array<TSWorldObject> LGetGameObjectsInRange();
+    TSLua::Array<TSWorldObject> LGetPlayersInRange();
 };
 
 class TC_GAME_API TSCollisionEntry {
