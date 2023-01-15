@@ -5,7 +5,7 @@
 class TC_GAME_API TSItemEntry
 {
 public:
-    TSItem(uint32 entry, uint32 count);
+    TSItemEntry(uint32 entry, uint32 count);
     TSNumber<uint32> GetEntry();
     TSNumber<uint32> GetCount();
 private:
