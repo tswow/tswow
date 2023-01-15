@@ -90,6 +90,7 @@ declare const enum TempSummonType {} /** ObjectDefines.h:TempSummonType */
 declare const enum TypeID {} /** ObjectGuid.h:TypeID */
 declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
 declare const enum CharmType {} /** Unit.h:CharmType */
+declare const enum PlayerFlags {} /** Player.h:PlayerFlags */
 
 declare const enum Powers /**@realType:int8 */ {
     HEALTH                        = -2,
