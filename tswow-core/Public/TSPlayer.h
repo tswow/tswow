@@ -31,6 +31,7 @@ class TSBattleground;
 class TSBattlegroundPlayer;
 class TSInstance;
 class TSPlayerSpell;
+class TSItemEntry;
 
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit, public TSDBJsonProvider {
@@ -326,7 +327,7 @@ public:
 	TSGroup GroupCreate(TSPlayer invited);
 	void SendCinematicStart(uint32 CinematicSequenceId);
 	void SendMovieStart(uint32 MovieId);
-	void SendMail(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money = 0, uint32 cod = 0, uint32 delay = 0, TSArray<TSItem> items = TSArray<TSItem>());
+	void SendMail(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money = 0, uint32 cod = 0, uint32 delay = 0, TSArray<TSItem> items = TSArray<TSItem>(), TSArray<TSItemEntry> itemEntries = TSArray<TSItemEntry>());
 	bool CanBeTank();
 	bool CanBeHealer();
 	bool CanBeDPS();

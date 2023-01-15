@@ -16,6 +16,7 @@
  */
 
 #include "TSIncludes.h"
+#include "TSItemEntry.h"
 #include "TSSpell.h"
 #include "TSIncludes.h"
 #include "TSPlayer.h"
@@ -3858,7 +3859,7 @@ void TSPlayer::SendMovieStart(uint32 MovieId)
 }
 #endif
 
-void TSPlayer::SendMail(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
+void TSPlayer::SendMail(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items, TSArray<TSItemEntry> itemEntries)
 {
     MailSender sender(MailMessageType(senderType),from);
     MailDraft draft(subject,body);
@@ -3871,6 +3872,13 @@ void TSPlayer::SendMail(uint8 senderType, uint64 from, std::string const& subjec
         auto item = items.get(i);
         item->item->SaveToDB(trans);
         draft.AddItem(item.item);
+    }
+
+    for(int i=0;i<itemEntries.get_length();++i)
+    {
+        auto item = Item::CreateItem(itemEntries[i].GetEntry(),itemEntries[i].GetCount(),nullptr);
+        item->SaveToDB(trans);
+        draft.AddItem(item);
     }
 
     draft.SendMailTo(trans,MailReceiver(player,player->GetGUID().GetCounter()),sender, MAIL_CHECK_MASK_NONE, delay);

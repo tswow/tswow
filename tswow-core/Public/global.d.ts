@@ -327,7 +327,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param cod
      * @param items
      */
-	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, items? : TSArray<TSItem>);
+	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
 
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
@@ -4095,6 +4095,14 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     SetWeather(zoneId : uint32,weatherType : WeatherType,grade : float) : void
 }
+
+declare class TSItemEntry
+{
+    private constructor();
+    GetEntry(): TSNumber<uint32>;
+    GetCount(): TSNumber<uint32>
+}
+declare function CreateItemEntry(entry: uint32, count: uint32): TSItemEntry
 
 declare class TSItem extends TSObject {
     constructor();
