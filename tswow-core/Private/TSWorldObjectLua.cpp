@@ -10,10 +10,11 @@ void TSLua::load_world_object_methods(sol::state& state)
 {
     auto ts_worldobject = state.new_usertype<TSWorldObject>("TSWorldObject", sol::base_classes, sol::bases<TSObject,TSWorldEntityProvider<TSWorldObject>, TSEntityProvider>());
     load_world_entity_methods_t<TSWorldObject>(state, ts_worldobject, "TSWorldObject");
-    LUA_FIELD(ts_worldobject, TSWorldObject, LGetCreaturesInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, LGetPlayersInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, LGetUnitsInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, LGetGameObjectsInRange);
+
+    ts_worldobject.set_function("GetCreaturesInRange", &TSWorldObject::LGetCreaturesInRange);
+    ts_worldobject.set_function("GetPlayersInRange", &TSWorldObject::LGetPlayersInRange);
+    ts_worldobject.set_function("GetUnitsInRange", &TSWorldObject::LGetUnitsInRange);
+    ts_worldobject.set_function("GetGameObjectsInRange", &TSWorldObject::LGetGameObjectsInRange);
 
     LUA_FIELD_OVERLOAD_RET_0_3(ts_worldobject, TSWorldObject, GetNearestPlayer, float, uint32, uint32);
     LUA_FIELD_OVERLOAD_RET_0_3(ts_worldobject, TSWorldObject, GetNearestGameObject, float, uint32, uint32);

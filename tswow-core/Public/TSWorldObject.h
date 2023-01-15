@@ -147,10 +147,10 @@ public:
 private:
     friend class TSLua;
     void LDoDelayed(sol::protected_function callback);
-    TSLua::Array<TSWorldObject> LGetCreaturesInRange();
-    TSLua::Array<TSWorldObject> LGetUnitsInRange();
-    TSLua::Array<TSWorldObject> LGetGameObjectsInRange();
-    TSLua::Array<TSWorldObject> LGetPlayersInRange();
+    TSLua::Array<TSWorldObject> LGetCreaturesInRange(float range, uint32 entry, uint32 hostile, uint32 dead);
+    TSLua::Array<TSWorldObject> LGetUnitsInRange(float range, uint32 hostile, uint32 dead);
+    TSLua::Array<TSWorldObject> LGetGameObjectsInRange(float range, uint32 entry, uint32 hostile);
+    TSLua::Array<TSWorldObject> LGetPlayersInRange(float range, uint32 hostile, uint32 dead);
 };
 
 class TC_GAME_API TSCollisionEntry {
