@@ -804,6 +804,7 @@ struct TSEvents
          ID_EVENT(OnLFGRollEarly, TSItemTemplate, TSWorldObject looted, TSPlayer looter, TSMutableNumber<int32> result)
          ID_EVENT(OnDestroyEarly, TSItem, TSPlayer, TSMutable<bool,bool>)
          ID_EVENT(OnTakenAsLoot, TSItem, TSLootItem, TSLoot, TSPlayer)
+         ID_EVENT(OnCalculateFeralAttackPower, TSItemTemplate, TSNumber<int32>, TSMutableNumber<int32> result)
      } Item;
 
     struct QuestEvents : public TSMappedEventsRegistry
