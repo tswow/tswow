@@ -8281,6 +8281,9 @@ declare namespace _hidden {
         OnWaypointPathEnded(callback: (creature: TSCreature, id: uint32, path: uint32)=>void): T;
         OnWaypointPathEnded(id: EventID, callback: (creature: TSCreature, id: uint32, path: uint32)=>void): T;
 
+        OnMovementInform(callback: (creature: TSCreature, type: uint32, id: uint32)=>void): T;
+        OnMovementInform(id: EventID, callback: (creature: TSCreature, type: uint32, id: uint32)=>void): T;
+
         OnPassengerBoarded(callback: (creature: TSCreature, passenger: TSUnit, seatId: int8, isFirst: boolean)=>void): T;
         OnPassengerBoarded(id: EventID, callback: (creature: TSCreature, passenger: TSUnit, seatId: int8, isFirst: boolean)=>void): T;
 
