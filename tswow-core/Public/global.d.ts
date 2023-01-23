@@ -7969,6 +7969,9 @@ declare namespace _hidden {
             , locked: TSMutable<boolean,boolean>
         ) => void)
 
+        OnCalcEnchantDuration(callback: (spell: TSSpell, duration: TSMutable<uint32,uint32>) => void)
+        OnCalcEnchantDuration(id: EventID, callback: (spell: TSSpell, duration: TSMutable<uint32,uint32>) => void)
+
         OnHit(callback: (spell: TSSpell)=>void): T;
         OnHit(id: EventID, callback: (spell: TSSpell)=>void): T;
 

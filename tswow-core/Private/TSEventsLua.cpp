@@ -162,6 +162,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDispel);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffectApplyGlyph);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcEnchantDuration);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHit);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnTick);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnRemove);
