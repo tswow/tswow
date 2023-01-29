@@ -1346,22 +1346,22 @@ TSFactionTemplate TSWorldObject::GetFactionTemplate()
 }
 
 
-TSLua::Array<TSWorldObject> TSWorldObject::LGetCreaturesInRange(float range, uint32 entry, uint32 hostile, uint32 dead)
+TSLua::Array<TSCreature> TSWorldObject::LGetCreaturesInRange(float range, uint32 entry, uint32 hostile, uint32 dead)
 {
     return sol::as_table(*GetCreaturesInRange(range,entry,hostile,dead).vec);
 }
 
-TSLua::Array<TSWorldObject> TSWorldObject::LGetUnitsInRange(float range, uint32 hostile, uint32 dead)
+TSLua::Array<TSUnit> TSWorldObject::LGetUnitsInRange(float range, uint32 hostile, uint32 dead)
 {
     return sol::as_table(*GetUnitsInRange(range,hostile,dead).vec);
 }
 
-TSLua::Array<TSWorldObject> TSWorldObject::LGetGameObjectsInRange(float range, uint32 entry, uint32 hostile)
+TSLua::Array<TSGameObject> TSWorldObject::LGetGameObjectsInRange(float range, uint32 entry, uint32 hostile)
 {
     return sol::as_table(*GetGameObjectsInRange(range,entry,hostile).vec);
 }
 
-TSLua::Array<TSWorldObject> TSWorldObject::LGetPlayersInRange(float range, uint32 hostile, uint32 dead)
+TSLua::Array<TSPlayer> TSWorldObject::LGetPlayersInRange(float range, uint32 hostile, uint32 dead)
 {
     return sol::as_table(*GetPlayersInRange(range,hostile,dead).vec);
 }
