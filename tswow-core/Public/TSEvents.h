@@ -540,6 +540,7 @@ struct TSEvents
         ID_EVENT(OnWaypointStarted, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnWaypointReached, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnWaypointPathEnded, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
+        ID_EVENT(OnMovementInform, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnPassengerBoarded, TSCreature, TSUnit, TSNumber<int8>, bool)
         ID_EVENT(OnSpellClick, TSCreature, TSUnit, bool)
         ID_EVENT(OnUpdateAI, TSCreature, TSNumber<uint32>)
