@@ -1914,6 +1914,11 @@ void TSPlayer::SetKnownTitle(uint32 id)
 }
 #endif
 
+void TSPlayer::UnlockAchievement(uint32 entry)
+{
+    player->UnlockAchievement(entry);
+}
+
 #if !defined TRINITY && !AZEROTHCORE
 /**
  * Toggle the [Player]s FFA flag
