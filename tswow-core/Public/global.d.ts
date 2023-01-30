@@ -4440,9 +4440,10 @@ declare class TSItem extends TSObject {
      *
      * @param uint32 enchantId : the ID of the enchant to be applied
      * @param uint32 enchantSlot : the slot for the enchant to be applied to
+     * @param uint32 duration : How long the enchantment should last.
      * @return bool enchantmentSuccess : if enchantment is successfully set to specified (EnchantmentSlot)slot, returns 'true', otherwise 'false'
      */
-    SetEnchantment(enchant : uint32,slot : uint32) : bool
+    SetEnchantment(enchant : uint32,slot : uint32,duration : uint32) : bool
 
     /**
      * Removes an enchant from the [Item] by the specified slot

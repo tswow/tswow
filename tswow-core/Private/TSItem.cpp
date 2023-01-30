@@ -612,9 +612,10 @@ void TSItem::SetCount(uint32 count)
  *
  * @param uint32 enchantId : the ID of the enchant to be applied
  * @param uint32 enchantSlot : the slot for the enchant to be applied to
+ * @param uint32 duration : How long the enchantment should last.
  * @return bool enchantmentSuccess : if enchantment is successfully set to specified (EnchantmentSlot)slot, returns 'true', otherwise 'false'
  */
-bool TSItem::SetEnchantment(uint32 enchant,uint32 slot)
+bool TSItem::SetEnchantment(uint32 enchant,uint32 slot,uint32 duration)
 {
     Player* owner = item->GetOwner();
     if (!owner)
@@ -629,7 +630,7 @@ bool TSItem::SetEnchantment(uint32 enchant,uint32 slot)
 
 
     owner->ApplyEnchantment(item, (EnchantmentSlot)slot, false);
-    item->SetEnchantment((EnchantmentSlot)slot, enchant, 0, 0);
+    item->SetEnchantment((EnchantmentSlot)slot, enchant, duration, 0);
     owner->ApplyEnchantment(item, (EnchantmentSlot)slot, true);
     return true;
 }

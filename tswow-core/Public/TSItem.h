@@ -78,7 +78,7 @@ public:
     void SetOwner(TSPlayer player);
     void SetBinding(bool soulbound);
     void SetCount(uint32 count);
-    bool SetEnchantment(uint32 enchant, uint32 slot);
+    bool SetEnchantment(uint32 enchant, uint32 slot, uint32 duration);
     bool ClearEnchantment(uint32 slot);
     void SaveToDB();
 };
