@@ -180,6 +180,8 @@ struct TSEvents
          EVENT(OnPlayerRepop, TSPlayer)
          EVENT(OnSendMail, TSPlayer, TSMailDraft, TSMutableNumber<uint32>)
 
+         EVENT(OnFlightPathMount, TSPlayer, TSMutableNumber<uint32>)
+
          EVENT(OnGenerateItemLoot, TSPlayer, TSItem, TSLoot, TSNumber<uint32>)
          EVENT(OnLootCorpse, TSPlayer, TSCorpse)
          EVENT(OnLearnTalent, TSPlayer, TSNumber<uint32> tabId, TSNumber<uint32> talentId, TSNumber<uint32> talentRank, TSNumber<uint32> spellId, TSMutable<bool,bool>)

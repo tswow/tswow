@@ -75,6 +75,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnMovieComplete);
     LUA_HANDLE(player_events, PlayerEvents, OnPlayerRepop);
     LUA_HANDLE(player_events, PlayerEvents, OnSendMail);
+    LUA_HANDLE(player_events, PlayerEvents, OnFlightPathMount);
     LUA_HANDLE(player_events, PlayerEvents, OnGossipSelect);
     LUA_HANDLE(player_events, PlayerEvents, OnGossipSelectCode);
     LUA_HANDLE(player_events, PlayerEvents, OnGenerateItemLoot);
