@@ -7912,6 +7912,11 @@ declare namespace _hidden {
             , creature: TSCreature
             , money: TSMutableNumber<float>
         ) => void);
+
+        OnCalcKillXP(callback: (
+            player: TSPlayer
+          , xp: TSMutableNumber<float>
+        ) => void);
     }
 
     export class Account<T> {
@@ -8569,6 +8574,17 @@ declare namespace _hidden {
             quest: TSQuest
           , player: TSPlayer
           , reward: TSMutableNumber<uint32>
+        )=>void)
+
+        OnCalcXP(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , xp: TSMutableNumber<uint32>
+        )=>void)
+        OnCalcXP(event: EventID, callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , xp: TSMutableNumber<uint32>
         )=>void)
     }
 

@@ -343,6 +343,8 @@ struct TSEvents
             , TSCreature creature
             , TSMutableNumber<float> money
          )
+
+         EVENT(OnCalcKillXP, TSPlayer, TSMutableNumber<uint32>)
     } Player;
 
     struct AccountEvents
@@ -823,6 +825,7 @@ struct TSEvents
         ID_EVENT(OnObjectiveProgress, TSQuest, TSPlayer, TSNumber<uint32>, TSNumber<uint16>)
         ID_EVENT(OnStatusChanged, TSQuest, TSPlayer)
         ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
+        ID_EVENT(OnCalcXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
     } Quest;
 #if TRINITY
     struct AreaTriggerEvents : public TSMappedEventsDirect {

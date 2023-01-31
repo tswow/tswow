@@ -110,6 +110,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
     LUA_HANDLE(player_events, PlayerEvents, OnReputationPriceDiscount);
+    LUA_HANDLE(player_events, PlayerEvents, OnCalcKillXP);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
@@ -373,6 +374,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnAccept);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnReward);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnRewardXP);
+    LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnCalcXP);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnObjectiveProgress);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnStatusChanged);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSpellFinish);
