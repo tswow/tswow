@@ -115,6 +115,20 @@ bool TSUnit::IsRooted()
 }
 
 /**
+ * Returns true if the [Unit] is frozen.
+ *
+ * @return bool isFrozen
+ */
+bool TSUnit::IsFrozen()
+{
+#ifdef TRINITY
+    return unit->IsFrozen();
+#endif
+
+    return false;
+}
+
+/**
  * Returns true if the [Unit] has full health.
  *
  * @return bool hasFullHealth

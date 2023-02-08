@@ -5842,6 +5842,13 @@ declare interface TSUnit extends TSWorldObject {
     IsRooted() : bool
 
     /**
+     * Returns true if the [Unit] is frozen.
+     *
+     * @return bool isFrozen
+     */
+    IsFrozen() : bool
+
+    /**
      * Returns true if the [Unit] has full health.
      *
      * @return bool hasFullHealth

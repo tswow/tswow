@@ -40,6 +40,7 @@ public:
     bool IsStandState();
     bool IsMounted();
     bool IsRooted();
+    bool IsFrozen();
     bool IsFullHealth();
     bool IsInAccessiblePlaceFor(TSCreature creature);
     bool IsAuctioneer();
