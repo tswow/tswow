@@ -21,6 +21,7 @@
 #include "TSMain.h"
 #include "TSEntity.h"
 #include "TSArray.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
