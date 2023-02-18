@@ -74,7 +74,6 @@ file (GLOB headers "${ipaths.bin.include.abs('FORWARD')}/*.h")
 
 # root livescript headers
 target_include_directories(${buildModule} PUBLIC ../../../)
-file (GLOB headers "../../../*.h")
 
 # ts livescript headers
 target_include_directories(${buildModule} PUBLIC ./livescripts)
