@@ -6019,6 +6019,18 @@ declare interface TSUnit extends TSWorldObject {
     IsOnVehicle() : bool
 
     /**
+     * Builds and assigns a new Vehicle Kit for a unit.
+     * @param uint32 id Vehicle Entry
+     * @param uint32 creatureEntry Creature Entry
+     */
+    CreateVehicleKit(id: uint32, creatureEntry: uint32) : bool
+
+    /**
+     * Removes the [Unit]s current Vehicle Kit.
+     */
+    RemoveVehicleKit(): void
+
+    /**
      * Returns true if the [Unit] is in combat.
      *
      * @return bool inCombat

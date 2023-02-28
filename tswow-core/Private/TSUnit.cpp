@@ -458,6 +458,16 @@ bool TSUnit::IsOnVehicle()
 }
 #endif
 
+bool TSUnit::CreateVehicleKit(uint32 id, uint32 creatureEntry)
+{
+    return unit->CreateVehicleKit(id, creatureEntry);
+}
+
+void TSUnit::RemoveVehicleKit()
+{
+    unit->RemoveVehicleKit();
+}
+
 /**
  * Returns true if the [Unit] is in combat.
  *

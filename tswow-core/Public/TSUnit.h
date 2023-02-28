@@ -65,6 +65,8 @@ public:
     bool IsAttackingPlayer();
     bool IsPvPFlagged();
     bool IsOnVehicle();
+    bool CreateVehicleKit(uint32 id, uint32 creatureEntry);
+    void RemoveVehicleKit();
     bool IsInCombat();
     bool IsUnderWater();
     bool IsInWater();
