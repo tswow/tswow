@@ -7273,6 +7273,7 @@ declare interface TSUnit extends TSWorldObject {
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
 
     GetWeaponDamageRange(attType: uint8, type: uint8, damageIndex: uint8);
+    GetTotalAttackPowerValue(attType: uint8);
     SpellBaseDamageBonusDone(schoolMask: uint32);
 }
 

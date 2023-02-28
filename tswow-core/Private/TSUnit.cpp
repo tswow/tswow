@@ -2628,6 +2628,11 @@ float TSUnit::GetWeaponDamageRange(uint8 attType, uint8 type, uint8 damageIndex 
     return unit->GetWeaponDamageRange(static_cast<WeaponAttackType>(attType), static_cast<WeaponDamageRange>(type), damageIndex);
 }
 
+float TSUnit::GetTotalAttackPowerValue(uint8 attType)
+{
+    return unit->GetTotalAttackPowerValue(static_cast<WeaponAttackType>(attType));
+}
+
 void TSUnit::JumpTo(float x, float y, float z, float o, float speedXY, float speedZ, bool forward)
 {
     unit->JumpTo(speedXY, speedZ, forward, Position{ x,y,z });
