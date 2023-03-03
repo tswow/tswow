@@ -52,6 +52,7 @@ protected:
     uint32 m_id;
     uint32 m_paramCount;
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt) = 0;
+    virtual void SendAsync(TSPreparedStatementBase* stmnt) = 0;
     TSPreparedStatement(std::string const& sql, uint32 id);
 public:
     TSPreparedStatementBase Create();
@@ -68,6 +69,7 @@ public:
     TSPreparedStatementWorld* operator->() { return this; }
 private:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt);
+    virtual void SendAsync(TSPreparedStatementBase* stmnt);
 };
 
 class TC_GAME_API TSPreparedStatementCharacters: public TSPreparedStatement {
@@ -76,6 +78,7 @@ public:
     TSPreparedStatementCharacters* operator->() { return this; }
 private:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt);
+    virtual void SendAsync(TSPreparedStatementBase* stmnt);
 };
 
 class TC_GAME_API TSPreparedStatementAuth: public TSPreparedStatement {
@@ -84,6 +87,7 @@ public:
     TSPreparedStatementAuth* operator->() { return this; }
 private:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt);
+    virtual void SendAsync(TSPreparedStatementBase* stmnt);
 };
 
 struct TSWorldDatabaseConnection;
@@ -98,6 +102,7 @@ public:
         , TSPreparedStatement* holder
     );
     std::shared_ptr<TSDatabaseResult> Send();
+    void SendAsync();
     std::shared_ptr<TSDatabaseResult> Send(TSWorldDatabaseConnection & con);
     std::shared_ptr<TSDatabaseResult> Send(TSAuthDatabaseConnection & con);
     std::shared_ptr<TSDatabaseResult> Send(TSCharactersDatabaseConnection & con);
@@ -191,6 +196,10 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection();
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryWorld(std::string const& query);
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryCharacters(std::string const& query);
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryAuth(std::string const& query);
+
+TC_GAME_API void QueryWorldAsync(std::string const& query);
+TC_GAME_API void QueryCharactersAsync(std::string const& query);
+TC_GAME_API void QueryAuthAsync(std::string const& query);
 
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> WorldDatabaseInfo();
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> CharactersDatabaseInfo();
