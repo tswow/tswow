@@ -3345,6 +3345,7 @@ declare interface TSAura extends TSEntityProvider {
 }
 
 declare interface TSAuraEffect extends TSEntityProvider {
+    IsNull(): bool;
     GetCaster(): TSUnit;
     GetCasterGUID(): TSNumber<uint64>
     GetAura(): TSAura;
