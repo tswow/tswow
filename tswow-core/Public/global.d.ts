@@ -9487,6 +9487,7 @@ declare interface TSPreparedStatementBase {
 
     SetString(index: uint8, value: float): this
     Send(): TSDatabaseResult
+    SendAsync(): void
     Send(connection: TSDatabaseConnection): TSDatabaseResult
 }
 
@@ -9614,6 +9615,10 @@ declare function CreateTSMutable<T>(ptr: T): TSMutable<T,T>;
 declare function QueryWorld(query: string): TSDatabaseResult;
 declare function QueryCharacters(query: string): TSDatabaseResult;
 declare function QueryAuth(query: string): TSDatabaseResult;
+
+declare function QueryWorldAsync(query: string): void;
+declare function QueryCharactersAsync(query: string): void;
+declare function QueryAuthAsync(query: string): void;
 
 declare function PrepareWorldQuery(query: string): TSPreparedStatementWorld
 declare function PrepareCharactersQuery(query: string): TSPreparedStatementCharacters
