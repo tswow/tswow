@@ -263,10 +263,8 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 export class ItemTemplateRegistryClass
 extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
     protected Clone(mod: string, id: string, r: ItemTemplate, parent: ItemTemplate): void {
-        if(parent.GemProperties.get() !== 0) {
-            throw new Error(`Tried cloning an item with GemProperties != 0, this is not supported!`);
-        }
         let dbc = DBC.Item.findById(parent.ID);
+        r.row.GemProperties.set(0);
         if(dbc) {
             dbc.clone(r.ID);
         }
