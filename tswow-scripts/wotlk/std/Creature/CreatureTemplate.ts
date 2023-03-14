@@ -184,7 +184,7 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
     get StandState() { return this.wrapSQL(0, sql=>sql.StandState); }
     get AnimTier() { return this.wrapSQL(0, sql=>sql.AnimTier); }
     get VisFlags() { return this.wrapSQL(0, sql=>sql.VisFlags); }
-    get SheathState() { return this.wrapSQL(0, sql=>sql.SheathState); }
+    get SheathState() { return this.wrapSQL(1, sql=>sql.SheathState); }
     get PvPFlags() { return this.wrapSQL(0, sql=>sql.PvPFlags); }
 
     get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
