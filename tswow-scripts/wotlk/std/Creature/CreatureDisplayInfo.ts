@@ -107,8 +107,6 @@ export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {
     get ObjectEffectPackage() { return this.wrap(this.row.ObjectEffectPackageID); }
 
     clear(): this {
-
-
         if(this.hasSql()) {
             this.sql_row
                 .BoundingRadius.set(0)
@@ -133,6 +131,7 @@ export class CreatureModelRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.CreatureModelData
     }
+
     Clear(entity: CreatureModel): void {
         entity
             .AttachedEffectScale.set(0)
@@ -182,6 +181,12 @@ export class CreatureDisplayInfoRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.CreatureDisplayInfo
     }
+
+    protected Clone(entity: CreatureDisplayInfo, parent: CreatureDisplayInfo): void {
+        SQL.creature_model_info.query({DisplayID:parent.ID})
+            .clone(entity.ID)
+    }
+
     Clear(entity: CreatureDisplayInfo): void {
         entity
             .ExtendedDisplay.set(0)
@@ -195,6 +200,12 @@ export class CreatureDisplayInfoRegistryClass
             .ObjectEffectPackage.set(0)
             .row.SoundID.set(0)
             .NPCSoundID.set(0)
+
+        SQL.creature_model_info.add(entity.ID)
+            .BoundingRadius.set(0)
+            .CombatReach.set(0)
+            .DisplayID_Other_Gender.set(0)
+            .Gender.set(0)
     }
     protected FindByID(id: number): CreatureDisplayInfoRow {
         return DBC.CreatureDisplayInfo.findById(id);
