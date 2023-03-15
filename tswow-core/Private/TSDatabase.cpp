@@ -200,12 +200,6 @@ std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send()
     return m_holder->Send(this);
 }
 
-void TSPreparedStatementBase::SendAsync()
-{
-    return m_holder->SendAsync(this);
-}
-
-
 std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send(TSWorldDatabaseConnection & con)
 {
     return con.Query(this);
@@ -380,21 +374,6 @@ std::shared_ptr<TSDatabaseResult> TSPreparedStatementAuth::Send(TSPreparedStatem
     TS_LOG_ERROR("tswow.api", "TSPreparedStatementAuth::Send not implemented for AzerothCore");
     return nullptr;
 #endif
-}
-
-void TSPreparedStatementWorld::SendAsync(TSPreparedStatementBase* stmnt)
-{
-    WorldDatabase.QueryCustomStatementAsync(m_id, stmnt->m_statement);
-}
-
-void TSPreparedStatementCharacters::SendAsync(TSPreparedStatementBase* stmnt)
-{
-    CharacterDatabase.QueryCustomStatementAsync(m_id, stmnt->m_statement);
-}
-
-void TSPreparedStatementAuth::SendAsync(TSPreparedStatementBase* stmnt)
-{
-    LoginDatabase.QueryCustomStatementAsync(m_id, stmnt->m_statement);
 }
 
 TSPreparedStatement::TSPreparedStatement(std::string const& sql, uint32 id)
@@ -593,19 +572,4 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
 #elif AZEROTHCORE
     return TSCharactersDatabaseConnection(nullptr);
 #endif
-}
-
-TC_GAME_API void QueryWorldAsync(std::string const& query)
-{
-    WorldDatabase.AsyncQuery(query.c_str());
-}
-
-TC_GAME_API void QueryCharactersAsync(std::string const& query)
-{
-    CharacterDatabase.AsyncQuery(query.c_str());
-}
-
-TC_GAME_API void QueryAuthAsync(std::string const& query)
-{
-    LoginDatabase.AsyncQuery(query.c_str());
 }
