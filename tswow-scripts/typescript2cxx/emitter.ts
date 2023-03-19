@@ -3314,7 +3314,12 @@ export class Emitter {
 
     processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
-        this.writer.writeString(`std::string("${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}")`);
+        const customMacros = ['ASSERT_WORLD_TABLE','HAS_TAG','GetIDTag','UTAG','TAG','GetID']
+        if(node.parent && customMacros.find(x=>node.parent.getText().startsWith(x))) {
+            this.writer.writeString(`"${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}"`);
+        } else {
+            this.writer.writeString(`std::string("${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}")`);
+        }
     }
 
     processNoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral): void {
