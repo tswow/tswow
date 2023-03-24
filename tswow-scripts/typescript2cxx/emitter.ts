@@ -2393,6 +2393,7 @@ export class Emitter {
         }
 
         // @tswow-begin
+        /*
         const start = node.getFullStart();
         let cur = start;
         const filetext = node.getSourceFile().text;
@@ -2404,7 +2405,8 @@ export class Emitter {
                 passed = true;
             }
         }
-        const func = filetext.substring(cur,start);
+        */
+        //const func = filetext.substring(cur,start);
 
         // TODO: same garbage with "kind" not working
         let isEvent = false;
@@ -2416,7 +2418,10 @@ export class Emitter {
             if(callDecl.name && callDecl.name.getText() === 'TSEvents') {
                 isEvent = true;
             }
-        } catch(err) {}
+        } catch(err)
+        {
+            // todo: log error?
+        }
 
         // @tswow-end
 
