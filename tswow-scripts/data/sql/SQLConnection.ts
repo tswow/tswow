@@ -173,14 +173,22 @@ export class Connection {
             this.statements.forEach(x=>{
                 (x[name] as any[][]).forEach(y=>{
                     promises.push(new Promise((res,rej)=>{
-                        this.async.execute(x.query,y, err => {
-                            if(err) {
-                                err.message = `(For SQL "${x.query}" with values (${JSON.stringify(y,(_,value)=> typeof(value) == 'bigint' ? value.toString() : value)}))\n${err.message}`
-                                rej(err);
-                            } else {
-                                res();
-                            }
-                        })
+                        try {
+                            this.async.execute(x.query,y, err => {
+                                if(err) {
+                                    if(err.message == undefined) {
+                                        err.message = ''
+                                    }
+                                    err.message += ` (For SQL "${x.query}" with values (${JSON.stringify(y,(_,value)=> typeof(value) == 'bigint' ? value.toString() : value)}))\n${err.message}`
+                                    rej(err);
+                                } else {
+                                    res();
+                                }
+                            })
+                        } catch(err) {
+                            err.message += ` (For SQL "${x.query}" with values (${JSON.stringify(y,(_,value)=> typeof(value) == 'bigint' ? value.toString() : value)}))\n${err.message}`
+                            rej(err)
+                        }
                     }))
                 })
             })
