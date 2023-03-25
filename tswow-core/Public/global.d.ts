@@ -4851,6 +4851,11 @@ declare interface TSGameObject extends TSWorldObject {
      * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
      */
     SetRespawnTime(respawn : int32) : void
+
+    /**
+     * Get the GameObjects Owner.
+     */
+    GetOwner(): TSUnit
 }
 
 declare interface TSSpell extends TSEntityProvider {

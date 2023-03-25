@@ -368,3 +368,8 @@ TSGameObjectTemplate TSGameObject::GetTemplate()
 {
     return TSGameObjectTemplate(const_cast<GameObjectTemplate*>(go->GetGOInfo()));
 }
+
+TSUnit TSGameObject::GetOwner()
+{
+    return TSUnit(const_cast<Unit*>(go->GetOwner()));
+}

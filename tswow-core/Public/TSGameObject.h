@@ -52,4 +52,5 @@ public:
     void FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj);
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
+    TSUnit GetOwner();
 };
