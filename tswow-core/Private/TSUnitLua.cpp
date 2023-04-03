@@ -186,6 +186,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, ClearUnitState);
     LUA_FIELD(ts_unit, TSUnit, NearTeleport);
     LUA_FIELD(ts_unit, TSUnit, DealDamage);
+    LUA_FIELD_OVERLOAD_4_1(ts_unit, TSUnit, DealDamage, TSUnit, uint32, bool, uint32, uint32);
     LUA_FIELD(ts_unit, TSUnit, DealHeal);
     LUA_FIELD(ts_unit, TSUnit, Kill);
     LUA_FIELD(ts_unit, TSUnit, AddThreat);
