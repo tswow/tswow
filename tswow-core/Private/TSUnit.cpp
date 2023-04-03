@@ -2294,7 +2294,7 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
         uint32 absorb = dmgInfo.GetAbsorb();
         uint32 resist = dmgInfo.GetResist();
         unit->DealDamageMods(target, damage, &absorb);
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
         return;
     }
@@ -2316,7 +2316,7 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
     unit->CalculateSpellDamageTaken(&damageInfo, damage, spellInfo, WeaponAttackType::BASE_ATTACK);
     Unit::DealDamageMods(damageInfo.target, damageInfo.damage, &damageInfo.absorb);
     unit->SendSpellNonMeleeDamageLog(&damageInfo);
-    unit->DealSpellDamage(&damageInfo, true);
+    unit->DealSpellDamage(&damageInfo, durabilityloss);
 }
 
 /**
