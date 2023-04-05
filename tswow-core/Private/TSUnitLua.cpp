@@ -75,6 +75,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, GetNativeDisplayID);
     LUA_FIELD(ts_unit, TSUnit, GetLevel);
     LUA_FIELD(ts_unit, TSUnit, GetHealth);
+    LUA_FIELD(ts_unit, TSUnit, GetHealthPct);
     LUA_FIELD(ts_unit, TSUnit, PowerSelectorHelper);
     LUA_FIELD(ts_unit, TSUnit, GetPower);
     LUA_FIELD(ts_unit, TSUnit, GetMaxPower);
