@@ -35,6 +35,9 @@ export const LuaORM: Plugin = {
 
                     file.code += `\n\n\n-- ${cls.className} ORM Code\n`
 
+                    // CreateTable
+                    file.code += cls.createDatabaseSpec('lua') + '\n'
+
                     // Load
                     const loadVar = `__${cls.className}__loadStatement`
                     file.code += `local ${loadVar} = ` + cls.prepareStatement(0,'lua',cls.loadStatement)
@@ -135,8 +138,6 @@ export const LuaORM: Plugin = {
                     }
                     file.code += suffix;
 
-                    // CreateTable
-                    databaseFile += cls.createDatabaseSpec('lua') + '\n'
                 })
             })
         });
