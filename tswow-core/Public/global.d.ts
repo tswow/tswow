@@ -137,6 +137,8 @@ declare const enum RuneType {} /** Player.h:RuneType */
 
 declare const enum PlayerSpellState {} /** Player.h:PlayerSpellState */
 
+declare const enum LootMode {} /** SharedDefines.h:LootMode */
+
 declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
 declare const enum AuraEffectHandleMode {} /** SpellAuraDefines.h:AuraEffectHandleModes */
