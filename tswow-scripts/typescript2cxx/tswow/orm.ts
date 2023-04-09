@@ -277,9 +277,7 @@ export function writeTableCreationFile(outDir: string) {
     })
     writer.writeStringNewLine(`void WriteTables()`);
     writer.BeginBlock()
-    classes.forEach(x=>{
-        writer.writeStringNewLine(`${x}::__CreateTable();`);
-    })
+    // todo: remove entirely
     writer.EndBlock()
     const tableFile = mpath(outDir,'livescripts','TableCreator.cpp');
     TRANSPILER_CHANGES.writeIfChanged(
