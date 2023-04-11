@@ -2031,6 +2031,18 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     ResurrectPlayer(percent : float,sickness : bool) : void
 
     /**
+     * Unlocks the Given Taxi Node.
+     * @param nodeidx The TaxiNode entry we're unlocking.
+     */
+    SetTaximaskNode(nodeidx: uint32) : bool
+
+    /**
+     * Check if a given taxi node is unlocked.
+     * @param nodeidx The TaxiNode entry we're checking.
+     */
+    IsTaximaskNodeKnown(nodeidx: uint32) : bool
+
+    /**
      * Adds a new item to the gossip menu shown to the [Player] on next call to [Player:GossipSendMenu].
      *
      * sender and intid are numbers which are passed directly to the gossip selection handler. Internally they are partly used for the database gossip handling.

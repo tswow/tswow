@@ -4274,3 +4274,13 @@ bool TSPlayer::HasRunes()
 {
     return player->HasRunes();
 }
+
+bool TSPlayer::SetTaximaskNode(uint32 nodeidx)
+{
+    return player->m_taxi.SetTaximaskNode(nodeidx);
+}
+
+bool TSPlayer::IsTaximaskNodeKnown(uint32 nodeidx)
+{
+    return player->m_taxi.IsTaximaskNodeKnown(nodeidx);
+}

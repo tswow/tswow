@@ -282,6 +282,8 @@ public:
 	void LearnTalent(uint32 id, uint32 rank);
 	void LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLevel = false);
 	void ResurrectPlayer(float percent, bool sickness);
+	bool SetTaximaskNode(uint32 nodeidx);
+	bool IsTaximaskNodeKnown(uint32 nodeidx);
 	void GossipMenuAddItem(uint32 _icon, std::string const& msg, uint32 _sender = 0, uint32 _intid = 0, bool _code = false, std::string const& _promptMsg = "", uint32 _money = 0);
 	void GossipComplete();
 	void GossipSendMenu(uint32 npc_text, TSObject sender, uint32 menu_id = 0);
