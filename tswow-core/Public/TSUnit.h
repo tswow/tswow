@@ -130,6 +130,7 @@ public:
     TSAuraApplication GetAuraApplicationOfRankedSpell(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
     int32 GetTotalAuraModifier(uint32 auraType);
     float GetTotalAuraMultiplier(uint32 auraType);
+    int32 GetTotalAuraModifierByMiscMask(uint32 auraType, uint32 miscMask);
     int32 GetMaxPositiveAuraModifier(uint32 auraType);
     int32 GetMaxNegativeAuraModifier(uint32 auraType);
     void ResetCooldown(uint32 spellId, bool update = true);

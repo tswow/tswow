@@ -102,6 +102,7 @@ void TSLua::load_unit_methods(sol::state& state)
         return sol::as_table(*effs.vec);
     });
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifier);
+    LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifierByMiscMask);
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraMultiplier);
     LUA_FIELD(ts_unit, TSUnit, GetMaxPositiveAuraModifier);
     LUA_FIELD(ts_unit, TSUnit, GetMaxNegativeAuraModifier);

@@ -6507,6 +6507,7 @@ declare interface TSUnit extends TSWorldObject {
     GetAuraEffectsByType(type: AuraType): TSArray<TSAuraEffect>;
 
     GetTotalAuraModifier(auraType: AuraType): int32;
+    GetTotalAuraModifierByMiscMask(auraType: AuraType, miscMask: uint32): int32;
     GetTotalAuraMultiplier(auraType: AuraType): float;
     GetMaxPositiveAuraModifier(auraType: AuraType): int32;
     GetMaxNegativeAuraModifier(auraType: AuraType): int32;
