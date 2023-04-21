@@ -3,6 +3,7 @@ import { finish } from "../../../data/index";
 import { Table } from "../../../data/table/Table";
 import { ItemSetQuery, ItemSetRow } from "../../dbc/ItemSet";
 import { DBC } from "../../DBCFiles";
+import { SQL } from "../../SQLFiles";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
@@ -74,6 +75,7 @@ export class ItemSet extends MainEntity<ItemSetRow> {
                         , (value)=>{
                             if(value > 0 && !itemSetItems.includes(value)) {
                                 itemSetItems.push(value);
+                                SQL.item_template.query({entry: value}).itemset.set(this.ID)
                             }
                             this.row.ItemID.setIndex(index,value)
                         }
