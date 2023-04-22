@@ -81,6 +81,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnGenerateItemLoot);
     LUA_HANDLE(player_events, PlayerEvents, OnLearnTalent);
     LUA_HANDLE(player_events, PlayerEvents, OnLootCorpse);
+    LUA_HANDLE(player_events, PlayerEvents, OnCastPetTalentAuras);
     //LUA_HANDLE(player_events, PlayerEvents, OnTradeComplete);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateDodgePercentage);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateBlockPercentage);

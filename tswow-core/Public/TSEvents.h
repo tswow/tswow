@@ -189,6 +189,8 @@ struct TSEvents
          EVENT(OnGossipSelect, TSPlayer, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)
          EVENT(OnGossipSelectCode, TSPlayer, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, std::string const&, TSMutable<bool,bool>)
 
+         EVENT(OnCastPetTalentAuras, TSPlayer, TSCreature)
+
          EVENT(
              OnTradeCompleted
              , TSPlayer me

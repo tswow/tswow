@@ -7954,6 +7954,11 @@ declare namespace _hidden {
             player: TSPlayer
           , xp: TSMutableNumber<float>
         ) => void);
+
+        OnCastPetTalentAuras(callback: (
+            player: TSPlayer
+          , creature: TSCreature
+        ) => void);
     }
 
     export class Account<T> {
