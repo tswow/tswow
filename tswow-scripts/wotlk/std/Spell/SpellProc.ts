@@ -16,7 +16,7 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
-import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { makeMaskCell32, MaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { any } from "../../../data/query/Relations";
 import { spell_procRow } from "../../sql/spell_proc";
 import { SQL } from "../../SQLFiles";
@@ -223,9 +223,9 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
 
     get ClassMask() {
         return {
-              A: this.wrapSQL(0,sql=>sql.SpellFamilyMask0)
-            , B: this.wrapSQL(0,sql=>sql.SpellFamilyMask1)
-            , C: this.wrapSQL(0,sql=>sql.SpellFamilyMask2)
+              A: new MaskCell32(this, this.wrapSQL(0,sql=>sql.SpellFamilyMask0))
+            , B: new MaskCell32(this, this.wrapSQL(0,sql=>sql.SpellFamilyMask1))
+            , C: new MaskCell32(this, this.wrapSQL(0,sql=>sql.SpellFamilyMask2))
         }
     }
 
