@@ -30,6 +30,9 @@ import { CreatureTextRegistry } from "./std/BroadcastText/CreatureText";
 import { ClassRegistry } from "./std/Class/ClassRegistry";
 import { CreatureDisplayInfoRegistry } from "./std/Creature/CreatureDisplayInfo";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./std/Creature/Creatures";
+import { CreatureSoundDataRegistry } from "./std/Creature/CreatureSoundData";
+import { FootstepTerrainLookupRegistry } from "./std/Creature/FootstepTerrainLookup";
+import { NPCSoundsRegistry } from "./std/Creature/NPCSounds";
 import { CreatureOutfitsRegistry } from "./std/CreatureOutfits/CreatureOutfitsRegistry";
 import { CurrencyRegistry } from "./std/Currency/Currency";
 import { CurrencyCategoryRegistry } from "./std/Currency/CurrencyCategory";
@@ -46,6 +49,7 @@ import { GlyphRegistry } from "./std/Glyph/Glyph";
 import { GMTeleportRegistry } from "./std/GMTeleport/GMTeleport";
 import { GossipRegistry } from "./std/Gossip/Gossips";
 import { NPCTextRegistry } from "./std/Gossip/NPCTextRegistry";
+import { GroundEffectDoodadRegistry } from "./std/GroundEffect/GroundEffectDoodad";
 import { TSImages } from "./std/Images/Image";
 import { InlineScript } from "./std/InlineScript/InlineScript";
 import { ItemDisplayinfoRegistry } from "./std/Item/ItemDisplayInfo";
@@ -83,6 +87,7 @@ import { Tags } from "./std/Tags/Tags";
 import { TalentTreeRegistry } from "./std/Talents/Talents";
 import { TaxiPathRegistry } from "./std/Taxi/Taxi";
 import { TaxiEndNodeRegistry } from "./std/Taxi/TaxiEndNode";
+import { TerrainTypeRegistry, TerrainTypeSoundRegistry } from "./std/TerrainType/TerrainType";
 import { TitleRegistry } from "./std/Title/Titles";
 import { TotemCategoryRegistry } from "./std/TotemCategory/TotemCategory";
 import { TotemTypeRegistry } from "./std/TotemCategory/TotemType";
@@ -116,6 +121,12 @@ export const std = {
     CreatureInstances: CreatureInstanceRegistry,
     CreatureOutfits: CreatureOutfitsRegistry,
     CreatureDisplayInfo: CreatureDisplayInfoRegistry,
+    CreatureSoundData: CreatureSoundDataRegistry,
+    FootstepTerrainLookup: FootstepTerrainLookupRegistry,
+    NPCSounds: NPCSoundsRegistry,
+    GroundEffectDoodad: GroundEffectDoodadRegistry,
+    TerrainType: TerrainTypeRegistry,
+    TerrainTypeSound: TerrainTypeSoundRegistry,
     TalentTrees: TalentTreeRegistry,
     Factions: FactionRegistry,
     Scripts: SmartScripts,
