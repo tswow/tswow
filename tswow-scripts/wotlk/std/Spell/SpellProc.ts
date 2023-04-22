@@ -17,6 +17,7 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { any } from "../../../data/query/Relations";
 import { spell_procRow } from "../../sql/spell_proc";
 import { SQL } from "../../SQLFiles";
 import { PercentCell } from "../Misc/PercentCell";
@@ -184,7 +185,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     protected findSQL(): spell_procRow {
-        return SQL.spell_proc.query({SpellId:this.owner.ID})
+        return SQL.spell_proc.query({SpellId:any(this.owner.ID,-this.owner.ID)})
     }
     protected isValidSQL(sql: spell_procRow): boolean {
         return sql.SpellId.get() === this.owner.ID
