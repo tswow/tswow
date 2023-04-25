@@ -7953,6 +7953,18 @@ declare namespace _hidden {
     }
 
     export class Spell<T> {
+        OnLearn(callback :              (spell: TSSpellInfo, player: TSPlayer, active: boolean, disabled: boolean, superceded: boolean, from_skill: uint32)=>void): T;
+        OnLearn(id: EventID, callback : (spell: TSSpellInfo, player: TSPlayer, active: boolean, disabled: boolean, superceded: boolean, from_skill: uint32)=>void): T;
+
+        OnUnlearn(callback :              (spell: TSSpellInfo, player: TSPlayer, disabled: boolean, learn_low_rank: boolean)=>void): T;
+        OnUnlearn(id: EventID, callback : (spell: TSSpellInfo, player: TSPlayer, disabled: boolean, learn_low_rank: boolean)=>void): T;
+
+        OnUnlearnTalent(callback :              (spell: TSSpellInfo, player: TSPlayer, tab_index: uint32, tier: uint32, column: uint32, rank: uint32, direct: boolean)=>void): T;
+        OnUnlearnTalent(id: EventID, callback : (spell: TSSpellInfo, player: TSPlayer, tab_index: uint32, tier: uint32, column: uint32, rank: uint32, direct: boolean)=>void): T;
+
+        OnLearnTalent(callback:              (spell: TSSpellInfo, player: TSPlayer, tabId: uint32, talentId: uint32, talentRank: uint32, spellId: uint32, cancel: TSMutable<boolean,boolean>)=>void)
+        OnLearnTalent(id: EventID, callback: (spell: TSSpellInfo, player: TSPlayer, tabId: uint32, talentId: uint32, talentRank: uint32, spellId: uint32, cancel: TSMutable<boolean,boolean>)=>void)
+
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCast(id: EventID, callback : (spell: TSSpell)=>void): T;
 
