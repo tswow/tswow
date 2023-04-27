@@ -484,7 +484,7 @@ export function InstallPath(pathIn: string, tdb: string) {
 
 export function BuildPaths(pathIn: string, tdb: string) {
     return generateTree(pathIn, dir({
-        release_7z: file('release.7z'),
+        release_7z: file('release.exe'),
         terminal_history: file('terminal-history.txt'),
         ClientExtensionsDll: file('ClientExtensions.dll'),
         client_extensions: dirn('client-extensions',{
@@ -561,7 +561,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
         sevenZip: dirn('7zip',{
-            sevenZa_exe: file('7za.exe')
+            sevenZa_exe: file('7za.exe'),
+            sz_sfx: file('7z.sfx'),
         }),
 
         imArchive: file('ImageMagick-7.1.0-portable-Q16-x64.zip'),

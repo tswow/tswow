@@ -17,7 +17,7 @@
 import { SevenZip } from '../util/7zip';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { SZIP_DOWNLOAD_URL } from './BuildConfig';
+import { SZIP_DOWNLOAD_URL, SZ_SFX_DOWNLOAD_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -42,6 +42,11 @@ export namespace SevenZipInstall {
         await DownloadFile(
               SZIP_DOWNLOAD_URL
             , bpaths.sevenZipArchive
+        )
+
+        await DownloadFile(
+              SZ_SFX_DOWNLOAD_URL
+            , bpaths.sevenZip.sz_sfx
         )
 
         if(!bpaths.sevenZip.exists()) {
