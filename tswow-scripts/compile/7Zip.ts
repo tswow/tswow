@@ -49,7 +49,7 @@ export namespace SevenZipInstall {
             , bpaths.sevenZip.sz_sfx
         )
 
-        if(!bpaths.sevenZip.exists()) {
+        if(!bpaths.sevenZip.sevenZa_exe.exists()) {
             await ExtractZip(
                   bpaths.sevenZipArchive.get()
                 , {dir:bpaths.sevenZip.abs().get()}
