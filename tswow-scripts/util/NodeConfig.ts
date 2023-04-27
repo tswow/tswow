@@ -22,7 +22,7 @@ export class NodeConfigClass extends ConfigFile {
         name: 'Default.Client'
       , description: 'The client that is automatically selected if none is specified in the current dataset'
       , important: 'No spaces allowed!'
-      , examples: [['C:\\dev\\wow335','']]
+      , examples: [['C:\\wowdev\\client','']]
     })
     DefaultClient!: string
 
