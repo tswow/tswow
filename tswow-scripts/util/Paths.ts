@@ -268,9 +268,15 @@ export function InstallPath(pathIn: string, tdb: string) {
 
         Crashes: dir({}),
 
+        startBat: file('start.bat'),
+
         bin: dir({
             package: dir({
                 file: dynfile(x=>x)
+            }),
+            node: dir(
+            {
+                npm: file('npm'),
             }),
             changes: dir({
                 changeFile: dynfile(name=>name)
@@ -511,6 +517,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         cmakeArchive: file('cmake-3.25.0-win64-x64.zip'),
         mysqlArchive: file('mysql-5.7.32-winx64.zip'),
+        nodeArchive: file('node-v18.12.1-win-x64.zip'),
+        node: dirn('node-v18.12.1-win-x64',{}),
 
         sourceAdt: file('source.adt'),
 
