@@ -26,11 +26,14 @@ export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/down
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
 
-const currentCommitShort = child_process
-    .execSync('git rev-parse --short HEAD')
-    .toString('utf-8')
-    .trimRight()
-    .trimLeft()
+function currentCommitShort()
+{
+    return child_process
+        .execSync('git rev-parse --short HEAD')
+        .toString('utf-8')
+        .trimRight()
+        .trimLeft()
+}
 
 export function tdbFilename() {
     let split = TDB_URL.split('/')
@@ -491,7 +494,7 @@ export function InstallPath(pathIn: string, tdb: string) {
 
 export function BuildPaths(pathIn: string, tdb: string) {
     return generateTree(pathIn, dir({
-        release_7z: file(`tswow-installer-${currentCommitShort}.exe`),
+        release_7z: file(`tswow-installer-${currentCommitShort()}.exe`),
         terminal_history: file('terminal-history.txt'),
         ClientExtensionsDll: file('ClientExtensions.dll'),
         client_extensions: dirn('client-extensions',{
