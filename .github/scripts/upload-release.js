@@ -55,7 +55,7 @@ try {
 //
 try {
     child_process
-        .execSync(`gh release create build-${currentCommitShort} --title "Repack #${currentCommitShort}" --notes "" C:/tswow-build/release.exe#tswow-installer-${currentCommitShort}.exe`)
+        .execSync(`gh release create build-${currentCommitShort} --title "Repack #${currentCommitShort}" --notes "" C:/tswow-build/tswow-installer-${currentCommitShort}.exe#tswow-installer-${currentCommitShort}.exe`)
         .toString('utf-8')
 }
 catch(err) {
