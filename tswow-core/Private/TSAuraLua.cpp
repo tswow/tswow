@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "TSAura.h"
+#include "TSGUID.h"
 
 void TSLua::load_aura_methods(sol::state& state)
 {

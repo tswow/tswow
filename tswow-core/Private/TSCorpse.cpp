@@ -20,6 +20,7 @@
 
 #include "TSIncludes.h"
 #include "TSCorpse.h"
+#include "TSGUID.h"
 
 TSCorpse::TSCorpse(Corpse *corpse) : TSWorldObject(corpse)
 {
@@ -36,9 +37,9 @@ TSCorpse::TSCorpse() : TSWorldObject()
  *
  * @return uint64 ownerGUID
  */
-TSNumber<uint64> TSCorpse::GetOwnerGUID()
+TSGUID TSCorpse::GetOwnerGUID()
 {
-    return TS_GUID(corpse->GetOwnerGUID());
+    return TSGUID(corpse->GetOwnerGUID());
 }
 
 /**

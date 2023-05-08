@@ -22,6 +22,7 @@
 class CreatureOutfit;
 class TSCreature;
 class TSPlayer;
+class TSGUID;
 
 enum Outfit : uint32_t {
     SOUND_ID   = 0x1,
@@ -95,8 +96,9 @@ public:
     TSOutfit& SetSoundID(uint32_t soundId);
     TSNumber<uint32> GetSoundID();
 
-    TSOutfit& SetGuild(uint64_t guild);
-    TSNumber<uint64> GetGuild();
+    TSOutfit& SetGuild(TSGUID guild);
+    TSOutfit& SetGuild(TSNumber<uint32> guild);
+    TSGUID GetGuildGUID();
 
     TSNumber<uint8> GetGender();
     TSNumber<uint8> GetRace();
@@ -133,6 +135,10 @@ public:
 
     bool IsNull();
 private:
+    friend class TSLua;
+    TSOutfit& LSetGuild0(TSGUID guild);
+    TSOutfit& LSetGuild1(TSNumber<uint32> guild);
+
     void PItem(
           TSPlayer& player
         , uint32_t settings

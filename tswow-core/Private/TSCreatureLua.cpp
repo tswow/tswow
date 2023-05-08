@@ -10,6 +10,7 @@
 #include "TSSpell.h"
 #include "TSCorpse.h"
 #include "TSLuaVarargs.h"
+#include "TSGUID.h"
 
 void TSLua::load_creature_methods(sol::state & state)
 {

@@ -18,6 +18,7 @@
 #include "TSMail.h"
 #include "Mail.h"
 #include "Item.h"
+#include "TSGUID.h"
 
 TSMailItemInfo::TSMailItemInfo(MailItemInfo* info)
 {
@@ -54,14 +55,14 @@ TSNumber<uint16> TSMail::GetTemplateID()
     return mail->mailTemplateId;
 }
 
-TSNumber<uint64> TSMail::GetSender()
+TSGUID TSMail::GetSender()
 {
-    return mail->sender;
+    return TSGUID(mail->sender);
 }
 
-TSNumber<uint64> TSMail::GetReceiver()
+TSGUID TSMail::GetReceiver()
 {
-    return mail->receiver;
+    return TSGUID(mail->receiver);
 }
 
 std::string TSMail::GetSubject()
@@ -151,11 +152,16 @@ void TSMail::AddItem(uint32 entry, uint8 count, TSPlayer player)
 #endif
 }
 
-void TSMail::SetSender(uint8 type, uint64 guid)
+void TSMail::SetSender(uint8 type, TSNumber<uint32> guid)
+{
+    SetSender(type, TSGUID(guid));
+}
+
+void TSMail::SetSender(uint8 type, TSGUID guid)
 {
     mail->messageType = type;
 #if TRINITY
-    mail->sender = ObjectGuid(guid);
+    mail->sender = guid.asGUID();
 #elif AZEROTHCORE
     mail->sender = ObjectGuid(guid).GetEntry();
 #endif
@@ -226,12 +232,12 @@ TSNumber<uint32> TSMailDraft::GetCOD()
 #endif
 }
 
-TSArray<TSNumber<uint64> > TSMailDraft::GetItemKeys()
+TSArray<TSGUID> TSMailDraft::GetItemKeys()
 {
-    TSArray<TSNumber<uint64> > arr;
+    TSArray<TSGUID> arr;
     for(auto& itr : draft->m_items)
     {
-        arr.push(TS_GUID(itr.first));
+        arr.push(TSGUID(itr.first));
     }
     return arr;
 }
@@ -239,6 +245,11 @@ TSArray<TSNumber<uint64> > TSMailDraft::GetItemKeys()
 TSItem TSMailDraft::GetItem(uint64 item)
 {
     return draft->m_items[ObjectGuid(item)];
+}
+
+TSItem TSMailDraft::GetItem(TSGUID item)
+{
+    return draft->m_items[item.asGUID()];
 }
 
 void TSMailDraft::SetTemplateID(uint16 id)
@@ -303,7 +314,7 @@ void TSMail::LFilterItems(sol::protected_function predicate)
         return predicate(item);
     });
 }
-TSLua::Array<TSNumber<uint64>> TSMailDraft::LGetItemKeys()
+TSLua::Array<TSGUID> TSMailDraft::LGetItemKeys()
 {
     return sol::as_table(*GetItemKeys().vec);
 }
@@ -313,4 +324,24 @@ void TSMailDraft::LFilterItems(sol::protected_function predicate)
     FilterItems([predicate](auto const& item) {
         return predicate(item);
     });
+}
+
+TSItem TSMailDraft::LGetItem0(uint64 item)
+{
+    return GetItem(item);
+}
+TSItem TSMailDraft::LGetItem1(TSGUID item)
+{
+    return GetItem(item);
+}
+
+
+void TSMail::LSetSender0(uint8 type, TSGUID guid)
+{
+    SetSender(type, guid);
+}
+
+void TSMail::LSetSender1(uint8 type, TSNumber<uint32> guid)
+{
+    SetSender(type, guid);
 }

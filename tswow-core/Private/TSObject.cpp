@@ -24,6 +24,7 @@
 #include "TSCreature.h"
 #include "TSUnit.h"
 #include "TSCorpse.h"
+#include "TSGUID.h"
 
 #include "Player.h"
 #include "GameObject.h"
@@ -168,9 +169,9 @@ TSNumber<uint32> TSObject::GetEntry()
  *
  * @return uint64 guid
  */
-TSNumber<uint64> TSObject::GetGUID()
+TSGUID TSObject::GetGUID()
 {
-    return TS_GUID(obj->GetGUID());
+    return TSGUID(obj->GetGUID());
 }
 
 /**

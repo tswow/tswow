@@ -29,6 +29,7 @@ struct SpellDestination;
 class SpellImplicitTargetInfo;
 class DispelInfo;
 class TSAura;
+class TSGUID;
 
 class TC_GAME_API TSSpell : public TSEntityProvider {
 public:
@@ -95,7 +96,7 @@ class TC_GAME_API TSSpellDestination
     TSNumber<float> GetOffsetZ();
     TSNumber<float> GetOffsetO();
 
-    TSNumber<uint64> GetTransportGUID();
+    TSGUID GetTransportGUID();
     void Relocate(float x, float y, float z, float o);
     void RelocateOffset(float x, float y, float z, float o);
 };

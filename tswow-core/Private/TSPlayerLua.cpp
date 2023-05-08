@@ -23,6 +23,7 @@
 #include "TSSpell.h"
 #include "TSGameObject.h"
 #include "TSItemEntry.h"
+#include "TSGUID.h"
 
 void TSLua::load_player_methods(sol::state& state)
 {
@@ -119,7 +120,6 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, SetBankBagSlotCount);
     LUA_FIELD(ts_player, TSPlayer, GetItemByPos);
     LUA_FIELD(ts_player, TSPlayer, GetItemByEntry);
-    LUA_FIELD(ts_player, TSPlayer, GetItemByGUID);
     LUA_FIELD(ts_player, TSPlayer, GetGossipTextID);
     LUA_FIELD(ts_player, TSPlayer, GetSelection);
     LUA_FIELD(ts_player, TSPlayer, GetGlobalSelection);
@@ -170,7 +170,8 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, SetKnownTitle);
     LUA_FIELD(ts_player, TSPlayer, ResetPetTalents);
     LUA_FIELD(ts_player, TSPlayer, ResetAchievements);
-    LUA_FIELD(ts_player, TSPlayer, SendShowMailBox);
+    ts_player.set_function("GetItemByGUID", sol::overload( &TSPlayer::LGetItemByGUID0, &TSPlayer::LGetItemByGUID1 ));
+    ts_player.set_function("SendShowMailBox", sol::overload( &TSPlayer::LSendShowMailBox0, &TSPlayer::LSendShowMailBox1 ));
     LUA_FIELD(ts_player, TSPlayer, ModifyArenaPoints);
     LUA_FIELD(ts_player, TSPlayer, ModifyHonorPoints);
     LUA_FIELD(ts_player, TSPlayer, SaveToDB);
