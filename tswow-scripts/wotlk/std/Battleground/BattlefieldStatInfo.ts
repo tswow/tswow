@@ -30,7 +30,7 @@ export class BattlefieldStatInfoField {
     }
 
     protected owner: BattlefieldStatInfo
-    protected icon: string = '';
+    protected icon?: string;
     protected name: LocValue<BattlefieldStatInfo>
     protected tooltip: LocValue<BattlefieldStatInfo>
 }
@@ -102,7 +102,7 @@ ${entries
 ${entries
     .map(([key,value])=>value
         .map((fieldName,field)=>`BG_VALUE_OVERRIDES["${key}:${fieldName}"] = {\n    {${field.Name
-            .map((l,v)=>`${l} = "${v.get()}"`).join(',')}},\n    "${field.Icon.get()}",\n    {${field.Tooltip
+            .map((l,v)=>`${l} = "${v.get()}"`).join(',')}},\n    ${field.Icon.get() === undefined ? 'nil' : `"${field.Icon.get()}"`},\n    {${field.Tooltip
             .map((l,v)=>`${l} = "${v.get()}"`).join(',')}}\n}`)
         .join('\n') )
     .join('\n')}\n
