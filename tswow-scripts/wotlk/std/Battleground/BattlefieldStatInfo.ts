@@ -130,7 +130,6 @@ frame:RegisterEvent("CHAT_MSG_ADDON")
 frame:SetScript("OnEvent", function(self, event, prefix, message, type, sender)
     if sender == UnitName("player") and prefix == "tsmp" then
         cur_map_id = message
-        print("New map id:"..cur_map_id)
     end
 end)
 SendAddonMessage("tcmp","","WHISPER",UnitName("player"))
