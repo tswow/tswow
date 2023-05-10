@@ -86,8 +86,8 @@ TSRegistryRef& TSEvents::QuestEvents::get_registry_ref(uint32_t id)
 template <typename TC, typename TS>
 class ReloadMapObject {
 public:
-    ReloadMapObject( void(*cb)(TS), uint32 gobj_id)
-        : m_cxx_cb(cb)
+    ReloadMapObject(std::function<void(TS)> fn, uint32 gobj_id)
+        : m_cxx_cb(fn)
         , m_gobj_id(gobj_id)
         {
             Run();
@@ -125,7 +125,7 @@ public:
     template<class T>
     void Visit(std::unordered_map<ObjectGuid, T*>&) { }
 private:
-    void(*m_cxx_cb)(TS);
+    std::function<void(TS)> m_cxx_cb;
     sol::protected_function m_lua_cb;
     uint32 m_gobj_id;
 
@@ -194,22 +194,22 @@ static void _ReloadBattleground(T fn, uint32 id)
     });
 }
 
-void ReloadPlayer(void(cb)(TSPlayer,bool))
+void ReloadPlayer(std::function<void(TSPlayer,bool)> fn)
 {
-    _ReloadPlayers(cb);
+    _ReloadPlayers(fn);
 }
 void ReloadPlayer(sol::protected_function cb)
 {
     _ReloadPlayers(cb);
 }
 
-void ReloadCreature(void(cb)(TSCreature))
+void ReloadCreature(std::function<void(TSCreature)> fn)
 {
-    ReloadMapObject<Creature,TSCreature>(cb, UINT32_MAX);
+    ReloadMapObject<Creature,TSCreature>(fn, UINT32_MAX);
 }
-void ReloadCreature(void(cb)(TSCreature), TSNumber<uint32> id)
+void ReloadCreature(std::function<void(TSCreature)> fn, TSNumber<uint32> id)
 {
-    ReloadMapObject<Creature, TSCreature>(cb, id);
+    ReloadMapObject<Creature, TSCreature>(fn, id);
 }
 void ReloadCreature(sol::protected_function cb)
 {
@@ -220,13 +220,13 @@ void ReloadCreature(sol::protected_function cb, TSNumber<uint32> id)
     ReloadMapObject<Creature, TSCreature>(cb, id);
 }
 
-void ReloadGameObject(void(cb)(TSGameObject))
+void ReloadGameObject(std::function<void(TSGameObject)> fn)
 {
-    ReloadMapObject<GameObject, TSGameObject>(cb, UINT32_MAX);
+    ReloadMapObject<GameObject, TSGameObject>(fn, UINT32_MAX);
 }
-void ReloadGameObject(void(cb)(TSGameObject), TSNumber<uint32> id)
+void ReloadGameObject(std::function<void(TSGameObject)> fn, TSNumber<uint32> id)
 {
-    ReloadMapObject<GameObject, TSGameObject>(cb, id);
+    ReloadMapObject<GameObject, TSGameObject>(fn, id);
 }
 void ReloadGameObject(sol::protected_function cb)
 {
@@ -237,14 +237,14 @@ void ReloadGameObject(sol::protected_function cb, TSNumber<uint32> id)
     ReloadMapObject<GameObject, TSGameObject>(cb, id);
 }
 
-void ReloadMap(void(cb)(TSMap))
+void ReloadMap(std::function<void(TSMap)> fn)
 {
-    _ReloadMap(cb, UINT32_MAX);
+    _ReloadMap(fn, UINT32_MAX);
 }
 
-void ReloadMap(void(cb)(TSMap), TSNumber<uint32> id)
+void ReloadMap(std::function<void(TSMap)> fn, TSNumber<uint32> id)
 {
-    _ReloadMap(cb, id);
+    _ReloadMap(fn, id);
 }
 
 void ReloadMap(sol::protected_function cb)
@@ -257,13 +257,13 @@ void ReloadMap(sol::protected_function cb, TSNumber<uint32> id)
     _ReloadMap(cb, id);
 }
 
-void ReloadBattleground(void(cb)(TSBattleground))
+void ReloadBattleground(std::function<void(TSBattleground)> fn)
 {
-    _ReloadBattleground(cb, UINT32_MAX);
+    _ReloadBattleground(fn, UINT32_MAX);
 }
-void ReloadBattleground(void(cb)(TSBattleground), TSNumber<uint32> id)
+void ReloadBattleground(std::function<void(TSBattleground)> fn, TSNumber<uint32> id)
 {
-    _ReloadBattleground(cb, id);
+    _ReloadBattleground(fn, id);
 }
 void ReloadBattleground(sol::protected_function cb)
 {
@@ -274,13 +274,13 @@ void ReloadBattleground(sol::protected_function cb, TSNumber<uint32> id)
     _ReloadBattleground(cb, id);
 }
 
-void ReloadInstance(void(cb)(TSInstance))
+void ReloadInstance(std::function<void(TSInstance)> fn)
 {
-    _ReloadInstance(cb, UINT32_MAX);
+    _ReloadInstance(fn, UINT32_MAX);
 }
-void ReloadInstance(void(cb)(TSInstance), TSNumber<uint32> id)
+void ReloadInstance(std::function<void(TSInstance)> fn, TSNumber<uint32> id)
 {
-    _ReloadInstance(cb, id);
+    _ReloadInstance(fn, id);
 }
 void ReloadInstance(sol::protected_function cb)
 {
