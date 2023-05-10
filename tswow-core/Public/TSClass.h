@@ -8,6 +8,8 @@ class TSClass: public std::enable_shared_from_this<TSClass>
 public:
   virtual std::string stringify(int indention = 0) { return "[TSClass (stringify not implemented)]"; };
 
+  void ts_constructor() {}
+
   template <typename T>
   std::shared_ptr<T> ts_shared_from_this()
   {
