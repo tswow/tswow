@@ -2676,9 +2676,19 @@ int32 TSUnit::GetTotalAuraModifier(uint32 auraType)
     return unit->GetTotalAuraModifier(AuraType(auraType));
 }
 
+int32 TSUnit::GetTotalAuraModifierByMiscValue(uint32 auraType, int32 miscValue)
+{
+    return unit->GetTotalAuraModifierByMiscValue(AuraType(auraType), miscValue);
+}
+
 float TSUnit::GetTotalAuraMultiplier(uint32 auraType)
 {
     return unit->GetTotalAuraMultiplier(AuraType(auraType));
+}
+
+float TSUnit::GetTotalAuraMultiplierByMiscValue(uint32 auraType, int32 miscValue)
+{
+    return unit->GetTotalAuraMultiplierByMiscValue(AuraType(auraType), miscValue);
 }
 
 int32 TSUnit::GetMaxPositiveAuraModifier(uint32 auraType)
