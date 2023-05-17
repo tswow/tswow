@@ -20,9 +20,9 @@ import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "../../dbc/
 import { DBC } from "../../DBCFiles"
 import { gameobjectQuery, gameobjectRow } from "../../sql/gameobject"
 import { SQL } from "../../SQLFiles"
-import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids"
-import { RefDynamic } from "../Refs/Ref"
-import { RegistryDynamic, RegistryStatic } from "../Refs/Registry"
+import { Ids, StaticIDGenerator } from "../Misc/Ids"
+import { RefStatic } from "../Refs/Ref"
+import { RegistryStatic } from "../Refs/Registry"
 import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
 
@@ -71,10 +71,10 @@ export class GameObjectInstanceRegistryClass
 
 export const GameObjectInstances = new GameObjectInstanceRegistryClass();
 
-export class GameObjectDisplayRef<T> extends RefDynamic<T,GameObjectDisplay> {
-    setSimple(model: string, geobox: number) {
+export class GameObjectDisplayRef<T> extends RefStatic<T,GameObjectDisplay> {
+    setSimple(mod: string, name: string, model: string, geobox: number) {
         let entry = GameObjectDisplayRegistry
-            .create()
+            .create(mod,name)
             .ModelName.set(model)
             .GeoBox.set(geobox)
         this.set(entry.ID)
@@ -83,7 +83,7 @@ export class GameObjectDisplayRef<T> extends RefDynamic<T,GameObjectDisplay> {
 }
 
 export class GameObejctDisplayRegistryClass
-    extends RegistryDynamic<
+    extends RegistryStatic<
           GameObjectDisplay
         , GameObjectDisplayInfoRow
         , GameObjectDisplayInfoQuery
@@ -97,7 +97,7 @@ export class GameObejctDisplayRegistryClass
     protected Table(): Table<any, GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow> & { add: (id: number) => GameObjectDisplayInfoRow } {
         return DBC.GameObjectDisplayInfo;
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.GameObjectDisplayInfo
     }
     Clear(entity: GameObjectDisplay): void {

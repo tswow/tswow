@@ -11,8 +11,8 @@ import { GlyphPropertiesQuery, GlyphPropertiesRow } from "../../dbc/GlyphPropert
 import { DBC } from "../../DBCFiles";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamicNoClone } from "../Refs/Registry";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SpellRegistry } from "../Spell/Spells";
@@ -159,12 +159,12 @@ export class Glyph extends MainEntity<GlyphPropertiesRow> {
 }
 
 export class GlyphRegistryClass
-    extends RegistryDynamicNoClone<Glyph,GlyphPropertiesRow,GlyphPropertiesQuery>
+    extends RegistryStaticNoClone<Glyph,GlyphPropertiesRow,GlyphPropertiesQuery>
 {
     protected Table(): Table<any, GlyphPropertiesQuery, GlyphPropertiesRow> & { add: (id: number) => GlyphPropertiesRow; } {
         return DBC.GlyphProperties
     }
-    protected IDs(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.GlyphProperties
     }
     Clear(entity: Glyph): void {

@@ -11,9 +11,9 @@ import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequireme
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { FactionEnum } from "../Misc/FactionEnum";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RegistryStatic } from "../Refs/Registry";
 import { LFGDungeonRewards } from "./LFGDungeonRewards";
 import { LFGDungeonEncounters } from "./LFGEncounter";
 import { LFGDungeonGroupRegistry } from "./LFGGroup";
@@ -126,13 +126,13 @@ export class LFGDungeons<T> extends MultiRowSystem<LFGDungeon,T> {
         this.mapId = mapId;
     }
 
-    addGet() {
-        return LFGDungeonRegistry.create()
+    addGet(mod: string, name: string) {
+        return LFGDungeonRegistry.create(mod,name)
             .Map.set(this.mapId)
     }
 
-    addMod(callback: (dungeon: LFGDungeon)=>void) {
-        callback(this.addGet());
+    addMod(mod: string, name: string, callback: (dungeon: LFGDungeon)=>void) {
+        callback(this.addGet(mod,name));
         return this.owner;
     }
 
@@ -146,12 +146,12 @@ export class LFGDungeons<T> extends MultiRowSystem<LFGDungeon,T> {
 }
 
 export class LFGDungeonRegistryClass
-    extends RegistryDynamic<LFGDungeon,LfgDungeonsRow,LfgDungeonsQuery>
+    extends RegistryStatic<LFGDungeon,LfgDungeonsRow,LfgDungeonsQuery>
 {
     protected Table(): Table<any, LfgDungeonsQuery, LfgDungeonsRow> & { add: (id: number) => LfgDungeonsRow; } {
         return DBC.LfgDungeons
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.LfgDungeons
     }
     Clear(entity: LFGDungeon): void {

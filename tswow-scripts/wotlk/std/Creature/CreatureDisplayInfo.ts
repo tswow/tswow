@@ -7,8 +7,8 @@ import { creature_model_infoRow } from "../../sql/creature_model_info";
 import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { GeoBox } from "../Misc/GeoBox";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryDynamic, RegistryStatic } from "../Refs/Registry";
 import { CreatureSoundDataRegistry } from "./CreatureSoundData";
 import { NPCSoundsRegistry } from "./NPCSounds";
 
@@ -170,7 +170,7 @@ export class CreatureModelRegistryClass
 export const CreatureModelRegistry = new CreatureModelRegistryClass();
 
 export class CreatureDisplayInfoRegistryClass
-    extends RegistryDynamic<
+    extends RegistryStatic<
           CreatureDisplayInfo
         , CreatureDisplayInfoRow
         , CreatureDisplayInfoQuery
@@ -179,11 +179,11 @@ export class CreatureDisplayInfoRegistryClass
     protected Table(): Table<any, CreatureDisplayInfoQuery, CreatureDisplayInfoRow> & { add: (id: number) => CreatureDisplayInfoRow; } {
         return DBC.CreatureDisplayInfo
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.CreatureDisplayInfo
     }
 
-    protected Clone(entity: CreatureDisplayInfo, parent: CreatureDisplayInfo): void {
+    protected Clone(mod: string, name: string, entity: CreatureDisplayInfo, parent: CreatureDisplayInfo): void {
         SQL.creature_model_info.query({DisplayID:parent.ID})
             .clone(entity.ID)
     }

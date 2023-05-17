@@ -2,8 +2,8 @@ import { Table } from "../../../data/table/Table";
 import { LockQuery, LockRow } from "../../dbc/Lock";
 import { LockTypeQuery, LockTypeRow } from "../../dbc/LockType";
 import { DBC } from "../../DBCFiles";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryDynamic, RegistryStatic } from "../Refs/Registry";
 import { Lock } from "./Lock";
 import { LockType } from "./LockType";
 
@@ -38,12 +38,12 @@ export class LockTypeRegistryClass
 export const LockTypeRegistry = new LockTypeRegistryClass();
 
 export class LockRegistryClass
-    extends RegistryDynamic<Lock,LockRow,LockQuery>
+    extends RegistryStatic<Lock,LockRow,LockQuery>
 {
     protected Table(): Table<any, LockQuery, LockRow> & { add: (id: number) => LockRow; } {
         return DBC.Lock
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.Lock
     }
     Clear(entity: Lock): void {
