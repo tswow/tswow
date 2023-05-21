@@ -16,7 +16,7 @@
  */
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { DBCIntCell } from "../../../data/dbc/DBCCell";
 import { Table } from "../../../data/table/Table";
@@ -28,6 +28,7 @@ import { Attachment } from "../Misc/Attachment";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";
+import { Substruct } from "../Misc/Substruct";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 import { SpellAnimation } from "./SpellAnimation";
@@ -191,11 +192,11 @@ export class SpellVisualKitRegistryClass
 }
 export const SpellVisualKitRegistry = new SpellVisualKitRegistryClass();
 
-export class MissileFollowGround extends CellSystem<SpellVisual> {
-    get Height() { return this.ownerWrap(this.owner.row.MissileFollowGroundHeight); }
-    get DropSpeed() { return this.ownerWrap(this.owner.row.MissileFollowGroundDropSpeed); }
-    get Approach() { return this.ownerWrap(this.owner.row.MissileFollowGroundApproach); }
-    get Flags() { return this.ownerWrap(this.owner.row.MissileFollowGroundFlags); }
+export class MissileFollowGround<T> extends Substruct<T,SpellVisual> {
+    get Height() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundHeight); }
+    get DropSpeed() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundDropSpeed); }
+    get Approach() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundApproach); }
+    get Flags() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundFlags); }
 
     set(height: number, dropSpeed: number, groundApproach: number, groundFlags: number) {
         this.Height.set(height)
@@ -204,33 +205,63 @@ export class MissileFollowGround extends CellSystem<SpellVisual> {
         this.Flags.set(groundFlags);
         return this.owner;
     }
+
+    mod(callback: (ent: MissileFollowGroundCB)=>void): T
+    {
+        callback(new MissileFollowGroundCB(this.realOwner))
+        return this.owner;
+    }
 }
 
-export class SpellVisualMissile extends CellSystem<SpellVisual> {
+export class MissileFollowGroundCB extends MissileFollowGround<MissileFollowGroundCB>
+{
+    constructor(owner: SpellVisual)
+    {
+        super(undefined,owner);
+        this.injectThis(this);
+    }
+}
+
+export class SpellVisualMissile<T> extends Substruct<T,SpellVisual> {
     get DestinationAttachment() {
-        return this.ownerWrap(this.owner.row.MissileDestinationAttachment);
+        return this.ownerWrap(this.realOwner.row.MissileDestinationAttachment);
     }
     get Sound() {
-        return SoundEntryRegistry.ref(this.owner, this.owner.row.MissileSound);
+        return SoundEntryRegistry.ref(this.owner, this.realOwner.row.MissileSound);
     }
-    get FollowGround() { return new MissileFollowGround(this.owner); }
-    get HasMissile() { return this.ownerWrap(this.owner.row.HasMissile); }
-    get Model() { return SpellVisualEffectRegistry.ref(this.owner, this.owner.row.MissileModel); }
+    get FollowGround() { return new MissileFollowGround(this.owner,this.realOwner); }
+    get HasMissile() { return this.ownerWrap(this.realOwner.row.HasMissile); }
+    get Model() { return SpellVisualEffectRegistry.ref(this.owner, this.realOwner.row.MissileModel); }
 
-    get Attachment() { return this.ownerWrap(this.owner.row.MissileAttachment); }
+    get Attachment() { return this.ownerWrap(this.realOwner.row.MissileAttachment); }
 
     get CastOffset() {
         return new PositionXYZCell(this.owner,
-            this.owner.row.MissileCastOffsetX,
-            this.owner.row.MissileCastOffsetY,
-            this.owner.row.MissileCastOffsetZ)
+            this.realOwner.row.MissileCastOffsetX,
+            this.realOwner.row.MissileCastOffsetY,
+            this.realOwner.row.MissileCastOffsetZ)
     }
 
     get ImpactOffset() {
         return new PositionXYZCell(this.owner,
-            this.owner.row.MissileImpactOffsetX,
-            this.owner.row.MissileImpactOffsetY,
-            this.owner.row.MissileImpactOffsetZ)
+            this.realOwner.row.MissileImpactOffsetX,
+            this.realOwner.row.MissileImpactOffsetY,
+            this.realOwner.row.MissileImpactOffsetZ)
+    }
+
+    mod(callback: (vis: SpellVisualMissileCB)=>void): T
+    {
+        callback(new SpellVisualMissileCB(this.realOwner));
+        return this.owner;
+    }
+}
+
+export class SpellVisualMissileCB extends SpellVisualMissile<SpellVisualMissileCB>
+{
+    constructor(vis: SpellVisual)
+    {
+        super(undefined,vis);
+        this.injectThis(this);
     }
 }
 
@@ -304,7 +335,7 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
     get PersistentAreaKit() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
     get MissileTargetingKit() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); }
 
-    get Missile() { return new SpellVisualMissile(this); }
+    get Missile() { return new SpellVisualMissile(this, this); }
 
     cloneFromVisual(visualId: number) {
         let row = DBC.SpellVisual.findById(visualId).clone(Ids.SpellVisual.id());
