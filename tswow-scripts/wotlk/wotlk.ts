@@ -80,8 +80,13 @@ import { SoundEntryRegistry } from "./std/Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./std/Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./std/Sound/ZoneMusic";
 import { SpawnGroupRegistry } from "./std/SpawnGroup/SpawnGroupRegistry";
+import { SpellMissileRegistry } from "./std/Spell/SpellMissile";
+import { SpellRuneCostRegistry } from "./std/Spell/SpellPower";
+import { SpellRangeRegistry } from "./std/Spell/SpellRange";
 import { SpellRegistry } from "./std/Spell/Spells";
 import { SpellStackGroupRegistry } from "./std/Spell/SpellStackGroup";
+import { SpellVisualKitRegistry, SpellVisualRegistry } from "./std/Spell/SpellVisual";
+import { SpellVisualEffectRegistry } from "./std/Spell/SpellVisualEffect";
 import { SpellFocusRegistry } from "./std/SpellFocus/SpellFocus";
 import { Tags } from "./std/Tags/Tags";
 import { TalentTreeRegistry } from "./std/Talents/Talents";
@@ -106,6 +111,12 @@ import { WorldStateUIRegistry } from "./std/WorldState/WorldStateUI";
 
 export const std = {
     Spells : SpellRegistry,
+    SpellVisuals: SpellVisualRegistry,
+    SpellVisualKits: SpellVisualKitRegistry,
+    SpellVisualEffects: SpellVisualEffectRegistry,
+    SpellMissile: SpellMissileRegistry,
+    SpellRuneCost: SpellRuneCostRegistry,
+    SpellRange: SpellRangeRegistry,
     Languages : LanguageRegistry,
     Quests : QuestRegistry,
     Titles: TitleRegistry,

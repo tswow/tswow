@@ -147,6 +147,11 @@ export class CellSystem<T> {
         obj[key] = this.objectify();
     }
 
+    stringify(options?: ObjectifyOptions): string
+    {
+        return JSON.stringify(this.objectify(options))
+    }
+
     objectify(options?: ObjectifyOptions): any {
         return Objects.objectifyObj(this, options);
     }
@@ -217,6 +222,10 @@ export class WrappedLoc<T> extends LocSystem<T> {
 
     objectify(options?: ObjectifyOptions) {
         return this.wrapped.objectify(options);
+    }
+
+    stringify(options?: ObjectifyOptions) {
+        return JSON.stringify(this.objectify(options))
     }
 }
 

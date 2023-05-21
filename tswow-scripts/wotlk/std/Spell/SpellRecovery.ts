@@ -15,29 +15,50 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Transient } from "../../../data/cell/serialization/Transient";
-import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { Substruct } from "../Misc/Substruct";
 import { Spell } from "./Spell";
 
-export class SpellRecovery<T> extends CellSystem<T> {
-    @Transient
-    protected spell :Spell;
-
+export class SpellRecovery<T> extends Substruct<T,Spell> {
     constructor(owner: T, spell: Spell) {
-        super(owner);
-        this.spell = spell;
+        super(owner,spell);
     }
 
-    get Time() { return this.ownerWrap(this.spell.row.RecoveryTime); }
-    get CategoryTime() { return this.ownerWrap(this.spell.row.CategoryRecoveryTime); }
+    get Time() { return this.ownerWrap(this.realOwner.row.RecoveryTime); }
+    get CategoryTime() { return this.ownerWrap(this.realOwner.row.CategoryRecoveryTime); }
+    get Category() { return this.ownerWrap(this.realOwner.row.Category)}
 
-    get StartTime() { return this.ownerWrap(this.spell.row.StartRecoveryTime); }
-    get StartCategory() { return this.ownerWrap(this.spell.row.StartRecoveryCategory); }
+    get GlobalTime() { return this.ownerWrap(this.realOwner.row.StartRecoveryTime); }
+    get GlobalCategory() { return this.ownerWrap(this.realOwner.row.StartRecoveryCategory); }
 
+    /** @deprecated use GlobalTime */
+    @Transient
+    get StartTime() { return this.ownerWrap(this.realOwner.row.StartRecoveryTime); }
+
+    /** @deprecated use GlobalCategory */
+    @Transient
+    get StartCategory() { return this.ownerWrap(this.realOwner.row.StartRecoveryCategory); }
+
+    /** @deprecated set values individually */
     set(time: number, categoryTime: number = 0, startTime: number = 0, startCategory: number = 0) {
         this.Time.set(time);
         this.CategoryTime.set(categoryTime);
         this.StartTime.set(startTime);
         this.StartCategory.set(startCategory);
         return this.owner;
+    }
+
+    mod(callback: (rec: SpellRecoveryCB)=>void)
+    {
+        callback(new SpellRecoveryCB(this.realOwner));
+        return this.owner;
+    }
+}
+
+export class SpellRecoveryCB extends SpellRecovery<SpellRecoveryCB>
+{
+    constructor(spell: Spell)
+    {
+        super(undefined,spell);
+        this.injectThis(this);
     }
 }
