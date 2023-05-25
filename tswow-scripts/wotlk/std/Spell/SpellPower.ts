@@ -51,10 +51,10 @@ export class SpellRuneCost extends MainEntity<SpellRuneCostRow> {
     {
         return GenerateCode(settings,'std.SpellRuneCost.create()',(gen)=>
         {
-            gen.non_zero_num('RunicPower',this.RunicPower);
-            gen.non_zero_num('Blood',this.Blood);
-            gen.non_zero_num('Frost',this.Frost);
-            gen.non_zero_num('Unholy',this.Unholy);
+            gen.non_def_num('RunicPower',this.RunicPower);
+            gen.non_def_num('Blood',this.Blood);
+            gen.non_def_num('Frost',this.Frost);
+            gen.non_def_num('Unholy',this.Unholy);
         })
     }
 }

@@ -32,6 +32,7 @@ import { GemRegistry } from "../Gem/Gem";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { Loot, LootSet } from "../Loot/Loot";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { DurationCell } from "../Misc/DurationCell";
 import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -257,6 +258,64 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 
     get ID() {
         return this.row.entry.get();
+    }
+
+    codify(settings: {mod?: string, id?: string, name?: string} & CodegenSettings)
+    {
+        return GenerateCode(settings,`std.Items.create('${settings.mod || 'mod'}','${settings.id}')`,code=>
+        {
+            code.loc('Name',this.Name)
+            code.loc('Description',this.Description)
+            code.loc('ItemSetName',this.ItemSetName)
+
+            code.non_def_num('Loot',this.Loot)
+            code.non_def_num('Spells',this.Spells)
+            code.non_def_num('Stats',this.Stats)
+
+            code.non_zero_enum('Bonding',this.Bonding)
+            code.non_zero_enum('AmmoType',this.AmmoType)
+            code.non_zero_enum('Class',this.Class)
+            code.non_zero_enum('FoodType',this.FoodType)
+            code.non_zero_enum('InventoryType',this.InventoryType)
+            code.non_zero_enum('Material',this.Material)
+            code.non_zero_enum('SheatheType',this.SheatheType)
+            code.non_zero_enum('TotemCategory',this.TotemCategory)
+
+            code.non_zero_bitmask('BagFamily',this.BagFamily)
+            code.non_zero_bitmask('ClassMask',this.ClassMask)
+            code.non_zero_bitmask('Flags',this.Flags)
+            code.non_zero_bitmask('FlagsCustom',this.FlagsCustom)
+            code.non_zero_bitmask('FlagsExtra',this.FlagsExtra)
+
+            code.non_def_num('Area',this.Area)
+            code.non_def_num('Armor',this.Armor)
+            code.non_def_num('Block',this.Block)
+            code.non_def_num('BonusArmor',this.BonusArmor)
+            code.non_def_num('ContainerSlots',this.ContainerSlots)
+            code.non_def_num('Damage',this.Damage)
+            code.non_def_num('Delay',this.Delay)
+            code.non_def_num('Disenchant',this.Disenchant)
+            code.non_def_num('Durability',this.Durability)
+            code.non_def_num('Duration',this.Duration)
+            if(this.GemProperties)
+            {
+                code.line(`// Warning: Ignoring field "GemProperties" (gems will not work)`)
+            }
+            code.non_def_num('Holiday',this.Holiday)
+            code.non_def_num('ItemLevel',this.ItemLevel)
+            code.non_def_num('ItemSet',this.ItemSet)
+            code.non_def_num('Lock',this.Lock)
+            code.non_def_num('Map',this.Map)
+            code.non_def_num('MaxCount',this.MaxCount)
+            code.non_def_num('MaxStack',this.MaxStack)
+            code.non_def_num('MoneyLoot',this.MoneyLoot)
+            code.non_def_num('ScriptName',this.ScriptName)
+            code.non_def_num('Sheath',this.Sheath)
+            code.non_def_num('SocketBonus',this.SocketBonus)
+            code.non_def_num('StartQuest',this.StartQuest)
+            code.non_def_num('Socket',this.Socket)
+            code.non_def_num('SoundOverride',this.SoundOverride)
+        })
     }
 }
 

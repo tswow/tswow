@@ -222,8 +222,8 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
                 if(proc.Type.CHAIN.is())
                 {
                     let chain = proc.Type.CHAIN.as();
-                    code.non_zero_num('Forever',chain.Forever);
-                    code.non_zero_num('TargetCount',chain.TargetCount);
+                    code.non_def_num('Forever',chain.Forever);
+                    code.non_def_num('TargetCount',chain.TargetCount);
                     if(chain.ChainEffect.get())
                     {
                         code.begin_block('.ChainEffect.modRefCopy(x=>x')

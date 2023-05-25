@@ -55,11 +55,11 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
         {
             code.loc('Name',this.Name);
             code.loc('NameShort',this.NameShort);
-            code.non_zero_num('Flags',this.Flags)
-            code.non_zero_num('HostileMin',this.HostileMin)
-            code.non_zero_num('HostileMax',this.HostileMax)
-            code.non_zero_num('FriendMin',this.FriendMin)
-            code.non_zero_num('FriendMax',this.FriendMax)
+            code.non_def_num('Flags',this.Flags)
+            code.non_def_num('HostileMin',this.HostileMin)
+            code.non_def_num('HostileMax',this.HostileMax)
+            code.non_def_num('FriendMin',this.FriendMin)
+            code.non_def_num('FriendMax',this.FriendMax)
         })
     }
 

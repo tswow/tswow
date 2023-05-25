@@ -69,18 +69,23 @@ export class Codegen
         }
     }
 
-    non_zero_num(key: string, value: any)
+    num(key: string, value: any)
     {
-        if(value.get())
+        if(typeof(value.get()) === 'bigint')
         {
-            if(typeof(value.get()) === 'bigint')
-            {
-                this.line(`.${key}.set(BigInt(${value.get()}))`)
-            }
-            else
-            {
-                this.line(`.${key}.set(${value.get()})`)
-            }
+            this.line(`.${key}.set(BigInt(${value.get()}))`)
+        }
+        else
+        {
+            this.line(`.${key}.set(${value.get()})`)
+        }
+    }
+
+    non_def_num(key: string, value: any, def = 0)
+    {
+        if(value.get() != def)
+        {
+            this.num(key,value);
         }
     }
 

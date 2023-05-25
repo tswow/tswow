@@ -375,38 +375,38 @@ export class Spell extends MainEntityID<SpellRow> {
             code.non_zero_bitmask('TargetType',this.TargetType)
 
             // Other numbers
-            code.non_zero_num('DefenseType',this.DefenseType)
-            code.non_zero_num('MaxTargetLevel',this.MaxTargetLevel)
-            code.non_zero_num('MaxTargets',this.MaxTargets)
-            code.non_zero_num('Mechanic',this.Mechanic)
-            code.non_zero_num('ModalNextSpell',this.ModalNextSpell);
-            code.non_zero_num('Priority',this.Priority)
-            code.non_zero_num('RequiredArea',this.RequiredArea);
-            code.non_zero_num('RequiredAuraVision',this.RequiredAuraVision);
-            code.non_zero_num('ShapeshiftMask.Include',this.ShapeshiftMask.Include)
-            code.non_zero_num('ShapeshiftMask.Exclude',this.ShapeshiftMask.Exclude)
-            code.non_zero_num('Speed',this.Speed)
-            code.non_zero_num('Stacks',this.Stacks)
-            code.non_zero_num('StanceBarOrder',this.StanceBarOrder)
-            code.non_zero_num('TargetAuraSpell.Include',this.TargetAuraSpell.Include)
-            code.non_zero_num('TargetAuraSpell.Exclude',this.TargetAuraSpell.Exclude)
-            code.non_zero_num('TargetAuraState.Include',this.TargetAuraState.Include)
-            code.non_zero_num('TargetAuraState.Exclude',this.TargetAuraState.Exclude)
-            code.non_zero_num('RequiredSpellFocus',this.RequiredSpellFocus);
-            code.non_zero_num('Category',this.Category);
+            code.non_def_num('DefenseType',this.DefenseType)
+            code.non_def_num('MaxTargetLevel',this.MaxTargetLevel)
+            code.non_def_num('MaxTargets',this.MaxTargets)
+            code.non_def_num('Mechanic',this.Mechanic)
+            code.non_def_num('ModalNextSpell',this.ModalNextSpell);
+            code.non_def_num('Priority',this.Priority)
+            code.non_def_num('RequiredArea',this.RequiredArea);
+            code.non_def_num('RequiredAuraVision',this.RequiredAuraVision);
+            code.non_def_num('ShapeshiftMask.Include',this.ShapeshiftMask.Include)
+            code.non_def_num('ShapeshiftMask.Exclude',this.ShapeshiftMask.Exclude)
+            code.non_def_num('Speed',this.Speed)
+            code.non_def_num('Stacks',this.Stacks)
+            code.non_def_num('StanceBarOrder',this.StanceBarOrder)
+            code.non_def_num('TargetAuraSpell.Include',this.TargetAuraSpell.Include)
+            code.non_def_num('TargetAuraSpell.Exclude',this.TargetAuraSpell.Exclude)
+            code.non_def_num('TargetAuraState.Include',this.TargetAuraState.Include)
+            code.non_def_num('TargetAuraState.Exclude',this.TargetAuraState.Exclude)
+            code.non_def_num('RequiredSpellFocus',this.RequiredSpellFocus);
+            code.non_def_num('Category',this.Category);
 
             if(this.Proc.exists())
             {
                 code.begin_block('.Proc.mod(x=>x')
                 code.non_zero_bitmask('AttributesMask',this.Proc.AttributesMask)
-                code.non_zero_num('Chance',this.Proc.Chance)
-                code.non_zero_num('Charges',this.Proc.Charges)
-                code.non_zero_num('ProcsPerMinute',this.Proc.ProcsPerMinute)
+                code.non_def_num('Chance',this.Proc.Chance)
+                code.non_def_num('Charges',this.Proc.Charges)
+                code.non_def_num('ProcsPerMinute',this.Proc.ProcsPerMinute)
 
-                code.non_zero_num('SpellFamily',this.Proc.SpellFamily)
-                code.non_zero_num('Classmask.A',this.Proc.ClassMask.A)
-                code.non_zero_num('Classmask.B',this.Proc.ClassMask.A)
-                code.non_zero_num('Classmask.C',this.Proc.ClassMask.A)
+                code.non_def_num('SpellFamily',this.Proc.SpellFamily)
+                code.non_def_num('Classmask.A',this.Proc.ClassMask.A)
+                code.non_def_num('Classmask.B',this.Proc.ClassMask.A)
+                code.non_def_num('Classmask.C',this.Proc.ClassMask.A)
 
                 code.non_zero_bitmask('DisableEffectsMask',this.Proc.DisableEffectsMask)
                 code.non_zero_bitmask('HitMask',this.Proc.HitMask)
@@ -485,11 +485,11 @@ export class Spell extends MainEntityID<SpellRow> {
 
             code.begin_block('.Power.mod(x=>x')
             code.line(`.Type.${this.Power.Type.objectify()}.set()`)
-            code.non_zero_num('CostBase',this.Power.CostBase);
-            code.non_zero_num('CostPerLevel',this.Power.CostPerLevel);
-            code.non_zero_num('CostPercent',this.Power.CostPercent);
-            code.non_zero_num('CostPerSecond',this.Power.CostPerSecond);
-            code.non_zero_num('CostPerSecondPerLevel',this.Power.CostPerSecondPerLevel);
+            code.non_def_num('CostBase',this.Power.CostBase);
+            code.non_def_num('CostPerLevel',this.Power.CostPerLevel);
+            code.non_def_num('CostPercent',this.Power.CostPercent);
+            code.non_def_num('CostPerSecond',this.Power.CostPerSecond);
+            code.non_def_num('CostPerSecondPerLevel',this.Power.CostPerSecondPerLevel);
             if(this.Power.RuneCost.get())
             {
                 code.begin_block(`.RuneCost.modRefCopy(x=>x`)
