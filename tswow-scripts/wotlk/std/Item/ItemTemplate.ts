@@ -31,7 +31,7 @@ import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { GemRegistry } from "../Gem/Gem";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
-import { Loot, LootSet } from "../Loot/Loot";
+import { Loot, LootSet, LootSetRef } from "../Loot/Loot";
 import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { DurationCell } from "../Misc/DurationCell";
 import { MainEntityID } from "../Misc/Entity";
@@ -223,7 +223,8 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     get FlagsCustom() {
         return makeMaskCell32(ItemFlagsCustom,this, this.row.flagsCustom);
     }
-    get Loot() { return new LootSet(this.ID, SQL.item_loot_template); }
+
+    get Loot() { return new LootSetRef(this, new LootSet(this.ID, SQL.item_loot_template)); }
 
     /**
      * This is readonly, because changing the gem properties
@@ -260,21 +261,36 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         return this.row.entry.get();
     }
 
-    codify(settings: {mod?: string, id?: string, name?: string} & CodegenSettings)
+    codify(settings: {mod?: string, id?: string, name?: string, create_spells?: boolean, all_locs?: bool} & CodegenSettings)
     {
-        return GenerateCode(settings,`std.Items.create('${settings.mod || 'mod'}','${settings.id}')`,code=>
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        const create_spells = settings.create_spells === undefined ? false : settings.create_spells;
+        const all_locs = settings.all_locs === undefined ? false : settings.all_locs
+
+        return GenerateCode(settings,`std.Items.create('${mod}','${id}')`,code=>
         {
-            code.loc('Name',this.Name)
-            code.loc('Description',this.Description)
-            code.loc('ItemSetName',this.ItemSetName)
-
-            code.non_def_num('Loot',this.Loot)
-            code.non_def_num('Spells',this.Spells)
-            code.non_def_num('Stats',this.Stats)
-
+            if(all_locs)
+            {
+                code.loc('Name',this.Name)
+                code.loc('Description',this.Description)
+                code.loc('ItemSetName',this.ItemSetName)
+            }
+            else
+            {
+                code.line(`.Name.enGB.set('${this.Name.enGB.get().split("'").join("\\'")}')`)
+                if(this.Description.enGB.get().length > 0)
+                {
+                    code.line(`.Description.enGB.set('${this.Description.enGB.get().split("'").join("\\'")}')`)
+                }
+                if(this.ItemSetName.enGB.get().length > 0)
+                {
+                    code.line(`.ItemSetName.enGB.set('${this.ItemSetName.enGB.get().split("'").join("\\'")}')`)
+                }
+            }
             code.non_zero_enum('Bonding',this.Bonding)
             code.non_zero_enum('AmmoType',this.AmmoType)
-            code.non_zero_enum('Class',this.Class)
+            code.enum_line('Class',this.Class)
             code.non_zero_enum('FoodType',this.FoodType)
             code.non_zero_enum('InventoryType',this.InventoryType)
             code.non_zero_enum('Material',this.Material)
@@ -282,7 +298,15 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             code.non_zero_enum('TotemCategory',this.TotemCategory)
 
             code.non_zero_bitmask('BagFamily',this.BagFamily)
-            code.non_zero_bitmask('ClassMask',this.ClassMask)
+            console.log(this.ClassMask.get(),this.RaceMask.get())
+            if(this.ClassMask.get() !== 0xffffffff)
+            {
+                code.non_zero_bitmask('ClassMask',this.ClassMask)
+            }
+            if(this.RaceMask.get() !== 0xffffffff)
+            {
+                code.non_zero_bitmask('Racemask',this.RaceMask)
+            }
             code.non_zero_bitmask('Flags',this.Flags)
             code.non_zero_bitmask('FlagsCustom',this.FlagsCustom)
             code.non_zero_bitmask('FlagsExtra',this.FlagsExtra)
@@ -292,12 +316,21 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             code.non_def_num('Block',this.Block)
             code.non_def_num('BonusArmor',this.BonusArmor)
             code.non_def_num('ContainerSlots',this.ContainerSlots)
-            code.non_def_num('Damage',this.Damage)
+            this.Damage.forEach(x=>{
+                if(!x.isClear())
+                {
+                    code.line(`.Damage.add('${x.School.objectify()}',${x.Min.get()},${x.Max.get()})`)
+                }
+            })
+
+            this.Socket.forEach(x=>{
+            })
+
             code.non_def_num('Delay',this.Delay)
             code.non_def_num('Disenchant',this.Disenchant)
             code.non_def_num('Durability',this.Durability)
             code.non_def_num('Duration',this.Duration)
-            if(this.GemProperties)
+            if(this.GemProperties.get())
             {
                 code.line(`// Warning: Ignoring field "GemProperties" (gems will not work)`)
             }
@@ -308,13 +341,70 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             code.non_def_num('Map',this.Map)
             code.non_def_num('MaxCount',this.MaxCount)
             code.non_def_num('MaxStack',this.MaxStack)
-            code.non_def_num('MoneyLoot',this.MoneyLoot)
+            if(this.MoneyLoot.Min.get() !== 0 || this.MoneyLoot.Max.get() !== 0)
+            {
+                code.line(`.MoneyLoot.set(${this.MoneyLoot.Min.get()},${this.MoneyLoot.Max.get()})`)
+            }
             code.non_def_num('ScriptName',this.ScriptName)
             code.non_def_num('Sheath',this.Sheath)
             code.non_def_num('SocketBonus',this.SocketBonus)
             code.non_def_num('StartQuest',this.StartQuest)
-            code.non_def_num('Socket',this.Socket)
             code.non_def_num('SoundOverride',this.SoundOverride)
+
+            this.Socket.forEach(x=>{
+                if(!x.isClear())
+                {
+                    code.line(`.Socket.add('${x.Color.objectify()}',${x.Content.get()})`)
+                }
+            })
+
+            this.Stats.forEach((x,i)=>{
+                if(!x.isClear())
+                {
+                    code.line(`.Stats.add('${x.Type.objectify()}',${x.Value.get()})`)
+                }
+            })
+
+            this.Spells.forEach((x,i)=>
+            {
+                if(!x.Spell.get())
+                {
+                    return;
+                }
+
+                code.begin_block('.Spells.addMod(x=>x')
+                if(create_spells)
+                {
+                    code.begin_block(`.Spell.modRefCopy('${mod}','${id}_spell_${i}',x=>x`)
+                    code.substruct(x.Spell.getRef(),settings);
+                    code.end_block(')')
+                }
+                else
+                {
+                    code.non_def_num('Spell',x.Spell.get())
+                }
+                code.non_def_num('Category',x.Category)
+                code.non_def_num('CategoryCooldown',x.CategoryCooldown)
+                code.non_def_num('Charges',x.Charges)
+                code.non_def_num('Cooldown',x.Cooldown)
+                code.non_def_num('ProcsPerMinute',x.ProcsPerMinute)
+                code.enum_line('Trigger',x.Trigger)
+                code.end_block(`)`)
+            })
+
+            if(this.Loot.get().rows.length > 0)
+            {
+                code.begin_block(`.Loot.mod(x=>x`)
+                this.Loot.get().codify(settings);
+                code.end_block(`)`)
+            }
+
+            if(this.DisplayInfo.get())
+            {
+                code.begin_block(`.DisplayInfo.modRefCopy('${mod}','${id}_display',x=>x`)
+                code.substruct(this.DisplayInfo.getRef(),Object.assign(settings,{mod:mod,id:id+'_display'}));
+                code.end_block(`)`)
+            }
         })
     }
 }

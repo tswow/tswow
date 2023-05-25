@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "../../../data/cell/cells/EnumCell";
+import { EnumCell, EnumCon, makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -51,17 +51,29 @@ export class ItemColorCell extends EnumCell<ItemSocket> {
 }
 
 export class ItemSocket extends ArrayEntry<ItemTemplate>{
+    /** @deprecated use Color */
     get color() { return new ItemColorCell(this, colors(this.container)[this.index]); }
+    /** @deprecated use Content */
     get content() { return this.wrap(contents(this.container)[this.index]); }
 
+    get Content() { return this.wrap(contents(this.container)[this.index]); }
+    get Color() { return makeEnumCell(ItemColorMask, this, colors(this.container)[this.index])}
+
+    set(color: EnumCon<keyof typeof ItemColorMask>, content: number)
+    {
+        this.Color.set(color);
+        this.Content.set(content);
+        return this;
+    }
+
     clear() {
-        this.color.set(0);
-        this.content.set(0);
+        this.Color.set(0);
+        this.Content.set(0);
         return this;
     }
 
     isClear() {
-        return this.color.get() === 0;
+        return this.Color.get() === 0;
     }
 }
 
@@ -79,17 +91,25 @@ export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
         return new ItemSocket(this.owner, index);
     }
 
-    protected add(col: number) {
+    protected _add(col: number) {
         const free = this.addGet();
         free.color.set(col);
         free.content.set(1);
         return this.owner;
     }
 
+    add(color: EnumCon<keyof typeof ItemColorMask>, content: number = 1)
+    {
+        return this.addMod(x=>x
+            .Color.set(color)
+            .Content.set(content)
+        )
+    }
+
     get Properties() { return this.ownerWrap(this.owner.row.GemProperties); }
 
-    addMeta() {return this.add(1)};
-    addRed() {return this.add(2)};
-    addYellow() {return this.add(4)};
-    addBlue() {return this.add(8)};
+    addMeta() {return this._add(1)};
+    addRed() {return this._add(2)};
+    addYellow() {return this._add(4)};
+    addBlue() {return this._add(8)};
 }

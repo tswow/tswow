@@ -15,7 +15,7 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { Cell, CellWrapper } from "../../../data/cell/cells/Cell";
-import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "../../../data/sql/SQLCell";
 import { SQL } from "../../SQLFiles";
 import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
@@ -120,6 +120,27 @@ export class LootSet extends CellSystemTop {
         super();
         this.id = id;
         this.table = table;
+    }
+}
+
+export class LootSetRef<T> extends CellSystem<T>
+{
+    protected lootSet: LootSet;
+
+    constructor(owner: T, lootSet: LootSet)
+    {
+        super(owner);
+        this.lootSet = lootSet;
+    }
+
+    get(): LootSet {
+        return this.lootSet;
+    }
+
+    mod(callback: (set: LootSet)=>void)
+    {
+        callback(this.lootSet);
+        return this.owner;
     }
 }
 

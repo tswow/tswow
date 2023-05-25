@@ -66,6 +66,7 @@ import { MapRegistry } from "./std/Map/Maps";
 import { Colors } from "./std/Misc/Color";
 import { Compare } from "./std/Misc/Compare";
 import { Ids } from "./std/Misc/Ids";
+import { ParticleColorRegistry } from "./std/Misc/ParticleColor";
 import { CompanionRegistry } from "./std/PetsCollectibles/Companion";
 import { MountRegistry } from "./std/PetsCollectibles/Mount";
 import { ProfessionRegistry } from "./std/Profession/Professions";
@@ -198,6 +199,7 @@ export const std = {
     AchievementCategory: AchievementCategoryRegistry,
     ItemSet: ItemSetRegistry,
     ItemDisplayInfo: ItemDisplayinfoRegistry,
+    ParticleColors: ParticleColorRegistry,
     ExtendedCost: ExtendedCostRegistry,
     EquipSkills: EquipSkills,
     SpellFocus: SpellFocusRegistry,
