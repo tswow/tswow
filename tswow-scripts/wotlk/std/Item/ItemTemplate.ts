@@ -272,13 +272,23 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         {
             if(all_locs)
             {
-                code.loc('Name',this.Name)
+                if(settings.name)
+                {
+                    code.line(`.Name.enGB.set('${settings.name}')`)
+                }
                 code.loc('Description',this.Description)
                 code.loc('ItemSetName',this.ItemSetName)
             }
             else
             {
-                code.line(`.Name.enGB.set('${this.Name.enGB.get().split("'").join("\\'")}')`)
+                if(settings.name)
+                {
+                    code.line(`.Name.enGB.set('${settings.name}')`)
+                }
+                else
+                {
+                    code.line(`.Name.enGB.set('${this.Name.enGB.get().split("'").join("\\'")}')`)
+                }
                 if(this.Description.enGB.get().length > 0)
                 {
                     code.line(`.Description.enGB.set('${this.Description.enGB.get().split("'").join("\\'")}')`)
@@ -296,6 +306,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             code.non_zero_enum('Material',this.Material)
             code.non_zero_enum('SheatheType',this.SheatheType)
             code.non_zero_enum('TotemCategory',this.TotemCategory)
+            code.non_zero_enum('Quality',this.Quality)
 
             code.non_zero_bitmask('BagFamily',this.BagFamily)
             console.log(this.ClassMask.get(),this.RaceMask.get())
@@ -305,7 +316,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             }
             if(this.RaceMask.get() !== 0xffffffff)
             {
-                code.non_zero_bitmask('Racemask',this.RaceMask)
+                code.non_zero_bitmask('RaceMask',this.RaceMask)
             }
             code.non_zero_bitmask('Flags',this.Flags)
             code.non_zero_bitmask('FlagsCustom',this.FlagsCustom)
@@ -323,12 +334,14 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                 }
             })
 
-            this.Socket.forEach(x=>{
-            })
-
             code.non_def_num('Delay',this.Delay)
             code.non_def_num('Disenchant',this.Disenchant)
             code.non_def_num('Durability',this.Durability)
+            code.non_def_num('Price.PlayerBuyPrice',this.Price.PlayerBuyPrice)
+            code.non_def_num('Price.PlayerSellPrice',this.Price.PlayerSellPrice)
+            code.non_def_num('Price.BuyCount',this.Price.BuyCount)
+            code.non_def_num('RequiredLevel',this.RequiredLevel)
+            code.non_def_num('RequiredDisenchantSkill',this.RequiredDisenchantSkill,-1)
             code.non_def_num('Duration',this.Duration)
             if(this.GemProperties.get())
             {
@@ -381,11 +394,11 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                 }
                 else
                 {
-                    code.non_def_num('Spell',x.Spell.get())
+                    code.non_def_num('Spell',x.Spell)
                 }
                 code.non_def_num('Category',x.Category)
                 code.non_def_num('CategoryCooldown',x.CategoryCooldown)
-                code.non_def_num('Charges',x.Charges)
+                code.non_def_num('Charges.Raw',x.Charges.Raw)
                 code.non_def_num('Cooldown',x.Cooldown)
                 code.non_def_num('ProcsPerMinute',x.ProcsPerMinute)
                 code.enum_line('Trigger',x.Trigger)

@@ -41,6 +41,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     get SpellVisual() { return SpellVisualRegistry.ref(this, this.row.SpellVisualID); }
     get Texture() { return this.wrapArray(this.row.Texture); }
     get Icon() { return new ItemIcon(this); }
+    get GroupSoundIndex() { return this.wrap(this.row.GroupSoundIndex); }
 
     copyFromDisplay(displayId: number) {
         DBC.ItemDisplayInfo
@@ -121,10 +122,10 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
             {
                 if(this.HelmGeosetVis.getIndex(i) !== 0)
                 {
-                    code.line(`.HelmtGeosetVis.setIndex(${i},${this.HelmGeosetVis.getIndex(i)})`)
+                    code.line(`.HelmGeosetVis.setIndex(${i},${this.HelmGeosetVis.getIndex(i)})`)
                 }
             }
-
+            code.non_def_num('GroupSoundIndex',this.GroupSoundIndex);
         })
     }
 }
