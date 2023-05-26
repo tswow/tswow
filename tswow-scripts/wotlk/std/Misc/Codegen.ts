@@ -10,6 +10,10 @@ export function GenerateCode(settings: CodegenSettings, regLine: string, callbac
     let gen = new Codegen(settings);
     if(gen.include_registry())
     {
+        gen.line(`// Note:`);
+        gen.line(`// Codegen is an experimental feature.`)
+        gen.line(`// Generated entities may not perfectly match the original entity.`) 
+        gen.line(`// Please report issues to our tracker: https://github.com/tswow/tswow/issues`)
         gen.begin_block(regLine);
     }
     callback(gen);
