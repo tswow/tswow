@@ -19,6 +19,7 @@
 #include "TSMain.h"
 #include "TSArray.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -61,3 +62,5 @@ private:
     friend class TSLua;
     TSLua::Array<TSPlayer> LGetMembers();
 };
+
+LUA_PTR_TYPE(TSGroup)

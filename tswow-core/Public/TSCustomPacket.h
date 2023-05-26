@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSMain.h"
+#include "TSLua.h"
 #define CUSTOM_PACKET_API TC_GAME_API
 #include "CustomPacketRead.h"
 #include "CustomPacketWrite.h"
@@ -104,3 +105,6 @@ TC_GAME_API TSPacketWrite CreateCustomPacket(
 		opcode_t opcode
 	, totalSize_t size
 );
+
+LUA_PTR_TYPE(TSPacketWrite)
+LUA_PTR_TYPE(TSPacketRead)

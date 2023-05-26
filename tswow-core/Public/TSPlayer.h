@@ -362,3 +362,5 @@ private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSPlayer)

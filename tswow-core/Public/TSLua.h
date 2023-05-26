@@ -9,6 +9,22 @@
 
 #define LUA_FIELD(target,cls,fn) target.set_function(#fn,&cls::fn)
 
+#define LUA_PTR_TYPE(type)\
+inline int sol_lua_push(lua_State* L, const type& value) {\
+    int amount;\
+    if (value)\
+    {\
+       	using Tu = sol::meta::unqualified_t<type>;\
+        sol::stack::unqualified_pusher<Tu> p{};\
+        amount = p.push(L, value);\
+    }\
+    else\
+    {\
+        amount = sol::stack::push(L, sol::nil);\
+    }\
+    return amount;\
+}\
+
 class TC_GAME_API TSLua
 {
 public:

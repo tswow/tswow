@@ -20,6 +20,7 @@
 #include "TSUnit.h"
 #include "TSPlayer.h"
 #include "TSItem.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -104,3 +105,7 @@ private:
     void LFilterItems(sol::protected_function predicate);
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSMailItemInfo)
+LUA_PTR_TYPE(TSMail)
+LUA_PTR_TYPE(TSMailDraft)

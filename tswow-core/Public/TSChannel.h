@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
@@ -48,3 +49,5 @@ public:
     void SetOwner(uint64 guid, bool exclaim = true);
     void Say(uint64 guid, std::string const& what, uint32 lang);
 };
+
+LUA_PTR_TYPE(TSChannel)

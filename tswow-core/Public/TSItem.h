@@ -20,6 +20,7 @@
 #include "TSClasses.h"
 #include "TSObject.h"
 #include "TSItemTemplate.h"
+#include "TSLua.h"
 
 class TC_GAME_API TSItem : public TSObject {
 public:
@@ -84,3 +85,4 @@ public:
 };
 
 TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);
+LUA_PTR_TYPE(TSItem)

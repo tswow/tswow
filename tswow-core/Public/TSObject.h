@@ -35,6 +35,7 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSEntity.h"
+#include "TSLua.h"
 
 class TSPlayer;
 class TSUnit;
@@ -97,3 +98,5 @@ public:
 
     bool operator==(TSObject& rhs);
 };
+
+LUA_PTR_TYPE(TSObject)

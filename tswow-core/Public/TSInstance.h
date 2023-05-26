@@ -4,6 +4,7 @@
 #include "TSBase.h"
 #include "TSUnit.h"
 #include "TSMap.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -73,3 +74,7 @@ public:
     TSNumber<uint32> GetFactionInInstance();
     TSBossInfo GetBossInfo(uint32 id);
 };
+
+LUA_PTR_TYPE(TSGuidSet)
+LUA_PTR_TYPE(TSBossInfo)
+LUA_PTR_TYPE(TSInstance)

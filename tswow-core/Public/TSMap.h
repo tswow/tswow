@@ -21,6 +21,7 @@
 #include "TSClasses.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -90,3 +91,5 @@ private:
 
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSMap)

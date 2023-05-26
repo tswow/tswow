@@ -21,6 +21,7 @@
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 #include "TSMap.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
@@ -117,3 +118,6 @@ public:
     TSGameObject GetBGGameObject(uint32 type, bool logErrors = false);
     TSCreature GetBGCreature(uint32 type, bool logErrors = false);
 };
+
+LUA_PTR_TYPE(TSBattlegroundPlayer)
+LUA_PTR_TYPE(TSBattleground)

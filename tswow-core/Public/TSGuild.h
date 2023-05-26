@@ -19,6 +19,7 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSArray.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -56,3 +57,5 @@ private:
 TSGuild TC_GAME_API GetGuild(uint32 id);
 TSGuild TC_GAME_API GetGuildByName(std::string const& name);
 TSGuild TC_GAME_API GetGuildByLeader(uint64 owner);
+
+LUA_PTR_TYPE(TSGuild)

@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSLua.h"
 #include "TSLoot.h"
 #include "TSBase.h"
 #include "TSMain.h"
@@ -146,3 +147,5 @@ public:
 private:
     TSLua::Array<TSUnit> LGetAITargets();
 };
+
+LUA_PTR_TYPE(TSCreature)
