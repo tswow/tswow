@@ -1,6 +1,7 @@
 import { CellIndexWrapper } from "../../../data/cell/cells/CellArray";
 import { GameObjectDisplayInfoRow } from "../../dbc/GameObjectDisplayInfo";
 import { BoundingBox } from "../Misc/BoundingBox";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { GeoBox } from "../Misc/GeoBox";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
@@ -89,5 +90,26 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
             this.row.GeoBoxMinZ,
             this.row.GeoBoxMaxZ
         )
+    }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectDisplays.set('${mod}','${id}')`,(gen)=>{
+            if(this.ModelName.get().length > 0)
+            {
+                gen.line(`.ModelName.set('${this.ModelName.get().split('\\').join('\\\\')}')`)
+            }
+            for(let i = 0; i < this.Sound.length; ++i)
+            {
+                if(this.Sound.getId(i))
+                {
+                    gen.line(`.Sound.setId(${i},${this.Sound.getId(i)})`)
+                }
+            }
+            gen.non_def_num('ObjectEffectPackage',this.ObjectEffectPackage);
+            gen.line(`.GeoBox.set({minX:${this.GeoBox.MinX.get()}, minY:${this.GeoBox.MinY.get()}, minZ:${this.GeoBox.MinZ.get()},maxX:${this.GeoBox.MaxX.get()},maxY:${this.GeoBox.MaxY.get()},maxZ:${this.GeoBox.MaxZ.get()}})`)
+        })
     }
 }

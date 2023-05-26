@@ -107,6 +107,20 @@ export class UnitFlags extends MaskCell<CreatureTemplate> {
         return this.bit(found+index*32);
     }
 
+    add(values: string[])
+    {
+        values.forEach(x=>{
+            (this as any)[x].set(true);
+        })
+        return this.owner;
+    }
+
+    set(values: string[])
+    {
+        this.clearAll();
+        return this.add(values);
+    }
+
     setBit(no: number, value: boolean) {
         if(value) {
             const cell = this.cell(no);

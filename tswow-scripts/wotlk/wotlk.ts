@@ -28,7 +28,7 @@ import { AreaTriggerRegistry } from "./std/AreaTrigger/AreaTrigger";
 import { BroadcastTextRegistry } from "./std/BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./std/BroadcastText/CreatureText";
 import { ClassRegistry } from "./std/Class/ClassRegistry";
-import { CreatureDisplayInfoRegistry } from "./std/Creature/CreatureDisplayInfo";
+import { CreatureDisplayInfoRegistry, CreatureModelRegistry } from "./std/Creature/CreatureDisplayInfo";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./std/Creature/Creatures";
 import { CreatureSoundDataRegistry } from "./std/Creature/CreatureSoundData";
 import { FootstepTerrainLookupRegistry } from "./std/Creature/FootstepTerrainLookup";
@@ -134,6 +134,7 @@ export const std = {
     CreatureOutfits: CreatureOutfitsRegistry,
     CreatureDisplayInfo: CreatureDisplayInfoRegistry,
     CreatureSoundData: CreatureSoundDataRegistry,
+    CreatureModels: CreatureModelRegistry,
     FootstepTerrainLookup: FootstepTerrainLookupRegistry,
     NPCSounds: NPCSoundsRegistry,
     GroundEffectDoodad: GroundEffectDoodadRegistry,
