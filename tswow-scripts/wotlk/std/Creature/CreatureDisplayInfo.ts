@@ -9,7 +9,8 @@ import { MainEntity } from "../Misc/Entity";
 import { GeoBox } from "../Misc/GeoBox";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
-import { SoundEntryRegistry } from "../Sound/SoundEntry";
+import { CreatureSoundDataRegistry } from "./CreatureSoundData";
+import { NPCSoundsRegistry } from "./NPCSounds";
 
 export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     clear(): this {
@@ -46,7 +47,7 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     get FoleyMaterial() { return this.wrap(this.row.FoleyMaterialID); }
     get FootstepShakeSize() { return this.wrap(this.row.FootstepShakeSize); }
     get DeathThudShake() { return this.wrap(this.row.DeathThudShakeSize); }
-    get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundID); }
+    get Sound() { return CreatureSoundDataRegistry.ref(this, this.row.SoundID); }
     get CollisionWidth() { return this.wrap(this.row.CollisionWidth); }
     get CollisionHeight() { return this.wrap(this.row.CollisionHeight);}
     get MountHeight() { return this.wrap(this.row.MountHeight); }
@@ -94,21 +95,19 @@ export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {
     get BoundingRadius() { return this.wrap(this.sql_row.BoundingRadius); }
     get CombatReach() { return this.wrap(this.sql_row.CombatReach); }
 
-    get Sound() { return SoundEntryRegistry.ref(this,this.row.SoundID); }
+    get Sound() { return CreatureSoundDataRegistry.ref(this, this.row.SoundID); }
     get ExtendedDisplay() { return this.wrap(this.row.ExtendedDisplayInfoID); }
     get CreatureModelScale() { return this.wrap(this.row.CreatureModelScale); }
     get CreatureModelAlpha() { return this.wrap(this.row.CreatureModelAlpha); }
     get TextureVariation() { return this.wrapArray(this.row.TextureVariation); }
     get BloodLevel() { return this.wrap(this.row.BloodLevel); }
     get Blood() { return this.wrap(this.row.BloodID); }
-    get NPCSound() { return SoundEntryRegistry.ref(this,this.row.NPCSoundID); }
+    get NPCSound() { return NPCSoundsRegistry.ref(this, this.row.NPCSoundID); }
     get ParticleColor() { return this.wrap(this.row.ParticleColorID); }
     get CreatureGeosetData() { return this.wrap(this.row.CreatureGeosetData); }
     get ObjectEffectPackage() { return this.wrap(this.row.ObjectEffectPackageID); }
 
     clear(): this {
-
-
         if(this.hasSql()) {
             this.sql_row
                 .BoundingRadius.set(0)
@@ -133,6 +132,7 @@ export class CreatureModelRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.CreatureModelData
     }
+
     Clear(entity: CreatureModel): void {
         entity
             .AttachedEffectScale.set(0)
@@ -182,6 +182,12 @@ export class CreatureDisplayInfoRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.CreatureDisplayInfo
     }
+
+    protected Clone(entity: CreatureDisplayInfo, parent: CreatureDisplayInfo): void {
+        SQL.creature_model_info.query({DisplayID:parent.ID})
+            .clone(entity.ID)
+    }
+
     Clear(entity: CreatureDisplayInfo): void {
         entity
             .ExtendedDisplay.set(0)
@@ -195,6 +201,12 @@ export class CreatureDisplayInfoRegistryClass
             .ObjectEffectPackage.set(0)
             .row.SoundID.set(0)
             .NPCSoundID.set(0)
+
+        SQL.creature_model_info.add(entity.ID)
+            .BoundingRadius.set(0)
+            .CombatReach.set(0)
+            .DisplayID_Other_Gender.set(0)
+            .Gender.set(0)
     }
     protected FindByID(id: number): CreatureDisplayInfoRow {
         return DBC.CreatureDisplayInfo.findById(id);

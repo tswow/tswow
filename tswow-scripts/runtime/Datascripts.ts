@@ -369,7 +369,7 @@ export class Datascripts {
         try {
             wsys.exec(
                     `node -r source-map-support/register`
-                + ` ${ipaths.bin.scripts.wow.data.index.get()}`
+                + ` ${ipaths.node_modules.wow.data.index.get()}`
                 + ` --ipaths=./`
                 + ` --dataset=${dataset.path.get()}`
                 + ` --datasetName=${dataset.fullName}`

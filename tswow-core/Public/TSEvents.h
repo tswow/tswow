@@ -458,6 +458,12 @@ struct TSEvents
     {
         EVENTS_HEADER(SpellEvents)
         TSRegistryRef& get_registry_ref(uint32 id) override;
+
+        ID_EVENT(OnLearn, TSSpellInfo, TSPlayer, bool active, bool disabled, bool superceded, TSNumber<std::uint32_t> from_skill)
+        ID_EVENT(OnUnlearnTalent, TSSpellInfo, TSPlayer, TSNumber<std::uint32_t> tab_index, TSNumber<std::uint32_t> tier, TSNumber<std::uint32_t> column, TSNumber<std::uint32_t> rank, bool direct)
+        ID_EVENT(OnLearnTalent, TSSpellInfo, TSPlayer, TSNumber<uint32> tabId, TSNumber<uint32> talentId, TSNumber<uint32> talentRank, TSNumber<uint32> spellId, TSMutable<bool, bool>)
+        ID_EVENT(OnUnlearn, TSSpellInfo, TSPlayer, bool disabled, bool learn_low_rank)
+
         ID_EVENT(OnCast, TSSpell)
         ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>)
         ID_EVENT(OnSuccessfulDispel, TSSpell, TSNumber<uint32>)
@@ -509,7 +515,7 @@ struct TSEvents
         ID_EVENT(OnEffectCalcSpellMod, TSAuraEffect, TSSpellModifier, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnEffectManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnEffectSplit, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> splitAmount, TSMutable<bool,bool> cancelDefault)
-
+        ID_EVENT(OnSetDuration, TSAura, TSMutableNumber<int32> duration, TSMutable<bool,bool> withMods);
         ID_EVENT(OnAfterCast, TSSpell, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnAfterHit, TSSpell, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnBeforeCast, TSSpell, TSMutable<bool,bool> cancelDefault)
@@ -518,7 +524,6 @@ struct TSEvents
         ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
-        ID_EVENT(OnLearn, TSSpellInfo, TSPlayer)
         ID_EVENT(OnHealLate, TSSpellInfo, TSUnit, TSUnit, TSNumber<uint32>, bool)
     } Spell;
 

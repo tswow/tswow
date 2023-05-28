@@ -134,6 +134,7 @@ public:
     int32 GetTotalAuraModifier(uint32 auraType);
     int32 GetTotalAuraModifierByMiscValue(uint32 auraType, int32 miscValue);
     float GetTotalAuraMultiplier(uint32 auraType);
+    int32 GetTotalAuraModifierByMiscMask(uint32 auraType, uint32 miscMask);
     float GetTotalAuraMultiplierByMiscValue(uint32 auraType, int32 miscValue);
     int32 GetMaxPositiveAuraModifier(uint32 auraType);
     int32 GetMaxNegativeAuraModifier(uint32 auraType);

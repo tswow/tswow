@@ -16,10 +16,10 @@
 /* tslint:disable */
 import { int, mediumint, text, tinyint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { SQLCell, SQLCellReadOnly } from '../../data/sql/SQLCell'
 import { SqlRow } from '../../data/sql/SQLRow'
 import { SqlTable } from '../../data/sql/SQLTable'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -53,12 +53,27 @@ export class creature_template_addonRow extends SqlRow<creature_template_addonCr
     /**
      * No comment (yet!)
      */
-    get bytes1() {return new SQLCell<int, this>(this, 'bytes1')}
+    get StandState() { return new SQLCell<tinyint, this>(this, 'StandState')}
 
     /**
      * No comment (yet!)
      */
-    get bytes2() {return new SQLCell<int, this>(this, 'bytes2')}
+    get AnimTier() { return new SQLCell<tinyint, this>(this, 'AnimTier')}
+
+    /**
+     * No comment (yet!)
+     */
+    get VisFlags() { return new SQLCell<tinyint, this>(this, 'VisFlags')}
+
+    /**
+     * No comment (yet!)
+     */
+    get SheathState() { return new SQLCell<tinyint, this>(this, 'SheathState')}
+
+    /**
+     * No comment (yet!)
+     */
+    get PvPFlags() { return new SQLCell<tinyint, this>(this, 'PvPFlags')}
 
     /**
      * No comment (yet!)
@@ -93,8 +108,11 @@ export type creature_template_addonCreator = {
     path_id? : int,
     mount? : mediumint,
     MountCreatureID?: int,
-    bytes1? : int,
-    bytes2? : int,
+    StandState?: tinyint,
+    AnimTier?: tinyint,
+    VisFlags?: tinyint,
+    SheathState?: tinyint,
+    PvPFlags?: tinyint,
     emote? : mediumint,
     visibilityDistanceType? : tinyint,
     auras? : text,
@@ -108,8 +126,11 @@ export type creature_template_addonQuery = {
     path_id? : Relation<int>,
     mount? : Relation<mediumint>,
     MountCreatureID? : Relation<int>,
-    bytes1? : Relation<int>,
-    bytes2? : Relation<int>,
+    StandState?: Relation<tinyint>,
+    AnimTier?: Relation<tinyint>,
+    VisFlags?: Relation<tinyint>,
+    SheathState?: Relation<tinyint>,
+    PvPFlags?: Relation<tinyint>,
     emote? : Relation<mediumint>,
     visibilityDistanceType? : Relation<tinyint>,
     auras? : Relation<text>,

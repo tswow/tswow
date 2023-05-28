@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 
 	HANDLE mpq = NULL;
 	if (!SFileOpenArchive(mainfile.string().c_str(), 0, STREAM_FLAG_READ_ONLY, &mpq)) {
-		std::cout << "Failed to open main MPQ file with error " << GetLastError() << "\n";
+		std::cout << "Failed to open main MPQ file " << mainfile.string() << " with error " << GetLastError() << "\n";
 		return GetLastError();
 	}
 

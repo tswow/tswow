@@ -223,7 +223,7 @@ export class ClassRegistryClass
 
         let cls = new Class(
             parent,
-            rParent.clone(id,{Filename:identifier}),
+            rParent.clone(id,{Filename:identifier, Required_Expansion: 0}),
             tCoordsCC,
             tCoordsWS,
             classColor,

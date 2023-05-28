@@ -204,6 +204,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffectCalcSpellMod);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffectManaShield);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffectSplit);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnSetDuration);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnAfterCast);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnAfterHit);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnBeforeCast);
@@ -212,7 +213,6 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnObjectAreaTargetSelect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnObjectTargetSelect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
-    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnLearn);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHealLate);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");

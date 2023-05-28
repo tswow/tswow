@@ -163,8 +163,11 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
         return SQL.creature_template_addon.add(this.owner.ID)
             .MountCreatureID.set(0)
             .auras.set('')
-            .bytes1.set(0)
-            .bytes2.set(0)
+            .StandState.set(0)
+            .AnimTier.set(0)
+            .VisFlags.set(0)
+            .SheathState.set(1)
+            .PvPFlags.set(0)
             .emote.set(0)
             .mount.set(0)
             .path_id.set(0)
@@ -178,8 +181,12 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
     }
 
     get Auras()  { return this.wrapSQL('',sql=>sql.auras); }
-    get Bytes1() { return this.wrapSQL(0,sql=>sql.bytes1); }
-    get Bytes2() { return this.wrapSQL(0,sql=>sql.bytes2); }
+    get StandState() { return this.wrapSQL(0, sql=>sql.StandState); }
+    get AnimTier() { return this.wrapSQL(0, sql=>sql.AnimTier); }
+    get VisFlags() { return this.wrapSQL(0, sql=>sql.VisFlags); }
+    get SheathState() { return this.wrapSQL(1, sql=>sql.SheathState); }
+    get PvPFlags() { return this.wrapSQL(0, sql=>sql.PvPFlags); }
+
     get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
     get Mount()  { return this.wrapSQL(0,sql=>sql.mount); }
     get Path()   { return this.wrapSQL(0,sql=>sql.path_id); }
@@ -218,11 +225,17 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     @Transient
     readonly AddonRow = new CreatureTemplateAddonRow(this);
     get Auras()   { return this.Addon.Auras; }
-    get AddonBytes1()  { return this.Addon.Bytes1 }
-    get AddonBytes2()  { return this.Addon.Bytes2 }
+
     get Emote()   { return this.Addon.Emote }
     get Mount()   { return this.Addon.Mount }
     get Path()    { return this.Addon.Path }
+
+    get StandState() { return this.Addon.StandState }
+    get AnimTier() { return this.Addon.AnimTier }
+    get VisFlags() { return this.Addon.VisFlags }
+    get SheathState() { return this.Addon.SheathState }
+    get PvPFlags() { return this.Addon.PvPFlags }
+
     get VisibilityDistanceType() {
         return this.Addon.VisibilityDistanceType
     }

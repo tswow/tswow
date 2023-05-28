@@ -90,6 +90,7 @@ declare const enum TempSummonType {} /** ObjectDefines.h:TempSummonType */
 declare const enum TypeID {} /** ObjectGuid.h:TypeID */
 declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
 declare const enum CharmType {} /** Unit.h:CharmType */
+declare const enum PlayerFlags {} /** Player.h:PlayerFlags */
 
 declare const enum Powers /**@realType:int8 */ {
     HEALTH                        = -2,
@@ -135,6 +136,8 @@ declare const enum WeaponAttackType {} /** SharedDefines.h:WeaponAttackType */
 declare const enum RuneType {} /** Player.h:RuneType */
 
 declare const enum PlayerSpellState {} /** Player.h:PlayerSpellState */
+
+declare const enum LootMode {} /** SharedDefines.h:LootMode */
 
 declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
@@ -327,7 +330,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param cod
      * @param items
      */
-	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, items? : TSArray<TSItem>);
+	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
 
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
@@ -3356,6 +3359,7 @@ declare interface TSAura extends TSEntityProvider {
 }
 
 declare interface TSAuraEffect extends TSEntityProvider {
+    IsNull(): bool;
     GetCaster(): TSUnit;
     GetCasterGUID(): TSNumber<uint64>
     GetAura(): TSAura;
@@ -4114,6 +4118,14 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     SetWeather(zoneId : uint32,weatherType : WeatherType,grade : float) : void
 }
+
+declare class TSItemEntry
+{
+    private constructor();
+    GetEntry(): TSNumber<uint32>;
+    GetCount(): TSNumber<uint32>
+}
+declare function CreateItemEntry(entry: uint32, count: uint32): TSItemEntry
 
 declare class TSItem extends TSObject {
     constructor();
@@ -6534,6 +6546,7 @@ declare interface TSUnit extends TSWorldObject {
     GetAuraEffectsByType(type: AuraType): TSArray<TSAuraEffect>;
 
     GetTotalAuraModifier(auraType: AuraType): int32;
+    GetTotalAuraModifierByMiscMask(auraType: AuraType, miscMask: uint32): int32;
     GetTotalAuraModifierByMiscValue(auraType: AuraType, miscValue: int32): int32;
     GetTotalAuraMultiplier(auraType: AuraType): float;
     GetTotalAuraMultiplierByMiscValue(auraType: AuraType, miscValue: int32): float;
@@ -7994,6 +8007,18 @@ declare namespace _hidden {
     }
 
     export class Spell<T> {
+        OnLearn(callback :              (spell: TSSpellInfo, player: TSPlayer, active: boolean, disabled: boolean, superceded: boolean, from_skill: uint32)=>void): T;
+        OnLearn(id: EventID, callback : (spell: TSSpellInfo, player: TSPlayer, active: boolean, disabled: boolean, superceded: boolean, from_skill: uint32)=>void): T;
+
+        OnUnlearn(callback :              (spell: TSSpellInfo, player: TSPlayer, disabled: boolean, learn_low_rank: boolean)=>void): T;
+        OnUnlearn(id: EventID, callback : (spell: TSSpellInfo, player: TSPlayer, disabled: boolean, learn_low_rank: boolean)=>void): T;
+
+        OnUnlearnTalent(callback :              (spell: TSSpellInfo, player: TSPlayer, tab_index: uint32, tier: uint32, column: uint32, rank: uint32, direct: boolean)=>void): T;
+        OnUnlearnTalent(id: EventID, callback : (spell: TSSpellInfo, player: TSPlayer, tab_index: uint32, tier: uint32, column: uint32, rank: uint32, direct: boolean)=>void): T;
+
+        OnLearnTalent(callback:              (spell: TSSpellInfo, player: TSPlayer, tabId: uint32, talentId: uint32, talentRank: uint32, spellId: uint32, cancel: TSMutable<boolean,boolean>)=>void)
+        OnLearnTalent(id: EventID, callback: (spell: TSSpellInfo, player: TSPlayer, tabId: uint32, talentId: uint32, talentRank: uint32, spellId: uint32, cancel: TSMutable<boolean,boolean>)=>void)
+
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCast(id: EventID, callback : (spell: TSSpell)=>void): T;
 
@@ -8207,6 +8232,9 @@ declare namespace _hidden {
         OnEffectManaShield(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutableNumber<uint32>, cancel: TSMutable<boolean,boolean> )=>void)
         OnEffectManaShield(id: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutableNumber<uint32>, cancel: TSMutable<boolean,boolean> )=>void)
 
+        OnSetDuration(callback: (effect: TSAura, duration: TSMutableNumber<int32>, withMods: TSMutable<bool,bool>) => void);
+        OnSetDuration(id: EventID, callback: (effect: TSAura, duration: TSMutableNumber<int32>, withMods: TSMutable<bool,bool>) => void);
+
         OnEffectSplit(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, splitAmount: TSMutableNumber<uint32>, cancel: TSMutable<boolean,boolean> )=>void)
         OnEffectSplit(id: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, splitAmount: TSMutableNumber<uint32>, cancel: TSMutable<boolean,boolean> )=>void)
 
@@ -8233,15 +8261,6 @@ declare namespace _hidden {
 
         OnResistAbsorbCalculate(callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
         OnResistAbsorbCalculate(id: EventID, callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
-    
-        OnLearn(callback : (
-            spell: TSSpellInfo
-            , player: TSPlayer
-        )=>void): T
-        OnLearn(id: EventID, callback : (
-            spell: TSSpellInfo
-            , player: TSPlayer
-        )=>void): T
 
         OnHealLate(callback : (
             spell: TSSpellInfo
@@ -9569,6 +9588,7 @@ declare interface TSPreparedStatementBase {
 
     SetString(index: uint8, value: float): this
     Send(): TSDatabaseResult
+    SendAsync(): void
     Send(connection: TSDatabaseConnection): TSDatabaseResult
 }
 
@@ -9696,6 +9716,10 @@ declare function CreateTSMutable<T>(ptr: T): TSMutable<T,T>;
 declare function QueryWorld(query: string): TSDatabaseResult;
 declare function QueryCharacters(query: string): TSDatabaseResult;
 declare function QueryAuth(query: string): TSDatabaseResult;
+
+declare function QueryWorldAsync(query: string): void;
+declare function QueryCharactersAsync(query: string): void;
+declare function QueryAuthAsync(query: string): void;
 
 declare function PrepareWorldQuery(query: string): TSPreparedStatementWorld
 declare function PrepareCharactersQuery(query: string): TSPreparedStatementCharacters

@@ -16,7 +16,9 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
-import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { makeMaskCell32, MaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { any } from "../../../data/query/Relations";
 import { spell_procRow } from "../../sql/spell_proc";
 import { SQL } from "../../SQLFiles";
 import { PercentCell } from "../Misc/PercentCell";
@@ -127,6 +129,25 @@ export enum SpellProcFlags {
 
 }
 
+export class SimpleClassMask<T> extends CellSystem<T>
+{
+    protected a: Cell<number,any>;
+    protected b: Cell<number,any>;
+    protected c: Cell<number,any>;
+
+    constructor(owner: T, a: Cell<number, any>, b: Cell<number, any>, c: Cell<number,any>)
+    {
+        super(owner);
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+
+    get A() { return new MaskCell32(this.owner, this.a) };
+    get B() { return new MaskCell32(this.owner, this.b) };
+    get C() { return new MaskCell32(this.owner, this.c) };
+}
+
 export class SQLMaybeWriteCell extends Cell<number,Spell>{
     private proc: SpellProc
 
@@ -184,7 +205,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     protected findSQL(): spell_procRow {
-        return SQL.spell_proc.query({SpellId:this.owner.ID})
+        return SQL.spell_proc.query({SpellId:any(this.owner.ID,-this.owner.ID)})
     }
     protected isValidSQL(sql: spell_procRow): boolean {
         return sql.SpellId.get() === this.owner.ID
@@ -221,11 +242,11 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get ClassMask() {
-        return {
-              A: this.wrapSQL(0,sql=>sql.SpellFamilyMask0)
-            , B: this.wrapSQL(0,sql=>sql.SpellFamilyMask1)
-            , C: this.wrapSQL(0,sql=>sql.SpellFamilyMask2)
-        }
+        return new SimpleClassMask(this
+            , this.wrapSQL(0,s=>s.SpellFamilyMask0)
+            , this.wrapSQL(0,s=>s.SpellFamilyMask1)
+            , this.wrapSQL(0,s=>s.SpellFamilyMask2)
+        );
     }
 
     get TypeMask() {

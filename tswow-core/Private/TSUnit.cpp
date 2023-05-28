@@ -2294,34 +2294,16 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
     // flat melee damage without resistence/etc reduction
     if (school == MAX_SPELL_SCHOOL)
     {
-#if defined TRINITY || AZEROTHCORE
         Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
-#elif defined CMANGOS
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
-        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
-#else
-        unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
-        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
-#endif
         return;
     }
 
     SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
 
-#if defined TRINITY || AZEROTHCORE
     if (Unit::IsDamageReducedByArmor(schoolmask))
         damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
-#else
-    if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
-#ifndef CMANGOS
-        damage = unit->CalcArmorReducedDamage(target, damage);
-#else
-        damage = unit->CalcArmorReducedDamage(unit, target, damage);
-#endif
-#endif
 
-#ifdef TRINITY
     // melee damage by specific school
     if (!spell)
     {
@@ -2336,98 +2318,29 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
         uint32 absorb = dmgInfo.GetAbsorb();
         uint32 resist = dmgInfo.GetResist();
         unit->DealDamageMods(target, damage, &absorb);
-#ifdef TRINITY
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#else
-        unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#endif
+        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
         return;
     }
 
-    if (!spell)
-        return;
-
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
     if (!spellInfo)
-        return;
-
-    SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
-#ifdef TRINITY
-    Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-#else
-    damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE;
-    damage = target->SpellDamageBonusTaken(unit, spellInfo, damage, SPELL_DIRECT_DAMAGE);
-    unit->CalculateSpellDamageTaken(&dmgInfo, damage, spellInfo);
-    unit->DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-#endif
-
-    unit->SendSpellNonMeleeDamageLog(&dmgInfo);
-    unit->DealSpellDamage(&dmgInfo, true);
-    return;
-#elif AZEROTHCORE
-    if (!spell)
     {
-        DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE);
-        unit->CalcAbsorbResist(dmgInfo);
-
-        if (!dmgInfo.GetDamage())
-            damage = 0;
-        else
-            damage = dmgInfo.GetDamage();
-
-        uint32 absorb = dmgInfo.GetAbsorb();
-        uint32 resist = dmgInfo.GetResist();
-        unit->DealDamageMods(target, damage, &absorb);
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-        unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+        TC_LOG_ERROR("scripts", "attempted to do damage with invalid spell id %u", spell);
         return;
     }
 
-    if (!spell)
-        return;
-
-    SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
-    if (!spellInfo)
-        return;
-
-    SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, spellInfo->GetSchoolMask());
-    Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-    unit->SendSpellNonMeleeDamageLog(&dmgInfo);
-    unit->DealSpellDamage(&dmgInfo, true);
-    return;
-#else
-    // melee damage by specific school
-    if (!spell)
+    if (target->IsImmunedToDamage(spellInfo))
     {
-        uint32 absorb = 0;
-#ifndef CMANGOS
-        uint32 resist = 0;
-#else
-        int32 resist = 0;
-#endif
-        target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-
-        if (damage <= absorb + resist)
-            damage = 0;
-        else
-            damage -= absorb + resist;
-
-#ifndef CMANGOS
-        unit->DealDamageMods(target, damage, &absorb);
-        unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#else
-        unit->DealDamageMods(unit, target, damage, &absorb, DIRECT_DAMAGE);
-        unit->DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#endif
-        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
         return;
     }
 
-    // non-melee damage
-    unit->SpellNonMeleeDamageLog(target, spell, damage);
-    return;
-#endif
+    SpellNonMeleeDamage damageInfo(unit, target, spell, schoolmask);
+    unit->SetLastDamagedTargetGuid(target->GetGUID());
+    unit->CalculateSpellDamageTaken(&damageInfo, damage, spellInfo, WeaponAttackType::BASE_ATTACK);
+    Unit::DealDamageMods(damageInfo.target, damageInfo.damage, &damageInfo.absorb);
+    unit->SendSpellNonMeleeDamageLog(&damageInfo);
+    unit->DealSpellDamage(&damageInfo, durabilityloss);
 }
 
 /**
@@ -2684,6 +2597,11 @@ int32 TSUnit::GetTotalAuraModifierByMiscValue(uint32 auraType, int32 miscValue)
 float TSUnit::GetTotalAuraMultiplier(uint32 auraType)
 {
     return unit->GetTotalAuraMultiplier(AuraType(auraType));
+}
+
+int32 TSUnit::GetTotalAuraModifierByMiscMask(uint32 auraType, uint32 miscMask)
+{
+    return unit->GetTotalAuraModifierByMiscMask(AuraType(auraType), miscMask);
 }
 
 float TSUnit::GetTotalAuraMultiplierByMiscValue(uint32 auraType, int32 miscValue)

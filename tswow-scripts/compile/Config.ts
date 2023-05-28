@@ -161,6 +161,8 @@ export namespace Config {
             .split('\r').join('');
 
         ipaths.bin.revisions.tswow.write(`${commit}${h.length>0?'+':''}`)
+
+        ipaths.startBat.write(`./bin/node/npm run start %*`)
         // todo: realm/dataset configs
     }
 }
