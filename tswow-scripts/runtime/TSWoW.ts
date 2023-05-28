@@ -80,6 +80,10 @@ export async function main() {
     applyTSTLHack();
     Module.cacheEndpoints(true);
     await mysql.initialize();
+    if(process.argv.includes('mysql-only'))
+    {
+        return;
+    }
     await Dataset.initialize()
     await Client.initialize();
     await Module.initialize();

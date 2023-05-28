@@ -46,7 +46,7 @@
     "sync-mysql": "^3.0.1",
     "terminal-kit": "^1.44.0",
     "typescript": "4.7.3",
-    "typescript-to-lua": "^1.6.2",
+    "typescript-to-lua": "1.6.2",
     "xml2js": "^0.4.23"
   },
   "scripts": {

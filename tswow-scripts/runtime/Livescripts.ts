@@ -146,7 +146,7 @@ export class Livescripts {
     private buildLua(dataset: Dataset, args: string[] = []) {
         applyTSTLHack();
         ipaths.bin.include_lua.copy(dataset.path.lib.include_lua)
-        let config = Object.assign({},lua_tsconfig_json)
+        let config = JSON.parse(JSON.stringify(lua_tsconfig_json));
 
         let buildDir = this.path.build.dataset.pick(dataset.fullName).lua
         config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.path).get()

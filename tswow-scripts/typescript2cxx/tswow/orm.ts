@@ -22,6 +22,16 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         + `${entry.dbCallName()}`
         + `Query`
 
+
+    // __CreateTable
+    writer.writeStringNewLine()
+    writer.writeStringNewLine(`int ${entry.className}::__CreateTable()`)
+    writer.BeginBlock()
+    writer.writeString(entry.createDatabaseSpec('c++')+';')
+    writer.writeStringNewLine('return 0;');
+    writer.EndBlock()
+    writer.writeStringNewLine(`volatile int ${entry.className}_load_dummy = ${entry.className}::__CreateTable();`);
+
     // Load
     writer.writeStringNewLine()
     writer.writeStringNewLine()
@@ -41,11 +51,11 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     switch(entry.tableType) {
         case 'DBEntry':
+            writer.writeStringNewLine(`static ${statementName} ${entry.className}_LoadStatement = ${entry.prepareStatement(4,'c++',entry.loadStatement)};`)
             writer.writeStringNewLine(`void ${entry.className}::Load()`)
             writer.BeginBlock()
-            writer.writeStringNewLine(`static ${statementName} LoadStatement = ${entry.prepareStatement(4,'c++',entry.loadStatement)};`)
             writer.writeString(
-                `auto res = LoadStatement.Create()`)
+                `auto res = ${entry.className}_LoadStatement.Create()`)
             writer.writeString('\n'+entry.loadPks(8,false,true,'c++'));
             writer.writeStringNewLine(`        ->Send();`)
             writer.writeStringNewLine('')
@@ -56,13 +66,13 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             writer.writeStringNewLine()
             break;
         case 'DBArrayEntry':
+            writer.writeStringNewLine(`static ${statementName} ${entry.className}_LoadStatement = ${entry.prepareStatement(4,'c++',entry.loadStatement)};`)
             writer.writeStringNewLine(
                     `std::shared_ptr<DBContainer<${entry.className}>> ${entry.className}::Load`
                 + `(${entry.pksNoIndex().map(x=>`${x.type} ${x.memoryName()}`).join(', ')})`
             )
             writer.BeginBlock()
-            writer.writeStringNewLine(`static ${statementName} LoadStatement = ${entry.prepareStatement(4,'c++',entry.loadStatement)};`)
-            writer.writeString(`auto res = LoadStatement.Create()`)
+            writer.writeString(`auto res = ${entry.className}_LoadStatement.Create()`)
             writer.writeString('\n'+entry.loadPks(8,false,false,'c++'))
             writer.writeStringNewLine(`        ->Send();`)
             writer.writeStringNewLine(``);
@@ -128,12 +138,12 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     // Save
     writer.writeStringNewLine()
+    writer.writeStringNewLine(`static ${statementName} ${entry.className}_SaveStatement = ${entry.prepareStatement(4,'c++',entry.saveStatement)};`)
     writer.writeStringNewLine(`void ${entry.className}::Save()`)
     writer.BeginBlock()
-    writer.writeStringNewLine(`static ${statementName} SaveStatement = ${entry.prepareStatement(4,'c++',entry.saveStatement)};`)
     switch(entry.tableType) {
         case 'DBEntry':
-            writer.writeString(`SaveStatement->Create()`)
+            writer.writeString(`${entry.className}_SaveStatement->Create()`)
             writer.writeString('\n'+entry.saveFields(8,'c++'))
             writer.writeStringNewLine(`        ->Send();`)
             writer.EndBlock()
@@ -144,7 +154,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             writer.writeStringNewLine(
                 `auto con = Get${entry.dbCallName()}DBConnection();`
             )
-            writer.writeString(`SaveStatement->Create()`);
+            writer.writeString(`${entry.className}_SaveStatement->Create()`);
             writer.writeString('\n'+entry.saveFields(12,'c++'))
             writer.writeStringNewLine(`            ->Send(con);`);
             writer.writeStringNewLine(
@@ -155,7 +165,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             writer.EndBlock()
             writer.writeStringNewLine(`else`)
             writer.BeginBlock()
-            writer.writeString(`SaveStatement->Create()`);
+            writer.writeString(`${entry.className}_SaveStatement->Create()`);
             writer.writeString('\n'+entry.saveFields(12,'c++'))
             writer.writeStringNewLine(`            ->Send();`);
             writer.EndBlock()
@@ -166,6 +176,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     // Delete
     writer.writeStringNewLine()
+    writer.writeStringNewLine(`static ${statementName} ${entry.className}_DeleteStatement = ${entry.prepareStatement(4,'c++',entry.deleteStatement)};`)
     switch(entry.tableType) {
         case 'DBEntry':
             writer.writeStringNewLine(`void ${entry.className}::Delete()`)
@@ -176,18 +187,11 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         default: throw new Error(`Invalid TableType: ${entry.tableType}`)
     }
     writer.BeginBlock()
-    writer.writeStringNewLine(`static ${statementName} DeleteStatement = ${entry.prepareStatement(4,'c++',entry.deleteStatement)};`)
-    writer.writeString(`DeleteStatement->Create()`)
+    writer.writeString(`${entry.className}_DeleteStatement->Create()`)
     writer.writeString(`\n${entry.loadPks(8,true,true,'c++')}`)
     writer.writeStringNewLine(`        ->Send();`)
     writer.EndBlock()
 
-    // __CreateTable
-    writer.writeStringNewLine()
-    writer.writeStringNewLine(`void ${entry.className}::__CreateTable()`)
-    writer.BeginBlock()
-    writer.writeString(entry.createDatabaseSpec('c++')+';')
-    writer.EndBlock()
     if(entry.tableType === 'DBArrayEntry') {
         writer.writeStringNewLine(`uint64 ${entry.className}::Index() { return __index; }`)
     }
@@ -248,7 +252,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
         default:
             throw new Error(`Invalid table type: ${entry.tableType}`)
     }
-    writer.writeStringNewLine(`static void __CreateTable();`)
+    writer.writeStringNewLine(`static int __CreateTable();`)
     writer.writeStringNewLine()
 }
 
@@ -273,9 +277,7 @@ export function writeTableCreationFile(outDir: string) {
     })
     writer.writeStringNewLine(`void WriteTables()`);
     writer.BeginBlock()
-    classes.forEach(x=>{
-        writer.writeStringNewLine(`${x}::__CreateTable();`);
-    })
+    // todo: remove entirely
     writer.EndBlock()
     const tableFile = mpath(outDir,'livescripts','TableCreator.cpp');
     TRANSPILER_CHANGES.writeIfChanged(

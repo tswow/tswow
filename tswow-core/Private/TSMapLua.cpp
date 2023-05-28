@@ -31,6 +31,7 @@ void TSLua::load_map_methods(sol::state& state)
     LUA_FIELD(ts_map, TSMap, GetCreature);
     LUA_FIELD(ts_map, TSMap, GetGameObject);
     LUA_FIELD(ts_map, TSMap, GetPlayer);
+    LUA_FIELD(ts_map, TSMap, IsInLineOfSight);
     LUA_FIELD(ts_map, TSMap, GetCreatureByDBGUID);
     LUA_FIELD(ts_map, TSMap, GetGameObjectByDBGUID);
     LUA_FIELD(ts_map, TSMap, SpawnCreature);

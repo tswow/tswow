@@ -14,16 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as child_process from 'child_process';
 import * as fs from 'fs';
 import path from 'path';
 import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.22101/TDB_full_world_335.22101_2022_10_17.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.23011/TDB_full_world_335.23011_2023_01_16.7z"
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
+
+function currentCommitShort()
+{
+    return child_process
+        .execSync('git rev-parse --short HEAD')
+        .toString('utf-8')
+        .trimRight()
+        .trimLeft()
+}
 
 export function tdbFilename() {
     let split = TDB_URL.split('/')
@@ -257,16 +267,26 @@ export function InstallPath(pathIn: string, tdb: string) {
             typescript_js: file('typescript/lib/tsc'),
             tstl_decorators: file('typescript-to-lua/dist/transformation/visitors/class/decorators.js'),
             tstl_js: file('typescript-to-lua/dist/tstl.js'),
-            wow: dir({}),
+            wow: dir({
+                data: dir({
+                    index: file('index.js')
+                })
+            }),
         }),
 
         node_conf: file('node.conf'),
 
         Crashes: dir({}),
 
+        startBat: file('start.bat'),
+
         bin: dir({
             package: dir({
                 file: dynfile(x=>x)
+            }),
+            node: dir(
+            {
+                npm: file('npm'),
             }),
             changes: dir({
                 changeFile: dynfile(name=>name)
@@ -474,7 +494,7 @@ export function InstallPath(pathIn: string, tdb: string) {
 
 export function BuildPaths(pathIn: string, tdb: string) {
     return generateTree(pathIn, dir({
-        release_7z: file('release.7z'),
+        release_7z: file(`tswow-installer-${currentCommitShort()}.exe`),
         terminal_history: file('terminal-history.txt'),
         ClientExtensionsDll: file('ClientExtensions.dll'),
         client_extensions: dirn('client-extensions',{
@@ -507,6 +527,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         cmakeArchive: file('cmake-3.25.0-win64-x64.zip'),
         mysqlArchive: file('mysql-5.7.32-winx64.zip'),
+        nodeArchive: file('node-v18.12.1-win-x64.zip'),
+        node: dirn('node-v18.12.1-win-x64',{}),
 
         sourceAdt: file('source.adt'),
 
@@ -549,7 +571,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
         sevenZip: dirn('7zip',{
-            sevenZa_exe: file('7za.exe')
+            sevenZa_exe: file('7za.exe'),
+            sz_sfx: file('7z.sfx'),
         }),
 
         imArchive: file('ImageMagick-7.1.0-portable-Q16-x64.zip'),

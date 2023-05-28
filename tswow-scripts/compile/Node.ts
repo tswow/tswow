@@ -14,19 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { isWindows } from './Platform';
-import { wsys } from './System';
+import { ipaths } from '../util/Paths';
+import { isWindows } from '../util/Platform';
+import { NODE_URL } from './BuildConfig';
+import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
-export namespace SevenZip {
-    export function extract(sevenZipPath: string, archive: string, out: string) {
-        if(isWindows()) {
-            wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
-        } else {
-            wsys.execIn(out,`p7zip -d -k "${archive}"`,'inherit')
+export namespace NodeJS {
+    export async function install() {
+        if(!isWindows())
+        {
+            return;
         }
-    }
 
-    export function makeArchive(sevenZipPath: string, zipPath: string, directoryIn: string[]) {
-        wsys.exec(`"${sevenZipPath}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on -sfx7z.sfx`,'inherit');
+        await DownloadFile(
+             NODE_URL
+           , bpaths.nodeArchive
+        )
+
+        if(!bpaths.node.exists()) {
+            await ExtractZip(
+                  bpaths.nodeArchive.get()
+                , {dir:bpaths.abs().get()}
+            )
+        }
+
+        bpaths.node.copy(ipaths.bin.node);
     }
 }

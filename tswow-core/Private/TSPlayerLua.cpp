@@ -22,6 +22,7 @@
 #include "TSVehicle.h"
 #include "TSSpell.h"
 #include "TSGameObject.h"
+#include "TSItemEntry.h"
 
 void TSLua::load_player_methods(sol::state& state)
 {

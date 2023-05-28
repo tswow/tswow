@@ -576,7 +576,7 @@ export const Ids = {
     GlyphSlot: new DynamicIDGenerator('GlyphSlot',30),
 
     /** Starts at 800, highest base value is 798 */
-    GroundEffectDoodad: new DynamicIDGenerator('GroundEffectDoodad',800),
+    GroundEffectDoodad: new StaticIDGenerator('GroundEffectDoodad',800),
 
     /** Starts at 74000, highest base value is 73186 */
     GroundEffectTexture: new DynamicIDGenerator('GroundEffectTexture',74000),
@@ -817,6 +817,9 @@ export const Ids = {
 
     /** Starts at 1401, highest base value is 1400 (cont) */
     TeamContributionPoints: new DynamicIDGenerator('TeamContributionPoints', 1401),
+
+    /** Starts at 13, highest base value is 12 (cont) */
+    TerrainType: new DynamicIDGenerator('Terraintype', 13),
 
     /** Starts at 11, highest base value is 10 (cont) */
     TerrainTypeSounds: new DynamicIDGenerator('TerraintypeSounds', 11),

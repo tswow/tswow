@@ -75,6 +75,8 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, GetNativeDisplayID);
     LUA_FIELD(ts_unit, TSUnit, GetLevel);
     LUA_FIELD(ts_unit, TSUnit, GetHealth);
+    LUA_FIELD(ts_unit, TSUnit, GetMaxHealth);
+    LUA_FIELD(ts_unit, TSUnit, GetHealthPct);
     LUA_FIELD(ts_unit, TSUnit, PowerSelectorHelper);
     LUA_FIELD(ts_unit, TSUnit, GetPower);
     LUA_FIELD(ts_unit, TSUnit, GetMaxPower);
@@ -101,6 +103,7 @@ void TSLua::load_unit_methods(sol::state& state)
         return sol::as_table(*effs.vec);
     });
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifier);
+    LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifierByMiscMask);
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraMultiplier);
     LUA_FIELD(ts_unit, TSUnit, GetMaxPositiveAuraModifier);
     LUA_FIELD(ts_unit, TSUnit, GetMaxNegativeAuraModifier);
@@ -186,6 +189,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, ClearUnitState);
     LUA_FIELD(ts_unit, TSUnit, NearTeleport);
     LUA_FIELD(ts_unit, TSUnit, DealDamage);
+    LUA_FIELD_OVERLOAD_4_1(ts_unit, TSUnit, DealDamage, TSUnit, uint32, bool, uint32, uint32);
     LUA_FIELD(ts_unit, TSUnit, DealHeal);
     LUA_FIELD(ts_unit, TSUnit, Kill);
     LUA_FIELD(ts_unit, TSUnit, AddThreat);
