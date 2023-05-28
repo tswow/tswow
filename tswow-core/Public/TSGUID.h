@@ -11,6 +11,7 @@ public:
     TSGUID();
     TSNumber<uint32> GetLow() const;
     bool operator==(TSGUID const& oth) const;
+    TSGUID* operator->() { return this; }
     bool IsEmpty()             const;
     bool IsCreature()          const;
     bool IsPet()               const;

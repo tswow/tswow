@@ -2282,6 +2282,9 @@ declare class TSEntityProvider {
     HasInt(key: string): boolean;
     GetInt(key: string, def?: int32): TSNumber<int32>
     SetUInt64(key: string, value: uint64): TSNumber<uint64>
+    SetGUIDNumber(key: string, value: TSGUID): TSGUID
+    HasGUIDNumber(key: string): bool
+    GetGUIDNumber(key?: string, def?: TSGUID): TSGUID
     SetUInt(key: string, value: uint32): TSNumber<uint32>
     HasUInt(key: string): boolean;
     HasUInt64(key: string): boolean;
@@ -4495,7 +4498,6 @@ declare class TSItem extends TSObject {
 }
 
 declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityProvider<TSBattlegroundPlayer>{
-    GetGUID(): TSGUID
     GetTeam(): TeamId;
     GetOfflineRemovalTime(): TSNumber<uint64>
 }
@@ -5676,20 +5678,6 @@ declare class TSObject extends TSEntityProvider {
     GetEntry() : TSNumber<uint32>
 
     /**
-     * Returns the GUID of the [Object].
-     *
-     * GUID is an unique identifier for the object.
-     *
-     * However on MaNGOS and cMangos creatures and gameobjects inside different maps can share
-     * the same GUID but not on the same map.
-     *
-     * On TrinityCore this value is unique across all maps
-     *
-     * @return uint64 guid
-     */
-    GetGUID() : TSGUID
-
-    /**
      * Returns the low-part of the [Object]'s GUID.
      *
      * On TrinityCore all low GUIDs are different for all objects of the same type.
@@ -5702,6 +5690,8 @@ declare class TSObject extends TSEntityProvider {
      * @return uint32 guidLow
      */
     GetGUIDLow() : TSNumber<uint32>
+
+    GetGUID() : TSGUID
 
     /**
      * Returns the TypeId of the [Object].
@@ -9368,6 +9358,12 @@ declare class TSJsonArray {
     InsertString(index: uint32, value: string): this;
     PushString(value: string): this;
 
+    SetGUIDNumber(index: uint32, value: TSGUID): this;
+    GetGUIDNumber(index: uint32, def?: TSGUID): string;
+    HasGUIDNumber(index: uint32): bool;
+    InsertGUIDNumber(index: uint32, value: TSGUID): this;
+    PushGUIDNumber(value: TSGUID): this;
+
     SetJsonObject(index: uint32, value: TSJsonObject): this;
     GetJsonObject(index: uint32, def?: TSJsonObject): TSJsonObject;
     HasJsonObject(index: uint32): bool;
@@ -9496,6 +9492,7 @@ declare class TSDatabaseResult {
     GetUInt16(index: int): TSNumber<int16>
     GetUInt32(index: int): TSNumber<uint32>
     GetUInt64(index: int): TSNumber<uint64>
+    GetGUIDNumber(index: int): TSGUID
 
     GetInt8(index: int): TSNumber<int8>;
     GetInt16(index: int): TSNumber<int16>;
@@ -9526,6 +9523,8 @@ declare interface TSPreparedStatementBase {
 
     SetFloat(index: uint8, value: float): this
     SetDouble(index: uint8, value: double): this
+
+    SetGUIDNumber(index: uint8, value: TSGUID): this
 
     SetString(index: uint8, value: float): this
     Send(): TSDatabaseResult
