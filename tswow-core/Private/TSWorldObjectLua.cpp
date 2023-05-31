@@ -5,15 +5,17 @@
 #include "TSGameObject.h"
 #include "TSCorpse.h"
 #include "TSLuaVarargs.h"
+#include "TSGUID.h"
 
 void TSLua::load_world_object_methods(sol::state& state)
 {
     auto ts_worldobject = state.new_usertype<TSWorldObject>("TSWorldObject", sol::base_classes, sol::bases<TSObject,TSWorldEntityProvider<TSWorldObject>, TSEntityProvider>());
     load_world_entity_methods_t<TSWorldObject>(state, ts_worldobject, "TSWorldObject");
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetCreaturesInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetPlayersInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetUnitsInRange);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetGameObjectsInRange);
+
+    ts_worldobject.set_function("GetCreaturesInRange", &TSWorldObject::LGetCreaturesInRange);
+    ts_worldobject.set_function("GetPlayersInRange", &TSWorldObject::LGetPlayersInRange);
+    ts_worldobject.set_function("GetUnitsInRange", &TSWorldObject::LGetUnitsInRange);
+    ts_worldobject.set_function("GetGameObjectsInRange", &TSWorldObject::LGetGameObjectsInRange);
 
     LUA_FIELD_OVERLOAD_RET_0_3(ts_worldobject, TSWorldObject, GetNearestPlayer, float, uint32, uint32);
     LUA_FIELD_OVERLOAD_RET_0_3(ts_worldobject, TSWorldObject, GetNearestGameObject, float, uint32, uint32);
@@ -60,11 +62,13 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD(ts_worldobject, TSWorldObject, IsFriendlyToPlayers);
     LUA_FIELD(ts_worldobject, TSWorldObject, IsHostileToPlayers);
     LUA_FIELD(ts_worldobject, TSWorldObject, IsNeutralToAll);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetGameObject);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetCorpse);
+
+    ts_worldobject.set_function("GetCreature", sol::overload(&TSWorldObject::LGetCreature0, &TSWorldObject::LGetCreature1));
+    ts_worldobject.set_function("GetGameObject", sol::overload(&TSWorldObject::LGetGameObject0, &TSWorldObject::LGetGameObject1));
+    ts_worldobject.set_function("GetPlayer", sol::overload(&TSWorldObject::LGetPlayer0, &TSWorldObject::LGetPlayer1));
+    ts_worldobject.set_function("GetCorpse", sol::overload(&TSWorldObject::LGetCorpse0, &TSWorldObject::LGetCorpse1));
+
     LUA_FIELD(ts_worldobject, TSWorldObject, GetUnit);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetCreature);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetPlayer);
     LUA_FIELD(ts_worldobject, TSWorldObject, HasCollision);
     LUA_FIELD(ts_worldobject, TSWorldObject, AddCollision);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetCollision);

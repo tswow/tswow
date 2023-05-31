@@ -30,15 +30,17 @@
 #include "TSSpellInfo.h"
 #include "SpellMgr.h"
 #include "Player.h"
+#include "TSGUID.h"
 
 TSSpell::TSSpell(Spell *spell)
-{
-    this->spell = spell;
-}
+    : TSEntityProvider(&spell->m_tsEntity)
+    , spell(spell)
+{}
 
 TSSpell::TSSpell()
+    : TSEntityProvider(nullptr)
+    , spell(nullptr)
 {
-    this->spell = nullptr;
 }
 
 /**
@@ -363,9 +365,9 @@ TSNumber<float> TSSpellDestination::GetOffsetO()
     return m_dest->_transportOffset.GetOrientation();
 }
 
-TSNumber<uint64> TSSpellDestination::GetTransportGUID()
+TSGUID TSSpellDestination::GetTransportGUID()
 {
-    return m_dest->_transportGUID.GetRawValue();
+    return TSGUID(m_dest->_transportGUID);
 }
 
 void TSSpellDestination::Relocate(float x, float y, float z, float o)

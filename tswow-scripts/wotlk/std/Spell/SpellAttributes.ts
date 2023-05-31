@@ -75,6 +75,22 @@ export class SpellAttributes<T> extends MaskCell<T> {
         return ((cell.get()&1<<this.bitno(no))>>>0) !== 0;
     }
 
+    // todo: fix autocompletion
+    set(keys: string[])
+    {
+        this.clearAll();
+        this.add(keys);
+        return this.owner;
+    }
+    add(keys: string[])
+    {
+        for(let key of keys)
+        {
+            this[key].set(1);
+        }
+        return this.owner;
+    }
+
    /**
      * No comment (yet!)
      */

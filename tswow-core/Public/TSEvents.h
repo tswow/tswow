@@ -111,15 +111,15 @@ struct TSEvents
         EVENT(OnAuctionExpire, TSAuctionHouseObject, TSAuctionEntry)
     } AuctionHouse;
 
-    struct VehicleEvents
+    struct VehicleEvents : public TSMappedEventsRegistry
     {
         EVENTS_HEADER(VehicleEvents)
-        EVENT(OnInstall, TSVehicle)
-        EVENT(OnUninstall, TSVehicle)
-        EVENT(OnReset, TSVehicle)
-        EVENT(OnInstallAccessory, TSVehicle, TSCreature)
-        EVENT(OnAddPassenger, TSVehicle, TSUnit, TSNumber<uint8>)
-        EVENT(OnRemovePassenger, TSVehicle, TSUnit)
+        TSRegistryRef& get_registry_ref(uint32_t id) override;
+        ID_EVENT(OnInstall, TSVehicle)
+        ID_EVENT(OnUninstall, TSVehicle)
+        ID_EVENT(OnReset, TSVehicle)
+        ID_EVENT(OnAddPassenger, TSVehicle, TSUnit, TSNumber<uint8>)
+        ID_EVENT(OnRemovePassenger, TSVehicle, TSUnit, TSNumber<uint8>)
     } Vehicle;
 
     struct AchievementEvents : public TSMappedEventsDirect
@@ -452,6 +452,12 @@ struct TSEvents
     {
         EVENTS_HEADER(SpellEvents)
         TSRegistryRef& get_registry_ref(uint32 id) override;
+
+        ID_EVENT(OnLearn, TSSpellInfo, TSPlayer, bool active, bool disabled, bool superceded, TSNumber<std::uint32_t> from_skill)
+        ID_EVENT(OnUnlearnTalent, TSSpellInfo, TSPlayer, TSNumber<std::uint32_t> tab_index, TSNumber<std::uint32_t> tier, TSNumber<std::uint32_t> column, TSNumber<std::uint32_t> rank, bool direct)
+        ID_EVENT(OnLearnTalent, TSSpellInfo, TSPlayer, TSNumber<uint32> tabId, TSNumber<uint32> talentId, TSNumber<uint32> talentRank, TSNumber<uint32> spellId, TSMutable<bool, bool>)
+        ID_EVENT(OnUnlearn, TSSpellInfo, TSPlayer, bool disabled, bool learn_low_rank)
+
         ID_EVENT(OnCast, TSSpell)
         ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>)
         ID_EVENT(OnSuccessfulDispel, TSSpell, TSNumber<uint32>)
@@ -502,7 +508,7 @@ struct TSEvents
         ID_EVENT(OnEffectCalcSpellMod, TSAuraEffect, TSSpellModifier, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnEffectManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnEffectSplit, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> splitAmount, TSMutable<bool,bool> cancelDefault)
-
+        ID_EVENT(OnSetDuration, TSAura, TSMutableNumber<int32> duration, TSMutable<bool,bool> withMods);
         ID_EVENT(OnAfterCast, TSSpell, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnAfterHit, TSSpell, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnBeforeCast, TSSpell, TSMutable<bool,bool> cancelDefault)
@@ -540,6 +546,7 @@ struct TSEvents
         ID_EVENT(OnWaypointStarted, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnWaypointReached, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnWaypointPathEnded, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
+        ID_EVENT(OnMovementInform, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnPassengerBoarded, TSCreature, TSUnit, TSNumber<int8>, bool)
         ID_EVENT(OnSpellClick, TSCreature, TSUnit, bool)
         ID_EVENT(OnUpdateAI, TSCreature, TSNumber<uint32>)
@@ -804,6 +811,7 @@ struct TSEvents
          ID_EVENT(OnLFGRollEarly, TSItemTemplate, TSWorldObject looted, TSPlayer looter, TSMutableNumber<int32> result)
          ID_EVENT(OnDestroyEarly, TSItem, TSPlayer, TSMutable<bool,bool>)
          ID_EVENT(OnTakenAsLoot, TSItem, TSLootItem, TSLoot, TSPlayer)
+         ID_EVENT(OnCalculateFeralAttackPower, TSItemTemplate, TSNumber<int32>, TSMutableNumber<int32> result)
      } Item;
 
     struct QuestEvents : public TSMappedEventsRegistry

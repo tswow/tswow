@@ -27,7 +27,7 @@ export namespace MySQL {
            , bpaths.mysqlArchive
         )
 
-        if(!bpaths.sevenZip.exists()) {
+        if(!bpaths.mysql.exists()) {
             await ExtractZip(
                   bpaths.mysqlArchive.get()
                 , {dir:bpaths.mysql.abs().get()}

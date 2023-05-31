@@ -5,6 +5,7 @@ import { Table } from "../../../data/table/Table";
 import { SpellVisualEffectNameQuery, SpellVisualEffectNameRow } from "../../dbc/SpellVisualEffectName";
 import { SpellVisualKitRow } from "../../dbc/SpellVisualKit";
 import { DBC } from "../../DBCFiles";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
@@ -51,6 +52,16 @@ export class SpellVisualEffect extends MainEntity<SpellVisualEffectNameRow> {
         this.AreaSize.set(areaSize);
         this.Scale.set(scale,scaleMin,scaleMax);
         return this.owner;
+    }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'std.SpellVisualEffects.create()',(gen)=>{
+            gen.line(`.Name.set("${this.Name.get()}")`)
+            gen.line(`.Filename.set("${this.Filename.get().split('\\').join('\\\\')}")`)
+            gen.line(`.AreaSize.set(${this.AreaSize.get()})`)
+            gen.line(`.Scale.set(${this.Scale.Scale.get()},${this.Scale.Min.get()},${this.Scale.Max.get()})`)
+        })
     }
 }
 
@@ -111,6 +122,18 @@ export class SpellVisualEffects<T> extends CellSystem<T> {
     constructor(owner: T, row: SpellVisualKitRow) {
         super(owner);
         this.row = row;
+    }
+
+    forEachValid(callback: (eff: SpellVisualEffect)=>void)
+    {
+        for(let i = 0; i < this.length; ++i)
+        {
+            if(this.row.SpecialEffect.getIndex(i) != 0)
+            {
+                callback(this.get(i).getRef())
+            }
+        }
+        return this.owner;
     }
 
     get length() { return 3; }

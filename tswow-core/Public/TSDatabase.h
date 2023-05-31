@@ -16,6 +16,8 @@
 #pragma once
 
 #include "TSMain.h"
+#include "TSGUID.h"
+
 #include <memory>
 #include <string>
 #include <functional>
@@ -31,6 +33,8 @@ public:
     virtual TSNumber<uint16> GetUInt16(int index) = 0;
     virtual TSNumber<uint32> GetUInt32(int index) = 0;
     virtual TSNumber<uint64> GetUInt64(int index) = 0;
+
+    virtual TSGUID GetGUIDNumber(int index) = 0;
 
     virtual TSNumber<int8> GetInt8(int index) = 0;
     virtual TSNumber<int16> GetInt16(int index) = 0;
@@ -52,6 +56,7 @@ protected:
     uint32 m_id;
     uint32 m_paramCount;
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt) = 0;
+    virtual void SendAsync(TSPreparedStatementBase* stmnt) = 0;
     TSPreparedStatement(std::string const& sql, uint32 id);
 public:
     TSPreparedStatementBase Create();
@@ -68,6 +73,7 @@ public:
     TSPreparedStatementWorld* operator->() { return this; }
 private:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt);
+    virtual void SendAsync(TSPreparedStatementBase* stmnt);
 };
 
 class TC_GAME_API TSPreparedStatementCharacters: public TSPreparedStatement {
@@ -76,6 +82,7 @@ public:
     TSPreparedStatementCharacters* operator->() { return this; }
 private:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt);
+    virtual void SendAsync(TSPreparedStatementBase* stmnt);
 };
 
 class TC_GAME_API TSPreparedStatementAuth: public TSPreparedStatement {
@@ -84,6 +91,7 @@ public:
     TSPreparedStatementAuth* operator->() { return this; }
 private:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt);
+    virtual void SendAsync(TSPreparedStatementBase* stmnt);
 };
 
 struct TSWorldDatabaseConnection;
@@ -98,6 +106,7 @@ public:
         , TSPreparedStatement* holder
     );
     std::shared_ptr<TSDatabaseResult> Send();
+    void SendAsync();
     std::shared_ptr<TSDatabaseResult> Send(TSWorldDatabaseConnection & con);
     std::shared_ptr<TSDatabaseResult> Send(TSAuthDatabaseConnection & con);
     std::shared_ptr<TSDatabaseResult> Send(TSCharactersDatabaseConnection & con);
@@ -115,6 +124,8 @@ public:
 
     TSPreparedStatementBase * SetUInt64(const uint8 index, const uint64 value);
     TSPreparedStatementBase * SetInt64(const uint8 index, const int64 value);
+
+    TSPreparedStatementBase * SetGUIDNumber(const uint8 index, const TSGUID value);
 
     TSPreparedStatementBase * SetFloat(const uint8 index, const float value);
     TSPreparedStatementBase * SetDouble(const uint8 index, const double value);
@@ -191,6 +202,10 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection();
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryWorld(std::string const& query);
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryCharacters(std::string const& query);
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryAuth(std::string const& query);
+
+TC_GAME_API void QueryWorldAsync(std::string const& query);
+TC_GAME_API void QueryCharactersAsync(std::string const& query);
+TC_GAME_API void QueryAuthAsync(std::string const& query);
 
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> WorldDatabaseInfo();
 TC_GAME_API std::shared_ptr<TSDatabaseConnectionInfo> CharactersDatabaseInfo();

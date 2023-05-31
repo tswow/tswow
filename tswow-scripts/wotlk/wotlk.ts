@@ -28,8 +28,11 @@ import { AreaTriggerRegistry } from "./std/AreaTrigger/AreaTrigger";
 import { BroadcastTextRegistry } from "./std/BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./std/BroadcastText/CreatureText";
 import { ClassRegistry } from "./std/Class/ClassRegistry";
-import { CreatureDisplayInfoRegistry } from "./std/Creature/CreatureDisplayInfo";
+import { CreatureDisplayInfoRegistry, CreatureModelRegistry } from "./std/Creature/CreatureDisplayInfo";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./std/Creature/Creatures";
+import { CreatureSoundDataRegistry } from "./std/Creature/CreatureSoundData";
+import { FootstepTerrainLookupRegistry } from "./std/Creature/FootstepTerrainLookup";
+import { NPCSoundsRegistry } from "./std/Creature/NPCSounds";
 import { CreatureOutfitsRegistry } from "./std/CreatureOutfits/CreatureOutfitsRegistry";
 import { CurrencyRegistry } from "./std/Currency/Currency";
 import { CurrencyCategoryRegistry } from "./std/Currency/CurrencyCategory";
@@ -46,6 +49,7 @@ import { GlyphRegistry } from "./std/Glyph/Glyph";
 import { GMTeleportRegistry } from "./std/GMTeleport/GMTeleport";
 import { GossipRegistry } from "./std/Gossip/Gossips";
 import { NPCTextRegistry } from "./std/Gossip/NPCTextRegistry";
+import { GroundEffectDoodadRegistry } from "./std/GroundEffect/GroundEffectDoodad";
 import { TSImages } from "./std/Images/Image";
 import { InlineScript } from "./std/InlineScript/InlineScript";
 import { ItemDisplayinfoRegistry } from "./std/Item/ItemDisplayInfo";
@@ -62,6 +66,7 @@ import { MapRegistry } from "./std/Map/Maps";
 import { Colors } from "./std/Misc/Color";
 import { Compare } from "./std/Misc/Compare";
 import { Ids } from "./std/Misc/Ids";
+import { ParticleColorRegistry } from "./std/Misc/ParticleColor";
 import { CompanionRegistry } from "./std/PetsCollectibles/Companion";
 import { MountRegistry } from "./std/PetsCollectibles/Mount";
 import { ProfessionRegistry } from "./std/Profession/Professions";
@@ -70,18 +75,25 @@ import { EquipSkills } from "./std/SkillLines/EquipSkills";
 import { SkillLineRegistry } from "./std/SkillLines/SkillLines";
 import { SkillTiersRegistry } from "./std/SkillTiers/SkillTiers";
 import { SmartScripts } from "./std/SmartScript/SmartScript";
+import { ActionListRegistry } from "./std/SmartScript/TimedActionList";
 import { SoundAmbienceRegistry } from "./std/Sound/SoundAmbience";
 import { SoundEntryRegistry } from "./std/Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./std/Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./std/Sound/ZoneMusic";
 import { SpawnGroupRegistry } from "./std/SpawnGroup/SpawnGroupRegistry";
+import { SpellMissileRegistry } from "./std/Spell/SpellMissile";
+import { SpellRuneCostRegistry } from "./std/Spell/SpellPower";
+import { SpellRangeRegistry } from "./std/Spell/SpellRange";
 import { SpellRegistry } from "./std/Spell/Spells";
 import { SpellStackGroupRegistry } from "./std/Spell/SpellStackGroup";
+import { SpellVisualKitRegistry, SpellVisualRegistry } from "./std/Spell/SpellVisual";
+import { SpellVisualEffectRegistry } from "./std/Spell/SpellVisualEffect";
 import { SpellFocusRegistry } from "./std/SpellFocus/SpellFocus";
 import { Tags } from "./std/Tags/Tags";
 import { TalentTreeRegistry } from "./std/Talents/Talents";
 import { TaxiPathRegistry } from "./std/Taxi/Taxi";
 import { TaxiEndNodeRegistry } from "./std/Taxi/TaxiEndNode";
+import { TerrainTypeRegistry, TerrainTypeSoundRegistry } from "./std/TerrainType/TerrainType";
 import { TitleRegistry } from "./std/Title/Titles";
 import { TotemCategoryRegistry } from "./std/TotemCategory/TotemCategory";
 import { TotemTypeRegistry } from "./std/TotemCategory/TotemType";
@@ -100,6 +112,12 @@ import { WorldStateUIRegistry } from "./std/WorldState/WorldStateUI";
 
 export const std = {
     Spells : SpellRegistry,
+    SpellVisuals: SpellVisualRegistry,
+    SpellVisualKits: SpellVisualKitRegistry,
+    SpellVisualEffects: SpellVisualEffectRegistry,
+    SpellMissile: SpellMissileRegistry,
+    SpellRuneCost: SpellRuneCostRegistry,
+    SpellRange: SpellRangeRegistry,
     Languages : LanguageRegistry,
     Quests : QuestRegistry,
     Titles: TitleRegistry,
@@ -115,6 +133,13 @@ export const std = {
     CreatureInstances: CreatureInstanceRegistry,
     CreatureOutfits: CreatureOutfitsRegistry,
     CreatureDisplayInfo: CreatureDisplayInfoRegistry,
+    CreatureSoundData: CreatureSoundDataRegistry,
+    CreatureModels: CreatureModelRegistry,
+    FootstepTerrainLookup: FootstepTerrainLookupRegistry,
+    NPCSounds: NPCSoundsRegistry,
+    GroundEffectDoodad: GroundEffectDoodadRegistry,
+    TerrainType: TerrainTypeRegistry,
+    TerrainTypeSound: TerrainTypeSoundRegistry,
     TalentTrees: TalentTreeRegistry,
     Factions: FactionRegistry,
     Scripts: SmartScripts,
@@ -175,6 +200,7 @@ export const std = {
     AchievementCategory: AchievementCategoryRegistry,
     ItemSet: ItemSetRegistry,
     ItemDisplayInfo: ItemDisplayinfoRegistry,
+    ParticleColors: ParticleColorRegistry,
     ExtendedCost: ExtendedCostRegistry,
     EquipSkills: EquipSkills,
     SpellFocus: SpellFocusRegistry,
@@ -186,6 +212,7 @@ export const std = {
     SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,
     Tags: Tags,
+    TimedActionListBuilder: ActionListRegistry,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: _DBC,
     /** Used to load external dbc files for conversion purposes. */

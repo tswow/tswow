@@ -42,8 +42,11 @@ export class CreatureInstanceAddon
         return SQL.creature_addon.add(this.owner.ID)
             .MountCreatureID.set(0)
             .auras.set('')
-            .bytes1.set(0)
-            .bytes2.set(0)
+            .StandState.set(0)
+            .AnimTier.set(0)
+            .VisFlags.set(0)
+            .SheathState.set(1)
+            .PvPFlags.set(0)
             .emote.set(0)
             .mount.set(0)
             .path_id.set(0)
@@ -57,9 +60,12 @@ export class CreatureInstanceAddon
     }
 
     get Auras()  { return this.wrapSQL('',sql=>sql.auras) }
+    get StandState() { return this.wrapSQL(0, sql=>sql.StandState); }
+    get AnimTier() { return this.wrapSQL(0, sql=>sql.AnimTier); }
+    get VisFlags() { return this.wrapSQL(0, sql=>sql.VisFlags); }
+    get SheathState() { return this.wrapSQL(1, sql=>sql.SheathState); }
+    get PvPFlags() { return this.wrapSQL(0, sql=>sql.PvPFlags); }
     get Path()   { return this.wrapSQL(0,sql=>sql.path_id); }
-    get Bytes1() { return this.wrapSQL(0,sql=>sql.bytes1); }
-    get Bytes2() { return this.wrapSQL(0,sql=>sql.bytes2); }
     get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
     get Mount()  { return this.wrapSQL(0,sql=>sql.mount); }
     get VisibilityDistanceType() {
@@ -121,8 +127,11 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     readonly AddonRow = new CreatureInstanceAddonRow(this);
     get Auras() { return this.Addon.Auras; }
     get Path() { return this.Addon.Path; }
-    get AddonBytes1() { return this.Addon.Bytes1; }
-    get AddonBytes2() { return this.Addon.Bytes2; }
+    get StandState() { return this.Addon.StandState }
+    get AnimTier() { return this.Addon.AnimTier }
+    get VisFlags() { return this.Addon.VisFlags }
+    get SheathState() { return this.Addon.SheathState }
+    get PvPFlags() { return this.Addon.PvPFlags }
     get Emote() { return this.Addon.Emote; }
     get Mount() { return this.Addon.Mount; }
     get VisibilityDistanceType() { return this.Addon.VisibilityDistanceType; }

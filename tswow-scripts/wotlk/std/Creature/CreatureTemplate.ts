@@ -28,6 +28,7 @@ import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LootSetPointer } from "../Loot/Loot";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
@@ -163,8 +164,11 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
         return SQL.creature_template_addon.add(this.owner.ID)
             .MountCreatureID.set(0)
             .auras.set('')
-            .bytes1.set(0)
-            .bytes2.set(0)
+            .StandState.set(0)
+            .AnimTier.set(0)
+            .VisFlags.set(0)
+            .SheathState.set(1)
+            .PvPFlags.set(0)
             .emote.set(0)
             .mount.set(0)
             .path_id.set(0)
@@ -178,8 +182,12 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
     }
 
     get Auras()  { return this.wrapSQL('',sql=>sql.auras); }
-    get Bytes1() { return this.wrapSQL(0,sql=>sql.bytes1); }
-    get Bytes2() { return this.wrapSQL(0,sql=>sql.bytes2); }
+    get StandState() { return this.wrapSQL(0, sql=>sql.StandState); }
+    get AnimTier() { return this.wrapSQL(0, sql=>sql.AnimTier); }
+    get VisFlags() { return this.wrapSQL(0, sql=>sql.VisFlags); }
+    get SheathState() { return this.wrapSQL(1, sql=>sql.SheathState); }
+    get PvPFlags() { return this.wrapSQL(0, sql=>sql.PvPFlags); }
+
     get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
     get Mount()  { return this.wrapSQL(0,sql=>sql.mount); }
     get Path()   { return this.wrapSQL(0,sql=>sql.path_id); }
@@ -218,11 +226,17 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     @Transient
     readonly AddonRow = new CreatureTemplateAddonRow(this);
     get Auras()   { return this.Addon.Auras; }
-    get AddonBytes1()  { return this.Addon.Bytes1 }
-    get AddonBytes2()  { return this.Addon.Bytes2 }
+
     get Emote()   { return this.Addon.Emote }
     get Mount()   { return this.Addon.Mount }
     get Path()    { return this.Addon.Path }
+
+    get StandState() { return this.Addon.StandState }
+    get AnimTier() { return this.Addon.AnimTier }
+    get VisFlags() { return this.Addon.VisFlags }
+    get SheathState() { return this.Addon.SheathState }
+    get PvPFlags() { return this.Addon.PvPFlags }
+
     get VisibilityDistanceType() {
         return this.Addon.VisibilityDistanceType
     }
@@ -349,5 +363,140 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
 
     get Spawns() {
         return new CreatureTemplateInstances(this);
+    }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string, all_locs?: boolean, name?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        const all_locs = settings.all_locs || false;
+
+        return GenerateCode(settings,`std.CreatureTemplates.create('${mod}','${id}')`,code=>{
+            if(all_locs)
+            {
+                if(settings.name)
+                {
+                    code.line(`.Name.enGB.set('${settings.name}')`)
+                }
+                else
+                {
+                    code.loc('Name',this.Name)
+                }
+                code.loc('Subname',this.Subname)
+            }
+            else
+            {
+                if(settings.name)
+                {
+                    code.line(`.Name.enGB.set('${settings.name}')`)
+                }
+                else
+                {
+                    code.line(`.Name.enGB.set('${this.Name.enGB.get().split("'").join("\\'")}')`)
+                }
+                code.line(`.Subname.enGB.set('${this.Subname.enGB.get().split("'").join("\\'")}')`)
+            }
+
+            if(this.Auras.get().length > 0)
+            {
+                code.line(`.Auras.set('${this.Auras.get()}')`)
+            }
+            
+            code.non_def_num('Emote',this.Emote);
+            code.non_def_num('Mount',this.Mount);
+            code.non_def_num('Path',this.Path);
+            code.non_def_num('StandState',this.StandState);
+            code.non_def_num('AnimTier',this.AnimTier);
+            code.non_def_num('VisFlags',this.VisFlags);
+            code.non_def_num('SheathState',this.SheathState);
+            code.non_def_num('PvPFlags',this.PvPFlags);
+            code.non_def_num('VisibilityDistanceType',this.VisibilityDistanceType);
+            code.non_def_num('HealthExpansion',this.HealthExpansion);
+            code.non_def_num('FactionTemplate',this.FactionTemplate);
+            code.non_def_num('RegenHealth',this.RegenHealth);
+            code.non_zero_enum('Type',this.Type);
+            code.non_zero_bitmask('TypeFlags',this.TypeFlags);
+            code.non_zero_bitmask('DynFlags',this.DynFlags);
+            code.bitmask('UnitFlags',this.UnitFlags);
+            code.non_zero_bitmask('FlagsExtra',this.FlagsExtra);
+            code.non_zero_enum('UnitClass',this.UnitClass);
+            code.non_zero_bitmask('DynamicFlags',this.DynamicFlags);
+            
+            code.non_def_num('Difficulty.Heroic5Man',this.Difficulty.Heroic5Man)
+            code.non_def_num('Difficulty.Heroic10Man',this.Difficulty.Heroic10Man)
+            code.non_def_num('Difficulty.Heroic25Man',this.Difficulty.Heroic25Man)
+            code.non_def_num('Difficulty.Normal25Man',this.Difficulty.Normal25man)
+
+            code.line(`.Icon.set('${this.row.IconName.get().split('\\').join('\\\\')}')`)
+            code.line(`.Level.set(${this.Level.Min.get()},${this.Level.Max.get()})`)
+            code.line(`.MovementSpeed.set(${this.MovementSpeed.getWalk()},${this.MovementSpeed.getRun()})`)
+            code.non_def_num('Scale',this.Scale,1)
+            code.non_zero_enum('Rank',this.Rank);
+            code.non_zero_enum('DamageSchool',this.DamageSchool);
+            code.line(`.AttackTime.set(${this.AttackTime.MeleeBase.get()},${this.AttackTime.RangedBase.get()},${this.AttackTime.MeleeVariance.get()},${this.AttackTime.RangedVariance.get()})`)
+            code.non_zero_enum('Family',this.Family);
+            code.non_def_num('PetSpells',this.PetSpells);
+            code.non_def_num('Vehicle',this.Vehicle);
+            code.line(`.Gold.set(${this.Gold.Min.get()},${this.Gold.Max.get()})`)
+            code.line(`.AIName.set('${this.AIName.get()}')`)
+            code.non_zero_enum('MovementType',this.MovementType);
+            code.non_def_num('HoverHeight',this.HoverHeight);
+            code.non_def_num('RacialLeader',this.RacialLeader);
+            code.non_def_num('Movement',this.Movement)
+            code.non_zero_bitmask('MechanicImmunity',this.MechanicImmunity)
+            code.non_zero_bitmask('SchoolImmunity',this.SchoolImmunity)
+
+            if(this.NormalLoot.get())
+            {
+                code.begin_block('.NormalLoot.modRefCopy(x=>x')
+                code.substruct(this.NormalLoot.getRef(),settings);
+                code.end_block(')')
+            }
+
+            if(this.PickpocketLoot.get())
+            {
+                code.begin_block('.PickPocketLoot.modRefCopy(x=>x')
+                code.substruct(this.PickpocketLoot.getRef(),settings);
+                code.end_block(')')
+            }
+
+            if(this.SkinningLoot.get())
+            {
+                code.begin_block('.SkinningLoot.modRefCopy(x=>x')
+                code.substruct(this.SkinningLoot.getRef(),settings);
+                code.end_block(')')
+            }
+
+            this.Weapons.forEach(x=>{
+                code.line(`.Weapons.add(${x.LeftHand.get()},${x.RightHand.get()},${x.Ranged.get()})`)
+            })
+
+            this.Resistances.forEach(x=>{
+                code.line(`.Resistances.add('${x.School.objectify()}',${x.Resistance.get()})`)
+            })
+
+            code.non_def_num('Stats.ArmorMod',this.Stats.ArmorMod)
+            code.non_def_num('Stats.DamageMod',this.Stats.DamageMod)
+            code.non_def_num('Stats.ExperienceMod',this.Stats.ExperienceMod)
+            code.non_def_num('Stats.HealthMod',this.Stats.HealthMod)
+            code.non_def_num('Stats.ManaMod',this.Stats.ManaMod)
+
+            for(let i = 0; i < this.Models.length; ++i)
+            {
+                if(!this.Models.get(i).get())
+                {
+                    return;
+                }
+
+                let ref = this.Models.get(i).getRef();
+
+                this.Models.addMod(x=>x.modRefCopy)
+
+                code.begin_block(`.Models.addMod(x=>x.modRefCopy('${mod}','${id}-display-${i}',x=>x`)
+                code.substruct(ref,settings);
+                code.end_block('))')
+            }
+            // this.VehicleAccessories
+        })
     }
 }

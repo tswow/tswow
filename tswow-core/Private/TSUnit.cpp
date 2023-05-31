@@ -24,6 +24,7 @@
 #include "TSCreature.h"
 #include "TSItem.h"
 #include "TSMap.h"
+#include "TSGUID.h"
 
 #include "Object.h"
 #include "Unit.h"
@@ -594,9 +595,9 @@ TSUnit  TSUnit::GetOwner()
  *
  * @return uint64 ownerGUID
  */
-TSNumber<uint64> TSUnit::GetOwnerGUID()
+TSGUID TSUnit::GetOwnerGUID()
 {
-    return TS_GUID(unit->GetOwnerGUID());
+    return TSGUID(unit->GetOwnerGUID());
 }
 
 /**
@@ -614,9 +615,9 @@ TSNumber<uint32> TSUnit::GetMountID()
  *
  * @return uint64 creatorGUID
  */
-TSNumber<uint64> TSUnit::GetCreatorGUID()
+TSGUID TSUnit::GetCreatorGUID()
 {
-    return TS_GUID(unit->GetCreatorGUID());
+    return TSGUID(unit->GetCreatorGUID());
 }
 
 /**
@@ -624,9 +625,9 @@ TSNumber<uint64> TSUnit::GetCreatorGUID()
  *
  * @return uint64 charmerGUID
  */
-TSNumber<uint64> TSUnit::GetCharmerGUID()
+TSGUID TSUnit::GetCharmerGUID()
 {
-    return TS_GUID(unit->GetCharmerGUID());
+    return TSGUID(unit->GetCharmerGUID());
 }
 
 /**
@@ -634,10 +635,10 @@ TSNumber<uint64> TSUnit::GetCharmerGUID()
  *
  * @return uint64 charmedGUID
  */
-TSNumber<uint64> TSUnit::GetCharmGUID()
+TSGUID TSUnit::GetCharmGUID()
 {
 #if TRINITY
-    return unit->GetCharmedGUID();
+    return TSGUID(unit->GetCharmedGUID());
 #elif AZEROTHCORE
     return TS_GUID(unit->GetCharmGUID());
 #endif
@@ -648,9 +649,9 @@ TSNumber<uint64> TSUnit::GetCharmGUID()
  *
  * @return uint64 petGUID
  */
-TSNumber<uint64> TSUnit::GetPetGUID(uint32 summonSlot)
+TSGUID TSUnit::GetPetGUID(uint32 summonSlot)
 {
-    return TS_GUID(unit->m_SummonSlot[summonSlot]);
+    return TSGUID(unit->m_SummonSlot[summonSlot]);
 }
 
 TSCreature TSUnit::GetPet(uint32 slot)
@@ -663,9 +664,9 @@ TSCreature TSUnit::GetPet(uint32 slot)
  *
  * @return uint64 controllerGUID
  */
-TSNumber<uint64> TSUnit::GetControllerGUID()
+TSGUID TSUnit::GetControllerGUID()
 {
-    return TS_GUID(unit->GetCharmerOrOwnerGUID());
+    return TSGUID(unit->GetCharmerOrOwnerGUID());
 }
 
 TSUnit TSUnit::GetController()
@@ -678,9 +679,9 @@ TSUnit TSUnit::GetController()
  *
  * @return uint64 controllerGUID
  */
-TSNumber<uint64> TSUnit::GetControllerGUIDS()
+TSGUID TSUnit::GetControllerGUIDS()
 {
-    return TS_GUID(unit->GetCharmerOrOwnerOrOwnGUID());
+    return TSGUID(unit->GetCharmerOrOwnerOrOwnGUID());
 }
 
 /**
@@ -1195,9 +1196,9 @@ TSVehicle TSUnit::GetVehicle()
  *
  * @return uint64 critterGuid
  */
-TSNumber<uint64> TSUnit::GetCritterGUID()
+TSGUID TSUnit::GetCritterGUID()
 {
-    return TS_GUID(unit->GetCritterGUID());
+    return TSGUID(unit->GetCritterGUID());
 }
 #endif
 
@@ -1272,14 +1273,9 @@ TSNumber<uint32> TSUnit::GetMovementType()
  *
  * @param uint64 guid : new owner guid
  */
-void TSUnit::SetOwnerGUID(uint64 guid)
+void TSUnit::SetOwnerGUID(TSGUID guid)
 {
-
-#if defined TRINITY || AZEROTHCORE
-    unit->SetOwnerGUID(ObjectGuid(guid));
-#else
-    unit->SetOwnerGuid(ObjectGuid(guid));
-#endif
+    unit->SetOwnerGUID(guid.asGUID());
 }
 
 /**
@@ -1557,10 +1553,10 @@ void TSUnit::SetFacingToObject(TSWorldObject _obj)
  *
  * @param uint64 guid
  */
-void TSUnit::SetCreatorGUID(uint64 guid)
+void TSUnit::SetCreatorGUID(TSGUID guid)
 {
 #if defined TRINITY || AZEROTHCORE
-    unit->SetCreatorGUID(ObjectGuid(guid));
+    unit->SetCreatorGUID(guid.asGUID());
 #else
     unit->SetCreatorGuid(ObjectGuid(guid));
 #endif
@@ -1571,10 +1567,10 @@ void TSUnit::SetCreatorGUID(uint64 guid)
  *
  * @param uint64 guid
  */
-void TSUnit::SetPetGUID(uint64 guid)
+void TSUnit::SetPetGUID(TSGUID guid)
 {
 #if defined TRINITY || AZEROTHCORE
-    unit->SetPetGUID(ObjectGuid(guid));
+    unit->SetPetGUID(guid.asGUID());
 #else
     unit->SetPetGuid(ObjectGuid(guid));
 #endif
@@ -1663,10 +1659,10 @@ void TSUnit::SetSanctuary(bool apply)
 
 }
 
-void TSUnit::SetCritterGUID(uint64 guid)
+void TSUnit::SetCritterGUID(TSGUID guid)
 {
 #if defined TRINITY || AZEROTHCORE
-    unit->SetCritterGUID(ObjectGuid(guid));
+    unit->SetCritterGUID(guid.asGUID());
 #else
     unit->SetCritterGuid(ObjectGuid(guid));
 #endif
@@ -2270,34 +2266,16 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
     // flat melee damage without resistence/etc reduction
     if (school == MAX_SPELL_SCHOOL)
     {
-#if defined TRINITY || AZEROTHCORE
         Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
-#elif defined CMANGOS
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
-        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
-#else
-        unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
-        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
-#endif
         return;
     }
 
     SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
 
-#if defined TRINITY || AZEROTHCORE
     if (Unit::IsDamageReducedByArmor(schoolmask))
         damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
-#else
-    if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
-#ifndef CMANGOS
-        damage = unit->CalcArmorReducedDamage(target, damage);
-#else
-        damage = unit->CalcArmorReducedDamage(unit, target, damage);
-#endif
-#endif
 
-#ifdef TRINITY
     // melee damage by specific school
     if (!spell)
     {
@@ -2312,98 +2290,29 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
         uint32 absorb = dmgInfo.GetAbsorb();
         uint32 resist = dmgInfo.GetResist();
         unit->DealDamageMods(target, damage, &absorb);
-#ifdef TRINITY
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#else
-        unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#endif
+        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
         return;
     }
 
-    if (!spell)
-        return;
-
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
     if (!spellInfo)
-        return;
-
-    SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
-#ifdef TRINITY
-    Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-#else
-    damage = unit->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE;
-    damage = target->SpellDamageBonusTaken(unit, spellInfo, damage, SPELL_DIRECT_DAMAGE);
-    unit->CalculateSpellDamageTaken(&dmgInfo, damage, spellInfo);
-    unit->DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-#endif
-
-    unit->SendSpellNonMeleeDamageLog(&dmgInfo);
-    unit->DealSpellDamage(&dmgInfo, true);
-    return;
-#elif AZEROTHCORE
-    if (!spell)
     {
-        DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE);
-        unit->CalcAbsorbResist(dmgInfo);
-
-        if (!dmgInfo.GetDamage())
-            damage = 0;
-        else
-            damage = dmgInfo.GetDamage();
-
-        uint32 absorb = dmgInfo.GetAbsorb();
-        uint32 resist = dmgInfo.GetResist();
-        unit->DealDamageMods(target, damage, &absorb);
-        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-        unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+        TC_LOG_ERROR("scripts", "attempted to do damage with invalid spell id %u", spell);
         return;
     }
 
-    if (!spell)
-        return;
-
-    SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
-    if (!spellInfo)
-        return;
-
-    SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, spellInfo->GetSchoolMask());
-    Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
-    unit->SendSpellNonMeleeDamageLog(&dmgInfo);
-    unit->DealSpellDamage(&dmgInfo, true);
-    return;
-#else
-    // melee damage by specific school
-    if (!spell)
+    if (target->IsImmunedToDamage(spellInfo))
     {
-        uint32 absorb = 0;
-#ifndef CMANGOS
-        uint32 resist = 0;
-#else
-        int32 resist = 0;
-#endif
-        target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-
-        if (damage <= absorb + resist)
-            damage = 0;
-        else
-            damage -= absorb + resist;
-
-#ifndef CMANGOS
-        unit->DealDamageMods(target, damage, &absorb);
-        unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#else
-        unit->DealDamageMods(unit, target, damage, &absorb, DIRECT_DAMAGE);
-        unit->DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-#endif
-        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
         return;
     }
 
-    // non-melee damage
-    unit->SpellNonMeleeDamageLog(target, spell, damage);
-    return;
-#endif
+    SpellNonMeleeDamage damageInfo(unit, target, spell, schoolmask);
+    unit->SetLastDamagedTargetGuid(target->GetGUID());
+    unit->CalculateSpellDamageTaken(&damageInfo, damage, spellInfo, WeaponAttackType::BASE_ATTACK);
+    Unit::DealDamageMods(damageInfo.target, damageInfo.damage, &damageInfo.absorb);
+    unit->SendSpellNonMeleeDamageLog(&damageInfo);
+    unit->DealSpellDamage(&damageInfo, durabilityloss);
 }
 
 /**
@@ -2646,6 +2555,11 @@ int32 TSUnit::GetTotalAuraModifier(uint32 auraType)
 float TSUnit::GetTotalAuraMultiplier(uint32 auraType)
 {
     return unit->GetTotalAuraMultiplier(AuraType(auraType));
+}
+
+int32 TSUnit::GetTotalAuraModifierByMiscMask(uint32 auraType, uint32 miscMask)
+{
+    return unit->GetTotalAuraModifierByMiscMask(AuraType(auraType), miscMask);
 }
 
 int32 TSUnit::GetMaxPositiveAuraModifier(uint32 auraType)

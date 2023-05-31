@@ -26,6 +26,9 @@ export class QuestRegistryClass extends RegistryStatic<Quest,quest_templateRow,q
         if(parent.AddonRow.exists()) {
             parent.AddonRow.get().clone(r.ID);
         }
+
+        SQL.quest_template_locale.queryAll({ID:parent.ID})
+            .forEach(x=>x.clone(r.ID,x.locale.get()))
     }
     protected Table(): Table<any, quest_templateQuery, quest_templateRow> & { add: (id: number) => quest_templateRow; } {
         return SQL.quest_template

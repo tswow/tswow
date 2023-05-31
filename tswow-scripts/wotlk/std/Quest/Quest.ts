@@ -62,6 +62,7 @@ export class Quest extends MainEntityID<quest_templateRow> {
     get CompleteText() { return new Reward(this); }
     get ObjectiveText() { return new ObjectiveDescription(this); }
     get CompleteLogText() { return new QuestCompletionLog(this); }
+    get TimeAllowed() { return this.wrap(this.row.TimeAllowed); }
 
     get SpecialFlags() { return this.Addon.SpecialFlags; }
 

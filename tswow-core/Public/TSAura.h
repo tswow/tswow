@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSEntity.h"
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSArray.h"
@@ -30,11 +31,12 @@ class TSSpell;
 class TSSpellInfo;
 class TSHealInfo;
 class TSDamageInfo;
+class TSGUID;
 
-class TC_GAME_API TSAuraEffect {
+class TC_GAME_API TSAuraEffect : public TSEntityProvider {
     TS_CLASS_DECLARATION(TSAuraEffect,AuraEffect,aura)
     TSUnit GetCaster();
-    TSNumber<uint64> GetCasterGUID();
+    TSGUID GetCasterGUID();
     TSAura GetAura();
     TSSpellInfo GetSpellInfo();
     TSNumber<uint32> GetID();
@@ -56,7 +58,7 @@ class TC_GAME_API TSAuraEffect {
 };
 
 class AuraApplication;
-class TC_GAME_API TSAuraApplication {
+class TC_GAME_API TSAuraApplication : public TSEntityProvider {
     TS_CLASS_DECLARATION(TSAuraApplication,AuraApplication,aura)
     TSUnit GetTarget();
     TSAura GetAura();
@@ -69,7 +71,7 @@ class TC_GAME_API TSAuraApplication {
     bool IsSelfCast();
 };
 
-class TC_GAME_API TSAura {
+class TC_GAME_API TSAura : public TSEntityProvider {
 public:
     Aura *aura;
     TSAura(Aura *aura);
@@ -79,7 +81,7 @@ public:
     operator bool() const { return aura != nullptr; }
     bool operator==(TSAura const& rhs) { return aura == rhs.aura; }
     TSUnit GetCaster();
-    TSNumber<uint64> GetCasterGUID();
+    TSGUID GetCasterGUID();
     TSNumber<uint32> GetCasterLevel();
     TSNumber<int32> GetDuration();
     TSNumber<uint32> GetAuraID();

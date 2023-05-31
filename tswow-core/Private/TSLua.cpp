@@ -110,6 +110,7 @@ void TSLua::load_bindings(sol::state& ztate)
     load_object_methods(state);
     load_world_object_methods(state);
     load_unit_methods(state);
+    load_guid_methods(state);
     load_map_methods(state);
     load_database_methods(state);
     load_faction_template_methods(state);
@@ -328,6 +329,14 @@ void TSLua::Load()
     load_bindings(state);
     state["HAS_TAG"] = L_HAS_TAG;
     state["BROADCAST_PHASE_ID"] = BROADCAST_PHASE_ID;
+    state["TSClass"] = state.script(
+        "local _lualib = require(\"lualib_bundle\")\n"
+        "TSClass = _lualib.__TS__Class()\n"
+        "TSClass.name = \"TSClass\"\n"
+        "function TSClass.prototype.____constructor(self) end\n"
+        "return TSClass"
+    );
+    state.script("print(\"hello_test\")");
 
     for (auto const& entry : std::filesystem::directory_iterator(LuaRoot()))
     {

@@ -182,6 +182,7 @@ export namespace mysql {
         wsys.exec(
             `"${ipaths.bin.mysql.mysqldump_exe.get()}"`
             + ` --port ${connection.cfg.port}`
+            + ` --host ${connection.cfg.host}`
             + ` -u root ${connection.cfg.database}`
             + ` > ${wfs.absPath(outputFile)}`)
     }
@@ -356,6 +357,7 @@ export namespace mysql {
                 ? ` -p${con.cfg.password}`
                 : '')
             + ` --port ${con.cfg.port}`
+            + ` --host ${con.cfg.host}`
             + ` ${con.name()} < ${sqlFilePath}`);
         term.success('mysql',`Rebuilt database ${con.name()}`);
     }

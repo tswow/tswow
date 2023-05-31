@@ -22,12 +22,12 @@ export class CollectibleIcon<T> extends CellSystem<T> {
     /**
      * Creates copies of any ItemDisplayInfo before applying the icon
      */
-    setCopy(str: string) {
+    setCopy(mod: string, name: string, str: string) {
         let v = this.values();
         v.spell.Icon.setPath(str);
         v.items.map(x=>x.DisplayInfo)
             .filter((x,i,a)=>a.findIndex(y=>y.get()===x.get()) === i)
-            .forEach(x=>x.getRefCopy().Icon.set(str))
+            .forEach(x=>x.getRefCopy(mod,name).Icon.set(str))
         return this.owner;
     }
 

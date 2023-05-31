@@ -41,7 +41,7 @@ export namespace AzerothCore {
             if(isWindows()) {
                 wsys.exec(
                     `${cmake} `
-                  + ` -DCMAKE_GENERATOR="Visual Studio 16 2019"`
+                  + ` -DCMAKE_GENERATOR="Visual Studio 17 2022"`
                   + ` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
                   + ` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                   + ` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`

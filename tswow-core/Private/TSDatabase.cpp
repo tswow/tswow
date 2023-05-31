@@ -71,6 +71,7 @@ public:
     TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
     TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
     TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSGUID GetGUIDNumber(int index) final { return TSGUID(field[index].TSGet(GetUInt64,uint64)); }
 
     TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
     TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
@@ -129,6 +130,7 @@ public:
     TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
     TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
     TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSGUID GetGUIDNumber(int index) final { return TSGUID(field[index].TSGet(GetUInt64, uint64)); }
 
     TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
     TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
@@ -199,6 +201,12 @@ std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send()
 {
     return m_holder->Send(this);
 }
+
+void TSPreparedStatementBase::SendAsync()
+{
+    return m_holder->SendAsync(this);
+}
+
 
 std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send(TSWorldDatabaseConnection & con)
 {
@@ -295,6 +303,16 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetUInt64(const uint8 index, c
     return this;
 }
 
+TSPreparedStatementBase* TSPreparedStatementBase::SetGUIDNumber(const uint8 index, const TSGUID value)
+{
+#if TRINITY
+    m_statement->setUInt64(index, value.asGUID().GetRawValue());
+#elif AZEROTHCORE
+    m_statement->SetData<uint64>(index, value);
+#endif
+    return this;
+}
+
 TSPreparedStatementBase* TSPreparedStatementBase::SetInt64(const uint8 index, const int64 value)
 {
 #if TRINITY
@@ -374,6 +392,21 @@ std::shared_ptr<TSDatabaseResult> TSPreparedStatementAuth::Send(TSPreparedStatem
     TS_LOG_ERROR("tswow.api", "TSPreparedStatementAuth::Send not implemented for AzerothCore");
     return nullptr;
 #endif
+}
+
+void TSPreparedStatementWorld::SendAsync(TSPreparedStatementBase* stmnt)
+{
+    WorldDatabase.QueryCustomStatementAsync(m_id, stmnt->m_statement);
+}
+
+void TSPreparedStatementCharacters::SendAsync(TSPreparedStatementBase* stmnt)
+{
+    CharacterDatabase.QueryCustomStatementAsync(m_id, stmnt->m_statement);
+}
+
+void TSPreparedStatementAuth::SendAsync(TSPreparedStatementBase* stmnt)
+{
+    LoginDatabase.QueryCustomStatementAsync(m_id, stmnt->m_statement);
 }
 
 TSPreparedStatement::TSPreparedStatement(std::string const& sql, uint32 id)
@@ -572,4 +605,19 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
 #elif AZEROTHCORE
     return TSCharactersDatabaseConnection(nullptr);
 #endif
+}
+
+TC_GAME_API void QueryWorldAsync(std::string const& query)
+{
+    WorldDatabase.AsyncQuery(query.c_str());
+}
+
+TC_GAME_API void QueryCharactersAsync(std::string const& query)
+{
+    CharacterDatabase.AsyncQuery(query.c_str());
+}
+
+TC_GAME_API void QueryAuthAsync(std::string const& query)
+{
+    LoginDatabase.AsyncQuery(query.c_str());
 }

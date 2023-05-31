@@ -24,17 +24,18 @@
 #include "SpellAuraEffects.h"
 #include "TSSpellInfo.h"
 #include "TSUnit.h"
+#include "TSGUID.h"
 
-TS_CLASS_DEFINITION(TSAuraEffect, AuraEffect, aura)
+TS_CLASS_DEFINITION_ENTITY_PROVIDER(TSAuraEffect, AuraEffect, aura)
 
 TSUnit TSAuraEffect::GetCaster()
 {
     return TSUnit(aura->GetCaster());
 }
 
-TSNumber<uint64> TSAuraEffect::GetCasterGUID()
+TSGUID TSAuraEffect::GetCasterGUID()
 {
-    return TS_GUID(aura->GetCasterGUID());
+    return TSGUID(aura->GetCasterGUID());
 }
 
 TSAura TSAuraEffect::GetAura()
@@ -132,7 +133,7 @@ bool TSAuraEffect::IsPeriodic()
     return aura->IsPeriodic();
 }
 
-TS_CLASS_DEFINITION(TSAuraApplication, AuraApplication, aura)
+TS_CLASS_DEFINITION_ENTITY_PROVIDER(TSAuraApplication, AuraApplication, aura)
 
 TSUnit TSAuraApplication::GetTarget()
 {
@@ -188,13 +189,15 @@ TSNumber<uint8> TSAuraApplication::GetRemoveMode()
 // =============
 
 TSAura::TSAura(Aura *aura)
+    : TSEntityProvider(&aura->m_tsEntity)
+    , aura(aura)
 {
-    this->aura = aura;
 }
 
 TSAura::TSAura()
+    : TSEntityProvider(nullptr)
+    , aura(nullptr)
 {
-    this->aura = nullptr;
 }
 
 TSArray<TSAuraApplication> TSAura::GetApplications()
@@ -222,9 +225,9 @@ TSUnit  TSAura::GetCaster()
  *
  * @return string caster_guid : the GUID of the Unit as a decimal string
  */
-TSNumber<uint64> TSAura::GetCasterGUID()
+TSGUID TSAura::GetCasterGUID()
 {
-    return TS_GUID(aura->GetCasterGUID());
+    return TSGUID(aura->GetCasterGUID());
 }
 
 /**

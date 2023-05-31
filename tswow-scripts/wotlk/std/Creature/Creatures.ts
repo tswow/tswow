@@ -60,7 +60,7 @@ export class CreatureTemplateRegistryClass
             .UnitClass.WARRIOR.set()
             .UnitFlags.clearAll()
             .Vehicle.set(0)
-            .AIName.ReactorAI()
+            .AIName.AggressorAI()
             .AttackTime.set(2000,2000,1,1)
             .DamageSchool.Normal.set()
             .DynFlags.clearAll()

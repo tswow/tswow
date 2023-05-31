@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSEntity.h"
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSPosition.h"
@@ -28,8 +29,9 @@ struct SpellDestination;
 class SpellImplicitTargetInfo;
 class DispelInfo;
 class TSAura;
+class TSGUID;
 
-class TC_GAME_API TSSpell {
+class TC_GAME_API TSSpell : public TSEntityProvider {
 public:
     Spell * spell;
     TSSpell(Spell *spell);
@@ -94,7 +96,7 @@ class TC_GAME_API TSSpellDestination
     TSNumber<float> GetOffsetZ();
     TSNumber<float> GetOffsetO();
 
-    TSNumber<uint64> GetTransportGUID();
+    TSGUID GetTransportGUID();
     void Relocate(float x, float y, float z, float o);
     void RelocateOffset(float x, float y, float z, float o);
 };

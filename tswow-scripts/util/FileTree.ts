@@ -310,13 +310,13 @@ export class WFile extends WNode {
 
     append(text: string) {
         wfs.mkDirs(this.dirname());
-        fs.appendFileSync(this.path,text);
+        fs.appendFileSync(this.path,text,{encoding:'utf-8'});
     }
 
     write(text: string, overwrite: Overwrite = 'OVERWRITE') {
         wfs.mkDirs(this.dirname());
         if(overwrite === 'OVERWRITE' || ! this.exists()) {
-            fs.writeFileSync(this.path,text)
+            fs.writeFileSync(this.path,text,{encoding:'utf-8'})
             return true;
         }
         return false;
@@ -324,7 +324,7 @@ export class WFile extends WNode {
     writeJson(obj: any, indents: number = 4, overwrite: Overwrite = 'OVERWRITE') {
         wfs.mkDirs(this.dirname());
         if(overwrite === 'OVERWRITE' || ! this.exists()) {
-            fs.writeFileSync(this.path,JSON.stringify(obj,null,indents));
+            fs.writeFileSync(this.path,JSON.stringify(obj,null,indents),{encoding:'utf-8'});
             return true;
         }
         return false;

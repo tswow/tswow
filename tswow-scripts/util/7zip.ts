@@ -27,6 +27,6 @@ export namespace SevenZip {
     }
 
     export function makeArchive(sevenZipPath: string, zipPath: string, directoryIn: string[]) {
-        wsys.exec(`"${sevenZipPath}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`,'inherit');
+        wsys.exec(`"${sevenZipPath}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on -sfx7z.sfx`,'inherit');
     }
 }

@@ -146,7 +146,7 @@ export class Livescripts {
     private buildLua(dataset: Dataset, args: string[] = []) {
         applyTSTLHack();
         ipaths.bin.include_lua.copy(dataset.path.lib.include_lua)
-        let config = Object.assign({},lua_tsconfig_json)
+        let config = JSON.parse(JSON.stringify(lua_tsconfig_json));
 
         let buildDir = this.path.build.dataset.pick(dataset.fullName).lua
         config["compilerOptions"]["outDir"] = buildDir.relativeTo(this.path).get()
@@ -285,7 +285,7 @@ export class Livescripts {
 
             const cmake_generate =
             (isWindows()
-                ? `"bin/cmake/bin/cmake.exe" -DCMAKE_GENERATOR="Visual Studio 16 2019"`
+                ? `"bin/cmake/bin/cmake.exe" -G "Visual Studio 17 2022" -DCMAKE_GENERATOR="Visual Studio 17 2022"`
                 : 'cmake')
             + ` -DTRACY_ENABLE="${Args.hasFlag('tracy',args) ? 'ON': 'OFF'}"`
             + ` -S ${builddir.cpp.abs()}`

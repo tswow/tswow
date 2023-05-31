@@ -144,7 +144,7 @@ export abstract class LockGameObject<T extends GameObjectTemplate> extends Multi
         let [lockIndex,type,transformer] = this.values();
         let query: gameobject_templateQuery = {type}
         query[lockIndex] = this.owner.ID
-        return GORegistry.Plain
+        return GORegistry.Generic
             .queryAll(query)
             .map(x=>transformer(x.Type).as())
     }

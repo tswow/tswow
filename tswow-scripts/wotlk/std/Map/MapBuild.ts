@@ -205,11 +205,7 @@ function generateZmp(map: string, moduleOut: string) {
         areaLookup[x.ID] = x.ID
         x.Children.get(0).forEach(y=>{
             if(allChildren.indexOf(y.ID)>=0) {
-                throw new Error(
-                      `Area ${y.ID} is child to multiple zones in`
-                    + `${map}, this can happen if you have WorldMapArea`
-                    + ` entries for areas that have parents set`
-                )
+                throw new Error(`Area ${y.ID} is both listed as a subzone and has a WorldMapArea entry, this is not permitted.`)
             }
             allChildren.push(y.ID)
             areaLookup[y.ID] = x.ID

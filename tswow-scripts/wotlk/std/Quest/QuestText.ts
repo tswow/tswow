@@ -63,7 +63,16 @@ function rewardRow(id: number, lang: Language) {
 function localeRow(id: number, lang: Language) {
     let row = SQL.quest_template_locale.query({ID:id,locale:lang});
     if(row!==undefined) return row;
-    return SQL.quest_template_locale.add(id, lang);
+    return SQL.quest_template_locale.add(id, lang)
+        .Title.set('')
+        .Objectives.set('')
+        .EndText.set('')
+        .CompletedText.set('')
+        .ObjectiveText1.set('')
+        .ObjectiveText2.set('')
+        .ObjectiveText3.set('')
+        .ObjectiveText4.set('')
+        ;
 }
 
 export class RequestItems extends SQLLocSystem<Quest> {

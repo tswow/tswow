@@ -33,6 +33,7 @@ import { Config } from './Config';
 import { IMInstall } from './ImageMagick';
 import { MPQBuilder } from './MPQBuilder';
 import { MySQL } from './MySQL';
+import { NodeJS } from './Node';
 import { OpenSSL } from './OpenSSL';
 import { Scripts } from './Scripts';
 import { TrinityCore } from './TrinityCore';
@@ -54,6 +55,7 @@ async function compile(type: string, compileArgs: string[]) {
     const mysql = isWindows() ? await MySQL.find() : 'mysql';
     term.log('build',`Found MySQL at ${mysql}`);
     const boost = isWindows() ? await Boost.install() : 'boost';
+    await NodeJS.install();
     if (isWindows()) { await SevenZipInstall.install(); }
     if (isWindows()) { await IMInstall.install() }
 

@@ -38,18 +38,18 @@ export class BattlegroundBrackets<T> extends MultiRowSystem<BattlegroundBracket,
         return value.row.isDeleted();
     }
 
-    add(minLevel: number, maxLevel: number, difficulty = 0) {
-        this.addMod(bracket=>bracket
+    add(mod: string, name: string, minLevel: number, maxLevel: number, difficulty = 0) {
+        this.addMod(mod,name,bracket=>bracket
             .Level.set(minLevel,maxLevel)
             .Difficulty.set(difficulty)
         )
         return this.owner;
     }
 
-    addGet() {
+    addGet(mod: string, name: string) {
         let rows = this.get()
         return new BattlegroundBracket(
-                DBC.PvpDifficulty.add(Ids.PvpDifficulty.id())
+                DBC.PvpDifficulty.add(Ids.PvpDifficulty.id(mod,name))
             )
             .Map.set(this.mapCell.get())
             .RangeIndex.set(
@@ -59,8 +59,8 @@ export class BattlegroundBrackets<T> extends MultiRowSystem<BattlegroundBracket,
             )
     }
 
-    addMod(callback: (bracket: BattlegroundBracket)=>void) {
-        callback(this.addGet());
+    addMod(mod: string, name: string, callback: (bracket: BattlegroundBracket)=>void) {
+        callback(this.addGet(mod,name));
         return this.owner;
     }
 }

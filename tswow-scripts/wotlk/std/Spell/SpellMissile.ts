@@ -17,6 +17,7 @@
 import { Table } from "../../../data/table/Table";
 import { SpellMissileQuery, SpellMissileRow } from "../../dbc/SpellMissile";
 import { DBC } from "../../DBCFiles";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
@@ -69,6 +70,22 @@ export class SpellMissile extends MainEntity<SpellMissileRow> {
     get Flags() { return this.wrap(this.row.Flags); }
     get Gravity() { return this.wrap(this.row.Gravity); }
     get MaxDuration() { return this.wrap(this.row.MaxDuration); }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings, 'std.SpellMissile.create()',(code)=>
+        {
+            code.line(`.DefaultPitch.set(${this.DefaultPitch.Min.get()},${this.DefaultPitch.Max.get()})`)
+            code.line(`.DefaultSpeed.set(${this.DefaultSpeed.Min.get()},${this.DefaultSpeed.Max.get()})`)
+            code.line(`.RandomizeFacing.set(${this.RandomizeFacing.Min.get()},${this.RandomizeFacing.Max.get()})`)
+            code.line(`.RandomizePitch.set(${this.RandomizePitch.Min.get()},${this.RandomizePitch.Max.get()})`)
+            code.line(`.RandomizeSpeed.set(${this.RandomizeSpeed.Min.get()},${this.RandomizeSpeed.Max.get()})`)
+            code.line(`.CollisionRadius.set(${this.CollisionRadius.get()})`)
+            code.line(`.Flags.set(${this.CollisionRadius.get()})`)
+            code.line(`.Gravity.set(${this.Gravity.get()})`)
+            code.line(`.MaxDuration.set(${this.MaxDuration.get()})`)
+        })
+    }
 }
 
 export class SpellMissileRegistryClass
