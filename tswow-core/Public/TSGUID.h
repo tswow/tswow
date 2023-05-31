@@ -31,6 +31,8 @@ public:
     bool IsInstance()          const;
     bool IsGroup()             const;
     ObjectGuid asGUID() const;
+
+    std::string stringify(int indention = 0) { return std::to_string(m_guid); };
 private:
     uint64 m_guid;
 };
