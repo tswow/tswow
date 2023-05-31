@@ -30,6 +30,7 @@
 #include "TSSpellInfo.h"
 #include "SpellMgr.h"
 #include "Player.h"
+#include "TSGUID.h"
 
 TSSpell::TSSpell(Spell *spell)
     : TSEntityProvider(&spell->m_tsEntity)
@@ -364,9 +365,9 @@ TSNumber<float> TSSpellDestination::GetOffsetO()
     return m_dest->_transportOffset.GetOrientation();
 }
 
-TSNumber<uint64> TSSpellDestination::GetTransportGUID()
+TSGUID TSSpellDestination::GetTransportGUID()
 {
-    return m_dest->_transportGUID.GetRawValue();
+    return TSGUID(m_dest->_transportGUID);
 }
 
 void TSSpellDestination::Relocate(float x, float y, float z, float o)

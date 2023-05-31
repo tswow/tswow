@@ -17,6 +17,7 @@
 #pragma once
 
 #include "TSJson.h"
+#include "TSGUID.h"
 #include <nlohmann/json.hpp>
 
 /*
@@ -572,3 +573,52 @@ TSNumber<unsigned> TSJsonArray::get_length()
 {
     return m_tags->size();
 }
+
+TSJsonObject TSJsonObject::SetGUIDNumber(std::string const& key, TSGUID guid)
+{
+    return SetString(key, std::to_string(guid.asGUID().GetRawValue()));
+}
+
+TSGUID TSJsonObject::GetGUIDNumber(std::string const& key, TSGUID def)
+{
+    if (!HasGUIDNumber(key))
+    {
+        return def;
+    }
+    return TSGUID(std::stoull(GetString(key)));
+}
+
+bool TSJsonObject::HasGUIDNumber(std::string const& key)
+{
+    return HasString(key);
+}
+
+TSJsonArray TSJsonArray::SetGUIDNumber(unsigned key, TSGUID guid)
+{
+    return SetString(key, std::to_string(guid.asGUID().GetRawValue()));
+}
+
+bool TSJsonArray::HasGUIDNumber(unsigned key)
+{
+    return HasString(key);
+}
+
+TSGUID TSJsonArray::GetGUIDNumber(unsigned key, TSGUID guid)
+{
+    if (!HasGUIDNumber(key))
+    {
+        return guid;
+    }
+    return TSGUID(std::stoull(GetString(key)));
+}
+
+TSJsonArray TSJsonArray::InsertGUIDNumber(unsigned key, TSGUID value)
+{
+    return InsertString(key, std::to_string(value.asGUID().GetRawValue()));
+}
+
+TSJsonArray TSJsonArray::PushGUIDNumber(TSGUID value)
+{
+    return PushString(std::to_string(value.asGUID().GetRawValue()));
+}
+

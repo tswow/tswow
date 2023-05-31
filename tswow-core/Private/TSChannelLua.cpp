@@ -2,6 +2,7 @@
 #include "TSChannel.h"
 #include "TSPlayer.h"
 #include "TSLuaVarargs.h"
+#include "TSGUID.h"
 
 void TSLua::load_channel_methods(sol::state& state)
 {
@@ -19,8 +20,8 @@ void TSLua::load_channel_methods(sol::state& state)
     LUA_FIELD(ts_channel, TSChannel, JoinChannel);
     LUA_FIELD(ts_channel, TSChannel, LeaveChannel);
     LUA_FIELD(ts_channel, TSChannel, SetInvisible);
-    LUA_FIELD(ts_channel, TSChannel, SetOwner);
-    LUA_FIELD(ts_channel, TSChannel, Say);
+    ts_channel.set_function("SetOwner", sol::overload( &TSChannel::LSetOwner0, &TSChannel::LSetOwner1 ));
+    ts_channel.set_function("Say", sol::overload( &TSChannel::LSay0, &TSChannel::LSay1));
     LUA_FIELD(ts_channel, TSChannel, SetPassword);
     LUA_FIELD(ts_channel, TSChannel, CheckPassword);
     LUA_FIELD_OVERLOAD_1_1(ts_channel, TSChannel, JoinChannel, TSPlayer, std::string const&);

@@ -21,6 +21,7 @@
 #include "TSCreature.h"
 #include "CreatureOutfit.h"
 #include "Player.h"
+#include "TSGUID.h"
 
 TSOutfit::TSOutfit(uint32_t race, uint8_t gender)
     : m_outfit(std::make_shared<CreatureOutfit>(race,static_cast<Gender>(gender)))
@@ -90,14 +91,19 @@ TSNumber<uint32> TSOutfit::GetSoundID()
     return m_outfit->npcsoundsid;
 }
 
-TSOutfit & TSOutfit::SetGuild(uint64_t guild)
+TSOutfit & TSOutfit::SetGuild(TSNumber<uint32> guild)
 {
-    m_outfit->guild = guild;
+    return SetGuild(TSGUID(guild));
+}
+
+TSOutfit & TSOutfit::SetGuild(TSGUID guild)
+{
+    m_outfit->guild = guild.asGUID();
     return *this;
 }
-TSNumber<uint64> TSOutfit::GetGuild()
+TSGUID TSOutfit::GetGuildGUID()
 {
-    return m_outfit->guild;
+    return TSGUID(m_outfit->guild);
 }
 
 TSNumber<uint8> TSOutfit::GetGender()
@@ -255,7 +261,7 @@ TSOutfit::TSOutfit(
 
     if (s & Outfit::GUILD)
     {
-        SetGuild(o.GetGuild());
+        SetGuild(o.GetGuildGUID());
     }
 
     if (s & Outfit::CLASS)
@@ -356,6 +362,16 @@ TSNumber<int32> TSOutfit::GetRanged()
 TSOutfit CreateOutfit(uint32_t race, uint32_t gender)
 {
     return TSOutfit(race,gender);
+}
+
+TSOutfit& TSOutfit::LSetGuild0(TSGUID guild)
+{
+    return SetGuild(guild);
+}
+
+TSOutfit& TSOutfit::LSetGuild1(TSNumber<uint32> guild)
+{
+    return SetGuild(guild);
 }
 
 #endif

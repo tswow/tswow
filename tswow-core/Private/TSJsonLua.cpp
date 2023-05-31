@@ -32,6 +32,10 @@ void TSLua::load_json_methods(sol::state& state)
     LUA_FIELD(ts_jsonarray, TSJsonArray, InsertString);
     LUA_FIELD(ts_jsonarray, TSJsonArray, PushString);
 
+    LUA_FIELD(ts_jsonarray, TSJsonArray, SetGUIDNumber);
+    LUA_FIELD(ts_jsonarray, TSJsonArray, InsertGUIDNumber);
+    LUA_FIELD(ts_jsonarray, TSJsonArray, PushGUIDNumber);
+
     LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetBool, unsigned, bool);
     LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetNumber, unsigned, double);
     LUA_FIELD_OVERLOAD_RET_1_1(ts_jsonarray, TSJsonArray, GetString, unsigned, std::string const&);

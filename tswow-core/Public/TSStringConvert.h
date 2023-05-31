@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdint>
 #include "TSBase.h"
+#include "TSGUID.h"
 
 #define INDENT_SIZE 4
 
@@ -25,6 +26,7 @@ TC_GAME_API std::string ToStr(int64 val, int indent = 0);
 TC_GAME_API std::string ToStr(float val, int indent = 0);
 TC_GAME_API std::string ToStr(double val, int indent = 0);
 TC_GAME_API std::string ToStr(bool val, int indent = 0);
+TC_GAME_API std::string ToStr(TSGUID guid, int indent = 0);
 TC_GAME_API std::string ToStr(std::string const& val, int indent = 0);
 TC_GAME_API TSNumber<int32> parseInt(std::string const& str);
 TC_GAME_API TSNumber<float> parseFloat(std::string const& str);

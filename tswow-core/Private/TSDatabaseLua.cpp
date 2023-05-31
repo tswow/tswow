@@ -19,6 +19,7 @@ void TSLua::load_database_methods(sol::state& state)
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetDouble);
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetRow);
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetString);
+    LUA_FIELD(ts_database_result, TSDatabaseResult, GetGUIDNumber);
 
     auto ts_prepared_statement_world = state.new_usertype<TSPreparedStatementWorld>("TSPreparedStatementWorld");
     auto ts_prepared_statement_characters = state.new_usertype<TSPreparedStatementCharacters>("TSPreparedStatementCharacters");
@@ -42,6 +43,7 @@ void TSLua::load_database_methods(sol::state& state)
     LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetDouble);
     LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetDouble);
     LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetString);
+    LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetGUIDNumber);
     
     ts_prepared_statement_base.set_function("Send", sol::overload(
           [](TSPreparedStatementBase& stmnt) { return stmnt.Send(); }

@@ -4,13 +4,14 @@
 #include "TSVehicle.h"
 #include "TSGameObject.h"
 #include "TSCreature.h"
+#include "TSGUID.h"
 
 void TSLua::load_instance_methods(sol::state& state)
 {
-    auto ts_guidset = state.new_usertype<TSGuidSet>("TSGuidSet");
-    LUA_FIELD(ts_guidset, TSGuidSet, Contains);
-    LUA_FIELD(ts_guidset, TSGuidSet, Add);
-    LUA_FIELD(ts_guidset, TSGuidSet, Remove);
+    auto ts_guidset = state.new_usertype<TSGUIDSet>("TSGUIDSet");
+    LUA_FIELD(ts_guidset, TSGUIDSet, Contains);
+    LUA_FIELD(ts_guidset, TSGUIDSet, Add);
+    LUA_FIELD(ts_guidset, TSGUIDSet, Remove);
 
     auto ts_bossinfo = state.new_usertype<TSBossInfo>("TSBossInfo");
     LUA_FIELD(ts_bossinfo, TSBossInfo, GetBossState);
@@ -47,6 +48,6 @@ void TSLua::load_instance_methods(sol::state& state)
     LUA_FIELD(ts_instance, TSInstance, GetBossInfo);
     LUA_FIELD(ts_instance, TSInstance, DoSendNotify);
     LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoCastSpellOnPlayers, uint32, bool, bool);
-    LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoUseDoorOrButton, uint64, uint32, bool);
+    LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoUseDoorOrButton, TSGUID, uint32, bool);
     LUA_FIELD_OVERLOAD_1_2(ts_instance, TSInstance, DoRemoveAurasDueToSpellOnPlayers, uint32, bool, bool);
 }

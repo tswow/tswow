@@ -80,6 +80,11 @@ export const DBFiledTypes = {
           'text'
         , 'GetString'
         , 'SetString'
+    ),
+    TSGUID: new DBFieldType(
+          'bigint(20)'
+        , 'GetGUIDNumber'
+        , 'SetGUIDNumber'
     )
 } as const
 

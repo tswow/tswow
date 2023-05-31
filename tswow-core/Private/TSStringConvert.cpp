@@ -134,3 +134,7 @@ std::string ToStr(const char* str, int indent)
     return str;
 }
 
+std::string ToStr(TSGUID guid, int indent)
+{
+    return std::to_string(guid.asGUID().GetRawValue());
+}

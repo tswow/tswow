@@ -110,6 +110,7 @@ void TSLua::load_bindings(sol::state& ztate)
     load_object_methods(state);
     load_world_object_methods(state);
     load_unit_methods(state);
+    load_guid_methods(state);
     load_map_methods(state);
     load_database_methods(state);
     load_faction_template_methods(state);

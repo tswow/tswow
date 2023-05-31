@@ -23,6 +23,7 @@
 #include "LootMgr.h"
 #include "ObjectGuid.h"
 #include "TSMath.h"
+#include "TSGUID.h"
 
 TSLoot::TSLoot(Loot *loot)
 {
@@ -81,14 +82,14 @@ TSNumber<uint32> TSLoot::GetLootType()
     return loot->loot_type;
 }
 
-void TSLoot::SetLootOwner(uint64 owner)
+void TSLoot::SetLootOwner(TSGUID const& owner)
 {
-    loot->lootOwnerGUID = ObjectGuid(owner);
+    loot->lootOwnerGUID = ObjectGuid(owner.asGUID());
 }
 
-TSNumber<uint64> TSLoot::GetLootOwner()
+TSGUID TSLoot::GetLootOwnerGUID()
 {
-    return TS_GUID(loot->lootOwnerGUID);
+    return TSGUID(loot->lootOwnerGUID);
 }
 
 TSLootItem::TSLootItem(LootItem* item)
