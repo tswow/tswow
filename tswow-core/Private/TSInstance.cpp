@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "InstanceScript.h"
 #include "ScriptedCreature.h"
+#include "TSGUID.h"
 
 TSInstance::TSInstance(Map* map, InstanceScript* script)
     : TSMap(map),  m_script(script)
@@ -31,29 +32,29 @@ bool TSInstance::IsEncounterInProgress()
     return m_script->IsEncounterInProgress();
 }
 
-TSNumber<uint64> TSInstance::GetObjectGUID(uint32 type)
+TSGUID TSInstance::GetObjectGUID(uint32 type)
 {
-    return TS_GUID(m_script->GetObjectGuid(type));
+    return TSGUID(m_script->GetObjectGuid(type));
 }
 
-void TSInstance::DoUseDoorOrButton(uint64 guid, uint32 withRestoreTime, bool useAlternativeState)
+void TSInstance::DoUseDoorOrButton(TSGUID guid, uint32 withRestoreTime, bool useAlternativeState)
 {
-    return m_script->DoUseDoorOrButton(ObjectGuid(guid), withRestoreTime, useAlternativeState);
+    return m_script->DoUseDoorOrButton(guid.asGUID(), withRestoreTime, useAlternativeState);
 }
 
-void TSInstance::DoCloseDoorOrButton(uint64 guid)
+void TSInstance::DoCloseDoorOrButton(TSGUID guid)
 {
 #if TRINITY
-    m_script->DoCloseDoorOrButton(ObjectGuid(guid));
+    m_script->DoCloseDoorOrButton(guid.asGUID());
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSInstance::DoCloseDoorOrButton not implemented for AzerothCore");
 #endif
 }
 
-void TSInstance::DoRespawnGameObject(uint64 guid, uint32 seconds)
+void TSInstance::DoRespawnGameObject(TSGUID guid, uint32 seconds)
 {
 #if TRINITY
-    m_script->DoRespawnGameObject(ObjectGuid(guid), Seconds(seconds));
+    m_script->DoRespawnGameObject(guid.asGUID(), Seconds(seconds));
 #elif AZEROTHCORE
     m_script->DoRespawnGameObject(ObjectGuid(guid), seconds);
 #endif
@@ -195,21 +196,21 @@ TSBossInfo TSInstance::GetBossInfo(uint32 id)
     return TSBossInfo(&m_script->bosses[id]);
 }
 
-TSGuidSet::TSGuidSet(std::set<ObjectGuid>* set)
+TSGUIDSet::TSGUIDSet(std::set<ObjectGuid>* set)
     : m_set(set)
 {}
 
-bool TSGuidSet::Contains(uint64 value)
+bool TSGUIDSet::Contains(uint64 value)
 {
     return m_set->find(ObjectGuid(value)) == m_set->end();
 }
 
-void TSGuidSet::Add(uint64 value)
+void TSGUIDSet::Add(uint64 value)
 {
     m_set->insert(ObjectGuid(value));
 }
 
-void TSGuidSet::Remove(uint64 value)
+void TSGUIDSet::Remove(uint64 value)
 {
     m_set->erase(ObjectGuid(value));
 }
@@ -223,43 +224,43 @@ TSNumber<uint32> TSBossInfo::GetBossState()
     return m_info->state;
 }
 
-TSGuidSet TSBossInfo::GetMinionGUIDs()
+TSGUIDSet TSBossInfo::GetMinionGUIDs()
 {
 #if TRINITY
-    return TSGuidSet(&m_info->minion);
+    return TSGUIDSet(&m_info->minion);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSBossInfo::GetMinionGUIDs not implemented for AzerothCore");
-    return TSGuidSet(nullptr);
+    return TSGUIDSet(nullptr);
 #endif
 }
 
-TSGuidSet TSBossInfo::GetDoorsClosedDuringEncounter()
+TSGUIDSet TSBossInfo::GetDoorsClosedDuringEncounter()
 {
 #if TRINITY
-    return TSGuidSet(&m_info->door[DoorType::DOOR_TYPE_ROOM]);
+    return TSGUIDSet(&m_info->door[DoorType::DOOR_TYPE_ROOM]);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSBossInfo::GetDoorsClosedDuringEncounter not implemented for AzerothCore");
-    return TSGuidSet(nullptr);
+    return TSGUIDSet(nullptr);
 #endif
 }
 
-TSGuidSet TSBossInfo::GetDoorsOpenDuringEncounter()
+TSGUIDSet TSBossInfo::GetDoorsOpenDuringEncounter()
 {
 #if TRINITY
-    return TSGuidSet(&m_info->door[DoorType::DOOR_TYPE_SPAWN_HOLE]);
+    return TSGUIDSet(&m_info->door[DoorType::DOOR_TYPE_SPAWN_HOLE]);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSBossInfo::GetDoorsOpenDuringEncounter not implemented for AzerothCore");
-    return TSGuidSet(nullptr);
+    return TSGUIDSet(nullptr);
 #endif
 }
 
-TSGuidSet TSBossInfo::GetDoorsOpenAfterEncounter()
+TSGUIDSet TSBossInfo::GetDoorsOpenAfterEncounter()
 {
 #if TRINITY
-    return TSGuidSet(&m_info->door[DoorType::DOOR_TYPE_PASSAGE]);
+    return TSGUIDSet(&m_info->door[DoorType::DOOR_TYPE_PASSAGE]);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSBossInfo::GetDoorsOpenAfterEncounter not implemented for AzerothCore");
-    return TSGuidSet(nullptr);
+    return TSGUIDSet(nullptr);
 #endif
 }
 

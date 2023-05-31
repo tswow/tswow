@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "TSAuction.h"
+#include "TSGUID.h"
 #include "AuctionHouseMgr.h"
 
 TSAuctionEntry::TSAuctionEntry(AuctionEntry* entry)
@@ -32,7 +33,7 @@ TSNumber<uint8> TSAuctionEntry::GetHouseID()
     return entry->houseId;
 }
 
-TSNumber<uint64> TSAuctionEntry::GetItemID()
+TSNumber<uint32> TSAuctionEntry::GetItemID()
 {
 #if TRINITY
     return entry->itemGUIDLow;
@@ -55,9 +56,9 @@ TSNumber<uint32> TSAuctionEntry::GetItemCount()
     return entry->itemCount;
 }
 
-TSNumber<uint64> TSAuctionEntry::GetOwnerID()
+TSGUID TSAuctionEntry::GetOwnerGUID()
 {
-    return TS_GUID(entry->owner);
+    return TSGUID(entry->owner);
 }
 
 TSNumber<uint32> TSAuctionEntry::GetStartBid()
@@ -80,9 +81,9 @@ TSNumber<uint64> TSAuctionEntry::GetExpireTime()
     return (uint64) entry->expire_time;
 }
 
-TSNumber<uint64> TSAuctionEntry::GetBidder()
+TSGUID TSAuctionEntry::GetBidderGUID()
 {
-    return TS_GUID(entry->bidder);
+    return TSGUID(entry->bidder);
 }
 
 TSNumber<uint32> TSAuctionEntry::GetDeposit()
@@ -99,13 +100,13 @@ TSNumber<uint32> TSAuctionEntry::GetETime()
 #endif
 }
 
-TSArray<TSNumber<uint64> > TSAuctionEntry::GetBidders()
+TSArray<TSGUID> TSAuctionEntry::GetBidders()
 {
-    TSArray<TSNumber<uint64> > arr;
+    TSArray<TSGUID> arr;
 #if TRINITY
     for(auto& bidder: entry->bidders)
     {
-        arr.push(bidder);
+        arr.push(TSGUID(bidder));
     }
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSAuctionEntry::GetBidders not implemented for AzerothCore (bidders aren't stored).");
@@ -235,7 +236,7 @@ void TSAuctionHouseObject::AddAuction(TSAuctionEntry entry)
     obj->AddAuction(entry->entry);
 }
 
-TSLua::Array<TSNumber<uint64>> TSAuctionEntry::LGetBidders()
+TSLua::Array<TSGUID> TSAuctionEntry::LGetBidders()
 {
     return sol::as_table(*GetBidders().vec);
 }

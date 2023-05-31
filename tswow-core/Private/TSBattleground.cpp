@@ -27,6 +27,7 @@
 #include "Map.h"
 #include "TSGroup.h"
 #include "TSWorldPacket.h"
+#include "TSGUID.h"
 
 #if TRINITY
 #define TSTeamId(x) x
@@ -53,9 +54,9 @@ TSBattlegroundPlayer::TSBattlegroundPlayer()
     , m_offlineRemoveTime(0)
 {}
 
-TSNumber<uint64> TSBattlegroundPlayer::GetGUID()
+TSGUID TSBattlegroundPlayer::GetGUID()
 {
-    return m_guid;
+    return TSGUID(m_guid);
 }
 TSNumber<uint32> TSBattlegroundPlayer::GetTeam()
 {
@@ -296,11 +297,16 @@ TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
     return players;
 }
 
-TSBattlegroundPlayer TSBattleground::GetBGPlayer(uint64 guid)
+TSBattlegroundPlayer TSBattleground::GetBGPlayer(TSNumber<uint32> guid)
+{
+    return GetBGPlayer(TSGUID(guid));
+}
+
+TSBattlegroundPlayer TSBattleground::GetBGPlayer(TSGUID guid)
 {
     for (auto& player : bg->GetPlayers())
     {
-        if (player.first.GetRawValue() == guid)
+        if (player.first.GetRawValue() == guid.asGUID())
         {
             return TSBattlegroundPlayer(
                   *this
@@ -514,9 +520,14 @@ void TSBattleground::CloseDoor(uint32 type)
     bg->DoorClose(type);
 }
 
-bool TSBattleground::IsPlayerInBG(uint64 guid)
+bool TSBattleground::IsPlayerInBG(TSNumber<uint32> guid)
 {
-    return bg->IsPlayerInBattleground(ObjectGuid(guid));
+    return IsPlayerInBG(TSGUID(guid));
+}
+
+bool TSBattleground::IsPlayerInBG(TSGUID guid)
+{
+    return bg->IsPlayerInBattleground(guid.asGUID());
 }
 
 TSNumber<uint32> TSBattleground::GetTeamScore(uint32 team)
@@ -570,9 +581,9 @@ bool TSBattleground::RemoveObjectFromWorld(uint32 type)
     return false;
 #endif
 }
-TSNumber<int32> TSBattleground::GetObjectType(uint64 guid)
+TSNumber<int32> TSBattleground::GetObjectType(TSGUID guid)
 {
-    return bg->GetObjectType(ObjectGuid(guid));
+    return bg->GetObjectType(guid.asGUID());
 }
 void TSBattleground::SetHoliday(bool isHoliday)
 {
@@ -604,4 +615,24 @@ TSCreature TSBattleground::GetBGCreature(uint32 type, bool logErrors)
 #elif AZEROTHCORE
     return TSCreature(bg->GetBGCreature(type));
 #endif
+}
+
+TSBattlegroundPlayer TSBattleground::LGetBGPlayer0(TSGUID guid)
+{
+    return GetBGPlayer(guid);
+}
+
+TSBattlegroundPlayer TSBattleground::LGetBGPlayer1(TSNumber<uint32> guid)
+{
+    return GetBGPlayer(guid);
+}
+
+bool TSBattleground::LIsPlayerInBG0(TSGUID guid)
+{
+    return IsPlayerInBG(guid);
+}
+
+bool TSBattleground::LIsPlayerInBG1(TSNumber<uint32> guid)
+{
+    return IsPlayerInBG(guid);
 }

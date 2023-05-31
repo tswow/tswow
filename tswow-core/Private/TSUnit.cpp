@@ -24,6 +24,7 @@
 #include "TSCreature.h"
 #include "TSItem.h"
 #include "TSMap.h"
+#include "TSGUID.h"
 
 #include "Object.h"
 #include "Unit.h"
@@ -594,9 +595,9 @@ TSUnit  TSUnit::GetOwner()
  *
  * @return uint64 ownerGUID
  */
-TSNumber<uint64> TSUnit::GetOwnerGUID()
+TSGUID TSUnit::GetOwnerGUID()
 {
-    return TS_GUID(unit->GetOwnerGUID());
+    return TSGUID(unit->GetOwnerGUID());
 }
 
 /**
@@ -614,9 +615,9 @@ TSNumber<uint32> TSUnit::GetMountID()
  *
  * @return uint64 creatorGUID
  */
-TSNumber<uint64> TSUnit::GetCreatorGUID()
+TSGUID TSUnit::GetCreatorGUID()
 {
-    return TS_GUID(unit->GetCreatorGUID());
+    return TSGUID(unit->GetCreatorGUID());
 }
 
 /**
@@ -624,9 +625,9 @@ TSNumber<uint64> TSUnit::GetCreatorGUID()
  *
  * @return uint64 charmerGUID
  */
-TSNumber<uint64> TSUnit::GetCharmerGUID()
+TSGUID TSUnit::GetCharmerGUID()
 {
-    return TS_GUID(unit->GetCharmerGUID());
+    return TSGUID(unit->GetCharmerGUID());
 }
 
 /**
@@ -634,10 +635,10 @@ TSNumber<uint64> TSUnit::GetCharmerGUID()
  *
  * @return uint64 charmedGUID
  */
-TSNumber<uint64> TSUnit::GetCharmGUID()
+TSGUID TSUnit::GetCharmGUID()
 {
 #if TRINITY
-    return unit->GetCharmedGUID();
+    return TSGUID(unit->GetCharmedGUID());
 #elif AZEROTHCORE
     return TS_GUID(unit->GetCharmGUID());
 #endif
@@ -648,9 +649,9 @@ TSNumber<uint64> TSUnit::GetCharmGUID()
  *
  * @return uint64 petGUID
  */
-TSNumber<uint64> TSUnit::GetPetGUID(uint32 summonSlot)
+TSGUID TSUnit::GetPetGUID(uint32 summonSlot)
 {
-    return TS_GUID(unit->m_SummonSlot[summonSlot]);
+    return TSGUID(unit->m_SummonSlot[summonSlot]);
 }
 
 TSCreature TSUnit::GetPet(uint32 slot)
@@ -663,9 +664,9 @@ TSCreature TSUnit::GetPet(uint32 slot)
  *
  * @return uint64 controllerGUID
  */
-TSNumber<uint64> TSUnit::GetControllerGUID()
+TSGUID TSUnit::GetControllerGUID()
 {
-    return TS_GUID(unit->GetCharmerOrOwnerGUID());
+    return TSGUID(unit->GetCharmerOrOwnerGUID());
 }
 
 TSUnit TSUnit::GetController()
@@ -678,9 +679,9 @@ TSUnit TSUnit::GetController()
  *
  * @return uint64 controllerGUID
  */
-TSNumber<uint64> TSUnit::GetControllerGUIDS()
+TSGUID TSUnit::GetControllerGUIDS()
 {
-    return TS_GUID(unit->GetCharmerOrOwnerOrOwnGUID());
+    return TSGUID(unit->GetCharmerOrOwnerOrOwnGUID());
 }
 
 /**
@@ -1195,9 +1196,9 @@ TSVehicle TSUnit::GetVehicle()
  *
  * @return uint64 critterGuid
  */
-TSNumber<uint64> TSUnit::GetCritterGUID()
+TSGUID TSUnit::GetCritterGUID()
 {
-    return TS_GUID(unit->GetCritterGUID());
+    return TSGUID(unit->GetCritterGUID());
 }
 #endif
 
@@ -1272,14 +1273,9 @@ TSNumber<uint32> TSUnit::GetMovementType()
  *
  * @param uint64 guid : new owner guid
  */
-void TSUnit::SetOwnerGUID(uint64 guid)
+void TSUnit::SetOwnerGUID(TSGUID guid)
 {
-
-#if defined TRINITY || AZEROTHCORE
-    unit->SetOwnerGUID(ObjectGuid(guid));
-#else
-    unit->SetOwnerGuid(ObjectGuid(guid));
-#endif
+    unit->SetOwnerGUID(guid.asGUID());
 }
 
 /**
@@ -1557,10 +1553,10 @@ void TSUnit::SetFacingToObject(TSWorldObject _obj)
  *
  * @param uint64 guid
  */
-void TSUnit::SetCreatorGUID(uint64 guid)
+void TSUnit::SetCreatorGUID(TSGUID guid)
 {
 #if defined TRINITY || AZEROTHCORE
-    unit->SetCreatorGUID(ObjectGuid(guid));
+    unit->SetCreatorGUID(guid.asGUID());
 #else
     unit->SetCreatorGuid(ObjectGuid(guid));
 #endif
@@ -1571,10 +1567,10 @@ void TSUnit::SetCreatorGUID(uint64 guid)
  *
  * @param uint64 guid
  */
-void TSUnit::SetPetGUID(uint64 guid)
+void TSUnit::SetPetGUID(TSGUID guid)
 {
 #if defined TRINITY || AZEROTHCORE
-    unit->SetPetGUID(ObjectGuid(guid));
+    unit->SetPetGUID(guid.asGUID());
 #else
     unit->SetPetGuid(ObjectGuid(guid));
 #endif
@@ -1663,10 +1659,10 @@ void TSUnit::SetSanctuary(bool apply)
 
 }
 
-void TSUnit::SetCritterGUID(uint64 guid)
+void TSUnit::SetCritterGUID(TSGUID guid)
 {
 #if defined TRINITY || AZEROTHCORE
-    unit->SetCritterGUID(ObjectGuid(guid));
+    unit->SetCritterGUID(guid.asGUID());
 #else
     unit->SetCritterGuid(ObjectGuid(guid));
 #endif

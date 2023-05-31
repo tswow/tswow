@@ -32,6 +32,7 @@ class TSBattlegroundPlayer;
 class TSInstance;
 class TSPlayerSpell;
 class TSItemEntry;
+class TSGUID;
 
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit, public TSDBJsonProvider {
@@ -139,7 +140,8 @@ public:
 	TSNumber<uint8> GetChatTag();
 	void SetBankBagSlotCount(uint8 count);
 	TSItem GetItemByPos(uint8 bag, uint8 slot);
-	TSItem GetItemByGUID(uint64 guid);
+	TSItem GetItemByGUID(TSGUID guid);
+	TSItem GetItemByGUID(TSNumber<uint32> guid);
 	TSItem GetItemByEntry(uint32 entry);
 	TSNumber<uint32> GetGossipTextID(TSWorldObject obj);
 	TSUnit GetSelection();
@@ -196,7 +198,8 @@ public:
 	void UnlockAchievement(uint32 entry);
 	void ResetPetTalents(int32 pType);
 	void ResetAchievements();
-	void SendShowMailBox(uint64 guid);
+	void SendShowMailBox(TSGUID guid);
+	void SendShowMailBox(TSNumber<uint32> guid);
 	void ModifyArenaPoints(int32 amount);
 	void ModifyHonorPoints(int32 amount);
 	void SaveToDB();
@@ -243,7 +246,7 @@ public:
 	void CompleteQuest(uint32 entry);
 	void AddQuest(uint32 entry);
 	void RemoveQuest(uint32 entry);
-	void Whisper(std::string const& text, uint32 lang, TSPlayer receiver, uint64 guid);
+	void Whisper(std::string const& text, uint32 lang, TSPlayer receiver);
 	void TextEmote(std::string const& text);
 	void Yell(std::string const& text, uint32 lang);
 	void Say(std::string const& text, uint32 lang);
@@ -360,5 +363,10 @@ public:
 
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
+		TSItem LGetItemByGUID0(TSGUID guid);
+		TSItem LGetItemByGUID1(TSNumber<uint32> guid);
+
+		void LSendShowMailBox0(TSGUID guid);
+		void LSendShowMailBox1(TSNumber<uint32> guid);
 		friend class TSLua;
 };

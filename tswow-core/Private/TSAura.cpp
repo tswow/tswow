@@ -24,6 +24,7 @@
 #include "SpellAuraEffects.h"
 #include "TSSpellInfo.h"
 #include "TSUnit.h"
+#include "TSGUID.h"
 
 TS_CLASS_DEFINITION_ENTITY_PROVIDER(TSAuraEffect, AuraEffect, aura)
 
@@ -32,9 +33,9 @@ TSUnit TSAuraEffect::GetCaster()
     return TSUnit(aura->GetCaster());
 }
 
-TSNumber<uint64> TSAuraEffect::GetCasterGUID()
+TSGUID TSAuraEffect::GetCasterGUID()
 {
-    return TS_GUID(aura->GetCasterGUID());
+    return TSGUID(aura->GetCasterGUID());
 }
 
 TSAura TSAuraEffect::GetAura()
@@ -224,9 +225,9 @@ TSUnit  TSAura::GetCaster()
  *
  * @return string caster_guid : the GUID of the Unit as a decimal string
  */
-TSNumber<uint64> TSAura::GetCasterGUID()
+TSGUID TSAura::GetCasterGUID()
 {
-    return TS_GUID(aura->GetCasterGUID());
+    return TSGUID(aura->GetCasterGUID());
 }
 
 /**

@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "TSCorpse.h"
+#include "TSGUID.h"
 
 void TSLua::load_corpse_methods(sol::state& state)
 {

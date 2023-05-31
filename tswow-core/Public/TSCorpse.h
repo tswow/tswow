@@ -21,6 +21,8 @@
 #include "TSClasses.h"
 #include "TSWorldObject.h"
 
+class TSGUID;
+
 class TC_GAME_API TSCorpse : public TSWorldObject {
 public:
     Corpse* corpse;
@@ -28,7 +30,7 @@ public:
     TSCorpse(Corpse* corpse);
     TSCorpse();
     TSCorpse* operator->() { return this;}
-    TSNumber<uint64> GetOwnerGUID();
+    TSGUID GetOwnerGUID();
     TSNumber<uint32> GetGhostTime();
     TSNumber<uint32> GetType();
     TSLoot GetLoot();

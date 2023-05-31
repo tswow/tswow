@@ -42,6 +42,7 @@ class TSGameObject;
 class TSWorldObject;
 class TSCreature;
 class TSCorpse;
+class TSGUID;
 
 class TC_GAME_API TSObject: public TSEntityProvider {
 public:
@@ -55,7 +56,7 @@ public:
     bool IsInWorld();
     TSNumber<float> GetScale();
     TSNumber<uint32> GetEntry();
-    TSNumber<uint64> GetGUID();
+    TSGUID GetGUID();
     TSNumber<uint32> GetGUIDLow();
     TSNumber<uint8> GetTypeID();
     void SetScale(float size);
