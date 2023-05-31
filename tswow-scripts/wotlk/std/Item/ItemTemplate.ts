@@ -309,7 +309,6 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             code.non_zero_enum('Quality',this.Quality)
 
             code.non_zero_bitmask('BagFamily',this.BagFamily)
-            console.log(this.ClassMask.get(),this.RaceMask.get())
             if(this.ClassMask.get() !== 0xffffffff)
             {
                 code.non_zero_bitmask('ClassMask',this.ClassMask)
