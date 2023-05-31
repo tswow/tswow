@@ -5,10 +5,10 @@ import { Table } from "../../../data/table/Table";
 import { page_textQuery, page_textRow } from "../../sql/page_text";
 import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RefStatic } from "../Refs/Ref";
+import { RegistryStatic } from "../Refs/Registry";
 
 export class PageTextContent extends SQLLocSystem<PageText> {
     protected getMain(): Cell<string, any> {
@@ -28,8 +28,8 @@ export class PageText extends MainEntity<page_textRow> {
     get Text() { return new PageTextContent(this); }
     get NextPage() { return this.wrap(this.row.NextPageID); }
 
-    clone() {
-        let id = Ids.page_text.id()
+    clone(mod: string, name: string) {
+        let id = Ids.page_text.id(mod,name)
         let r = this.row.clone(id).Text.set('')
         SQL.page_text_locale.queryAll({ID:this.ID})
            .forEach(x=>x.clone(id,x.locale.get()))
@@ -37,18 +37,18 @@ export class PageText extends MainEntity<page_textRow> {
     }
 }
 
-export class PageTextRef<T> extends RefDynamic<T,PageText> {
-    setSimpleLoc(loc: loc_constructor|loc_constructor[], nextPage: number = 0) {
-        return this.set(PageTextRegistry.createSimpleLoc(loc,nextPage).ID);
+export class PageTextRef<T> extends RefStatic<T,PageText> {
+    setSimpleLoc(mod: string, name: string, loc: loc_constructor|loc_constructor[], nextPage: number = 0) {
+        return this.set(PageTextRegistry.createSimpleLoc(mod,name,loc,nextPage).ID);
     }
 
-    setSimple(lang: Language, text: string|string[], nextPage: number = 0) {
-        return this.set(PageTextRegistry.createSimple(lang,text,nextPage).ID);
+    setSimple(mod: string, name: string, lang: Language, text: string|string[], nextPage: number = 0) {
+        return this.set(PageTextRegistry.createSimple(mod,name,lang,text,nextPage).ID);
     }
 }
 
 export class PageTextRegistryClass
-    extends RegistryDynamic<PageText,page_textRow,page_textQuery>
+    extends RegistryStatic<PageText,page_textRow,page_textQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new PageTextRef(owner, cell, this);
@@ -57,7 +57,7 @@ export class PageTextRegistryClass
     protected Table(): Table<any, page_textQuery, page_textRow> & { add: (id: number) => page_textRow; } {
         return SQL.page_text
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.page_text
     }
     Clear(entity: PageText): void {
@@ -76,16 +76,16 @@ export class PageTextRegistryClass
         return new PageText(r);
     }
 
-    createSimpleLoc(loc: loc_constructor|loc_constructor[], nextPage: number = 0) {
+    createSimpleLoc(mod: string, name: string, loc: loc_constructor|loc_constructor[], nextPage: number = 0) {
         if(!Array.isArray(loc)) {
             loc = [loc];
         }
-        let first = this.create();
+        let first = this.create(mod,name);
         let cur = first;
         loc.forEach((x,i,arr)=>{
             cur.Text.set(x)
             if(i<arr.length-1) {
-                let next = this.create();
+                let next = this.create(mod,name + i);
                 cur.NextPage.set(next.ID)
                 cur = next;
             } else {
@@ -95,11 +95,11 @@ export class PageTextRegistryClass
         return first;
     }
 
-    createSimple(lang: Language, texts: string[]|string, nextPage: number = 0) {
+    createSimple(mod: string, name: string, lang: Language, texts: string[]|string, nextPage: number = 0) {
         if(typeof(texts) === 'string') {
             texts = [texts];
         }
-        return this.createSimpleLoc(texts.map(x=>{
+        return this.createSimpleLoc(mod,name,texts.map(x=>{
             let obj: loc_constructor = {}
             obj[lang] = x;
             return obj;

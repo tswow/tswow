@@ -19,7 +19,7 @@ import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { creature_templateRow } from "../../sql/creature_template";
 import { BoundingBox } from "../Misc/BoundingBox";
-import { RefDynamic } from "../Refs/Ref";
+import { RefStatic } from "../Refs/Ref";
 import { CreatureDisplayInfo, CreatureDisplayInfoRegistry } from "./CreatureDisplayInfo";
 
 function getModel(row: creature_templateRow, index: number) {
@@ -86,18 +86,18 @@ export class CreatureModels<T> extends CellSystem<T> {
         return this.findFree()
     }
 
-    addMod(callback: (ref: RefDynamic<T,CreatureDisplayInfo>) => void) {
+    addMod(callback: (ref: RefStatic<T,CreatureDisplayInfo>) => void) {
         callback(this.addGet());
         return this.owner;
     }
 
-    mod(index: number, callback: (ref: RefDynamic<T,CreatureDisplayInfo>)=>void) {
+    mod(index: number, callback: (ref: RefStatic<T,CreatureDisplayInfo>)=>void) {
         callback(this.get(index));
         return this.owner;
     }
 
-    addSimple(model: string, geobox: number | BoundingBox) {
-        let v = CreatureDisplayInfoRegistry.create()
+    addSimple(mod: string, name: string, model: string, geobox: number | BoundingBox) {
+        let v = CreatureDisplayInfoRegistry.create(mod,name)
             .Model.modRefCopy((value)=>value
                 .ModelName.set(model)
                 .Geobox.set(geobox)

@@ -71,6 +71,7 @@ public:
     TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
     TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
     TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSGUID GetGUIDNumber(int index) final { return TSGUID(field[index].TSGet(GetUInt64,uint64)); }
 
     TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
     TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
@@ -129,6 +130,7 @@ public:
     TSNumber<uint16> GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
     TSNumber<uint32> GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
     TSNumber<uint64> GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
+    TSGUID GetGUIDNumber(int index) final { return TSGUID(field[index].TSGet(GetUInt64, uint64)); }
 
     TSNumber<int8> GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
     TSNumber<int16> GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
@@ -295,6 +297,16 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetUInt64(const uint8 index, c
 {
 #if TRINITY
     m_statement->setUInt64(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<uint64>(index, value);
+#endif
+    return this;
+}
+
+TSPreparedStatementBase* TSPreparedStatementBase::SetGUIDNumber(const uint8 index, const TSGUID value)
+{
+#if TRINITY
+    m_statement->setUInt64(index, value.asGUID().GetRawValue());
 #elif AZEROTHCORE
     m_statement->SetData<uint64>(index, value);
 #endif

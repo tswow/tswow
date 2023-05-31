@@ -195,6 +195,30 @@ declare interface TSMutable<T,R> {
 declare type TSNumber<T> = number;
 declare type TSMutableNumber<T> = TSMutable<TSNumber<T>,T>
 
+declare interface TSGUID {
+    GetLow(): TSNumber<uint32>
+    IsEmpty(): bool
+    IsCreature(): bool
+    IsPet(): bool
+    IsVehicle(): bool
+    IsCreatureOrPet(): bool
+    IsCreatureOrVehicle(): bool
+    IsAnyTypeCreature(): bool
+    IsPlayer(): bool
+    IsUnit(): bool
+    IsItem(): bool
+    IsGameObject(): bool
+    IsDynamicObject(): bool
+    IsCorpse(): bool
+    IsTransport(): bool
+    IsMOTransport(): bool
+    IsAnyTypeGameObject(): bool
+    IsInstance(): bool
+    IsGroup(): bool
+}
+
+declare function CreateGUID(low: TSNumber<uint32>, high: TSNumber<uint32>): TSGUID;
+
 declare interface TSMutex {
     lock();
     unlock();
@@ -235,8 +259,8 @@ declare interface TSChatChannel {
     HasFlag(flag: uint8): bool;
     JoinChannel(player: TSPlayer, send?: boolean): void;
     SetInvisible(player: TSPlayer, on: bool): void;
-    SetOwner(guid: uint64, exclaim?: bool): void;
-    Say(guid: uint64, what: string, lang: uint32): void;
+    SetOwner(guid: uint64 | TSGUID, exclaim?: bool): void;
+    Say(guid: uint64 | TSGUID, what: string, lang: uint32): void;
 }
 
 declare interface TSAchievementEntry
@@ -1023,7 +1047,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint64 guid : an item guid
      * @return [Item] item
      */
-    GetItemByGUID(guid : uint64) : TSItem
+    GetItemByGUID(guid : uint64 | TSGUID) : TSItem
 
     /**
      * Returns an [Item] from the player by entry.
@@ -1443,7 +1467,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @param uint64 guid = playerguid : guid of the mailbox window sender
      */
-    SendShowMailBox(guid : uint64) : void
+    SendShowMailBox(guid : uint64 | TSGUID) : void
 
     /**
      * Adds or detracts from the [Player]s current Arena Points
@@ -1771,7 +1795,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param [Player] receiver : is the [Player] that will receive the whisper, if TrinityCore
      * @param uint64 guid : is the GUID of a [Player] that will receive the whisper, not TrinityCore
      */
-    Whisper(text : string,lang : uint32,receiver : TSPlayer,guid : uint64) : void
+    Whisper(text : string,lang : uint32,receiver : TSPlayer,guid : uint64 | TSGUID) : void
 
     /**
      * Sends a text emote from the [Player]
@@ -2215,7 +2239,7 @@ declare interface TSCorpse extends TSWorldObject {
      *
      * @return uint64 ownerGUID
      */
-    GetOwnerGUID() : TSNumber<uint64>
+    GetOwnerGUID() : TSGUID
 
     /**
      * Returns the time when the [Player] became a ghost and spawned this [Corpse].
@@ -2258,6 +2282,9 @@ declare class TSEntityProvider {
     HasInt(key: string): boolean;
     GetInt(key: string, def?: int32): TSNumber<int32>
     SetUInt64(key: string, value: uint64): TSNumber<uint64>
+    SetGUIDNumber(key: string, value: TSGUID): TSGUID
+    HasGUIDNumber(key: string): bool
+    GetGUIDNumber(key?: string, def?: TSGUID): TSGUID
     SetUInt(key: string, value: uint32): TSNumber<uint32>
     HasUInt(key: string): boolean;
     HasUInt64(key: string): boolean;
@@ -2518,8 +2545,8 @@ declare interface TSOutfit {
     SetSoundID(soundId: uint32): TSOutfit;
     GetSoundID(): TSNumber<uint32>
 
-    SetGuild(guild: uint64): TSOutfit;
-    GetGuild(): TSNumber<uint64>
+    SetGuild(guild: TSGUID | TSNumber<uint32>): TSOutfit;
+    GetGuild(): TSGUID
 
     GetGender(): Gender;
     GetRace(): TSNumber<uint8>;
@@ -3264,7 +3291,7 @@ declare interface TSAura extends TSEntityProvider {
      *
      * @return string caster_guid : the GUID of the Unit as a decimal string
      */
-    GetCasterGUID() : TSNumber<uint64>
+    GetCasterGUID() : TSGUID
 
     /**
      * Returns the level of the [Unit] that casted the [Spell] that caused this [Aura] to be applied.
@@ -3349,7 +3376,7 @@ declare interface TSAura extends TSEntityProvider {
 declare interface TSAuraEffect extends TSEntityProvider {
     IsNull(): bool;
     GetCaster(): TSUnit;
-    GetCasterGUID(): TSNumber<uint64>
+    GetCasterGUID(): TSGUID
     GetAura(): TSAura;
     GetSpellInfo(): TSSpellInfo;
     GetID(): TSNumber<uint32>
@@ -3413,7 +3440,7 @@ declare interface TSGuild {
      *
      * @return uint64 leaderGUID
      */
-    GetLeaderGUID() : TSNumber<uint64>
+    GetLeaderGUID() : TSGUID
 
     /**
      * Returns the [Guild]s entry ID
@@ -3514,7 +3541,7 @@ declare interface TSGroup {
      * @param uint64 guid : guid of a possible leader
      * @return bool isLeader
      */
-    IsLeader(guid : uint64) : bool
+    IsLeader(guid : TSNumber<uint32> | TSGUID) : bool
 
     /**
      * Returns 'true' if the [Group] is full
@@ -3543,7 +3570,7 @@ declare interface TSGroup {
      * @param uint64 guid : guid of a player
      * @return bool isMember
      */
-    IsMember(guid : uint64) : bool
+    IsMember(guid : TSNumber<uint32> | TSGUID) : bool
 
     /**
      * Returns 'true' if the [Player] is an assistant of this [Group]
@@ -3597,7 +3624,7 @@ declare interface TSGroup {
      *
      * @return uint64 groupGUID
      */
-    GetGUID() : TSNumber<uint64>
+    GetGUID() : TSGUID
 
     /**
      * Returns a [Group] member's GUID by their name
@@ -3605,7 +3632,7 @@ declare interface TSGroup {
      * @param string name : the [Player]'s name
      * @return uint64 memberGUID
      */
-    GetMemberGUID(name : string) : TSNumber<uint64>
+    GetMemberGUID(name : string) : TSGUID
 
     /**
      * Returns the member count of this [Group]
@@ -3627,7 +3654,7 @@ declare interface TSGroup {
      *
      * @param uint64 guid : guid of the new leader
      */
-    SetLeader(guid : uint64) : void
+    SetLeader(guid : uint64 | TSGUID) : void
 
     /**
      * Sends a specified [WorldPacket] to this [Group]
@@ -3653,7 +3680,7 @@ declare interface TSGroup {
      * @param [RemoveMethod] method : method used to remove the player
      * @return bool removed
      */
-    RemoveMember(guid : uint64,method : RemoveMethod) : bool
+    RemoveMember(guid : uint64 | TSGUID,method : RemoveMethod) : bool
 
     /**
      * Disbands this [Group]
@@ -3673,7 +3700,7 @@ declare interface TSGroup {
      * @param uint64 guid : guid of the player to move
      * @param uint8 groupID : the subGroup's ID
      */
-    SetMembersGroup(guid : uint64,subGroup : uint8) : void
+    SetMembersGroup(guid : uint64 | TSGUID,subGroup : uint8) : void
 
     /**
      * Sets the target icon of an object for the [Group]
@@ -3925,7 +3952,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @important - This is NOT the creatures guid in the database,
      *              use "GetCreatureBySpawnGUID" for that.
      */
-    GetCreature(guid: uint32): TSCreature;
+    GetCreature(guid: uint32 | TSGUID): TSCreature;
 
     /**
      * Returns a gameobject in this map by its map id
@@ -3933,12 +3960,12 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @important - This is NOT the gameobject guid in the database,
      *              use "GetGameObjectBySpawnGUID" for that.
      */
-    GetGameObject(guid: uint32): TSGameObject;
+    GetGameObject(guid: uint32 | TSGUID): TSGameObject;
 
     /**
      * Returns a player in this map by its guid
      */
-    GetPlayer(guid: uint32): TSPlayer;
+    GetPlayer(guid: uint32 | TSGUID): TSPlayer;
 
     /**
      * Check if 2 positions are within LoS of each other, following different checks.
@@ -4251,7 +4278,7 @@ declare class TSItem extends TSObject {
 
     GetTemplate(): TSItemTemplate
 
-    GetOwnerGUID() : TSNumber<uint64>
+    GetOwnerGUID() : TSGUID
 
     /**
      * Returns the [Player] who currently owns the [Item]
@@ -4471,7 +4498,6 @@ declare class TSItem extends TSObject {
 }
 
 declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityProvider<TSBattlegroundPlayer>{
-    GetGUID(): TSNumber<uint64>
     GetTeam(): TeamId;
     GetOfflineRemovalTime(): TSNumber<uint64>
 }
@@ -4639,8 +4665,8 @@ declare interface TSBattleground extends TSMap {
     GetStatus() : TSNumber<uint32>
 
     IsRandom(): bool;
-    GetScore(guid: uint64): TSBattlegroundScore
-    GetBGPlayer(guid: uint64): TSBattlegroundPlayer;
+    GetScore(guid: TSNumber<uint32> | TSGUID): TSBattlegroundScore
+    GetBGPlayer(guid: TSNumber<uint32> | TSGUID): TSBattlegroundPlayer;
     GetBGPlayers(): TSArray<TSBattlegroundPlayer>;
     SetStartPosition(teamId: uint32, x: float, y: float, z: float, o: float): void;
     GetStartX(teamid: TeamId): TSNumber<float>
@@ -4665,7 +4691,7 @@ declare interface TSBattleground extends TSMap {
     AddSpiritGuide(type: uint32, x: float, y: float, z: float, o: float, teamId?: TeamId): void;
     OpenDoor(type: uint32): void;
     CloseDoor(type: uint32): void;
-    IsPlayerInBG(guid: uint64): bool;
+    IsPlayerInBG(guid: TSNumber<uint32> | TSGUID): bool;
     GetTeamScore(team: TeamId): TSNumber<uint32>
     SendMessage(entry: uint32, type: uint8, source?: TSPlayer): void;
     GetUniqueBracketID(): TSNumber<uint32>
@@ -4677,14 +4703,14 @@ declare interface TSBattleground extends TSMap {
     RemoveCreature(type: uint32): bool;
     RemoveObject(type: uint32): bool;
     RemoveObjectFromWorld(type: uint32): bool;
-    GetObjectType(guid: uint64): TSNumber<int32>
+    GetObjectType(guid: TSGUID): TSNumber<int32>
     SetHoliday(isHoliday: bool): void;
     IsHoliday(): bool;
     GetBGGameObject(type: uint32, logErrors?: bool): TSGameObject;
     GetBGCreature(type: uint32, logErrors?: bool): TSCreature;
 }
 
-declare interface TSGuidSet {
+declare interface TSGUIDSet {
     Contains(id: uint64): bool
     Add(id: uint64): void
     Remove(id: uint64): void
@@ -4692,10 +4718,10 @@ declare interface TSGuidSet {
 
 declare interface TSBossInfo {
     GetBossState(): TSNumber<uint32>
-    GetMinionGUIDs(): TSGuidSet
-    GetDoorsOpenDuringEncounter(): TSGuidSet
-    GetDoorsClosedDuringEncounter(): TSGuidSet
-    GetDoorsOpenAfterEncounter(): TSGuidSet
+    GetMinionGUIDs(): TSGUIDSet
+    GetDoorsOpenDuringEncounter(): TSGUIDSet
+    GetDoorsClosedDuringEncounter(): TSGUIDSet
+    GetDoorsOpenAfterEncounter(): TSGUIDSet
     IsWithinBoundary(x: float, y: float, z: float): bool
     IsWithinBoundary(obj: TSWorldObject): bool
 }
@@ -4706,9 +4732,9 @@ declare interface TSInstance extends TSMap {
     IsEncounterInProgress(): bool;
     GetEncounterCount(): TSNumber<uint32>
     GetObjectGUID(type: uint32): TSNumber<uint64>
-    DoUseDoorOrButton(guid: uint64, withRestoreTime?: uint32, useAlternativeState?: bool): void;
-    DoCloseDoorOrButton(guid: uint64): void;
-    DoRespawnGameObject(guid: uint64, seconds: uint32): void
+    DoUseDoorOrButton(guid: TSGUID, withRestoreTime?: uint32, useAlternativeState?: bool): void;
+    DoCloseDoorOrButton(guid: TSGUID): void;
+    DoRespawnGameObject(guid: TSGUID, seconds: uint32): void
     DoUpdateWorldState(worldStateId: uint32, worldStateValue: uint32): void;
     DoSendNotify(message: string): void;
     DoUpdateAchievementCriteria(type: uint32, miscValue1?: uint32, miscValue2?: uint32, unit?: TSUnit): void;
@@ -5063,7 +5089,7 @@ declare interface TSSpellDestination {
     GetOffsetZ(): TSNumber<float>
     GetOffsetO(): TSNumber<float>
 
-    GetTransportGUID(): TSNumber<uint64>
+    GetTransportGUID(): TSGUID
     Relocate(x: float, y: float, z: float, o: float): void;
     RelocateOffset(x: float, y: float, z: float, o: float): void;
 }
@@ -5585,11 +5611,11 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      */
     PlayDistanceSound(soundId : uint32,player : TSPlayer) : void
 
-    GetGameObject(guid: uint64): TSGameObject
-    GetCorpse(guid: uint64): TSCorpse
-    GetUnit(guid: uint64): TSUnit
-    GetCreature(guid: uint64): TSCreature
-    GetPlayer(guid: uint64): TSPlayer
+    GetGameObject(guid: TSNumber<uint32> | TSGUID): TSGameObject
+    GetCorpse(guid: TSNumber<uint32> | TSGUID ): TSCorpse
+    GetUnit(guid: TSGUID): TSUnit
+    GetCreature(guid: TSNumber<uint32> | TSGUID): TSCreature
+    GetPlayer(guid: TSNumber<uint32> | TSGUID): TSPlayer
     GetFactionTemplate(): TSFactionTemplate
 }
 
@@ -5702,20 +5728,6 @@ declare class TSObject extends TSEntityProvider {
     GetEntry() : TSNumber<uint32>
 
     /**
-     * Returns the GUID of the [Object].
-     *
-     * GUID is an unique identifier for the object.
-     *
-     * However on MaNGOS and cMangos creatures and gameobjects inside different maps can share
-     * the same GUID but not on the same map.
-     *
-     * On TrinityCore this value is unique across all maps
-     *
-     * @return uint64 guid
-     */
-    GetGUID() : TSNumber<uint64>
-
-    /**
      * Returns the low-part of the [Object]'s GUID.
      *
      * On TrinityCore all low GUIDs are different for all objects of the same type.
@@ -5728,6 +5740,8 @@ declare class TSObject extends TSEntityProvider {
      * @return uint32 guidLow
      */
     GetGUIDLow() : TSNumber<uint32>
+
+    GetGUID() : TSGUID
 
     /**
      * Returns the TypeId of the [Object].
@@ -6172,28 +6186,28 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return uint64 creatorGUID
      */
-    GetCreatorGUID() : TSNumber<uint64>
+    GetCreatorGUID() : TSGUID
 
     /**
      * Returns the [Unit]'s charmer's GUID.
      *
      * @return uint64 charmerGUID
      */
-    GetCharmerGUID() : TSNumber<uint64>
+    GetCharmerGUID() : TSGUID
 
     /**
      * Returns the GUID of the [Unit]'s charmed entity.
      *
      * @return uint64 charmedGUID
      */
-    GetCharmGUID() : TSNumber<uint64>
+    GetCharmGUID() : TSGUID
 
     /**
      * Returns the GUID of the [Unit]'s pet.
      *
      * @return uint64 petGUID
      */
-    GetPetGUID(index?: number) : TSNumber<uint64>
+    GetPetGUID(index?: number) : TSGUID
 
     /**
      * Returns the [Unit]'s pet.
@@ -6206,7 +6220,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return uint64 controllerGUID
      */
-    GetControllerGUID() : TSNumber<uint64>
+    GetControllerGUID() : TSGUID
 
     GetControlled(): TSArray<TSUnit>
 
@@ -6700,7 +6714,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param uint64 guid : new owner guid
      */
-    SetOwnerGUID(guid : uint64) : void
+    SetOwnerGUID(guid : TSGUID) : void
 
     /**
      * Sets the [Unit]'s PvP on or off.
@@ -6887,14 +6901,14 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param uint64 guid
      */
-    SetCreatorGUID(guid : uint64) : void
+    SetCreatorGUID(guid : TSGUID) : void
 
     /**
      * Sets pet GUID
      *
      * @param uint64 guid
      */
-    SetPetGUID(guid : uint64) : void
+    SetPetGUID(guid : TSGUID) : void
 
     /**
      * Toggles (Sets) [Unit]'s water walking
@@ -6923,7 +6937,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param bool apply = true
      */
     SetSanctuary(apply : bool) : void
-    SetCritterGUID(guid : uint64) : void
+    SetCritterGUID(guid : TSGUID) : void
 
     /**
      * Roots the [Unit] to the ground, if 'false' specified, unroots the [Unit].
@@ -9232,8 +9246,8 @@ declare interface TSLoot {
     SetMoney(money: uint32): void;
     GetLootType(): TSNumber<uint32>
     GetMoney(): TSNumber<uint32>
-    GetLootOwner(): TSNumber<uint64>
-    SetLootOwner(owner: uint64);
+    GetLootOwnerGUID(): TSGUID
+    SetLootOwner(owner: TSGUID | TSNumber<uint32>);
     GetItemCount(): TSNumber<uint32>
     GetQuestItemCount(): TSNumber<uint32>
 
@@ -9256,15 +9270,15 @@ declare interface TSAuctionEntry {
      */
     GetItemEntry(): TSNumber<uint32>
     GetItemCount(): TSNumber<uint32>
-    GetOwnerID(): TSNumber<uint64>
+    GetOwnerGUID(): TSGUID
     GetStartBid(): TSNumber<uint32>
     GetBid(): TSNumber<uint32>
     GetBuyout(): TSNumber<uint32>
     GetExpireTime(): TSNumber<uint64>
-    GetBidder(): TSNumber<uint64>
+    GetBidderGUID(): TSGUID
     GetDeposit(): TSNumber<uint32>
     GetETime(): TSNumber<uint32>
-    GetBidders(): TSArray<uint64>
+    GetBidders(): TSArray<TSGUID>
     GetFlags(): TSNumber<uint32>
 
     SetItemID(itemId: uint64);
@@ -9297,8 +9311,8 @@ declare interface TSMail {
     GetID(): TSNumber<uint32>
     GetType(): TSNumber<uint8>;
     GetTemplateID(): TSNumber<int16>
-    GetSender(): TSNumber<uint64>
-    GetReceiver(): TSNumber<uint64>
+    GetSender(): TSGUID
+    GetReceiver(): TSGUID
     GetState(): TSNumber<int16>
     GetMoney(): TSNumber<uint32>
     GetCOD(): TSNumber<uint32>
@@ -9313,7 +9327,7 @@ declare interface TSMail {
     SetMoney(money: uint32)
     SetCOD(cod: uint32)
     SetChecked(checked: uint32)
-    SetSender(type: uint8, guid: uint64)
+    SetSender(type: uint8, guid: TSNumber<uint32> | TSGUID)
     SetSubject(subject: string)
     SetBody(body: string)
     SetState(state: uint8)
@@ -9396,6 +9410,12 @@ declare class TSJsonArray {
     HasString(index: uint32): bool;
     InsertString(index: uint32, value: string): this;
     PushString(value: string): this;
+
+    SetGUIDNumber(index: uint32, value: TSGUID): this;
+    GetGUIDNumber(index: uint32, def?: TSGUID): string;
+    HasGUIDNumber(index: uint32): bool;
+    InsertGUIDNumber(index: uint32, value: TSGUID): this;
+    PushGUIDNumber(value: TSGUID): this;
 
     SetJsonObject(index: uint32, value: TSJsonObject): this;
     GetJsonObject(index: uint32, def?: TSJsonObject): TSJsonObject;
@@ -9525,6 +9545,7 @@ declare class TSDatabaseResult {
     GetUInt16(index: int): TSNumber<int16>
     GetUInt32(index: int): TSNumber<uint32>
     GetUInt64(index: int): TSNumber<uint64>
+    GetGUIDNumber(index: int): TSGUID
 
     GetInt8(index: int): TSNumber<int8>;
     GetInt16(index: int): TSNumber<int16>;
@@ -9555,6 +9576,8 @@ declare interface TSPreparedStatementBase {
 
     SetFloat(index: uint8, value: float): this
     SetDouble(index: uint8, value: double): this
+
+    SetGUIDNumber(index: uint8, value: TSGUID): this
 
     SetString(index: uint8, value: float): this
     Send(): TSDatabaseResult

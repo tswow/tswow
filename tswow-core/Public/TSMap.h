@@ -26,6 +26,7 @@
 
 #include <functional>
 
+class TSGUID;
 class TSBattleground;
 class TSInstance;
 class TSMainThreadContext;
@@ -61,16 +62,21 @@ public:
     TSArray<TSUnit> GetUnits();
     TSArray<TSGameObject> GetGameObjects(uint32 entry = 0);
     TSArray<TSCreature> GetCreatures(uint32 entry = 0);
-    TSCreature GetCreature(uint64 guid);
-    TSGameObject GetGameObject(uint64 guid);
-    TSPlayer GetPlayer(uint64 guid);
+    TSCreature GetCreature(TSGUID guid);
+    TSGameObject GetGameObject(TSGUID guid);
+    TSPlayer GetPlayer(TSGUID guid);
+    TSWorldObject GetWorldObject(TSGUID guid);
+
+    TSCreature GetCreature(TSNumber<uint32> guid);
+    TSGameObject GetGameObject(TSNumber<uint32> guid);
+    TSPlayer GetPlayer(TSNumber<uint32> guid);
+
     bool IsInLineOfSight(float x1, float y1, float z1, float x2, float y2, float z2, uint32 phasemask, uint32 checks, uint32 ignoreFlags);
     TSCreature GetCreatureByDBGUID(uint32 dbguid);
     TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
     TSCreature SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
     TSGameObject SpawnGameObject(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
     TSNumber<uint32> GetAreaID(float x, float y, float z, float phasemask);
-    TSWorldObject GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
     TSEntity * GetData();
     void DoDelayed(std::function<void(TSMap, TSMainThreadContext)> callback);
@@ -87,6 +93,15 @@ private:
 
     TSLua::Array<TSCreature> LGetCreatures0(uint32 entry);
     TSLua::Array<TSCreature> LGetCreatures1();
+
+    TSPlayer LGetPlayer0(TSGUID guid);
+    TSPlayer LGetPlayer1(TSNumber<uint32> guid);
+
+    TSCreature LGetCreature0(TSGUID guid);
+    TSCreature LGetCreature1(TSNumber<uint32> guid);
+
+    TSGameObject LGetGameObject0(TSGUID guid);
+    TSGameObject LGetGameObject1(TSNumber<uint32> guid);
 
     friend class TSLua;
 };

@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "TSSpell.h"
+#include "TSGUID.h"
 
 void TSLua::load_spell_methods(sol::state& state)
 {

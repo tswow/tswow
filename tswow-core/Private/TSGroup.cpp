@@ -22,6 +22,7 @@
 #include "TSIncludes.h"
 #include "TSGroup.h"
 #include "Player.h"
+#include "TSGUID.h"
 
 TSGroup::TSGroup(Group *group)
 {
@@ -39,9 +40,14 @@ TSGroup::TSGroup()
  * @param uint64 guid : guid of a possible leader
  * @return bool isLeader
  */
-bool TSGroup::IsLeader(uint64 guid)
+bool TSGroup::IsLeader(TSGUID guid)
 {
-    return group->IsLeader(ObjectGuid(guid));
+    return group->IsLeader(guid.asGUID());
+}
+
+bool TSGroup::IsLeader(TSNumber<uint32> guid)
+{
+    return IsLeader(TSGUID(guid));
 }
 
 /**
@@ -80,9 +86,19 @@ bool TSGroup::IsBGGroup()
  * @param uint64 guid : guid of a player
  * @return bool isMember
  */
-bool TSGroup::IsMember(uint64 guid)
+bool TSGroup::IsMember(TSGUID guid)
 {
-    return group->IsMember(ObjectGuid(guid));
+    return group->IsMember(guid.asGUID());
+}
+
+bool TSGroup::IsMember(TSNumber<uint32> guid)
+{
+    return IsMember(TSGUID(guid));
+}
+
+bool TSGroup::IsAssistant(TSNumber<uint32> guid)
+{
+    return IsAssistant(TSGUID(guid));
 }
 
 /**
@@ -91,9 +107,9 @@ bool TSGroup::IsMember(uint64 guid)
  * @param uint64 guid : guid of a player
  * @return bool isAssistant
  */
-bool TSGroup::IsAssistant(uint64 guid)
+bool TSGroup::IsAssistant(TSGUID guid)
 {
-    return group->IsAssistant(ObjectGuid(guid));
+    return group->IsAssistant(guid.asGUID());
 }
 
 /**
@@ -192,9 +208,9 @@ TSArray<TSPlayer> TSGroup::GetMembers()
  *
  * @return uint64 leaderGUID
  */
-TSNumber<uint64> TSGroup::GetLeaderGUID()
+TSGUID TSGroup::GetLeaderGUID()
 {
-    return TS_GUID(group->GetLeaderGUID());
+    return TSGUID(group->GetLeaderGUID());
 }
 
 /**
@@ -202,9 +218,9 @@ TSNumber<uint64> TSGroup::GetLeaderGUID()
  *
  * @return uint64 groupGUID
  */
-TSNumber<uint64> TSGroup::GetGUID()
+TSGUID TSGroup::GetGUID()
 {
-    return TS_GUID(group->TS_GET_GUID());
+    return TSGUID(group->TS_GET_GUID());
 }
 
 /**
@@ -213,9 +229,9 @@ TSNumber<uint64> TSGroup::GetGUID()
  * @param string name : the [Player]'s name
  * @return uint64 memberGUID
  */
-TSNumber<uint64> TSGroup::GetMemberGUID(std::string const& name)
+TSGUID TSGroup::GetMemberGUID(std::string const& name)
 {
-    return TS_GUID(group->GetMemberGUID(name));
+    return TSGUID(group->GetMemberGUID(name));
 }
 
 /**
@@ -234,9 +250,14 @@ TSNumber<uint32> TSGroup::GetMembersCount()
  * @param uint64 guid : guid of the player
  * @return uint8 subGroupID : a valid subgroup ID or MAX_RAID_SUBGROUPS+1
  */
-TSNumber<uint8> TSGroup::GetMemberGroup(uint64 guid)
+TSNumber<uint8> TSGroup::GetMemberGroup(TSGUID guid)
 {
-    return group->GetMemberGroup(ObjectGuid(guid));
+    return group->GetMemberGroup(guid.asGUID());
+}
+
+TSNumber<uint8> TSGroup::GetMemberGroup(TSNumber<uint32> guid)
+{
+    return GetMemberGroup(TSGUID(guid));
 }
 
 /**
@@ -244,13 +265,18 @@ TSNumber<uint8> TSGroup::GetMemberGroup(uint64 guid)
  *
  * @param uint64 guid : guid of the new leader
  */
-void TSGroup::SetLeader(uint64 guid)
+void TSGroup::SetLeader(TSGUID guid)
 {
-    group->ChangeLeader(ObjectGuid(guid));
+    group->ChangeLeader(guid.asGUID());
     group->SendUpdate();
 }
 
-void TSGroup::SendPacket(std::shared_ptr<TSWorldPacket> _data,bool ignorePlayersInBg,uint64 ignore)
+void TSGroup::SetLeader(TSNumber<uint32> guid)
+{
+    return SetLeader(TSGUID(guid));
+}
+
+void TSGroup::SendPacket(std::shared_ptr<TSWorldPacket> _data,bool ignorePlayersInBg,TSGUID ignore)
 {
     SendPacket(*_data,ignorePlayersInBg,ignore);
 }
@@ -262,15 +288,25 @@ void TSGroup::SendPacket(std::shared_ptr<TSWorldPacket> _data,bool ignorePlayers
  * @param bool ignorePlayersInBg : ignores [Player]s in a battleground
  * @param uint64 ignore : ignore a [Player] by their GUID
  */
-void TSGroup::SendPacket(TSWorldPacket _data,bool ignorePlayersInBg,uint64 ignore)
+void TSGroup::SendPacket(TSWorldPacket _data,bool ignorePlayersInBg,TSGUID ignore)
 {
     auto data = _data.packet;
 
 #ifdef CMANGOS
     group->BroadcastPacket(*data, ignorePlayersInBg, -1, ObjectGuid(ignore));
 #else
-    group->BroadcastPacket(data, ignorePlayersInBg, -1, ObjectGuid(ignore));
+    group->BroadcastPacket(data, ignorePlayersInBg, -1, ignore.asGUID());
 #endif
+}
+
+void TSGroup::SendPacket(std::shared_ptr<TSWorldPacket> _data, bool ignorePlayersInBg, TSNumber<uint32> ignore)
+{
+    SendPacket(_data, ignorePlayersInBg, TSGUID(ignore));
+}
+
+void TSGroup::SendPacket(TSWorldPacket _data, bool ignorePlayersInBg, TSNumber<uint32> ignore)
+{
+    return SendPacket(_data, ignorePlayersInBg, TSGUID(ignore));
 }
 
 /**
@@ -289,14 +325,19 @@ void TSGroup::SendPacket(TSWorldPacket _data,bool ignorePlayersInBg,uint64 ignor
  * @param [RemoveMethod] method : method used to remove the player
  * @return bool removed
  */
-bool TSGroup::RemoveMember(uint64 guid,uint32 method)
+bool TSGroup::RemoveMember(TSGUID guid,uint32 method)
 {
 
 #if defined TRINITY || AZEROTHCORE
-    return group->RemoveMember(ObjectGuid(guid), (RemoveMethod)method);
+    return group->RemoveMember(guid.asGUID(), (RemoveMethod)method);
 #else
     return group->RemoveMember(ObjectGuid(guid), method);
 #endif
+}
+
+bool TSGroup::RemoveMember(TSNumber<uint32> guid, uint32 method)
+{
+    return RemoveMember(TSGUID(guid), method);
 }
 
 /**
@@ -323,15 +364,19 @@ void TSGroup::ConvertToRaid()
  * @param uint64 guid : guid of the player to move
  * @param uint8 groupID : the subGroup's ID
  */
-void TSGroup::SetMembersGroup(uint64 guid,uint8 subGroup)
+void TSGroup::SetMembersGroup(TSGUID guid,uint8 subGroup)
 {
 
     if (subGroup >= MAX_RAID_SUBGROUPS)
     {
     }
 
+    group->ChangeMembersGroup(guid.asGUID(), subGroup);
+}
 
-    group->ChangeMembersGroup(ObjectGuid(guid), subGroup);
+void TSGroup::SetMembersGroup(TSNumber<uint32> guid, uint8 subGroup)
+{
+    return SetMembersGroup(TSGUID(guid), subGroup);
 }
 
 /**
@@ -341,14 +386,14 @@ void TSGroup::SetMembersGroup(uint64 guid,uint8 subGroup)
  * @param uint64 target : GUID of the icon target, 0 is to clear the icon
  * @param uint64 setter : GUID of the icon setter
  */
-void TSGroup::SetTargetIcon(uint8 icon,uint64 target,uint64 setter)
+void TSGroup::SetTargetIcon(uint8 icon,TSGUID target,TSGUID setter)
 {
 
 
 #if (defined(CLASSIC) || defined(TBC))
     group->SetTargetIcon(icon, ObjectGuid(target));
 #else
-    group->SetTargetIcon(icon, ObjectGuid(setter), ObjectGuid(target));
+    group->SetTargetIcon(icon, setter.asGUID(), target.asGUID());
 #endif
 }
 
@@ -360,4 +405,74 @@ void TSGroup::SetTargetIcon(uint8 icon,uint64 target,uint64 setter)
 TSLua::Array<TSPlayer> TSGroup::LGetMembers()
 {
     return sol::as_table(*GetMembers().vec);
+}
+
+bool TSGroup::LIsLeader0(TSGUID guid)
+{
+    return IsLeader(guid);
+}
+
+bool TSGroup::LIsLeader1(TSNumber<uint32> guid)
+{
+    return IsLeader(guid);
+}
+
+bool TSGroup::LIsAssistant0(TSGUID guid)
+{
+    return IsAssistant(guid);
+}
+
+bool TSGroup::LIsAssistant1(TSNumber<uint32> guid)
+{
+    return IsAssistant(guid);
+}
+
+bool TSGroup::LIsMember0(TSGUID guid)
+{
+    return IsMember(guid);
+}
+
+bool TSGroup::LIsMember1(TSNumber<uint32> guid)
+{
+    return IsMember(guid);
+}
+
+void TSGroup::LSetLeader0(TSGUID guid)
+{
+    SetLeader(guid);
+}
+
+void TSGroup::LSetLeader1(TSNumber<uint32> guid)
+{
+    SetLeader(guid);
+}
+
+bool TSGroup::LRemoveMember0(TSGUID guid, uint32 method)
+{
+    return RemoveMember(guid, method);
+}
+
+bool TSGroup::LRemoveMember1(TSNumber<uint32> guid, uint32 method)
+{
+    return RemoveMember(guid, method);
+}
+
+TSNumber<uint8> TSGroup::LGetMemberGroup0(TSGUID guid)
+{
+    return GetMemberGroup(guid);
+}
+
+TSNumber<uint8> TSGroup::LGetMemberGroup1(TSNumber<uint32> guid)
+{
+    return GetMemberGroup(guid);
+}
+
+void TSGroup::LSetMembersGroup0(TSGUID guid, uint8 subGroup)
+{
+    SetMembersGroup(guid, subGroup);
+}
+
+void TSGroup::LSetMembersGroup1(TSNumber<uint32> guid, uint8 subGroup)
+{
+    SetMembersGroup(guid, subGroup);
 }

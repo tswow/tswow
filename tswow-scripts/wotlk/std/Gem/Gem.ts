@@ -130,7 +130,7 @@ export class GemRegistryClass
         let parent = parentGem > 0
             ? DBC.GemProperties.findById(parentGem)
             : undefined;
-        let gemid = Ids.GemProperties.id()
+        let gemid = Ids.GemProperties.id(mod,id)
 
         // Build enchantment
         if(parent && parentEnchantment === 0) {

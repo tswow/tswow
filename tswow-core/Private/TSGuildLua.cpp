@@ -1,7 +1,7 @@
 #include "TSLua.h"
 #include "TSGuild.h"
 
-#include "TSGuild.h"
+#include "TSGUID.h"
 #include "TSPlayer.h"
 #include "TSWorldPacket.h"
 

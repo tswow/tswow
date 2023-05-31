@@ -207,7 +207,7 @@ export const Ids = {
     SummonProperties: new DynamicIDGenerator('SummonProperties',3000),
 
     /** Starts at 191, highest base value is 190 */
-    TotemCategory: new DynamicIDGenerator('TotemCategory',191),
+    TotemCategory: new StaticIDGenerator('TotemCategory',191),
 
     /** Starts at 25, highest base value is 24 */
     TotemType: new DynamicIDGenerator('TotemType',25),
@@ -240,10 +240,10 @@ export const Ids = {
     SpellShapeshiftForm: new DynamicIDGenerator('SpellShapeshiftForm',33),
 
     /** Starts at 33000, highest base value is 32754 */
-    CreatureDisplayInfo: new DynamicIDGenerator('CreatureDisplayInfo',33000),
+    CreatureDisplayInfo: new StaticIDGenerator('CreatureDisplayInfo',33000),
 
     /** Starts at 70000, highest base value is 68742 */
-    ItemDisplayInfo: new DynamicIDGenerator('ItemDisplayInfo',70000),
+    ItemDisplayInfo: new StaticIDGenerator('ItemDisplayInfo',70000),
 
     /** Starts at 7100, highest base value is 7087 */
     SpellVisualEffectName: new DynamicIDGenerator('SpellVisualEffectName',7100),
@@ -330,10 +330,10 @@ export const Ids = {
     ChrRaces: new DynamicIDGenerator('ChrRaces',22),
 
     /** Starts at 300, highest base value is 246 */
-    CinematicCamera: new DynamicIDGenerator('CinematicCamera',300),
+    CinematicCamera: new StaticIDGenerator('CinematicCamera',300),
 
     /** Starts at 200, highest base value is 166 */
-    CinematicSequences: new DynamicIDGenerator('CinematicSequences',200),
+    CinematicSequences: new StaticIDGenerator('CinematicSequences',200),
 
     /** Starts at 47, highest base value is 46 */
     CreatureFamily: new StaticIDGenerator('CreatureFamily',47),
@@ -342,7 +342,7 @@ export const Ids = {
     CreatureModelData: new DynamicIDGenerator('CreatureModelData',4000),
 
     /** Starts at 900, highest base value is 821 */
-    CreatureMovementInfo: new DynamicIDGenerator('CreatureMovementInfo',900),
+    CreatureMovementInfo: new StaticIDGenerator('CreatureMovementInfo',900),
 
     /** Starts at 4000, highest base value is 3108 */
     CreatureSoundData: new DynamicIDGenerator('CreatureSoundData',4000),
@@ -397,7 +397,7 @@ export const Ids = {
     /** Starts at 200000, highest base value is 165990 */
     gameobject: new StaticIDGenerator('gameobject', 200000),
     /** Starts at  10000, highest base value is 9624 */
-    GameObjectDisplayInfo: new DynamicIDGenerator('GameObjectDisplayInfo',10000),
+    GameObjectDisplayInfo: new StaticIDGenerator('GameObjectDisplayInfo',10000),
     /**
      * Starts at 1000, highest base value is 21
      * (but some Spells use higher values, so 1000 is for safety)
@@ -407,7 +407,7 @@ export const Ids = {
     /**
      * Starts at 2000, highest base value is 1860
      */
-    Lock: new DynamicIDGenerator('Lock',2000),
+    Lock: new StaticIDGenerator('Lock',2000),
 
     /**
      * Starts at 5000, highest base value is 5000
@@ -487,7 +487,7 @@ export const Ids = {
     /**
      * Starts at 300, highest base value is 291
      */
-    MailTemplate: new DynamicIDGenerator('MailTemplate', 300),
+    MailTemplate: new StaticIDGenerator('MailTemplate', 300),
 
     /**
      * Starts at 441, highest base value is 440. Max value is 2048
@@ -546,31 +546,31 @@ export const Ids = {
     FootstepTerrainLookup: new DynamicIDGenerator('FootstepTerrainLookup',500),
 
     /** Starts at 200, highest base value is 175 */
-    GMSurveyAnswers: new DynamicIDGenerator('GMSurveyAnswers',200),
+    GMSurveyAnswers: new StaticIDGenerator('GMSurveyAnswers',200),
 
     /** Starts at 9, highest base value is 8 (cont) */
-    GMSurveyCurrentSurvey: new DynamicIDGenerator('GMSurveyCurrentSurvey',9),
+    GMSurveyCurrentSurvey: new StaticIDGenerator('GMSurveyCurrentSurvey',9),
 
     /** Starts at 50, highest base value is 41 */
-    GMSurveyQuestions: new DynamicIDGenerator('GMSurveyQuestions',50),
+    GMSurveyQuestions: new StaticIDGenerator('GMSurveyQuestions',50),
 
     /** Starts at 10, highest base value is 9 */
-    GMSurveySurveys: new DynamicIDGenerator('GMSurveySurveys',10),
+    GMSurveySurveys: new StaticIDGenerator('GMSurveySurveys',10),
 
     /** Starts at 38, highest base value is 37 */
-    GMTicketCategory: new DynamicIDGenerator('GMTicketCategory',38),
+    GMTicketCategory: new StaticIDGenerator('GMTicketCategory',38),
 
     /** Starts at 200, highest base value is 122 */
-    GameObjectArtKit: new DynamicIDGenerator('GameObjectArtKit',200),
+    GameObjectArtKit: new StaticIDGenerator('GameObjectArtKit',200),
 
     /** Starts at 600, highest base value is 509 */
     GameTips: new DynamicIDGenerator('GameTips',600),
 
     /** Starts at 2000, highest base value is 1629 */
-    GemProperties: new DynamicIDGenerator('GemProperties',2000),
+    GemProperties: new StaticIDGenerator('GemProperties',2000),
 
     /** Starts at 1000, highest base value is 911 */
-    GlyphProperties: new DynamicIDGenerator('GlyphProperties',1000),
+    GlyphProperties: new StaticIDGenerator('GlyphProperties',1000),
 
     /** Starts at 30, highest base value is 26 */
     GlyphSlot: new DynamicIDGenerator('GlyphSlot',30),
@@ -591,10 +591,10 @@ export const Ids = {
     HolidayNames: new DynamicIDGenerator('HolidayNames',200),
 
     /** Starts at 500, highest base value is 424 */
-    Holidays: new DynamicIDGenerator('Holidays', 500),
+    Holidays: new StaticIDGenerator('Holidays', 500),
 
     /** Starts at 16, highest base value is 15 (cont) */
-    ItemBagFamily: new DynamicIDGenerator('ItemBagFamily',16),
+    ItemBagFamily: new StaticIDGenerator('ItemBagFamily',16),
 
     /** Starts at 1600, highest base value is 1546 */
     ItemCondExtCosts: new DynamicIDGenerator('ItemCondExtCosts',1600),
@@ -618,7 +618,7 @@ export const Ids = {
     ItemRandomSuffix: new StaticIDGenerator('ItemRandomSuffix',100),
 
     /** Starts at 1000, highest base value is 901 */
-    ItemSet: new DynamicIDGenerator('ItemSet',1000),
+    ItemSet: new StaticIDGenerator('ItemSet',1000),
 
     /** Starts at 2000, highest base value is 1677 */
     LanguageWords: new DynamicIDGenerator('LanguageWords',2000),
@@ -630,7 +630,7 @@ export const Ids = {
     LfgDungeonGroup: new DynamicIDGenerator('LfgDungeonGroup',100),
 
     /** Starts at 300, highest base value is 294 */
-    LfgDungeons: new DynamicIDGenerator('LfgDungeons',300),
+    LfgDungeons: new StaticIDGenerator('LfgDungeons',300),
 
     /** Starts at 200, highest base value is 148 */
     LightSkybox: new DynamicIDGenerator('LightSkybox',200),
@@ -696,7 +696,7 @@ export const Ids = {
     Package: new DynamicIDGenerator('Package',3),
 
     /** Starts at 8, highest base value is 7 */
-    PageTextMaterial: new DynamicIDGenerator('PageTextMaterial',8),
+    PageTextMaterial: new StaticIDGenerator('PageTextMaterial',8),
 
     /** Starts at 4, highest base value is 3 */
     PetPersonality: new StaticIDGenerator('PetPersonality', 4),
@@ -708,7 +708,7 @@ export const Ids = {
     PowerDisplay: new DynamicIDGenerator('PowerDisplay',200),
 
     /** Starts at 109, highest base value is 108 (cont) */
-    PvpDifficulty: new DynamicIDGenerator('PvpDifficulty',109),
+    PvpDifficulty: new StaticIDGenerator('PvpDifficulty',109),
 
     /** Starts at 3, highest base value is 2 */
     QuestFactionReward: new DynamicIDGenerator('QuestFactionReward',3),
@@ -912,7 +912,7 @@ export const Ids = {
     game_event_condition: new StaticIDGenerator('game_event_condition',1),
 
     /** Starts at 4000, highest base value is 3622 */
-    page_text: new DynamicIDGenerator('page_text', 4000),
+    page_text: new StaticIDGenerator('page_text', 4000),
 
     /** Starts at 500, highest base value is 453 */
     points_of_interest: new StaticIDGenerator('points_of_interest', 500),

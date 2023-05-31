@@ -22,6 +22,8 @@
 
 #include <sol/sol.hpp>
 
+class TSGUID;
+
 class TC_GAME_API TSGuild {
 public:
     Guild *guild;
@@ -34,7 +36,7 @@ public:
     TSArray<TSPlayer> GetMembers();
     TSNumber<uint32> GetMemberCount();
     TSPlayer GetLeader();
-    TSNumber<uint64> GetLeaderGUID();
+    TSGUID GetLeaderGUID();
     TSNumber<uint32> GetID();
     std::string GetName();
     std::string GetMOTD();

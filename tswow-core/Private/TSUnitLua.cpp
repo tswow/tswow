@@ -1,6 +1,7 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSUnit.h"
+#include "TSGUID.h"
 
 #include "TSPlayer.h"
 #include "TSAura.h"

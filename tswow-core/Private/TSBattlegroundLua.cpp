@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "TSGroup.h"
 #include "TSWorldPacket.h"
+#include "TSGUID.h"
 
 void TSLua::load_battleground_methods(sol::state& state)
 {
@@ -84,7 +85,6 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground, TSBattleground, GetWinner);
     LUA_FIELD(ts_battleground, TSBattleground, GetStatus);
     LUA_FIELD(ts_battleground, TSBattleground, IsRandom);
-    LUA_FIELD(ts_battleground, TSBattleground, GetBGPlayer);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGPlayers);
     LUA_FIELD(ts_battleground, TSBattleground, SetStartPosition);
     LUA_FIELD(ts_battleground, TSBattleground, GetStartX);
@@ -99,7 +99,6 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground, TSBattleground, GetBGPlayerCount);
     LUA_FIELD(ts_battleground, TSBattleground, OpenDoor);
     LUA_FIELD(ts_battleground, TSBattleground, CloseDoor);
-    LUA_FIELD(ts_battleground, TSBattleground, IsPlayerInBG);
     LUA_FIELD(ts_battleground, TSBattleground, GetTeamScore);
     LUA_FIELD(ts_battleground, TSBattleground, SendMessage);
     LUA_FIELD(ts_battleground, TSBattleground, GetUniqueBracketID);
@@ -116,6 +115,10 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground, TSBattleground, GetBGGameObject);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGCreature);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGName);
+
+    ts_battleground.set_function("GetBGPlayer", sol::overload( &TSBattleground::LGetBGPlayer0, &TSBattleground::LGetBGPlayer1 ));
+    ts_battleground.set_function("IsPlayerInBG", sol::overload( &TSBattleground::LIsPlayerInBG0, &TSBattleground::LIsPlayerInBG1 ));
+
     LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, PlaySound, uint32, uint32);
     LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, CastSpell, uint32, uint32);
     LUA_FIELD_OVERLOAD_1_1(ts_battleground, TSBattleground, RemoveAura, uint32, uint32);

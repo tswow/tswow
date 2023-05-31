@@ -2,6 +2,7 @@ import { Table } from "../../../data/table/Table";
 import { ParticleColorQuery, ParticleColorRow } from "../../dbc/ParticleColor";
 import { DBC } from "../../DBCFiles";
 import { RegistryDynamic } from "../Refs/Registry";
+import { CodegenSettings, GenerateCode } from "./Codegen";
 import { MainEntity } from "./Entity";
 import { DynamicIDGenerator, Ids } from "./Ids";
 
@@ -41,6 +42,15 @@ export class ParticleColor extends MainEntity<ParticleColorRow> {
         this.End.setIndex(1,end2);
         this.End.setIndex(2,end3);
         return this.owner;
+    }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,`std.ParticleColors.create()`,code=>{
+            code.line(`.setStart(${this.Start.getIndex(0),this.Start.getIndex(1),this.Start.getIndex(2)})`)
+            code.line(`.setMid(${this.Mid.getIndex(0),this.Mid.getIndex(1),this.Mid.getIndex(2)})`)
+            code.line(`.setEnd(${this.End.getIndex(0),this.End.getIndex(1),this.End.getIndex(2)})`)
+        })
     }
 }
 

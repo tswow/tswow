@@ -1,8 +1,7 @@
-import { MaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { Bit, MaskCell, MaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { spell_custom_attrRow } from "../../sql/spell_custom_attr";
 import { SQL } from "../../SQLFiles";
-import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
 
@@ -21,22 +20,59 @@ export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRo
     get Attribute() { return this.wrapSQL(0, (sql)=>sql.attributes); }
 }
 
-export class SpellCustomAttr extends MaskCell32<Spell> {
+export class SpellCustomAttr extends MaskCell<Spell> {
     @Transient
     private sql: SpellCustomAttrSQL;
+
+    @Transient
+    private mask: MaskCell32<any>;
     constructor(owner: Spell) {
-        super(owner,
-            new CellBasic(owner,
-                ()=>{
-                    return this.sql.Attribute.get();
-                },
-                (value: number)=>{
-                    this.sql.Attribute.set(value);
-                    return owner;
-                }
-            )
-        );
+        super(owner);
         this.sql = new SpellCustomAttrSQL(owner);
+        this.mask = new MaskCell32(undefined,this.sql.Attribute,false);
+    }
+
+    get() {
+        return this.mask.get();
+    }
+    getBit(bit: number): boolean {
+        return this.mask.getBit(bit);
+    }
+    setBit(bit: number, value: Bit): Spell {
+        this.mask.setBit(bit,value);
+        return this.owner;
+    }
+    clearAll(): Spell {
+        this.mask.clearAll();
+        return this.owner;
+    }
+    toString(): string {
+        return this.mask.toString();
+    }
+    protected deserialize(value: any): void {
+        (this.mask as any).deserialize(value);
+    }
+
+    set(values: number | string[])
+    {
+        if(typeof(values) === 'number')
+        {
+            this.mask.set(values);
+        }
+        else
+        {
+            this.clearAll();
+            return this.add(values);
+        }
+    }
+
+    add(values: string[])
+    {
+        for(let value of values)
+        {
+            this[value].set(1);
+        }
+        return this.owner;
     }
 
     exists() { return this.sql.exists(); }

@@ -15,66 +15,48 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "../../../data/cell/cells/Cell";
-import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
-import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Table } from "../../../data/table/Table";
 import { SpellRuneCostQuery, SpellRuneCostRow } from "../../dbc/SpellRuneCost";
 import { DBC } from "../../DBCFiles";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { Substruct } from "../Misc/Substruct";
 import { RefDynamic } from "../Refs/Ref";
 import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "./Spell";
 
-export const PowerTypeMap = {
-    'HEALTH':-2,
-    'INVALID':-1,
-    'MANA':0,
-    'RAGE':1,
-    'PET_ENERGY':2,
-    'ENERGY':3,
-    'ELIXIR':4,
-    'RUNES':5,
-    'RUNIC_POWER':6,
+export enum PowerTypeEnum
+{
+    HEALTH = -2,
+    INVALID = -1,
+    MANA = 0,
+    RAGE = 1,
+    PET_ENERGY = 2,
+    ENERGY = 3,
+    ELIXIR = 4,
+    RUNES = 5,
+    RUNIC_POWER = 6,
 }
-
-export type PowerType = keyof typeof PowerTypeMap
-
-export class Power<T> extends CellSystem<T> {
-    readonly spell: Spell;
-
-    constructor(owner: T, spell: Spell) {
-        super(owner);
-        this.spell = spell;
-    }
-
-    get(): PowerType {
-        let type = this.spell.row.PowerType.get()
-        for(let key in PowerTypeMap) {
-            if(PowerTypeMap[key as PowerType] == type) {
-                return key as PowerType;
-            }
-        }
-        return 'INVALID'
-    }
-
-    set(type: PowerType) {
-        this.spell.row.PowerType.set(PowerTypeMap[type]);
-        return this.owner;
-    }
-
-    objectify(options?: ObjectifyOptions) {
-        return this.get();
-    }
-}
-
 export class SpellRuneCost extends MainEntity<SpellRuneCostRow> {
     get ID() { return this.row.ID.get(); }
     get RunicPower() { return this.wrap(this.row.RunicPower); }
     get Blood() { return this.wrap(this.row.Blood); }
     get Frost() { return this.wrap(this.row.Frost); }
     get Unholy() { return this.wrap(this.row.Unholy); }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'std.SpellRuneCost.create()',(gen)=>
+        {
+            gen.non_def_num('RunicPower',this.RunicPower);
+            gen.non_def_num('Blood',this.Blood);
+            gen.non_def_num('Frost',this.Frost);
+            gen.non_def_num('Unholy',this.Unholy);
+        })
+    }
 }
 
 export class SpellRuneCostRef<T> extends RefDynamic<T,SpellRuneCost> {
@@ -123,24 +105,47 @@ export class SpellRuneCostRegistryClass
 
 export const SpellRuneCostRegistry = new SpellRuneCostRegistryClass()
 
-export class SpellPower<T> extends CellSystem<T> {
-    @Transient
-    readonly spell: Spell;
+export class SpellPower<T> extends Substruct<T,Spell> {
     constructor(owner: T, spell: Spell) {
-        super(owner);
-        this.spell = spell;
+        super(owner,spell);
     }
 
-    get PowerType() { return new Power(this.owner, this.spell); }
-    get PowerCostBase() { return this.ownerWrap(this.spell.row.ManaCost);}
-    get PowerCostPercent() { return this.ownerWrap(this.spell.row.ManaCostPct);}
-    get PowerCostPerLevel() { return this.ownerWrap(this.spell.row.ManaCostPerLevel);}
-    get PowerPerSecond() { return this.ownerWrap(this.spell.row.ManaPerSecond);}
-    get PowerPerSecondPerLevel() { return this.ownerWrap(this.spell.row.ManaPerSecondPerLevel);}
-    get RuneCost() { return SpellRuneCostRegistry.ref(this.spell, this.spell.row.RuneCostID); }
+    get Type() { return makeEnumCell(PowerTypeEnum, this.owner, this.realOwner.row.PowerType)}
+    get CostBase() { return this.ownerWrap(this.realOwner.row.ManaCost);}
+    get CostPercent() { return this.ownerWrap(this.realOwner.row.ManaCostPct);}
+    get CostPerLevel() { return this.ownerWrap(this.realOwner.row.ManaCostPerLevel);}
+    get CostPerSecond() { return this.ownerWrap(this.realOwner.row.ManaPerSecond);}
+    get CostPerSecondPerLevel() { return this.ownerWrap(this.realOwner.row.ManaPerSecondPerLevel);}
+
+    mod(callback: (power: SpellPowerCB)=>void)
+    {
+        callback(new SpellPowerCB(this.realOwner));
+        return this.owner;
+    }
+
+    /** @deprecated Use 'Type'*/
+    @Transient
+    get PowerType() { return makeEnumCell(PowerTypeEnum, this.owner, this.realOwner.row.PowerType)}
+    /** @deprecated Use 'CostBase'*/
+    @Transient
+    get PowerCostBase() { return this.ownerWrap(this.realOwner.row.ManaCost);}
+    /** @deprecated Use 'CostPercent'*/
+    @Transient
+    get PowerCostPercent() { return this.ownerWrap(this.realOwner.row.ManaCostPct);}
+    /** @deprecated Use 'CostPerLevel'*/
+    @Transient
+    get PowerCostPerLevel() { return this.ownerWrap(this.realOwner.row.ManaCostPerLevel);}
+    /** @deprecated Use 'CostPerSecond'*/
+    @Transient
+    get PowerPerSecond() { return this.ownerWrap(this.realOwner.row.ManaPerSecond);}
+    /** @deprecated Use 'CostPerSecondPerLevel'*/
+    @Transient
+    get PowerPerSecondPerLevel() { return this.ownerWrap(this.realOwner.row.ManaPerSecondPerLevel);}
+
+    get RuneCost() { return SpellRuneCostRegistry.ref(this.owner, this.realOwner.row.RuneCostID); }
 
     /**
-     * Sets this spell to use mana
+     * Sets this.realOwner.to use mana
      * @param baseCost {number} Defines the spell's base mana cost
      * @param costPct {number} Defines a percentage of the user's max mana as cost (i.e. 10% of maximum mana)
      * @param perLevel {number} Increases the spell's mana cost for each level
@@ -148,17 +153,17 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's mana cost per second for each level
      */
     setMana(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.PowerType.set('MANA');
-        this.spell.row.ManaCost.set(baseCost);
-        this.spell.row.ManaCostPct.set(costPct);
-        this.spell.row.ManaCostPerLevel.set(perLevel);
-        this.spell.row.ManaPerSecond.set(perSecondBase);
-        this.spell.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
+        this.Type.set('MANA')
+        this.realOwner.row.ManaCost.set(baseCost);
+        this.realOwner.row.ManaCostPct.set(costPct);
+        this.realOwner.row.ManaCostPerLevel.set(perLevel);
+        this.realOwner.row.ManaPerSecond.set(perSecondBase);
+        this.realOwner.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
         return this.owner;
     }
 
     /**
-     * Sets this spell to use energy
+     * Sets this.realOwner.to use energy
      * @param baseCost {number} Defines the spell's base energy cost
      * @param costPct {number} Defines a percentage of the user's max energy as cost (i.e. 10% of maximum energy)
      * @param perLevel {number} Increases the spell's energy cost for each level
@@ -166,17 +171,17 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's energy cost per second for each level
      */
     setEnergy(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.PowerType.set('ENERGY');
-        this.spell.row.ManaCost.set(baseCost);
-        this.spell.row.ManaCostPct.set(costPct);
-        this.spell.row.ManaCostPerLevel.set(perLevel);
-        this.spell.row.ManaPerSecond.set(perSecondBase);
-        this.spell.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
+        this.Type.set('ENERGY');
+        this.realOwner.row.ManaCost.set(baseCost);
+        this.realOwner.row.ManaCostPct.set(costPct);
+        this.realOwner.row.ManaCostPerLevel.set(perLevel);
+        this.realOwner.row.ManaPerSecond.set(perSecondBase);
+        this.realOwner.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
         return this.owner;
     }
 
     /**
-     * Set this spell to use rage
+     * Set this.realOwner.to use rage
      * @param baseCost {number} Defines the spell's base rage cost
      * @param costPct {number} Defines a percentage of the user's max rage as cost (i.e. 10% of maximum rage)
      * @param perLevel {number} Increases the spell's rage cost for each level
@@ -184,12 +189,21 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's rage cost per second for each level
      */
     setRage(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.PowerType.set('RAGE');
-        this.spell.row.ManaCost.set(baseCost*10);
-        this.spell.row.ManaCostPct.set(costPct);
-        this.spell.row.ManaCostPerLevel.set(perLevel*10);
-        this.spell.row.ManaPerSecond.set(perSecondBase*10);
-        this.spell.row.ManaPerSecondPerLevel.set(perSecondPerLevel*10);
+        this.Type.set('RAGE');
+        this.realOwner.row.ManaCost.set(baseCost*10);
+        this.realOwner.row.ManaCostPct.set(costPct);
+        this.realOwner.row.ManaCostPerLevel.set(perLevel*10);
+        this.realOwner.row.ManaPerSecond.set(perSecondBase*10);
+        this.realOwner.row.ManaPerSecondPerLevel.set(perSecondPerLevel*10);
         return this.owner;
+    }
+}
+
+export class SpellPowerCB extends SpellPower<SpellPowerCB>
+{
+    constructor(owner: Spell)
+    {
+        super(undefined,owner);
+        this.injectThis(this);
     }
 }
