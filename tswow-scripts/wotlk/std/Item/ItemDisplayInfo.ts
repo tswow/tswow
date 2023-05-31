@@ -20,10 +20,10 @@ import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "../../dbc/ItemDisplayI
 import { DBC } from "../../DBCFiles";
 import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { ParticleColorRegistry } from "../Misc/ParticleColor";
-import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RefStatic } from "../Refs/Ref";
+import { RegistryStatic } from "../Refs/Registry";
 import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
 import { ItemVisualsRegistry } from "./ItemVisualEffect";
@@ -55,16 +55,16 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     }
 }
 
-export class ItemDisplayInfoRef<T> extends RefDynamic<T,ItemDisplayInfo> {
-    setSimpleIcon(icon: string) {
-        this.getRefCopy().Icon.set(icon)
+export class ItemDisplayInfoRef<T> extends RefStatic<T,ItemDisplayInfo> {
+    setSimpleIcon(mod: string, name: string, icon: string) {
+        this.getRefCopy(mod,name).Icon.set(icon)
         return this.owner;
     }
 }
 
 
 export class ItemDisplayInfoRegistryClass
-    extends RegistryDynamic<
+    extends RegistryStatic<
           ItemDisplayInfo
         , ItemDisplayInfoRow
         , ItemDisplayInfoQuery
@@ -76,7 +76,7 @@ export class ItemDisplayInfoRegistryClass
     protected Table(): Table<any, ItemDisplayInfoQuery, ItemDisplayInfoRow> & { add: (id: number) => ItemDisplayInfoRow; } {
         return DBC.ItemDisplayInfo
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.ItemDisplayInfo
     }
     Clear(entity: ItemDisplayInfo): void {

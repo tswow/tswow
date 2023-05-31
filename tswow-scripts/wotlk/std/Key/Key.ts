@@ -38,8 +38,8 @@ export class KeyLocks extends MultirowSystemCached<Lock,Key> {
         return value.row.isDeleted()
     }
 
-    addGet(lockType: number = 5, lockSkill = 0) {
-        return LockRegistry.create()
+    addGet(mod: string, name: string, lockType: number = 5, lockSkill = 0) {
+        return LockRegistry.create(mod,name)
             .Requirements.addItem(this.owner.ItemID,1)
             .Requirements.addLockType(lockType,lockSkill,0)
     }
