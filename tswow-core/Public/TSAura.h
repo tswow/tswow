@@ -31,11 +31,12 @@ class TSSpell;
 class TSSpellInfo;
 class TSHealInfo;
 class TSDamageInfo;
+class TSGUID;
 
 class TC_GAME_API TSAuraEffect : public TSEntityProvider {
     TS_CLASS_DECLARATION(TSAuraEffect,AuraEffect,aura)
     TSUnit GetCaster();
-    TSNumber<uint64> GetCasterGUID();
+    TSGUID GetCasterGUID();
     TSAura GetAura();
     TSSpellInfo GetSpellInfo();
     TSNumber<uint32> GetID();
@@ -80,7 +81,7 @@ public:
     operator bool() const { return aura != nullptr; }
     bool operator==(TSAura const& rhs) { return aura == rhs.aura; }
     TSUnit GetCaster();
-    TSNumber<uint64> GetCasterGUID();
+    TSGUID GetCasterGUID();
     TSNumber<uint32> GetCasterLevel();
     TSNumber<int32> GetDuration();
     TSNumber<uint32> GetAuraID();

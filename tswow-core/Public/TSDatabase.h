@@ -16,6 +16,8 @@
 #pragma once
 
 #include "TSMain.h"
+#include "TSGUID.h"
+
 #include <memory>
 #include <string>
 #include <functional>
@@ -31,6 +33,8 @@ public:
     virtual TSNumber<uint16> GetUInt16(int index) = 0;
     virtual TSNumber<uint32> GetUInt32(int index) = 0;
     virtual TSNumber<uint64> GetUInt64(int index) = 0;
+
+    virtual TSGUID GetGUIDNumber(int index) = 0;
 
     virtual TSNumber<int8> GetInt8(int index) = 0;
     virtual TSNumber<int16> GetInt16(int index) = 0;
@@ -120,6 +124,8 @@ public:
 
     TSPreparedStatementBase * SetUInt64(const uint8 index, const uint64 value);
     TSPreparedStatementBase * SetInt64(const uint8 index, const int64 value);
+
+    TSPreparedStatementBase * SetGUIDNumber(const uint8 index, const TSGUID value);
 
     TSPreparedStatementBase * SetFloat(const uint8 index, const float value);
     TSPreparedStatementBase * SetDouble(const uint8 index, const double value);

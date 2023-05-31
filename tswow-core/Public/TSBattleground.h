@@ -27,6 +27,7 @@
 
 class TSPlayer;
 class TSWorldPacket;
+class TSGUID;
 
 class TC_GAME_API TSBattlegroundPlayer: public TSEntityProvider {
     uint64 m_guid;
@@ -37,7 +38,7 @@ public:
     TSBattlegroundPlayer(TSBattleground bg, uint64 guid, uint32 team, int64 offlineRemoveTime);
     operator bool() const { return m_guid > 0; }
     bool operator==(TSBattlegroundPlayer const& rhs) { return m_guid == rhs.m_guid; }
-    TSNumber<uint64> GetGUID();
+    TSGUID GetGUID();
     TSNumber<uint32> GetTeam();
     TSNumber<int64> GetOfflineRemoveTime();
 };
@@ -73,7 +74,8 @@ public:
     TSNumber<uint32> GetStatus();
 
     bool IsRandom();
-    TSBattlegroundPlayer GetBGPlayer(uint64 guid);
+    TSBattlegroundPlayer GetBGPlayer(TSGUID guid);
+    TSBattlegroundPlayer GetBGPlayer(TSNumber<uint32> guid);
     TSArray<TSBattlegroundPlayer> GetBGPlayers();
     void SetStartPosition(uint32 teamid, float x, float y, float z, float o);
     TSNumber<float> GetStartX(uint32 teamid);
@@ -98,7 +100,8 @@ public:
     void AddSpiritGuide(uint32 type, float x, float y, float z, float o, uint32 teamId = TS_TEAM_NEUTRAL);
     void OpenDoor(uint32 type);
     void CloseDoor(uint32 type);
-    bool IsPlayerInBG(uint64 guid);
+    bool IsPlayerInBG(TSGUID guid);
+    bool IsPlayerInBG(TSNumber<uint32> guid);
     TSNumber<uint32> GetTeamScore(uint32 team);
     void SendMessage(uint32 entry, uint8 type, TSPlayer source);
     TSNumber<uint32> GetUniqueBracketID();
@@ -110,10 +113,17 @@ public:
     bool RemoveCreature(uint32 type);
     bool RemoveObject(uint32 type);
     bool RemoveObjectFromWorld(uint32 type);
-    TSNumber<int32> GetObjectType(uint64 guid);
+    TSNumber<int32> GetObjectType(TSGUID guid);
     void SetHoliday(bool isHoliday);
     bool IsHoliday();
 
     TSGameObject GetBGGameObject(uint32 type, bool logErrors = false);
     TSCreature GetBGCreature(uint32 type, bool logErrors = false);
+private:
+    TSBattlegroundPlayer LGetBGPlayer0(TSGUID guid);
+    TSBattlegroundPlayer LGetBGPlayer1(TSNumber<uint32> guid);
+
+    bool LIsPlayerInBG0(TSGUID guid);
+    bool LIsPlayerInBG1(TSNumber<uint32> guid);
+    friend class TSLua;
 };
