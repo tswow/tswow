@@ -27,6 +27,7 @@ export class LocValueEntry<T> extends Cell<string,T> {
 }
 
 export class LocValue<T> extends LocSystem<T> {
+    
     protected locs: {[key: string]: LocValueEntry<T>} = {}
     lang(lang: Language): LocValueEntry<T> {
         return (this.locs[lang] || (this.locs[lang] = new LocValueEntry<T>(this.owner)))
