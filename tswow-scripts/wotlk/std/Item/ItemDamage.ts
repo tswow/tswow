@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { EnumCon, makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
+import { SchoolTypes } from "../Misc/School";
 import { ItemTemplate } from "./ItemTemplate";
 
 function schools(owner: ItemTemplate) {
@@ -48,19 +50,35 @@ export enum DamageSchool {
 }
 
 export class ItemDamage extends ArrayEntry<ItemTemplate> {
+    /** @deprecated use School */
     get school() { return schools(this.container)[this.index]; }
+
+    /** @deprecated use Min */
     get min() { return dmgMin(this.container)[this.index]; }
+    /** @deprecated use Max */
     get max() { return dmgMax(this.container)[this.index]; }
 
+    get Min() { return dmgMin(this.container)[this.index]; }
+    get Max() { return dmgMax(this.container)[this.index]; }
+    get School() { return makeEnumCell(SchoolTypes, this, schools(this.container)[this.index]) }
+
+    set(school: EnumCon<keyof typeof SchoolTypes>, min: number, max: number)
+    {
+        this.School.set(school);
+        this.Min.set(min);
+        this.Max.set(max);
+    }
+
     clear() {
-        this.school.set(0);
-        this.min.set(0);
-        this.max.set(0);
+        this.School.set(0);
+        this.Min.set(0);
+        this.Max.set(0);
         return this;
     }
 
     isClear(): boolean {
-        return this.school.get() === 0 && this.min.get() === 0 && this.max.get() === 0;
+        // todo: is School supposed to be checked here?
+        return this.School.get() === 0 && this.Min.get() === 0 && this.Max.get() === 0;
     }
 }
 
@@ -72,7 +90,7 @@ export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
         return new ItemDamage(this.owner, index);
     }
 
-    private add(type: number, min: number, max: number) {
+    private _add(type: number, min: number, max: number) {
         const free = this.addGet()
         free.school.set(type);
         free.min.set(min);
@@ -80,31 +98,38 @@ export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
         return this.owner;
     }
 
+    add(school: EnumCon<keyof typeof SchoolTypes>, min: number, max: number)
+    {
+        return this.addMod(x=>x
+            .set(school,min,max)
+        )
+    }
+
     addPhysical(min: number, max: number) {
-        return this.add(0, min, max);
+        return this._add(0, min, max);
     }
 
     addHoly(min: number, max: number) {
-        return this.add(1, min, max);
+        return this._add(1, min, max);
     }
 
     addFire(min: number, max: number) {
-        return this.add(2, min, max);
+        return this._add(2, min, max);
     }
 
     addNature(min: number, max: number) {
-        return this.add(3, min, max);
+        return this._add(3, min, max);
     }
 
     addFrost(min: number, max: number) {
-        return this.add(4, min, max);
+        return this._add(4, min, max);
     }
 
     addShadow(min: number, max: number) {
-        return this.add(5, min, max);
+        return this._add(5, min, max);
     }
 
     addArcane(min: number, max: number) {
-        return this.add(6, min, max);
+        return this._add(6, min, max);
     }
 }

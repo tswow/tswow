@@ -31,7 +31,8 @@ import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { GemRegistry } from "../Gem/Gem";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
-import { Loot, LootSet } from "../Loot/Loot";
+import { Loot, LootSet, LootSetRef } from "../Loot/Loot";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { DurationCell } from "../Misc/DurationCell";
 import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -222,7 +223,8 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     get FlagsCustom() {
         return makeMaskCell32(ItemFlagsCustom,this, this.row.flagsCustom);
     }
-    get Loot() { return new LootSet(this.ID, SQL.item_loot_template); }
+
+    get Loot() { return new LootSetRef(this, new LootSet(this.ID, SQL.item_loot_template)); }
 
     /**
      * This is readonly, because changing the gem properties
@@ -257,6 +259,165 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 
     get ID() {
         return this.row.entry.get();
+    }
+
+    codify(settings: {mod?: string, id?: string, name?: string, create_spells?: boolean, all_locs?: bool} & CodegenSettings)
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        const create_spells = settings.create_spells === undefined ? false : settings.create_spells;
+        const all_locs = settings.all_locs === undefined ? false : settings.all_locs
+
+        return GenerateCode(settings,`std.Items.create('${mod}','${id}')`,code=>
+        {
+            if(all_locs)
+            {
+                if(settings.name)
+                {
+                    code.line(`.Name.enGB.set('${settings.name}')`)
+                }
+                code.loc('Description',this.Description)
+                code.loc('ItemSetName',this.ItemSetName)
+            }
+            else
+            {
+                if(settings.name)
+                {
+                    code.line(`.Name.enGB.set('${settings.name}')`)
+                }
+                else
+                {
+                    code.line(`.Name.enGB.set('${this.Name.enGB.get().split("'").join("\\'")}')`)
+                }
+                if(this.Description.enGB.get().length > 0)
+                {
+                    code.line(`.Description.enGB.set('${this.Description.enGB.get().split("'").join("\\'")}')`)
+                }
+                if(this.ItemSetName.enGB.get().length > 0)
+                {
+                    code.line(`.ItemSetName.enGB.set('${this.ItemSetName.enGB.get().split("'").join("\\'")}')`)
+                }
+            }
+            code.non_zero_enum('Bonding',this.Bonding)
+            code.non_zero_enum('AmmoType',this.AmmoType)
+            code.enum_line('Class',this.Class)
+            code.non_zero_enum('FoodType',this.FoodType)
+            code.non_zero_enum('InventoryType',this.InventoryType)
+            code.non_zero_enum('Material',this.Material)
+            code.non_zero_enum('SheatheType',this.SheatheType)
+            code.non_zero_enum('TotemCategory',this.TotemCategory)
+            code.non_zero_enum('Quality',this.Quality)
+
+            code.non_zero_bitmask('BagFamily',this.BagFamily)
+            if(this.ClassMask.get() !== 0xffffffff)
+            {
+                code.non_zero_bitmask('ClassMask',this.ClassMask)
+            }
+            if(this.RaceMask.get() !== 0xffffffff)
+            {
+                code.non_zero_bitmask('RaceMask',this.RaceMask)
+            }
+            code.non_zero_bitmask('Flags',this.Flags)
+            code.non_zero_bitmask('FlagsCustom',this.FlagsCustom)
+            code.non_zero_bitmask('FlagsExtra',this.FlagsExtra)
+
+            code.non_def_num('Area',this.Area)
+            code.non_def_num('Armor',this.Armor)
+            code.non_def_num('Block',this.Block)
+            code.non_def_num('BonusArmor',this.BonusArmor)
+            code.non_def_num('ContainerSlots',this.ContainerSlots)
+            this.Damage.forEach(x=>{
+                if(!x.isClear())
+                {
+                    code.line(`.Damage.add('${x.School.objectify()}',${x.Min.get()},${x.Max.get()})`)
+                }
+            })
+
+            code.non_def_num('Delay',this.Delay)
+            code.non_def_num('Disenchant',this.Disenchant)
+            code.non_def_num('Durability',this.Durability)
+            code.non_def_num('Price.PlayerBuyPrice',this.Price.PlayerBuyPrice)
+            code.non_def_num('Price.PlayerSellPrice',this.Price.PlayerSellPrice)
+            code.non_def_num('Price.BuyCount',this.Price.BuyCount)
+            code.non_def_num('RequiredLevel',this.RequiredLevel)
+            code.non_def_num('RequiredDisenchantSkill',this.RequiredDisenchantSkill,-1)
+            code.non_def_num('Duration',this.Duration)
+            if(this.GemProperties.get())
+            {
+                code.line(`// Warning: Ignoring field "GemProperties" (gems will not work)`)
+            }
+            code.non_def_num('Holiday',this.Holiday)
+            code.non_def_num('ItemLevel',this.ItemLevel)
+            code.non_def_num('ItemSet',this.ItemSet)
+            code.non_def_num('Lock',this.Lock)
+            code.non_def_num('Map',this.Map)
+            code.non_def_num('MaxCount',this.MaxCount)
+            code.non_def_num('MaxStack',this.MaxStack)
+            if(this.MoneyLoot.Min.get() !== 0 || this.MoneyLoot.Max.get() !== 0)
+            {
+                code.line(`.MoneyLoot.set(${this.MoneyLoot.Min.get()},${this.MoneyLoot.Max.get()})`)
+            }
+            code.non_def_num('ScriptName',this.ScriptName)
+            code.non_def_num('Sheath',this.Sheath)
+            code.non_def_num('SocketBonus',this.SocketBonus)
+            code.non_def_num('StartQuest',this.StartQuest)
+            code.non_def_num('SoundOverride',this.SoundOverride)
+
+            this.Socket.forEach(x=>{
+                if(!x.isClear())
+                {
+                    code.line(`.Socket.add('${x.Color.objectify()}',${x.Content.get()})`)
+                }
+            })
+
+            this.Stats.forEach((x,i)=>{
+                if(!x.isClear())
+                {
+                    code.line(`.Stats.add('${x.Type.objectify()}',${x.Value.get()})`)
+                }
+            })
+
+            this.Spells.forEach((x,i)=>
+            {
+                if(!x.Spell.get())
+                {
+                    return;
+                }
+
+                code.begin_block('.Spells.addMod(x=>x')
+                if(create_spells)
+                {
+                    code.begin_block(`.Spell.modRefCopy('${mod}','${id}_spell_${i}',x=>x`)
+                    code.substruct(x.Spell.getRef(),settings);
+                    code.end_block(')')
+                }
+                else
+                {
+                    code.non_def_num('Spell',x.Spell)
+                }
+                code.non_def_num('Category',x.Category)
+                code.non_def_num('CategoryCooldown',x.CategoryCooldown)
+                code.non_def_num('Charges.Raw',x.Charges.Raw)
+                code.non_def_num('Cooldown',x.Cooldown)
+                code.non_def_num('ProcsPerMinute',x.ProcsPerMinute)
+                code.enum_line('Trigger',x.Trigger)
+                code.end_block(`)`)
+            })
+
+            if(this.Loot.get().rows.length > 0)
+            {
+                code.begin_block(`.Loot.mod(x=>x`)
+                this.Loot.get().codify(settings);
+                code.end_block(`)`)
+            }
+
+            if(this.DisplayInfo.get())
+            {
+                code.begin_block(`.DisplayInfo.modRefCopy('${mod}','${id}_display',x=>x`)
+                code.substruct(this.DisplayInfo.getRef(),Object.assign(settings,{mod:mod,id:id+'_display'}));
+                code.end_block(`)`)
+            }
+        })
     }
 }
 

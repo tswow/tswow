@@ -41,6 +41,14 @@ export class ItemVisualModels<T> extends ArraySystem<ItemVisualModel<T>,ItemDisp
         return new ItemVisualModel(this.owner, index);
     }
 
+    set(index: number, model?: string, texture?: string)
+    {
+        let v = this.get(index);
+        if(model) v.Model.set(model);
+        if(texture) v.ModelTexture.set(texture);
+        return this.owner;
+    }
+
     add(model: string, texture: string) {
         this.addGet()
             .Model.set(model)

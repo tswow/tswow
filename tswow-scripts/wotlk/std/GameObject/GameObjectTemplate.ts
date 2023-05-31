@@ -29,6 +29,7 @@ import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { LootSetPointer } from "../Loot/Loot";
 import { MapRegistry } from "../Map/Maps";
+import { Codegen, CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { TransformedEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
@@ -146,6 +147,47 @@ export class GameObjectTemplate extends TransformedEntityID<gameobject_templateR
             , 'livescript'
         ) as _hidden.GameObject<this>
     }
+
+    protected codifyBase(mod: string, id: string, settings: CodegenSettings, code: Codegen & {all_locs?: boolean})
+    {
+        this.ArtKits.forEach((x,i)=>{
+            if(x)
+            {
+                code.line(`.ArtKits.set(${i},${x})`)
+            }
+        })
+        code.non_def_num('Faction',this.Faction);
+        code.non_zero_bitmask('Flags',this.Flags);
+        if(this.Gold.Min.get() || this.Gold.Max.get())
+        {
+            code.line(`.Gold.set(${this.Gold.Min.get()},${this.Gold.Max.get()})`)
+        }
+        code.enum_line('Type',this.Type);
+        if(code.all_locs)
+        {
+            code.loc('Name',this.Name);
+        }
+        else
+        {
+            code.line(`.Name.enGB.set('${this.Name.enGB.get().split('\\').join('\\\\').split('\'').join('\\\'')}')`)
+        }
+        if(this.Icon.get().length > 0)
+        {
+            code.line(`.Icon.set('${this.Icon.get().split('\\').join('\\\\')}')`)
+        }
+        
+        if(this.CastBarCaption.get().length > 0)
+        {
+            code.line(`.CastBarCaption('${this.CastBarCaption.get()}')`)
+        }
+        code.non_def_num('Size',this.Size,1);
+        if(this.Display.get())
+        {
+            code.begin_block(`.Display.modRefCopy('${mod}','${id}-display',x=>x`)
+            code.substruct(this.Display.getRef(),settings);
+            code.end_block(')')
+        }
+    }
 }
 
 export class GameObjectPlain extends GameObjectTemplate {
@@ -173,6 +215,39 @@ export class GameObjectPlain extends GameObjectTemplate {
     get Data21() { return this.wrap(this.row.Data21); }
     get Data22() { return this.wrap(this.row.Data22); }
     get Data23() { return this.wrap(this.row.Data23); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Generic.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Data0',this.Data0);
+            code.non_def_num('Data1',this.Data1);
+            code.non_def_num('Data2',this.Data2);
+            code.non_def_num('Data3',this.Data3);
+            code.non_def_num('Data4',this.Data4);
+            code.non_def_num('Data5',this.Data5);
+            code.non_def_num('Data6',this.Data6);
+            code.non_def_num('Data7',this.Data7);
+            code.non_def_num('Data8',this.Data8);
+            code.non_def_num('Data9',this.Data9);
+            code.non_def_num('Data10',this.Data10);
+            code.non_def_num('Data11',this.Data11);
+            code.non_def_num('Data12',this.Data12);
+            code.non_def_num('Data13',this.Data13);
+            code.non_def_num('Data14',this.Data14);
+            code.non_def_num('Data15',this.Data15);
+            code.non_def_num('Data16',this.Data16);
+            code.non_def_num('Data17',this.Data17);
+            code.non_def_num('Data18',this.Data18);
+            code.non_def_num('Data19',this.Data19);
+            code.non_def_num('Data20',this.Data20);
+            code.non_def_num('Data21',this.Data21);
+            code.non_def_num('Data22',this.Data22);
+            code.non_def_num('Data23',this.Data23);
+        })
+    }
 }
 
 export class GameObjectAreaDamage extends GameObjectTemplate {
@@ -187,6 +262,23 @@ export class GameObjectAreaDamage extends GameObjectTemplate {
     get AutoCloseTime() { return this.wrap(this.row.Data5); }
     get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data6); }
     get Closetext() { return BroadcastTextRegistry.ref(this, this.row.Data7); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.AreaDamage.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('Radius',this.Radius);
+            code.non_def_num('DamageMin',this.DamageMin);
+            code.non_def_num('DamageMax',this.DamageMax);
+            code.non_def_num('DamageSchool',this.DamageSchool);
+            code.non_def_num('AutoCloseTime',this.AutoCloseTime);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('CloseText',this.Closetext);
+        })
+    }
 }
 
 export class GameObjectAuraGenerator extends GameObjectTemplate {
@@ -201,6 +293,22 @@ export class GameObjectAuraGenerator extends GameObjectTemplate {
     get AuraID2() { return this.wrap(this.row.Data4); }
     get Condition2() { return new RefUnknown(this, this.row.Data5); }
     get ServerOnly() { return this.wrap(this.row.Data6); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.AuraGenerators.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('StartOpen',this.StartOpen);
+            code.non_def_num('Radius',this.Radius);
+            code.non_def_num('AuraID1',this.AuraID1);
+            code.non_def_num('Condition1',this.Condition1);
+            code.non_def_num('AuraID2',this.AuraID2);
+            code.non_def_num('Condition2',this.Condition2);
+            code.non_def_num('ServerOnly',this.ServerOnly);
+        })
+    }
 }
 
 export class GameObjectBarberChair extends GameObjectTemplate {
@@ -209,6 +317,17 @@ export class GameObjectBarberChair extends GameObjectTemplate {
     }
     get ChairHeight() { return this.wrap(this.row.Data0); }
     get HeightOffset() { return this.wrap(this.row.Data1); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.BarberChairs.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('ChairHeight',this.ChairHeight);
+            code.non_def_num('HeightOffset',this.HeightOffset);
+        })
+    }
 }
 
 GameObjectID(1)
@@ -257,6 +376,25 @@ export class GameObjectButton extends GameObjectTemplate {
     get LineOfSightOK() { return BroadcastTextRegistry.ref(this, this.row.Data8) }
 
     get Condition() { return new RefUnknown(this, this.row.Data9); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Buttons.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('StartsActive',this.StartsActive);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('AutoClose',this.AutoClose);
+            code.non_def_num('LinkedTrap',this.LinkedTrap);
+            code.non_def_num('NoDamageImmune',this.NoDamageImmune);
+            code.non_def_num('IsLarge',this.IsLarge);
+            code.non_def_num('ActivateText',this.ActivateText);
+            code.non_def_num('DeactivateText',this.DeactivateText);
+            code.non_def_num('LineOfSightOk',this.LineOfSightOK);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectCamera extends GameObjectTemplate {
@@ -268,6 +406,20 @@ export class GameObjectCamera extends GameObjectTemplate {
     get Event() { return new RefUnknown(this, this.row.Data2); }
     get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data3); }
     get Condition() { return new RefUnknown(this, this.row.Data4); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Cameras.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('Cinematic',this.Cinematic);
+            code.non_def_num('Event',this.Event);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectCapturePoint extends GameObjectTemplate {
@@ -296,6 +448,37 @@ export class GameObjectCapturePoint extends GameObjectTemplate {
     get Highlight() { return this.wrap(this.row.Data19); }
     get StartingValue() { return this.wrap(this.row.Data20); }
     get Unidirectional() { return this.wrap(this.row.Data21); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.CapturePoints.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Radius',this.Radius);
+            code.non_def_num('Spell',this.Spell);
+            code.non_def_num('WorldState1',this.WorldState1);
+            code.non_def_num('WorldState2',this.WorldState2);
+            code.non_def_num('WinEvent1',this.WinEvent1);
+            code.non_def_num('WinEvent2',this.WinEvent2);
+            code.non_def_num('ContestedEvent1',this.ContestedEvent1);
+            code.non_def_num('ContestedEvent2',this.ContestedEvent2);
+            code.non_def_num('ProgressEvent1',this.ProgressEvent1);
+            code.non_def_num('ProgressEvent2',this.ProgressEvent2);
+            code.non_def_num('NeutralEvent1',this.NeutralEvent1);
+            code.non_def_num('NeutralEvent2',this.NeutralEvent2);
+            code.non_def_num('NeutralPercent',this.NeutralPercent);
+            code.non_def_num('WorldState3',this.WorldState3);
+            code.non_def_num('MinSuperiority',this.MinSuperiority);
+            code.non_def_num('MaxSuperiority',this.MaxSuperiority);
+            code.non_def_num('MinTime',this.MinTime);
+            code.non_def_num('MaxTime',this.MaxTime);
+            code.non_def_num('Large',this.Large);
+            code.non_def_num('Highlight',this.Highlight);
+            code.non_def_num('StartingValue',this.StartingValue);
+            code.non_def_num('Unidirectional',this.Unidirectional);
+        })
+    }
 }
 
 export class GameObjectChair extends GameObjectTemplate {
@@ -308,6 +491,20 @@ export class GameObjectChair extends GameObjectTemplate {
     get OnlyCreatorUse() { return this.wrap(this.row.Data2); }
     get TriggeredEvent() { return new RefUnknown(this, this.row.Data3); }
     get Condition() { return new RefUnknown(this, this.row.Data4); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Chairs.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Slots',this.Slots);
+            code.non_def_num('Height',this.Height);
+            code.non_def_num('OnlyCreatorUse',this.OnlyCreatorUse);
+            code.non_def_num('TriggeredEvents',this.TriggeredEvent);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectChest extends GameObjectTemplate {
@@ -350,6 +547,33 @@ export class GameObjectChest extends GameObjectTemplate {
     get UseGroupLoot() { return this.wrap(this.row.Data15); }
     get Tooltip() { return this.wrap(this.row.Data16); }
     get Condition() { return new RefUnknown(this, this.row.Data17); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Chests.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('Loot',this.Loot);
+            code.non_def_num('RestockTime',this.RestockTime);
+            code.non_def_num('IsConsumable',this.IsConsumable);
+            code.non_def_num('MinRestock',this.MinRestock);
+            code.non_def_num('MaxRestock',this.MaxRestock);
+            code.non_def_num('LootedEvent',this.LootedEvent);
+            code.non_def_num('LinkedTrap',this.LinkedTrap);
+            code.non_def_num('Quest',this.Quest);
+            code.non_def_num('Level',this.Level);
+            code.non_def_num('LosOK',this.LosOK);
+            code.non_def_num('LeaveLoot',this.LeaveLoot);
+            code.non_def_num('NotInCombat',this.NotInCombat);
+            code.non_def_num('LogLoot',this.LogLoot);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('UseGroupLoot',this.UseGroupLoot);
+            code.non_def_num('Tooltip',this.Tooltip);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectDestructibleBuilding extends GameObjectTemplate {
@@ -380,6 +604,39 @@ export class GameObjectDestructibleBuilding extends GameObjectTemplate {
     get Empty13() { return this.wrap(this.row.Data21); }
     get DamageEvent() { return new RefUnknown(this, this.row.Data22); }
     get Empty14() { return this.wrap(this.row.Data23); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Destructibles.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('InteractNumHits',this.InteractNumHits);
+            code.non_def_num('CreditProxyCreatures',this.InteractNumHits);
+            code.non_def_num('Empty1',this.InteractNumHits);
+            code.non_def_num('IntactEvent',this.InteractNumHits);
+            code.non_def_num('Empty2',this.Empty2);
+            code.non_def_num('DamageNumHits',this.DamageNumHits);
+            code.non_def_num('Empty3',this.Empty3);
+            code.non_def_num('Empty4',this.Empty4);
+            code.non_def_num('Empty5',this.Empty5);
+            code.non_def_num('DamagedEvent',this.DamageEvent);
+            code.non_def_num('Empty6',this.Empty6);
+            code.non_def_num('Empty7',this.Empty7);
+            code.non_def_num('Empty8',this.Empty8);
+            code.non_def_num('Empty9',this.Empty9);
+            code.non_def_num('DestroyedEvent',this.DestroyedEvent);
+            code.non_def_num('Empty10',this.Empty10);
+            code.non_def_num('RebuildingTimeSecs',this.RebuildingTimeSecs);
+            code.non_def_num('Empty11',this.Empty11);
+            code.non_def_num('DestructibleData',this.DestructibleData);
+            code.non_def_num('RebuildingEvent',this.RebuildingEvent);
+            code.non_def_num('Empty12',this.Empty12);
+            code.non_def_num('Empty13',this.Empty13);
+            code.non_def_num('DamageEvent',this.DamageEvent);
+            code.non_def_num('Empty14',this.Empty14);
+        })
+    }
 }
 
 export class GameObjectDoor extends GameObjectTemplate {
@@ -429,6 +686,23 @@ export class GameObjectDoor extends GameObjectTemplate {
     }
 
     get Condition1() { return new RefUnknown(this, this.row.Data7); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Doors.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('StartOpen',this.StartOpen);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('AutoClose',this.AutoClose);
+            code.non_def_num('NoDamageImmune',this.NoDamageImmune);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('CloseText',this.CloseText);
+            code.non_def_num('IgnoredByPathFinding',this.IgnoredByPathfinding);
+            code.non_def_num('Condition1',this.Condition1);
+        })
+    }
 }
 
 export class GameObjectDungeonDifficulty extends GameObjectTemplate {
@@ -437,6 +711,17 @@ export class GameObjectDungeonDifficulty extends GameObjectTemplate {
     }
     get Map() { return MapRegistry.ref(this, this.row.Data0); }
     get Difficulty() { return this.wrap(this.row.Data1); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.DungeonDifficulties.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Map',this.Map);
+            code.non_def_num('Difficulty',this.Difficulty);
+        })
+    }
 }
 
 export class GameObjectFishingHole extends GameObjectTemplate {
@@ -461,6 +746,20 @@ export class GameObjectFishingHole extends GameObjectTemplate {
      * Possibly 1628 for all fishing holes.
      */
     get Lock() { return LockRegistry.ref(this, this.row.Data4); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.FishingHoles.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Map',this.Radius);
+            code.non_def_num('Loot',this.Loot);
+            code.non_def_num('MinSuccessOpens',this.MinSuccessOpens);
+            code.non_def_num('MaxSuccessOpens',this.MaxSuccessOpens);
+            code.non_def_num('Lock',this.Lock);
+        })
+    }
 }
 
 export class GameObjectFlagDrop extends GameObjectTemplate {
@@ -472,6 +771,20 @@ export class GameObjectFlagDrop extends GameObjectTemplate {
     get PickupSpell() { return this.wrap(this.row.Data2); }
     get NoDamageImmune() { return this.wrap(this.row.Data3); }
     get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data4); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.FlagDrops.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('Event',this.Event);
+            code.non_def_num('PickupSpell',this.PickupSpell);
+            code.non_def_num('NoDamageImmune',this.NoDamageImmune);
+            code.non_def_num('OpenText',this.OpenText);
+        })
+    }
 }
 
 export class GameObjectFlagStand extends GameObjectTemplate {
@@ -487,6 +800,24 @@ export class GameObjectFlagStand extends GameObjectTemplate {
     get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data6); }
     get LineOfSightOK() { return this.wrap(this.row.Data7); }
     get Condition() { return new RefUnknown(this, this.row.Data8); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.FlagStands.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('PickupSpell',this.PickupSpell);
+            code.non_def_num('Radius',this.Radius);
+            code.non_def_num('ReturnAura',this.ReturnAura);
+            code.non_def_num('ReturnSpell',this.ReturnSpell);
+            code.non_def_num('NoDamageImmune',this.NoDamageImmune);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('LineOfSightOK',this.LineOfSightOK);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectGeneric extends GameObjectTemplate {
@@ -500,6 +831,22 @@ export class GameObjectGeneric extends GameObjectTemplate {
     get FloatOnWater() { return this.wrap(this.row.Data4); }
     get Quest() { return QuestRegistry.ref(this, this.wrap(this.row.Data5)); }
     get Condition() { return new RefUnknown(this, this.row.Data6); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Generic.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Tooltip',this.Tooltip);
+            code.non_def_num('Highlight',this.Highlight);
+            code.non_def_num('ServerOnly',this.ServerOnly);
+            code.non_def_num('Large',this.Large);
+            code.non_def_num('FloatOnWater',this.FloatOnWater);
+            code.non_def_num('Quest',this.Quest);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export enum SpellFlags {
@@ -538,6 +885,39 @@ export class GameObjectGoober extends GameObjectTemplate {
     get SpellFlags() {
         return makeMaskCell32(SpellFlags, this, this.row.Data23);
     }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Goobers.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('Quest',this.Quest);
+            code.non_def_num('Event',this.Event);
+            code.non_def_num('AutoCloseTime',this.AutoCloseTime);
+            code.non_def_num('CustomAnim',this.CustomAnim);
+            code.non_def_num('Consumable',this.Consumable);
+            code.non_def_num('Cooldown',this.Cooldown);
+            code.non_def_num('Page',this.Page);
+            code.non_def_num('Language',this.Language);
+            code.non_def_num('PageMaterial',this.PageMaterial);
+            code.non_def_num('Spell',this.Spell);
+            code.non_def_num('NoDamageImmune',this.NoDamageImmune);
+            code.non_def_num('LinkedTrap',this.LinkedTrap);
+            code.non_def_num('Large',this.Large);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('CloseText',this.CloseText);
+            code.non_def_num('LineOfSightOk',this.LineOfSightOK);
+            code.non_def_num('AllowMounted',this.AllowMounted);
+            code.non_def_num('FloatingTooltip',this.FloatingTooltip);
+            code.non_def_num('Gossip',this.Gossip);
+            code.non_def_num('WorldStateSetsState',this.WorldStateSetsState);
+            code.non_def_num('FloatOnWater',this.FloatOnWater);
+            code.non_def_num('Condition',this.Condition);
+            code.non_def_num('SpellFlags',this.SpellFlags);
+        })
+    }
 }
 
 export class GameObjectGuardPost extends GameObjectTemplate {
@@ -549,6 +929,17 @@ export class GameObjectGuardPost extends GameObjectTemplate {
         return new RefUnknown(this, this.row.Data0);
     }
     get Charges() { return this.wrap(this.row.Data1); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.GuardPosts.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.CreatureTemplateUnused);
+            code.non_def_num('Quest',this.Charges);
+        })
+    }
 }
 
 export class GameObjectGuildBank extends GameObjectTemplate {
@@ -556,6 +947,16 @@ export class GameObjectGuildBank extends GameObjectTemplate {
         super(row);
     }
     get Condition() { return new RefUnknown(this, this.row.Data0); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.GuildBanks.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectMailbox extends GameObjectTemplate {
@@ -563,6 +964,16 @@ export class GameObjectMailbox extends GameObjectTemplate {
         super(row);
     }
     get Condition() { return new RefUnknown(this, this.row.Data0); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Mailboxes.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectMeetingStone extends GameObjectTemplate {
@@ -572,6 +983,18 @@ export class GameObjectMeetingStone extends GameObjectTemplate {
     get MinLevel() { return this.wrap(this.row.Data0); }
     get MaxLevel() { return this.wrap(this.row.Data1); }
     get Area() { return AreaRegistry.ref(this, this.row.Data2); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.MeetingStones.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('MinLevel',this.MinLevel);
+            code.non_def_num('MaxLevel',this.MaxLevel);
+            code.non_def_num('Area',this.Area);
+        })
+    }
 }
 
 export class GameObjectMinigame extends GameObjectTemplate {
@@ -579,6 +1002,16 @@ export class GameObjectMinigame extends GameObjectTemplate {
         super(row);
     }
     get GameType() { return this.wrap(this.row.Data0); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Minigames.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('GameType',this.GameType);
+        })
+    }
 }
 
 export class GameObjectShip extends GameObjectTemplate {
@@ -594,6 +1027,24 @@ export class GameObjectShip extends GameObjectTemplate {
     get SpawnGroup() { return this.wrap(this.row.Data6); }
     get WorldState1() { return this.wrap(this.row.Data7); }
     get CanBeStopped() { return this.wrap(this.row.Data8); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Ships.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('TaxiPath',this.TaxiPath);
+            code.non_def_num('MoveSpeed',this.MoveSpeed);
+            code.non_def_num('AccelRate',this.AccelRate);
+            code.non_def_num('StartEvent',this.StartEvent);
+            code.non_def_num('StopEvent',this.StopEvent);
+            code.non_def_num('TransportPhysics',this.TransportPhysics);
+            code.non_def_num('SpawnGroup',this.SpawnGroup);
+            code.non_def_num('WorldState1',this.WorldState1);
+            code.non_def_num('CanBeStopped',this.CanBeStopped);
+        })
+    }
 }
 
 export class GameObjectQuestGiver extends GameObjectTemplate {
@@ -611,6 +1062,26 @@ export class GameObjectQuestGiver extends GameObjectTemplate {
     get AllowMounted() { return BroadcastTextRegistry.ref(this, this.row.Data8) }
     get IsLarge() { return BroadcastTextRegistry.ref(this, this.row.Data9) }
     get Condition() { return new RefUnknown(this, this.row.Data10) }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.QuestGivers.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('QuestList',this.QuestList);
+            code.non_def_num('PageMaterial',this.PageMaterial);
+            code.non_def_num('Gossip',this.Gossip);
+            code.non_def_num('CustomAnim',this.CustomAnim);
+            code.non_def_num('NoDamageImmune',this.NoDamageImmune);
+            code.non_def_num('OpenText',this.OpenText)
+            code.non_def_num('IsLOSOk',this.IsLOSOk);
+            code.non_def_num('AllowMounted',this.AllowMounted);
+            code.non_def_num('IsLarge',this.IsLarge);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectSpellCaster extends GameObjectTemplate {
@@ -623,6 +1094,21 @@ export class GameObjectSpellCaster extends GameObjectTemplate {
     get AllowMounted() { return this.wrap(this.row.Data3); }
     get Large() { return this.wrap(this.row.Data4); }
     get Condition() { return new RefUnknown(this, this.row.Data5); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.SpellCasters.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Spell',this.Spell);
+            code.non_def_num('Charges',this.Charges);
+            code.non_def_num('PartyOnly',this.PartyOnly);
+            code.non_def_num('AllowMounted',this.AllowMounted);
+            code.non_def_num('Large',this.Large);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectSpellFocus extends GameObjectTemplate {
@@ -638,6 +1124,24 @@ export class GameObjectSpellFocus extends GameObjectTemplate {
     get FloatingTooltip() { return this.wrap(this.row.Data6); }
     get FloatOnWater() { return this.wrap(this.row.Data7); }
     get Condition() { return new RefUnknown(this, this.row.Data8); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.SpellFocus.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Focus',this.Focus);
+            code.non_def_num('Distance',this.Distance);
+            code.non_def_num('LinkedTrap',this.LinkedTrap);
+            code.non_def_num('ServerOnly',this.ServerOnly);
+            code.non_def_num('Quest',this.Quest);
+            code.non_def_num('Large',this.Large);
+            code.non_def_num('FloatingTooltip',this.FloatingTooltip);
+            code.non_def_num('FloatOnWater',this.FloatOnWater);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectSummoningRitual extends GameObjectTemplate {
@@ -653,6 +1157,24 @@ export class GameObjectSummoningRitual extends GameObjectTemplate {
     get CasterGrouped() { return this.wrap(this.row.Data6); }
     get RitualNoTargetCheck() { return this.wrap(this.row.Data7); }
     get Condition() { return new RefUnknown(this, this.row.Data8); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.SummoningRituals.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('RequiredParticipants',this.RequiredParticipants);
+            code.non_def_num('Distance',this.Spell);
+            code.non_def_num('AnimSpell',this.AnimSpell);
+            code.non_def_num('RitualPersistent',this.RitualPersistent);
+            code.non_def_num('CasterTargetSpell',this.CasterTargetSpell);
+            code.non_def_num('CasterTargetSpellTargets',this.CasterTargetSpellTargets);
+            code.non_def_num('CasterGrouped',this.CasterGrouped);
+            code.non_def_num('RitualNoTargetCheck',this.RitualNoTargetCheck);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectText extends GameObjectTemplate {
@@ -664,6 +1186,20 @@ export class GameObjectText extends GameObjectTemplate {
     get PageMaterial() { return this.wrap(this.row.Data2); }
     get AllowMounted() { return this.wrap(this.row.Data3); }
     get Condition() { return new RefUnknown(this, this.row.Data4); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Text.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Page',this.Page);
+            code.non_def_num('Language',this.Language);
+            code.non_def_num('PageMaterial',this.PageMaterial);
+            code.non_def_num('AllowMounted',this.AllowMounted);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectElevator extends GameObjectTemplate {
@@ -677,6 +1213,22 @@ export class GameObjectElevator extends GameObjectTemplate {
     get Pause2Event() { return new RefUnknown(this, this.row.Data4); }
     get Map() { return this.wrap(this.row.Data5); }
     get Keyframes() { return new ElevatorKeyframes(this); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Eleveators.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Pause',this.Pause);
+            code.non_def_num('StartOpen',this.StartOpen);
+            code.non_def_num('AutoCloseTime',this.AutoCloseTime);
+            code.non_def_num('Pause1Event',this.Pause1Event);
+            code.non_def_num('Pause2Event',this.Pause2Event);
+            code.non_def_num('Map',this.Map);
+            code.non_def_num('Keyframes',this.Keyframes);
+        })
+    }
 }
 
 export class GameObjectTrap extends GameObjectTemplate {
@@ -704,6 +1256,31 @@ export class GameObjectTrap extends GameObjectTemplate {
     get CloseText() { return BroadcastTextRegistry.ref(this, this.row.Data13); }
     get IgnoreTotems() { return this.wrap(this.row.Data14); }
     get Condition() { return new RefUnknown(this, this.row.Data15); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Traps.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('Lock',this.Lock);
+            code.non_def_num('Level',this.Level);
+            code.non_def_num('Diameter',this.Diameter);
+            code.non_def_num('Spell',this.Spell);
+            code.non_def_num('TrapType',this.TrapType);
+            code.non_def_num('Cooldown',this.Cooldown);
+            code.non_def_num('AutoCloseTime',this.AutoCloseTime);
+            code.non_def_num('StartDelay',this.StartDelay);
+            code.non_def_num('ServerOnly',this.ServerOnly);
+            code.non_def_num('Stealthed',this.Stealthed);
+            code.non_def_num('Large',this.Large);
+            code.non_def_num('Invisible',this.Invisible);
+            code.non_def_num('OpenText',this.OpenText);
+            code.non_def_num('CloseText',this.CloseText);
+            code.non_def_num('IgnoreTotems',this.IgnoreTotems);
+            code.non_def_num('Condition',this.Condition);
+        })
+    }
 }
 
 export class GameObjectTrapdoor extends GameObjectTemplate {
@@ -714,6 +1291,18 @@ export class GameObjectTrapdoor extends GameObjectTemplate {
     get WhenToPause() { return this.wrap(this.row.Data0); }
     get StartOpen() { return this.wrap(this.row.Data1); }
     get AutoClose() { return this.wrap(this.row.Data2); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.id || 'id';
+        return GenerateCode(settings,`std.GameObjectTemplates.Trapdoors.create('${mod}','${id}')`,code=>{
+            this.codifyBase(mod,id,settings,code);
+            code.non_def_num('WhenToPause',this.WhenToPause);
+            code.non_def_num('StartOpen',this.StartOpen);
+            code.non_def_num('AutoClose',this.AutoClose);
+        })
+    }
 }
 
 export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {

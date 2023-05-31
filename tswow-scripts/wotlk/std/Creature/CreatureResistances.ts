@@ -1,4 +1,4 @@
-import { EnumCon, makeEnum } from "../../../data/cell/cells/EnumCell";
+import { EnumCon, makeEnum, makeEnumCellReadOnly } from "../../../data/cell/cells/EnumCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { creature_template_resistanceRow } from "../../sql/creature_template_resistance";
 import { SQL } from "../../SQLFiles";
@@ -11,7 +11,8 @@ export class CreatureResistance extends MainEntity<creature_template_resistanceR
     get CreatureTemplate() {
         return CreatureTemplateRegistry.readOnlyRef(this, this.row.CreatureID)
     }
-    get School() { return this.row.School.get() }
+
+    get School() { return makeEnumCellReadOnly(SchoolTypes,this,this.row.School) }
     get Resistance() { return this.wrap(this.row.Resistance); }
 }
 
