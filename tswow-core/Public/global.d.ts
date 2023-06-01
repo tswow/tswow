@@ -224,7 +224,10 @@ declare interface TSMutex {
     unlock();
     try_lock(): bool;
 }
+
+/** @deprecated use CreateMutex */
 declare function CreateMutexLock(): TSMutex;
+declare function CreateMutex(): TSMutex;
 
 // should not be interface,
 // will make it look like {x:0,y:0,z:0,o:0,map:0} is legal

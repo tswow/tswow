@@ -12,6 +12,8 @@ public:
     void lock();
     void unlock();
     bool try_lock();
+    std::string stringify(int indention = 0) { return "TSMutex"; };
 };
 
 #define CreateMutexLock TSMutex
+#define CreateMutex TSMutex
