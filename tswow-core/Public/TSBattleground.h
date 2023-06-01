@@ -103,6 +103,7 @@ class TC_GAME_API TSBattlegroundScore
 
     TSNumber<uint32> GetCustomAttr(std::string const& key) const;
     void SetCustomAttr(std::string const& key, uint32 value);
+    void ModCustomAttr(std::string const& key, int32 mod);
 };
 
 class TC_GAME_API TSBattleground: public TSMap {
@@ -133,9 +134,9 @@ public:
 
     bool IsRandom();
     TSBattlegroundScore GetScore(TSGUID guid);
+    TSBattlegroundScore GetScore(TSNumber<uint32> guid);
     TSBattlegroundPlayer GetBGPlayer(TSGUID guid);
     TSBattlegroundPlayer GetBGPlayer(TSNumber<uint32> guid);
-    TSBattlegroundScore GetScore(TSNumber<uint32> guid);
     TSArray<TSBattlegroundPlayer> GetBGPlayers();
     void SetStartPosition(uint32 teamid, float x, float y, float z, float o);
     TSNumber<float> GetStartX(uint32 teamid);
@@ -182,6 +183,9 @@ public:
 private:
     TSBattlegroundPlayer LGetBGPlayer0(TSGUID guid);
     TSBattlegroundPlayer LGetBGPlayer1(TSNumber<uint32> guid);
+
+    TSBattlegroundScore LGetScore0(TSGUID guid);
+    TSBattlegroundScore LGetScore1(TSNumber<uint32> guid);
 
     bool LIsPlayerInBG0(TSGUID guid);
     bool LIsPlayerInBG1(TSNumber<uint32> guid);

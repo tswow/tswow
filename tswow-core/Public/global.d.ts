@@ -4548,6 +4548,7 @@ declare interface TSBattlegroundScore {
     GetArenaTeamID(): TSNumber<uint8>
     GetCustomAttr(key: string): TSNumber<uint32>
     SetCustomAttr(key: string, value: uint32): void
+    ModCustomAttr(key: string, value: int32): void
 }
 
 

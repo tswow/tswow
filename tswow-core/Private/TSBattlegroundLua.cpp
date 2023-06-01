@@ -64,12 +64,12 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetArenaTeamID);
     LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetCustomAttr);
     LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetCustomAttr);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, ModCustomAttr);
 
     sol::usertype<TSBattleground> ts_battleground = state.new_usertype<TSBattleground>("TSBattleground", sol::base_classes, sol::bases<TSMap, TSWorldEntityProvider<TSMap>, TSEntityProvider>());
     #if TRINITY
     LUA_FIELD(ts_battleground, TSBattleground, GetBracketID);
     #endif
-    LUA_FIELD(ts_battleground, TSBattleground, GetScore);
     LUA_FIELD(ts_battleground, TSBattleground, GetAlivePlayersCountByTeam);
     LUA_FIELD(ts_battleground, TSBattleground, GetBonusHonorFromKillCount);
     LUA_FIELD(ts_battleground, TSBattleground, GetEndTime);
@@ -116,6 +116,7 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground, TSBattleground, GetBGCreature);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGName);
 
+    ts_battleground.set_function("GetScore", sol::overload( &TSBattleground::LGetScore0, &TSBattleground::LGetScore1 ));
     ts_battleground.set_function("GetBGPlayer", sol::overload( &TSBattleground::LGetBGPlayer0, &TSBattleground::LGetBGPlayer1 ));
     ts_battleground.set_function("IsPlayerInBG", sol::overload( &TSBattleground::LIsPlayerInBG0, &TSBattleground::LIsPlayerInBG1 ));
 

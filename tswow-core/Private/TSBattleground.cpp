@@ -345,6 +345,11 @@ void TSBattlegroundScore::SetCustomAttr(std::string const& key, uint32 value)
     m_score->CustomAttributes[key] = value;
 }
 
+void ModCustomAttr(std::string const& key, int32 mod)
+{
+    m_score->CustomAttributes[key] += mod;
+}
+
 uint64 TSBattlegroundScore::GetPlayerGUID() const
 {
     return m_score->PlayerGuid;
@@ -677,7 +682,7 @@ TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
 
 TSBattlegroundScore TSBattleground::GetScore(TSGUID guid)
 {
-    auto itr = bg->PlayerScores.find(guid);
+    auto itr = bg->PlayerScores.find(guid.GetLow());
     if (itr != bg->PlayerScores.end())
     {
         return TSBattlegroundScore(itr->second);
@@ -1031,4 +1036,14 @@ bool TSBattleground::LIsPlayerInBG0(TSGUID guid)
 bool TSBattleground::LIsPlayerInBG1(TSNumber<uint32> guid)
 {
     return IsPlayerInBG(guid);
+}
+
+TSBattlegroundScore TSBattleground::LGetScore0(TSGUID guid)
+{
+    return GetScore(guid);
+}
+
+TSBattlegroundScore TSBattleground::LGetScore1(TSNumber<uint32> guid)
+{
+    return GetScore(guid);
 }
