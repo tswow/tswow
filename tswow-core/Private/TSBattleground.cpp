@@ -345,7 +345,7 @@ void TSBattlegroundScore::SetCustomAttr(std::string const& key, uint32 value)
     m_score->CustomAttributes[key] = value;
 }
 
-void ModCustomAttr(std::string const& key, int32 mod)
+void TSBattlegroundScore::ModCustomAttr(std::string const& key, int32 mod)
 {
     m_score->CustomAttributes[key] += mod;
 }
