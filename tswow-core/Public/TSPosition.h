@@ -4,14 +4,14 @@
 
 class TSPosition {
 public:
-    int map;
+    uint32 map;
     TSNumber<float> x;
     TSNumber<float> y;
     TSNumber<float> z;
     TSNumber<float> o;
 
     TSPosition* operator->() { return this;}
-    TSPosition(int map,float x, float y, float z, float o)
+    TSPosition(uint32 map,float x, float y, float z, float o)
     {
         this->x = x;
         this->y = y;
@@ -20,3 +20,8 @@ public:
         this->o = o;
     }
 };
+
+TSPosition CreateTSPosition(uint32 map, float x, float y, float z, float o)
+{
+    return TSPosition(map,x,y,z,o);
+}
