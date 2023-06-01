@@ -25,6 +25,7 @@ import { AreaRegistry } from "./std/Area/Area";
 import { AreaGroupRegistry } from "./std/Area/AreaGroup";
 import { WMOAreaRegistry } from "./std/Area/WMOArea";
 import { AreaTriggerRegistry } from "./std/AreaTrigger/AreaTrigger";
+import { BattlegroundStatInfoRegistry } from "./std/Battleground/BattlegroundStatInfo";
 import { BroadcastTextRegistry } from "./std/BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./std/BroadcastText/CreatureText";
 import { ClassRegistry } from "./std/Class/ClassRegistry";
@@ -215,6 +216,7 @@ export const std = {
     TimedActionListBuilder: ActionListRegistry,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: _DBC,
+    BattlegroundStats: BattlegroundStatInfoRegistry,
     /** Used to load external dbc files for conversion purposes. */
     DBCLoader: DBCLoader,
     SQL: _SQL,

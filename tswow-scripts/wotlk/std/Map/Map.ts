@@ -25,6 +25,7 @@ import { battleground_templateRow } from "../../sql/battleground_template";
 import { instance_addonRow } from "../../sql/instance_addon";
 import { instance_templateRow } from "../../sql/instance_template";
 import { SQL } from "../../SQLFiles";
+import { BattlegroundStatInfoBase, BattlegroundStatInfoRegistry } from "../Battleground/BattlegroundStatInfo";
 import { createBgBase } from "../Battleground/BattlegroundBase";
 import { BattlegroundBrackets } from "../Battleground/BattlegroundBracket";
 import { BattlegroundSafeLoc } from "../Battleground/BattlegroundSafeLocs";
@@ -185,6 +186,12 @@ export class BattlegroundMap extends Map {
 
     get Brackets() {
         return new BattlegroundBrackets(this, this.wrapIndex(this.bg_dbc.MapID,0))
+    }
+
+    get Stats() {
+        let info = BattlegroundStatInfoRegistry.get(this.ID);
+        BattlegroundStatInfoBase.setOwner(info,this as any);
+        return info as any as BattlegroundStatInfoBase<this>;
     }
 
     get InlineScriptsBG() {

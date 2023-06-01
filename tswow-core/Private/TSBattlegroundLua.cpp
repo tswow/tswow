@@ -18,6 +18,54 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetTeam);
     LUA_FIELD(ts_battlegroundplayer, TSBattlegroundPlayer, GetOfflineRemoveTime);
 
+    sol::usertype<TSBattlegroundScore> ts_battleground_score = state.new_usertype<TSBattlegroundScore>("TSBattlegroundScore");
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetKillingBlows);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetDeaths);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetHonorableKills);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetBonusHonor);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetDamageDone);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetHealingDone);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetKillingBlows);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetDeaths);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetHonorableKills);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetBonusHonor);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetDamageDone);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetHealingDone);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, ApplyBaseToPacket);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetWSFlagCaptures);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetEYFlagCaptures);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetWSFlagReturns);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetABBasesAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetICBasesAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetABBasesDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetICBasesDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetAVGraveyardsAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetAVGraveyardsDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetAVTowersAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetAVTowersDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetAVMinesCaptured);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetSADestroyedDemolishers);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetSADestroyedGates);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetWSFlagCaptures);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetEYFlagCaptures);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetWSFlagReturns);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetABBasesAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetICBasesAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetABBasesDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetICBasesDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetAVGraveyardsAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetAVGraveyardsDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetAVTowersAssaulted);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetAVTowersDefended);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetAVMinesCaptured);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetSADestroyedDemolishers);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetSADestroyedGates);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetPlayerGUID);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetArenaTeamID);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, GetCustomAttr);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, SetCustomAttr);
+    LUA_FIELD(ts_battleground_score, TSBattlegroundScore, ModCustomAttr);
+
     sol::usertype<TSBattleground> ts_battleground = state.new_usertype<TSBattleground>("TSBattleground", sol::base_classes, sol::bases<TSMap, TSWorldEntityProvider<TSMap>, TSEntityProvider>());
     #if TRINITY
     LUA_FIELD(ts_battleground, TSBattleground, GetBracketID);
@@ -68,6 +116,7 @@ void TSLua::load_battleground_methods(sol::state& state)
     LUA_FIELD(ts_battleground, TSBattleground, GetBGCreature);
     LUA_FIELD(ts_battleground, TSBattleground, GetBGName);
 
+    ts_battleground.set_function("GetScore", sol::overload( &TSBattleground::LGetScore0, &TSBattleground::LGetScore1 ));
     ts_battleground.set_function("GetBGPlayer", sol::overload( &TSBattleground::LGetBGPlayer0, &TSBattleground::LGetBGPlayer1 ));
     ts_battleground.set_function("IsPlayerInBG", sol::overload( &TSBattleground::LIsPlayerInBG0, &TSBattleground::LIsPlayerInBG1 ));
 

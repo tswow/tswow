@@ -4502,6 +4502,56 @@ declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityPr
     GetOfflineRemovalTime(): TSNumber<uint64>
 }
 
+declare interface TSBattlegroundScore {
+    GetKillingBlows(): TSNumber<uint32>
+    GetDeaths(): TSNumber<uint32>
+    GetHonorableKills(): TSNumber<uint32>
+    GetBonusHonor(): TSNumber<uint32>
+    GetDamageDone(): TSNumber<uint32>
+    GetHealingDone(): TSNumber<uint32>
+    SetKillingBlows(value: uint32) : void;
+    SetDeaths(value: uint32): void;
+    SetHonorableKills(value: uint32): void;
+    SetBonusHonor(value: uint32): void;
+    SetDamageDone(value: uint32): void;
+    SetHealingDone(value: uint32): void;
+    ApplyBaseToPacket(bg: TSBattleground, packet: TSWorldPacket): void;
+    GetWSFlagCaptures(): TSNumber<uint32>
+    GetEYFlagCaptures(): TSNumber<uint32>
+    GetWSFlagReturns(): TSNumber<uint32>
+    GetABBasesAssaulted(): TSNumber<uint32>
+    GetICBasesAssaulted(): TSNumber<uint32>
+    GetABBasesDefended(): TSNumber<uint32>
+    GetICBasesDefended(): TSNumber<uint32>
+    GetAVGraveyardsAssaulted(): TSNumber<uint32>
+    GetAVGraveyardsDefended(): TSNumber<uint32>
+    GetAVTowersAssaulted(): TSNumber<uint32>
+    GetAVTowersDefended(): TSNumber<uint32>
+    GetAVMinesCaptured(): TSNumber<uint32>
+    GetSADestroyedDemolishers(): TSNumber<uint32>
+    GetSADestroyedGates(): TSNumber<uint32>
+    SetWSFlagCaptures(value: uint32): void
+    SetEYFlagCaptures(value: uint32): void
+    SetWSFlagReturns(value: uint32): void
+    SetABBasesAssaulted(value: uint32): void
+    SetICBasesAssaulted(value: uint32): void
+    SetABBasesDefended(value: uint32): void
+    SetICBasesDefended(value: uint32): void
+    SetAVGraveyardsAssaulted(value: uint32): void
+    SetAVGraveyardsDefended(value: uint32): void
+    SetAVTowersAssaulted(value: uint32): void
+    SetAVTowersDefended(value: uint32): void
+    SetAVMinesCaptured(value: uint32): void 
+    SetSADestroyedDemolishers(value: uint32): void
+    SetSADestroyedGates(value: uint32): void
+    GetPlayerGUID(): uint64
+    GetArenaTeamID(): TSNumber<uint8>
+    GetCustomAttr(key: string): TSNumber<uint32>
+    SetCustomAttr(key: string, value: uint32): void
+    ModCustomAttr(key: string, value: int32): void
+}
+
+
 declare interface TSBattleground extends TSMap {
     IsNull() : bool
 
@@ -4616,7 +4666,8 @@ declare interface TSBattleground extends TSMap {
     GetStatus() : TSNumber<uint32>
 
     IsRandom(): bool;
-    GetBGPlayer(guid: uint64 | TSGUID): TSBattlegroundPlayer;
+    GetScore(guid: TSNumber<uint32> | TSGUID): TSBattlegroundScore
+    GetBGPlayer(guid: TSNumber<uint32> | TSGUID): TSBattlegroundPlayer;
     GetBGPlayers(): TSArray<TSBattlegroundPlayer>;
     SetStartPosition(teamId: uint32, x: float, y: float, z: float, o: float): void;
     GetStartX(teamid: TeamId): TSNumber<float>
@@ -8687,6 +8738,9 @@ declare namespace _hidden {
 
         OnEndEarly(callback: (bg: TSBattleground,winner: TSMutableNumber<uint32>)=>void): T
         OnEndEarly(id: EventID, callback: (bg: TSBattleground,winner: TSMutableNumber<uint32>)=>void): T
+
+        OnSendScore(callback: (bg: TSBattleground, score: TSBattlegroundScore, packet: TSWorldPacket, cancel: TSMutable<bool,bool>)=>void): T
+        OnSendScore(id: EventID, callback: (bg: TSBattleground, score: TSBattlegroundScore, packet: TSWorldPacket, cancel: TSMutable<bool,bool>)=>void): T
 
         /**
          * Note that "winner" can no longer be changed at this stage,
