@@ -23,6 +23,8 @@
 
 #include <sol/sol.hpp>
 
+class TSGUID;
+
 struct MailItemInfo;
 struct TC_GAME_API TSMailItemInfo {
     MailItemInfo* info;
@@ -48,8 +50,8 @@ struct TC_GAME_API TSMail {
     TSNumber<uint32> GetID();
     TSNumber<uint8> GetType();
     TSNumber<uint16> GetTemplateID();
-    TSNumber<uint64> GetSender();
-    TSNumber<uint64> GetReceiver();
+    TSGUID GetSender();
+    TSGUID GetReceiver();
     TSNumber<uint16> GetState();
     TSNumber<uint32> GetMoney();
     TSNumber<uint32> GetCOD();
@@ -66,7 +68,8 @@ struct TC_GAME_API TSMail {
     void SetMoney(uint32 money);
     void SetCOD(uint32 cod);
     void SetChecked(uint32 checked);
-    void SetSender(uint8 type, uint64 guid);
+    void SetSender(uint8 type, TSGUID guid);
+    void SetSender(uint8 type, TSNumber<uint32> guid);
     void SetSubject(std::string const& subject);
     void SetBody(std::string const& body);
     void SetState(uint8 state);
@@ -74,6 +77,8 @@ struct TC_GAME_API TSMail {
 private:
     TSLua::Array<TSMailItemInfo> LGetItems();
     void LFilterItems(sol::protected_function predicate);
+    void LSetSender0(uint8 type, TSGUID guid);
+    void LSetSender1(uint8 type, TSNumber<uint32> guid);
     friend class TSLua;
 };
 
@@ -91,8 +96,9 @@ struct TC_GAME_API TSMailDraft {
     std::string GetBody();
     TSNumber<uint32> GetMoney();
     TSNumber<uint32> GetCOD();
-    TSArray<TSNumber<uint64> > GetItemKeys();
+    TSArray<TSGUID> GetItemKeys();
     TSItem GetItem(uint64 item);
+    TSItem GetItem(TSGUID item);
 
     void SetTemplateID(uint16 id);
     void SetSubject(std::string const& subject);
@@ -100,7 +106,9 @@ struct TC_GAME_API TSMailDraft {
     void AddItem(uint32 entry, uint8 count, TSPlayer player = TSPlayer(nullptr));
     void FilterItems(std::function<bool(TSItem)> predicate);
 private:
-    TSLua::Array<TSNumber<uint64>> LGetItemKeys();
+    TSLua::Array<TSGUID> LGetItemKeys();
     void LFilterItems(sol::protected_function predicate);
+    TSItem LGetItem0(uint64 item);
+    TSItem LGetItem1(TSGUID item);
     friend class TSLua;
 };

@@ -148,13 +148,13 @@ export class SimpleClassMask<T> extends CellSystem<T>
     get C() { return new MaskCell32(this.owner, this.c) };
 }
 
-export class SQLMaybeWriteCell extends Cell<number,Spell>{
-    private proc: SpellProc
+export class SQLMaybeWriteCell<T> extends Cell<number,T>{
+    private proc: SpellProc<T>
 
     protected dbcCell: Cell<number,any>;
     protected sqlCell: (sql: spell_procRow)=>Cell<number,any>;
 
-    constructor(owner: Spell, proc: SpellProc, dbcCell: Cell<number,any>, sqlGetter: (sql: spell_procRow)=>Cell<number,any>) {
+    constructor(owner: T, proc: SpellProc<T>, dbcCell: Cell<number,any>, sqlGetter: (sql: spell_procRow)=>Cell<number,any>) {
         super(owner);
         this.proc = proc;
         this.dbcCell = dbcCell;
@@ -178,14 +178,21 @@ export class SQLMaybeWriteCell extends Cell<number,Spell>{
     }
 }
 
-export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
+export class SpellProc<T> extends MaybeSQLEntity<T, spell_procRow> {
+    private realOwner: Spell;
+    constructor(owner: T, realOwner: Spell)
+    {
+        super(owner);
+        this.realOwner = realOwner;
+    }
+
     protected createSQL(): spell_procRow {
-        return SQL.spell_proc.add(this.owner.ID)
+        return SQL.spell_proc.add(this.realOwner.ID)
             // when we create this in sql, we want
             // the fields currently in dbc to stay the same
-            .Chance.set(this.owner.row.ProcChance.get())
-            .Charges.set(this.owner.row.ProcCharges.get())
-            .ProcFlags.set(this.owner.row.ProcTypeMask.get())
+            .Chance.set(this.realOwner.row.ProcChance.get())
+            .Charges.set(this.realOwner.row.ProcCharges.get())
+            .ProcFlags.set(this.realOwner.row.ProcTypeMask.get())
             .AttributesMask.set(0)
             .Cooldown.set(0)
             .DisableEffectsMask.set(0)
@@ -205,21 +212,21 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     protected findSQL(): spell_procRow {
-        return SQL.spell_proc.query({SpellId:any(this.owner.ID,-this.owner.ID)})
+        return SQL.spell_proc.query({SpellId:any(this.realOwner.ID,-this.realOwner.ID)})
     }
     protected isValidSQL(sql: spell_procRow): boolean {
-        return sql.SpellId.get() === this.owner.ID
+        return sql.SpellId.get() === this.realOwner.ID
     }
 
     get TriggerMask() {
-        return makeMaskCell32(SpellProcFlags,this, this.owner.row.ProcTypeMask);
+        return makeMaskCell32(SpellProcFlags,this, this.realOwner.row.ProcTypeMask);
     }
 
     get Chance() {
         return new PercentCell(this.owner,'[1-101]', false, new SQLMaybeWriteCell(
               this.owner
             , this
-            , this.owner.row.ProcChance
+            , this.realOwner.row.ProcChance
             , sql=>sql.Chance
         ))
     }
@@ -228,7 +235,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
         return new SQLMaybeWriteCell(
               this.owner
             , this
-            , this.owner.row.ProcCharges
+            , this.realOwner.row.ProcCharges
             , sql=>sql.Charges
         )
     }
@@ -242,7 +249,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get ClassMask() {
-        return new SimpleClassMask(this
+        return new SimpleClassMask(this.owner
             , this.wrapSQL(0,s=>s.SpellFamilyMask0)
             , this.wrapSQL(0,s=>s.SpellFamilyMask1)
             , this.wrapSQL(0,s=>s.SpellFamilyMask2)
@@ -296,5 +303,20 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
 
     get ProcsPerMinute() {
         return this.wrapSQL(0,sql=>sql.ProcsPerMinute);
+    }
+
+    mod(callback: (proc: SpellProcCB)=>void)
+    {
+        callback(new SpellProcCB(this.realOwner));
+        return this.owner;
+    }
+}
+
+export class SpellProcCB extends SpellProc<SpellProcCB>
+{
+    constructor(spell: Spell)
+    {
+        super(undefined,spell);
+        this.owner = this;
     }
 }

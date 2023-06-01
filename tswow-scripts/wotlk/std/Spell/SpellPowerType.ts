@@ -1,4 +1,3 @@
-
 export enum SpellPowerType {
     HEALTH      = -2,
     MANA        = 0,
@@ -9,5 +8,4 @@ export enum SpellPowerType {
     RUNE        = 5,
     RUNIC_POWER = 6,
     ALL         = 127,
-
 }

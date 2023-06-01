@@ -1,5 +1,6 @@
 #include "TSLua.h"
 #include "TSAuction.h"
+#include "TSGUID.h"
 
 void TSLua::load_auction_methods(sol::state& state)
 {
@@ -9,12 +10,12 @@ void TSLua::load_auction_methods(sol::state& state)
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetItemID);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetItemEntry);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetItemCount);
-    LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetOwnerID);
+    LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetOwnerGUID);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetStartBid);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetBid);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetBuyout);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetExpireTime);
-    LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetBidder);
+    LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetBidderGUID);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetDeposit);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetETime);
     LUA_FIELD(ts_auctionentry, TSAuctionEntry, GetFlags);

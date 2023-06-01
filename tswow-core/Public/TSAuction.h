@@ -23,6 +23,7 @@
 #include <vector>
 
 struct AuctionEntry;
+class TSGUID;
 
 struct TC_GAME_API TSAuctionEntry {
     AuctionEntry* entry;
@@ -35,18 +36,18 @@ struct TC_GAME_API TSAuctionEntry {
 
     TSNumber<uint32> GetID();
     TSNumber<uint8> GetHouseID();
-    TSNumber<uint64> GetItemID();
+    TSNumber<uint32> GetItemID();
     TSNumber<uint32> GetItemEntry();
     TSNumber<uint32> GetItemCount();
-    TSNumber<uint64> GetOwnerID();
+    TSGUID GetOwnerGUID();
     TSNumber<uint32> GetStartBid();
     TSNumber<uint32> GetBid();
     TSNumber<uint32> GetBuyout();
     TSNumber<uint64> GetExpireTime();
-    TSNumber<uint64> GetBidder();
+    TSGUID GetBidderGUID();
     TSNumber<uint32> GetDeposit();
     TSNumber<uint32> GetETime();
-    TSArray<TSNumber<uint64>> GetBidders();
+    TSArray<TSGUID> GetBidders();
     TSNumber<uint32> GetFlags();
 
     void SetItemID(uint64 itemId);
@@ -61,7 +62,7 @@ struct TC_GAME_API TSAuctionEntry {
     void SetETime(uint32 eTime);
     void SetFlags(uint32 flags);
 private:
-    TSLua::Array<TSNumber<uint64> > LGetBidders();
+    TSLua::Array<TSGUID> LGetBidders();
     friend class TSLua;
 };
 

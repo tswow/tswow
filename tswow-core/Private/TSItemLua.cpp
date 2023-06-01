@@ -3,6 +3,7 @@
 #include "TSItem.h"
 #include "TSObject.h"
 #include "TSEntity.h"
+#include "TSGUID.h"
 
 #include "TSPlayer.h"
 

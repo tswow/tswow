@@ -133,17 +133,31 @@ export function ClientPatches(
                 [0x61be58,[0x7c,0x7c]]
             ]),
             patch(EXTENSION_DLL_PATCH_NAME,[
-                // Jump to hook
-                [0x28e19c,[0xE9,0x6C,0xBC,0x07,0x00,0x90]],
-                // hook:
-                // - Jump past following code in surrounding subroutine (we had to cave inside another function)
-                // - Call LoadLibraryA (arbitrary instruction we replaced with jump, will load d3d9.dll)
-                // - Push all registers
-                // - Push ClientExtensions.dll string
-                // - Call LoadLibraryA
-                // - Pop all registers
-                // - Jump back
-                [0x309e0b,[0xEB,0x1D,0xFF,0x15,0x48,0xF2,0x9D,0x00,0x60,0x68,0x71,0x42,0x9E,0x00,0xFF,0x15,0x48,0xF2,0x9D,0x00,0x61,0xE9,0x7D,0x43,0xF8,0xFF]],
+                // stage
+                [0x28e19c,[
+                    // Jump to hook (replaces "LoadLibraryA")
+                    0xE9,0x19,0x57,0x0E,0x00,
+                    // pad old instruction
+                    0x90
+                ]],
+
+                // cave
+                [0x3738b8,[
+                    // short jump 26 bytes (past code cave)
+                    0xEB, 0x26,
+                    // call "LoadLibraryA" (for d3d9.dll) (this is what we jump to)
+                    0xFF, 0x15, 0x48, 0xF2, 0x9D, 0x00,
+                    // push all registers
+                    0x60,
+                    // push "ClienbtExtensions.dll" string (see below)
+                    0x68, 0x71, 0x42, 0x9E, 0x00,
+                    // call "LoadLibraryA" (for ClientExtensions.dll)
+                    0xFF, 0x15, 0x48, 0xF2, 0x9D, 0x00,
+                    // pop all registers
+                    0x61,
+                    // jump back
+                    0xE9, 0xD0, 0xA8, 0xF1, 0xFF
+                ]],
                 // "ClientExtensions.dll" string
                 [0x5e2a71,[0x43,0x6C,0x69,0x65,0x6E,0x74,0x45,0x78,0x74,0x65,0x6E,0x73,0x69,0x6F,0x6E,0x73,0x2E,0x64,0x6C,0x6C]]
             ]),

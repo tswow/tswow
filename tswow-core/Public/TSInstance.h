@@ -9,14 +9,15 @@
 
 class TSUnit;
 class InstanceScript;
+class TSGUID;
 
 class ObjectGuid;
-class TC_GAME_API TSGuidSet {
+class TC_GAME_API TSGUIDSet {
     std::set<ObjectGuid>* m_set;
 public:
-    TSGuidSet(std::set<ObjectGuid>* set);
+    TSGUIDSet(std::set<ObjectGuid>* set);
     operator bool() const { return m_set != nullptr; }
-    bool operator==(TSGuidSet const& rhs) { return m_set == rhs.m_set; }
+    bool operator==(TSGUIDSet const& rhs) { return m_set == rhs.m_set; }
 
     bool Contains(uint64);
     void Add(uint64);
@@ -31,10 +32,10 @@ public:
     operator bool() const { return m_info != nullptr; }
     bool operator==(TSBossInfo const& rhs) { return m_info == rhs.m_info; }
     TSNumber<uint32> GetBossState();
-    TSGuidSet GetMinionGUIDs();
-    TSGuidSet GetDoorsOpenDuringEncounter();
-    TSGuidSet GetDoorsClosedDuringEncounter();
-    TSGuidSet GetDoorsOpenAfterEncounter();
+    TSGUIDSet GetMinionGUIDs();
+    TSGUIDSet GetDoorsOpenDuringEncounter();
+    TSGUIDSet GetDoorsClosedDuringEncounter();
+    TSGUIDSet GetDoorsOpenAfterEncounter();
     bool IsWithinBoundary(float x, float y, float z);
     bool IsWithinBoundary(TSWorldObject obj);
 };
@@ -49,10 +50,10 @@ public:
     void RemoveFromMap(TSPlayer player, bool deleteFromWorld);
     void SaveInstanceToDB();
     bool IsEncounterInProgress();
-    TSNumber<uint64> GetObjectGUID(uint32 type);
-    void DoUseDoorOrButton(uint64 guid, uint32 withRestoreTime = 0, bool useAlternativeState = false);
-    void DoCloseDoorOrButton(uint64 guid);
-    void DoRespawnGameObject(uint64 guid, uint32 seconds);
+    TSGUID GetObjectGUID(uint32 type);
+    void DoUseDoorOrButton(TSGUID guid, uint32 withRestoreTime = 0, bool useAlternativeState = false);
+    void DoCloseDoorOrButton(TSGUID guid);
+    void DoRespawnGameObject(TSGUID guid, uint32 seconds);
     void DoUpdateWorldState(uint32 worldStateId, uint32 worldStateValue);
     void DoSendNotify(std::string const& message);
     void DoUpdateAchievementCriteria(uint32 type, uint32 miscValue1, uint32 miscValue2, TSUnit unit);

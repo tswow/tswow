@@ -23,6 +23,7 @@
 
 #include <functional>
 
+class TSGUID;
 struct LootItem;
 struct TC_GAME_API TSLootItem {
     LootItem* item;
@@ -70,8 +71,8 @@ class TC_GAME_API TSLoot {
         TSNumber<uint32> GetMoney();
         void SetMoney(uint32 money);
 
-        TSNumber<uint64> GetLootOwner();
-        void SetLootOwner(uint64 owner);
+        TSGUID GetLootOwnerGUID();
+        void SetLootOwner(TSGUID const& guid);
 
         TSNumber<uint32> GetItemCount();
         TSNumber<uint32> GetQuestItemCount();

@@ -3,8 +3,8 @@ import { Table } from "../../../data/table/Table";
 import { HolidaysQuery, HolidaysRow } from "../../dbc/Holidays";
 import { DBC } from "../../DBCFiles";
 import { TransformedEntity } from "../Misc/Entity";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamicNoClone } from "../Refs/Registry";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";
@@ -79,12 +79,12 @@ export class HolidayCustomPeriod extends HolidayBase {
 export class HolidayPlain extends HolidayBase {}
 
 export class HolidayRegistryClass
-    extends RegistryDynamicNoClone<HolidayPlain,HolidaysRow,HolidaysQuery>
+    extends RegistryStaticNoClone<HolidayPlain,HolidaysRow,HolidaysQuery>
 {
     protected Table(): Table<any, HolidaysQuery, HolidaysRow> & { add: (id: number) => HolidaysRow; } {
         return DBC.Holidays
     }
-    protected IDs(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.Holidays
     }
     Clear(entity: HolidayPlain): void {

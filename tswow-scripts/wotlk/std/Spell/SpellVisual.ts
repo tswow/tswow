@@ -16,7 +16,7 @@
  */
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { DBCIntCell } from "../../../data/dbc/DBCCell";
 import { Table } from "../../../data/table/Table";
@@ -25,15 +25,18 @@ import { SpellVisualKitQuery, SpellVisualKitRow } from "../../dbc/SpellVisualKit
 import { SpellVisualKitModelAttachRow } from "../../dbc/SpellVisualKitModelAttach";
 import { DBC } from "../../DBCFiles";
 import { Attachment } from "../Misc/Attachment";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";
+import { Substruct } from "../Misc/Substruct";
+import { RefDynamic } from "../Refs/Ref";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 import { SpellAnimation } from "./SpellAnimation";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 import { SpellEffectCameraShakeRegistry } from "./SpellEffectCameraShakes";
-import { SpellVisualEffectRegistry, SpellVisualEffects } from "./SpellVisualEffect";
+import { SpellVisualEffect, SpellVisualEffectRef, SpellVisualEffectRegistry, SpellVisualEffects } from "./SpellVisualEffect";
 
 export enum SpellVisualKitFlags {
     LOOP_ANIMATION = 0x40
@@ -136,14 +139,135 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     get RightHandEffect() {
         return SpellVisualEffectRegistry.ref(this, this.row.RightHandEffect)
     }
+
+    addBothHands(callback: (eff: SpellVisualEffect) => void)
+    {
+        let eff = SpellVisualEffectRegistry.create();
+        callback(eff);
+        this.LeftHandEffect.set(eff.ID);
+        this.RightHandEffect.set(eff.ID);
+        return this;
+    }
+    
+    addBothWeapons(callback: (eff: SpellVisualEffect) => void)
+    {
+        let eff = SpellVisualEffectRegistry.create();
+        callback(eff);
+        this.LeftWeaponEffect.set(eff.ID);
+        this.RightWeaponEffect.set(eff.ID);
+        return this;
+    }
+
     get RightWeaponEffect() {
         return SpellVisualEffectRegistry.ref(this, this.row.RightWeaponEffect)
     }
+
+    get LeftWeaponEffect() {
+        return SpellVisualEffectRegistry.ref(this, this.row.LeftWeaponEffect)
+    }
+
     get SpellEffects() {
         return new SpellVisualEffects(this, this.row);
     }
     get Models(): SpellVisualKitModels {
         return new SpellVisualKitModels(this);
+    }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'std.SpellVisualKits.create()',code=>{
+            const simple_effect = (name: string, ref: SpellVisualEffectRef<this>)=>{
+                if(ref.get())
+                {
+                    code.begin_block(`.${name}.modRefCopy(x=>x`)
+                    code.substruct(ref.getRef(),settings);
+                    code.end_block(')')
+                    return;
+                }
+            }
+
+            const double_effect = (fnName: string, name1: string, name2: string, ref1: SpellVisualEffectRef<this>, ref2: SpellVisualEffectRef<this>) =>
+            {
+                if(ref1.get() === ref2.get())
+                {
+                    if(ref1.get() === 0)
+                    {
+                        return;
+                    }
+                    code.begin_block(`.${fnName}(x=>x`)
+                    code.substruct(ref1.getRef(),settings);
+                    code.end_block(')')
+                }
+                else
+                {
+                    simple_effect(name1,ref1);
+                    simple_effect(name2,ref2);
+                }
+            }
+
+            double_effect('addBothHands','LeftHandEffect','RightHandEffect',this.LeftHandEffect,this.RightHandEffect)
+            double_effect('addBothWeapons','LeftWeaponEffect','RightWeaponEffect',this.LeftWeaponEffect,this.RightWeaponEffect)
+            simple_effect('BaseEffect',this.BaseEffect)
+            simple_effect('BreathEffect',this.BreathEffect)
+            simple_effect('ChestEffect',this.ChestEffect)
+            simple_effect('HeadEffect',this.HeadEffect)
+            simple_effect('WorldEffect',this.WorldEffect)
+
+            code.line(`.CameraShake.set(${this.CameraShake.get()})`)
+            code.line(`.Flags.set(${this.Flags.get()})`)
+            code.line(`.Sound.set(${this.Sound.get()})`)
+            this.CharProcedures.forEachValid((proc) => {
+                code.begin_block(`.CharProcedures.addMod(x=>x`)
+                code.line(`.Type.${proc.Type.objectify()}.set()`)
+                if(proc.Type.CHAIN.is())
+                {
+                    let chain = proc.Type.CHAIN.as();
+                    code.non_def_num('Forever',chain.Forever);
+                    code.non_def_num('TargetCount',chain.TargetCount);
+                    if(chain.ChainEffect.get())
+                    {
+                        code.begin_block('.ChainEffect.modRefCopy(x=>x')
+                        let chainObj = chain.ChainEffect.getRef().objectify();
+                        for(let key in chainObj)
+                        {
+                            if(key === 'ID')
+                            {
+                                continue;
+                            }
+
+                            if(key == 'Combo' || key == 'Texture')
+                            {
+                                code.line(`.${key}.set('${chainObj[key].split('\\').join('\\\\')}')`)
+                            }
+                            else
+                            {
+                                code.line(`.${key}.set(${chainObj[key]})`)
+                            }
+                        }
+                        code.end_block(')')
+                    }
+                }
+                else
+                {
+                    let obj = proc.objectify();
+                    for(let key in obj)
+                    {
+                        if(key !== 'Type')
+                        {
+                            code.line(`.${key}.set(${obj[key]})`)
+                        }
+                    }
+                }
+                code.end_block(`)`)
+            })
+            this.SpellEffects.forEachValid((eff)=>{
+                code.begin_block(`.SpellEffects.add().modRefCopy(x=>x`)
+                code.substruct(eff,settings)
+                code.end_block('');
+            })
+            code.enum_line('Animation',this.Animation)
+            code.enum_line('StartAnimation',this.StartAnimation)
+        })
     }
 }
 
@@ -191,11 +315,11 @@ export class SpellVisualKitRegistryClass
 }
 export const SpellVisualKitRegistry = new SpellVisualKitRegistryClass();
 
-export class MissileFollowGround extends CellSystem<SpellVisual> {
-    get Height() { return this.ownerWrap(this.owner.row.MissileFollowGroundHeight); }
-    get DropSpeed() { return this.ownerWrap(this.owner.row.MissileFollowGroundDropSpeed); }
-    get Approach() { return this.ownerWrap(this.owner.row.MissileFollowGroundApproach); }
-    get Flags() { return this.ownerWrap(this.owner.row.MissileFollowGroundFlags); }
+export class MissileFollowGround<T> extends Substruct<T,SpellVisual> {
+    get Height() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundHeight); }
+    get DropSpeed() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundDropSpeed); }
+    get Approach() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundApproach); }
+    get Flags() { return this.ownerWrap(this.realOwner.row.MissileFollowGroundFlags); }
 
     set(height: number, dropSpeed: number, groundApproach: number, groundFlags: number) {
         this.Height.set(height)
@@ -204,33 +328,63 @@ export class MissileFollowGround extends CellSystem<SpellVisual> {
         this.Flags.set(groundFlags);
         return this.owner;
     }
+
+    mod(callback: (ent: MissileFollowGroundCB)=>void): T
+    {
+        callback(new MissileFollowGroundCB(this.realOwner))
+        return this.owner;
+    }
 }
 
-export class SpellVisualMissile extends CellSystem<SpellVisual> {
+export class MissileFollowGroundCB extends MissileFollowGround<MissileFollowGroundCB>
+{
+    constructor(owner: SpellVisual)
+    {
+        super(undefined,owner);
+        this.injectThis(this);
+    }
+}
+
+export class SpellVisualMissile<T> extends Substruct<T,SpellVisual> {
     get DestinationAttachment() {
-        return this.ownerWrap(this.owner.row.MissileDestinationAttachment);
+        return this.ownerWrap(this.realOwner.row.MissileDestinationAttachment);
     }
     get Sound() {
-        return SoundEntryRegistry.ref(this.owner, this.owner.row.MissileSound);
+        return SoundEntryRegistry.ref(this.owner, this.realOwner.row.MissileSound);
     }
-    get FollowGround() { return new MissileFollowGround(this.owner); }
-    get HasMissile() { return this.ownerWrap(this.owner.row.HasMissile); }
-    get Model() { return SpellVisualEffectRegistry.ref(this.owner, this.owner.row.MissileModel); }
+    get FollowGround() { return new MissileFollowGround(this.owner,this.realOwner); }
+    get HasMissile() { return this.ownerWrap(this.realOwner.row.HasMissile); }
+    get Model() { return SpellVisualEffectRegistry.ref(this.owner, this.realOwner.row.MissileModel); }
 
-    get Attachment() { return this.ownerWrap(this.owner.row.MissileAttachment); }
+    get Attachment() { return this.ownerWrap(this.realOwner.row.MissileAttachment); }
 
     get CastOffset() {
         return new PositionXYZCell(this.owner,
-            this.owner.row.MissileCastOffsetX,
-            this.owner.row.MissileCastOffsetY,
-            this.owner.row.MissileCastOffsetZ)
+            this.realOwner.row.MissileCastOffsetX,
+            this.realOwner.row.MissileCastOffsetY,
+            this.realOwner.row.MissileCastOffsetZ)
     }
 
     get ImpactOffset() {
         return new PositionXYZCell(this.owner,
-            this.owner.row.MissileImpactOffsetX,
-            this.owner.row.MissileImpactOffsetY,
-            this.owner.row.MissileImpactOffsetZ)
+            this.realOwner.row.MissileImpactOffsetX,
+            this.realOwner.row.MissileImpactOffsetY,
+            this.realOwner.row.MissileImpactOffsetZ)
+    }
+
+    mod(callback: (vis: SpellVisualMissileCB)=>void): T
+    {
+        callback(new SpellVisualMissileCB(this.realOwner));
+        return this.owner;
+    }
+}
+
+export class SpellVisualMissileCB extends SpellVisualMissile<SpellVisualMissileCB>
+{
+    constructor(vis: SpellVisual)
+    {
+        super(undefined,vis);
+        this.injectThis(this);
     }
 }
 
@@ -271,7 +425,8 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
         return SpellVisualKitRegistry.ref(this, kit);
     }
 
-    AllKits() {
+    // @ts-ignore
+    AllKits(): {name: string, ref: RefDynamic<SpellVisual,SpellVisualKit>}[] {
         return ([
             [this.row.CastKit,"Cast"],
             [this.row.StateKit,"State"],
@@ -287,7 +442,7 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
             [this.row.MissileTargetingKit,"MissileTargeting"]
         ] as [DBCIntCell<any>,string][]).filter(([row])=>{
             return row.get()!=0;
-        }).map(([row,name])=>SpellVisualKitRegistry.ref(this, row));
+        }).map(([row,name])=>({name,ref:SpellVisualKitRegistry.ref(this, row)}));
     }
 
     get ID() { return this.row.ID.get(); }
@@ -304,7 +459,7 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
     get PersistentAreaKit() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
     get MissileTargetingKit() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); }
 
-    get Missile() { return new SpellVisualMissile(this); }
+    get Missile() { return new SpellVisualMissile(this, this); }
 
     cloneFromVisual(visualId: number) {
         let row = DBC.SpellVisual.findById(visualId).clone(Ids.SpellVisual.id());
@@ -314,6 +469,36 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
 
     cloneFromSpell(spellId: number) {
         return this.cloneFromVisual(DBC.Spell.findById(spellId).SpellVisualID.getIndex(0));
+    }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'std.SpellVisuals.create()',(code)=>{
+            if(this.Missile.HasMissile.get())
+            {
+                code.begin_block(`.Missile.mod(x=>x`)
+                code.line(`.HasMissile.set(${this.Missile.HasMissile.get()})`)
+                code.line(`.Attachment.set(${this.Missile.Attachment.get()})`)
+                code.lowercase('CastOffset',this.Missile.CastOffset);
+                code.line(`.DestinationAttachment.set(${this.Missile.DestinationAttachment.get()})`)
+                code.line(`.Model.set(${this.Missile.Model.get()})`)
+                code.line(`.Sound.set(${this.Missile.Sound.get()})`)
+                code.begin_block('.FollowGround.mod(x=>x')
+                code.line(`.Approach.set(${this.Missile.FollowGround.Approach.get()})`)
+                code.line(`.DropSpeed.set(${this.Missile.FollowGround.DropSpeed.get()})`)
+                code.line(`.Flags.set(${this.Missile.FollowGround.Flags.get()})`)
+                code.line(`.Height.set(${this.Missile.FollowGround.Height.get()})`)
+                code.end_block(')')
+                code.end_block(`)`)
+            }
+
+            this.AllKits().forEach(({name,ref})=>{
+                let kit = ref.getRef();
+                code.begin_block(`.${name}Kit.modRefCopy(x=>x`)
+                code.substruct(kit,settings);
+                code.end_block(`)`)
+            })
+        })
     }
 }
 

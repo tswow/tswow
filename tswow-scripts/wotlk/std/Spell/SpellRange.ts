@@ -19,6 +19,7 @@ import { loc_constructor } from "../../../data/primitives";
 import { Table } from "../../../data/table/Table";
 import { SpellRangeQuery, SpellRangeRow } from "../../dbc/SpellRange";
 import { DBC } from "../../DBCFiles";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
@@ -48,6 +49,20 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
 
     get ID() { return this.row.ID.get(); }
 
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'std.SpellRange.create()',(code)=>
+        {
+            code.loc('Name',this.Name);
+            code.loc('NameShort',this.NameShort);
+            code.non_def_num('Flags',this.Flags)
+            code.non_def_num('HostileMin',this.HostileMin)
+            code.non_def_num('HostileMax',this.HostileMax)
+            code.non_def_num('FriendMin',this.FriendMin)
+            code.non_def_num('FriendMax',this.FriendMax)
+        })
+    }
+
     set(hostileMin: number, hostileMax: number, friendMin: number, friendMax: number, name?: loc_constructor, nameShort?: loc_constructor, flags?: number) {
         this.HostileMin.set(hostileMin);
         this.HostileMax.set(hostileMax);
@@ -64,7 +79,6 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
         if(flags!==undefined) {
             this.Flags.set(flags);
         }
-
         return this;
     }
 }

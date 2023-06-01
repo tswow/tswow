@@ -127,6 +127,10 @@ public:
     // backwards compatibility
     void SetUInt(std::string const& key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
     void SetUInt64(std::string const& key, uint64_t value) { getData()->m_json.SetNumber(key, double(value)); }
+    void SetGUIDNumber(std::string const& key, TSGUID guid) { getData()->m_json.SetGUIDNumber(key, guid); }
+    bool HasGUIDNumber(std::string const& key) { return getData()->m_json.HasGUIDNumber(key); }
+    TSGUID GetGUIDNumber(std::string const& key, TSGUID def = TSGUID(0)) { return getData()->m_json.GetGUIDNumber(key, def); }
+
     bool HasUInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
     bool HasUInt64(std::string const& key) { return getData()->m_json.HasNumber(key); }
     TSNumber<uint32> GetUInt(std::string const& key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }

@@ -9,6 +9,7 @@
 #include "TSCreature.h"
 #include "TSBattleground.h"
 #include "TSInstance.h"
+#include "TSGUID.h"
 
 void TSLua::load_map_methods(sol::state& state)
 {
@@ -28,9 +29,9 @@ void TSLua::load_map_methods(sol::state& state)
     LUA_FIELD(ts_map, TSMap, GetMapID);
     LUA_FIELD(ts_map, TSMap, IsInstance);
     LUA_FIELD(ts_map, TSMap, ToInstance);
-    LUA_FIELD(ts_map, TSMap, GetCreature);
-    LUA_FIELD(ts_map, TSMap, GetGameObject);
-    LUA_FIELD(ts_map, TSMap, GetPlayer);
+    ts_map.set_function("GetCreature", sol::overload(&TSMap::LGetCreature0, &TSMap::LGetCreature1));
+    ts_map.set_function("GetGameObject", sol::overload(&TSMap::LGetGameObject0,&TSMap::LGetGameObject1));
+    ts_map.set_function("GetPlayer", sol::overload(&TSMap::LGetPlayer0,&TSMap::LGetPlayer1));
     LUA_FIELD(ts_map, TSMap, IsInLineOfSight);
     LUA_FIELD(ts_map, TSMap, GetCreatureByDBGUID);
     LUA_FIELD(ts_map, TSMap, GetGameObjectByDBGUID);

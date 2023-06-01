@@ -18,6 +18,7 @@
 #include "TSPlayer.h"
 #include "Channel.h"
 #include "Player.h"
+#include "TSGUID.h"
 
 TSChannel::TSChannel(Channel *channel)
 {
@@ -95,12 +96,42 @@ void TSChannel::SetInvisible(TSPlayer player, bool on)
 #endif
 }
 
-void TSChannel::SetOwner(uint64 guid, bool exclaim)
+void TSChannel::SetOwner(TSNumber<uint32> guid, bool exclaim)
 {
-    channel->SetOwner(ObjectGuid(guid),exclaim);
+    SetOwner(TSGUID(guid), exclaim);
 }
 
-void TSChannel::Say(uint64 guid, std::string const& what, uint32 lang)
+void TSChannel::Say(TSNumber<uint32> guid, std::string const& what, uint32 lang)
 {
-    channel->Say(ObjectGuid(guid),what,LocaleConstant(lang));
+    Say(TSGUID(guid), what, lang);
+}
+
+void TSChannel::SetOwner(TSGUID guid, bool exclaim)
+{
+    channel->SetOwner(guid.asGUID(), exclaim);
+}
+
+void TSChannel::Say(TSGUID guid, std::string const& what, uint32 lang)
+{
+    channel->Say(guid.asGUID(), what, LocaleConstant(lang));
+}
+
+void TSChannel::LSetOwner0(TSGUID guid, bool exclaim)
+{
+    SetOwner(guid, exclaim);
+}
+
+void TSChannel::LSetOwner1(TSNumber<uint32> guid, bool exclaim)
+{
+    SetOwner(guid, exclaim);
+}
+
+void TSChannel::LSay0(TSGUID guid, std::string const& what, uint32 lang)
+{
+    Say(guid, what, lang);
+}
+
+void TSChannel::LSay1(TSNumber<uint32> guid, std::string const& what, uint32 lang)
+{
+    Say(guid, what, lang);
 }
