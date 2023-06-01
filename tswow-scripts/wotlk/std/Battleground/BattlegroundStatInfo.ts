@@ -1,23 +1,16 @@
 import { finish } from "../../../data";
+import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { loc_constructor } from "../../../data/primitives";
 import { LUAXML } from "../../luaxml/LUAXML";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { LocValue } from "../Misc/LocValueCell";
 
-export class BattlefieldStatInfoField<T> {
-    constructor(owner: T)
+export class BattlegroundStatInfoField extends CellSystemTop {
+    constructor()
     {
-        this.owner = owner;
-        this.name = new LocValue<T>(owner);
-        this.tooltip = new LocValue<T>(owner);
-    }
-
-    static setOwner<T>(owner: T, field: BattlefieldStatInfoField<any>) {
-        field.owner = owner;
-        // @ts-ignore
-        field.name.owner = owner;
-        // @ts-ignore
-        field.tooltip.owner = owner;
+        super();
+        this.name = new LocValue<this>(this);
+        this.tooltip = new LocValue<this>(this);
     }
 
     set(name: loc_constructor, icon: string | undefined, tooltip: loc_constructor)
@@ -37,70 +30,77 @@ export class BattlefieldStatInfoField<T> {
         return { name: this.name.objectify(), icon: this.icon, tooltip: this.tooltip.objectify() }
     }
 
-    protected owner: T
     protected icon?: string;
-    protected name: LocValue<T>
-    protected tooltip: LocValue<T>
+    protected name: LocValue<this>
+    protected tooltip: LocValue<this>
 }
 
-export class BattlefieldStatInfoBase<T> {
+export class BattlegroundStatInfoBase<T> {
     protected id: number;
     protected count?: number = undefined;
-    protected overrides: {[key: string]: BattlefieldStatInfoField<any>} = {}
+    protected overrides: {[key: string]: BattlegroundStatInfoField } = {}
     protected owner: T
     constructor(owner: T, id: number)
     {
         this.owner = owner;
         this.id = id;
     }
-    protected get_override(name: string): BattlefieldStatInfoField<T>
-    {
-        // @ts-ignore
-        return this.overrides[name] || (this.overrides[name] = new BattlefieldStatInfoField(this.owner));
-    }
 
-    static setOwner<T>(info: BattlefieldStatInfoBase<T>, owner: T) {
+    static setOwner<T>(info: BattlegroundStatInfoBase<T>, owner: T) {
         for(let value of Object.values(info.overrides))
         {
-            BattlefieldStatInfoBase.setOwner(info,owner);
+            BattlegroundStatInfoBase.setOwner(info,owner);
         }
         // @ts-ignore
         info.owner = owner;
     }
 
-    forEach(callback: (key: string, field: BattlefieldStatInfoField<T>) => void) {
+    protected get_override(name: string): BattlegroundStatInfoField
+    {
+        // @ts-ignore
+        return this.overrides[name] || (this.overrides[name] = new BattlegroundStatInfoField(this.owner));
+    }
+
+    set(index: number, name: loc_constructor, icon: string|undefined, tooltip: loc_constructor)
+    {
+        this.get_override(`CUSTOM_ATTR_${index}`).set(name,icon,tooltip);
+        return this.owner;
+    }
+
+    get(index: number)
+    {
+        return this.get_override(`CUSTOM_ATTR_${index}`)
+    }
+
+    mod(index: number, callback: (v: BattlegroundStatInfoField) => void)
+    {
+        callback(this.get(index));
+        return this.owner;
+    }
+
+    forEach(callback: (key: string, field: BattlegroundStatInfoField) => void) {
         Object.entries(this.overrides).forEach(([key,field])=> callback(key,field))
     }
 
-    map<V>(callback: (key: string, field: BattlefieldStatInfoField<T>) => V) {
+    map<V>(callback: (key: string, field: BattlegroundStatInfoField) => V) {
         return Object.entries(this.overrides).map(([key,value]) => callback(key,value));
     }
 
-    get CustomAttr1() { return this.get_override('CUSTOM_ATTR_1'); }
-    get CustomAttr2() { return this.get_override('CUSTOM_ATTR_2'); }
-    get CustomAttr3() { return this.get_override('CUSTOM_ATTR_3'); }
-    get CustomAttr4() { return this.get_override('CUSTOM_ATTR_4'); }
-    get CustomAttr5() { return this.get_override('CUSTOM_ATTR_5'); }
-    get CustomAttr6() { return this.get_override('CUSTOM_ATTR_6'); }
-    get CustomAttr7() { return this.get_override('CUSTOM_ATTR_7'); }
-
     get Count() { return new CellBasic(this.owner, ()=>this.count, (val)=>this.count=val)}
     get ID() { return this.id; }
-
 };
 
-export class BattlefieldStatInfo extends BattlefieldStatInfoBase<BattlefieldStatInfo> {
-}
+export class BattlegroundStatInfo extends BattlegroundStatInfoBase<BattlegroundStatInfo> {}
 
-let statInfoOverrides: {[key: string]: BattlefieldStatInfo} = {}
-export class BattlefieldStatInfoRegistryClass {
-    get(map: number): BattlefieldStatInfo {
-        let info = (statInfoOverrides[map] || (statInfoOverrides[map] = new BattlefieldStatInfoBase<BattlefieldStatInfo>(undefined,map)))
-        BattlefieldStatInfoBase.setOwner(info,info);
+let statInfoOverrides: {[key: string]: BattlegroundStatInfo} = {}
+export class BattlegroundStatInfoRegistryClass {
+    get(map: number): BattlegroundStatInfo {
+        let info = (statInfoOverrides[map] || (statInfoOverrides[map] = new BattlegroundStatInfoBase<BattlegroundStatInfo>(undefined,map)))
+        BattlegroundStatInfoBase.setOwner(info,info);
         return info;
     }
 }
-export const BattlefieldStatInfoRegistry = new BattlefieldStatInfoRegistryClass();
+export const BattlegroundStatInfoRegistry = new BattlegroundStatInfoRegistryClass();
 
 finish('stat-info-overrides', ()=>{
     let entries = Object.entries(statInfoOverrides);
