@@ -6831,7 +6831,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param int32 amount : amount to modify
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      */
-    ModifyPower(amt : int32,type : Powers|-1) : void
+    ModifyPower(type: Powers|-1, amt : int32) : void
 
     /**
      * Sets the [Unit]'s max power amount for the given power type.
