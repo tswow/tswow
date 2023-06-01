@@ -23,7 +23,7 @@ import { AreaGroupRegistry } from "../Area/AreaGroup";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntityID } from "../Misc/Entity";
-import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
+import { IncludeExclude, IncludeExcludeGeneric, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
@@ -32,6 +32,7 @@ import { CastSpells } from "./CastOnCreate";
 import { SpellFacingFlags } from "./FacingCasterFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
+import { AuraStateType } from "./SpellAuraState";
 import { SpellAutoLearns } from "./SpellAutoLearn";
 import { SpellBonusData } from "./SpellBonusData";
 import { SpellCastTimeRegistry } from "./SpellCastTime";
@@ -102,17 +103,19 @@ export class Spell extends MainEntityID<SpellRow> {
         return makeMaskCell32(SpellFacingFlags, this, this.row.FacingCasterFlags);
     }
 
-    get CasterAuraState() : IncludeExclude<number, this> {
-        return new IncludeExclude(this,
-            this.wrap(this.row.CasterAuraState),
-            this.wrap(this.row.ExcludeCasterAuraState)
-    )}
+    get CasterAuraState() {
+        return new IncludeExcludeGeneric(this,
+            makeEnumCell(AuraStateType,this,this.row.CasterAuraState),
+            makeEnumCell(AuraStateType,this,this.row.ExcludeCasterAuraState)
+        )
+    }
 
-    get TargetAuraState() : IncludeExclude<number, this> {
-        return new IncludeExclude(this,
-            this.wrap(this.row.TargetAuraState),
-            this.wrap(this.row.ExcludeTargetAuraState)
-    )}
+    get TargetAuraState() {
+        return new IncludeExcludeGeneric(this,
+            makeEnumCell(AuraStateType,this,this.row.TargetAuraState),
+            makeEnumCell(AuraStateType,this,this.row.ExcludeTargetAuraState)
+        )
+    }
 
     get CasterAuraSpell() : IncludeExclude<number, this> {
         return new IncludeExclude(this,
@@ -364,6 +367,11 @@ export class Spell extends MainEntityID<SpellRow> {
             code.non_zero_enum('PowerDisplay',this.PowerDisplay)
             code.non_zero_enum('PreventionType',this.PreventionType)
             code.non_zero_enum('DispelType',this.DispelType)
+            code.non_zero_enum('CasterAuraState.Include',this.CasterAuraState.Include)
+            code.non_zero_enum('CasterAuraState.Exclude',this.CasterAuraState.Exclude)
+
+            code.non_zero_enum('TargetAuraState.Include',this.TargetAuraState.Include)
+            code.non_zero_enum('TargetAuraState.Exclude',this.TargetAuraState.Exclude)
 
             // Masks
             code.non_zero_bitmask('FacingCasterFlags',this.FacingCasterFlags);

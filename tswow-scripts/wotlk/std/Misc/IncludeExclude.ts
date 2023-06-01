@@ -13,6 +13,17 @@ export class IncludeExcludeMask<T,M extends MaskCell<T>> extends CellSystem<T> {
     }
 }
 
+export class IncludeExcludeGeneric<T,M,N> extends CellSystem<T> {
+    readonly Include: M;
+    readonly Exclude: N;
+
+    constructor(owner: T,include: M, exclude: N) {
+        super(owner);
+        this.Include = include;
+        this.Exclude = exclude;
+    }
+}
+
 export class IncludeExclude<V extends CPrim,T> extends CellSystem<T> {
     readonly Include: Cell<V, T>;
     readonly Exclude: Cell<V, T>;
