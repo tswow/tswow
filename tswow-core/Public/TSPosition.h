@@ -9,19 +9,8 @@ public:
     TSNumber<float> y;
     TSNumber<float> z;
     TSNumber<float> o;
-
     TSPosition* operator->() { return this;}
-    TSPosition(uint32 map,float x, float y, float z, float o)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-        this->map = map;
-        this->o = o;
-    }
+    TSPosition(uint32 map,float x, float y, float z, float o);
 };
 
-TSPosition CreateTSPosition(uint32 map, float x, float y, float z, float o)
-{
-    return TSPosition(map,x,y,z,o);
-}
+TC_GAME_API TSPosition CreatePosition(uint32 map, float x, float y, float z, float o);

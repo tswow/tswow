@@ -10,5 +10,5 @@ void TSLua::load_position_methods(sol::state& state)
     ts_position["o"] = &TSPosition::o;
     ts_position["map"] = &TSPosition::map;
 
-    state.set_function("CreateTSPosition", CreateTSPosition);
+    state.set_function("CreatePosition", CreatePosition);
 }

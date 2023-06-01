@@ -235,7 +235,7 @@ declare class TSPosition {
     o: TSNumber<float>
     map: TSNumber<uint32>
 }
-declare function CreateTSPosition(map: uint32, x: float, y: float, z: float, o: float): TSPosition
+declare function CreatePosition(map: uint32, x: float, y: float, z: float, o: float): TSPosition
 
 interface Array<T> {
     get(index: number): T;
