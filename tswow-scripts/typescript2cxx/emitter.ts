@@ -19,6 +19,10 @@ export class Emitter {
     opsMap: Map<number, string> = new Map<number, string>();
     embeddedCPPTypes: Array<string>;
     isWritingMain = false;
+    isInClass: boolean = false;
+    curClassName: string = "";
+    didConstructor: boolean = false;
+    asyncScopes: boolean[] = []
     // @tswow-begin: hack: const enums
     enumTypes: {[key:string]: string}
     // @tswow-end
@@ -863,9 +867,22 @@ export class Emitter {
     }
 
     processClassImplementation(node: ts.ClassDeclaration, template?: boolean) {
+        if(this.isInClass)
+        {
+            this.error(`Found class declaration inside another class declaration. Nested classes are not supported.`, node)
+        }
+        this.didConstructor = false;
+        this.isInClass = true;
+        this.curClassName = node.name.getText();
         this.scope.push(node);
         this.processClassImplementationInternal(node, template);
+        if(!this.didConstructor && !this.isHeader())
+        {
+            this.writer.writeStringNewLine(`void ${node.name.getText()}::ts_constructor() {}`)
+        }
         this.scope.pop();
+        this.isInClass = false;
+        this.didConstructor = false;
     }
 
     processClassImplementationInternal(node: ts.ClassDeclaration, template?: boolean) {
@@ -878,6 +895,10 @@ export class Emitter {
     }
 
     processExpressionStatement(node: ts.ExpressionStatement): void {
+        if(this.isInClass && node.getChildCount() > 0 && this.isEvent(node.getChildAt(0) as ts.ExpressionStatement))
+        {
+            this.writer.writeStringNewLine(`auto ts_strong_this = this->ts_shared_from_this<${this.curClassName}>();`);
+        }
         this.processExpression(node.expression);
         this.writer.EndOfStatement();
     }
@@ -1303,6 +1324,8 @@ export class Emitter {
             return;
         }
 
+        this.didConstructor = false;
+
         this.processClassForwardDeclarationInternal(node);
 
         let next = false;
@@ -1343,29 +1366,12 @@ export class Emitter {
             this.writer.writeString(' : public TSClass');
         }
 
-        this.writer.writeString(', public std::enable_shared_from_this<');
-        this.processIdentifier(node.name);
-        this.processTemplateParameters(<ts.ClassDeclaration>node);
-        this.writer.writeString('>');
-
         this.writer.writeString(' ');
         this.writer.BeginBlock();
         this.writer.DecreaseIntent();
         this.writer.writeString('public:');
         this.writer.IncreaseIntent();
         this.writer.writeStringNewLine();
-
-        this.writer.writeString('using std::enable_shared_from_this<');
-        this.processIdentifier(node.name);
-        this.processTemplateParameters(<ts.ClassDeclaration>node);
-        this.writer.writeStringNewLine('>::shared_from_this;');
-
-        /*
-        if (!node.heritageClauses) {
-            // to make base class polymorphic
-            this.writer.writeStringNewLine('virtual void dummy() {};');
-        }
-        */
 
         // declare all private parameters of constructors
         for (const constructor of <ts.ConstructorDeclaration[]>(<ts.ClassDeclaration>node)
@@ -1396,6 +1402,11 @@ export class Emitter {
             generateStringify(node, this.writer);
         }
         // @tswow-end
+
+        if(!this.didConstructor)
+        {
+            this.writer.writeStringNewLine(`void ts_constructor();`)
+        }
 
         this.writer.EndBlock();
         this.writer.EndOfStatement();
@@ -2049,7 +2060,6 @@ export class Emitter {
 
                 const typeText = type.pos == -1 ? (type as any).typeName.escapedText : typeReference.getText();
                 const isEventsStruct = typeText === 'TSEvents';
-
                 const primitives = [
                     'uint8', 'uint16', 'uint32', 'uint64',
                     'int8', 'int16', 'int32', 'int64', 'float',
@@ -2371,6 +2381,39 @@ export class Emitter {
         return result;
     }
 
+    isEvent(pare: ts.ExpressionStatement)
+    {
+        try
+        {
+            let fsChild = pare.expression.getChildAt(0).getChildAt(0);
+            let type = this.resolver.getTypeAtLocation(fsChild);
+            let callDecl = this.resolver.getFirstDeclaration(type) as ts.ClassDeclaration;
+            return callDecl.name && callDecl.name.getText() === 'TSEvents';
+        }
+        catch(error)
+        {
+            return false;
+        }
+    }
+
+    isTimer(pare: ts.ExpressionStatement)
+    {
+        try
+        {
+            let ch = pare.expression.getChildAt(pare.expression.getChildCount()-1);
+            return ch.getText() == 'AddTimer'
+        }
+        catch(error)
+        {
+            return false;
+        }
+    }
+
+    isAsync(exp: ts.ExpressionStatement)
+    {
+        return this.isEvent(exp) || this.isTimer(exp)
+    }
+
     processFunctionExpressionInternal(
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
@@ -2393,36 +2436,7 @@ export class Emitter {
         }
 
         // @tswow-begin
-        /*
-        const start = node.getFullStart();
-        let cur = start;
-        const filetext = node.getSourceFile().text;
-        let passed = false
-
-        while(cur >= 0 && (filetext[cur] != '.' || !passed)) {
-            --cur;
-            if(filetext[cur]==='(') {
-                passed = true;
-            }
-        }
-        */
-        //const func = filetext.substring(cur,start);
-
-        // TODO: same garbage with "kind" not working
-        let isEvent = false;
-        try {
-            let pare = node.parent as ts.ExpressionStatement;
-            let fsChild = pare.expression.getChildAt(0).getChildAt(0);
-            let type = this.resolver.getTypeAtLocation(fsChild);
-            let callDecl = this.resolver.getFirstDeclaration(type) as ts.ClassDeclaration;
-            if(callDecl.name && callDecl.name.getText() === 'TSEvents') {
-                isEvent = true;
-            }
-        } catch(err)
-        {
-            // todo: log error?
-        }
-
+        let isAsync = this.isAsync(node.parent as ts.ExpressionStatement);
         // @tswow-end
 
         // skip function declaration as union
@@ -2531,6 +2545,11 @@ export class Emitter {
                     this.writer.writeString(' ');
                 }
 
+                if (node.kind === ts.SyntaxKind.Constructor)
+                {
+                    this.writer.writeString('void ')
+                }
+
                 if (isClassMemberDeclaration && implementationMode) {
                     // in case of constructor
                     this.writeClassName();
@@ -2560,7 +2579,8 @@ export class Emitter {
                     }
                 } else {
                     // in case of constructor
-                    this.writeClassName();
+                    this.didConstructor = true;
+                    this.writer.writeString('ts_constructor')
                 }
             } else if (isArrowFunction || isFunctionExpression) {
                 // Prepare extra arguments
@@ -2608,9 +2628,8 @@ export class Emitter {
 
                 // lambda or noname function
                 // @tswow-begin
-                const byReference = isEvent  ? '' : '&';
+                this.writer.writeString(`[${isAsync ? '=' : '&'}]`);
                 // @tswow-begin
-                this.writer.writeString(`[${byReference}]`);
             }
         }
 
@@ -2679,7 +2698,7 @@ export class Emitter {
         }
 
         // @tswow-begin
-        if (!isEvent && (isArrowFunction || isFunctionExpression)) {
+        if (!isAsync && (isArrowFunction || isFunctionExpression)) {
         // @tswow-end
             this.writer.writeStringNewLine(') mutable');
         } else {
@@ -2713,24 +2732,6 @@ export class Emitter {
                     next = true;
                 });
 
-            // process base constructor call
-            let superCall = (<any>node.body).statements[0];
-            if (superCall && superCall.kind === ts.SyntaxKind.ExpressionStatement) {
-                superCall = (<ts.ExpressionStatement>superCall).expression;
-            }
-
-            if (superCall && superCall.kind === ts.SyntaxKind.CallExpression
-                && (<ts.CallExpression>superCall).expression.kind === ts.SyntaxKind.SuperKeyword) {
-                if (!next) {
-                    this.writer.writeString(' : ');
-                } else {
-                    this.writer.writeString(', ');
-                }
-
-                this.processExpression(superCall);
-                skipped = 1;
-            }
-
             if (next) {
                 this.writer.writeString(' ');
             }
@@ -2744,6 +2745,10 @@ export class Emitter {
             this.writer.writeString(' = 0');
         }
 
+        if(isAsync)
+        {
+            this.asyncScopes.push(true)
+        }
         if (!noBody && (isArrowFunction || isFunctionExpression || implementationMode)) {
             this.writer.BeginBlock();
 
@@ -2781,6 +2786,7 @@ export class Emitter {
 
             this.writer.EndBlock();
         }
+        this.asyncScopes.pop();
     }
 
     writeClassName() {
@@ -2938,7 +2944,7 @@ export class Emitter {
     }
 
     processFunctionDeclaration(node: ts.FunctionDeclaration | ts.MethodDeclaration, implementationMode?: boolean): boolean {
-
+        // @ts-ignore
         if (!implementationMode) {
             this.processPredefineType(node.type);
             node.parameters.forEach((element) => {
@@ -3783,7 +3789,7 @@ export class Emitter {
         const isArray = isNew && typeOfExpression && typeOfExpression.symbol && typeOfExpression.symbol.name === 'ArrayConstructor';
 
         if (node.kind === ts.SyntaxKind.NewExpression && !isArray) {
-            this.writer.writeString('std::make_shared<');
+            this.writer.writeString('ts_make_shared<');
         }
 
         if (isArray) {
@@ -3817,6 +3823,11 @@ export class Emitter {
     }
 
     processThisExpression(node: ts.ThisExpression): void {
+        if(this.asyncScopes.length > 0)
+        {
+            this.writer.writeString('ts_strong_this')
+            return;
+        }
 
         const method = this.scope[this.scope.length - 1];
         if (method
@@ -3834,8 +3845,8 @@ export class Emitter {
             this.writer.writeString('this');
         } else if (method.kind === ts.SyntaxKind.Constructor) {
             this.writer.writeString('_this');
-        } else {
-            this.writer.writeString('shared_from_this()');
+        } else { // return statement(?)
+            this.writer.writeString(`this->ts_shared_from_this<${this.curClassName}>()`);
         }
     }
 
@@ -3848,7 +3859,7 @@ export class Emitter {
                     const firstType = heritageClause.types[0];
                     if (firstType.expression.kind === ts.SyntaxKind.Identifier) {
                         const identifier = <ts.Identifier>firstType.expression;
-                        this.writer.writeString(identifier.text);
+                        this.writer.writeString(`${identifier.text}::ts_constructor`);
                         return;
                     }
                 }

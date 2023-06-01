@@ -44,31 +44,31 @@
 
 #include <cstdint>
 
-void TC_GAME_API ReloadPlayer(void(ptr)(TSPlayer, bool));
+void TC_GAME_API ReloadPlayer(std::function<void(TSPlayer, bool)> fn);
 void TC_GAME_API ReloadPlayer(sol::protected_function);
 
-void TC_GAME_API ReloadCreature(void(ptr)(TSCreature));
-void TC_GAME_API ReloadCreature(void(ptr)(TSCreature), TSNumber<uint32> id);
+void TC_GAME_API ReloadCreature(std::function<void(TSCreature)> fn);
+void TC_GAME_API ReloadCreature(std::function<void(TSCreature)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadCreature(sol::protected_function);
 void TC_GAME_API ReloadCreature(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject));
-void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject), TSNumber<uint32> id);
+void TC_GAME_API ReloadGameObject(std::function<void(TSGameObject)> fn);
+void TC_GAME_API ReloadGameObject(std::function<void(TSGameObject)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadGameObject(sol::protected_function);
 void TC_GAME_API ReloadGameObject(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadMap(void(ptr)(TSMap));
-void TC_GAME_API ReloadMap(void(ptr)(TSMap), TSNumber<uint32> id);
+void TC_GAME_API ReloadMap(std::function<void(TSMap)> fn);
+void TC_GAME_API ReloadMap(std::function<void(TSMap)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadMap(sol::protected_function);
 void TC_GAME_API ReloadMap(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground));
-void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground), TSNumber<uint32> id);
+void TC_GAME_API ReloadBattleground(std::function<void(TSBattleground)> fn);
+void TC_GAME_API ReloadBattleground(std::function<void(TSBattleground)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadBattleground(sol::protected_function);
 void TC_GAME_API ReloadBattleground(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadInstance(void(ptr)(TSInstance));
-void TC_GAME_API ReloadInstance(void(ptr)(TSInstance), TSNumber<uint32> id);
+void TC_GAME_API ReloadInstance(std::function<void(TSInstance)> fn);
+void TC_GAME_API ReloadInstance(std::function<void(TSInstance)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadInstance(sol::protected_function);
 void TC_GAME_API ReloadInstance(sol::protected_function, TSNumber<uint32> id);
 

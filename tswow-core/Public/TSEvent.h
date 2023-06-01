@@ -16,10 +16,11 @@
  */
 #pragma once
 
-#include <vector>
-
 #include "sol/sol.hpp"
 #include "TSLua.h"
+
+#include <vector>
+#include <functional>
 
 template <class C>
 struct TSEvent;
@@ -102,7 +103,7 @@ private:
 };
 
 #define EVENT_ROOT(name,is_fn,fn_cxx,fn_lua,...) \
-		typedef void (*name##__type)(__VA_ARGS__);\
+		using name##__type = std::function<void(__VA_ARGS__)>;\
 		TSEvent<name##__type> name##_callbacks;\
 		void name(name##__type cb) {\
 				name##_callbacks.m_cxx_callbacks.push_back(cb);\

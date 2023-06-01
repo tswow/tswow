@@ -3,6 +3,7 @@ import { CodeWriter } from "../codewriter";
 
 export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter) {
     const name = node.name.getText(node.getSourceFile());
+    writer.writeStringNewLine()
     writer.writeString('std::string stringify(int indention = 0) override ')
     writer.BeginBlock();
     writer.writeString(`return "${name} {\\n`);
