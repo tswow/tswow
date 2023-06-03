@@ -5216,6 +5216,8 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetPlayersInRange(range : float,hostile : uint32,dead : uint32) : TSArray<TSPlayer>
     GetGameObjectsInRange(range : float,entry : uint32,hostile : uint32) : TSArray<TSGameObject>
 
+    IsBehind(obj: TSWorldObject): bool
+
     HasCollision(id: string);
     AddCollision(id: string, range: float, minDelay: uint32, maxHits: uint32, cb: TSCollisionCallback)
     GetCollision(id: string): TSCollisionEntry

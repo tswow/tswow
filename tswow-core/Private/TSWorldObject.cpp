@@ -1426,3 +1426,8 @@ TSPlayer TSWorldObject::LGetPlayer1(TSNumber<uint32> lowGuid)
 {
     return GetPlayer(lowGuid);
 }
+
+bool TSWorldObject::IsBehind(TSWorldObject o)
+{
+    return !o.obj->HasInArc(static_cast<float>(M_PI), obj);
+}

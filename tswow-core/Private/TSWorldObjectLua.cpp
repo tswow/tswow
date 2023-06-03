@@ -62,6 +62,7 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD(ts_worldobject, TSWorldObject, IsFriendlyToPlayers);
     LUA_FIELD(ts_worldobject, TSWorldObject, IsHostileToPlayers);
     LUA_FIELD(ts_worldobject, TSWorldObject, IsNeutralToAll);
+    LUA_FIELD(ts_worldobject, TSWorldObject, IsBehind);
 
     ts_worldobject.set_function("GetCreature", sol::overload(&TSWorldObject::LGetCreature0, &TSWorldObject::LGetCreature1));
     ts_worldobject.set_function("GetGameObject", sol::overload(&TSWorldObject::LGetGameObject0, &TSWorldObject::LGetGameObject1));
