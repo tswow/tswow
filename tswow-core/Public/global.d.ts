@@ -78,6 +78,7 @@ declare const enum InventorySlots /**@realType:uint32*/{
     BAG_4 = 22
 }
 declare const enum SpellMissInfo {} /** SharedDefines.h:SpellMissInfo */
+declare const enum HighGuid { } /** ObjectGuid.h:HighGuid */
 declare const enum CorpseType {} /** Corpse.h:CorpseType */
 declare const enum CreatureFamily {} /** SharedDefines.h:CreatureFamily */
 declare const enum RemoveMethod {} /** SharedDefines.h:RemoveMethod */
@@ -196,7 +197,10 @@ declare type TSNumber<T> = number;
 declare type TSMutableNumber<T> = TSMutable<TSNumber<T>,T>
 
 declare interface TSGUID {
-    GetLow(): TSNumber<uint32>
+    GetCounter(): TSNumber<uint32>
+    GetEntry(): TSNumber<uint32>
+    GetType(): HighGuid
+
     IsEmpty(): bool
     IsCreature(): bool
     IsPet(): bool
@@ -217,7 +221,20 @@ declare interface TSGUID {
     IsGroup(): bool
 }
 
-declare function CreateGUID(low: TSNumber<uint32>, high: TSNumber<uint32>): TSGUID;
+/**
+ * Constructs a new GUID object for global entities
+ * @param high
+ * @param counter
+ */
+declare function CreateGUID(high: HighGuid, counter: TSNumber<uint32>): TSGUID;
+
+/**
+ * Constructs a new GUID for entities with map-specific instances.
+ * @param high
+ * @param entry
+ * @param counter
+ */
+declare function CreateGUID(high: HighGuid, entry: TSNumber<uint32>, counter: TSNumber<uint32>): TSGUID;
 
 declare interface TSMutex {
     lock();

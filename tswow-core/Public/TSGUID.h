@@ -9,7 +9,9 @@ class TC_GAME_API TSGUID
 public:
     explicit TSGUID(uint64 guid);
     TSGUID();
-    TSNumber<uint32> GetLow() const;
+    TSNumber<uint32> GetCounter() const;
+    TSNumber<uint32> GetType() const;
+    TSNumber<uint32> GetEntry() const;
     bool operator==(TSGUID const& oth) const;
     TSGUID* operator->() { return this; }
     bool IsEmpty()             const;
@@ -37,4 +39,5 @@ private:
     uint64 m_guid;
 };
 
-TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> low, TSNumber<uint32> high);
+TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry);
+TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry, TSNumber<uint32> counter);

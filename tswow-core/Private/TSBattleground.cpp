@@ -682,7 +682,7 @@ TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
 
 TSBattlegroundScore TSBattleground::GetScore(TSGUID guid)
 {
-    auto itr = bg->PlayerScores.find(guid.GetLow());
+    auto itr = bg->PlayerScores.find(guid.GetCounter());
     if (itr != bg->PlayerScores.end())
     {
         return TSBattlegroundScore(itr->second);

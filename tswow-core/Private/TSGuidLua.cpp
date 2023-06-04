@@ -4,7 +4,9 @@
 void TSLua::load_guid_methods(sol::state& state)
 {
     auto ts_guid = state.new_usertype<TSGUID>("TSGUID");
-    LUA_FIELD(ts_guid, TSGUID, GetLow);
+    LUA_FIELD(ts_guid, TSGUID, GetCounter);
+    LUA_FIELD(ts_guid, TSGUID, GetEntry);
+    LUA_FIELD(ts_guid, TSGUID, GetType);
     LUA_FIELD(ts_guid, TSGUID, IsEmpty);
     LUA_FIELD(ts_guid, TSGUID, IsCreature);
     LUA_FIELD(ts_guid, TSGUID, IsPet);
@@ -23,5 +25,9 @@ void TSLua::load_guid_methods(sol::state& state)
     LUA_FIELD(ts_guid, TSGUID, IsAnyTypeGameObject);
     LUA_FIELD(ts_guid, TSGUID, IsInstance);
     LUA_FIELD(ts_guid, TSGUID, IsGroup);
-    state.set_function("CreateGUID", CreateGUID);
+    state.set_function("CreateGUID", sol::overload
+    (
+        [](TSNumber<uint32> high, TSNumber<uint32> counter) { return CreateGUID(high, counter); },
+        [](TSNumber<uint32> high, TSNumber<uint32> entry, TSNumber<uint32> counter) { return CreateGUID(high, entry, counter); }
+    ));
 }

@@ -10,9 +10,19 @@ TSGUID::TSGUID(uint64 guid)
     : m_guid(guid)
 {}
 
-TSNumber<uint32> TSGUID::GetLow() const
+TSNumber<uint32> TSGUID::GetCounter() const
 {
     return asGUID().GetCounter();
+}
+
+TSNumber<uint32> TSGUID::GetType() const
+{
+    return static_cast<uint32>(asGUID().GetHigh());
+}
+
+TSNumber<uint32> TSGUID::GetEntry() const
+{
+    return asGUID().GetEntry();
 }
 
 bool TSGUID::operator==(TSGUID const& oth) const
@@ -44,7 +54,14 @@ bool TSGUID::IsAnyTypeGameObject() const { return asGUID().IsAnyTypeGameObject()
 bool TSGUID::IsInstance()          const { return asGUID().IsInstance(); }
 bool TSGUID::IsGroup()             const { return asGUID().IsGroup(); }
 
-TSGUID CreateGUID(TSNumber<uint32> low, TSNumber<uint32> high)
+TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry)
 {
-    return TSGUID(static_cast<uint64>(low) | (static_cast<uint64>(high) << 32ull));
+    ObjectGuid guid(static_cast<HighGuid>(high), static_cast<ObjectGuid::LowType>(entry));
+    return TSGUID(guid.GetRawValue());
+}
+
+TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry, TSNumber<uint32> counter)
+{
+    ObjectGuid guid(static_cast<HighGuid>(high), static_cast<uint32>(entry), static_cast<ObjectGuid::LowType>(counter));
+    return TSGUID(guid.GetRawValue());
 }
