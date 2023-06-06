@@ -3232,7 +3232,7 @@ void TSPlayer::AddLifetimeKills(uint32 val)
  * @param uint32 itemCount = 1 : amount of the item to add
  * @return [Item] item : the item that was added or nil
  */
-TSItem  TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
+TSItem TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
 {
 
 #if defined TRINITY || AZEROTHCORE

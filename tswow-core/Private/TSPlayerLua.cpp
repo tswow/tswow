@@ -285,8 +285,8 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, TextEmote);
     LUA_FIELD(ts_player, TSPlayer, Yell);
     LUA_FIELD(ts_player, TSPlayer, Say);
-    LUA_FIELD_OVERLOAD_2_1(ts_player, TSPlayer, AddItem, uint32, uint32, int32);
-    LUA_FIELD_OVERLOAD_4_1(ts_player, TSPlayer, AddItemToSlotRaw, uint8, uint8, uint32, uint32, int32);
+    LUA_FIELD_OVERLOAD_RET_2_1(ts_player, TSPlayer, AddItem, uint32, uint32, int32);
+    LUA_FIELD_OVERLOAD_RET_4_1(ts_player, TSPlayer, AddItemToSlotRaw, uint8, uint8, uint32, uint32, int32);
     LUA_FIELD_OVERLOAD_1_1(ts_player, TSPlayer, RemoveItem, TSItem, uint32);
     LUA_FIELD_OVERLOAD_1_1(ts_player, TSPlayer, RemoveItemByEntry, uint32, uint32);
     LUA_FIELD(ts_player, TSPlayer, SendBroadcastMessage);
