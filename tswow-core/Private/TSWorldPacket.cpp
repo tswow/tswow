@@ -24,20 +24,17 @@
 
 TSWorldPacket::TSWorldPacket(WorldPacket *packet)
 {
-    this->packet = packet;
-    this->owner = false;
+    ts_constructor(packet);
 }
 
 TSWorldPacket::TSWorldPacket()
 {
-    this->packet = nullptr;
-    this->owner = false;
+    ts_constructor();
 }
 
 TSWorldPacket::TSWorldPacket(uint16 opcode, uint32 res)
 {
-    this->packet = new WorldPacket(opcode,res);
-    this->owner = true;
+    ts_constructor(opcode,res);
 }
 
 TSWorldPacket::~TSWorldPacket()
@@ -338,4 +335,23 @@ void TSWorldStatePacket::Remove(uint32 index)
 void TSWorldStatePacket::Clear()
 {
     m_ws->Worldstates.clear();
+}
+
+void TSWorldPacket::ts_constructor(uint16 opcode, uint32 res)
+{
+    this->packet = new WorldPacket(opcode,res);
+    this->owner = true;
+}
+
+void TSWorldPacket::ts_constructor(WorldPacket *packet)
+{
+    this->packet = packet;
+    this->owner = false;
+}
+
+
+void TSWorldPacket::ts_constructor()
+{
+    this->packet = nullptr;
+    this->owner = false;
 }

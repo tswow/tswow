@@ -31,6 +31,10 @@ public:
     operator bool() const { return packet != nullptr; }
     bool operator==(TSWorldPacket const& rhs) { return packet == rhs.packet; }
 
+    void ts_constructor();
+    void ts_constructor(uint16 opcode, uint32 res = 200);
+    void ts_constructor(WorldPacket *packet);
+
     ~TSWorldPacket();
     bool IsNull() { return packet == nullptr; }
     TSNumber<uint16> GetOpcode();
