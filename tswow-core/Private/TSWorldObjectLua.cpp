@@ -5,6 +5,7 @@
 #include "TSGameObject.h"
 #include "TSCorpse.h"
 #include "TSLuaVarargs.h"
+#include "TSGUID.h"
 
 void TSLua::load_world_object_methods(sol::state& state)
 {
@@ -61,11 +62,14 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD(ts_worldobject, TSWorldObject, IsFriendlyToPlayers);
     LUA_FIELD(ts_worldobject, TSWorldObject, IsHostileToPlayers);
     LUA_FIELD(ts_worldobject, TSWorldObject, IsNeutralToAll);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetGameObject);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetCorpse);
+    LUA_FIELD(ts_worldobject, TSWorldObject, IsBehind);
+
+    ts_worldobject.set_function("GetCreature", sol::overload(&TSWorldObject::LGetCreature0, &TSWorldObject::LGetCreature1));
+    ts_worldobject.set_function("GetGameObject", sol::overload(&TSWorldObject::LGetGameObject0, &TSWorldObject::LGetGameObject1));
+    ts_worldobject.set_function("GetPlayer", sol::overload(&TSWorldObject::LGetPlayer0, &TSWorldObject::LGetPlayer1));
+    ts_worldobject.set_function("GetCorpse", sol::overload(&TSWorldObject::LGetCorpse0, &TSWorldObject::LGetCorpse1));
+
     LUA_FIELD(ts_worldobject, TSWorldObject, GetUnit);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetCreature);
-    LUA_FIELD(ts_worldobject, TSWorldObject, GetPlayer);
     LUA_FIELD(ts_worldobject, TSWorldObject, HasCollision);
     LUA_FIELD(ts_worldobject, TSWorldObject, AddCollision);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetCollision);

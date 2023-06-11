@@ -21,6 +21,8 @@
 #include "TSObject.h"
 #include "TSItemTemplate.h"
 
+class TSGUID;
+
 class TC_GAME_API TSItem : public TSObject {
 public:
     Item* item;
@@ -48,7 +50,7 @@ public:
     bool IsConjuredConsumable();
     TSItemTemplate GetTemplate();
     std::string GetItemLink(uint8 locale);
-    TSNumber<uint64> GetOwnerGUID();
+    TSGUID GetOwnerGUID();
     TSPlayer  GetOwner();
     TSNumber<uint32> GetCount();
     TSNumber<uint32> GetMaxStackCount();

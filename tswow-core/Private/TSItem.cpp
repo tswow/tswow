@@ -23,6 +23,7 @@
 #include "TSIncludes.h"
 #include "TSItem.h"
 #include "TSPlayer.h"
+#include "TSGUID.h"
 
 TSItem::TSItem(Item *item) : TSObject(item)
 {
@@ -303,9 +304,9 @@ std::string TSItem::GetItemLink(uint8 locale)
 #endif
 }
 
-TSNumber<uint64> TSItem::GetOwnerGUID()
+TSGUID TSItem::GetOwnerGUID()
 {
-    return TS_GUID(item->GetOwnerGUID());
+    return TSGUID(item->GetOwnerGUID());
 }
 
 /**

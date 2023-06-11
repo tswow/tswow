@@ -1,6 +1,7 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSMail.h"
+#include "TSGUID.h"
 
 void TSLua::load_mail_methods(sol::state& state)
 {
@@ -24,7 +25,7 @@ void TSLua::load_mail_methods(sol::state& state)
     LUA_FIELD(ts_mail, TSMail, SetMoney);
     LUA_FIELD(ts_mail, TSMail, SetCOD);
     LUA_FIELD(ts_mail, TSMail, SetChecked);
-    LUA_FIELD(ts_mail, TSMail, SetSender);
+    ts_mail.set_function("SetSender", sol::overload(&TSMail::LSetSender0, &TSMail::LSetSender1));
     LUA_FIELD(ts_mail, TSMail, SetState);
     LUA_FIELD(ts_mail, TSMail, GetSubject);
     LUA_FIELD(ts_mail, TSMail, GetBody);
@@ -38,7 +39,9 @@ void TSLua::load_mail_methods(sol::state& state)
     LUA_FIELD(ts_maildraft, TSMailDraft, GetTemplateID);
     LUA_FIELD(ts_maildraft, TSMailDraft, GetMoney);
     LUA_FIELD(ts_maildraft, TSMailDraft, GetCOD);
-    LUA_FIELD(ts_maildraft, TSMailDraft, GetItem);
+    ts_maildraft.set_function("GetItem", sol::overload( &TSMailDraft::LGetItem0, &TSMailDraft::LGetItem1 ));
+
+
     LUA_FIELD(ts_maildraft, TSMailDraft, SetTemplateID);
     LUA_FIELD(ts_maildraft, TSMailDraft, SetSubject);
     LUA_FIELD(ts_maildraft, TSMailDraft, SetBody);

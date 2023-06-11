@@ -7,8 +7,8 @@ import { SQL } from "../../SQLFiles";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
 import { SkillRequirement } from "./ItemRequirements";
 import { ItemTemplate, ItemTemplateRegistry } from "./ItemTemplate";
@@ -86,12 +86,12 @@ export class ItemSet extends MainEntity<ItemSetRow> {
 }
 
 export class ItemSetRegistryClass
-    extends RegistryDynamic<ItemSet,ItemSetRow,ItemSetQuery>
+    extends RegistryStatic<ItemSet,ItemSetRow,ItemSetQuery>
 {
     protected Table(): Table<any, ItemSetQuery, ItemSetRow> & { add: (id: number) => ItemSetRow; } {
         return DBC.ItemSet
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.ItemSet
     }
     Clear(entity: ItemSet): void {

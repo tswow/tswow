@@ -15,9 +15,10 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { Cell, CellWrapper } from "../../../data/cell/cells/Cell";
-import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "../../../data/sql/SQLCell";
 import { SQL } from "../../SQLFiles";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { convertPercent, PercentUnit } from "../Misc/PercentCell";
 
@@ -50,8 +51,45 @@ export class LootSet extends CellSystemTop {
     get ID() { return this.id; }
     get rows() { return this.table.queryAll({Entry:this.id})}
 
+    private add(item: number)
+    {
+        let row = this.table.add(this.id,item)
+        row.Chance.set(1)
+        row.GroupId.set(0)
+        row.LootMode.set(1)
+        row.MinCount.set(1)
+        row.MaxCount.set(1)
+        row.QuestRequired.set(0)
+        row.Reference.set(0)
+        return row;
+    }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'',(code)=>
+        {
+            this.rows.forEach(x=>{
+                code.begin_block(`.addMod(${x.Item.get()},x=>x`)
+                code.non_def_num('Reference',x.Reference);
+                code.non_def_num('Chance',x.Chance,1);
+                code.non_def_num('QuestRequired',x.QuestRequired);
+                code.non_def_num('LootMode',x.LootMode,1);
+                code.non_def_num('GroupId',x.GroupId);
+                code.non_def_num('MinCount',x.MinCount,1);
+                code.non_def_num('MaxCount',x.MaxCount,1);
+                code.end_block(')')
+            })
+        })
+    }
+
+    addMod(item: number, callback: (row: LootRowBase)=>void)
+    {
+        callback(this.add(item))
+        return this;
+    }
+
     addItem(item: number, chance: number|[number,PercentUnit], minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this.table.add(this.id,item)
+        this.add(item)
             .Chance.set(Array.isArray(chance)
                 ? convChanceTuple(chance): chance)
             .MinCount.set(minCount)
@@ -65,7 +103,7 @@ export class LootSet extends CellSystemTop {
     }
 
     addReference(table: number, chance: number|[number,PercentUnit], lootMode: number = 1) {
-        this.table.add(this.id,table)
+        this.add(table)
             .Chance.set(Array.isArray(chance)
                 ? convChanceTuple(chance): chance)
             .Reference.set(table)
@@ -82,6 +120,27 @@ export class LootSet extends CellSystemTop {
         super();
         this.id = id;
         this.table = table;
+    }
+}
+
+export class LootSetRef<T> extends CellSystem<T>
+{
+    protected lootSet: LootSet;
+
+    constructor(owner: T, lootSet: LootSet)
+    {
+        super(owner);
+        this.lootSet = lootSet;
+    }
+
+    get(): LootSet {
+        return this.lootSet;
+    }
+
+    mod(callback: (set: LootSet)=>void)
+    {
+        callback(this.lootSet);
+        return this.owner;
     }
 }
 

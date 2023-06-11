@@ -5,10 +5,11 @@ import { CreatureModelDataQuery, CreatureModelDataRow } from "../../dbc/Creature
 import { DBC } from "../../DBCFiles";
 import { creature_model_infoRow } from "../../sql/creature_model_info";
 import { SQL } from "../../SQLFiles";
+import { CodegenSettings, GenerateCode } from "../Misc/Codegen";
 import { MainEntity } from "../Misc/Entity";
 import { GeoBox } from "../Misc/GeoBox";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryDynamic, RegistryStatic } from "../Refs/Registry";
 import { CreatureSoundDataRegistry } from "./CreatureSoundData";
 import { NPCSoundsRegistry } from "./NPCSounds";
 
@@ -18,13 +19,14 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
         this.SizeClass.set(0)
         this.ModelScale.set(0)
         this.Blood.set(0)
+        this.Flags.set(0)
         this.FootprintTexture.set(0)
         this.FootprintTextureLength.set(0)
         this.FoleyMaterial.set(0)
         this.FootstepShakeSize.set(0)
         this.DeathThudShake.set(0)
         this.CollisionHeight.set(0)
-        this.CollisionHeight.set(0)
+        this.CollisionWidth.set(0)
         this.MountHeight.set(0)
         this.WorldEffectScale.set(0)
         this.AttachedEffectScale.set(0)
@@ -38,6 +40,7 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     }
 
     get ID() {return this.row.ID.get(); }
+    get Flags() { return this.wrap(this.row.Flags); }
     get ModelName() { return this.wrap(this.row.ModelName); }
     get SizeClass() { return this.wrap(this.row.SizeClass); }
     get ModelScale() { return this.wrap(this.row.ModelScale); }
@@ -65,6 +68,37 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
             this.row.GeoBoxMinZ,
             this.row.GeoBoxMaxZ
         )
+    }
+
+    codify(settings: CodegenSettings)
+    {
+        return GenerateCode(settings,'std.CreatureModels.create()',code=>{
+            if(this.ModelName.get().length > 0)
+            {
+                code.line(`.ModelName.set('${this.ModelName.get().split('\\').join('\\\\')}')`)
+            }
+            code.non_def_num('SizeClass',this.SizeClass);
+            code.non_def_num('ModelScale',this.ModelScale);
+            code.non_def_num('Blood',this.Blood);
+            code.non_def_num('Flags',this.Flags);
+            code.non_def_num('FootprintTexture',this.FootprintTexture);
+            code.non_def_num('FootprintTextureLength',this.FootprintTextureLength);
+            code.non_def_num('FoleyMaterial',this.FoleyMaterial);
+            code.non_def_num('FootstepShakeSize',this.FootstepShakeSize);
+            code.non_def_num('DeathThudShake',this.DeathThudShake);
+            code.non_def_num('CollisionHeight',this.CollisionHeight);
+            code.non_def_num('CollisionWidth',this.CollisionWidth);
+            code.non_def_num('MountHeight',this.MountHeight);
+            code.non_def_num('WorldEffectScale',this.WorldEffectScale);
+            code.non_def_num('AttachedEffectScale',this.AttachedEffectScale);
+            code.non_def_num('MissileCollisionRadius',this.MissileCollisionRadius);
+            code.non_def_num('AttachedEffectScale',this.AttachedEffectScale);
+            code.non_def_num('MissileCollisionRadius',this.MissileCollisionRadius);
+            code.non_def_num('MissileCollisionPush',this.MissileCollisionPush);
+            code.non_def_num('MissileCollisionRaise',this.MissileCollisionRaise);
+            code.line(`.Geobox.set({minX:${this.Geobox.MinX.get()}, minY:${this.Geobox.MinY.get()}, minZ:${this.Geobox.MinZ.get()},maxX:${this.Geobox.MaxX.get()},maxY:${this.Geobox.MaxY.get()},maxZ:${this.Geobox.MaxZ.get()}})`)
+            code.non_def_num('Sound',this.Sound);
+        })
     }
 }
 
@@ -106,6 +140,43 @@ export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {
     get ParticleColor() { return this.wrap(this.row.ParticleColorID); }
     get CreatureGeosetData() { return this.wrap(this.row.CreatureGeosetData); }
     get ObjectEffectPackage() { return this.wrap(this.row.ObjectEffectPackageID); }
+
+    codify(settings: CodegenSettings & {mod?: string, id?: string})
+    {
+        const mod = settings.mod || 'mod';
+        const id = settings.mod || 'id';
+        return GenerateCode(settings,`std.CreatureDisplayInfo.create('${mod}','${id}')`,code=>{
+            if(this.Model.get())
+            {
+                code.begin_block('.Model.modRefCopy(x=>x')
+                code.substruct(this.Model.getRef(),settings);
+                code.end_block(')')
+            }
+            code.non_def_num('BoundingRadius',this.BoundingRadius)
+            code.non_def_num('CombatReach',this.CombatReach)
+            code.non_def_num('Sound',this.Sound);
+            code.non_def_num('ExtendedDisplay',this.ExtendedDisplay);
+            code.non_def_num('CreatureModelScale',this.CreatureModelScale)
+            code.non_def_num('CreatureModelAlpha',this.CreatureModelAlpha)
+            code.non_def_num('BloodLevel',this.BloodLevel)
+            code.non_def_num('Blood',this.Blood)
+            code.non_def_num('NPCSound',this.NPCSound)
+            code.non_def_num('ParticleColor',this.ParticleColor)
+            code.non_def_num('CreatureGeosetData',this.CreatureGeosetData)
+            code.non_def_num('ObjectEffectPackage',this.ObjectEffectPackage)
+            for(let i = 0; i < this.TextureVariation.length(); ++i)
+            {
+                let v = this.TextureVariation.getIndex(i);
+                if(v.length > 0)
+                {
+                    code.line(`.TextureVariation.setIndex(${i},'${v.split('\\').join('\\\\').split('\'').join('\\\'')}')`)
+                }
+            }
+
+            // texture variations
+            // 
+        })
+    }
 
     clear(): this {
         if(this.hasSql()) {
@@ -170,7 +241,7 @@ export class CreatureModelRegistryClass
 export const CreatureModelRegistry = new CreatureModelRegistryClass();
 
 export class CreatureDisplayInfoRegistryClass
-    extends RegistryDynamic<
+    extends RegistryStatic<
           CreatureDisplayInfo
         , CreatureDisplayInfoRow
         , CreatureDisplayInfoQuery
@@ -179,11 +250,11 @@ export class CreatureDisplayInfoRegistryClass
     protected Table(): Table<any, CreatureDisplayInfoQuery, CreatureDisplayInfoRow> & { add: (id: number) => CreatureDisplayInfoRow; } {
         return DBC.CreatureDisplayInfo
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): StaticIDGenerator {
         return Ids.CreatureDisplayInfo
     }
 
-    protected Clone(entity: CreatureDisplayInfo, parent: CreatureDisplayInfo): void {
+    protected Clone(mod: string, name: string, entity: CreatureDisplayInfo, parent: CreatureDisplayInfo): void {
         SQL.creature_model_info.query({DisplayID:parent.ID})
             .clone(entity.ID)
     }

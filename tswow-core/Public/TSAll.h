@@ -70,3 +70,4 @@
 #include "TSFileSystem.h"
 #include "TSNumber.h"
 #include "TSFactionTemplate.h"
+#include "TSGUID.h"

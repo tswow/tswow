@@ -1,6 +1,7 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSOutfit.h"
+#include "TSGUID.h"
 
 #include "TSPlayer.h"
 #include "TSItem.h"
@@ -24,8 +25,6 @@ void TSLua::load_outfit_methods(sol::state& state)
     LUA_FIELD(ts_outfit, TSOutfit, GetHairColor);
     LUA_FIELD(ts_outfit, TSOutfit, SetSoundID);
     LUA_FIELD(ts_outfit, TSOutfit, GetSoundID);
-    LUA_FIELD(ts_outfit, TSOutfit, SetGuild);
-    LUA_FIELD(ts_outfit, TSOutfit, GetGuild);
     LUA_FIELD(ts_outfit, TSOutfit, GetGender);
     LUA_FIELD(ts_outfit, TSOutfit, GetRace);
     LUA_FIELD(ts_outfit, TSOutfit, SetItem);
@@ -40,6 +39,10 @@ void TSLua::load_outfit_methods(sol::state& state)
     LUA_FIELD(ts_outfit, TSOutfit, GetMainhand);
     LUA_FIELD(ts_outfit, TSOutfit, GetOffhand);
     LUA_FIELD(ts_outfit, TSOutfit, GetRanged);
+
+    ts_outfit.set_function("SetGuild", sol::overload( &TSOutfit::LSetGuild0, &TSOutfit::LSetGuild1 ));
+    LUA_FIELD(ts_outfit, TSOutfit, GetGuildGUID);
+
     LUA_FIELD_OVERLOAD_RET_0_1(ts_outfit, TSOutfit, GetDisplayID, uint8_t);
     LUA_FIELD(ts_outfit, TSOutfit, SetDisplayID);
     LUA_FIELD(ts_outfit, TSOutfit, ApplyRef);

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "TSMain.h"
+#include "TSGUID.h"
 #include <memory>
 #include <variant>
 #include <vector>
@@ -25,6 +26,7 @@
 
 class TSJsonObject;
 class TSJsonArray;
+class TSGUID;
 
 typedef std::variant<double, bool, void*, std::string, TSJsonObject, TSJsonArray> JsonValue;
 enum class JsonType { NUMBER, BOOL, STRING, OBJECT, LIST, NULL_LITERAL};
@@ -57,6 +59,10 @@ public:
     TSJsonObject SetString(std::string const& key, std::string const& number);
     bool HasString(std::string const& key);
     std::string GetString(std::string const& key, std::string const& def = "");
+
+    TSJsonObject SetGUIDNumber(std::string const& key, TSGUID guid);
+    TSGUID GetGUIDNumber(std::string const& key, TSGUID def = TSGUID(0));
+    bool HasGUIDNumber(std::string const& key);
 
     TSJsonObject SetNull(std::string const& key);
     bool HasNull(std::string const& key);
@@ -108,6 +114,12 @@ public:
     std::string GetString(unsigned key, std::string const& def = "");
     TSJsonArray InsertString(unsigned key, std::string const& value);
     TSJsonArray PushString(std::string const& value);
+
+    TSJsonArray SetGUIDNumber(unsigned key, TSGUID guid);
+    bool HasGUIDNumber(unsigned key);
+    TSGUID GetGUIDNumber(unsigned key, TSGUID guid = TSGUID(0));
+    TSJsonArray InsertGUIDNumber(unsigned key, TSGUID value);
+    TSJsonArray PushGUIDNumber(TSGUID value);
 
     TSJsonArray SetNull(unsigned key);
     bool HasNull(unsigned key);

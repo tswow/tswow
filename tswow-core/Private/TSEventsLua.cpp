@@ -330,6 +330,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnDropFlag);
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnClickFlag);
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnPlayerUnderMap);
+    LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnSendScore);
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnWeight);
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnSelect);
 

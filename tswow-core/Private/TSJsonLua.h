@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSLua.h"
+#include "TSGUID.h"
 #include "TSLuaVarargs.h"
 
 template <typename V, typename T>
@@ -12,6 +13,8 @@ void TSLua::load_json_methods_t(sol::state& state, sol::usertype<T> & target, st
     LUA_FIELD(target, V, HasBool);
     LUA_FIELD(target, V, SetString);
     LUA_FIELD(target, V, HasString);
+    LUA_FIELD(target, V, SetGUIDNumber);
+    LUA_FIELD(target, V, HasGUIDNumber);
     LUA_FIELD(target, V, HasJsonObject);
     LUA_FIELD(target, V, HasJsonArray);
     LUA_FIELD(target, V, Remove);
@@ -19,6 +22,7 @@ void TSLua::load_json_methods_t(sol::state& state, sol::usertype<T> & target, st
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetNumber, std::string const&, double);
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetBool, std::string const&, bool);
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetString, std::string const&, std::string const&);
+    LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetGUIDNumber, std::string const&, TSGUID);
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, GetJsonObject, std::string const&, TSJsonObject);
     LUA_FIELD_OVERLOAD_RET_1_1(target, V, SetJsonObject, std::string const&, TSJsonObject);
 

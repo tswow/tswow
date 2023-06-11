@@ -38,6 +38,7 @@
 #include "TSEntity.h"
 #include "TSItem.h"
 #include "TSMainThreadContext.h"
+#include "TSGUID.h"
 
 TSWorldObject::TSWorldObject(WorldObject *objIn)
     : TSObject(objIn)
@@ -869,29 +870,49 @@ TSCreature TSWorldObject::GetNearestCreature(float range, uint32 entry, uint32 h
 #endif
 }
 
-TSGameObject TSWorldObject::GetGameObject(uint64 guid)
+TSGameObject TSWorldObject::GetGameObject(TSNumber<uint32> guid)
 {
-    return TSGameObject(ObjectAccessor::GetGameObject(*obj,ObjectGuid(guid)));
+    return GetGameObject(TSGUID(guid));
 }
 
-TSCorpse TSWorldObject::GetCorpse(uint64 guid)
+TSGameObject TSWorldObject::GetGameObject(TSGUID guid)
 {
-    return TSCorpse(ObjectAccessor::GetCorpse(*obj,ObjectGuid(guid)));
+    return TSGameObject(ObjectAccessor::GetGameObject(*obj,guid.asGUID()));
 }
 
-TSUnit TSWorldObject::GetUnit(uint64 guid)
+TSCorpse TSWorldObject::GetCorpse(TSNumber<uint32> guid)
 {
-    return TSUnit(ObjectAccessor::GetUnit(*obj,ObjectGuid(guid)));
+    return GetCorpse(TSGUID(guid));
 }
 
-TSCreature TSWorldObject::GetCreature(uint64 guid)
+TSCorpse TSWorldObject::GetCorpse(TSGUID guid)
 {
-    return TSCreature(ObjectAccessor::GetCreature(*obj,ObjectGuid(guid)));
+    return TSCorpse(ObjectAccessor::GetCorpse(*obj,guid.asGUID()));
 }
 
-TSPlayer TSWorldObject::GetPlayer(uint64 guid)
+TSUnit TSWorldObject::GetUnit(TSGUID guid)
 {
-    return TSPlayer(ObjectAccessor::GetPlayer(*obj,ObjectGuid(guid)));
+    return TSUnit(ObjectAccessor::GetUnit(*obj,guid.asGUID()));
+}
+
+TSCreature TSWorldObject::GetCreature(TSNumber<uint32> guid)
+{
+    return GetCreature(TSGUID(guid));
+}
+
+TSCreature TSWorldObject::GetCreature(TSGUID guid)
+{
+    return TSCreature(ObjectAccessor::GetCreature(*obj,guid.asGUID()));
+}
+
+TSPlayer TSWorldObject::GetPlayer(TSNumber<uint32> guid)
+{
+    return GetPlayer(TSGUID(guid));
+}
+
+TSPlayer TSWorldObject::GetPlayer(TSGUID guid)
+{
+    return TSPlayer(ObjectAccessor::GetPlayer(*obj,guid.asGUID()));
 }
 
 TSPosition TSWorldObject::GetPosition()
@@ -986,14 +1007,14 @@ bool TSCollisionEntry::Tick(TSWorldObject value, bool force)
         {
 
         }
-        else if(!hitmap.contains(unit->GetGUID()))
+        else if(!hitmap.contains(unit->GetGUID().asGUID()))
         {
-            hitmap.set(unit->GetGUID(),1);
+            hitmap.set(unit->GetGUID().asGUID(), 1);
         }
         else
         {
-            hits = hitmap.get(unit->GetGUID());
-            hitmap.set(unit->GetGUID(),hits+1);
+            hits = hitmap.get(unit->GetGUID().asGUID());
+            hitmap.set(unit->GetGUID().asGUID(), hits + 1);
         }
 
         if(maxHits == 0 || hits < maxHits)
@@ -1364,4 +1385,49 @@ TSLua::Array<TSGameObject> TSWorldObject::LGetGameObjectsInRange(float range, ui
 TSLua::Array<TSPlayer> TSWorldObject::LGetPlayersInRange(float range, uint32 hostile, uint32 dead)
 {
     return sol::as_table(*GetPlayersInRange(range,hostile,dead).vec);
+}
+
+TSGameObject TSWorldObject::LGetGameObject0(TSGUID guid)
+{
+    return GetGameObject(guid);
+}
+
+TSGameObject TSWorldObject::LGetGameObject1(TSNumber<uint32> lowGuid)
+{
+    return GetGameObject(lowGuid);
+}
+
+TSCorpse TSWorldObject::LGetCorpse0(TSGUID guid)
+{
+    return GetCorpse(guid);
+}
+
+TSCorpse TSWorldObject::LGetCorpse1(TSNumber<uint32> lowGuid)
+{
+    return GetCorpse(lowGuid);
+}
+
+TSCreature TSWorldObject::LGetCreature0(TSNumber<uint32> lowGuid)
+{
+    return GetCreature(lowGuid);
+}
+
+TSCreature TSWorldObject::LGetCreature1(TSGUID guid)
+{
+    return GetCreature(guid);
+}
+
+TSPlayer TSWorldObject::LGetPlayer0(TSGUID guid)
+{
+    return GetPlayer(guid);
+}
+
+TSPlayer TSWorldObject::LGetPlayer1(TSNumber<uint32> lowGuid)
+{
+    return GetPlayer(lowGuid);
+}
+
+bool TSWorldObject::IsBehind(TSWorldObject o)
+{
+    return !o.obj->HasInArc(static_cast<float>(M_PI), obj);
 }

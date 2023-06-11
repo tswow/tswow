@@ -27,6 +27,8 @@
 
 class TSPlayer;
 class TSWorldPacket;
+struct BattlegroundScore;
+class TSGUID;
 
 class TC_GAME_API TSBattlegroundPlayer: public TSEntityProvider {
     uint64 m_guid;
@@ -37,7 +39,7 @@ public:
     TSBattlegroundPlayer(TSBattleground bg, uint64 guid, uint32 team, int64 offlineRemoveTime);
     operator bool() const { return m_guid > 0; }
     bool operator==(TSBattlegroundPlayer const& rhs) { return m_guid == rhs.m_guid; }
-    TSNumber<uint64> GetGUID();
+    TSGUID GetGUID();
     TSNumber<uint32> GetTeam();
     TSNumber<int64> GetOfflineRemoveTime();
 };
@@ -45,6 +47,64 @@ public:
 #define TS_TEAM_ALLIANCE 0
 #define TS_TEAM_HORDE 1
 #define TS_TEAM_NEUTRAL 2
+
+class TC_GAME_API TSBattlegroundScore
+{
+    TS_CLASS_DECLARATION(TSBattlegroundScore, BattlegroundScore, m_score);
+    TSNumber<uint32> GetKillingBlows() const;
+    TSNumber<uint32> GetDeaths() const;
+    TSNumber<uint32> GetHonorableKills() const;
+    TSNumber<uint32> GetBonusHonor() const;
+    TSNumber<uint32> GetDamageDone() const;
+    TSNumber<uint32> GetHealingDone() const;
+
+    void SetKillingBlows(uint32 value);
+    void SetDeaths(uint32 value);
+    void SetHonorableKills(uint32 value);
+    void SetBonusHonor(uint32 value);
+    void SetDamageDone(uint32 value);
+    void SetHealingDone(uint32 value);
+
+    void ApplyBaseToPacket(TSBattleground bg, TSWorldPacket packet);
+
+    TSNumber<uint32> GetWSFlagCaptures();
+    TSNumber<uint32> GetEYFlagCaptures();
+    TSNumber<uint32> GetWSFlagReturns();
+    TSNumber<uint32> GetABBasesAssaulted();
+    TSNumber<uint32> GetICBasesAssaulted();
+    TSNumber<uint32> GetABBasesDefended();
+    TSNumber<uint32> GetICBasesDefended();
+    TSNumber<uint32> GetAVGraveyardsAssaulted();
+    TSNumber<uint32> GetAVGraveyardsDefended();
+    TSNumber<uint32> GetAVTowersAssaulted();
+    TSNumber<uint32> GetAVTowersDefended();
+    TSNumber<uint32> GetAVMinesCaptured();
+    TSNumber<uint32> GetSADestroyedDemolishers();
+    TSNumber<uint32> GetSADestroyedGates();
+
+    void SetWSFlagCaptures(uint32 value);
+    void SetEYFlagCaptures(uint32 value);
+    void SetWSFlagReturns(uint32 value);
+    void SetABBasesAssaulted(uint32 value);
+    void SetICBasesAssaulted(uint32 value);
+    void SetABBasesDefended(uint32 value);
+    void SetICBasesDefended(uint32 value);
+    void SetAVGraveyardsAssaulted(uint32 value);
+    void SetAVGraveyardsDefended(uint32 value);
+    void SetAVTowersAssaulted(uint32 value);
+    void SetAVTowersDefended(uint32 value);
+    void SetAVMinesCaptured(uint32 value);
+    void SetSADestroyedDemolishers(uint32 value);
+    void SetSADestroyedGates(uint32 value);
+
+    uint64 GetPlayerGUID() const;
+
+    TSNumber<uint8> GetArenaTeamID() const;
+
+    TSNumber<uint32> GetCustomAttr(std::string const& key) const;
+    void SetCustomAttr(std::string const& key, uint32 value);
+    void ModCustomAttr(std::string const& key, int32 mod);
+};
 
 class TC_GAME_API TSBattleground: public TSMap {
 public:
@@ -73,7 +133,10 @@ public:
     TSNumber<uint32> GetStatus();
 
     bool IsRandom();
-    TSBattlegroundPlayer GetBGPlayer(uint64 guid);
+    TSBattlegroundScore GetScore(TSGUID guid);
+    TSBattlegroundScore GetScore(TSNumber<uint32> guid);
+    TSBattlegroundPlayer GetBGPlayer(TSGUID guid);
+    TSBattlegroundPlayer GetBGPlayer(TSNumber<uint32> guid);
     TSArray<TSBattlegroundPlayer> GetBGPlayers();
     void SetStartPosition(uint32 teamid, float x, float y, float z, float o);
     TSNumber<float> GetStartX(uint32 teamid);
@@ -98,7 +161,8 @@ public:
     void AddSpiritGuide(uint32 type, float x, float y, float z, float o, uint32 teamId = TS_TEAM_NEUTRAL);
     void OpenDoor(uint32 type);
     void CloseDoor(uint32 type);
-    bool IsPlayerInBG(uint64 guid);
+    bool IsPlayerInBG(TSGUID guid);
+    bool IsPlayerInBG(TSNumber<uint32> guid);
     TSNumber<uint32> GetTeamScore(uint32 team);
     void SendMessage(uint32 entry, uint8 type, TSPlayer source);
     TSNumber<uint32> GetUniqueBracketID();
@@ -110,10 +174,20 @@ public:
     bool RemoveCreature(uint32 type);
     bool RemoveObject(uint32 type);
     bool RemoveObjectFromWorld(uint32 type);
-    TSNumber<int32> GetObjectType(uint64 guid);
+    TSNumber<int32> GetObjectType(TSGUID guid);
     void SetHoliday(bool isHoliday);
     bool IsHoliday();
 
     TSGameObject GetBGGameObject(uint32 type, bool logErrors = false);
     TSCreature GetBGCreature(uint32 type, bool logErrors = false);
+private:
+    TSBattlegroundPlayer LGetBGPlayer0(TSGUID guid);
+    TSBattlegroundPlayer LGetBGPlayer1(TSNumber<uint32> guid);
+
+    TSBattlegroundScore LGetScore0(TSGUID guid);
+    TSBattlegroundScore LGetScore1(TSNumber<uint32> guid);
+
+    bool LIsPlayerInBG0(TSGUID guid);
+    bool LIsPlayerInBG1(TSNumber<uint32> guid);
+    friend class TSLua;
 };

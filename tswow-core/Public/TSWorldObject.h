@@ -33,6 +33,7 @@ class TSCollisionEntry;
 class TSEntity;
 class TSUnit;
 class TSMainThreadContext;
+class TSGUID;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutableNumber<uint32>,TSCollisionEntry*)>
 
@@ -57,6 +58,8 @@ public:
     TSPlayer GetNearestPlayer(float range = 533.33333, uint32 hostile = 0, uint32 dead = 1);
     TSGameObject GetNearestGameObject(float range = 533.33333, uint32 entry = 0, uint32 hostile = 0);
     TSCreature GetNearestCreature(float range = 533.33333, uint32 entry = 0, uint32 hostile = 0, uint32 dead = 1);
+
+    bool IsBehind(TSWorldObject obj);
 
     TSNumber<float> GetDistance(TSWorldObject target);
     TSNumber<float> GetDistanceToPoint(float X, float Y, float Z);
@@ -124,11 +127,15 @@ public:
         , uint64 originalCaster = 0
     );
 
-    TSGameObject GetGameObject(uint64 guid);
-    TSCorpse GetCorpse(uint64 guid);
-    TSUnit GetUnit(uint64 guid);
-    TSCreature GetCreature(uint64 guid);
-    TSPlayer GetPlayer(uint64 guid);
+    TSGameObject GetGameObject(TSGUID guid);
+    TSGameObject GetGameObject(TSNumber<uint32> lowGuid);
+    TSCorpse GetCorpse(TSGUID guid);
+    TSCorpse GetCorpse(TSNumber<uint32> lowGuid);
+    TSUnit GetUnit(TSGUID guid);
+    TSCreature GetCreature(TSNumber<uint32> lowGuid);
+    TSCreature GetCreature(TSGUID guid);
+    TSPlayer GetPlayer(TSGUID guid);
+    TSPlayer GetPlayer(TSNumber<uint32> lowGuid);
 
     bool HasCollision(std::string const& id) ;
     void AddCollision(std::string const& id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
@@ -151,6 +158,15 @@ private:
     TSLua::Array<TSUnit> LGetUnitsInRange(float range, uint32 hostile, uint32 dead);
     TSLua::Array<TSGameObject> LGetGameObjectsInRange(float range, uint32 entry, uint32 hostile);
     TSLua::Array<TSPlayer> LGetPlayersInRange(float range, uint32 hostile, uint32 dead);
+
+    TSGameObject LGetGameObject0(TSGUID guid);
+    TSGameObject LGetGameObject1(TSNumber<uint32> lowGuid);
+    TSCorpse LGetCorpse0(TSGUID guid);
+    TSCorpse LGetCorpse1(TSNumber<uint32> lowGuid);
+    TSCreature LGetCreature0(TSNumber<uint32> lowGuid);
+    TSCreature LGetCreature1(TSGUID guid);
+    TSPlayer LGetPlayer0(TSGUID guid);
+    TSPlayer LGetPlayer1(TSNumber<uint32> lowGuid);
 };
 
 class TC_GAME_API TSCollisionEntry {

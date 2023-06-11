@@ -1,9 +1,24 @@
-import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
+import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
+import { ObjectifyOptions, Objects } from "../../../data/cell/serialization/ObjectIteration";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { MultiFloatWrapper, MultiIntWrapper, MultiUIntWrapper } from "../../../data/dbc/DBCCell";
 import { SpellVisualKitRow } from "../../dbc/SpellVisualKit";
 import { SpellChainEffectRegistry } from "./SpellChainEffect";
+
+export class CharacterProcedureType extends EnumCellTransform<SpellCharacterProcedure> 
+{
+    get CHAIN() { return this.value(0, x=>new ChainProcedure(this.owner.row,this.owner.index)) }
+    get COLOR() { return this.value(1, x=>new ColorProcedure(this.owner.row,this.owner.index)) }
+    get SCALE() { return this.value(2, x=>new ScaleProcedure(this.owner.row,this.owner.index)) }
+    get EMISSIVE() { return this.value(4, x=>new EmissiveProcedure(this.owner.row,this.owner.index)) }
+    get ECLIPSE() { return this.value(6, x=>new EclipseProcedure(this.owner.row,this.owner.index)) }
+    get ANIMATION() { return this.value(7, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+    get WEAPON_TRAIL() { return this.value(8, x=>new WeaponTrail(this.owner.row,this.owner.index)) }
+    get BLIZZARD() { return this.value(9, x=>new Blizzard(this.owner.row,this.owner.index)) }
+    get FISHING_LINE() { return this.value(10, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+    get UNK_13() { return this.value(13, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+}
 
 export class SpellCharacterProcedure extends CellSystemTop {
     @Transient
@@ -12,53 +27,27 @@ export class SpellCharacterProcedure extends CellSystemTop {
     @Transient
     index: number
 
-    constructor(row: SpellVisualKitRow, index: number, type = -2) {
+    constructor(row: SpellVisualKitRow, index: number) {
         super();
         this.row = row;
         this.index = index;
-        if(type>-1) {
-            this.row.CharProc.setIndex(this.index, type);
-        }
     }
 
-    static As(proc: SpellCharacterProcedure, id: number) {
-        return proc.As(id);
+    get Type() {
+        return new CharacterProcedureType(this, this.wrapIndex(this.row.CharProc,this.index));
     }
 
-    protected As(id: number): SpellCharacterProcedure {
-        switch(id) {
-            case 0:
-                return this.SetChain()
-            case 1:
-                return this.SetColor()
-            case 2:
-                return this.SetScale()
-            case 4:
-                return this.SetEmissive()
-            case 6:
-                return this.SetEclipse()
-            case 7:
-                return this.SetAnimation()
-            case 8:
-                return this.SetWeaponTrail()
-            case 9:
-                return this.SetBlizzard()
-            case 10:
-                return this.SetFishingLine()
-            default:
-                return this;
-        }
+    objectify(options?: ObjectifyOptions)
+    {
+        return Objects.objectifyObj(EnumCellTransform.getSelection(this.Type).cell.as());
     }
+}
 
-    SetChain() { return new ChainProcedure(this.row,this.index,0) }
-    SetColor() { return new ColorProcedure(this.row,this.index,1) }
-    SetScale() { return new ScaleProcedure(this.row,this.index,2) }
-    SetEmissive() { return new EmissiveProcedure(this.row,this.index,4) }
-    SetEclipse() { return new EclipseProcedure(this.row,this.index,6) }
-    SetAnimation() { return new StandWalkAnim(this.row,this.index,7) }
-    SetWeaponTrail() { return new WeaponTrail(this.row,this.index,8) }
-    SetBlizzard() { return new Blizzard(this.row,this.index,9) }
-    SetFishingLine() { return new SpellCharacterProcedure(this.row, this.index, 10); }
+export class SpellCharacterProcedurePlain extends SpellCharacterProcedure
+{
+    get Param0() { return this.wrapIndex(this.row.CharParamZero, this.index); }
+    get Param1() { return this.wrapIndex(this.row.CharParamOne, this.index); }
+    get Param2() { return this.wrapIndex(this.row.CharParamTwo, this.index); }
 }
 
 export class ChainProcedure extends SpellCharacterProcedure {
@@ -126,16 +115,28 @@ export class SpellCharacterProcedures<T> extends CellSystem<T> {
     protected row: SpellVisualKitRow;
 
     get(index: number) {
-        return new SpellCharacterProcedure(this.row, index);
+        return new SpellCharacterProcedurePlain(this.row, index);
     }
 
     objectify(options?: ObjectifyOptions) {
         return this.row.CharProc.get()
             .filter((x)=>x>=0)
-            .map((x,i)=> SpellCharacterProcedure.As(this.get(i),x).objectify(options))
+            .map((x,i)=>x < 0 ? '<empty>' : this.get(i).objectify())
     }
 
     get length() { return 4; }
+
+    forEachValid(callback: (proc: SpellCharacterProcedurePlain) => void)
+    {
+        for(let i = 0; i < this.length; ++i)
+        {
+            if(this.row.CharProc.getIndex(i) >= 0)
+            {
+                callback(this.get(i));
+            }
+        }
+        return this.owner;
+    }
 
     addGet() {
         for(let i=0;i<this.length;++i) {
@@ -146,7 +147,7 @@ export class SpellCharacterProcedures<T> extends CellSystem<T> {
         throw new Error(`Can't add more entries, array is full.`)
     }
 
-    mod(index: number, callback: (proc: SpellCharacterProcedure)=>void) {
+    mod(index: number, callback: (proc: SpellCharacterProcedurePlain)=>void) {
         callback(this.get(index));
         return this.owner;
     }

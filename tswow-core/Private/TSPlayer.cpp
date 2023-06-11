@@ -35,6 +35,7 @@
 #include "TSWorldPacket.h"
 #include "TSCreature.h"
 #include "TSMail.h"
+#include "TSGUID.h"
 
 #if TRINITY
 #include "SpellHistory.h"
@@ -1253,9 +1254,14 @@ TSItem  TSPlayer::GetItemByPos(uint8 bag,uint8 slot)
  * @param uint64 guid : an item guid
  * @return [Item] item
  */
-TSItem  TSPlayer::GetItemByGUID(uint64 guid)
+TSItem TSPlayer::GetItemByGUID(TSGUID guid)
 {
-     return TSItem(player->GetItemByGuid(ObjectGuid(guid)));
+     return TSItem(player->GetItemByGuid(guid.asGUID()));
+}
+
+TSItem TSPlayer::GetItemByGUID(TSNumber<uint32> guid)
+{
+    return GetItemByGUID(TSGUID(guid));
 }
 
 /**
@@ -1961,12 +1967,17 @@ void TSPlayer::ResetAchievements()
 }
 #endif
 
+void TSPlayer::SendShowMailBox(TSNumber<uint32> guid)
+{
+    return SendShowMailBox(TSGUID(guid));
+}
+
 /**
  * Shows the mailbox window to the player from specified guid.
  *
  * @param uint64 guid = playerguid : guid of the mailbox window sender
  */
-void TSPlayer::SendShowMailBox(uint64 guid)
+void TSPlayer::SendShowMailBox(TSGUID guid)
 {
 
 #if (defined(CLASSIC) || defined(TBC))
@@ -1974,7 +1985,7 @@ WorldPacket data(CMSG_GET_MAIL_LIST, 8);
     data << uint64(guid);
     player->GetSession()->HandleGetMailList(data);
 #else
-    player->GetSession()->SendShowMailBox(ObjectGuid(guid));
+    player->GetSession()->SendShowMailBox(guid.asGUID());
 #endif
 }
 
@@ -2864,9 +2875,8 @@ void TSPlayer::RemoveQuest(uint32 entry)
  * @param string text
  * @param uint32 lang : language the [Player] will speak
  * @param [Player] receiver : is the [Player] that will receive the whisper, if TrinityCore
- * @param uint64 guid : is the GUID of a [Player] that will receive the whisper, not TrinityCore
  */
-void TSPlayer::Whisper(std::string const& _text,uint32 lang,TSPlayer _receiver,uint64 guid)
+void TSPlayer::Whisper(std::string const& _text,uint32 lang,TSPlayer _receiver)
 {
     auto receiver = _receiver.player;
     auto text = _text;
@@ -3222,7 +3232,7 @@ void TSPlayer::AddLifetimeKills(uint32 val)
  * @param uint32 itemCount = 1 : amount of the item to add
  * @return [Item] item : the item that was added or nil
  */
-TSItem  TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
+TSItem TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
 {
 
 #if defined TRINITY || AZEROTHCORE
@@ -4281,6 +4291,26 @@ TSDBJson* TSPlayer::get_json()
 bool TSPlayer::HasRunes()
 {
     return player->HasRunes();
+}
+
+TSItem TSPlayer::LGetItemByGUID0(TSGUID guid)
+{
+    return GetItemByGUID(guid);
+}
+
+TSItem TSPlayer::LGetItemByGUID1(TSNumber<uint32> guid)
+{
+    return GetItemByGUID(guid);
+}
+
+void TSPlayer::LSendShowMailBox0(TSGUID guid)
+{
+    return SendShowMailBox(guid);
+}
+
+void TSPlayer::LSendShowMailBox1(TSNumber<uint32> guid)
+{
+    return SendShowMailBox(guid);
 }
 
 bool TSPlayer::SetTaximaskNode(uint32 nodeidx)

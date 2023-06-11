@@ -19,4 +19,6 @@ export enum InterruptFlags {
     ON_MOVEMENT       = 0x1,
     ON_PUSHBACK       = 0x2,
     ON_INTERRUPT_CAST = 0x4,
+    ON_INTERRUPT      = 0x8,
+    ON_DAMAGE         = 0x10,
 }

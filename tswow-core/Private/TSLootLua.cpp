@@ -1,6 +1,7 @@
 #include "TSLua.h"
 #include "TSLuaVarargs.h"
 #include "TSLoot.h"
+#include "TSGUID.h"
 
 void TSLua::load_loot_methods(sol::state& state)
 {
@@ -30,7 +31,7 @@ void TSLua::load_loot_methods(sol::state& state)
     LUA_FIELD(ts_loot, TSLoot, SetLootType);
     LUA_FIELD(ts_loot, TSLoot, GetMoney);
     LUA_FIELD(ts_loot, TSLoot, SetMoney);
-    LUA_FIELD(ts_loot, TSLoot, GetLootOwner);
+    LUA_FIELD(ts_loot, TSLoot, GetLootOwnerGUID);
     LUA_FIELD(ts_loot, TSLoot, SetLootOwner);
     LUA_FIELD(ts_loot, TSLoot, GetItemCount);
     LUA_FIELD(ts_loot, TSLoot, GetQuestItemCount);

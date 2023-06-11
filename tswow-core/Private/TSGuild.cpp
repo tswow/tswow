@@ -19,6 +19,7 @@
 #include "TSGuild.h"
 #include "TSPlayer.h"
 #include "TSWorldPacket.h"
+#include "TSGUID.h"
 
 #include "Object.h"
 #include "Guild.h"
@@ -81,9 +82,9 @@ TSPlayer  TSGuild::GetLeader()
  *
  * @return uint64 leaderGUID
  */
-TSNumber<uint64> TSGuild::GetLeaderGUID()
+TSGUID TSGuild::GetLeaderGUID()
 {
-    return TS_GUID(guild->GetLeaderGUID());
+    return TSGUID(guild->GetLeaderGUID());
 }
 
 /**
