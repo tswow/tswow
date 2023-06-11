@@ -531,9 +531,9 @@ bool TSUnit::HealthAbovePct(int32 pct)
  * @param uint32 spell : entry of the aura spell
  * @return bool hasAura
  */
-bool TSUnit::HasAura(uint32 spell, uint64_t casterGUID , uint64_t itemCasterGUID, uint8 reqEffMask)
+bool TSUnit::HasAura(uint32 spell, TSGUID casterGUID , TSGUID itemCasterGUID, uint8 reqEffMask)
 {
-    return unit->HasAura(spell, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask);
+    return unit->HasAura(spell, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask);
 }
 
 /**
@@ -1129,19 +1129,19 @@ TSNumber<uint32> TSUnit::GetFaction()
  * @param uint32 spellID : entry of the aura spell
  * @return [Aura] aura : aura object or nil
  */
-TSAura  TSUnit::GetAura(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask)
+TSAura  TSUnit::GetAura(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID, uint8 reqEffMask)
 {
 #if defined TRINITY || AZEROTHCORE
-     return TSAura(unit->GetAura(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask));
+     return TSAura(unit->GetAura(spellID, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask));
 #else
      return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
 #endif
 }
 
-TSAura  TSUnit::GetAuraOfRankedSpell(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask)
+TSAura  TSUnit::GetAuraOfRankedSpell(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID, uint8 reqEffMask)
 {
 #if defined TRINITY || AZEROTHCORE
-     return TSAura(unit->GetAuraOfRankedSpell(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask));
+     return TSAura(unit->GetAuraOfRankedSpell(spellID, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask));
 #else
      return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
 #endif
@@ -2514,14 +2514,14 @@ void TSUnit::JumpTo(float x, float y, float z, float o, float speedXY, float spe
     unit->JumpTo(speedXY, speedZ, forward, Position{ x,y,z });
 }
 
-TSAuraApplication TSUnit::GetAuraApplication(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask, TSAuraApplication except)
+TSAuraApplication TSUnit::GetAuraApplication(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID, uint8 reqEffMask, TSAuraApplication except)
 {
-    return TSAuraApplication(unit->GetAuraApplication(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask, except.aura));
+    return TSAuraApplication(unit->GetAuraApplication(spellID, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask, except.aura));
 }
 
-TSAuraApplication TSUnit::GetAuraApplicationOfRankedSpell(uint32 spellID, uint64_t casterGUID, uint64_t itemCasterGUID, uint8 reqEffMask, TSAuraApplication except)
+TSAuraApplication TSUnit::GetAuraApplicationOfRankedSpell(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID, uint8 reqEffMask, TSAuraApplication except)
 {
-    return TSAuraApplication(unit->GetAuraApplicationOfRankedSpell(spellID, ObjectGuid(casterGUID), ObjectGuid(itemCasterGUID), reqEffMask, except.aura));
+    return TSAuraApplication(unit->GetAuraApplicationOfRankedSpell(spellID, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask, except.aura));
 }
 
 TSArray<TSAuraApplication> TSUnit::GetAuraApplications()

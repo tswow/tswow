@@ -229,6 +229,11 @@ declare interface TSGUID {
 declare function CreateGUID(high: HighGuid, counter: TSNumber<uint32>): TSGUID;
 
 /**
+ * Creates an empty invalid guid
+ */
+declare function EmptyGUID(): TSGUID
+
+/**
  * Constructs a new GUID for entities with map-specific instances.
  * @param high
  * @param entry
@@ -6167,7 +6172,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param uint32 spell : entry of the aura spell
      * @return bool hasAura
      */
-    HasAura(spell : uint32) : bool
+    HasAura(spell : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : bool
 
     /**
      * Returns true if the [Unit] is casting a spell
@@ -6196,7 +6201,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return uint64 ownerGUID
      */
-    GetOwnerGUID() : TSNumber<uint64>
+    GetOwnerGUID() : TSGUID
 
     /**
      * Returns the [Unit]'s mount's modelID.
@@ -6552,7 +6557,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
      * @return [Aura] aura : aura object or nil
      */
-    GetAura(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8) : TSAura
+    GetAura(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : TSAura
 
     /**
      * Returns the [Aura] of the given spell entry on the [Unit] or nil.
@@ -6563,7 +6568,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
      * @return [Aura] aura : aura object or nil
      */
-    GetAuraOfRankedSpell(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8) : TSAura
+    GetAuraOfRankedSpell(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : TSAura
 
     /**
      * Returns the [AuraApplication] of the given spell entry on the [Unit] or nil.
@@ -6575,7 +6580,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param except = null: application to exclude from search result
      * @return [Aura] aura : aura object or nil
      */
-    GetAuraApplication(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
+    GetAuraApplication(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
 
     /**
      * Returns the [AuraApplication] of the given spell entry on the [Unit] or nil.
@@ -6587,7 +6592,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param except = null: application to exclude from search result
      * @return [Aura] aura : aura object or nil
      */
-    GetAuraApplicationOfRankedSpell(spellID : uint32, casterGuid?: uint64, itemCasterGuid?: uint64, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
+    GetAuraApplicationOfRankedSpell(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
 
     /**
      * Returns all [AuraApplication]s attached to this [Unit].

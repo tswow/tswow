@@ -41,3 +41,4 @@ private:
 
 TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry);
 TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry, TSNumber<uint32> counter);
+TC_GAME_API TSGUID EmptyGUID();

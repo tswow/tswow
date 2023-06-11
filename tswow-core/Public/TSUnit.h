@@ -71,7 +71,7 @@ public:
     bool IsQuestGiver();
     bool HealthBelowPct(int32 pct);
     bool HealthAbovePct(int32 pct);
-    bool HasAura(uint32 spell, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0);
+    bool HasAura(uint32 spell, TSGUID casterGUID = EmptyGUID(), TSGUID itemCasterGUID = EmptyGUID(), uint8 reqEffMask = 0);
     bool HasAuraType(uint32 auraType);
     bool IsCasting();
     bool HasUnitState(uint32 state);
@@ -124,10 +124,10 @@ public:
     TSNumber<uint32> GetFaction();
     TSArray<TSAuraApplication> GetAuraApplications();
     TSArray<TSAuraEffect> GetAuraEffectsByType(uint32 type);
-    TSAura  GetAura(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0);
-    TSAura  GetAuraOfRankedSpell(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0);
-    TSAuraApplication GetAuraApplication(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
-    TSAuraApplication GetAuraApplicationOfRankedSpell(uint32 spellID, uint64_t casterGUID = 0, uint64_t itemCasterGUID = 0, uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
+    TSAura  GetAura(uint32 spellID, TSGUID casterGUID = EmptyGUID(), TSGUID itemCasterGUID = EmptyGUID(), uint8 reqEffMask = 0);
+    TSAura  GetAuraOfRankedSpell(uint32 spellID, TSGUID casterGUID = EmptyGUID(), TSGUID itemCasterGUID = EmptyGUID(), uint8 reqEffMask = 0);
+    TSAuraApplication GetAuraApplication(uint32 spellID, TSGUID casterGUID = EmptyGUID(), TSGUID itemCasterGUID = EmptyGUID(), uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
+    TSAuraApplication GetAuraApplicationOfRankedSpell(uint32 spellID, TSGUID casterGUID = EmptyGUID(), TSGUID itemCasterGUID = EmptyGUID(), uint8 reqEffMask = 0, TSAuraApplication except = TSAuraApplication());
     int32 GetTotalAuraModifier(uint32 auraType);
     float GetTotalAuraMultiplier(uint32 auraType);
     int32 GetTotalAuraModifierByMiscMask(uint32 auraType, uint32 miscMask);

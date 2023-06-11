@@ -54,14 +54,19 @@ bool TSGUID::IsAnyTypeGameObject() const { return asGUID().IsAnyTypeGameObject()
 bool TSGUID::IsInstance()          const { return asGUID().IsInstance(); }
 bool TSGUID::IsGroup()             const { return asGUID().IsGroup(); }
 
-TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry)
+TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry)
 {
     ObjectGuid guid(static_cast<HighGuid>(high), static_cast<ObjectGuid::LowType>(entry));
     return TSGUID(guid.GetRawValue());
 }
 
-TC_GAME_API TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry, TSNumber<uint32> counter)
+TSGUID CreateGUID(TSNumber<uint32> high, TSNumber<uint32> entry, TSNumber<uint32> counter)
 {
     ObjectGuid guid(static_cast<HighGuid>(high), static_cast<uint32>(entry), static_cast<ObjectGuid::LowType>(counter));
     return TSGUID(guid.GetRawValue());
+}
+
+TSGUID EmptyGUID()
+{
+    return CreateGUID(0, 0);
 }
