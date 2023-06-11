@@ -20,6 +20,7 @@ export class Emitter {
     embeddedCPPTypes: Array<string>;
     isWritingMain = false;
     isInClass: boolean = false;
+    didStrongThis: boolean = false;
     curClassName: string = "";
     didConstructor: boolean = false;
     asyncScopes: boolean[] = []
@@ -895,8 +896,11 @@ export class Emitter {
     }
 
     processExpressionStatement(node: ts.ExpressionStatement): void {
-        if(this.isInClass && node.getChildCount() > 0 && this.isEvent(node.getChildAt(0) as ts.ExpressionStatement))
+        let isEvent = this.isEvent(node.getChildAt(0) as ts.ExpressionStatement);
+        let isTimer = this.isTimer(node.getChildAt(0) as ts.ExpressionStatement);
+        if(!this.didStrongThis && this.isInClass && node.getChildCount() > 0 && (isEvent || isTimer))
         {
+            this.didStrongThis = true;
             this.writer.writeStringNewLine(`auto ts_strong_this = this->ts_shared_from_this<${this.curClassName}>();`);
         }
         this.processExpression(node.expression);
@@ -1471,6 +1475,7 @@ export class Emitter {
         } else {
             this.writer.EndOfStatement();
         }
+        this.didStrongThis = false;
     }
 
     processModifiers(modifiers: ts.NodeArray<ts.Modifier>) {
