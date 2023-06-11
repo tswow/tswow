@@ -13,6 +13,7 @@ public:
     TSNumber<uint32> GetType() const;
     TSNumber<uint32> GetEntry() const;
     bool operator==(TSGUID const& oth) const;
+    bool operator!=(TSGUID const& oth) const;
     TSGUID* operator->() { return this; }
     bool IsEmpty()             const;
     bool IsCreature()          const;

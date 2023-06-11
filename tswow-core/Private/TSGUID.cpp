@@ -30,6 +30,11 @@ bool TSGUID::operator==(TSGUID const& oth) const
     return m_guid == oth.m_guid;
 }
 
+bool TSGUID::operator!=(TSGUID const& oth) const
+{
+    return m_guid != oth.m_guid;
+}
+
 ObjectGuid TSGUID::asGUID() const
 {
     return ObjectGuid(m_guid);
