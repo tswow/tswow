@@ -179,7 +179,6 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, SendUnitSay);
     LUA_FIELD(ts_unit, TSUnit, SendUnitYell);
     LUA_FIELD(ts_unit, TSUnit, DeMorph);
-    LUA_FIELD(ts_unit, TSUnit, CastCustomSpell);
     LUA_FIELD(ts_unit, TSUnit, ClearInCombat);
     LUA_FIELD(ts_unit, TSUnit, StopSpellCast);
     LUA_FIELD(ts_unit, TSUnit, InterruptSpell);
