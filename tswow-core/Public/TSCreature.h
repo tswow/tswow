@@ -82,9 +82,9 @@ public:
     TSNumber<uint32> GetCorpseDelay();
     TSPosition GetHomePosition();
     void SetHomePosition(float x, float y, float z, float o);
-    TSUnit GetAITarget(uint32 targetType, bool playerOnly, uint32 position, float dist, int32 aura);
-    TSArray<TSUnit> GetAITargets();
-    TSNumber<int> GetAITargetsCount();
+    TSUnit FindThreatListEntry(uint32 targetType, bool playerOnly, uint32 position, float dist, int32 aura);
+    TSArray<TSUnit> GetThreatList();
+    TSNumber<int> GetThreatListCount();
     TSNumber<uint32> GetNPCFlags();
     TSNumber<uint32> GetShieldBlockValue();
     TSNumber<uint16> GetLootMode();
@@ -143,6 +143,9 @@ public:
     void EquipOffhand(uint32_t offhand);
     void EquipRanged(uint32_t ranged);
 
+    TSNumber<float> GetThreat(TSUnit target, bool include_offline = false);
+
 private:
-    TSLua::Array<TSUnit> LGetAITargets();
+    TSLua::Array<TSUnit> LGetThreatList();
+    friend class TSLua;
 };

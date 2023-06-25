@@ -2988,15 +2988,17 @@ declare interface TSCreature extends TSUnit {
      * @param float o
      */
     SetHomePosition(x : float,y : float,z : float,o : float) : void
-    //GetAITarget(targetType : uint32,playerOnly : bool,position : uint32,dist : float,aura : int32) : TSUnit
-    //GetAITargets() : TSArray<TSUnit>
+    FindThreatListEntry(targetType : uint32,playerOnly : bool,position : uint32,dist : float,aura : int32) : TSUnit
+    GetThreatList() : TSArray<TSUnit>
 
     /**
      * Returns the number of [Unit]s in this [Creature]'s threat list.
      *
      * @return int targetsCount
      */
-    GetAITargetsCount() : int
+    GetThreatListCount() : int
+
+    GetThreat(target: TSUnit, includeOffline?: boolean): TSNumber<float>
 
     /**
      * Returns the [Creature]'s NPC flags.

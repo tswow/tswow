@@ -17,7 +17,8 @@ void TSLua::load_creature_methods(sol::state & state)
     auto ts_creature = state.new_usertype<TSCreature>("TSCreature", sol::base_classes, sol::bases<TSUnit,TSWorldObject,TSObject, TSEntityProvider, TSWorldEntityProvider<TSWorldObject>>());
     LUA_FIELD(ts_creature, TSCreature, GetScriptName);
     LUA_FIELD(ts_creature, TSCreature, GetAIName);
-    LUA_FIELD(ts_creature, TSCreature, GetAITargets);
+    ts_creature.set_function("GetThreatList", &TSCreature::LGetThreatList);
+    LUA_FIELD(ts_creature, TSCreature, FindThreatListEntry);
     LUA_FIELD_OVERLOAD_RET_0_3(ts_creature, TSCreature, GetOutfitCopy, Outfit, int32_t, int32_t);
     LUA_FIELD(ts_creature, TSCreature, IsReputationGainDisabled);
     LUA_FIELD(ts_creature, TSCreature, IsReputationGainDisabled);
@@ -62,8 +63,8 @@ void TSLua::load_creature_methods(sol::state & state)
     LUA_FIELD(ts_creature, TSCreature, GetCorpseDelay);
     LUA_FIELD(ts_creature, TSCreature, GetHomePosition);
     LUA_FIELD(ts_creature, TSCreature, SetHomePosition);
-    LUA_FIELD(ts_creature, TSCreature, GetAITarget);
-    LUA_FIELD(ts_creature, TSCreature, GetAITargetsCount);
+    LUA_FIELD(ts_creature, TSCreature, FindThreatListEntry);
+    LUA_FIELD(ts_creature, TSCreature, GetThreatListCount);
     LUA_FIELD(ts_creature, TSCreature, GetNPCFlags);
     LUA_FIELD(ts_creature, TSCreature, GetShieldBlockValue);
     LUA_FIELD(ts_creature, TSCreature, GetLootMode);
@@ -114,4 +115,5 @@ void TSLua::load_creature_methods(sol::state & state)
     LUA_FIELD(ts_creature, TSCreature, EquipMainhand);
     LUA_FIELD(ts_creature, TSCreature, EquipOffhand);
     LUA_FIELD(ts_creature, TSCreature, EquipRanged);
+    LUA_FIELD_OVERLOAD_RET_1_1(ts_creature, TSCreature, GetThreat, TSUnit, bool);
 }
