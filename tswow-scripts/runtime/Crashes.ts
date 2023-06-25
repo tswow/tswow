@@ -47,11 +47,11 @@ export class Crashes {
                     }
                     try {
                         fs.copyFileSync(file.abs().get(),ipaths.Crashes.join(
-                            `${ctime.getFullYear()}-${ctime.getMonth()}-${ctime.getDate()}.`
+                            `${ctime.getFullYear()}-${ctime.getMonth()+1}-${ctime.getDate()+1}.`
                             + `${ctime.getHours()}-${ctime.getMinutes()}-${ctime.getSeconds()}.`
                             + `${type}-${realmPath}.${file.extension()}`).get())
                         file.remove()
-                        clearInterval()
+                        clearInterval(int)
                     } catch(err) {}
                 },500)
             },2000)
