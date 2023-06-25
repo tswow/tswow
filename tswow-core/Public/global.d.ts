@@ -65,6 +65,7 @@ declare const enum Class /** @realType: uint8 */ {
 }
 declare type ClassID = Class | uint8
 
+declare const enum EnchantmentSlot {} /** ItemDefines.h:EnchantmentSlot */
 declare const enum InventoryResult {} /** ItemDefines.h:InventoryResult */
 declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
 declare const enum TimerLoops {} /** TSTimer.h:TimerLoops */
@@ -4173,6 +4174,12 @@ declare class TSItem extends TSObject {
 
     IsNull() : bool
 
+    UpdateItemSuffixFactor(): void
+    SetEnchantmentDuration(slot: EnchantmentSlot, duration: uint32): void
+    SetEnchantmentCharges(slot: EnchantmentSlot, charges: uint32): void
+    GetEnchantmentDuration(slot: EnchantmentSlot): TSNumber<uint32>
+    GetEnchantmentCharges(slot: EnchantmentSlot): TSNumber<uint32>
+
     /**
      * Returns 'true' if the [Item] is soulbound, 'false' otherwise
      *
@@ -4347,7 +4354,7 @@ declare class TSItem extends TSObject {
      * @param [EnchantmentSlot] enchantSlot : the enchant slot specified
      * @return uint32 enchantId : the id of the enchant slot specified
      */
-    GetEnchantmentID(enchant_slot : uint32) : TSNumber<uint32>
+    GetEnchantmentID(enchant_slot : EnchantmentSlot) : TSNumber<uint32>
 
     /**
      * Returns the spell ID tied to the [Item] by spell index
@@ -4507,7 +4514,7 @@ declare class TSItem extends TSObject {
      * @param uint32 enchantSlot : the slot for the enchant to be applied to
      * @return bool enchantmentSuccess : if enchantment is successfully set to specified (EnchantmentSlot)slot, returns 'true', otherwise 'false'
      */
-    SetEnchantment(enchant : uint32,slot : uint32) : bool
+    SetEnchantment(enchant : uint32,slot : EnchantmentSlot) : bool
 
     /**
      * Removes an enchant from the [Item] by the specified slot
@@ -4515,7 +4522,7 @@ declare class TSItem extends TSObject {
      * @param uint32 enchantSlot : the slot for the enchant to be removed from
      * @return bool enchantmentRemoved : if enchantment is successfully removed from specified (EnchantmentSlot)slot, returns 'true', otherwise 'false'
      */
-    ClearEnchantment(slot : uint32) : bool
+    ClearEnchantment(slot : EnchantmentSlot) : bool
 
     /**
      * Saves the [Item] to the database

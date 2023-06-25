@@ -61,6 +61,14 @@ void TSLua::load_item_methods(sol::state& state)
     LUA_FIELD(ts_item, TSItem, SetCount);
     LUA_FIELD(ts_item, TSItem, SetEnchantment);
     LUA_FIELD(ts_item, TSItem, ClearEnchantment);
+
+    LUA_FIELD(ts_item, TSItem, SetEnchantmentDuration);
+    LUA_FIELD(ts_item, TSItem, SetRandomProperty);
+    LUA_FIELD(ts_item, TSItem, UpdateItemSuffixFactor);
+    LUA_FIELD(ts_item, TSItem, SetEnchantmentCharges);
+    LUA_FIELD(ts_item, TSItem, GetEnchantmentDuration);
+    LUA_FIELD(ts_item, TSItem, GetEnchantmentCharges);
+
     LUA_FIELD(ts_item, TSItem, SaveToDB);
     state.set_function("CreateItem", sol::overload(
         [](uint32 entry, uint32 count) { return CreateItem(entry, count); },
