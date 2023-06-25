@@ -8307,8 +8307,8 @@ declare namespace _hidden {
     }
 
     export class Creature<T> {
-        OnGenerateLoot(callback: (creature: TSCreature, killer: TSPlayer)=>void): T;
-        OnGenerateLoot(id: EventID, callback: (creature: TSCreature, killer: TSPlayer)=>void): T;
+        OnGenerateLoot(callback: (generating: TSCreature, killer: TSPlayer)=>void): T;
+        OnGenerateLoot(id: EventID, callback: (generating: TSCreature, killer: TSPlayer)=>void): T;
 
         OnMoveInLOS(callback: (creature: TSCreature, seen: TSUnit)=>void): T;
         OnMoveInLOS(id: EventID, callback: (creature: TSCreature, seen: TSUnit)=>void): T;
@@ -8316,35 +8316,35 @@ declare namespace _hidden {
         OnJustEnteredCombat(callback: (creature: TSCreature, target: TSUnit)=>void): T;
         OnJustEnteredCombat(id: EventID, callback: (creature: TSCreature, target: TSUnit)=>void): T;
 
-        OnDeathEarly(callback: (creature: TSCreature, killer: TSUnit)=>void): T;
-        OnDeathEarly(id: EventID, callback: (creature: TSCreature, killer: TSUnit)=>void): T;
+        OnDeathEarly(callback: (dying: TSCreature, killer: TSUnit)=>void): T;
+        OnDeathEarly(id: EventID, callback: (dying: TSCreature, killer: TSUnit)=>void): T;
 
-        OnDeath(callback: (creature: TSCreature, killer: TSUnit)=>void): T;
-        OnDeath(id: EventID, callback: (creature: TSCreature, killer: TSUnit)=>void): T;
+        OnDeath(callback: (dying: TSCreature, killer: TSUnit)=>void): T;
+        OnDeath(id: EventID, callback: (dying: TSCreature, killer: TSUnit)=>void): T;
 
-        OnKilledUnit(callback: (creature: TSCreature, killed: TSUnit)=>void): T;
-        OnKilledUnit(id: EventID, callback: (creature: TSCreature, killed: TSUnit)=>void): T;
+        OnKilledUnit(callback: (killer: TSCreature, killed: TSUnit)=>void): T;
+        OnKilledUnit(id: EventID, callback: (killer: TSCreature, killed: TSUnit)=>void): T;
 
-        OnSummoned(callback: (creature: TSCreature, summon: TSCreature)=>void): T;
-        OnSummoned(id: EventID, callback: (creature: TSCreature, summon: TSCreature)=>void): T;
+        OnSummoned(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
+        OnSummoned(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
 
-        OnIsSummoned(callback: (creature: TSCreature, summoner: TSWorldObject)=>void): T;
-        OnIsSummoned(id: EventID, callback: (creature: TSCreature, summoner: TSWorldObject)=>void): T;
+        OnIsSummoned(callback: (summoned: TSCreature, summoner: TSWorldObject)=>void): T;
+        OnIsSummoned(id: EventID, callback: (summoned: TSCreature, summoner: TSWorldObject)=>void): T;
 
-        OnSummonDespawn(callback: (creature: TSCreature, summon: TSCreature)=>void): T;
-        OnSummonDespawn(id: EventID, callback: (creature: TSCreature, summon: TSCreature)=>void): T;
+        OnSummonDespawn(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
+        OnSummonDespawn(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
 
-        OnSummonDies(callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
-        OnSummonDies(id: EventID, callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
+        OnSummonDies(callback: (summoner: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
+        OnSummonDies(id: EventID, callback: (summoner: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
 
-        OnHitBySpell(callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
-        OnHitBySpell(id: EventID, callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
+        OnHitBySpell(callback: (target: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
+        OnHitBySpell(id: EventID, callback: (target: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
 
-        OnSpellHitTarget(callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
-        OnSpellHitTarget(id: EventID, callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
+        OnSpellHitTarget(callback: (caster: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
+        OnSpellHitTarget(id: EventID, callback: (caster: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
 
-        OnSpellCastFinished(callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: SpellFinishReason)=>void): T;
-        OnSpellCastFinished(id: EventID, callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: SpellFinishReason)=>void): T;
+        OnSpellCastFinished(callback: (caster: TSCreature, spellInfo: TSSpellInfo, reason: SpellFinishReason)=>void): T;
+        OnSpellCastFinished(id: EventID, callback: (caster: TSCreature, spellInfo: TSSpellInfo, reason: SpellFinishReason)=>void): T;
 
         OnJustAppeared(callback: (creature: TSCreature)=>void): T;
         OnJustAppeared(id: EventID, callback: (creature: TSCreature)=>void): T;
@@ -8355,8 +8355,8 @@ declare namespace _hidden {
         OnReachedHome(callback: (creature: TSCreature)=>void): T;
         OnReachedHome(id: EventID, callback: (creature: TSCreature)=>void): T;
 
-        OnReceiveEmote(callback: (creature: TSCreature, player: TSPlayer, emote: uint32)=>void): T;
-        OnReceiveEmote(id: EventID, callback: (creature: TSCreature, player: TSPlayer, emote: uint32)=>void): T;
+        OnReceiveEmote(callback: (receiver: TSCreature, player: TSPlayer, emote: uint32)=>void): T;
+        OnReceiveEmote(id: EventID, callback: (receiver: TSCreature, player: TSPlayer, emote: uint32)=>void): T;
 
         OnOwnerAttacked(callback: (creature: TSCreature, attacker: TSUnit)=>void): T;
         OnOwnerAttacked(id: EventID, callback: (creature: TSCreature, attacker: TSUnit)=>void): T;
