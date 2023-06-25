@@ -532,6 +532,7 @@ struct TSEvents
         ID_EVENT(OnSummoned, TSCreature, TSCreature)
         ID_EVENT(OnIsSummoned, TSCreature, TSWorldObject)
         ID_EVENT(OnSummonDespawn, TSCreature, TSCreature)
+        ID_EVENT(OnDespawn, TSCreature, TSWorldObject)
         ID_EVENT(OnSummonDies, TSCreature, TSCreature, TSUnit)
         ID_EVENT(OnHitBySpell, TSCreature, TSWorldObject, TSSpellInfo)
         ID_EVENT(OnSpellHitTarget, TSCreature, TSWorldObject, TSSpellInfo)

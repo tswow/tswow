@@ -8328,6 +8328,9 @@ declare namespace _hidden {
         OnSummoned(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
         OnSummoned(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
 
+        OnDespawn(callback: (despawning: TSCreature, summoner: TSWorldObject)=>void): T;
+        OnDespawn(id: EventID, callback: (despawning: TSCreature, summoner: TSWorldObject)=>void): T;
+
         OnIsSummoned(callback: (summoned: TSCreature, summoner: TSWorldObject)=>void): T;
         OnIsSummoned(id: EventID, callback: (summoned: TSCreature, summoner: TSWorldObject)=>void): T;
 
