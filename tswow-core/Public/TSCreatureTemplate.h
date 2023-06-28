@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSLua.h"
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
@@ -135,3 +136,4 @@ public:
 };
 
 TC_GAME_API TSCreatureTemplate GetCreatureTemplate(uint32 entry);
+LUA_PTR_TYPE(TSCreatureTemplate);

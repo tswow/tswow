@@ -565,3 +565,29 @@ TSGameObject TSMap::LGetGameObject1(TSNumber<uint32> guid)
 {
     return GetGameObject(guid);
 }
+
+TC_GAME_API TSInstance ToInstance(TSMap map)
+{
+    if (map.map && map->IsInstance())
+    {
+        InstanceMap* instance = map.map->ToInstanceMap();
+        return TSInstance(instance, instance->GetInstanceScript());
+    }
+    else
+    {
+        return TSInstance(nullptr,nullptr);
+    }
+}
+
+TC_GAME_API TSBattleground ToBattleground(TSMap map)
+{
+    if (map.map && map->IsBG())
+    {
+        BattlegroundMap* bg = map.map->ToBattlegroundMap();
+        return TSBattleground(bg, bg->GetBG());
+    }
+    else
+    {
+        return TSBattleground(nullptr, nullptr);
+    }
+}

@@ -5,6 +5,8 @@
 #include <regex>
 #include "document.hpp"
 #include <fstream>
+#include <memory>
+#include <array>
     
 static std::map<std::filesystem::path, sol::table> modules;
 static std::vector<std::filesystem::path> file_stack;
@@ -411,4 +413,30 @@ void TSLua::Load()
             }
         }
     }
+}
+
+// the ugliest hack in in the history of emulation
+static constexpr size_t lua_garbage_page_size = 8192;
+using lua_garbage_page_type = std::array<char, lua_garbage_page_size>;
+size_t lua_garbage_page = 0;
+size_t lua_garbage_offset = lua_garbage_page_size; // saves an extra if statement below
+static std::vector<std::unique_ptr<lua_garbage_page_type>> lua_garbage_stack;
+
+void* add_lua_garbage(size_t size)
+{
+    if (lua_garbage_offset + size >= lua_garbage_page_size)
+    {
+        lua_garbage_stack.push_back(std::make_unique<lua_garbage_page_type>());
+        lua_garbage_offset = 0;
+    }
+    char* c = lua_garbage_stack[lua_garbage_stack.size() - 1]->data() + lua_garbage_offset;
+    lua_garbage_offset += size;
+    return c;
+}
+
+void clear_lua_garbage()
+{
+    lua_garbage_stack.clear();
+    lua_garbage_page = 0;
+    lua_garbage_offset = lua_garbage_page_size;
 }
