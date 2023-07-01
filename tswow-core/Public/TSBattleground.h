@@ -21,6 +21,7 @@
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 #include "TSMap.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
@@ -191,3 +192,6 @@ private:
     bool LIsPlayerInBG1(TSNumber<uint32> guid);
     friend class TSLua;
 };
+
+LUA_PTR_TYPE_CON(TSBattlegroundPlayer,TSBattlegroundPlayer())
+LUA_PTR_TYPE_CON(TSBattleground,TSBattleground(nullptr,nullptr))

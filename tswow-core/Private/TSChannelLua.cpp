@@ -7,8 +7,8 @@
 void TSLua::load_channel_methods(sol::state& state)
 {
     auto ts_channel = state.new_usertype<TSChannel>("TSChannel");
-    LUA_FIELD_OVERLOAD_RET_0_1(ts_channel, TSChannel, GetName, uint32);
     LUA_FIELD(ts_channel, TSChannel, GetID);
+    LUA_FIELD_OVERLOAD_RET_0_1(ts_channel, TSChannel, GetName, uint32);
     LUA_FIELD(ts_channel, TSChannel, IsConstant);
     LUA_FIELD(ts_channel, TSChannel, IsLFG);
     LUA_FIELD(ts_channel, TSChannel, IsAnnounce);

@@ -30,6 +30,8 @@ type bool = boolean;
 type TSArray<T> = T[];
 type TSString = string;
 
+type Maybe<T> = T | undefined
+
 declare const BROADCAST_PHASE_ID: TSNumber<uint32>
 
 declare const enum Gender /**@realType:uint8 */ {
@@ -4022,18 +4024,26 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * Returns `true` if the [Map] is a non-arena [BattleGround], `false` otherwise.
      *
      * @return bool isBattleGround
+     * @deprecated use free function 'ToBattleground'
      */
     IsBG() : bool
 
+    /**
+     * @deprecated use free function 'ToBattleground'
+     */
     ToBG(): TSBattleground
 
     /**
      * Returns `true` if the [Map] is an instance, `false` otherwise.
      *
      * @return bool isBattleGround
+     * @deprecated use free function 'ToInstance'
      */
     IsInstance() : bool
 
+    /**
+     * @deprecated use free function 'ToInstance'
+     */
     ToInstance(): TSInstance
 
     /**
@@ -5900,11 +5910,35 @@ declare class TSObject extends TSEntityProvider {
      * @param uint32 flag
      */
     RemoveFlag(index : uint16,flag : uint32) : void
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
     ToCorpse() : TSCorpse
+
+    /**
+     * @deprecated use free function 'ToGameObject'
+     */
     ToGameObject() : TSGameObject
+
+    /**
+     * @deprecated use free function 'ToUnit'
+     */
     ToUnit() : TSUnit
+
+    /**
+     * @deprecated use free function 'ToCreature'
+     */
     ToCreature() : TSCreature
+
+    /**
+     * @deprecated use free function 'ToPlayer'
+     */
     ToPlayer() : TSPlayer
+
+    /**
+     * @deprecated use free function 'ToItem'
+     */
     ToItem(): TSItem
 }
 
@@ -9961,6 +9995,17 @@ declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate
 declare function GetGuild(guid: uint32): TSGuild
 declare function GetGuildByName(name: string): TSGuild
 declare function GetGuildByLeader(guid: uint64): TSGuild
+
+// typecasts
+declare function ToWorldObject(obj: TSObject): Maybe<TSWorldObject>
+declare function ToItem(obj: TSObject): Maybe<TSItem>
+declare function ToUnit(obj: TSObject): Maybe<TSUnit>
+declare function ToCreature(obj: TSObject): Maybe<TSCreature>
+declare function ToPlayer(obj: TSObject): Maybe<TSPlayer>
+declare function ToGameObject(obj: TSObject): Maybe<TSGameObject>
+
+declare function ToInstance(map: TSMap): Maybe<TSInstance>
+declare function ToBattleground(map: TSMap): Maybe<TSBattleground>
 
 // tracy
 declare type ZoneCategory = uint32;

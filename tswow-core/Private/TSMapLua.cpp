@@ -56,4 +56,7 @@ void TSLua::load_map_methods(sol::state& state)
         &TSMap::LGetCreatures0
         , &TSMap::LGetCreatures1
     ));
+
+    state.set_function("ToBattleground", &ToBattleground);
+    state.set_function("ToInstance", &ToInstance);
 }

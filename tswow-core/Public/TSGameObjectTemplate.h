@@ -3,6 +3,7 @@
 #include "TSBase.h"
 #include "TSMain.h"
 #include "TSEntity.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -30,3 +31,4 @@ public:
 };
 
 TSGameObjectTemplate TC_GAME_API GetGameObjectTemplate(uint32 id);
+LUA_PTR_TYPE(TSGameObjectTemplate)

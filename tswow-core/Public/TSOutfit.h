@@ -156,4 +156,5 @@ private:
 
 #if TRINITY
 TSOutfit TC_GAME_API CreateOutfit(uint32_t race, uint32_t gender);
+LUA_PTR_TYPE(TSOutfit)
 #endif

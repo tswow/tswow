@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 class TC_GAME_API TSWorldPacket {
 public:
@@ -118,3 +119,6 @@ public:
 };
 
 #define CreateWorldPacket TSWorldPacket
+
+//LUA_PTR_TYPE(TSWorldPacket)
+//LUA_PTR_TYPE(TSWorldStatePacket)

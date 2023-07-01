@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSArray.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
@@ -83,3 +84,6 @@ private:
     TSLua::Array<TSNumber<uint32>> LGetKeys();
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSAuctionEntry)
+LUA_PTR_TYPE(TSAuctionHouseObject)

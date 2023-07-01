@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSLua.h"
 #include "TSLoot.h"
 #include "TSMain.h"
 #include "TSClasses.h"
@@ -37,3 +38,5 @@ public:
     void ResetGhostTime();
     void SaveToDB();
 };
+
+LUA_PTR_TYPE(TSCorpse)

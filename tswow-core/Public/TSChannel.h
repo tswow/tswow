@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
@@ -59,3 +60,5 @@ private:
     void LSay0(TSGUID guid, std::string const& what, uint32 lang);
     void LSay1(TSNumber<uint32> guid, std::string const& what, uint32 lang);
 };
+
+LUA_PTR_TYPE(TSChannel)
