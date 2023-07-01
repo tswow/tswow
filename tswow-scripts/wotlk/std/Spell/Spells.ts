@@ -17,6 +17,7 @@
 import { Table } from "../../../data/table/Table";
 import { SpellQuery, SpellRow } from "../../dbc/Spell";
 import { DBC } from "../../DBCFiles";
+import { SQL } from "../../SQLFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "./Spell";
@@ -32,9 +33,16 @@ export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery
                 parentEntity.BonusData.getSQL().clone(v.ID)
             }
 
+            if(parentEntity.Proc.exists())
+            {
+                parentEntity.Proc.getSQL().clone(v.ID);
+            }
+
             if(parentEntity.Threat.exists()) {
                 parentEntity.Threat.getSQL().clone(v.ID);
             }
+
+            SQL.spell_target_position.queryAll({ID: parent}).forEach(x=>x.clone(v.ID,x.EffectIndex.get()))
 
             if(parentEntity.CustomAttributes.exists()) {
                 parentEntity.CustomAttributes.sqlRow().clone(v.ID)

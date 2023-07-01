@@ -223,6 +223,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnDeath);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnKilledUnit);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnSummoned);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnDespawn);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnIsSummoned);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnSummonDespawn);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnSummonDies);

@@ -702,7 +702,7 @@ bool ObjectDistanceOrderPred::operator()(WorldObject const* pLeft, WorldObject c
 * @param int32 aura = 0 : if positive, the target must have this [Aura]. If negative, the the target must not have this Aura
 * @return [Unit] target : the target, or `nil`
 */
-TSUnit  TSCreature::GetAITarget(uint32 targetType,bool playerOnly,uint32 position,float dist,int32 aura)
+TSUnit  TSCreature::FindThreatListEntry(uint32 targetType,bool playerOnly,uint32 position,float dist,int32 aura)
 {
 #if TRINITY
     auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
@@ -785,27 +785,15 @@ TSUnit  TSCreature::GetAITarget(uint32 targetType,bool playerOnly,uint32 positio
  *
  * @return table targets
  */
-TSArray<TSUnit> TSCreature::GetAITargets()
+TSArray<TSUnit> TSCreature::GetThreatList()
 {
-#ifdef TRINITY
-    auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
-#elif defined AZEROTHCORE
-    auto const& threatlist = creature->getThreatMgr().getThreatList();
-#else
-    ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
-#endif
+    auto const& threatlist = creature->GetThreatManager().GetUnsortedThreatList();
     TSArray <TSUnit> tbl;
-    uint32 i = 0;
     for (auto itr = threatlist.begin(); itr != threatlist.end(); ++itr)
     {
-#ifdef TRINITY
-        Unit* target = itr->second->GetOwner();
-#else
-        Unit* target = (*itr)->getTarget();
-#endif
+        Unit* target = itr->GetVictim();
         if (target) tbl.push(TSUnit(target));
     }
-
     return tbl;
 }
 
@@ -814,15 +802,9 @@ TSArray<TSUnit> TSCreature::GetAITargets()
  *
  * @return int targetsCount
  */
-TSNumber<int> TSCreature::GetAITargetsCount()
+TSNumber<int> TSCreature::GetThreatListCount()
 {
-#ifdef TRINITY
-    return creature->GetThreatManager().GetThreatenedByMeList().size();
-#elif AZEROTHCORE
-    return creature->getThreatMgr().getThreatList().size();
-#else
-    return creature->GetThreatManager().getThreatList().size();
-#endif
+    return creature->GetThreatManager().GetThreatListSize();
 }
 
 /**
@@ -1443,7 +1425,13 @@ TSOutfit TSCreature::GetOutfitCopy(Outfit settings, int32_t race, int32_t gender
 #endif
 }
 
-TSLua::Array<TSUnit> TSCreature::LGetAITargets()
+TSLua::Array<TSUnit> TSCreature::LGetThreatList()
 {
-    return sol::as_table(*GetAITargets().vec);
+    return sol::as_table(*GetThreatList().vec);
 }
+
+TSNumber<float> TSCreature::GetThreat(TSUnit target, bool includeOffline)
+{
+    return creature->GetThreatManager().GetThreat(target, includeOffline);
+}
+
