@@ -776,7 +776,7 @@ struct TSEvents
         EVENTS_HEADER(InstanceEvents)
         ID_EVENT(OnCreate, TSInstance)
         ID_EVENT_FN(OnReload, ReloadInstance, TSInstance)
-        ID_EVENT(OnLoad, TSInstance)
+        ID_EVENT(OnLoad, TSInstance, bool)
         ID_EVENT(OnSave, TSInstance)
         ID_EVENT(OnUpdate, TSInstance, TSNumber<uint32> diff)
         ID_EVENT(OnPlayerEnter, TSInstance, TSPlayer)

@@ -9111,14 +9111,20 @@ declare namespace _hidden {
     }
 
     export class Instance<T> {
+        /**
+         * @deprecated use OnLoad and check 'created' argument
+         */
         OnCreate(callback: (instance: TSInstance)=>void): T
+        /**
+         * @deprecated use OnLoad and check 'created' argument
+         */
         OnCreate(id: EventID, callback: (instance: TSInstance)=>void): T
 
         OnReload(callback: (instance: TSInstance)=>void): T
         OnReload(id: EventID, callback: (instance: TSInstance)=>void): T
 
-        OnLoad(callback: (instance: TSInstance)=>void): T
-        OnLoad(id: EventID, callback: (instance: TSInstance)=>void): T
+        OnLoad(callback: (instance: TSInstance, created: bool)=>void): T
+        OnLoad(id: EventID, callback: (instance: TSInstance, created: bool)=>void): T
 
         OnSave(callback: (instance: TSInstance)=>void): T
         OnSave(id: EventID, callback: (instance: TSInstance)=>void): T
