@@ -9280,6 +9280,8 @@ declare interface TSLootItem {
 
     GetFakeRandomSuffix(): TSNumber<uint32>
     GetFakeRandomPropertyID(): TSNumber<uint32>
+
+    GetTemplate(): TSItemTemplate
 }
 
 declare interface TSLoot {
