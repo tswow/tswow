@@ -22,6 +22,12 @@ void TSLua::load_spell_methods(sol::state& state)
     LUA_FIELD(ts_spell, TSSpell, Cancel);
     LUA_FIELD(ts_spell, TSSpell, Finish);
 
+    LUA_FIELD(ts_spell, TSSpell, GetBasePoints);
+    LUA_FIELD(ts_spell, TSSpell, GetMaxAffectedTargetsOverride);
+    LUA_FIELD(ts_spell, TSSpell, GetRadiusModOverride);
+    LUA_FIELD(ts_spell, TSSpell, GetAuraStackAmountOverride);
+    LUA_FIELD(ts_spell, TSSpell, GetCritChanceOverride);
+
     auto ts_spell_destination = state.new_usertype<TSSpellDestination>("TSSpellDestination");
     LUA_FIELD(ts_spell_destination, TSSpellDestination, GetX);
     LUA_FIELD(ts_spell_destination, TSSpellDestination, GetY);

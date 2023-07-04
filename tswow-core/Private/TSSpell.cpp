@@ -254,6 +254,31 @@ TSNumber<uint32> TSSpell::GetGlyphSlot()
     return spell->m_glyphIndex;
 }
 
+int32 TSSpell::GetBasePoints(uint32 index)
+{
+    return spell->m_spellValue->EffectBasePoints[index];
+}
+
+uint32 TSSpell::GetMaxAffectedTargetsOverride()
+{
+    return spell->m_spellValue->MaxAffectedTargets;
+}
+
+float TSSpell::GetRadiusModOverride()
+{
+    return spell->m_spellValue->RadiusMod;
+}
+
+uint8 TSSpell::GetAuraStackAmountOverride()
+{
+    return spell->m_spellValue->AuraStackAmount;
+}
+
+float TSSpell::GetCritChanceOverride()
+{
+    return spell->m_spellValue->CriticalChance;
+}
+
 TS_CLASS_DEFINITION(TSSpellModifier, SpellModifier, m_mod)
 
 TSNumber<uint32> TSSpellModifier::GetOp()
