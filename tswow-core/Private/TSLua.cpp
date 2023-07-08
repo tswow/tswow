@@ -3,7 +3,9 @@
 #include "TSWorldObject.h"
 #include "TSGlobal.h"
 #include <regex>
+#if 0
 #include "document.hpp"
+#endif
 #include <fstream>
     
 static std::map<std::filesystem::path, sol::table> modules;
@@ -200,7 +202,8 @@ void TSLua::handle_error(sol::protected_function_result const& res)
             std::string str = buffer.str();
 
             // todo: sourcemap corrupts the heap, fix that before enabling this.
-            if (str.size() > 0 && false)
+#if 0
+            if (str.size() > 0)
             {
                 SourceMap::SrcMapDoc doc(str);
                 if (doc.map->getRowCount() < match.lineNo)
@@ -219,6 +222,7 @@ void TSLua::handle_error(sol::protected_function_result const& res)
                 std::string replacement = match.spaces + srcFile + ":" + std::to_string(srcLine);
                 what.replace(match.start, match.len, replacement);
             }
+#endif
         }
     }
     TS_LOG_ERROR("tswow.lua", "%s", what.c_str());

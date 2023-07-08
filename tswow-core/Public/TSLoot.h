@@ -24,7 +24,9 @@
 #include <functional>
 
 class TSGUID;
+class TSItemTemplate;
 struct LootItem;
+
 struct TC_GAME_API TSLootItem {
     LootItem* item;
     TSLootItem(LootItem* item);
@@ -46,6 +48,8 @@ struct TC_GAME_API TSLootItem {
     TSNumber<uint32> GetFakeRandomPropertyID();
     void SetFakeRandomSuffix(uint32 fakeRandomSuffix);
     void SetFakeRandomPropertyID(uint32 fakePropertyId);
+
+    TSItemTemplate GetTemplate();
 };
 
 struct Loot;

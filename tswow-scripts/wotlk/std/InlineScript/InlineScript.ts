@@ -102,9 +102,9 @@ export function getAny(owner: any, prefix: string,type: string, inlineType: Inli
                 .forEachChild(findLambda)
 
             if(func === undefined) {
-                throw new Error(
-                      `Did not find function body`
-                    + `(you **must** pass a direct lambda for this to work)`
+                throw new Error
+                (
+                      `Did not find function body, make sure you pass a direct lambda and don't use multiline comments/strings in the file (they cause bugs like this)`
                 )
             }
 

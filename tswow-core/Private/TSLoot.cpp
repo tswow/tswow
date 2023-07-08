@@ -24,6 +24,7 @@
 #include "ObjectGuid.h"
 #include "TSMath.h"
 #include "TSGUID.h"
+#include "TSItemTemplate.h"
 
 TSLoot::TSLoot(Loot *loot)
 {
@@ -234,3 +235,7 @@ void TSLootItem::SetFakeRandomPropertyID(uint32 fakePropertyId)
     item->fakeRandomPropertyId = fakePropertyId;
 }
 
+TSItemTemplate TSLootItem::GetTemplate()
+{
+    return GetItemTemplate(GetItemID());
+}

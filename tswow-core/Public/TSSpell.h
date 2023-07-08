@@ -53,6 +53,13 @@ public:
     TSObject  GetTarget();
     TSSpellInfo GetSpellInfo();
     TSNumber<uint32> GetTriggeredCastFlags();
+
+    int32 GetBasePoints(uint32 index);
+    uint32 GetMaxAffectedTargetsOverride();
+    float GetRadiusModOverride();
+    uint8 GetAuraStackAmountOverride();
+    float GetCritChanceOverride();
+
     bool IsTriggered();
     bool IsTriggeredByAura(uint32 aura);
     void SetAutoRepeat(bool repeat);

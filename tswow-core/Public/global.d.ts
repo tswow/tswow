@@ -5081,6 +5081,12 @@ declare interface TSSpell extends TSEntityProvider {
 
     GetGlyphSlot() : TSNumber<uint32>
 
+    GetBasePoints(index: uint32) : TSNumber<uint32>
+    GetMaxAffectedTargetsOverride(): TSNumber<uint32>
+    GetRadiusModOverride(): TSNumber<float>
+    GetAuraStackAmountOverride(): TSNumber<uint8>
+    GetCritChanceOverride(): TSNumber<float>
+
     /**
      * Sets the [Spell] to automatically repeat.
      *
@@ -9363,6 +9369,8 @@ declare interface TSLootItem {
 
     GetFakeRandomSuffix(): TSNumber<uint32>
     GetFakeRandomPropertyID(): TSNumber<uint32>
+
+    GetTemplate(): TSItemTemplate
 }
 
 declare interface TSLoot {
