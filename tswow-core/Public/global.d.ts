@@ -9610,6 +9610,7 @@ declare class TSDatabaseResult {
     GetFloat(index: int): TSNumber<float>
     GetDouble(index: int): TSNumber<double>
     GetString(index: int): string;
+    GetBinary(index: int): TSArray<uint8>;
 
     GetRow(): boolean;
     IsValid(): boolean;
@@ -9635,6 +9636,7 @@ declare interface TSPreparedStatementBase {
     SetGUIDNumber(index: uint8, value: TSGUID): this
 
     SetString(index: uint8, value: float): this
+    SetBinary(index: uint8, value: TSArray<uint8>): this
     Send(): TSDatabaseResult
     SendAsync(): void
     Send(connection: TSDatabaseConnection): TSDatabaseResult
