@@ -37,6 +37,11 @@ void TSLua::load_world_packet_methods(sol::state & state)
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadDouble, uint32);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadString, uint32);
 
+    ts_world_packet.set_function("GetBytes", [](TSWorldPacket& packet)
+        {
+            return sol::as_table(*packet.GetBytes().vec);
+        });
+
     ts_world_packet.set_function("WriteInt8", sol::overload(
         [](TSWorldPacket& pkt, int8 value) { pkt.WriteInt8(value); },
         [](TSWorldPacket& pkt, uint32 index, int8 value) { pkt.WriteInt8(index,value); }

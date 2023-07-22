@@ -36,6 +36,9 @@ public:
     void ts_constructor(WorldPacket *packet);
 
     ~TSWorldPacket();
+
+    TSArray<uint8> GetBytes();
+
     bool IsNull() { return packet == nullptr; }
     TSNumber<uint16> GetOpcode();
     TSNumber<uint32> GetSize();

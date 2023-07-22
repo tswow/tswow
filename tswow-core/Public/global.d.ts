@@ -3767,6 +3767,8 @@ declare class TSWorldPacket {
      */
     SetOpcode(opcode : uint32) : void
 
+    GetBytes(): TSArray<uint8>;
+
     ReadInt8(): TSNumber<int8>;
     ReadInt8(index: uint32): TSNumber<int8>;
     WriteInt8(value: int8): void
