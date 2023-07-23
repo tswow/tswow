@@ -88,6 +88,11 @@ public:
         return this->GetString(index);
 #endif
     }
+
+    TSArray<uint8> GetBinary(int index) final {
+        std::vector<uint8> raw = field[index].GetBinary();
+        return TSArray<uint8>(raw);
+    }
 };
 
 // todo: don't copypaste
@@ -146,6 +151,12 @@ public:
 #elif AZEROTHCORE
         return GetString(index));
 #endif
+
+    }
+
+    TSArray<uint8> GetBinary(int index) final {
+        std::vector<uint8> raw = field[index].GetBinary();
+        return TSArray<uint8>(raw);
     }
 };
 
@@ -350,6 +361,12 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetString(const uint8 index, s
 #elif AZEROTHCORE
     m_statement->SetData(index, value);
 #endif
+    return this;
+}
+
+TSPreparedStatementBase* TSPreparedStatementBase::SetBinary(const uint8 index, TSArray<uint8> value)
+{
+    m_statement->setBinary(index, *value.vec.get());
     return this;
 }
 

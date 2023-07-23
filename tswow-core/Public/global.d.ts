@@ -3779,6 +3779,8 @@ declare class TSWorldPacket {
      */
     SetOpcode(opcode : uint32) : void
 
+    GetBytes(): TSArray<uint8>;
+
     ReadInt8(): TSNumber<int8>;
     ReadInt8(index: uint32): TSNumber<int8>;
     WriteInt8(value: int8): void
@@ -3962,6 +3964,17 @@ declare interface TSMainThreadContext {
     GetPlayer(name: string): TSPlayer
     GetMap(mapid: uint32, instanceId?: uint32): TSMap
     SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>): void;
+}
+
+declare interface TSWeather
+{
+    GetState(): TSNumber<uint32>;
+    GetType(): TSNumber<uint32>;
+    GetIntensity(): TSNumber<float>;
+    SetWeather(type: WeatherType, intensity: float, triggerScripts?: bool): void;
+    GetZone(): TSNumber<uint32>;
+    GetScriptID(): TSNumber<uint32>;
+    GetMap(): TSMap;
 }
 
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
@@ -9197,6 +9210,12 @@ declare namespace _hidden {
 
         OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void): T
         OnCheckEncounter(id: EventID, callback: (map: TSMap, player: TSPlayer)=>void): T
+
+        OnWeatherChange(callback: (map: TSMap, weather: TSWeather)=>void): T
+        OnWeatherChange(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
+
+        OnWeatherUpdate(callback: (map: TSMap, weather: TSWeather)=>void): T
+        OnWeatherUpdate(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
     }
 
     export class Instance<T> {
@@ -9693,6 +9712,7 @@ declare class TSDatabaseResult {
     GetFloat(index: int): TSNumber<float>
     GetDouble(index: int): TSNumber<double>
     GetString(index: int): string;
+    GetBinary(index: int): TSArray<uint8>;
 
     GetRow(): boolean;
     IsValid(): boolean;
@@ -9718,6 +9738,7 @@ declare interface TSPreparedStatementBase {
     SetGUIDNumber(index: uint8, value: TSGUID): this
 
     SetString(index: uint8, value: float): this
+    SetBinary(index: uint8, value: TSArray<uint8>): this
     Send(): TSDatabaseResult
     SendAsync(): void
     Send(connection: TSDatabaseConnection): TSDatabaseResult

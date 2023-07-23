@@ -238,6 +238,21 @@ public:
       return def;
   }
 
+  TSArray<T>& sort(std::function<TSNumber<int>(T,T)> callback)
+  {
+    std::sort(vec->begin(),vec->end(), [&](T const& v1, T const& v2)
+    {
+      return callback(v1,v2) < 0;
+    });
+    return *this;
+  }
+
+  TSArray<T>& sort()
+  {
+    std::sort(vec->begin(),vec->end());
+    return *this;
+  }
+
   TSArray<T> filter(std::function<bool(T, size_t, TSArray<T> &)> p)
   {
     std::vector<T> result;

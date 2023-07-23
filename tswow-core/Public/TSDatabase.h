@@ -46,6 +46,8 @@ public:
 
     virtual std::string GetString(int index) = 0;
 
+    virtual TSArray<uint8> GetBinary(int index) = 0;
+
     virtual bool GetRow() = 0;
     virtual bool IsValid() = 0;
 };
@@ -131,6 +133,8 @@ public:
     TSPreparedStatementBase * SetDouble(const uint8 index, const double value);
 
     TSPreparedStatementBase * SetString(const uint8 index, std::string const& value);
+    TSPreparedStatementBase * SetBinary(const uint8 index, TSArray<uint8>);
+
     TSPreparedStatementBase * operator->() { return this; }
 private:
     PreparedStatementBase* m_statement;

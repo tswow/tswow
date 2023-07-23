@@ -18,24 +18,13 @@
 
 #include <math.h>
 #include <cinttypes>
-#include <random>
 #include <ctime>
 
-static struct MathClass {
-    std::mt19937_64 gen;
-    std::uniform_real_distribution<double> dist;
-
-    MathClass()
-    {
-        std::random_device rd;
-        gen = std::mt19937_64(rd());
-        dist = std::uniform_real_distribution<double>(0, 1.0);
-    }
+struct TC_GAME_API MathClass {
     constexpr MathClass* operator->()
     {
         return this;
     }
-
     TSNumber<double> atan2(double y, double x) { return ::atan2(y,x); }
     TSNumber<double> round(double a1) { return ::round(a1); }
     TSNumber<double> pow(double a1, double a2) { return ::pow(a1, a2); }
@@ -79,5 +68,7 @@ static struct MathClass {
         return fst > max_args ? fst : max_args;
     }
 
-    TSNumber<double> random() { return dist(gen); }
-} Math;
+    TSNumber<double> random();
+};
+
+static MathClass Math;

@@ -71,3 +71,4 @@
 #include "TSNumber.h"
 #include "TSFactionTemplate.h"
 #include "TSGUID.h"
+#include "TSWeather.h"

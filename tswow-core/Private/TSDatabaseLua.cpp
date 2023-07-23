@@ -20,6 +20,10 @@ void TSLua::load_database_methods(sol::state& state)
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetRow);
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetString);
     LUA_FIELD(ts_database_result, TSDatabaseResult, GetGUIDNumber);
+    ts_database_result.set_function("GetBinary", [](TSDatabaseResult& res, int index)
+        {
+            return sol::as_table(*res.GetBinary(index).vec);
+        });
 
     auto ts_prepared_statement_world = state.new_usertype<TSPreparedStatementWorld>("TSPreparedStatementWorld");
     auto ts_prepared_statement_characters = state.new_usertype<TSPreparedStatementCharacters>("TSPreparedStatementCharacters");
@@ -44,6 +48,18 @@ void TSLua::load_database_methods(sol::state& state)
     LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetDouble);
     LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetString);
     LUA_FIELD(ts_prepared_statement_base, TSPreparedStatementBase, SetGUIDNumber);
+    ts_prepared_statement_base.set_function("SetBinary", [](TSPreparedStatementBase& stmt, const uint8 index, sol::table table)
+        {
+            // todo: this is awful, can we even do something different without overhauling the table system?
+            TSArray<uint8> tsbytes;
+            tsbytes.reserve(table.size());
+            for (auto const& value : table)
+            {
+                tsbytes.push(value.second.as<uint8>());
+            }
+            stmt.SetBinary(index, tsbytes);
+            return stmt;
+        });
     
     ts_prepared_statement_base.set_function("Send", sol::overload(
           [](TSPreparedStatementBase& stmnt) { return stmnt.Send(); }

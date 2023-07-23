@@ -85,6 +85,11 @@ export const DBFiledTypes = {
           'bigint(20)'
         , 'GetGUIDNumber'
         , 'SetGUIDNumber'
+    ),
+    'TSArray<uint8>': new DBFieldType(
+          'BLOB'
+        , 'GetBinary'
+        , 'SetBinary'
     )
 } as const
 

@@ -2971,11 +2971,22 @@ export class Emitter {
     processReturnStatement(node: ts.ReturnStatement): void {
         const typeReturn = this.resolver.getOrResolveTypeOfAsTypeNode(node.expression);
         const functionDeclaration = (<ts.FunctionDeclaration>(this.scope[this.scope.length - 1]));
-        let functionReturn = functionDeclaration.type || this.resolver.getOrResolveTypeOfAsTypeNode(functionDeclaration);
-        if (functionReturn.kind === ts.SyntaxKind.FunctionType) {
-            functionReturn = (<ts.FunctionTypeNode>functionReturn).type;
-        } else if (!functionDeclaration.type) {
-            // if it is not function then use "any"
+
+        let functionReturn = functionDeclaration.type;
+        // @tswow: solves some bizarre error that happens when adding the TSArray::sort method
+        try
+        {
+            if(!functionReturn)
+                functionReturn = this.resolver.getOrResolveTypeOfAsTypeNode(functionDeclaration);
+
+            if (functionReturn.kind === ts.SyntaxKind.FunctionType) {
+                functionReturn = (<ts.FunctionTypeNode>functionReturn).type;
+            } else if (!functionDeclaration.type) {
+                // if it is not function then use "any"
+                functionReturn = null;
+            }
+        } catch(err)
+        {
             functionReturn = null;
         }
 
