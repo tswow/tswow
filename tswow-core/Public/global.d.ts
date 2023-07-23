@@ -3954,6 +3954,17 @@ declare interface TSMainThreadContext {
     SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>): void;
 }
 
+declare interface TSWeather
+{
+    GetState(): TSNumber<uint32>;
+    GetType(): TSNumber<uint32>;
+    GetIntensity(): TSNumber<float>;
+    SetWeather(type: WeatherType, intensity: float, triggerScripts?: bool): void;
+    GetZone(): TSNumber<uint32>;
+    GetScriptID(): TSNumber<uint32>;
+    GetMap(): TSMap;
+}
+
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsNull() : bool
     HasInstanceScript(): bool
@@ -9116,6 +9127,12 @@ declare namespace _hidden {
 
         OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void): T
         OnCheckEncounter(id: EventID, callback: (map: TSMap, player: TSPlayer)=>void): T
+
+        OnWeatherChange(callback: (map: TSMap, weather: TSWeather)=>void): T
+        OnWeatherChange(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
+
+        OnWeatherUpdate(callback: (map: TSMap, weather: TSWeather)=>void): T
+        OnWeatherUpdate(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
     }
 
     export class Instance<T> {

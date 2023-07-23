@@ -41,6 +41,7 @@
 #include "TSArray.h"
 #include "TSDamageInfo.h"
 #include "TSSpell.h"
+#include "TSWeather.h"
 
 #include <cstdint>
 
@@ -687,6 +688,8 @@ struct TSEvents
         ID_EVENT(OnGameObjectCreate, TSMap, TSGameObject, TSMutable<bool,bool>)
         ID_EVENT(OnGameObjectRemove, TSMap, TSGameObject)
         ID_EVENT(OnCheckEncounter, TSMap, TSPlayer)
+        ID_EVENT(OnWeatherUpdate, TSMap, TSWeather)
+        ID_EVENT(OnWeatherChange, TSMap, TSWeather)
     } Map;
 
     struct BattlegroundEvents : public TSMappedEventsDirect
