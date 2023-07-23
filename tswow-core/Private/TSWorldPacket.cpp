@@ -258,6 +258,40 @@ TSNumber<double> TSWorldPacket::ReadDouble()
     (*packet) >> value;
     return value;
 }
+
+TSArray<uint8> TSWorldPacket::ReadBytes(uint32 index, uint32 size)
+{
+    TSArray<uint8> arr;
+    if (size == 0)
+    {
+        return arr;
+    }
+    arr.vec->resize(size);
+    memcpy(arr.vec->data(), packet->contents() + index, size);
+    return arr;
+}
+
+TSArray<uint8> TSWorldPacket::ReadBytes(uint32 size)
+{
+    TSArray<uint8> arr;
+    if (size == 0)
+    {
+        return arr;
+    }
+    arr.vec->resize(size);
+    packet->read(arr.vec->data(), size);
+}
+
+void TSWorldPacket::WriteBytes(uint32 index, TSArray<uint8>& vec)
+{
+    packet->put(index, vec.vec->data(), vec.get_length());
+}
+
+void TSWorldPacket::WriteBytes(TSArray<uint8>& vec)
+{
+    packet->append(vec.vec->data(), vec.get_length());
+}
+
 void TSWorldPacket::WriteDouble(uint32 index, double value)
 {
     packet->put<double>(index, value);

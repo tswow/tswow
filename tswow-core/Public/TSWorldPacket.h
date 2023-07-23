@@ -100,6 +100,11 @@ public:
     std::string ReadString(uint32 index);
     void WriteString(std::string const& value);
     void WriteString(uint32 index, std::string const& value);
+
+    TSArray<uint8> ReadBytes(uint32 index, uint32 size);
+    TSArray<uint8> ReadBytes(uint32 size);
+    void WriteBytes(uint32 index, TSArray<uint8>&);
+    void WriteBytes(TSArray<uint8>&);
 };
 
 namespace WorldPackets {
