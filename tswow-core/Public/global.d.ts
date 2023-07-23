@@ -3769,6 +3769,8 @@ declare class TSWorldPacket {
 
     GetBytes(): TSArray<uint8>;
 
+    IsEmpty(): boolean;
+
     ReadInt8(): TSNumber<int8>;
     ReadInt8(index: uint32): TSNumber<int8>;
     WriteInt8(value: int8): void

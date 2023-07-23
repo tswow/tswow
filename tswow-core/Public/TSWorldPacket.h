@@ -41,6 +41,7 @@ public:
     TSArray<uint8> GetBytes();
 
     bool IsNull() { return packet == nullptr; }
+    bool IsEmpty();
     TSNumber<uint16> GetOpcode();
     TSNumber<uint32> GetSize();
     void SetOpcode(uint32 opcode);

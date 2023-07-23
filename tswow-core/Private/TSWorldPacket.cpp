@@ -349,12 +349,22 @@ void TSWorldPacket::ts_constructor(WorldPacket *packet)
     this->owner = false;
 }
 
+bool TSWorldPacket::IsEmpty()
+{
+    return packet->empty();
+}
+
 TSArray<uint8> TSWorldPacket::GetBytes()
 {
-    std::vector<uint8> v;  (packet->contents(), packet->size());
-    v.resize(packet->size());
-    memcpy(v.data(), packet->contents(), packet->size());
-    return TSArray<uint8>(v);
+    if (packet->empty())
+    {
+        return TSArray<uint8>();
+    }
+
+    TSArray<uint8> arr;
+    arr.vec->resize(packet->size());
+    memcpy(arr.vec->data(), packet->contents(), packet->size());
+    return arr;
 }
 
 void TSWorldPacket::ts_constructor()
