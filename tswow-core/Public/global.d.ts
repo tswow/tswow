@@ -3781,6 +3781,8 @@ declare class TSWorldPacket {
 
     GetBytes(): TSArray<uint8>;
 
+    IsEmpty(): boolean;
+
     ReadInt8(): TSNumber<int8>;
     ReadInt8(index: uint32): TSNumber<int8>;
     WriteInt8(value: int8): void
@@ -3835,6 +3837,12 @@ declare class TSWorldPacket {
     ReadString(index: uint32): string
     WriteString(value: string): void
     WriteString(index: uint32, value: string): void
+
+    WriteBytes(index: uint32, value: TSArray<uint8>): void
+    WriteBytes(value: TSArray<uint8>): void
+
+    ReadBytes(index: uint32, size: uint32): TSArray<uint8>
+    ReadBytes(size: uint32): TSArray<uint8>
 }
 
 declare interface TSWorldStatePacket {

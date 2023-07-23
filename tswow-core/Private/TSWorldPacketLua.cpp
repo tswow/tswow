@@ -24,6 +24,7 @@ void TSLua::load_world_packet_methods(sol::state & state)
     LUA_FIELD(ts_world_packet, TSWorldPacket, GetOpcode);
     LUA_FIELD(ts_world_packet, TSWorldPacket, GetSize);
     LUA_FIELD(ts_world_packet, TSWorldPacket, SetOpcode);
+    LUA_FIELD(ts_world_packet, TSWorldPacket, IsEmpty);
 
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadInt8, uint32);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadUInt8, uint32);
@@ -36,6 +37,34 @@ void TSLua::load_world_packet_methods(sol::state & state)
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadFloat, uint32);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadDouble, uint32);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadString, uint32);
+
+    ts_world_packet.set_function("WriteBytes", sol::overload(
+        [](TSWorldPacket& packet, sol::table table, uint32 index)
+        {
+            for (auto const& value : table)
+            {
+                packet.WriteUInt8(index++,value.second.as<uint8>());
+            }
+        },
+        [](TSWorldPacket& packet, sol::table table)
+        {
+            for (auto const& value : table)
+            {
+                packet.WriteUInt8(value.second.as<uint8>());
+            }
+        }
+    ));
+
+    ts_world_packet.set_function("ReadBytes", sol::overload(
+        [](TSWorldPacket& packet, uint32 index, uint32 size)
+        {
+            return sol::as_table(packet.ReadBytes(index,size).vec);
+        },
+        [](TSWorldPacket& packet, uint32 size)
+        {
+            return sol::as_table(packet.ReadBytes(size).vec);
+        }
+    ));
 
     ts_world_packet.set_function("GetBytes", [](TSWorldPacket& packet)
         {

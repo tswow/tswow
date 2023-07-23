@@ -258,6 +258,40 @@ TSNumber<double> TSWorldPacket::ReadDouble()
     (*packet) >> value;
     return value;
 }
+
+TSArray<uint8> TSWorldPacket::ReadBytes(uint32 index, uint32 size)
+{
+    TSArray<uint8> arr;
+    if (size == 0)
+    {
+        return arr;
+    }
+    arr.vec->resize(size);
+    memcpy(arr.vec->data(), packet->contents() + index, size);
+    return arr;
+}
+
+TSArray<uint8> TSWorldPacket::ReadBytes(uint32 size)
+{
+    TSArray<uint8> arr;
+    if (size == 0)
+    {
+        return arr;
+    }
+    arr.vec->resize(size);
+    packet->read(arr.vec->data(), size);
+}
+
+void TSWorldPacket::WriteBytes(uint32 index, TSArray<uint8>& vec)
+{
+    packet->put(index, vec.vec->data(), vec.get_length());
+}
+
+void TSWorldPacket::WriteBytes(TSArray<uint8>& vec)
+{
+    packet->append(vec.vec->data(), vec.get_length());
+}
+
 void TSWorldPacket::WriteDouble(uint32 index, double value)
 {
     packet->put<double>(index, value);
@@ -349,12 +383,22 @@ void TSWorldPacket::ts_constructor(WorldPacket *packet)
     this->owner = false;
 }
 
+bool TSWorldPacket::IsEmpty()
+{
+    return packet->empty();
+}
+
 TSArray<uint8> TSWorldPacket::GetBytes()
 {
-    std::vector<uint8> v;  (packet->contents(), packet->size());
-    v.resize(packet->size());
-    memcpy(v.data(), packet->contents(), packet->size());
-    return TSArray<uint8>(v);
+    if (packet->empty())
+    {
+        return TSArray<uint8>();
+    }
+
+    TSArray<uint8> arr;
+    arr.vec->resize(packet->size());
+    memcpy(arr.vec->data(), packet->contents(), packet->size());
+    return arr;
 }
 
 void TSWorldPacket::ts_constructor()
