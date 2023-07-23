@@ -5276,6 +5276,8 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
 
     IsBehind(obj: TSWorldObject): bool
 
+    IsOutdoors(): bool
+
     HasCollision(id: string);
     AddCollision(id: string, range: float, minDelay: uint32, maxHits: uint32, cb: TSCollisionCallback)
     GetCollision(id: string): TSCollisionEntry
