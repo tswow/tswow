@@ -138,6 +138,8 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(group_events, GroupEvents, OnDisband);
 
     auto unit_events = state.new_usertype<TSEvents::UnitEvents>("UnitEvents");
+    LUA_HANDLE(unit_events, UnitEvents, OnOutdoorsChanged);
+    LUA_HANDLE(unit_events, UnitEvents, OnLiquidStatusChanged);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMissChance);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcHeal);
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageEarly);

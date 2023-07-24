@@ -65,6 +65,7 @@ declare const enum Class /** @realType: uint8 */ {
 }
 declare type ClassID = Class | uint8
 
+declare const enum LiquidStatus {} /** Map.h:ZLiquidStatus */
 declare const enum EnchantmentSlot {} /** ItemDefines.h:EnchantmentSlot */
 declare const enum InventoryResult {} /** ItemDefines.h:InventoryResult */
 declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
@@ -5277,6 +5278,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     IsBehind(obj: TSWorldObject): bool
 
     IsOutdoors(): bool
+    GetLiquidStatus(): LiquidStatus
 
     HasCollision(id: string);
     AddCollision(id: string, range: float, minDelay: uint32, maxHits: uint32, cb: TSCollisionCallback)
@@ -8703,6 +8705,9 @@ declare namespace _hidden {
     }
 
     export class Unit {
+        OnLiquidStatusChanged(callback: (unit: TSUnit, newStatus: TSMutableNumber<LiquidStatus>) => void);
+        OnOutdoorsChanged(callback: (unit: TSUnit, newStatus: TSMutable<boolean,boolean>) => void);
+
         OnCalcMissChance(callback: (unit: TSUnit, chance: TSMutableNumber<float>)=>void)
         OnCalcHeal(callback: (healer: TSUnit, target: TSUnit, heal: TSMutableNumber<uint32>)=>void)
         OnMeleeDamageEarly(callback: (
