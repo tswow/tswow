@@ -1,4 +1,8 @@
-# TSWoW
+# TSWoW - Epoch Edition
+
+Project Epoch is built with the modding framework TSWoW (TypeScript WoW) this repo is simply a fork of that project with the occasional extra function that needs to be merged upstream or epoch specific additional functionality. All credit for this basis should go to TSWoW. Please see below for further details. Any other TS-WoW project is free to cherry pick or grab from this.
+
+-----------------------------
 
 TSWoW (TypeScript WoW) is a **free** modding framework, mod loader and integrated development environment for the World of Warcraft: Wrath of the Lich King (WotLK) expansion build around the [TrinityCore](https://github.com/trinitycore/trinitycore) emulator.
 
