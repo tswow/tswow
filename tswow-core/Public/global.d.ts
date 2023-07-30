@@ -9669,7 +9669,7 @@ declare interface TSPreparedStatementBase {
 
     SetGUIDNumber(index: uint8, value: TSGUID): this
 
-    SetString(index: uint8, value: float): this
+    SetString(index: uint8, value: string): this
     SetBinary(index: uint8, value: TSArray<uint8>): this
     Send(): TSDatabaseResult
     SendAsync(): void
