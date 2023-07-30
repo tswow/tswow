@@ -49,6 +49,9 @@ public:
     operator TSWorldObject() const { return obj; }
     operator bool() const { return obj != nullptr; }
 
+    bool IsOutdoors();
+    TSNumber<uint32> GetLiquidStatus();
+
     TSWorldObject* operator->() { return this;}
     TSArray<TSCreature> GetCreaturesInRange(float range, uint32 entry, uint32 hostile, uint32 dead);
     TSArray<TSPlayer> GetPlayersInRange(float range, uint32 hostile, uint32 dead);

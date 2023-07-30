@@ -22,6 +22,7 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD_OVERLOAD_RET_0_4(ts_worldobject, TSWorldObject, GetNearestCreature, float, uint32, uint32, uint32);
 
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistance);
+    LUA_FIELD(ts_worldobject, TSWorldObject, IsOutdoors);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistanceToPoint);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistance2d);
     LUA_FIELD(ts_worldobject, TSWorldObject, GetDistanceToPoint2d);

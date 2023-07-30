@@ -1431,3 +1431,13 @@ bool TSWorldObject::IsBehind(TSWorldObject o)
 {
     return !o.obj->HasInArc(static_cast<float>(M_PI), obj);
 }
+
+bool TSWorldObject::IsOutdoors()
+{
+    return obj->IsOutdoors();
+}
+
+TSNumber<uint32> TSWorldObject::GetLiquidStatus()
+{
+    return static_cast<uint32>(obj->GetLiquidStatus());
+}
