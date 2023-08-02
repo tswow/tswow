@@ -37,6 +37,10 @@ declare const enum Gender /**@realType:uint8 */ {
     FEMALE = 1
 }
 
+interface Array<T> {
+    reserve(amount: uint32): void
+}
+
 declare const enum Race /** @realType: uint8 */ {
     HUMAN    = 1,
     ORC      = 2,
