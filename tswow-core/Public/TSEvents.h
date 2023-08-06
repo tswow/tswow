@@ -455,6 +455,11 @@ struct TSEvents
         EVENT(OnSetTarget, TSUnit, TSNumber<uint64> new_target, TSNumber<uint64> old_target)
         EVENT(OnLiquidStatusChanged, TSUnit, TSMutableNumber<uint32> newStatus);
         EVENT(OnOutdoorsChanged, TSUnit, TSMutable<bool,bool> isOutdoors);
+
+        /** @epoch-start */
+        EVENT(OnInitPossessCreateSpells, TSUnit, TSNumber<uint8>, TSMutableNumber<uint32> spell_id);
+        EVENT(OnInitCharmCreateSpells, TSUnit, TSNumber<uint8>, TSMutableNumber<uint32> spell_id);
+        /** @epoch-end */
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
@@ -660,6 +665,10 @@ struct TSEvents
             , TSMutableNumber<uint32>
             , TSPlayer killer
         )
+
+        /** @epoch-start */
+        ID_EVENT(OnCheckHasSpell, TSCreature creature, TSNumber<uint32>, TSMutable<bool, bool>)
+        /** @epoch-end */
     } Creature;
 
     struct GameObjectEvents : public TSMappedEventsRegistry

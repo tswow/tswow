@@ -3311,6 +3311,16 @@ declare interface TSCreature extends TSUnit {
      * Updates max hp, hp, and stats
      */
     UpdateLevelDependantStats(): void;
+
+    /** @epoch-start */
+    IsMoving(): boolean;
+    SetCombatMovement(allow: boolean): void;
+    CanNotReachTarget(): boolean;
+    GetThreatListSorted(): TSArray<TSUnit>
+    ResetEncounterPhase(): void;
+    GetEncounterPhase(): TSNumber<uint16>;
+    SetEncounterPhase(phase: uint16): void;
+    /** @epoch-end */
 }
 
 declare interface TSAura extends TSEntityProvider {
@@ -7441,9 +7451,23 @@ declare interface TSUnit extends TSWorldObject {
     AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : SpellSchoolMask | uint32, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
 
+    /** @epoch-start */
     GetWeaponDamageRange(attType: uint8, type: uint8, damageIndex: uint8);
     GetTotalAttackPowerValue(attType: uint8);
     SpellBaseDamageBonusDone(schoolMask: uint32);
+    IsWithinMeleeRange(target: TSUnit): boolean;
+    IsTotem(): boolean;
+    IsPet(): boolean;
+    IsHunterPet(): boolean;
+    StopMoving(): void;
+    InterruptNonMeleeSpells(withDelayed: boolean, spellid: uint32, withInstant: boolean);
+    IsNonMeleeSpellCast(withDelayed: boolean, skipChanneled: boolean, skipAutorepeat: boolean, isAutoshoot: boolean, skipInstant: boolean): boolean;
+    IsImmuneToSpell(spellInfo: TSSpellInfo, caster: TSWorldObject, requireImmunityPurgesEffectAttribute: boolean): boolean;
+    CanHaveThreatList(): boolean;
+    IsPossessed(): boolean;
+    IsPossessedByPlayer(): boolean;
+    StartCooldownExplicit(spell: uint32, cooldownMs: uint32, forcePacket: boolean): void;
+    /** @epoch-end */
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -7710,6 +7734,13 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
+
+    /** @epoch-start */
+    HasAura(auraType: uint32): boolean
+    IsPositive(): boolean
+    GetMinRange(positive: boolean): TSNumber<float>
+    GetMaxRange(positive: boolean): TSNumber<float>
+    /** @epoch-end */
 }
 
 declare class TSSpellEffectInfo {
@@ -8708,6 +8739,11 @@ declare namespace _hidden {
           , gain: TSMutableNumber<uint32>
           , killer: TSPlayer
         )=>void)
+
+        /** @epoch-start */
+        OnCheckHasSpell(callback: (creature: TSCreature, spell: TSNumber<uint32>, has_spell: TSMutable<bool, bool>) => void)
+        OnCheckHasSpell(id: EventID, callback: (creature: TSCreature, spell: TSNumber<uint32>, has_spell: TSMutable<bool, bool>) => void)
+        /** @epoch-end */
     }
 
     export class Quest<T> {
@@ -8867,6 +8903,11 @@ declare namespace _hidden {
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
+
+        /** @epoch-start */
+        OnInitPossessCreateSpells(callback: (me: TSUnit, index: TSNumber<uint8>, spell_id: TSMutableNumber<uint32>) => void);
+        OnInitCharmCreateSpells(callback: (me: TSUnit, index: TSNumber<uint8>, spell_id: TSMutableNumber<uint32>) => void);
+        /** @epoch-end */
     }
 
     export class Battleground<T> {

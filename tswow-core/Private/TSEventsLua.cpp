@@ -160,6 +160,10 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnEnterCombatWith);
     LUA_HANDLE(unit_events, UnitEvents, OnExitCombatWith);
     LUA_HANDLE(unit_events, UnitEvents, OnSetTarget);
+    /** @epoch-start */
+    LUA_HANDLE(unit_events, UnitEvents, OnInitPossessCreateSpells);
+    LUA_HANDLE(unit_events, UnitEvents, OnInitCharmCreateSpells);
+    /** @epoch-end */
 
     auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);
@@ -273,6 +277,10 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcGain);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcBaseGain);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMovementInform);
+
+    /** @epoch-start */
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCheckHasSpell);
+    /** @epoch-end */
 
     auto gameobject_events = state.new_usertype<TSEvents::GameObjectEvents>("GameObjectEvents");
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnUpdate);

@@ -131,6 +131,13 @@ public:
     TSNumber<uint32> GetTalentCost();
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
+
+    /** epoch-start */
+    bool HasAura(uint32 auraType);
+    bool IsPositive();
+    TSNumber<float> GetMinRange(bool positive = false);
+    TSNumber<float> GetMaxRange(bool positive = false);
+    /** epoch-end */
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);

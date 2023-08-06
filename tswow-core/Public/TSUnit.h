@@ -233,10 +233,25 @@ public:
     TSNumber<uint32> GetArmor();
     void SetResistance(uint32 school, int32 val);
     void SetArmor(int32 val);
+
+    /** @epoch-start */
     float GetWeaponDamageRange(uint8 attType, uint8 type, uint8 damageIndex = 0);
     float GetTotalAttackPowerValue(uint8 attType);
     int32 SpellBaseDamageBonusDone(uint32 schoolMask);
+    bool IsWithinMeleeRange(TSUnit target);
+    bool IsTotem();
+    bool IsPet();
+    bool IsHunterPet();
+    void StopMoving();
+    void InterruptNonMeleeSpells(bool withDelayed, uint32 spellid = 0, bool withInstant = true);
+    bool IsNonMeleeSpellCast(bool withDelayed, bool skipChanneled = false, bool skipAutorepeat = false, bool isAutoshoot = false, bool skipInstant = true);
+    bool IsImmuneToSpell(TSSpellInfo spellInfo, TSWorldObject caster, bool requireImmunityPurgesEffectAttribute = false);
+    bool CanHaveThreatList();
+    bool IsPossessed();
+    bool IsPossessedByPlayer();
+    void StartCooldownExplicit(uint32 spell, uint32 cooldownMs, bool forcePacket);
     // uint32 SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype);
+    /** @epoch-end*/
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

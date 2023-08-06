@@ -2659,3 +2659,75 @@ int32 TSUnit::SpellBaseDamageBonusDone(uint32 schoolMask)
 {
     return unit->SpellBaseDamageBonusDone(static_cast<SpellSchoolMask>(schoolMask));
 }
+
+/** @epoch-start */
+bool TSUnit::IsWithinMeleeRange(TSUnit target)
+{
+    return unit->IsWithinMeleeRange(target);
+}
+
+bool TSUnit::IsTotem()
+{
+    return unit->IsTotem();
+}
+
+bool TSUnit::IsPet()
+{
+    return unit->IsPet();
+}
+
+bool TSUnit::IsHunterPet()
+{
+    return unit->IsHunterPet();
+}
+
+void TSUnit::StopMoving()
+{
+    unit->StopMoving();
+}
+
+void TSUnit::InterruptNonMeleeSpells(bool withDelayed, uint32 spell_id, bool withInstant)
+{
+    unit->InterruptNonMeleeSpells(withDelayed, spell_id, withInstant);
+}
+
+bool TSUnit::IsNonMeleeSpellCast(bool withDelayed, bool skipChanneled, bool skipAutorepeat, bool isAutoshoot, bool skipInstant)
+{
+    return unit->IsNonMeleeSpellCast(withDelayed, skipChanneled, skipAutorepeat, isAutoshoot, skipInstant);
+}
+
+bool TSUnit::IsImmuneToSpell(TSSpellInfo spellInfo, TSWorldObject caster, bool requireImmunityPurgesEffectAttribute)
+{
+    return unit->IsImmunedToSpell(spellInfo->info, caster->obj, requireImmunityPurgesEffectAttribute);
+}
+
+bool TSUnit::CanHaveThreatList()
+{
+    return unit->CanHaveThreatList();
+}
+
+bool TSUnit::IsPossessed()
+{
+    return unit->isPossessed();
+}
+
+bool TSUnit::IsPossessedByPlayer()
+{
+    return unit->isPossessedByPlayer();
+}
+
+void TSUnit::StartCooldownExplicit(uint32 spell, uint32 cooldownMs, bool forcePacket)
+{
+    unit->GetSpellHistory()->AddCooldown(spell, 0, std::chrono::milliseconds(cooldownMs));
+
+    if (forcePacket)
+    {
+        if (Player* playerOwner = unit->GetCharmerOrOwnerPlayerOrPlayerItself())
+        {
+            WorldPacket spellCooldown;
+            unit->GetSpellHistory()->BuildCooldownPacket(spellCooldown, SPELL_COOLDOWN_FLAG_NONE, spell, cooldownMs);
+            playerOwner->SendDirectMessage(&spellCooldown);
+        }
+    }
+}
+/** @epoch-end */

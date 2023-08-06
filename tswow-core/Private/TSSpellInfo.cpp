@@ -498,3 +498,25 @@ TSNumber<uint32> GetTalentCost(uint32 entry)
 {
     return GetTalentSpellCost(entry);
 }
+
+/** epoch-start */
+bool TSSpellInfo::HasAura(uint32 auraType)
+{
+    return info->HasAura(static_cast<AuraType>(auraType));
+}
+
+TSNumber<float> TSSpellInfo::GetMinRange(bool positive /*= false*/)
+{
+    return info->GetMinRange(positive);
+}
+
+TSNumber<float> TSSpellInfo::GetMaxRange(bool positive /*= false*/)
+{
+    return info->GetMaxRange(positive, nullptr, nullptr);
+}
+
+bool TSSpellInfo::IsPositive()
+{
+    return info->IsPositive();
+}
+/** epoch-end */

@@ -1435,3 +1435,58 @@ TSNumber<float> TSCreature::GetThreat(TSUnit target, bool includeOffline)
     return creature->GetThreatManager().GetThreat(target, includeOffline);
 }
 
+/** @epoch-start */
+bool TSCreature::IsMoving()
+{
+    return creature->isMoving();
+}
+
+void TSCreature::SetCombatMovement(bool allow)
+{
+    if (!creature->IsAIEnabled()) return;
+
+    auto ai = creature->AI();
+    if (SmartAI * sai = dynamic_cast<SmartAI*>(ai))
+    {
+        sai->SetCombatMove(allow);
+    }
+}
+
+bool TSCreature::CanNotReachTarget()
+{
+    return creature->CanNotReachTarget();
+}
+
+/**
+ * Returns all [Unit]s in the [Creature]'s threat list.
+ *
+ * @return table targets
+ */
+TSArray<TSUnit> TSCreature::GetThreatListSorted()
+{
+    TSArray <TSUnit> tbl;
+
+    for (ThreatReference const* ref : creature->GetThreatManager().GetSortedThreatList())
+    {
+        Unit* target = ref->GetVictim();
+        if (target) tbl.push(TSUnit(target));
+    }
+
+    return tbl;
+}
+
+void TSCreature::SetEncounterPhase(uint16 phase)
+{
+    this->SetUInt("internal-creature-encounter-phase", phase);
+}
+
+void TSCreature::ResetEncounterPhase()
+{
+    this->SetEncounterPhase(0);
+}
+
+TSNumber<uint16> TSCreature::GetEncounterPhase()
+{
+    return this->GetUInt("internal-creature-encounter-phase", 0);
+}
+/** @epoch-end */
