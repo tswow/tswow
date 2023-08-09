@@ -1489,4 +1489,9 @@ TSNumber<uint16> TSCreature::GetEncounterPhase()
 {
     return this->GetUInt("internal-creature-encounter-phase", 0);
 }
+
+void TSCreature::SetInterruptImmune(bool apply)
+{
+    creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, apply);
+}
 /** @epoch-end */

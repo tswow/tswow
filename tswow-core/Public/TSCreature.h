@@ -153,6 +153,7 @@ public:
     TSNumber<uint16> GetEncounterPhase();
     void SetEncounterPhase(uint16 phase);
     void ResetEncounterPhase();
+    void SetInterruptImmune(bool apply);
     /** @epoch-end */
 
 private:

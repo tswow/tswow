@@ -3320,6 +3320,7 @@ declare interface TSCreature extends TSUnit {
     ResetEncounterPhase(): void;
     GetEncounterPhase(): TSNumber<uint16>;
     SetEncounterPhase(phase: uint16): void;
+    SetInterruptImmune(apply: boolean): void;
     /** @epoch-end */
 }
 
@@ -4813,7 +4814,7 @@ declare interface TSBossInfo {
 
 declare interface TSInstance extends TSMap {
     IsNull(): bool;
-    SaveToDB(): void;
+    SaveInstanceToDB(): void;
     IsEncounterInProgress(): bool;
     GetEncounterCount(): TSNumber<uint32>
     GetObjectGUID(type: uint32): TSNumber<uint64>
