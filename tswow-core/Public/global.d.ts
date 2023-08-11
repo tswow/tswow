@@ -4790,7 +4790,7 @@ declare interface TSBossInfo {
 
 declare interface TSInstance extends TSMap {
     IsNull(): bool;
-    SaveToDB(): void;
+    SaveInstanceToDB(): void;
     IsEncounterInProgress(): bool;
     GetEncounterCount(): TSNumber<uint32>
     GetObjectGUID(type: uint32): TSNumber<uint64>
