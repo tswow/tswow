@@ -850,12 +850,11 @@ struct TSEvents
         ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
     } Quest;
-#if TRINITY
+
     struct AreaTriggerEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(AreaTriggerEvents)
-        ID_EVENT(OnTrigger, TSNumber<uint8>, TSPlayer, TSMutable<bool,bool>)
+        ID_EVENT(OnTrigger, TSAreaTriggerEntry, TSPlayer, TSMutable<bool,bool>)
     } AreaTrigger;
-#endif
 
     struct GameEventsEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(GameEventsEvents)
