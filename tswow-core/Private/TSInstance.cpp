@@ -292,3 +292,33 @@ bool TSBossInfo::IsWithinBoundary(TSWorldObject obj)
 #endif
     return true;
 }
+
+TSNumber<uint32> TSInstance::GetInstanceData(uint32 id)
+{
+    return m_script->GetData(id);
+}
+
+void TSInstance::SetInstanceData(uint32 id, uint32 data)
+{
+    m_script->SetData(id, data);
+}
+
+TSNumber<uint64> TSInstance::GetInstanceData64(uint32 id)
+{
+    return m_script->GetData64(id);
+}
+
+void TSInstance::SetInstanceData64(uint32 id, uint64 data)
+{
+    m_script->SetData64(id, data);
+}
+
+TSGUID TSInstance::GetInstanceGuidData(uint32 id)
+{
+    return TSGUID(m_script->GetGuidData(id));
+}
+
+void TSInstance::SetInstanceGuidData(uint32 id, TSGUID data)
+{
+    m_script->SetGuidData(id, data->asGUID());
+}

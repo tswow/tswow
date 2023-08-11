@@ -73,4 +73,10 @@ public:
     TSNumber<uint32> GetTeamIDInInstance();
     TSNumber<uint32> GetFactionInInstance();
     TSBossInfo GetBossInfo(uint32 id);
+    TSNumber<uint32> GetInstanceData(uint32 id);
+    void SetInstanceData(uint32 id, uint32 data);
+    TSNumber<uint64> GetInstanceData64(uint32 id);
+    void SetInstanceData64(uint32 id, uint64 data);
+    TSGUID GetInstanceGuidData(uint32 id);
+    void SetInstanceGuidData(uint32 id, TSGUID data);
 };

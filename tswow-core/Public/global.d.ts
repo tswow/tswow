@@ -4840,6 +4840,12 @@ declare interface TSInstance extends TSMap {
     GetFactionInInstance(): TSNumber<uint32>
     GetBossInfo(id: uint32): TSBossInfo
     RemoveFromMap(player:TSPlayer, deleteFromWorld: boolean): void
+    GetInstanceData(): TSNumber<uint32>;
+    SetInstanceData(id: uint32, data: uint32): void;
+    GetInstanceData64(id: uint32): TSNumber<uint64>;
+    SetInstanceData64(id: uint32, data: uint64): void;
+    GetInstanceGuidData(id: uint32): TSGUID;
+    SetInstanceGuidData(id: uint32, data: TSGUID): void;
 }
 
 declare interface TSGameObject extends TSWorldObject {
