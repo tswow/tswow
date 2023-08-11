@@ -313,12 +313,12 @@ void TSInstance::SetInstanceData64(uint32 id, uint64 data)
     m_script->SetData64(id, data);
 }
 
-TSGUID TSInstance::GetInstanceGuidData(uint32 id)
+TSGUID TSInstance::GetInstanceGUIDData(uint32 id)
 {
     return TSGUID(m_script->GetGuidData(id));
 }
 
-void TSInstance::SetInstanceGuidData(uint32 id, TSGUID data)
+void TSInstance::SetInstanceGUIDData(uint32 id, TSGUID data)
 {
     m_script->SetGuidData(id, data->asGUID());
 }
