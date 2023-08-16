@@ -123,9 +123,25 @@ export async function main() {
     await AuthServer.initializeDatabase()
     await Realm.initialize()
     await AuthServer.initializeServer()
+    if (process.argv.includes('realm-only'))
+    {
+        return initTerminal();
+    }
     await Datascripts.initialize();
+    if (process.argv.includes('data-only'))
+    {
+        return initTerminal();
+    }
     await Livescripts.initialize();
+    if (process.argv.includes('scripts-only'))
+    {
+        return initTerminal();
+    }
     await Addon.initialize();
+    if (process.argv.includes('addon-only'))
+    {
+        return initTerminal();
+    }
     await MapData.initialize();
     await Package.initialize();
     await Crashes.initialize();
