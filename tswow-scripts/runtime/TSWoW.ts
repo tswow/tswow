@@ -40,8 +40,36 @@ import { Realm } from "./Realm";
 import { Snippets } from "./Snippets";
 import { applyTSTLHack } from "./TSTLHack";
 
+const timer = Timer.start();
+
+// can be called from multiple places
+async function initTerminal()
+{
+    await term.Initialize(
+        ipaths.coredata.terminal_history_txt.get(),
+        NodeConfig.TerminalHistory,
+        NodeConfig.TerminalTimestamps,
+        NodeConfig.TerminalNames,
+    )
+    term.log('mysql',`TSWoW started up in ${timer.timeSec()}s`)
+    CleanCommand.addCommand('filecache','','',args=>{
+        ipaths.bin.changes.remove();
+        term.log('mysql',`Removed ${ipaths.bin.changes.abs().get()}`)
+    });
+    await commands.enterLoop((input: string)=>{
+        Module.cacheEndpoints(true);
+        commands.sendCommand(input);
+        Module.cacheEndpoints(false);
+    });
+}
+
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
+
+    if(process.argv.includes('terminal-only'))
+    {
+        return initTerminal();
+    }
 
     let wd = wfs.absPath('./')
 
@@ -54,8 +82,6 @@ export async function main() {
         )
         process.exit(0)
     }
-
-    const timer = Timer.start();
 
     if(!wfs.exists(NodeConfig.DefaultClient) && !process.argv.includes('server-mode')) {
         term.error(
@@ -82,7 +108,13 @@ export async function main() {
     await mysql.initialize();
     if(process.argv.includes('mysql-only'))
     {
-        return;
+        return initTerminal();
+    }
+    if (process.argv.includes('auth-only'))
+    {
+        await AuthServer.initializeDatabase()
+        await AuthServer.initializeServer()
+        return initTerminal();
     }
     await Dataset.initialize()
     await Client.initialize();
@@ -91,9 +123,25 @@ export async function main() {
     await AuthServer.initializeDatabase()
     await Realm.initialize()
     await AuthServer.initializeServer()
+    if (process.argv.includes('realm-only'))
+    {
+        return initTerminal();
+    }
     await Datascripts.initialize();
+    if (process.argv.includes('data-only'))
+    {
+        return initTerminal();
+    }
     await Livescripts.initialize();
+    if (process.argv.includes('scripts-only'))
+    {
+        return initTerminal();
+    }
     await Addon.initialize();
+    if (process.argv.includes('addon-only'))
+    {
+        return initTerminal();
+    }
     await MapData.initialize();
     await Package.initialize();
     await Crashes.initialize();
@@ -101,21 +149,6 @@ export async function main() {
     await MiscCommands.initialize();
     await Launcher.initialize();
     Module.cacheEndpoints(false);
-    await term.Initialize(
-        ipaths.coredata.terminal_history_txt.get(),
-        NodeConfig.TerminalHistory,
-        NodeConfig.TerminalTimestamps,
-        NodeConfig.TerminalNames,
-    )
-    term.log('mysql',`TSWoW started up in ${timer.timeSec()}s`)
-    CleanCommand.addCommand('filecache','','',args=>{
-        ipaths.bin.changes.remove();
-        term.log('mysql',`Removed ${ipaths.bin.changes.abs().get()}`)
-    });
-    await commands.enterLoop((input: string)=>{
-        Module.cacheEndpoints(true);
-        commands.sendCommand(input);
-        Module.cacheEndpoints(false);
-    });
+    return initTerminal();
 }
 main();
