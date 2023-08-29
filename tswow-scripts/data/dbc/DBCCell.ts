@@ -338,6 +338,7 @@ export class DBCLocCell<T> extends LocSystem<T> {
             case 'ptPT': return 12;
             case 'itIT': return 13;
             case 'Unk': return 14;
+            case 'Unk2': return 15;
         }
         return 15;
     }
