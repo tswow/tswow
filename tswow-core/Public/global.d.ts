@@ -9032,8 +9032,8 @@ declare namespace _hidden {
         OnCanChangeEquipState(callback: (template: TSItemTemplate, res: TSMutable<boolean,boolean>)=>void);
         OnCanChangeEquipState(id: EventID, callback: (template: TSItemTemplate, res: TSMutable<boolean,boolean>)=>void);
 
-        OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<uint32>)=>void);
-        OnUnequip(id: EventID, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<uint32>)=>void);
+        OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<InventoryResult>)=>void);
+        OnUnequip(id: EventID, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<InventoryResult>)=>void);
 
         OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutableNumber<uint32>)=>void);
         OnBank(id: EventID, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutableNumber<uint32>)=>void);
