@@ -22,7 +22,7 @@ export namespace SevenZip {
         if(isWindows()) {
             wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
         } else {
-            wsys.execIn(out,`p7zip -d -k "${archive}"`,'inherit')
+            wsys.execIn(out,`7z x "${archive}"`,'inherit')
         }
     }
 
