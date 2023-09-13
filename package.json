@@ -24,7 +24,7 @@
         "adm-zip": "^0.5",
         "bigint-conversion": "^2.4",
         "chokidar": "^3.5",
-        "clipboardy": "^3.0",
+        "clipboardy": "2.3.0",
         "cross-spawn": "^7.0",
         "deasync": "^0.1",
         "extract-zip": "^2.0",
