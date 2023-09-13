@@ -340,6 +340,7 @@ export class Run {
             this.run('tsconfig.test.json', { suppressOutput: true });
 
             // compiling
+            // @ts-ignore todo: unused leftovers
             const result_compile: any = spawn.sync('ms_test.bat', tempCxxFiles);
             if (result_compile.error) {
                 actualOutput = result_compile.error.stack;
@@ -359,6 +360,7 @@ export class Run {
 
             if (!actualOutput) {
                 // start program and test it to
+                // @ts-ignore todo: unused leftovers
                 const result: any = spawn.sync('testapp1', []);
                 if (result.error) {
                     actualOutput = result.error.stack;

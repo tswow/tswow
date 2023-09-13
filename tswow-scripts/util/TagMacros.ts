@@ -158,7 +158,7 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
     if(checks.length > 0) {
         const settings = NodeConfig.DatabaseSettings('world',datasetName)
         const connection = mysql.createConnection(settings);
-        const syncQuery = deasync(connection.query.bind(connection))
+        const syncQuery = deasync(connection.query.bind(connection)) as any
         const errors: string[] = []
 
         checks.forEach(({table,cols})=>{
@@ -167,6 +167,7 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
                     WHERE \`TABLE_SCHEMA\` = "${settings.database}"
                         AND \`TABLE_NAME\` = "${table}";
             `);
+
             if(tableRes.length===0) {
                 errors.push(`Missing table "${table}"`);
                 return;
