@@ -118,9 +118,22 @@ public:
     bool IsNeutralToAll();
 
     TSNumber<uint32> CastSpell(TSWorldObject target, uint32 spell, bool triggered = false);
+    TSNumber<uint32> CastSpell(TSItem target, uint32 spell, bool triggered = false);
+
     TSNumber<uint32> CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered = false);
     TSNumber<uint32> CastCustomSpell(
           TSWorldObject target
+        , uint32 spell
+        , bool triggered = false
+        , int32 bp0 = 0
+        , int32 bp1 = 0
+        , int32 bp2 = 0
+        , TSItem castItem = TSItem()
+        , uint64 originalCaster = 0
+    );
+
+    TSNumber<uint32> CastCustomSpell(
+          TSItem target
         , uint32 spell
         , bool triggered = false
         , int32 bp0 = 0
