@@ -76,6 +76,5 @@
         "typescript-to-lua": "1.6.*"
     },
     "private": false,
-    "devDependencies": {
-    }
+    "devDependencies": {}
 }
