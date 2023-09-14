@@ -11999,6 +11999,8 @@ declare function GetTime(): number;
  */
 declare function GetLocale(): string;
 
+declare function HandleModifiedItemClick(link: string): void;
+
 /**
  * Returns the name of the character's realm
  * @see https://wow.gamepedia.com/API_GetRealmName
