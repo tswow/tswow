@@ -12001,6 +12001,10 @@ declare function GetLocale(): string;
 
 declare function HandleModifiedItemClick(link: string): void;
 
+declare function ShowUIPanel(frame: WoWAPI.Frame, force: boolean): void;
+
+declare function HideUIPanel(frame: WoWAPI.Frame, skipSetPoint: boolean): void;
+
 /**
  * Returns the name of the character's realm
  * @see https://wow.gamepedia.com/API_GetRealmName
