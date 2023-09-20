@@ -3980,6 +3980,11 @@ declare interface TSQuest {
      * @return uint32 type
      */
     GetType() : TSNumber<uint32>
+
+    /** @epoch-start */
+    GetRewardItems(): TSArray<TSNumber<uint32>>;
+    GetRewardChoiceItems(): TSArray<TSNumber<uint32>>;
+    /** @epoch-end */
 }
 
 declare interface TSMainThreadContext {
@@ -7670,6 +7675,11 @@ declare interface TSItemTemplate extends TSEntityProvider {
 
     InitializeQueryData(): void;
     Save(): void
+
+    /** @epoch-start */
+    SuitableForTransmogrification(player: TSPlayer): boolean;
+    GetItemLink(): string;
+    /** @epoch-end  */
 }
 
 declare interface TSSpellInfo extends TSEntityProvider {

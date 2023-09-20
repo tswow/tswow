@@ -224,6 +224,11 @@ public:
     ItemTemplate* _GetInfo();
     void InitializeQueryData();
     void Save();
+
+    /** @epoch-start */
+    bool SuitableForTransmogrification(TSPlayer player);
+    std::string GetItemLink();
+    /** @epoch-end */
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);

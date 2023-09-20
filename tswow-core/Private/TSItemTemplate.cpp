@@ -22,6 +22,10 @@
 #include "QueryPackets.h"
 #endif
 
+/** @epoch-start */
+#include "Transmogrification.h"
+/** @epoch-end */
+
 TSItemTemplate::TSItemTemplate(ItemTemplate const* _info)
     : TSEntityProvider(&(const_cast<ItemTemplate*>(_info)->m_tsEntity))
     , info(const_cast<ItemTemplate*>(_info))
@@ -655,3 +659,23 @@ void TSItemTemplate::InitializeQueryData()
     }
 #endif
 }
+
+/** @epoch-core */
+bool TSItemTemplate::SuitableForTransmogrification(TSPlayer player)
+{
+    return sTransmogrification->SuitableForTransmogrification(player->player, info);
+}
+
+std::string TSItemTemplate::GetItemLink()
+{
+    std::string name = info->Name1;
+    if (ItemLocale const* il = eObjectMgr->GetItemLocale(info->ItemId))
+        ObjectMgr::GetLocaleString(il->Name, LOCALE_enUS, name);
+
+    std::ostringstream oss;
+    oss << "|c" << std::hex << ItemQualityColors[info->Quality] << std::dec <<
+        "|Hitem:" << info->ItemId << ":0:0:0:0:0:0:0:0:0|h[" << name << "]|h|r";
+
+    return oss.str();
+}
+/** @epoch-core */

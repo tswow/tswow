@@ -187,3 +187,37 @@ TSNumber<uint32> TSQuest::GetType()
 {
     return quest->GetMaxLevel();
 }*/
+
+/** @epoch-end */
+TSArray<TSNumber<uint32>> TSQuest::GetRewardItems()
+{
+    TSArray<TSNumber<uint32>> items;
+
+    for (uint8 i = 0; i < QUEST_REWARDS_COUNT; i++)
+    {
+        uint32 item = quest->RewardItemId[i];
+        if (item == 0)
+            continue;
+
+        items.insert(i, item);
+    }
+
+    return items;
+}
+
+TSArray<TSNumber<uint32>> TSQuest::GetRewardChoiceItems()
+{
+    TSArray<TSNumber<uint32>> items;
+
+    for (uint8 i = 0; i < QUEST_REWARD_CHOICES_COUNT; i++)
+    {
+        uint32 item = quest->RewardChoiceItemId[i];
+        if (item == 0)
+            continue;
+
+        items.insert(i, item);
+    }
+
+    return items;
+}
+/** @epoch-end */

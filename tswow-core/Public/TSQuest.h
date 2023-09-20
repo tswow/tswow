@@ -39,4 +39,9 @@ public:
     TSNumber<int32> GetNextQuestInChain();
     TSNumber<uint32> GetFlags();
     TSNumber<uint32> GetType();
+
+    /** @epoch-start */
+    TSArray<TSNumber<uint32>> GetRewardItems();
+    TSArray<TSNumber<uint32>> GetRewardChoiceItems();
+    /** @epoch-end */
 };
