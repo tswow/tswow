@@ -464,7 +464,7 @@ export enum SpellModOp {
 }
 
 export class AddFlatModifier extends PointsBase {
-    get School() {
+    get Operation() {
         return makeEnumCell(SpellModOp,this, this.owner.MiscValueA);
     }
 }
