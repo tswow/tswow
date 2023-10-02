@@ -18,6 +18,7 @@ process.argv.push('--ipaths=./')
 import { commands } from "../util/Commands";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
+import { isWindows } from "../util/Platform";
 import { term } from "../util/Terminal";
 import { Timer } from "../util/Timer";
 import { Addon } from "./Addon";
@@ -39,6 +40,7 @@ import { PositionsFile } from "./PositionsFile";
 import { Realm } from "./Realm";
 import { Snippets } from "./Snippets";
 import { applyTSTLHack } from "./TSTLHack";
+import * as path from 'path'
 
 const timer = Timer.start();
 
@@ -83,7 +85,20 @@ export async function main() {
         process.exit(0)
     }
 
-    if(!wfs.exists(NodeConfig.DefaultClient) && !process.argv.includes('server-mode')) {
+    const isServerMode = process.argv.includes('server-mode');
+    
+    if (isWindows() && path.resolve(NodeConfig.DefaultClient).charAt(0) != path.resolve(process.cwd()).charAt(0) && !isServerMode)
+    {
+        term.error(
+            'client'
+          , `Invalid client: ${NodeConfig.DefaultClient} is on different drive from TSWoW installation.\n\n`
+          + `TSWoW must be installed on the same drive as the client,`
+          + ` please move TSWoW and the WoW client to the same drive.`
+      )
+      process.exit(0)
+    }
+
+    if(!wfs.exists(NodeConfig.DefaultClient) && !isServerMode) {
         term.error(
               'client'
             , `Invalid client: ${NodeConfig.DefaultClient} does not exist.\n\n`
@@ -93,7 +108,7 @@ export async function main() {
         process.exit(0)
     }
 
-    if(NodeConfig.DefaultClient.includes(' ')) {
+    if(NodeConfig.DefaultClient.includes(' ') && !isServerMode) {
         term.error(
             'client'
           , `Invalid client path: ${wd}\n`
