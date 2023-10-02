@@ -177,6 +177,18 @@ export class Dataset {
         }
 
         if(type === 'DEST' || type === 'BOTH') {
+            if (force)
+            {
+                if(this.path.dbc_source.exists() && this.path.dbc.exists())
+                {
+                    this.path.dbc_source.copy(this.path.dbc,true);
+                }
+
+                if(this.path.luaxml_source.exists() && this.path.luaxml.exists())
+                {
+                    this.path.luaxml_source.copy(this.path.luaxml,true);
+                }
+            }
             await this.setupDatabase(this.worldDest , force);
         }
     }
