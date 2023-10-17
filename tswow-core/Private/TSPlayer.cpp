@@ -2067,7 +2067,7 @@ void TSPlayer::Mute(uint32 muteseconds)
     std::ostringstream oss;
     oss << "UPDATE account SET mutetime = " << muteTime << " WHERE id = " << player->GetSession()->GetAccountId();
 #if TRINITY
-    LoginDatabase.PExecute("%s", oss.str().c_str());
+    LoginDatabase.PExecute("{}", oss.str().c_str());
 #elif AZEROTHCORE
     LoginDatabase.Execute("%s", oss.str().c_str());
 #endif
@@ -3587,7 +3587,7 @@ void TSPlayer::GossipSendTextMenu(
     , uint32 emote2Delay
     , uint32 menu_id
 ) {
-    bool isFemale = sender->IsUnit() && sender->ToUnit()->GetGender() ==
+    bool isFemale = sender->IsUnit() && static_cast<uint32>(sender->ToUnit()->GetGender()) ==
         Gender::GENDER_FEMALE;
     GossipSendTextMenuGendered(
           sender

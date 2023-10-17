@@ -25,6 +25,7 @@ import { _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
 import { Connection, SqlConnection } from './sql/SQLConnection';
+import deasync = require('deasync')
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
@@ -90,12 +91,12 @@ async function main() {
     }
 
     ctime = Date.now();
-    await IdPublic.readFile();
+    IdPublic.readFile();
     SqlConnection.connect();
 
     if(BuildArgs.WRITE_SERVER) {
         try{
-            await cleanSQL();
+            cleanSQL();
         } catch(err: any) {
             console.error(err.stack);
             process.exit(2);
@@ -134,7 +135,7 @@ async function main() {
                         if(profileScripts()) {
                             profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
                         }
-                        applyStage(setups);
+                        deasync((callback)=>applyStage(setups).then(callback))();
                     }
 
                 })
@@ -145,36 +146,38 @@ async function main() {
     }
 
     cur_stage = 'READ'
-    await applyStage(reads);
+    deasync((callback)=>applyStage(reads).then(callback))();
     cur_stage = 'WRITE'
-    await applyStage(writes);
+    deasync((callback)=>applyStage(writes).then(callback))();
     cur_stage = 'PATCH'
-    await applyStage(patches);
+    deasync((callback)=>applyStage(patches).then(callback))();
     cur_stage = 'FINISH'
-    await applyStage(finishes);
+    deasync((callback)=>applyStage(finishes).then(callback))();
 
     if(BuildArgs.WRITE_CLIENT) {
         _writeLUAXML();
         time(`Wrote LUAXML`);
     }
-
     cur_stage = 'LUAXML'
-    await applyStage(luaxmls);
+    deasync((callback)=>applyStage(luaxmls).then(callback))();
     dataset.luaxml.copy(BuildArgs.CLIENT_PATCH_DIR,false);
 
-    await __internal_wotlk_applyDeletes();
+    __internal_wotlk_applyDeletes();
 
     cur_stage = 'SORT'
     if(!BuildArgs.READ_ONLY) {
-        await applyStage(sorts);
+        deasync((callback)=>applyStage(sorts).then(callback))();
     }
     time(`Executed scripts`);
 
-    await __internal_wotlk_save();
+    deasync((callback)=>
+    {
+        __internal_wotlk_save().then(callback);
+    })()
     SqlConnection.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
 
     if(!BuildArgs.READ_ONLY) {
-        await IdPublic.writeFile();
+        IdPublic.writeFile();
         time(`Wrote IDs`)
     }
 

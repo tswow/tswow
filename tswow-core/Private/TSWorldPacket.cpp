@@ -280,6 +280,7 @@ TSArray<uint8> TSWorldPacket::ReadBytes(uint32 size)
     }
     arr.vec->resize(size);
     packet->read(arr.vec->data(), size);
+    return arr;
 }
 
 void TSWorldPacket::WriteBytes(uint32 index, TSArray<uint8>& vec)

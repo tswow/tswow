@@ -5342,7 +5342,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 spell : entry of a spell
      * @param bool triggered = false : if true the spell is instant and has no cost
      */
-     CastSpell(target : TSWorldObject,spell : uint32,triggered?: bool) : SpellCastResult
+     CastSpell(target : TSWorldObject | TSItem,spell : uint32,triggered?: bool) : SpellCastResult
 
      /**
       * Casts the [Spell] at target [Unit] with custom basepoints or casters.
@@ -5357,7 +5357,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
       * @param [Item] castItem = nil
       * @param uint64 originalCaster = 0
       */
-     CastCustomSpell(target : TSWorldObject,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
+     CastCustomSpell(target : TSWorldObject | TSItem,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
 
      /**
       * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
@@ -9173,8 +9173,8 @@ declare namespace _hidden {
         OnCanChangeEquipState(callback: (template: TSItemTemplate, res: TSMutable<boolean,boolean>)=>void);
         OnCanChangeEquipState(id: EventID, callback: (template: TSItemTemplate, res: TSMutable<boolean,boolean>)=>void);
 
-        OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<uint32>)=>void);
-        OnUnequip(id: EventID, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<uint32>)=>void);
+        OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<InventoryResult>)=>void);
+        OnUnequip(id: EventID, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutableNumber<InventoryResult>)=>void);
 
         OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutableNumber<uint32>)=>void);
         OnBank(id: EventID, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutableNumber<uint32>)=>void);

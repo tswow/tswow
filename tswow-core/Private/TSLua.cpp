@@ -225,7 +225,7 @@ void TSLua::handle_error(sol::protected_function_result const& res)
 #endif
         }
     }
-    TS_LOG_ERROR("tswow.lua", "%s", what.c_str());
+    TS_LOG_ERROR("tswow.lua", "{}", what.c_str());
 }
 
 void TSLua::execute_file(std::filesystem::path file)

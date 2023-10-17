@@ -201,14 +201,15 @@ export class Client {
                 hash = CLEAN_CLIENT_MD5
                 this.path.wow_exe_clean.writeBuffer(wowbin);
             } else {
-                term.warn('client',
-                    `Unclean wow.exe detected. Consider `
-                + `replacing it with a clean 3.3.5a client`)
+                // todo: stupid bugged code
+                //term.warn('client',
+                //    `Unclean wow.exe detected. Consider `
+                // + `replacing it with a clean 3.3.5a client`)
             }
         }
 
         if(hash == CLEAN_CLIENT_MD5) {
-            term.success('client',`Source wow client hash is ${hash} (clean!)`);
+            term.success('client',`Source wow client hash is ${hash}`);
         } else {
             term.success('client',`Source wow client hash is ${hash}`);
         }

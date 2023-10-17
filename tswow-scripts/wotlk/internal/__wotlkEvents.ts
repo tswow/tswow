@@ -67,7 +67,7 @@ export async function __internal_wotlk_save() {
     }
 }
 
-export async function __internal_wotlk_applyDeletes() {
+export function __internal_wotlk_applyDeletes() {
     for(const file of DBCFiles) {
         DBCFile.getBuffer(file).applyDeletes();
     }

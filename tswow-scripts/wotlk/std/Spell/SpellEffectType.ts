@@ -63,9 +63,9 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         18 */
     get RESURRECT()                     { return this.value(18, x=>new Resurrect(x)) }
     /** Enum Value:                                         19 */
-    get ADD_EXTRA_ATTACKS()             { return this.value(19, x=>x) }
+    get ADD_EXTRA_ATTACKS()             { return this.value(19, x=>new ExtraAttacks(x)) }
     /** Enum Value:                                         20 */
-    get DODGE()                        { return this.value(20, x=>new ExtraAttacks(x)) }
+    get DODGE()                        { return this.value(20, x=>x) }
     /** Enum Value:                                         21 */
     get EVADE()                        { return this.value(21, x=>x) }
     /** Enum Value:                                         22 */
