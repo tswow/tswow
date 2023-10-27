@@ -120,7 +120,15 @@ export const LuaORM: Plugin = {
                     // Delete
                     const deleteVar = `__${cls.className}__deleteStatement`
                     file.code += `local ${deleteVar} = ` + cls.prepareStatement(0,'lua',cls.deleteStatement)
-                    file.code += `function ${cls.className}.prototype._Delete(self)\n`
+                    switch(cls.tableType)
+                    {
+                        case 'DBEntry':
+                            file.code += `function ${cls.className}.prototype.Delete(self)\n`
+                            break;
+                        case 'DBArrayEntry':
+                            file.code += `function ${cls.className}.prototype._Delete(self)\n`
+                            break;
+                    }
                     file.code += `    ${deleteVar}:Create()\n`
                     file.code += cls.loadPks(8,true,true,'lua')
                     file.code += `        :Send()\n`
