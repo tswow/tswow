@@ -29,7 +29,7 @@ describe('FileSystem', function () {
 
     this.afterEach(function() {
         sleep(5);
-        fs.rmdirSync(tempdir, {recursive: true});
+        fs.rmSync(tempdir, {recursive: true});
     });
 
     describe('wfs', function() {

@@ -30,8 +30,7 @@ const lib_package_json =
     'description': '',
     'main': `datascripts.js`,
     'types': `datascripts.d.ts`,
-    'dependencies': {
-    },
+    'dependencies': {},
     'devDependencies': {},
     'scripts': {},
 });
