@@ -83,7 +83,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
 
         // todo: temporary measure to just fix performance
         //       this is probably not handling gaps or deleted rows correctly
-        let len = this.length-1;
+        let len = this.length;
 
         poses.forEach((pos,i)=>{
             if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
