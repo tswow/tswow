@@ -78,8 +78,8 @@ export class Connection {
     static connect(connection: Connection) {
         this.end(connection);
         if(NodeConfig.UsePooling) {
-            connection.async = mysql.createPool(connection.settings);
-            connection.sync = mysql.createPool(connection.settings);
+            connection.async = mysql.createPool(Object.assign({}, connection.settings, { enableKeepAlive: true}));
+            connection.sync = mysql.createPool(Object.assign({}, connection.settings, { enableKeepAlive: true}));
         } else {
             connection.async = mysql.createConnection(connection.settings);
             connection.sync = mysql.createConnection(connection.settings);
