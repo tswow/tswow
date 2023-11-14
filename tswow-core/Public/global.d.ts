@@ -9598,6 +9598,8 @@ declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTe
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
+declare function CreateWorldPacket(opcode: Opcodes, size?: uint32): TSWorldPacket
+
 declare function GetID(table: string, mod: string, name: string): TSNumber<uint32>
 
 /**
