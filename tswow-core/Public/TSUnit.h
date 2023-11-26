@@ -250,6 +250,7 @@ public:
     bool IsPossessed();
     bool IsPossessedByPlayer();
     void StartCooldownExplicit(uint32 spell, uint32 cooldownMs, bool forcePacket);
+    void MovePath(uint32 path_id, bool repeatable);
     // uint32 SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype);
     /** @epoch-end*/
 private:

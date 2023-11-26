@@ -7479,6 +7479,7 @@ declare interface TSUnit extends TSWorldObject {
     IsPossessed(): boolean;
     IsPossessedByPlayer(): boolean;
     StartCooldownExplicit(spell: uint32, cooldownMs: uint32, forcePacket: boolean): void;
+    MovePath(path_id: uint32, repeatable: boolean): void;
     /** @epoch-end */
 }
 

@@ -2730,4 +2730,9 @@ void TSUnit::StartCooldownExplicit(uint32 spell, uint32 cooldownMs, bool forcePa
         }
     }
 }
+
+void TSUnit::MovePath(uint32 path_id, bool repeatable)
+{
+    unit->GetMotionMaster()->MovePath(path_id, repeatable);
+}
 /** @epoch-end */
