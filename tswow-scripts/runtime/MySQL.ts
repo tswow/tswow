@@ -55,7 +55,7 @@ export class Connection {
     }
 
     private config() {
-        return Object.assign({}, this.cfg, {multipleStatements: true});
+        return Object.assign({}, this.cfg, {multipleStatements: true, enableKeepAlive: true});
     }
 
     /**
@@ -135,7 +135,8 @@ export class Connection {
                         if(endErr) {
                             return rej(endErr);
                         }
-                        this.con = mysql_lib.createPool(this.config());
+                        // workaround: the version of mysql2 we use lists enableKeepAlive as a 'true' type instead of 'boolean'
+                        this.con = mysql_lib.createPool(this.config() as any);
                         this.status = undefined;
                         res();
                     });
@@ -244,6 +245,7 @@ export namespace mysql {
             + ` IDENTIFIED BY '${pass}';`
             + `\nGRANT ALL ON *.* TO '${user}'@'localhost';`
             + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`);
+            + "`\nSET @@GLOBAL.wait_timeout=2147483"
         await disconnect();
         mysqlprocess.start(ipaths.bin.mysql.mysqld_exe.get(),
             [
@@ -251,6 +253,7 @@ export namespace mysql {
                 '--log_syslog=0',
                 '--console',
                 '--wait-timeout=2147483',
+                '--wait_timeout=2147483',
                 `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
                 `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
             ]);

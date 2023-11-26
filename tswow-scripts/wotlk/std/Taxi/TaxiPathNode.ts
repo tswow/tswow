@@ -80,12 +80,17 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
     push(poses: TaxiNodeConstructor|TaxiNodeConstructor[]) {
         if(!Array.isArray(poses)) poses = [poses]
         let old = this.getAllRows();
+
+        // todo: temporary measure to just fix performance
+        //       this is probably not handling gaps or deleted rows correctly
+        let len = this.length;
+
         poses.forEach((pos,i)=>{
             if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
                 old[old.length-1].Flags.MAP_CHANGE.set(true)
             }
             let newNode = this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
-                .NodeIndex.set(this.length-1)
+                .NodeIndex.set(len++)
             old.push(new TaxiPathNode(newNode));
         })
 

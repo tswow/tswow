@@ -332,6 +332,16 @@ void TSItemTemplate::SetTotemCategory(uint32 value) {
     info->TotemCategory = value;
     info->m_isDirty = true;
 };
+TSNumber<uint32> TSItemTemplate::GetSocketContent(uint32 index) { return info->Socket[index].Content; };
+void TSItemTemplate::SetSocketContent(uint32 index, uint32 value) {
+    info->Socket[index].Content = value;
+    info->m_isDirty = true;
+}
+TSNumber<uint32> TSItemTemplate::GetSocketColor(uint32 index) { return info->Socket[index].Color; };
+void TSItemTemplate::SetSocketColor(uint32 index, uint32 value) {
+    info->Socket[index].Color = value;
+    info->m_isDirty = true;
+}
 TSNumber<uint32> TSItemTemplate::GetSocketBonus() { return info->socketBonus; };
 void TSItemTemplate::SetSocketBonus(uint32 value) {
     info->socketBonus = value;

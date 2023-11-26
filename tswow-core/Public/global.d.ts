@@ -7600,6 +7600,10 @@ declare interface TSItemTemplate extends TSEntityProvider {
     SetBagFamily(value: uint32): void
     GetTotemCategory(): TSNumber<uint32>
     SetTotemCategory(value: uint32): void
+    GetSocketContent(index: uint32): TSNumber<uint32>
+    SetSocketContent(index: uint32, value: uint32): void
+    GetSocketColor(index: uint32): TSNumber<uint32>
+    SetSocketColor(index: uint32, value: uint32): void
     GetSocketBonus(): TSNumber<uint32>
     SetSocketBonus(value: uint32): void
     GetGemProperties(): TSNumber<uint32>
