@@ -382,6 +382,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnDestroyEarly);
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnTakenAsLoot);
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnCalculateFeralAttackPower);
+    LUA_MAPPED_HANDLE(item_events, ItemEvents, OnBeforeSendItemQuery);
+    LUA_MAPPED_HANDLE(item_events, ItemEvents, OnCreate);
 
     auto quest_events = state.new_usertype<TSEvents::QuestEvents>("QuestEvents");
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnAccept);

@@ -9207,6 +9207,12 @@ declare namespace _hidden {
 
         OnCalculateFeralAttackPower(callback: (item: TSItemTemplate, extra: TSNumber<int32>, result: TSMutableNumber<int32>)=>void);
         OnCalculateFeralAttackPower(id: EventID, callback: (item: TSItemTemplate, extra: TSNumber<int32>, result: TSMutableNumber<int32>)=>void);
+
+        OnBeforeSendItemQuery(callback: (item: TSItemTemplate, cancel: TSMutable<boolean,boolean>)=>void);
+        OnBeforeSendItemQuery(id: EventID, callback: (item: TSItemTemplate, cancel: TSMutable<boolean,boolean>)=>void);
+
+        OnCreate(callback: (item: TSItem)=>void);
+        OnCreate(id: EventID, callback: (item: TSItem)=>void);
     }
 
     export class GameObject<T> {
