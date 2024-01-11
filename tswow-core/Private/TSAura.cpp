@@ -381,6 +381,11 @@ void TSAura::Remove()
 #endif
 }
 
+void TSAura::RefreshDuration(bool withMods = false)
+{
+    aura->RefreshDuration(withMods);
+}
+
 TSAuraEffect TSAura::GetEffect(uint8 index)
 {
     return TSAuraEffect(aura->GetEffect(index));

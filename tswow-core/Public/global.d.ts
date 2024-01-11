@@ -3415,6 +3415,12 @@ declare interface TSAura extends TSEntityProvider {
     SetMaxDuration(duration : int32) : void
 
     /**
+     * Refreshes an auras duration and tick count all in one.
+     * @param withMods
+     */
+    RefreshDuration(withMods: boolean) : void
+
+    /**
      * Change the amount of times the [Aura] has "stacked" on the [Unit].
      *
      * If `amount` is greater than or equal to the current number of stacks,
