@@ -404,6 +404,14 @@ struct TSEvents
             , TSNumber<uint32>
             , TSNumber<uint32>
         )
+        // @epoch-start
+        EVENT(OnMeleeDamage
+            , TSMeleeDamageInfo
+            , TSMutableNumber<uint32>
+            , TSNumber<uint32>
+            , TSNumber<uint32>
+        )
+        // @epoch-end
         EVENT(OnMeleeDamageLate
             , TSMeleeDamageInfo
             , TSMutableNumber<uint32>
@@ -486,6 +494,9 @@ struct TSEvents
         ID_EVENT(OnRemove, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
         ID_EVENT(OnApply, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
         ID_EVENT(OnDamageEarly, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
+        // @epoch-start
+        ID_EVENT(OnDamage, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
+        // @epoch-end
         ID_EVENT(OnDamageLate, TSSpell, TSMutableNumber<uint32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
         ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcSpellPowerLevelPenalty
@@ -532,6 +543,9 @@ struct TSEvents
         ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+            /** @epoch-start */
+        ID_EVENT(OnHealEarly, TSSpellInfo, TSUnit, TSMutableNumber<uint32>)
+            /** @epoch-end */
         ID_EVENT(OnHealLate, TSSpellInfo, TSUnit, TSUnit, TSNumber<uint32>, bool)
     } Spell;
 
@@ -648,6 +662,38 @@ struct TSEvents
             , bool isGuardian
             , TSNumber<uint8> attType
         )
+        // @epoch-start
+        ID_EVENT(OnUpdateSpellPower
+            , TSCreature
+            , TSMutableNumber<int32>
+            , bool isGuardian
+        )
+        ID_EVENT(OnUpdateStamina
+            , TSCreature
+            , TSMutableNumber<float>
+            , bool isGuardian
+        )
+        ID_EVENT(OnUpdateAgility
+            , TSCreature
+            , TSMutableNumber<float>
+            , bool isGuardian
+        )
+        ID_EVENT(OnUpdateStrength
+            , TSCreature
+            , TSMutableNumber<float>
+            , bool isGuardian
+        )
+        ID_EVENT(OnUpdateIntellect
+            , TSCreature
+            , TSMutableNumber<float>
+            , bool isGuardian
+        )
+        ID_EVENT(OnUpdateSpirit
+            , TSCreature
+            , TSMutableNumber<float>
+            , bool isGuardian
+        )
+        // @epoch-end
         ID_EVENT(OnCalcColorCode
             , TSCreature
             , TSMutableNumber<uint8> code

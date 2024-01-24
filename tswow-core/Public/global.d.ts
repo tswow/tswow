@@ -7486,6 +7486,7 @@ declare interface TSUnit extends TSWorldObject {
     IsPossessedByPlayer(): boolean;
     StartCooldownExplicit(spell: uint32, cooldownMs: uint32, forcePacket: boolean): void;
     MovePath(path_id: uint32, repeatable: boolean): void;
+    AddThreatAllAssist(victim: TSUnit, threat: TSNumber<float>, spell: uint32, ignoreModifiers: bool): void;
     /** @epoch-end */
 }
 
@@ -8274,7 +8275,26 @@ declare namespace _hidden {
           , type: TSNumber<uint32>
           , isCrit: bool
           , effectMask: TSNumber<uint32>
-        )=>void): T
+        ) => void): T
+
+        // @epoch-start
+        OnDamage(callback: (
+            spell: TSSpell
+            , damage: TSMutableNumber<int32>
+            , info: TSSpellDamageInfo
+            , type: TSNumber<uint32>
+            , isCrit: bool
+            , effectMask: TSNumber<uint32>
+        ) => void): T
+        OnDamage(id: EventID, callback: (
+            spell: TSSpell
+            , damage: TSMutableNumber<int32>
+            , info: TSSpellDamageInfo
+            , type: TSNumber<uint32>
+            , isCrit: bool
+            , effectMask: TSNumber<uint32>
+        ) => void): T
+        //@epoch-end
 
         OnDamageLate(callback : (
               spell: TSSpell
@@ -8457,6 +8477,19 @@ declare namespace _hidden {
 
         OnResistAbsorbCalculate(callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
         OnResistAbsorbCalculate(id: EventID, callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
+        
+        /** @epoch-start */
+        OnHealEarly(callback : (
+            spell: TSSpellInfo
+            , target: TSUnit
+            , amount: TSMutableNumber<uint32>
+        )=>void): T
+        OnHealEarly(id: EventID, callback : (
+            spell: TSSpellInfo
+            , target: TSUnit
+            , amount: TSMutableNumber<uint32>
+        )=>void): T
+        /** @epoch-end */
 
         OnHealLate(callback : (
             spell: TSSpellInfo
@@ -8671,6 +8704,68 @@ declare namespace _hidden {
             , isGuardian: bool
             , attType: WeaponAttackType
         )=>void)
+        // @epoch-start
+        OnUpdateSpellPower(callback: (
+              creature: TSCreature
+            , value: TSMutableNumber<int32>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateSpellPower(id: EventID, callback: (
+              creature: TSCreature
+            , value: TSMutableNumber<int32>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateStamina(callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateStamina(id: EventID, callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateAgility(callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateAgility(id: EventID, callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateStrength(callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateStrength(id: EventID, callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateIntellect(callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateIntellect(id: EventID, callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateSpirit(callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        OnUpdateSpirit(id: EventID, callback: (
+            creature: TSCreature
+            , value: TSMutableNumber<float>
+            , isGuardian: bool
+        ) => void)
+        // @epoch-end
 
         OnUpdateLvlDepMaxHealth(callback: (
             creature: TSCreature
@@ -8868,6 +8963,14 @@ declare namespace _hidden {
             , index: TSNumber<uint32>
             )=>void
         )
+        // @epoch-start
+        OnMeleeDamage(callback: (
+            info: TSMeleeDamageInfo
+            , damage: TSMutableNumber<uint32>
+            , type: TSNumber<uint32>
+            , index: TSNumber<uint32>
+        ) => void)
+        // @epoch-end
         OnMeleeDamageLate(callback: (
               info: TSMeleeDamageInfo
             , damage: TSMutableNumber<uint32>

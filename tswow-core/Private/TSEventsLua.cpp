@@ -146,6 +146,9 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMissChance);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcHeal);
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageEarly);
+    // @epoch-start
+    LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamage);
+    // @epoch-end
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageLate);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMeleeCrit);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMeleeOutcome);
@@ -177,6 +180,9 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnRemove);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnApply);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDamageEarly);
+    // @epoch-start
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDamage);
+    // @epoch-end
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDamageLate);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnPeriodicDamage);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcMiss);
@@ -219,6 +225,9 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnObjectAreaTargetSelect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnObjectTargetSelect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
+    /** @epoch-start */
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHealEarly);
+    /** @epoch-end */
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHealLate);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
@@ -273,6 +282,14 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateMaxPower);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateAttackPowerDamage);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateDamagePhysical);
+    // @epoch-start
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateSpellPower);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateStamina);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateAgility);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateStrength);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateIntellect);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateSpirit);
+    // @epoch-end
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcColorCode);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcGain);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcBaseGain);
