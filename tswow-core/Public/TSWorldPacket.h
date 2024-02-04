@@ -105,6 +105,9 @@ public:
     TSArray<uint8> ReadBytes(uint32 size);
     void WriteBytes(uint32 index, TSArray<uint8>&);
     void WriteBytes(TSArray<uint8>&);
+
+    void Seek(size_t ofs);
+    size_t Tell() const;
 };
 
 namespace WorldPackets {

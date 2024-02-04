@@ -25,6 +25,8 @@ void TSLua::load_world_packet_methods(sol::state & state)
     LUA_FIELD(ts_world_packet, TSWorldPacket, GetSize);
     LUA_FIELD(ts_world_packet, TSWorldPacket, SetOpcode);
     LUA_FIELD(ts_world_packet, TSWorldPacket, IsEmpty);
+    LUA_FIELD(ts_world_packet, TSWorldPacket, Seek);
+    LUA_FIELD(ts_world_packet, TSWorldPacket, Tell);
 
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadInt8, uint32);
     LUA_FIELD_OVERLOAD_RET_0_1(ts_world_packet, TSWorldPacket, ReadUInt8, uint32);

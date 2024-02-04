@@ -407,3 +407,13 @@ void TSWorldPacket::ts_constructor()
     this->packet = nullptr;
     this->owner = false;
 }
+
+void TSWorldPacket::Seek(size_t ofs)
+{
+    packet->rpos(ofs);
+}
+
+size_t TSWorldPacket::Tell() const
+{
+    return packet->rpos();
+}

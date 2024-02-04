@@ -3836,6 +3836,9 @@ declare class TSWorldPacket {
 
     ReadBytes(index: uint32, size: uint32): TSArray<uint8>
     ReadBytes(size: uint32): TSArray<uint8>
+
+    Seek(ofs: uint64): void
+    Tell(): uint64
 }
 
 declare interface TSWorldStatePacket {
@@ -8991,7 +8994,7 @@ declare namespace _hidden {
 
     export class WorldPacket {
         OnReceive(callback: (opcode: TSNumber<uint32>, packet: TSWorldPacket, player: TSPlayer)=>void);
-        OnReceive(id: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnReceive(id: EventID, callback: (opcode: TSNumber<uint32>, packet: TSWorldPacket, player: TSPlayer)=>void);
 
         OnSend(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
         OnSend(id: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
