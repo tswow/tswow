@@ -2735,4 +2735,18 @@ void TSUnit::MovePath(uint32 path_id, bool repeatable)
 {
     unit->GetMotionMaster()->MovePath(path_id, repeatable);
 }
+
+/**
+ * Adds threat to the [Unit] from the victim.
+ *
+ * @param [Unit] victim : [Unit] that caused the threat
+ * @param float threat : threat amount
+ * @param uint32 spell = 0 : spell entry used for threat
+ */
+void TSUnit::AddThreatAllAssist(TSUnit _victim, TSNumber<float> threat, uint32 spell, bool ignoreModifiers)
+{
+    auto victim = _victim.unit;
+
+    unit->GetThreatManager().ForwardThreatForAssistingMe(victim, threat, sSpellMgr->GetSpellInfo(spell), ignoreModifiers);
+}
 /** @epoch-end */
