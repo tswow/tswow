@@ -378,10 +378,9 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnStatusChanged);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSpellFinish);
 
-#if TRINITY
     auto area_trigger_events = state.new_usertype<TSEvents::AreaTriggerEvents>("AreaTriggerEvents");
     LUA_MAPPED_HANDLE(area_trigger_events, AreaTriggerEvents, OnTrigger);
-#endif
+
     auto gameevent_events = state.new_usertype<TSEvents::GameEventsEvents>("GameEventsEvents");
     LUA_MAPPED_HANDLE(gameevent_events, GameEventsEvents, OnStart);
     LUA_MAPPED_HANDLE(gameevent_events, GameEventsEvents, OnUpdateState);
