@@ -168,20 +168,45 @@ export function ClientPatches(
                 ]]
             ]),
 
+            // windowed mode to full screen
             patch('windowed-mode-gamma-fix', [
                 [0xE94, [0xEB]]
             ]),
 
+            // melee swing on right-click
             patch('melee-swing-right-click', [
                 [0x2E1C67, [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90]]
             ]),
 
+            // NPC attack animation when turning
             patch('npc-turn-attack-anim', [
                 [0x33D7C9, [0xEB]]
             ]),
 
+            // "ghost" attack when NPC evades from combat
             patch('npc-evade-ghost-attack', [
                 [0x355BF, [0xEB]]
+            ]),
+
+            // missing pre cast animation when canceling channeled spells
+            patch('missing-pre-cast-animation', [
+                [0x33E0D6, [
+                    0x90, 0x90, 0x90, 0x90, 0x90,
+                    0x90, 0x90, 0x90, 0x90, 0x90,
+                    0x90, 0x90, 0x90, 0x90, 0x90,
+                    0x90, 0x90, 0x90, 0x90, 0x90,
+                    0x90, 0x90,
+                ]]
+            ]),
+
+             // patch area trigger timer to be more precise (250ms -> 50ms)
+            patch('area-trigger-time-out', [
+                [0x1DB241, [50]]
+            ]),
+
+            // Return of "The Blue Moon"
+            patch('blue-moon', [
+                [0x5CFBC0, [0xC7, 0x05, 0x74, 0x8E, 0xD3, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xC3]]
             ]),
         ]
 }
