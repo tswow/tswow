@@ -143,6 +143,8 @@ public:
         , uint64 originalCaster = 0
     );
 
+    TSNumber<uint32> CastSpellWithOrigin(TSWorldObject target, TSWorldObject origin, uint32 spell, bool triggered = false);
+
     TSGameObject GetGameObject(TSGUID guid);
     TSGameObject GetGameObject(TSNumber<uint32> lowGuid);
     TSCorpse GetCorpse(TSGUID guid);

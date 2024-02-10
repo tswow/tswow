@@ -5046,6 +5046,17 @@ declare interface TSGameObject extends TSWorldObject {
      * Get the GameObjects Owner.
      */
     GetOwner(): TSUnit
+
+    /**
+     * Get animation state.
+     */
+    GetGoAnimProgress(): TSNumber<uint8>;
+
+    /**
+     * Makes a GO perform a custom animation.
+     * @param anim Anim ID.
+     */
+    SendCustomAnim(anim: uint32): void;
 }
 
 declare interface TSSpell extends TSEntityProvider {
@@ -5349,6 +5360,17 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param bool triggered = false : if true the spell is instant and has no cost
      */
      CastSpell(target : TSWorldObject | TSItem,spell : uint32,triggered?: bool) : SpellCastResult
+
+    /**
+     * Makes the [Unit] cast the spell on the target but attributes the cast
+     * to the supplied origin.
+     *
+     * @param [Unit] target = nil : can be self or another unit
+     * @param [Unit] origin = nil : can be self or another unit
+     * @param uint32 spell : entry of a spell
+     * @param bool triggered = false : if true the spell is instant and has no cost
+     */
+    CastSpellWithOrigin(target : TSWorldObject, origin : TSWorldObject, spell : uint32,triggered?: bool) : SpellCastResult
 
      /**
       * Casts the [Spell] at target [Unit] with custom basepoints or casters.

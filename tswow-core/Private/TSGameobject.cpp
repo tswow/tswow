@@ -373,3 +373,13 @@ TSUnit TSGameObject::GetOwner()
 {
     return TSUnit(const_cast<Unit*>(go->GetOwner()));
 }
+
+void TSGameObject::SendCustomAnim(uint32 anim)
+{
+    go->SendCustomAnim(anim);
+}
+
+TSNumber<uint8> TSGameObject::GetGoAnimProgress()
+{
+    return go->GetGoAnimProgress();
+}

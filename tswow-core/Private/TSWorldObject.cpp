@@ -1145,6 +1145,18 @@ TSNumber<uint32> TSWorldObject::CastSpell(TSItem _target, uint32 spell, bool tri
     return obj->CastSpell(_target.item, spell, triggered);
 }
 
+TSNumber<uint32> TSWorldObject::CastSpellWithOrigin(TSWorldObject _target, TSWorldObject origin, uint32 spell, bool triggered)
+{
+    CastSpellExtraArgs args;
+
+    if (triggered)
+        args.TriggerFlags = TRIGGERED_FULL_MASK;
+
+    args.SetOriginalCaster(origin.GetGUID().asGUID());
+
+    return obj->CastSpell(_target.obj, spell, args);
+}
+
 /**
  * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
  *

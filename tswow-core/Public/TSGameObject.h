@@ -53,4 +53,6 @@ public:
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
     TSUnit GetOwner();
+    void SendCustomAnim(uint32 anim);
+    TSNumber<uint8> GetGoAnimProgress();
 };
