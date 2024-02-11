@@ -4793,7 +4793,7 @@ declare interface TSBossInfo {
 
 declare interface TSInstance extends TSMap {
     IsNull(): bool;
-    SaveToDB(): void;
+    SaveInstanceToDB(): void;
     IsEncounterInProgress(): bool;
     GetEncounterCount(): TSNumber<uint32>
     GetObjectGUID(type: uint32): TSNumber<uint64>
@@ -4819,6 +4819,12 @@ declare interface TSInstance extends TSMap {
     GetFactionInInstance(): TSNumber<uint32>
     GetBossInfo(id: uint32): TSBossInfo
     RemoveFromMap(player:TSPlayer, deleteFromWorld: boolean): void
+    GetInstanceData(id: uint32): TSNumber<uint32>;
+    SetInstanceData(id: uint32, data: uint32): void;
+    GetInstanceData64(id: uint32): TSNumber<uint64>;
+    SetInstanceData64(id: uint32, data: uint64): void;
+    GetInstanceGUIDData(id: uint32): TSGUID;
+    SetInstanceGUIDData(id: uint32, data: TSGUID): void;
 }
 
 declare interface TSGameObject extends TSWorldObject {
