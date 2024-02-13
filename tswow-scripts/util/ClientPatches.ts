@@ -201,7 +201,7 @@ export function ClientPatches(
 
              // patch area trigger timer to be more precise (250ms -> 50ms)
             patch('area-trigger-time-out', [
-                [0x1DB241, [50]]
+                [0x2DB241, [50]]
             ]),
 
             // Return of "The Blue Moon"
