@@ -5758,6 +5758,10 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetCreature(guid: TSNumber<uint32> | TSGUID): TSCreature
     GetPlayer(guid: TSNumber<uint32> | TSGUID): TSPlayer
     GetFactionTemplate(): TSFactionTemplate
+
+    /** @epoch-start */
+    GetMapHeight(x: TSNumber<float>, y: TSNumber<float>, z: TSNumber<float>): TSNumber<float>
+    /** @epoch-end */
 }
 
 declare interface TSWorldObjectCollection {
@@ -8960,6 +8964,7 @@ declare namespace _hidden {
           , reward: TSMutableNumber<uint32>
         )=>void)
 
+        /** @epoch-start */
         OnCalcXP(callback: (
             quest: TSQuest
           , player: TSPlayer
@@ -8970,6 +8975,23 @@ declare namespace _hidden {
           , player: TSPlayer
           , xp: TSMutableNumber<uint32>
         )=>void)
+
+        OnSendQuestGiverDetails(callback: (
+            quest: TSQuest
+        )=>void)
+        OnSendQuestGiverDetails(event: EventID, callback: (
+            quest: TSQuest
+        )=>void)
+
+        OnQuery(callback: (
+            quest: TSQuest
+          , cancel: TSMutable<bool, bool>
+        )=>void)
+        OnQuery(event: EventID, callback: (
+            quest: TSQuest
+          , cancel: TSMutable<bool, bool>
+        )=>void)
+        /** @epoch-end */
     }
 
     export class Unit {

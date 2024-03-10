@@ -1428,3 +1428,10 @@ TSNumber<uint32> TSWorldObject::GetLiquidStatus()
 {
     return static_cast<uint32>(obj->GetLiquidStatus());
 }
+
+/** @epoch-start */
+TSNumber<float> TSWorldObject::GetMapHeight(TSNumber<float> x, TSNumber<float> y, TSNumber<float> z)
+{
+    return obj->GetMapHeight(x, y, z);
+}
+/** @epoch-end */

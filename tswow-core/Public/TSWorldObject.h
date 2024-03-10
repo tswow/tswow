@@ -169,6 +169,10 @@ public:
     void RemovedByGroup(TSWorldObjectGroup* group);
 
     void DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback);
+
+    /** @epoch-start */
+    TSNumber<float> GetMapHeight(TSNumber<float> x, TSNumber<float> y, TSNumber<float> z);
+    /** @epoch-end */
 private:
     friend class TSLua;
     void LDoDelayed(sol::protected_function callback);

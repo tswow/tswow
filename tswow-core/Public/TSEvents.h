@@ -897,6 +897,8 @@ struct TSEvents
         ID_EVENT(OnStatusChanged, TSQuest, TSPlayer)
         ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
+        ID_EVENT(OnSendQuestGiverDetails, TSQuest)
+        ID_EVENT(OnQuery, TSQuest, TSMutable<bool,bool>)
     } Quest;
 
     struct AreaTriggerEvents : public TSMappedEventsDirect {
