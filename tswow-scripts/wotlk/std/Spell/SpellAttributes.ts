@@ -389,7 +389,7 @@ export class SpellAttributes<T> extends MaskCell<T> {
     /**
      * No comment (yet!)
      */
-    get UNK10() { return this.bit(59); }
+    get DISCOUNT_POWER_ON_MISS() { return this.bit(59); }
 
     /**
      * No comment (yet!)
