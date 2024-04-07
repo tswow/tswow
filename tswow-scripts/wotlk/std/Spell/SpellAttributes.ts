@@ -869,12 +869,12 @@ export class SpellAttributes<T> extends MaskCell<T> {
     /**
      * No comment (yet!)
      */
-    get UNK47() { return this.bit(155); }
+    get INHERIT_CRIT_FROM_AURA() { return this.bit(155); }
 
     /**
      * No comment (yet!)
      */
-    get UNK48() { return this.bit(156); }
+    get IGNORE_COMBAT_TIMER() { return this.bit(156); }
 
     /**
      * No comment (yet!)
