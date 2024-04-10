@@ -10175,6 +10175,7 @@ declare interface TSHealInfo {
     GetSpellInfo(): TSSpellInfo;
     GetSchoolMask(): TSNumber<uint32>
     GetHitMask(): TSNumber<uint32>
+    IsNull(): bool;
 }
 
 declare interface TSDamageInfo {
@@ -10192,6 +10193,7 @@ declare interface TSDamageInfo {
     GetAbsorb(): TSNumber<uint32>
     GetBlock(): TSNumber<uint32>
     GetHitMask(): TSNumber<uint32>
+    IsNull(): bool;
 }
 
 declare class TSPacketWrite {
