@@ -43,6 +43,9 @@
 #include "CreatureOutfit.h"
 #endif
 #include "SmartAI.h"
+/** @epoch-start */
+#include "PetAI.h"
+/** @epoch-end */
 
 TSCreature::TSCreature(Creature *creature) : TSUnit(creature)
 {
@@ -1163,7 +1166,11 @@ void TSCreature::AttackStart(TSUnit _target)
 {
     auto target = _target.unit;
 
-    creature->AI()->AttackStart(target);
+    CreatureAI* AI = creature->AI();
+    if (PetAI* petAI = dynamic_cast<PetAI*>(AI))
+        petAI->DoAttack(target, true);
+    else
+        AI->AttackStart(target);
 }
 
 void TSCreature::SetReactState(uint8 state)
