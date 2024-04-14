@@ -53,7 +53,6 @@ export namespace TrinityCore {
 
         if(!globalOnly) {
             let sol_sourcedir = [
-                bpaths.AzerothCore.sol_headers,
                 bpaths.TrinityCore.sol_headers
             ].find(x=>x.exists())
 

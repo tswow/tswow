@@ -31,9 +31,6 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 {
 #if TRINITY
     return sObjectMgr->CreateItemTemplate(entry,copyItemID);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
-    return TSItemTemplate();
 #endif
 }
 

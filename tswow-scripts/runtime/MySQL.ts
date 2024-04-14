@@ -418,9 +418,6 @@ export namespace mysql {
                  `No character tables found for ${connection.cfg.database},`
                + ` creating them...`);
             switch(core) {
-                case 'azerothcore':
-                    await connection.query(ipaths.bin.sql_ac.db_characters.readString());
-                    break;
                 case 'trinitycore':
                     await connection.query(ipaths.bin.sql.characters_create_sql.readString());
                     break;
@@ -430,9 +427,6 @@ export namespace mysql {
         switch(core) {
             case 'trinitycore':
                 await applySQLFiles(connection,'characters');
-                break;
-            case 'azerothcore':
-                // TODO: currently does not apply updates, this is wrong of course.
                 break;
         }
     }

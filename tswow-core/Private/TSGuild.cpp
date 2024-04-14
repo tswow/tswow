@@ -56,7 +56,7 @@ TSArray<TSPlayer> TSGuild::GetMembers()
  */
 TSNumber<uint32> TSGuild::GetMemberCount()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return guild->GetMemberCount();
 #else
     return guild->GetMemberSize();
@@ -70,7 +70,7 @@ TSNumber<uint32> TSGuild::GetMemberCount()
  */
 TSPlayer  TSGuild::GetLeader()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSPlayer(eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
 #else
      return TSPlayer(eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
@@ -124,7 +124,7 @@ std::string TSGuild::GetMOTD()
  */
 std::string TSGuild::GetInfo()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return guild->GetInfo();
 #else
      return guild->GetGINFO();
@@ -141,7 +141,7 @@ void TSGuild::SetLeader(TSPlayer _player)
 {
     auto player = _player.player;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     guild->HandleSetLeader(player->GetSession(), player->GetName());
 #else
     guild->SetLeader(player->TS_GET_GUID());
@@ -158,7 +158,7 @@ void TSGuild::SetLeader(TSPlayer _player)
  */
 void TSGuild::SetBankTabText(uint8 tabId,std::string const& text)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     guild->SetBankTabText(tabId, text);
 #else
     guild->SetGuildBankTabText(tabId, text);
@@ -252,10 +252,6 @@ void TSGuild::DeleteMember(TSPlayer _player,bool isDisbanding)
 #if defined TRINITY
 CharacterDatabaseTransaction trans(nullptr);
     guild->DeleteMember(trans, player->TS_GET_GUID(), isDisbanding);
-#elif defined AZEROTHCORE
-//SQLTransaction trans(nullptr);
-    //guild->DeleteMember(trans, player->TS_GET_GUID(), isDisbanding);
-    TS_LOG_ERROR("tswow.api", "TSGuild::DeleteMember not implemented for AzerothCore");
 #else
     guild->DelMember(player->TS_GET_GUID(), isDisbanding);
 #endif

@@ -137,11 +137,7 @@ TSNumber<uint16> TSObject::GetCoreUInt16(uint16 index,uint8 offset)
  */
 TSNumber<float> TSObject::GetScale()
 {
-#ifndef AZEROTHCORE
     return obj->GetObjectScale();
-#else
-    return obj->GetFloatValue(OBJECT_FIELD_SCALE_X);
-#endif
 }
 
 /**
@@ -189,8 +185,6 @@ TSGUID TSObject::GetGUID()
 TSNumber<uint32> TSObject::GetGUIDLow()
 {
 #ifdef TRINITY
-    return obj->GetGUID().GetCounter();
-#elif AZEROTHCORE
     return obj->GetGUID().GetCounter();
 #endif
 }
@@ -385,8 +379,6 @@ bool TSObject::IsCreature()
 {
 #if TRINITY
     return obj != nullptr && obj->IsCreature();
-#elif AZEROTHCORE
-    return obj && obj->GetTypeId() == TYPEID_UNIT;
 #endif
 }
 
@@ -394,8 +386,6 @@ bool TSObject::IsUnit()
 {
 #if TRINITY
     return obj != nullptr && obj->IsUnit();
-#elif AZEROTHCORE
-    return IsCreature() || IsPlayer();
 #endif
 }
 
@@ -403,8 +393,6 @@ bool TSObject::IsGameObject()
 {
 #if TRINITY
     return obj != nullptr && obj->IsGameObject();
-#elif AZEROTHCORE
-    return obj && obj->isType(TYPEMASK_GAMEOBJECT);
 #endif
 }
 
@@ -412,8 +400,6 @@ bool TSObject::IsCorpse()
 {
 #if TRINITY
     return obj != nullptr && obj->IsCorpse();
-#elif AZEROTHCORE
-    return obj && obj->isType(TYPEMASK_CORPSE);
 #endif
 }
 

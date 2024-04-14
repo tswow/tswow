@@ -22,9 +22,7 @@ sol::state& TSLua::GetState()
 
 static std::filesystem::path LibRoot()
 {
-#if AZEROTHCORE
-    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib";
-#elif TRINITY
+#if TRINITY
     return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib";
 #endif
 }
@@ -130,9 +128,7 @@ void TSLua::handle_error(sol::protected_function_result const& res)
     {
         return;
     }
-#if AZEROTHCORE
-    std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
-#elif TRINITY
+#if TRINITY
     std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
 #endif
     lua_path = std::filesystem::absolute(lua_path);

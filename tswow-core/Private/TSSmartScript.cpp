@@ -160,9 +160,6 @@ TSNumber<uint32> TSSmartScriptValues::GetPriority()
 {
 #if TRINITY
     return m_holder->priority;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSSmartScriptValues::GetPriority not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -185,16 +182,6 @@ TSArray<TSWorldObject> TSSmartScriptValues::GetTargets()
         out[i] = TSWorldObject((*m_targets)[i]);
     }
     return out;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSSmartScriptValues::GetTargets not implemented for AzerothCore");
-    return TSArray<TSWorldObject>();
-    /*
-    size_t i = 0;
-    for (WorldObject const* obj : *m_targets)
-    {
-        out[i++] = TSWorldObject(const_cast<WorldObject*>(obj));
-    }
-    */
 #endif
 }
 
@@ -207,8 +194,6 @@ void TSSmartScriptValues::StoreTargetList(TSArray<TSWorldObject> objects, uint32
     }
 #if TRINITY
     m_script->StoreTargetList(*objectsOut, id);
-#elif AZEROTHCORE
-    m_script->StoreTargetList(objectsOut, id);
 #endif
 }
 
@@ -221,9 +206,6 @@ TSArray<TSWorldObject> TSSmartScriptValues::GetTargetList(uint32 id, TSWorldObje
         out[i] = TSWorldObject((*vec)[i]);
     }
     return out;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api","TSSmartScriptValues::GetTargetList not implemented for AzerothCore");
-    return TSArray<TSWorldObject>();
 #endif
 }
 
@@ -231,8 +213,6 @@ void TSSmartScriptValues::StoreCounter(uint32 id, uint32 value, uint32 reset)
 {
 #if TRINITY
     m_script->StoreCounter(id, value, reset);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSSmartScriptValues::StoreCounter not implemented for AzerothCore");
 #endif
 }
 
@@ -275,8 +255,6 @@ TSWorldObject TSSmartScriptValues::GetSelf()
 {
 #if TRINITY
     return TSWorldObject(m_script->GetBaseObjectOrPlayerTrigger());
-#elif AZEROTHCORE
-    return TSWorldObject(m_script->GetBaseObject());
 #endif
 }
 
@@ -363,9 +341,6 @@ std::string TSCondition::ToString(bool ext)
 {
 #if TRINITY
     return m_condition->ToString();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSCondition::ToString not implemented for AzerothCore");
-    return "";
 #endif
 }
 

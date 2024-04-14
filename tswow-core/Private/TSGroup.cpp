@@ -159,7 +159,7 @@ bool TSGroup::AddMember(TSPlayer _player)
     if (player->GetGroupInvite())
         player->UninviteFromGroup();
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     bool success = group->AddMember(player);
     if (success)
         group->BroadcastGroupUpdate();
@@ -191,7 +191,7 @@ TSArray<TSPlayer> TSGroup::GetMembers()
 
     for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
         Player* member = itr->GetSource();
 #else
         Player* member = itr->getSource();
@@ -328,7 +328,7 @@ void TSGroup::SendPacket(TSWorldPacket _data, bool ignorePlayersInBg, TSNumber<u
 bool TSGroup::RemoveMember(TSGUID guid,uint32 method)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return group->RemoveMember(guid.asGUID(), (RemoveMethod)method);
 #else
     return group->RemoveMember(ObjectGuid(guid), method);

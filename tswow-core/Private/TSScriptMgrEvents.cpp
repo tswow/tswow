@@ -45,8 +45,6 @@
 #include "Player.h"
 #if TRINITY
 #include "MapManager.h"
-#elif AZEROTHCORE
-#include "MapMgr.h"
 #endif
 #include "Config.h"
 #include "BattlegroundMgr.h"
@@ -150,8 +148,6 @@ public:
         {
 #if TRINITY
             TC_LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW GM Message");
-#elif AZEROTHCORE
-            LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW GM Message");
 #endif
             return;
         }

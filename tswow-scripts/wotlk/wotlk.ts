@@ -232,7 +232,6 @@ export const std = {
     },
     Core: EmulatorCore,
     isTrinityCore: EmulatorCore === 'trinitycore',
-    isAzerothCore: EmulatorCore === 'azerothcore'
 }
 
 export const wotlk = std;
