@@ -4,7 +4,7 @@ import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 
 export function getLivescriptCMakeLists(emu: EmulatorCore, buildType: BuildType, buildModule: string) {
-return `cmake_minimum_required(VERSION 3.12)
+return `cmake_minimum_required(VERSION 3.22)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)

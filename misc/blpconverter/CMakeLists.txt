@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.11)
+cmake_minimum_required (VERSION 3.22)
 project (BLPConverter)
 file(GLOB_RECURSE sources *.cpp *.hpp *.c *.h)
 add_executable (blpconverter main.cpp ${sources})
