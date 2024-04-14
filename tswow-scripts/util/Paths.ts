@@ -233,10 +233,10 @@ export const Languages =
     ];
 export function ClientPath(pathIn: string, devPatch: string) {
     return generateTree(pathIn,dir({
-        /** The wow.exe used to start the game */
-        wow_exe: file('wow.exe'),
-        /** The wow.exe without any patches applied */
-        wow_exe_clean: file('wow.exe.clean'),
+        /** The Wow.exe used to start the game */
+        wow_exe: file('Wow.exe'),
+        /** The Wow.exe without any patches applied */
+        wow_exe_clean: file('Wow.exe.clean'),
         Data: dir({
             devPatch: dirn(devPatch,{
                 Interface: dir({

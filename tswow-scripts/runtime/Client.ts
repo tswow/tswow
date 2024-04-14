@@ -203,7 +203,7 @@ export class Client {
             } else {
                 // todo: stupid bugged code
                 //term.warn('client',
-                //    `Unclean wow.exe detected. Consider `
+                //    `Unclean Wow.exe detected. Consider `
                 // + `replacing it with a clean 3.3.5a client`)
             }
         }
