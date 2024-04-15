@@ -1,5 +1,15 @@
 {
+  "name": "typescript2cxx",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
     "watch": "tsc -w -p .."
-  }
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "tswow",
+  "license": "GPL-3.0-only"
 }
