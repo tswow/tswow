@@ -1,7 +1,25 @@
-install
-node_modules
-config
-install_garbage
-log.txt
-build.conf
-build/
+# Add directories, files, and symbolic links which should not be stored within
+# the repository here.
+
+# Helper files requiring special attention
+!.gitignore
+!.gitattributes
+
+# Project files
+/.cache/
+/.idea/
+/.vscode/
+
+# OS specific temporary files
+.DS_Store
+Thumbs.db
+
+# NodeJS
+/node_modules/
+/package-lock.json
+
+# Configuration files
+/build.conf
+
+# Logs
+/log.txt

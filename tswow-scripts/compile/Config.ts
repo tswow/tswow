@@ -32,6 +32,7 @@ export namespace Config {
             version: '0.13.0',
             description: '',
             dependencies: spaths.package_json.readJson({}).dependencies,
+            devDependencies: spaths.package_json.readJson({}).devDependencies,
             scripts: {
                   start:
                       `node -r source-map-support/register `
