@@ -6,9 +6,10 @@ add_executable(mpqbuilder mpqbuilder.cpp)
 add_executable(luaxmlreader luaxmlreader.cpp)
 
 include (FetchContent)
-FetchContent_Declare (storm
+FetchContent_Declare(
+  storm
   GIT_REPOSITORY https://github.com/ladislav-zezula/StormLib.git
-  GIT_TAG 60c2dd0fa16d3506722e25fee9b6fa4082b0c1e5
+  GIT_TAG v9.25
 )
 FetchContent_GetProperties (storm)
 if (NOT storm_POPULATED)
