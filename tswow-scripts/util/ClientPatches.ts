@@ -168,6 +168,11 @@ export function ClientPatches(
                 ]]
             ]),
 
+            // Resurrect X Faction
+            patch ('assist-any-corpse', [
+                [0x31EC9E, [0x0]]
+            ]),
+
             // windowed mode to full screen
             patch('windowed-mode-gamma-fix', [
                 [0xE94, [0xEB]]
