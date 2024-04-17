@@ -2749,4 +2749,9 @@ void TSUnit::AddThreatAllAssist(TSUnit _victim, TSNumber<float> threat, uint32 s
 
     unit->GetThreatManager().ForwardThreatForAssistingMe(victim, threat, sSpellMgr->GetSpellInfo(spell), ignoreModifiers);
 }
+
+TSPlayer TSUnit::GetControllingPlayer()
+{
+    return TSPlayer(unit->GetControllingPlayer());
+}
 /** @epoch-end */

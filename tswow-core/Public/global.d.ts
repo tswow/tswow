@@ -7513,6 +7513,7 @@ declare interface TSUnit extends TSWorldObject {
     StartCooldownExplicit(spell: uint32, cooldownMs: uint32, forcePacket: boolean): void;
     MovePath(path_id: uint32, repeatable: boolean): void;
     AddThreatAllAssist(victim: TSUnit, threat: TSNumber<float>, spell: uint32, ignoreModifiers: bool): void;
+    GetControllingPlayer(): TSPlayer;
     /** @epoch-end */
 }
 
@@ -7819,6 +7820,10 @@ declare class TSSpellEffectInfo {
     IsEffect(): bool;
     IsAura(): bool;
     CalcValue(caster: TSWorldObject);
+
+    /** @epoch-start */
+    CalcRadius(caster: TSWorldObject);
+    /** @epoch-end */
 }
 
 declare interface TSSpellCastTargets {

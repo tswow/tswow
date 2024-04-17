@@ -253,6 +253,7 @@ public:
     void MovePath(uint32 path_id, bool repeatable);
     // uint32 SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype);
     void AddThreatAllAssist(TSUnit victim, TSNumber<float> threat, uint32 spell, bool ignoreModifiers);
+    TSPlayer GetControllingPlayer();
     /** @epoch-end*/
 private:
     TSLua::Array<TSUnit> LGetControlled();

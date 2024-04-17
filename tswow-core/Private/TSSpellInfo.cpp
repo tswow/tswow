@@ -519,4 +519,9 @@ bool TSSpellInfo::IsPositive()
 {
     return info->IsPositive();
 }
+
+TSNumber<float> TSSpellEffectInfo::CalcRadius(TSWorldObject caster)
+{
+    return m_info->CalcRadius(caster.obj);
+}
 /** epoch-end */

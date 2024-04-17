@@ -51,6 +51,10 @@ public:
 
     bool IsEffect();
     bool IsAura();
+
+    /** @epoch-start */
+    TSNumber<float> CalcRadius(TSWorldObject caster);
+    /** @epoch-end */
 };
 
 class TC_GAME_API TSSpellInfo: public TSEntityProvider {
