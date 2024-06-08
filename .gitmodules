@@ -1,6 +1,6 @@
 [submodule "TrinityCore"]
 	path = cores/TrinityCore
-	url = https://github.com/Duskhaven-Reforged/dusk-tc.git
+	url = https://github.com/Duskhaven-Reforged/dusk-ts-tc.git
 	branch = tswow
 [submodule "misc/adt-creator"]
 	path = misc/adt-creator
