@@ -8713,6 +8713,17 @@ declare namespace _hidden {
           , player: TSPlayer
           , reward: TSMutableNumber<uint32>
         )=>void)
+
+        OnQuestRewardItem(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , reward: TSItem
+        )=>void)
+        OnQuestRewardItem(event: EventID, callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , reward: TSItem
+        )=>void)
     }
 
     export class Unit {
@@ -9068,6 +9079,10 @@ declare namespace _hidden {
 
         OnCalculateFeralAttackPower(callback: (item: TSItemTemplate, extra: TSNumber<int32>, result: TSMutableNumber<int32>)=>void);
         OnCalculateFeralAttackPower(id: EventID, callback: (item: TSItemTemplate, extra: TSNumber<int32>, result: TSMutableNumber<int32>)=>void);
+    
+        OnItemCrafted(callback: (item: TSItem, player: TSPlayer, count: uint8)=>void);
+        OnItemCrafted(id: EventID, callback: (item: TSItem, player: TSPlayer, count: uint8)=>void);
+
     }
 
     export class GameObject<T> {

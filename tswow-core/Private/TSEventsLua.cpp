@@ -369,6 +369,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnDestroyEarly);
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnTakenAsLoot);
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnCalculateFeralAttackPower);
+    LUA_MAPPED_HANDLE(item_events, ItemEvents, OnItemCrafted);
 
     auto quest_events = state.new_usertype<TSEvents::QuestEvents>("QuestEvents");
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnAccept);
@@ -377,6 +378,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnObjectiveProgress);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnStatusChanged);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSpellFinish);
+    LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnQuestRewardItem);
 
 #if TRINITY
     auto area_trigger_events = state.new_usertype<TSEvents::AreaTriggerEvents>("AreaTriggerEvents");

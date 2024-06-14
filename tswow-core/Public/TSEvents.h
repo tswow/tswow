@@ -819,6 +819,7 @@ struct TSEvents
          ID_EVENT(OnDestroyEarly, TSItem, TSPlayer, TSMutable<bool,bool>)
          ID_EVENT(OnTakenAsLoot, TSItem, TSLootItem, TSLoot, TSPlayer)
          ID_EVENT(OnCalculateFeralAttackPower, TSItemTemplate, TSNumber<int32>, TSMutableNumber<int32> result)
+         ID_EVENT(OnItemCrafted, TSItem, TSPlayer, TSNumber<uint32> count)
      } Item;
 
     struct QuestEvents : public TSMappedEventsRegistry
@@ -831,6 +832,7 @@ struct TSEvents
         ID_EVENT(OnObjectiveProgress, TSQuest, TSPlayer, TSNumber<uint32>, TSNumber<uint16>)
         ID_EVENT(OnStatusChanged, TSQuest, TSPlayer)
         ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
+        ID_EVENT(OnQuestRewardItem, TSQuest, TSPlayer, TSItem)
     } Quest;
 #if TRINITY
     struct AreaTriggerEvents : public TSMappedEventsDirect {
