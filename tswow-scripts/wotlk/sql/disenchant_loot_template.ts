@@ -84,6 +84,11 @@ export class disenchant_loot_templateRow extends SqlRow<disenchant_loot_template
     get Comment() {return new SQLCell<varchar, this>(this, 'Comment')}
 
     /**
+     * No comment (yet!)
+     */
+    get Table(): string { return this.table.name }
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.

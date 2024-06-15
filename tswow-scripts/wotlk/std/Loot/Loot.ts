@@ -33,6 +33,8 @@ export interface LootRowBase {
     MinCount: SQLCell<number,any>;
     MaxCount: SQLCell<number,any>;
     clone(id: number, item: number): any;
+    Table: string;
+    delete(): void;
 }
 
 export interface LootTable {
@@ -169,19 +171,61 @@ export class LootSetPointer<T> extends CellWrapper<number,T>{
         return this.owner;
     }
 
-    getRefCopy() {
+    getRefCopy(conditions: bool = true) {
         let old = this.cell.get();
         let nu = this.gen.id();
         this.cell.set(nu);
         this.table.queryAll({Entry:old}).forEach(x=>{
             x.clone(nu,x.Item.get())
-                .Comment.set('tswow')
+                .Comment.set('tswow');
+
+            /** Clone Conditions. */
+            if (conditions) {
+                let source = 0;
+
+                switch (x.Table) {
+                    case 'creature_loot_template': source = 1; break;
+                    case 'disenchant_loot_template': source = 2; break;
+                    case 'fishing_loot_template': source = 3; break;
+                    case 'gameobject_loot_template': source = 4; break;
+                    case 'item_loot_template': source = 5; break;
+                    case 'mail_loot_template': source = 6; break;
+                    case 'milling_loot_template': source = 7; break;
+                    case 'pickpocketing_loot_template': source = 8; break;
+                    case 'prospecting_loot_template': source = 9; break;
+                    case 'reference_loot_template': source = 10; break;
+                    case 'skinning_loot_template': source = 11; break;
+                    case 'spell_loot_template': source = 12; break;
+                }
+
+                if (source === 0)
+                    return;
+
+                SQL.conditions.queryAll({
+                    SourceTypeOrReferenceId: source,
+                    SourceGroup: old,
+                    SourceEntry: x.Item.get(),
+                }).forEach((cond) => {
+                    cond.clone(
+                        source,
+                        nu,
+                        cond.SourceEntry.get(),
+                        cond.SourceId.get(),
+                        cond.ElseGroup.get(),
+                        cond.ConditionTypeOrReference.get(),
+                        cond.ConditionTarget.get(),
+                        cond.ConditionValue1.get(),
+                        cond.ConditionValue2.get(),
+                        cond.ConditionValue3.get()
+                    );
+                });
+            }
         })
         return this.getRef();
     }
 
-    modRefCopy(callback: (table: LootSet)=>void) {
-        callback(this.getRefCopy());
+    modRefCopy(callback: (table: LootSet)=>void, conditions: bool = true) {
+        callback(this.getRefCopy(conditions));
         return this.owner;
     }
 }

@@ -84,6 +84,11 @@ export class fishing_loot_templateRow extends SqlRow<fishing_loot_templateCreato
     get Comment() {return new SQLCell<varchar, this>(this, 'Comment')}
 
     /**
+     * No comment (yet!)
+     */
+    get Table(): string { return this.table.name }
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.
