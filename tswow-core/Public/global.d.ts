@@ -8528,6 +8528,7 @@ declare namespace _hidden {
             , healer: TSUnit
             , target: TSUnit
             , amount: TSNumber<uint32>
+            , totalamount: TSNumber<uint32>
             , critical: bool
         )=>void): T
         OnHealLate(id: EventID, callback : (
@@ -8535,6 +8536,7 @@ declare namespace _hidden {
             , healer: TSUnit
             , target: TSUnit
             , amount: TSNumber<uint32>
+            , totalamount: TSNumber<uint32>
             , critical: bool
         )=>void): T
     }

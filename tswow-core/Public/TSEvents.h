@@ -548,7 +548,7 @@ struct TSEvents
             /** @epoch-start */
         ID_EVENT(OnHealEarly, TSSpellInfo, TSUnit, TSMutableNumber<uint32>)
             /** @epoch-end */
-        ID_EVENT(OnHealLate, TSSpellInfo, TSUnit, TSUnit, TSNumber<uint32>, bool)
+        ID_EVENT(OnHealLate, TSSpellInfo, TSUnit, TSUnit, TSNumber<uint32>, TSNumber<uint32>, bool)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
