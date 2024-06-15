@@ -565,3 +565,8 @@ TSGameObject TSMap::LGetGameObject1(TSNumber<uint32> guid)
 {
     return GetGameObject(guid);
 }
+
+void TSMap::LoadGrid(float x, float y)
+{
+    map->LoadGrid(x, y);
+}

@@ -1501,4 +1501,12 @@ void TSCreature::SetInterruptImmune(bool apply)
 {
     creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, apply);
 }
+
+void TSCreature::Talk(uint8 id, TSUnit target)
+{
+    if (target.IsNull())
+        creature->AI()->Talk(id);
+    else
+        creature->AI()->Talk(id, target->unit);
+}
 /** @epoch-end */

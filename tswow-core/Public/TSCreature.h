@@ -154,6 +154,7 @@ public:
     void SetEncounterPhase(uint16 phase);
     void ResetEncounterPhase();
     void SetInterruptImmune(bool apply);
+    void Talk(uint8 id, TSUnit target);
     /** @epoch-end */
 
 private:

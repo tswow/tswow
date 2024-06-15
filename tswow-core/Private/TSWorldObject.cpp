@@ -1434,4 +1434,12 @@ TSNumber<float> TSWorldObject::GetMapHeight(TSNumber<float> x, TSNumber<float> y
 {
     return obj->GetMapHeight(x, y, z);
 }
+
+TSPosition TSWorldObject::GetRandomPoint(float x, float y, float z, float distance)
+{
+    Position srcPos(x, y, z, 0);
+    Position pos = obj->GetRandomPoint(srcPos, distance);
+
+    return TSPosition(GetMap()->GetMapID(),pos.GetPositionX(),pos.GetPositionY(),pos.GetPositionZ(), 0);
+}
 /** @epoch-end */

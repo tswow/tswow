@@ -3321,6 +3321,7 @@ declare interface TSCreature extends TSUnit {
     GetEncounterPhase(): TSNumber<uint16>;
     SetEncounterPhase(phase: uint16): void;
     SetInterruptImmune(apply: boolean): void;
+    Talk(id: uint8, target?: TSUnit)
     /** @epoch-end */
 }
 
@@ -4221,6 +4222,13 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
      */
     SetWeather(zoneId : uint32,weatherType : WeatherType,grade : float) : void
+
+    /**
+     * Ensure grid is unloaded at position.
+     * @param x 
+     * @param y 
+     */
+    LoadGrid(x: float, y: float): void;
 }
 
 declare class TSItemEntry
@@ -5761,6 +5769,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
 
     /** @epoch-start */
     GetMapHeight(x: TSNumber<float>, y: TSNumber<float>, z: TSNumber<float>): TSNumber<float>
+    GetRandomPoint(x: float, y: float, z: float, distance: float): TSPosition
     /** @epoch-end */
 }
 
@@ -9515,6 +9524,27 @@ declare namespace _hidden {
 
         OnLoadObjectData(callback: (instance: TSInstance)=>void): T
         OnLoadObjectData(id: EventID, callback: (instance: TSInstance)=>void): T
+
+        OnCreatureCreate(callback: (instance: TSInstance, creature: TSCreature) => void): T
+        OnCreatureCreate(id: EventID, callback: (instance: TSInstance, creature: TSCreature) => void): T
+
+        OnGameObjectCreate(callback: (instance: TSInstance, go: TSGameObject) => void): T
+        OnGameObjectCreate(id: EventID, callback: (instance: TSInstance, go: TSGameObject) => void): T
+
+        OnWriteSaveDataMore(callback: (instance: TSInstance, data: TSMutable<TSArray<uint32>, TSArray<uint32>>) => void): T
+        OnWriteSaveDataMore(id: EventID, callback: (instance: TSInstance, data: TSMutable<TSArray<uint32>, TSArray<uint32>>) => void): T
+
+        OnBeforeReadSaveDataMore(callback: (instance: TSInstance, length: TSMutable<uint8, uint8>) => void): T
+        OnBeforeReadSaveDataMore(id: EventID, callback: (instance: TSInstance, length: TSMutable<uint8, uint8>) => void): T
+
+        OnReadSaveDataMore(callback: (instance: TSInstance, data: TSArray<uint32>) => void): T
+        OnReadSaveDataMore(id: EventID, callback: (instance: TSInstance, data: TSArray<uint32>) => void): T
+
+        OnDataSet(callback: (instance: TSInstance, type: uint32, data: uint32) => void): T
+        OnDataSet(id: EventID, callback: (instance: TSInstance, type: uint32, data: uint32) => void): T
+
+        OnDataGet(callback: (instance: TSInstance, type: uint32, result: TSMutableNumber<uint32>) => void): T
+        OnDataGet(id: EventID, callback: (instance: TSInstance, type: uint32, result: TSMutableNumber<uint32>) => void): T
     }
 
     export class AuctionHouse<T> {
