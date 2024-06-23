@@ -1,0 +1,91 @@
+local L = LibStub("AceLocale-3.0"):NewLocale("BugSack", "esES")
+if not L then return end
+
+-- Command descriptions
+L["Show sack"] = "Mostrar el saco"
+L["Show errors in the sack."] = "Muestra los errores en el saco."
+L["Current error"] = "Error actual"
+L["Show the current error."] = "Muestra el error actual."
+L["Current session"] = "Sesi\195\179n actual"
+L["Show errors from the current session."] = "Muestra los errores de la sesi\195\179n actual"
+L["Previous session"] = "Sesi\195\179n previa"
+L["Show errors from the previous session."] = "Muestra los errores de la sesi\195\179n previa."
+L["By session number"] = "Por n\195\186mero de sesi\195\179n"
+L["Show errors by session number."] = "Muestra los errores por el n\195\186mero de sesi\195\179n."
+L["All errors"] = "Todos los errores"
+L["Show all errors."] = "Muestra todos los errores"
+L["Received errors"] = "Errores recibidos"
+L["Show errors received from another player."] = "Muestra los errores recibidos desde otro jugador"
+L["Send bugs"] = "Enviar errores"
+L["Sends your current session bugs to another BugSack user."] = "Envía los errores de tu sesión actual a otro usuario. Solo funciona si tanto tú como el receptor tiene una instancia de AceComm-2.0 y BugSack cargadas."
+L["<player name>"] = "<nombre del jugador>"
+L["Menu"] = "Menú"
+L["Menu options."] = "Menú de opciones"
+
+L["List errors"] = "Mostrar lista de errores"
+L["List errors to the chat frame."] = "Muestra la lista de errores en la ventana de chat."
+L["List the current error."] = "Mostrar lista de errores actuales"
+L["List errors from the current session."] = "Mostrar lista de errores de la sesi\195\179n actual"
+L["List errors from the previous session."] = "Mostrar errores de la sesi\195\179n previa"
+L["List errors by session number."] = "Mostrar lista de errores por n\195\186mero de sesi\195\179n"
+L["List all errors."] = "Mostrar lista con todos los errores"
+L["List errors received from another player."] = "Mostrar una lista de los errores recibidos desde otro jugador"
+
+L["Auto popup"] = "Ventana emergente automática"
+L["Toggle auto BugSack frame popup."] = "Activa la ventana emergente de BugSack."
+L["Chatframe output"] = "Mostrar en chat"
+L["Print a warning to the chat frame when an error occurs."] = "Muestra un aviso en la ventana de chat cuando ocurre un error."
+L["Errors to chatframe"] = "Errores en chat"
+L["Print the full error message to the chat frame instead of just a warning."] = "Muestra el mensaje de error completo en la ventana de chat en vez de solo un aviso"
+L["Sound"] = "Sonido"
+L["What sound to play when an error occurs (Ctrl-Click to preview.)"] = "Qué sonido se reproducirá cuando ocurra un error (Ctrl-Clic para previsualizar)"
+L["Mute"] = "Enmudecer"
+L["Toggle an audible warning everytime an error occurs."] = "Determina si se reproduce un aviso auditivo cada vez que ocurre un error."
+L["Save errors"] = "Guardar errores"
+L["Toggle whether to save errors to your SavedVariables\\!BugGrabber.lua file."] = "Determina si se graban los errores en tu archivo SavedVariables\\!BugGrabber.lua"
+L["Limit"] = "L\195\173mite"
+L["Set the limit on the nr of errors saved."] = "Establece el l\195\173mite de la cantidad de errores guardados."
+L["Filter addon mistakes"] = "Filtrar errores de accesorio"
+L["Filters common mistakes that trigger the blocked/forbidden event."] = "Filtra errores comunes que hacen saltar el evento de bloqueado/prohibido."
+L["Throttle at excessive amount"] = "Acelerar cuando demasiados"
+L["Whether to throttle for a default of 60 seconds when BugGrabber catches more than 20 errors per second."] = "Determina si se acelera a 60 segundos por defecto cuando BugGrabber intercepta más de 20 errores por segundo."
+
+L["Generate bug"] = "Generar error"
+L["Generate a fake bug for testing."] = "Genera un error falso para hacer pruebas."
+L["Script bug"] = "Error de script"
+L["Generate a script bug."] = "Genera un error de script"
+L["Addon bug"] = "Error de accesorio"
+L["Generate an addon bug."] = "Genera un error de accesorio."
+
+L["Clear errors"] = "Borrar errores"
+L["Clear out the errors database."] = "Borra los errores de la base de datos."
+
+L["%d sec."] = "%d seg."
+L["|cffeda55fBugGrabber|r is paused due to an excessive amount of errors being generated. It will resume normal operations in |cffff0000%d|r seconds. |cffeda55fDouble-Click|r to resume now."] = "|cffeda55fBugGrabber|r se ha parado debido a que se han generado una cantidad excesiva de errores. Volverá a funcionar normalmente en  |cffff0000%d|r segundos. Haz |cffeda55fdoble-Clic|r para continuar ahora."
+
+-- Chat messages
+L["You have no errors, yay!"] = "No tienes errores, ¡chachi!"
+L["List of errors:"] = "Lista de errores:"
+L["An error has been generated."] = "Se ha generado un error."
+L["BugSack generated this fake error."] = "BugSack ha generado este falso error."
+L["All errors were wiped."] = "Todos los errores fueron limpiados."
+L["An error has been recorded."] = "Se ha guardado un error."
+L["%d errors have been recorded."] = "%d errores han sido guardados."
+L["You've received %d errors from %s, you can show them with /bugsack show received."] = "Has recibido %d errores desde %s, puedes mostrarlos con '/bugsack show received'"
+L["%d errors has been sent to %s. He must have BugSack to be able to read them."] = "%d errores han sido enviados a %s. Si no tiene tanto BugSack como AceComm-2.0 no podrá leerlos."
+
+-- Frame messages,
+L[" (... more ...)"] = " (... m\194\191s ...)"
+L["No errors found"] = "No se han encontrado errores"
+L["Error %d of %d"] = "Error %d de %d"
+L[" (viewing last error)"] = " (viendo el \195\186ltimo error)"
+L[" (viewing session errors)"] = " (viendo los errores de la sesi\195\179n)"
+L[" (viewing previous session errors)"] = " (viendo los errores de sesiones previas)"
+L[" (viewing all errors)"] = " (viendo todos los errores)"
+L[" (viewing errors for session %d)"] = " (viendo errores para la sesi\195\179n %d)"
+L[" (viewing errors from %s)"] = " (viendo errores desde %s)"
+
+-- FuBar plugin
+L["|cffeda55fClick|r to open BugSack with the last error. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to clear the sack."] = "|cffeda55fClic|r para abrir BugSack con el \195\186ltimo error. |cffeda55fMay\195\186sculas-Clic|r para recargar la interfaz de usuario. |cffeda55fAlt-Clic|r para limpiar el saco."
+
+

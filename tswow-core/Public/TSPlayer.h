@@ -40,7 +40,7 @@ public:
 	Player* player;
 	TSPlayer(Player* player);
 	TSPlayer();
-	TSPlayer* operator->() { return this;}
+	TSPlayer* operator->() { return this; }
 	bool IsNull() { return player == nullptr; };
 	TSDBJson* get_json() override;
 	bool CanTitanGrip();

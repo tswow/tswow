@@ -1,0 +1,45 @@
+﻿## Interface: 30300
+## Title: BugSack
+## Version: 3.3
+## Notes: Toss those bugs inna sack.
+## Notes-zhCN: 错误信息收集器。
+## Notes-esES: Mete esos errores en un saco.
+## Notes-zhTW: 集中顯示錯誤訊息，避免中斷遊戲。
+## Notes-ruRU: Аддон ловит текущие ошибки в мешок.
+## Author: Rabbit
+## X-Credits: Rowne, Ramble, kergoth, ckknight, Gamefaq, thomasmo, damjau, Fritti
+## SavedVariables: BugSackDB, BugSackLDBIconDB
+## OptionalDeps: Ace3, LibSharedMedia-3.0, LibDBIcon-1.0, !BugGrabber
+## X-Category: Development Tools
+## X-RelSite-WoWI: 5995
+## X-License: GPL v2 or later.
+## X-Email: rabbit.magtheridon@gmail.com
+## X-Curse-Packaged-Version: r225
+## X-Curse-Project-Name: BugSack
+## X-Curse-Project-ID: bugsack
+## X-Curse-Repository-ID: wow/bugsack/mainline
+
+Libs\LibStub\Libstub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+
+#@no-lib-strip@
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceComm-3.0\AceComm-3.0.xml
+Libs\AceSerializer-3.0\AceSerializer-3.0.xml
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+#@end-no-lib-strip@
+
+Locales\enUS.lua
+Locales\frFR.lua
+Locales\zhCN.lua
+Locales\deDE.lua
+Locales\koKR.lua
+Locales\esES.lua
+Locales\zhTW.lua
+Locales\ruRU.lua
+
+config.lua
+BugSack.lua
+BugSackLDB.lua
+

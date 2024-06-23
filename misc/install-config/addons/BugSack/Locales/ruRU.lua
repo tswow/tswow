@@ -1,0 +1,93 @@
+﻿-- Translated by Argonavt-Arkona
+-- Updated by StingerSoft at 17-11-2009
+local L = LibStub("AceLocale-3.0"):NewLocale("BugSack", "ruRU")
+if not L then return end
+
+-- Command descriptions
+L["Show sack"] = "Показать в мешке"
+L["Show errors in the sack."] = "Показать ошибку в мешке."
+L["Current error"] = "Текущая ошибка"
+L["Show the current error."] = "Показать текущуюю ошибку."
+L["Current session"] = "Текущая сессия"
+L["Show errors from the current session."] = "Показать ошибки текущей сессии."
+L["Previous session"] = "Предыдущая сессия"
+L["Show errors from the previous session."] = "Показать Ошибку Предыдущей сессии."
+L["By session number"] = "По номеру сессии"
+L["Show errors by session number."] = "Показывает ошибки по номеру сессии."
+L["All errors"] = "Все ошибки"
+L["Show all errors."] = "Показать все ошибки."
+L["Received errors"] = "Полученные ошибки"
+L["Show errors received from another player."] = "Показывает ошибки полученные от другого игрока."
+L["Send bugs"] = "Послать ошибки"
+L["Sends your current session bugs to another BugSack user."] = "Послать текующию сессию ошибок другому BugSack пользователю."
+L["<player name>"] = "<Имя игрока>"
+L["Menu"] = "Меню"
+L["Menu options."] = "Опции меню"
+
+L["List errors"] = "Список ошибок"
+L["List errors to the chat frame."] = "Вывести список ошибок в окне чата."
+L["List the current error."] = "Список текущих ошибок."
+L["List errors from the current session."] = "Список ошибок от текущей сессии."
+L["List errors from the previous session."] = "Список ошибок от предыдущей сессии."
+L["List errors by session number."] = "Список ошибок по номеру сессии."
+L["List all errors."] = "Список всех ошибок."
+L["List errors received from another player."] = "Список ошибок полученных от другого игрока."
+
+L["Auto popup"] = "Авто всплывать"
+L["Toggle auto BugSack frame popup."] = "Переключение авто всплывания области BugSack."
+L["Chatframe output"] = "Вывод в окно чата"
+L["Print a warning to the chat frame when an error occurs."] = "Вывод оповещений в окно чата, когда происходит ошибка."
+L["Errors to chatframe"] = "Ошибки в окно чата"
+L["Print the full error message to the chat frame instead of just a warning."] = "Вывод полных сообщение об ошибке вместо обычных оповещений."
+L["Mute"] = "Заглушить"
+L["Toggle an audible warning everytime an error occurs."] = "Каждый раз при ошибке выдает звуковое предупреждение."
+L["Sound"] = "Звук"
+L["What sound to play when an error occurs (Ctrl-Click to preview.)"] = "Проигрываемый звук во время ошибки (Ctrl-клик для предварительного просмотра.)"
+L["Save errors"] = "Сохранить ошибку"
+L["Toggle whether to save errors to your SavedVariables\\!BugGrabber.lua file."] = "Переключает сохранять или нет ошибки в файле SavedVariables\\!BugGrabber.lua."
+L["Limit"] = "Предел"
+L["Set the limit on the nr of errors saved."] = "Установите предел количества сохраняемых ошибок."
+L["Filter addon mistakes"] ="Фильтр ошибок аддона"
+L["Filters common mistakes that trigger the blocked/forbidden event."] = "Фильтрация общих ошибок которые вызывают запрещеные/блокированные события."
+L["Throttle at excessive amount"] = "Дроссель чрезмерных ошибок"
+L["Whether to throttle for a default of 60 seconds when BugGrabber catches more than 20 errors per second."] = "Закрывается по умолчанию на 60 секунд когда BugGrabber ловит более 20 ошибок в секунду."
+
+L["Generate bug"] = "Сгенерировать ошибку"
+L["Generate a fake bug for testing."] = "Сгенерировать ошибку для теста."
+L["Script bug"] = "Ошибка скрипта"
+L["Generate a script bug."] = "Сгенерировать ошибку скрипта."
+L["Addon bug"] = "Ошибка аддона"
+L["Generate an addon bug."] = "Сгенерировать ошибку аддона."
+
+L["Clear errors"] = "Очистить ошибки"
+L["Clear out the errors database."] = "Очистить ошибки из базы данных"
+
+L["%d sec."] = "%d сек."
+L["|cffeda55fBugGrabber|r is paused due to an excessive amount of errors being generated. It will resume normal operations in |cffff0000%d|r seconds. |cffeda55fDouble-Click|r to resume now."] = "|cffeda55fBugGrabber|r сделал паузу из за чрезмерно количества ошибок. Нормальные операции можно будет совершать через |cffff0000%d|r секунд. |cffeda55fDouble-Click|r чтобы возобновить сейчас."
+
+-- Chat messages
+L["You have no errors, yay!"] = "У вас нет никаких ошибок, да!"
+L["List of errors:"] = "Список ошибок:"
+L["An error has been generated."] = "Ошибка была сгенерировна."
+L["BugSack generated this fake error."] = "BugSack сгенерировал поддельную ошибку."
+L["All errors were wiped."] = "Все ошибки были стерты."
+L["An error has been recorded."] = "Ошибка была зарегистрирована."
+L["%d errors have been recorded."] = "%d |4ошибка:ошибки:ошибок; были зарегистрированы."
+L["You've received %d errors from %s, you can show them with /bugsack show received."] = "Вы получили %d |4ошибка:ошибки:ошибок; от |3-1(%s), для того чтобы посмотреть напечатайте /bugsack."
+L["%d errors has been sent to %s. He must have BugSack to be able to read them."] = "%d |4ошибка:ошибки:ошибок; отосланы к |3-2(%s). Но он должен иметь BugSack чтобы прочесть их."
+
+-- Frame messages,
+L[" (... more ...)"] = " (... более ...)"
+L["No errors found"] = "Ошибок не найдено"
+L["Error %d of %d"] = "Ошибка %d из %d"
+L[" (viewing last error)"] = " (отображение списка ошибок)"
+L[" (viewing session errors)"] = " (отображение ошибок сессии)"
+L[" (viewing previous session errors)"] = " (отображение ошибок предыдущей сессии)"
+L[" (viewing all errors)"] = " (отображение всех ошибок)"
+L[" (viewing errors for session %d)"] = " (отображение ошибок сессии %d)"
+L[" (viewing errors from %s)"] = " (отображение ошибок от |3-1(%s))"
+
+-- FuBar plugin
+L["|cffeda55fClick|r to open BugSack with the last error. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to clear the sack."] = "|cffeda55fКлик|r - открывает BugSack с последними ошибками. |cffeda55fShift-Клик|r - перезагрузка пользовательского интерфейса. |cffeda55fAlt-Клик|r - очистить мешок от ошибок."
+L["Minimap icon"] = "Иконка у мини-карты"
+L["Toggle the minimap icon."] = "переключение иконки у мини-карты"

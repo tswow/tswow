@@ -1,0 +1,14 @@
+------------------------------------------------------------------------
+r152 | rabbit | 2010-07-03 00:15:19 +0000 (Sat, 03 Jul 2010) | 1 line
+Changed paths:
+   M /trunk/BugGrabber.lua
+
+Tostring the error input in case some sneaky bastard calls geterrorhandler()(false|n) or whatever.
+------------------------------------------------------------------------
+r151 | rabbit | 2010-03-27 22:32:16 +0000 (Sat, 27 Mar 2010) | 1 line
+Changed paths:
+   M /trunk/!BugGrabber.toc
+   M /trunk/BugGrabber.lua
+
+Drop Ace2 support and bump TOC.
+------------------------------------------------------------------------
