@@ -392,7 +392,10 @@ export namespace mysql {
         return total;
     }
 
-    export async function applySQLFiles(
+    /**
+     * Applies updates that came from core in bin/sql.
+     */
+    export async function applySQLUpdates(
           cons: Connection
         , type: 'world'|'auth'|'characters'
     ) {
@@ -400,6 +403,18 @@ export namespace mysql {
         total += await makeUpdate(cons, ipaths.bin.sql.custom.type.pick(type).toDirectory())
         if(total > 0) {
             term.success('mysql',`Applied ${total} updates for ${cons.name()}`)
+        }
+    }
+
+    /**
+     * Apply sql file based mods that should run once on rebuild.
+     * Useful for large data migrations / edits. Limited to world
+     * for now.
+     */
+    export async function applyExtraSQLUpdates(cons: Connection, path: WDirectory) {
+        let total = await makeUpdate(cons, path.toDirectory());
+        if(total > 0) {
+            term.success('mysql',`Applied ${total} mods for ${cons.name()}`)
         }
     }
 
@@ -429,7 +444,7 @@ export namespace mysql {
 
         switch(core) {
             case 'trinitycore':
-                await applySQLFiles(connection,'characters');
+                await applySQLUpdates(connection,'characters');
                 break;
             case 'azerothcore':
                 // TODO: currently does not apply updates, this is wrong of course.
@@ -447,7 +462,7 @@ export namespace mysql {
 
             await connection.query(wfs.read(ipaths.bin.sql.auth_create_sql.get()));
         }
-        await applySQLFiles(connection,'auth');
+        await applySQLUpdates(connection,'auth');
     }
 
     export async function initialize() {

@@ -78,7 +78,10 @@ export function DatasetDirectory(inPath: string, inName: string) {
         config: file(`dataset.conf`),
         ids_txt: file('ids.txt'),
         modules_txt: file('modules.txt'),
-        world_sql: file('world.sql')
+        world_sql: file('world.sql'),
+        sql_updates: dir({
+            world: dir({}),
+        }),
     }))
 }
 

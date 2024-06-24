@@ -162,7 +162,12 @@ export class Dataset {
 
         switch(this.config.EmulatorCore) {
             case 'trinitycore':
-                await mysql.applySQLFiles(db,'world');
+                await mysql.applySQLUpdates(db,'world');
+
+                if (this.path.sql_updates.world.exists()) {
+                    await mysql.applyExtraSQLUpdates(db, this.path.sql_updates.world);
+                }
+                
                 break;
             case 'azerothcore':
                 // todo: updates
