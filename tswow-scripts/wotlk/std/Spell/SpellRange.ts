@@ -94,6 +94,8 @@ export class SpellRangeRef<T> extends RefDynamic<T,SpellRange>
             .Flags.set(flags)
         return this.owner;
     }
+
+    setInfinite() { return this.set(13) }
 }
 
 export class SpellRangeRegistryClass

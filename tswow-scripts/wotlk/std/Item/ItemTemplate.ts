@@ -72,7 +72,7 @@ import { PageMaterialCell } from "./PageMaterial";
 export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
     protected createDBC(): ItemRow {
         return DBC.Item.add(this.owner.ID)
-            .SheatheType.set(0)
+            .SheatheType.set(this.owner.row.sheath.get())
             .Material.set(0)
             .Sound_Override_Subclassid.set(0)
             .SubclassID.set(this.owner.row.subclass.get())
@@ -209,6 +209,8 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             ])
         );
     }
+    /** @deprecated use Sheath */
+    @Transient
     get SheatheType() { return this.dbc.SheatheType; }
     get RequiredFaction() { return new ItemRequiredFaction(this); }
     get ContainerSlots() { return this.wrap(this.row.ContainerSlots); }

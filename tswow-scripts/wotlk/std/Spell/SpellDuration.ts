@@ -48,6 +48,8 @@ export class SpellDurationRef<T> extends RefDynamic<T,SpellDuration>
         this.getRefCopy().set(duration,durationPerLevel,maxDuration);
         return this.owner;
     }
+
+    setInfinite() { return this.set(21) }
 }
 
 export class SpellDurationRegistryClass

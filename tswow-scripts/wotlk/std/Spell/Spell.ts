@@ -38,11 +38,13 @@ import { SpellBonusData } from "./SpellBonusData";
 import { SpellCastTimeRegistry } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
 import { SpellCustomAttr } from "./SpellCustomAttr";
+import { DefenseType } from "./SpellDefenseType";
 import { SpellDescriptionVariableRegistry } from "./SpellDescriptionVariable";
 import { SpellDifficultyRegistry } from "./SpellDifficulty";
 import { DispelType } from "./SpellDispelType";
 import { SpellDurationRegistry } from "./SpellDuration";
 import { SpellEffects } from "./SpellEffect";
+import { SpellEffectMechanic } from "./SpellEffectMechanics";
 import { SpellIconCell } from "./SpellIcon";
 import { SpellItemEquips } from "./SpellItemEquips";
 import { SpellLevels } from "./SpellLevels";
@@ -50,7 +52,7 @@ import { SpellMissileRegistry } from "./SpellMissile";
 import { SpellPower } from "./SpellPower";
 import { SpellPowerDisplay } from "./SpellPowerDisplay";
 import { SpellPreventionType } from "./SpellPreventionType";
-import { SpellProc } from "./SpellProc";
+import { SpellFamilyName, SpellProc } from "./SpellProc";
 import { SpellRangeRegistry } from "./SpellRange";
 import { SpellRank } from "./SpellRank";
 import { SpellReagents } from "./SpellReagents";
@@ -141,7 +143,7 @@ export class Spell extends MainEntityID<SpellRow> {
     get ClassMask() { return new BaseClassSet(this); }
 
     get Family() {
-        return this.wrap(this.row.SpellClassSet);
+        return makeEnumCell(SpellFamilyName, this, this.row.SpellClassSet);
     }
 
     get Power(): SpellPower<this> { return new SpellPower(this,this); }
@@ -159,7 +161,7 @@ export class Spell extends MainEntityID<SpellRow> {
     get Cooldown() { return new SpellRecovery(this, this); }
     get MaxTargetLevel() { return this.wrap(this.row.MaxTargetLevel); }
     get MaxTargets() { return this.wrap(this.row.MaxTargets); }
-    get DefenseType() { return this.wrap(this.row.DefenseType); }
+    get DefenseType() { return makeEnumCell(DefenseType, this, this.row.DefenseType); }
     get PreventionType() { return makeEnumCell(SpellPreventionType, this, this.row.PreventionType)}
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
     get CastTime() { return SpellCastTimeRegistry.ref(this,this.row.CastingTimeIndex); }
@@ -179,7 +181,7 @@ export class Spell extends MainEntityID<SpellRow> {
         return makeMaskCell32(SchoolMask,this, this.row.SchoolMask);
     }
     get DispelType() { return makeEnumCell(DispelType,this,this.row.DispelType)}
-    get Mechanic() { return this.wrap(this.row.Mechanic); }
+    get Mechanic() { return makeEnumCell(SpellEffectMechanic,this,this.row.Mechanic); }
     get Missile() { return SpellMissileRegistry.ref(this, this.row.SpellMissileID) }
 
     get ShapeshiftMask() { return new IncludeExcludeMask(this,
