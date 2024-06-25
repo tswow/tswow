@@ -33,6 +33,7 @@ class TSVehicle;
 class TSWorldObject;
 class TSWorldPacket;
 class TSPlayer;
+class TSCustomCache;
 
 class Weather;
 class Aura;
