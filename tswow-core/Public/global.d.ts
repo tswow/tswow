@@ -9340,6 +9340,9 @@ declare class TSDictionary<K,V> {
     filter(callback: (key: K, value: V)=>boolean): TSDictionary<K,V>
     // @ts-ignore
     map<M>(callback: (key: K, value: V, self: TSDictionary<K,V>)=>M): TSDictionary<K,M>
+
+    // @ts-ignore
+    get_length(): number
 }
 
 declare class TSDBDict<K,V> {

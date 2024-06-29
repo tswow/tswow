@@ -12932,7 +12932,7 @@ declare namespace WoWAPI {
          * @param b Blue component.
          * @param a Alpha component (1.0 is opaque, 0.0 is transparent). The default value is 1.0.
          */
-        SetColorTexture(r: number, g: number, b: number, a?: number): void;
+        SetColorTexture(r: number, g: number, b: number, a?: number): void; // SetVertexColor????
     }
 
     /**
@@ -13123,7 +13123,7 @@ declare namespace WoWAPI {
         /**
          * Controls how far into the frame the background will be drawn (use higher values the thicker the edges are)
          */
-        insets: {
+        insets?: {
             left: number;
             right: number;
             top: number;
@@ -13682,13 +13682,16 @@ declare namespace WoWAPI {
         SetFormattedText(formatstring: string): void;
         SetHighlightAtlas(atlasName: string): void;
         SetHighlightFontObject(fontObject: FontObject): void;
+        SetHighlightTexture(texture: string|Texture): void;
         SetHighlightTexture(texture: string): void;
         SetMotionScriptsWhileDisabled(shouldFire: bool): void;
         SetNormalAtlas(atlasName: string): void;
         SetNormalFontObject(fontObject: FontObject): void;
+        SetNormalTexture(texture: string|Texture): void;
         SetNormalTexture(texture: string): void;
         SetPushedAtlas(atlasName: string): void;
         SetPushedTextOffset(x: number, y: number): void;
+        SetPushedTexture(texture: string|Texture): void;
         SetPushedTexture(texture: string): void;
         SetText(textLabel:string): void;
         UnlockHighlight(): void;
@@ -13891,6 +13894,8 @@ declare const FocusFrame: WoWAPI.Frame;
 declare const WorldFrame: WoWAPI.Frame;
 declare const WorldMapFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
+
+declare const TalentMicroButton: WoWAPI.Button
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
