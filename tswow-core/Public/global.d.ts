@@ -42,30 +42,56 @@ interface Array<T> {
 }
 
 declare const enum Race /** @realType: uint8 */ {
-    HUMAN    = 1,
-    ORC      = 2,
-    DWARF    = 3,
-    NIGHTELF = 4,
-    UNDEAD   = 5,
-    TAUREN   = 6,
-    GNOME    = 7,
-    TROLL    = 8,
-    BLOODELF = 10,
-    DRAENEI  = 11,
+    HUMAN               = 1,
+    ORC                 = 2,
+    DWARF               = 3,
+    NIGHTELF            = 4,
+    UNDEAD_PLAYER       = 5,
+    TAUREN              = 6,
+    GNOME               = 7,
+    TROLL               = 8,
+    VULPERA             = 9,
+    BLOODELF            = 10,
+    DRAENEI             = 11,
+    WORGEN              = 12,
+    NIGHTBORNE          = 13,
+    PANDAREN            = 14,
+    VOIDELF             = 15,
+    EREDAR              = 16,
+    DRACTHYR            = 17,
+    ZANDALARI_TROLL     = 18,
+    OGRE                = 19,
+    DRAENEI_LIGHTFORGED = 20,
+    GOBLIN              = 21,
+    NAGA                = 22,
+    BROKEN              = 23,
+    TUSKARR             = 24,
+    FOREST_TROLL        = 25,
+    SKELETON            = 26,
+    DEMONHUNTERH        = 27,
+    ARAKKOA             = 28,
+    TAUNKA              = 29,
+    FELORC              = 30,
+    KULTIRAN            = 31,
+    DEMONHUNTERA        = 32,
 }
 declare type RaceID = Race | uint8
 
 declare const enum Class /** @realType: uint8 */ {
-    WARRIOR = 1,
-    PALADIN = 2,
-    HUNTER = 3,
-    ROGUE = 4,
-    PRIEST = 5,
-    DEATH_KNIGHT = 6,
-    SHAMAN = 7,
-    MAGE = 8,
-    WARLOCK = 9,
-    DRUID = 10,
+    WARRIOR       = 1,  // TITLE Warrior
+    PALADIN       = 2,  // TITLE Paladin
+    HUNTER        = 3,  // TITLE Hunter
+    ROGUE         = 4,  // TITLE Rogue
+    PRIEST        = 5,  // TITLE Priest
+    DEATH_KNIGHT  = 6,  // TITLE Death Knight
+    SHAMAN        = 7,  // TITLE Shaman
+    MAGE          = 8,  // TITLE Mage
+    WARLOCK       = 9,  // TITLE Warlock
+    DEMON_HUNTER  = 10, // TITLE DemonHunter
+    DRUID         = 11, // TITLE Druid
+    MONK          = 12, // TITLE Monk
+    BARD          = 13, // TITLE Bard
+    TINKER        = 14  // TITLE Tinker
 }
 declare type ClassID = Class | uint8
 
