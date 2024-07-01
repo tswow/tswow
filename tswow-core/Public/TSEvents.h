@@ -449,6 +449,8 @@ struct TSEvents
         EVENT(OnSetTarget, TSUnit, TSNumber<uint64> new_target, TSNumber<uint64> old_target)
         EVENT(OnLiquidStatusChanged, TSUnit, TSMutableNumber<uint32> newStatus);
         EVENT(OnOutdoorsChanged, TSUnit, TSMutable<bool,bool> isOutdoors);
+
+        EVENT(OnCastCancelled, TSUnit, TSSpellInfo)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry

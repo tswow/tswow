@@ -8846,6 +8846,8 @@ declare namespace _hidden {
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
+
+        OnCastCancelled(callback: (me: TSUnit, spell: TSSpellInfo)=>void)
     }
 
     export class Battleground<T> {

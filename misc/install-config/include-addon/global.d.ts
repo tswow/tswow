@@ -12008,7 +12008,7 @@ declare function GetRealmName(): string;
 /// <reference path="../auction.d.ts" />
 
 declare namespace WoWAPI {
-    interface GameTooltip extends UIObject, GameTooltipHookScript, GameTooltipSetScript {
+    interface GameTooltip extends UIObject, GameTooltipHookScript, GameTooltipSetScript, Frame {
 
         /**
          * Adds Line to tooltip with textLeft on left side of line and textRight on right side
@@ -13190,7 +13190,7 @@ declare namespace WoWAPI {
          * Returns the Frame Strata the frame is in.
          */
         GetFrameStrata(): FrameStrata;
-        
+
         /**
          * Returns the region's scale relative to its immediate parent (if it has one)
          * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
@@ -13304,6 +13304,11 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
+
+        /**
+         *  Returns Frame level
+         */
+        GetFrameLevel(): number;
 
         RegisterForDrag(button: WoWAPI.MouseButton): void;
 
@@ -13675,6 +13680,7 @@ declare namespace WoWAPI {
         SetButtonState(state: string): void;
         SetDisabledAtlas(atlasName: string): void;
         SetDisabledFontObject(fontObject: FontObject): void;
+        SetDisabledTexture(texture: string|Texture): void;
         SetDisabledTexture(texture: string): void;
         SetEnabled(isEnable: bool): void;
         SetFontString(fontString: string|FontObject): void;
