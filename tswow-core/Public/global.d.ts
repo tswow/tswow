@@ -192,7 +192,9 @@ declare const enum LineOfSightChecks { } /** SharedDefines.h:LineOfSightChecks *
 declare const enum VMapModelIgnoreFlags { } /** ModelIgnoreFlags.h:ModelIgnoreFlags */
 
 declare const enum Opcodes { } /** Opcodes.h:Opcodes */
-
+// @epoch-start
+declare const enum LiquidTypes { } /** SharedDefines.h:LiquidTypes */
+// @epoch-end
 declare interface TSMutable<T,R> {
     constructor(field: R);
     get() : R;
@@ -8261,7 +8263,10 @@ declare namespace _hidden {
         OnCast(id: EventID, callback : (spell: TSSpell)=>void): T;
 
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>)=>void): T;
-        OnCheckCast(id: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>)=>void): T;
+        OnCheckCast(id: EventID, callback: (spell: TSSpell, result: TSMutable<SpellCastResult, SpellCastResult>) => void): T;
+
+        OnCheckFishingCast(callback: (spell: TSSpell, caster: TSWorldObject, liquidType: LiquidTypes, result: TSMutable<SpellCastResult, SpellCastResult>) => void): T;
+        OnCheckFishingCast(id: EventID, callback: (spell: TSSpell, caster: TSWorldObject, liquidType: LiquidTypes, result: TSMutable<SpellCastResult, SpellCastResult>) => void): T;
 
         OnSuccessfulDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
         OnSuccessfulDispel(id: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void): T;

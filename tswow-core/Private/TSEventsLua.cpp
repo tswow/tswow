@@ -172,6 +172,9 @@ void TSLua::load_events(sol::state& state)
     auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCheckCast);
+    // @epoch-start
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCheckFishingCast);
+    // @epoch-end
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDispel);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffectApplyGlyph);
