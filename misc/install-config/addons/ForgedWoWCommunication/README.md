@@ -1,3 +1,0 @@
-# ReforgedDFTree
-
-Dusk is fun

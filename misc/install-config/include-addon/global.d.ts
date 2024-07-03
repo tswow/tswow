@@ -13620,7 +13620,7 @@ declare namespace WoWAPI {
         /**
          * Execute the click action of the button.
          */
-        Click(): void;
+        Click(self?: WoWAPI.Button, button?: string): void;
 
         /**
          * Disable the Button so that it cannot be clicked
