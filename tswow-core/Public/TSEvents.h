@@ -451,6 +451,9 @@ struct TSEvents
         EVENT(OnOutdoorsChanged, TSUnit, TSMutable<bool,bool> isOutdoors);
 
         EVENT(OnCastCancelled, TSUnit, TSSpellInfo)
+
+        EVENT(OnDamageDealt, TSUnit, TSUnit, TSNumber<uint32>)
+        EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
@@ -522,6 +525,10 @@ struct TSEvents
         ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
+        
+        ID_EVENT(OnAuraApplied, TSUnit, TSAura, TSUnit)
+        ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
+
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

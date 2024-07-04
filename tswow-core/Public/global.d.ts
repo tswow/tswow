@@ -8392,6 +8392,12 @@ declare namespace _hidden {
 
         OnResistAbsorbCalculate(callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
         OnResistAbsorbCalculate(id: EventID, callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutableNumber<uint32>, absorbAmount: TSMutableNumber<int32>, cancel: TSMutable<boolean,boolean> )=>void)
+    
+        OnAuraApplied(callback: (from: TSUnit, aura: TSAura, to: TSUnit) => void) : T;
+        OnAuraApplied(id: EventID, callback: (from: TSUnit, aura: TSAura, to: TSUnit) => void) : T;
+        
+        OnAuraRemoved(callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
+        OnAuraRemoved(id: EventID, callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
     }
 
     export class Creature<T> {
@@ -8848,6 +8854,9 @@ declare namespace _hidden {
         OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
 
         OnCastCancelled(callback: (me: TSUnit, spell: TSSpellInfo)=>void)
+
+        OnDamageDealt(callback: (from: TSUnit, To: TSUnit, damage) => void)
+        OnDamageTaken(callback: (who: TSUnit, from: TSUnit, damage: int32) => void)
     }
 
     export class Battleground<T> {
