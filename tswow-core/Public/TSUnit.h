@@ -228,6 +228,11 @@ public:
     TSNumber<uint32> GetArmor();
     void SetResistance(uint32 school, int32 val);
     void SetArmor(int32 val);
+
+    TSNumber<float> GetTotalAttackPowerValue(uint8) const;
+    TSNumber<uint32> GetAttackTime(uint8) const;
+    TSNumber<float> GetWeaponDamageRange(uint8, uint8, uint8) const;
+    TSNumber<float> ApplyEffectModifiers(TSSpellInfo, uint8, float) const;
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

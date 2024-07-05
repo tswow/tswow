@@ -2611,3 +2611,19 @@ bool TSUnit::IsSchoolLocked(uint32 schoolMask)
 {
     return unit->GetSpellHistory()->IsSchoolLocked(SpellSchoolMask(schoolMask));
 }
+
+TSNumber<float> TSUnit::GetTotalAttackPowerValue(uint8 AttackType) const {
+    return unit->GetTotalAttackPowerValue(WeaponAttackType(AttackType));
+}
+
+TSNumber<uint32> TSUnit::GetAttackTime(uint8 AttackType) const {
+    return unit->GetAttackTime(WeaponAttackType(AttackType));
+}
+
+TSNumber<float> TSUnit::GetWeaponDamageRange(uint8 AttackType, uint8 Range, uint8 Index) const {
+    return unit->GetWeaponDamageRange(WeaponAttackType(AttackType), WeaponDamageRange(Range), Index);
+}
+
+TSNumber<float> TSUnit::ApplyEffectModifiers(TSSpellInfo info, uint8 index, float value) const {
+    return unit->ApplyEffectModifiers(info->info, index, value);
+}
