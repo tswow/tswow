@@ -2273,6 +2273,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
 
     GetFace(): TSNumber<uint8>;
     SetFace(face: uint8);
+
+    SendQuestGiverStatusMultiple() : void
 }
 
 declare interface TSCorpse extends TSWorldObject {

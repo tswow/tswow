@@ -4322,3 +4322,8 @@ bool TSPlayer::IsTaximaskNodeKnown(uint32 nodeidx)
 {
     return player->m_taxi.IsTaximaskNodeKnown(nodeidx);
 }
+
+void TSPlayer::SendQuestGiverStatusMultiple()
+{
+    player->SendQuestGiverStatusMultiple();
+}
