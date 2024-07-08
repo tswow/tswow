@@ -109,6 +109,8 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
     LUA_HANDLE(player_events, PlayerEvents, OnReputationPriceDiscount);
+    LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
@@ -157,6 +159,10 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnEnterCombatWith);
     LUA_HANDLE(unit_events, UnitEvents, OnExitCombatWith);
     LUA_HANDLE(unit_events, UnitEvents, OnSetTarget);
+    LUA_HANDLE(unit_events, UnitEvents, OnDamageDealt);
+    LUA_HANDLE(unit_events, UnitEvents, OnDamageTaken);
+    LUA_HANDLE(unit_events, UnitEvents, OnLossOfControl);
+    LUA_HANDLE(unit_events, UnitEvents, OnRageGainedViaAttack);
 
     auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);

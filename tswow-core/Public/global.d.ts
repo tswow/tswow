@@ -7448,6 +7448,11 @@ declare interface TSUnit extends TSWorldObject {
      */
     AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : SpellSchoolMask | uint32, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
+
+    GetTotalAttackPowerValue(attackType: uint8) : TSNumber<float>
+    GetAttackTime(attackType: uint8) : TSNumber<uint32>
+    GetWeaponDamageRange(attackType: uint8, damageRange: uint8, index: uint8) : TSNumber<float>
+    ApplyEffectModifiers(spellInfo: TSSpellInfo, index: uint8, value: float) : TSNumber<float>
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -7701,7 +7706,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetRuneCostID() : TSNumber<uint32>
 	GetSchoolMask() : TSNumber<uint32>
 	GetSpeed() : TSNumber<uint32>
-	GetSpellFamilyFlags() : TSNumber<uint32>
+	GetSpellFamilyFlags(index: uint8) : TSNumber<uint32>
 	GetSpellFamilyName() : TSNumber<uint32>
 	GetSpellIconID() : TSNumber<uint32>
 	GetSpellLevel() : TSNumber<uint32>
@@ -8107,7 +8112,10 @@ declare namespace _hidden {
             , faction: TSFactionTemplate
             , creature: TSCreature
             , money: TSMutableNumber<float>
-         ) => void);
+         ) => void)
+
+        OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
+        OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
     }
 
     export class Account<T> {
@@ -8857,6 +8865,9 @@ declare namespace _hidden {
 
         OnDamageDealt(callback: (from: TSUnit, To: TSUnit, damage) => void)
         OnDamageTaken(callback: (who: TSUnit, from: TSUnit, damage: int32) => void)
+        OnLossOfControl(callback: (who: TSUnit, state: uint32) => void)
+
+        OnRageGainedViaAttack(callback: (To: TSUnit, Victim: TSUnit, RageDamage: TSMutableNumber<uint32>) => void)
     }
 
     export class Battleground<T> {

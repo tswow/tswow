@@ -2306,7 +2306,7 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
     {
         return;
     }
-
+    
     SpellNonMeleeDamage damageInfo(unit, target, spell, schoolmask);
     unit->SetLastDamagedTargetGuid(target->GetGUID());
     unit->CalculateSpellDamageTaken(&damageInfo, damage, spellInfo, WeaponAttackType::BASE_ATTACK);

@@ -354,4 +354,26 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     get UNUSED()                        { return this.value(163, x=>x) }
     /** Enum Value:                                         164 */
     get REMOVE_AURA()                   { return this.value(164, x=>new RemoveAura(x)) }
+    /** Enum Value:                                         165 */
+    get LEARN_TRANSMOG_SET()              { return this.value(165, x=>x) }
+    /** Enum Value:                                         166 */
+    get DO_NOT_USE_THIS_ONE()             { return this.value(166, x=>x) }
+    /** Enum Value:                                         167 */
+    get JUMP_CHARGE()                     { return this.value(167, x=>x) }
+    /** Enum Value:                                         168 */
+    get MODIFY_CURRENT_SPELL_COOLDOWN()   { return this.value(168, x=>x) }
+    /** Enum Value:                                         169 */
+    get REMOVE_CURRENT_SPELL_COOLDOWN()   { return this.value(169, x=>x) }
+    /** Enum Value:                                         170 */
+    get RESTORE_SPELL_CHARGE()            { return this.value(170, x=>x) }
+    /** Enum Value:                                         171 */
+    get GIVE_EXPERIENCE()                 { return this.value(171, x=>x) }
+    /** Enum Value:                                         172 */
+    get GIVE_RESTED_EXPERIENCE_BONUS()    { return this.value(172, x=>x) }
+    /** Enum Value:                                         173 */
+    get GIVE_HONOR()                      { return this.value(173, x=>x) }
+    /** Enum Value:                                         174 */
+    get RECEIVE_ITEM()                    { return this.value(174, x=>x) }
+    /** Enum Value:                                         175 */
+    get DO_NOT_USE_THIS_ONE2()            { return this.value(175, x=>x) }
 }

@@ -113,7 +113,7 @@ public:
     TSNumber<uint32> GetRuneCostID();
     TSNumber<uint32> GetSchoolMask();
     TSNumber<uint32> GetSpeed();
-    TSNumber<uint32> GetSpellFamilyFlags();
+    TSNumber<uint32> GetSpellFamilyFlags(uint8 index);
     TSNumber<uint32> GetSpellFamilyName();
     TSNumber<uint32> GetSpellIconID();
     TSNumber<uint32> GetSpellLevel();

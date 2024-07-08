@@ -283,9 +283,9 @@ TSNumber<uint32> TSSpellInfo::GetSpeed()
     return info->Speed;
 }
 
-TSNumber<uint32> TSSpellInfo::GetSpellFamilyFlags()
+TSNumber<uint32> TSSpellInfo::GetSpellFamilyFlags(uint8 index)
 {
-    return info->SpellFamilyFlags;
+    return info->SpellFamilyFlags[index];
 }
 
 TSNumber<uint32> TSSpellInfo::GetSpellFamilyName()

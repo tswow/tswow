@@ -273,6 +273,8 @@ export class PeriodicHealthFunnel extends HealBase {
     get Period() { return this.wrap(this.owner.AuraPeriod); }
 }
 // 63
+export class ModDamageOfReflected extends PercentBase {
+}
 // 64
 export class PeriodicManaLeech extends ManaBase {
     get Period() { return this.wrap(this.owner.AuraPeriod); }
@@ -509,7 +511,8 @@ export class ModHealingPct extends PercentBase {
     }
 }
 // 119
-
+export class ModHealingFromBandagePct extends PercentBase {
+}
 // 120
 export class Untrackable extends TargetBase {}
 // 121

@@ -342,6 +342,9 @@ struct TSEvents
             , TSCreature creature
             , TSMutableNumber<float> money
          )
+
+         EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
+         EVENT(OnCustomScriptedDamageMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSNumber<uint8> SpellType)
     } Player;
 
     struct AccountEvents
@@ -454,6 +457,8 @@ struct TSEvents
 
         EVENT(OnDamageDealt, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
+        EVENT(OnLossOfControl, TSUnit, TSNumber<uint32>)
+        EVENT(OnRageGainedViaAttack, TSUnit, TSUnit, TSMutableNumber<uint32> rage_damage)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry

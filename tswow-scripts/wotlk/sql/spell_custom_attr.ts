@@ -39,6 +39,7 @@ export class spell_custom_attrRow extends SqlRow<spell_custom_attrCreator,spell_
      * No comment (yet!)
      */
     get attributes() {return new SQLCell<mediumint, this>(this, 'attributes')}
+    get attributesEx() {return new SQLCell<mediumint, this>(this, 'attributesEx')}
 
     /**
      * Creates a clone of this row with new primary keys.
@@ -56,6 +57,7 @@ export class spell_custom_attrRow extends SqlRow<spell_custom_attrCreator,spell_
 export type spell_custom_attrCreator = {
     entry? : mediumint,
     attributes? : mediumint,
+    attributesEx? : mediumint,
 }
 
 /**
@@ -64,6 +66,7 @@ export type spell_custom_attrCreator = {
 export type spell_custom_attrQuery = {
     entry? : Relation<mediumint>,
     attributes? : Relation<mediumint>,
+    attributesEx? : Relation<mediumint>,
 }
 
 /**
