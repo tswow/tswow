@@ -1196,6 +1196,11 @@ TSItem  TSPlayer::GetEquippedItemBySlot(uint8 slot)
      return TSItem(item);
 }
 
+bool TSPlayer::IsUnarmed()
+{
+    return player->IsUnarmed();
+}
+
 /**
  * Returns the [Player]s current resting bonus
  *

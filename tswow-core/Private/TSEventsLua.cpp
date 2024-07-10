@@ -111,6 +111,8 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnReputationPriceDiscount);
     LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod); // same as above but for crit chance
+    LUA_HANDLE(player_events, PlayerEvents, OnPowerSpent);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);

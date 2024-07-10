@@ -1074,6 +1074,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      */
     GetEquippedItemBySlot(slot : uint8) : TSItem
 
+    IsUnarmed() : bool
+
     /**
      * Returns the [Player]s current resting bonus
      *
@@ -7453,6 +7455,8 @@ declare interface TSUnit extends TSWorldObject {
     GetAttackTime(attackType: uint8) : TSNumber<uint32>
     GetWeaponDamageRange(attackType: uint8, damageRange: uint8, index: uint8) : TSNumber<float>
     ApplyEffectModifiers(spellInfo: TSSpellInfo, index: uint8, value: float) : TSNumber<float>
+
+    RollChance(chance: uint8) : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -8116,6 +8120,8 @@ declare namespace _hidden {
 
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
         OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
+        OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutable<float>) => void);
+        OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
     }
 
     export class Account<T> {

@@ -126,6 +126,11 @@ export enum SpellProcFlags {
     DONE_MAINHAND_ATTACK                   = 0x100000,
     DONE_OFFHAND_ATTACK                    = 0x200000,
     DEATH                                  = 0x400000,
+    DAMAGE_BLOCKED                         = 0x800000,
+    DONE_CRITICAL_DAMAGE                   = 0x1000000,
+    TAKEN_CRITICAL_DAMAGE                  = 0x2000000,
+    DONE_CRITICAL_HEALING                  = 0x40000000,
+    TAKEN_CRITICAL_HEALING                 = 0x80000000,
 
 }
 

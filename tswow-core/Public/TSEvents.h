@@ -345,6 +345,8 @@ struct TSEvents
 
          EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
          EVENT(OnCustomScriptedDamageMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSNumber<uint8> SpellType)
+         EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
+         EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
     } Player;
 
     struct AccountEvents

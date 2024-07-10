@@ -41,4 +41,9 @@ export enum ProcType {
     MAINHAND_ATTACK                = 0x400000,
     OFFHAND_ATTACK                 = 0x800000,
     DEATH                          = 0x1000000,
+    DAMAGE_BLOCKED                 = 0x02000000,
+    DONE_CRITICAL_DAMAGE           = 0x04000000,
+    TAKEN_CRITICAL_DAMAGE          = 0x08000000,
+    DONE_CRITICAL_HEALING          = 0x10000000,
+    TAKEN_CRITICAL_HEALING         = 0x20000000,
 }

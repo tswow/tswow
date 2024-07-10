@@ -205,7 +205,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               89 */
     get PERIODIC_DAMAGE_PERCENT()             { return this.value(89, x=>new PeriodicDamagePercent(x)) }
     /** Enum Value:                                               90 */
-    get SPELL_AURA90()                        { return this.value(90, x=>x) }
+    get SPELL_AURA_MOD_DAMAGE_DONE_DAMAGETYPE() { return this.value(90, x=>x) }
     /** Enum Value:                                               91 */
     get MOD_DETECT_RANGE()                    { return this.value(91, x=>new ModDetectRange(x)) }
     /** Enum Value:                                               92 */
@@ -353,7 +353,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               163 */
     get MOD_CRIT_DAMAGE_BONUS()               { return this.value(163, x=>new ModCritDamageBonus(x)) }
     /** Enum Value:                                               164 */
-    get SPELL_AURA164()                       { return this.value(164, x=>x) }
+    get SPELL_AURA_MOD_DAMAGE_TAKEN_DAMAGETYPE() { return this.value(164, x=>x) }
     /** Enum Value:                                               165 */
     get MELEE_ATTACK_POWER_ATTACKER_BONUS()   { return this.value(165, x=>new MeleeAttackPowerAttackerBonus(x)) }
     /** Enum Value:                                               166 */
@@ -371,7 +371,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               172 */
     get MOD_MOUNTED_SPEED_NOT_STACK()         { return this.value(172, x=>new ModMountedSpeedNotStack(x)) }
     /** Enum Value:                                               173 */
-    get SPELL_AURA173()                       { return this.value(173, x=>x) }
+    get MOD_DAMAGE_PCT_TAKEN_FROM_SPELL()     { return this.value(173, x=>x) }
     /** Enum Value:                                               174 */
     get MOD_SPELL_DAMAGE_OF_STAT_PERCENT()    { return this.value(174, x=>new ModSpellDamageOfStatPercent(x)) }
     /** Enum Value:                                               175 */
@@ -647,7 +647,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               310 */
     get MOD_CREATURE_AOE_DAMAGE_AVOIDANCE()   { return this.value(310, x=>new ModCreatureAoEDamageAvoidance(x)) }
     /** Enum Value:                                               311 */
-    get SPELL_AURA311()                       { return this.value(311, x=>x) }
+    get TRIGGER_SPELL_WITH_PCT_OF_TRIGGER()   { return this.value(311, x=>x) }
     /** Enum Value:                                               312 */
     get SPELL_AURA312()                       { return this.value(312, x=>x) }
     /** Enum Value:                                               313 */
@@ -658,4 +658,82 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     get UNDERWATER_WALKING()                  { return this.value(315, x=>new UnderwaterWalking(x)) }
     /** Enum Value:                                               316 */
     get PERIODIC_HASTE()                      { return this.value(316, x=>x) }
+    /** Enum Value:                                               317 */
+    get MOD_SPELL_DAMAGE_OF_ARMOR()                 { return this.value(317, x=>x) }
+    /** Enum value:                                               318 */
+    get MOD_BLOCK_VALUE_SCALING()                   { return this.value(318, x=>x) }
+    /** Enum value:                                               319 */
+    get MOD_WEAPON_SCHOOL_DAMAGE_EFFECT()           { return this.value(319, x=>x) }
+    /** Enum value:                                               320 */
+    get PROC_ADD_DURATION()                         { return this.value(320, x=>x) }
+    /** Enum value:                                               321 */
+    get MOD_CRITICAL_BLOCK_PCT()                    { return this.value(321, x=>x) }
+    /** Enum value:                                               322 */
+    get MOD_SPELL_CHARGES()                         { return this.value(322, x=>x) }
+    /** Enum value:                                               323 */
+    get MOD_TRIGGER_SPELL_ON_STACKS()               { return this.value(323, x=>x) }
+    /** Enum value:                                               324 */
+    get MOD_BASE_CRIT_DAMAGE()                      { return this.value(324, x=>x) }
+    /** Enum value:                                               325 */
+    get MOD_DAMAGE_TAKEN_PCT_BEFORE_BLOCK()         { return this.value(325, x=>x) }
+    /** Enum value:                                               326 */
+    get ADD_SPELL_BLOCK()                           { return this.value(326, x=>x) }
+    /** Enum value:                                               327 */
+    get MOD_TOGGLE_AURA_COMBAT_STATE()              { return this.value(327, x=>x) }
+    /** Enum value:                                               328 */
+    get MOD_SPELL_POWER()                           { return this.value(328, x=>x) }
+    /** Enum value:                                               329 */
+    get MOD_SPELL_POWER_PCT()                       { return this.value(329, x=>x) }
+    /** Enum value:                                               330 */
+    get MOD_SPELL_POWER_OF_STAT_PERCENT()           { return this.value(330, x=>x) }
+    /** Enum value:                                               331 */
+    get MOD_SPELL_POWER_OF_RATING_PERCENT()         { return this.value(331, x=>x) }
+    /** Enum value:                                               332 */
+    get MOD_TRIGGER_SPELL_ON_POWER_PCT()            { return this.value(332, x=>x) }
+    /** Enum value:                                               333 */
+    get MOD_RATING_PCT()                            { return this.value(333, x=>x) }
+    /** Enum value:                                               334 */
+    get MOD_RATING_OF_RATING_PCT()                  { return this.value(334, x=>x) }
+    /** Enum value:                                               335 */
+    get MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER()        { return this.value(335, x=>x) }
+    /** Enum value:                                               336 */
+    get MOD_AUTOATTACK_DAMAGE_PCT()                 { return this.value(336, x=>x) }
+    /** Enum value:                                               336 */
+    get MOD_SCHOOL_MASK_DAMAGE_VS_CASTER()          { return this.value(336, x=>x) }
+    /** Enum value:                                               338 */
+    get AREA_TRIGGER()                              { return this.value(338, x=>x) }
+    /** Enum value:                                               339 */
+    get MOD_ARMOR_PENETRATION()                     { return this.value(339, x=>x) }
+    /** Enum value:                                               340 */
+    get KNOCKBACK_IMMUNITY()                        { return this.value(340, x=>x) }
+    /** Enum value:                                               341 */
+    get ADD_MASTERY_PCT_TO_SPELL_EFFECT()           { return this.value(341, x=>x) }
+    /** Enum value:                                               342 */
+    get MOD_RATING_FROM_ALL_SOURCES_BY_PCT()        { return this.value(342, x=>x) }
+    /** Enum value:                                               343 */
+    get MOD_RECOVERY_RATE()                         { return this.value(343, x=>x) }
+    /** Enum value:                                               344 */
+    get ADD_MASTERY_RATING_TO_SPELL_EFFECT()        { return this.value(344, x=>x) }
+    /** Enum value:                                               345 */
+    get MOD_REMOVE_AURA()                           { return this.value(345, x=>x) }
+    /** Enum value:                                               346 */
+    get CAN_DOUBLE_JUMP()                           { return this.value(346, x=>x) }
+    /** Enum value:                                               347 */
+    get CAN_GLIDE()                                 { return this.value(347, x=>x) }
+    /** Enum value:                                               348 */
+    get MOD_SCHOOL_MASK_HEALING_FROM_CASTER()       { return this.value(348, x=>x) }
+    /** Enum value:                                               349 */
+    get MOD_MONEY_GAIN()                            { return this.value(349, x=>x) }
+    /** Enum value:                                               350 */
+    get MOD_TAXI_FLIGHT_SPEED()                     { return this.value(350, x=>x) }
+    /** Enum value:                                               351 */
+    get MOD_FORGE_STAT()                            { return this.value(351, x=>x) }
+    /** Enum value:                                               352 */
+    get MOD_RESTED_XP_MAX_AMOUNT()                  { return this.value(352, x=>x) }
+    /** Enum value:                                               353 */
+    get MOD_RESTED_XP_RECOVERY_RATE()               { return this.value(353, x=>x) }
+    /** Enum value:                                               354 */
+    get MOD_CHANGE_DAMAGE_SCHOOL_OF_SPELL()         { return this.value(354, x=>x) }
+    /** Enum value:                                               355 */
+    get ADD_COMBAT_RATING_PCT_TO_SPELL_EFFECT()     { return this.value(355, x=>x) }
 }

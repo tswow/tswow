@@ -115,6 +115,7 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, GetReqKillOrCastCurrentCount);
     LUA_FIELD(ts_player, TSPlayer, GetQuestLevel);
     LUA_FIELD(ts_player, TSPlayer, GetEquippedItemBySlot);
+    LUA_FIELD(ts_player, TSPlayer, IsUnarmed);
     LUA_FIELD(ts_player, TSPlayer, GetRestBonus);
     LUA_FIELD(ts_player, TSPlayer, GetChatTag);
     LUA_FIELD(ts_player, TSPlayer, SetBankBagSlotCount);

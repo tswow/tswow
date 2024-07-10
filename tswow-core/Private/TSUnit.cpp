@@ -2627,3 +2627,7 @@ TSNumber<float> TSUnit::GetWeaponDamageRange(uint8 AttackType, uint8 Range, uint
 TSNumber<float> TSUnit::ApplyEffectModifiers(TSSpellInfo info, uint8 index, float value) const {
     return unit->ApplyEffectModifiers(info->info, index, value);
 }
+
+bool TSUnit::RollChance(uint8 chance) {
+    return roll_chance_i(chance);
+}

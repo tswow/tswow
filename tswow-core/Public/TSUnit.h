@@ -233,6 +233,8 @@ public:
     TSNumber<uint32> GetAttackTime(uint8) const;
     TSNumber<float> GetWeaponDamageRange(uint8, uint8, uint8) const;
     TSNumber<float> ApplyEffectModifiers(TSSpellInfo, uint8, float) const;
+
+    bool RollChance(uint8);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;
