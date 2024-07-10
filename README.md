@@ -51,6 +51,7 @@ The purpose of this document is to walk through building the Duskhaven fork of T
 - [VC Redist 2013 x64](https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Visual Studio 2022 Community](https://visualstudio.microsoft.com/downloads/)
+- [Python 3.11.4(dont get 3.12, they took out distutils)](https://www.python.org/ftp/python/3.11.4/python-3.11.4-amd64.exe)
 - World of Warcraft 3.3.5a Client
 
 ### Build Stage Directory / File Setup
