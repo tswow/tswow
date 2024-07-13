@@ -293,6 +293,8 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     /** @epoch-start */
     /** The range at which a creature will aggro at equal level. */
     get DetectionRange() { return this.wrap(this.row.detection_range); }
+
+    get CorpseDelay() { return this.wrap(this.row.corpse_delay); }
     /** @epoch-end */
     get Scale() { return this.wrap(this.row.scale); }
     get Rank() {
