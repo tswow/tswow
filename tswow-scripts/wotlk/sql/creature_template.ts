@@ -137,8 +137,6 @@ export class creature_templateRow extends SqlRow<creature_templateCreator,creatu
 
     /** @epoch-start */
     get detection_range() { return new SQLCell<float, this>(this, 'detection_range') }
-
-    get corpse_delay() { return new SQLCell<float, this>(this, 'corpse_delay') }
     /** @epoch-end */
 
     /**
@@ -321,6 +319,10 @@ export class creature_templateRow extends SqlRow<creature_templateCreator,creatu
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
 
+    /** @epoch-start */
+    get corpse_delay() { return new SQLCell<float, this>(this, 'corpse_delay') }
+    /** @epoch-end */
+
     /**
      * No comment (yet!)
      */
@@ -363,7 +365,6 @@ export type creature_templateCreator = {
     speed_run? : float,
     /** @epoch-start */
     detection_range? : float,
-    corpse_decay? : smallint,
     /** @epoch-end */
     scale? : float,
     rank? : tinyint,
@@ -401,6 +402,9 @@ export type creature_templateCreator = {
     spell_school_immune_mask? : int,
     flags_extra? : int,
     ScriptName? : char,
+    /** @epoch-start */
+    corpse_delay? : smallint,
+    /** @epoch-end */
     VerifiedBuild? : smallint,
 }
 
@@ -431,7 +435,7 @@ export type creature_templateQuery = {
     speed_run? : Relation<float>,
     /** @epoch-start */
     detection_range? : Relation<float>,
-    corpse_decay? : Relation<smallint>,
+    corpse_delay? : Relation<smallint>,
     /** @epoch-end */
     scale? : Relation<float>,
     rank? : Relation<tinyint>,
