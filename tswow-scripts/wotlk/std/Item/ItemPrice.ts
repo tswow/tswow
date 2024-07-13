@@ -51,7 +51,7 @@ export class ItemPrice extends CellSystem<ItemTemplate> {
         const sell = sellPrice === -1 ? buyPrice / 4 : sellPrice
         return this.setUnsafe(
               sell
-            , buyPrice
+            , buyPrice * buyCount // Multiply buyprice by buycount so buyprice still equates to the cost of 1 item
             , buyCount
             , currency
         );
