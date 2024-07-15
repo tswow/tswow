@@ -105,49 +105,32 @@ export enum SpellFamilyName {
 export enum SpellProcFlags {
     KILLED                          = 0x00000001,    // 00 Killed by agressor - not sure about this flag
     KILL                            = 0x00000002,    // 01 Kill target (in most cases need XP/Honor reward)
-
     DONE_MELEE_AUTO_ATTACK          = 0x00000004,    // 02 Done melee auto attack
     TAKEN_MELEE_AUTO_ATTACK         = 0x00000008,    // 03 Taken melee auto attack
-
     DONE_SPELL_MELEE_DMG_CLASS      = 0x00000010,    // 04 Done attack by Spell that has dmg class melee
     TAKEN_SPELL_MELEE_DMG_CLASS     = 0x00000020,    // 05 Taken attack by Spell that has dmg class melee
-
     DONE_RANGED_AUTO_ATTACK         = 0x00000040,    // 06 Done ranged auto attack
     TAKEN_RANGED_AUTO_ATTACK        = 0x00000080,    // 07 Taken ranged auto attack
-
     DONE_SPELL_RANGED_DAMAGE_CLASS     = 0x00000100,    // 08 Done attack by Spell that has dmg class ranged
     TAKEN_SPELL_RANGED_DAMAGE_CLASS    = 0x00000200,    // 09 Taken attack by Spell that has dmg class ranged
-
     DONE_SPELL_NONE_DAMAGE_CLASS_POSITIVE   = 0x00000400,    // 10 Done positive spell that has dmg class none
     TAKEN_SPELL_NONE_DAMAGE_CLASS_POSITIVE  = 0x00000800,    // 11 Taken positive spell that has dmg class none
-
     DONE_SPELL_NONE_DAMAGE_CLASS_NEGATIVE   = 0x00001000,    // 12 Done negative spell that has dmg class none
     TAKEN_SPELL_NONE_DAMAGE_CLASS_NEGATIVE  = 0x00002000,    // 13 Taken negative spell that has dmg class none
-
     DONE_SPELL_MAGIC_DAMAGE_CLASS_POSITIVE  = 0x00004000,    // 14 Done positive spell that has dmg class magic
     TAKEN_SPELL_MAGIC_DAMAGE_CLASS_POSITIVE = 0x00008000,    // 15 Taken positive spell that has dmg class magic
-
     DONE_SPELL_MAGIC_DAMAGE_CLASS_NEGATIVE  = 0x00010000,    // 16 Done negative spell that has dmg class magic
     TAKEN_SPELL_MAGIC_DAMAGE_CLASS_NEGATIVE = 0x00020000,    // 17 Taken negative spell that has dmg class magic
-
     DONE_PERIODIC                   = 0x00040000,    // 18 Successful do periodic (damage / healing)
     TAKEN_PERIODIC                  = 0x00080000,    // 19 Taken spell periodic (damage / healing)
-
     TAKEN_DAMAGE                    = 0x00100000,    // 20 Taken any damage
     DONE_TRAP_ACTIVATION            = 0x00200000,    // 21 On trap activation (possibly needs name change to ON_GAMEOBJECT_CAST or USE)
-
     DONE_MAINHAND_ATTACK            = 0x00400000,    // 22 Done main-hand melee attacks (spell and autoattack)
     DONE_OFFHAND_ATTACK             = 0x00800000,    // 23 Done off-hand melee attacks (spell and autoattack)
-
     DEATH                           = 0x01000000,    // 24 Died in any way
-
     DAMAGE_BLOCKED                  = 0x02000000,    // 25 Damage blocked
-
     CRITICAL_DAMAGE_DONE            = 0x04000000,    // 26 crit done
     CRITICAL_DAMAGE_TAKEN           = 0x08000000,    // 26 crit taken
-
-    CRITICAL_HEALING_DONE           = 0x10000000,    // 27 Damage blocked
-    CRITICAL_HEALING_TAKEN          = 0x20000000,    // 27 Damage blocked
 }
 
 export class SimpleClassMask<T> extends CellSystem<T>

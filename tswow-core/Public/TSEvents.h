@@ -348,7 +348,8 @@ struct TSEvents
          EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
          EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
          EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
-         EVENT(OnEnchantTriggered, TSPlayer caster, TSUnit On, TSItem item, TSSpellInfo info)
+         EVENT(OnEnchantTriggered, TSPlayer player, TSUnit target, TSItem item, TSSpellInfo spellInfo)
+         EVENT(OnCustomScriptedHealMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSMutableNumber<float> DoneTotalMod)
     } Player;
 
     struct AccountEvents
@@ -539,7 +540,6 @@ struct TSEvents
         ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
 
         ID_EVENT(OnHeal, TSHealInfo)
-
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
