@@ -8124,11 +8124,15 @@ declare namespace _hidden {
          ) => void)
 
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
-        OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
+        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
+        OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, TakenTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutable<float>) => void);
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutable<float>) => void);
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
         OnEnchantTriggered(callback: (Caster: TSPlayer, On: TSUnit, Item: TSItem, Spell: TSSpellInfo) => void);
+
+        OnUpdateSpellHealing(callback: (player: TSPlayer, healingPower: TSMutableNumber<int32>) => void)
+        OnUpdateSpellDamage(callback: (player: TSPlayer, SpellPower: TSMutableNumber<int32>, School: TSNumber<uint8>) => void)
     }
 
     export class Account<T> {

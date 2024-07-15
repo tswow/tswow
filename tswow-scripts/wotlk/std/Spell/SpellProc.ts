@@ -131,6 +131,8 @@ export enum SpellProcFlags {
     DAMAGE_BLOCKED                  = 0x02000000,    // 25 Damage blocked
     CRITICAL_DAMAGE_DONE            = 0x04000000,    // 26 crit done
     CRITICAL_DAMAGE_TAKEN           = 0x08000000,    // 26 crit taken
+    CRITICAL_HEALING_DONE           = 0x10000000,    // 27 Damage blocked
+    CRITICAL_HEALING_TAKEN          = 0x20000000,    // 27 Damage blocked
 }
 
 export class SimpleClassMask<T> extends CellSystem<T>

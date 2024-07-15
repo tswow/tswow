@@ -343,13 +343,16 @@ struct TSEvents
             , TSMutableNumber<float> money
          )
 
-         EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
-         EVENT(OnCustomScriptedDamageMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSNumber<uint8> SpellType)
-         EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
-         EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
-         EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
-         EVENT(OnEnchantTriggered, TSPlayer player, TSUnit target, TSItem item, TSSpellInfo spellInfo)
-         EVENT(OnCustomScriptedHealMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSMutableNumber<float> DoneTotalMod)
+        EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
+        EVENT(OnCustomScriptedDamageDoneMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSNumber<uint8> SpellType)
+        EVENT(OnCustomScriptedDamageTakenMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> TakenTotalMod, TSNumber<uint8> SpellType)
+        EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
+        EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
+        EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
+        EVENT(OnEnchantTriggered, TSPlayer player, TSUnit target, TSItem item, TSSpellInfo spellInfo)
+
+        EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
+        EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)
     } Player;
 
     struct AccountEvents
