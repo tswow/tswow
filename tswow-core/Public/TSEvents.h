@@ -538,7 +538,7 @@ struct TSEvents
         ID_EVENT(OnAuraApplied, TSUnit, TSAura, TSUnit)
         ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
 
-        ID_EVENT(OnHeal, TSHealInfo(&healInfo))
+        ID_EVENT(OnHeal, TSHealInfo)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
