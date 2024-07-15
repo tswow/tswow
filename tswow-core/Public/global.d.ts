@@ -8122,6 +8122,8 @@ declare namespace _hidden {
         OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutable<float>) => void);
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
+        OnCustomScriptedHealMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo,  DoneTotalMod: TSMutable<float>) => void);
+        OnEnchantTriggered(callback: (player: TSPlayer, target: TSUnit, item: TSItem, spellInfo: TSSpellInfo) => void);
     }
 
     export class Account<T> {
