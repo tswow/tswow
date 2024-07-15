@@ -8119,9 +8119,11 @@ declare namespace _hidden {
          ) => void)
 
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
-        OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
-        OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutable<float>) => void);
+        OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, SpellType: TSNumber<uint8>) => void);
+        OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutableNumber<float>) => void);
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
+        OnCustomScriptedHealMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
+        OnEnchantTriggered(callback: (player: TSPlayer, target: TSUnit, item: TSItem, spellInfo: TSSpellInfo) => void);
     }
 
     export class Account<T> {
@@ -8411,7 +8413,10 @@ declare namespace _hidden {
         OnAuraApplied(id: EventID, callback: (from: TSUnit, aura: TSAura, to: TSUnit) => void) : T;
         
         OnAuraRemoved(callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
-        OnAuraRemoved(id: EventID, callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
+        OnAuraRemoved(id: EventID, callback: (aura: TSAura, who: TSUnit, reason: uint32) => void): T;
+
+        OnHeal(callback: (healInfo: TSHealInfo) => void): T;
+        OnHeal(id: EventID, callback: (healInfo: TSHealInfo) => void): T;
     }
 
     export class Creature<T> {
