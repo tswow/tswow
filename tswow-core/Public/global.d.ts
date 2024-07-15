@@ -6346,6 +6346,10 @@ declare interface TSUnit extends TSWorldObject {
 
     GetControlled(): TSArray<TSUnit>
 
+    GetAppliedAurasById(entry: uint32) : TSArray<TSAuraApplication>;
+
+    GetDiseasesByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
+
     RemoveAllControlled(): void;
 
     GetFirstControlled(): TSUnit;
@@ -7457,6 +7461,7 @@ declare interface TSUnit extends TSWorldObject {
     ApplyEffectModifiers(spellInfo: TSSpellInfo, index: uint8, value: float) : TSNumber<float>
 
     RollChance(chance: uint8) : bool
+    RollChanceF(chance: float) : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -8121,7 +8126,9 @@ declare namespace _hidden {
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
         OnCustomScriptedDamageMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutable<float>, SpellType: TSNumber<uint8>) => void);
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutable<float>) => void);
+        OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutable<float>) => void);
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
+        OnEnchantTriggered(callback: (Caster: TSPlayer, On: TSUnit, Item: TSItem, Spell: TSSpellInfo) => void);
     }
 
     export class Account<T> {
@@ -8412,6 +8419,9 @@ declare namespace _hidden {
         
         OnAuraRemoved(callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
         OnAuraRemoved(id: EventID, callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
+
+        OnHeal(callback: (info: TSHealInfo) => void) : T;
+        OnHeal(id: EventID, callback: (info: TSHealInfo) => void) : T;
     }
 
     export class Creature<T> {
@@ -9397,6 +9407,8 @@ declare class TSDictionary<K,V> {
 
     // @ts-ignore
     get_length(): number
+    // @ts-ignore
+    erase(key: K);
 }
 
 declare class TSDBDict<K,V> {

@@ -84,6 +84,7 @@ public:
 
 class TC_GAME_API TSHealInfo {
     TS_CLASS_DECLARATION(TSHealInfo, HealInfo, m_info)
+    TSHealInfo(HealInfo* info);
     void AbsorbHeal(uint32 amount);
     void SetEffectiveHeal(uint32 amount);
     TSUnit GetHealer();

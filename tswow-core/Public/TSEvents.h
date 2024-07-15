@@ -346,7 +346,9 @@ struct TSEvents
          EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
          EVENT(OnCustomScriptedDamageMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSNumber<uint8> SpellType)
          EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
+         EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
          EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
+         EVENT(OnEnchantTriggered, TSPlayer caster, TSUnit On, TSItem item, TSSpellInfo info)
     } Player;
 
     struct AccountEvents
@@ -535,6 +537,8 @@ struct TSEvents
         
         ID_EVENT(OnAuraApplied, TSUnit, TSAura, TSUnit)
         ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
+
+        ID_EVENT(OnHeal, TSHealInfo)
 
     } Spell;
 

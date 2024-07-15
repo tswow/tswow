@@ -72,7 +72,7 @@ export enum SpellImplicitTarget {
     UNIT_CONE_ALLY              = 59,
     UNIT_CONE_ENTRY             = 60,
     UNIT_TARGET_AREA_RAID_CLASS = 61,
-    UNK62                       = 62,
+    DEST_DYNOBJ_CASTER          = 62,
     DEST_TARGET_ANY             = 63,
     DEST_TARGET_FRONT           = 64,
     DEST_TARGET_BACK            = 65,

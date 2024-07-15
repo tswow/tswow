@@ -144,6 +144,10 @@ public:
     return str + spaces(indention)+"}";
   }
 
+  void erase(K key) {
+    _map->erase(key);
+  }
+
   friend std::ostream& operator<<(std::ostream& os, TSDictionary<K,V> arr)
   {
     os << arr.stringify().c_str();

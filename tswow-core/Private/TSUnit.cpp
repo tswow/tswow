@@ -2631,3 +2631,21 @@ TSNumber<float> TSUnit::ApplyEffectModifiers(TSSpellInfo info, uint8 index, floa
 bool TSUnit::RollChance(uint8 chance) {
     return roll_chance_i(chance);
 }
+
+bool TSUnit::RollChanceF(float chance) {
+    return roll_chance_f(chance);
+}
+
+TSArray<TSAuraApplication> TSUnit::GetAppliedAurasById(uint32 spellId) {
+    auto auras = unit->GetAppliedAurasById(spellId);
+    TSArray<TSAuraApplication> out;
+    out.reserve(auras.size());
+    for (AuraApplication* aura : auras) {
+        out.push(TSAuraApplication(aura));
+    }
+    return out;
+}
+
+TSNumber<uint32> TSUnit::GetDiseasesByCaster(TSGUID casterGUID, bool remove) {
+    return unit->GetDiseasesByCaster(casterGUID.asGUID(), remove);
+}

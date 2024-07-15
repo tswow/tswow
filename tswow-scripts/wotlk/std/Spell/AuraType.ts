@@ -637,21 +637,21 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               305 */
     get MOD_MINIMUM_SPEED()                   { return this.value(305, x=>new ModMinimumSpeed(x)) }
     /** Enum Value:                                               306 */
-    get SPELL_AURA306()                       { return this.value(306, x=>x) }
+    get MOD_DAMAGE_TO_CASTER()                { return this.value(306, x=>x) }
     /** Enum Value:                                               307 */
-    get SPELL_AURA307()                       { return this.value(307, x=>x) }
+    get MOD_STAT_FROM_MAX_HEALTH_PCT()        { return this.value(307, x=>x) }
     /** Enum Value:                                               308 */
     get SPELL_AURA308()                       { return this.value(308, x=>x) }
     /** Enum Value:                                               309 */
-    get SPELL_AURA309()                       { return this.value(309, x=>x) }
+    get IMMUNE_TO_SILENCE()                   { return this.value(309, x=>x) }
     /** Enum Value:                                               310 */
     get MOD_CREATURE_AOE_DAMAGE_AVOIDANCE()   { return this.value(310, x=>new ModCreatureAoEDamageAvoidance(x)) }
     /** Enum Value:                                               311 */
     get TRIGGER_SPELL_WITH_PCT_OF_TRIGGER()   { return this.value(311, x=>x) }
     /** Enum Value:                                               312 */
-    get SPELL_AURA312()                       { return this.value(312, x=>x) }
+    get MOD_ILLUSION_COMBAT_MOUNT()           { return this.value(312, x=>x) }
     /** Enum Value:                                               313 */
-    get SPELL_AURA313()                       { return this.value(313, x=>x) }
+    get IMMUNE_TO_INTERRUPT()                 { return this.value(313, x=>x) }
     /** Enum Value:                                               314 */
     get PREVENT_RESURRECTION()                { return this.value(314, x=>new PreventResurrection(x)) }
     /** Enum Value:                                               315 */

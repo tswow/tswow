@@ -235,6 +235,11 @@ public:
     TSNumber<float> ApplyEffectModifiers(TSSpellInfo, uint8, float) const;
 
     bool RollChance(uint8);
+    bool RollChanceF(float);
+
+    TSArray<TSAuraApplication> GetAppliedAurasById(uint32);
+
+    TSNumber<uint32> GetDiseasesByCaster(TSGUID casterGUID, bool remove);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

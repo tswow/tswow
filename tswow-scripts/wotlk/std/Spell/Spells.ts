@@ -49,6 +49,7 @@ export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery
             }
             // note: we're never cloning spell_script_names, spell_scripts or spell_target_position
         }
+        v.Tags.add(mod, id)
         return v;
     }
 

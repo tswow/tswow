@@ -103,6 +103,10 @@ void TSLua::load_unit_methods(sol::state& state)
         TSArray<TSAuraEffect> effs = unit.GetAuraEffectsByType(type);
         return sol::as_table(*effs.vec);
     });
+    ts_unit.set_function("GetAppliedAurasById", [](TSUnit& unit, uint32 spellId) {
+        TSArray<TSAuraApplication> apps = unit.GetAppliedAurasById(spellId);
+        return sol::as_table(*apps.vec);
+    });
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifier);
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraModifierByMiscMask);
     LUA_FIELD(ts_unit, TSUnit, GetTotalAuraMultiplier);
@@ -210,6 +214,9 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, ApplyEffectModifiers);
 
     LUA_FIELD(ts_unit, TSUnit, RollChance);
+    LUA_FIELD(ts_unit, TSUnit, RollChanceF);
+
+    LUA_FIELD(ts_unit, TSUnit, GetDiseasesByCaster);
 
     LUA_FIELD_OVERLOAD_RET_2_1(ts_unit, TSUnit, SetCharmedBy, TSUnit, uint32, TSAuraApplication);
     LUA_FIELD_OVERLOAD_2_1(ts_unit, TSUnit, Jump, float, float, bool);

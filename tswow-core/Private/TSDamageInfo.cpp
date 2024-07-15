@@ -258,6 +258,8 @@ bool TSSpellDamageInfo::GetFullBlock()
 
 TS_CLASS_DEFINITION(TSHealInfo, HealInfo, m_info)
 
+TSHealInfo::TSHealInfo(HealInfo * info) : m_info(info) {}
+
 void TSHealInfo::AbsorbHeal(uint32 amount)
 {
     m_info->AbsorbHeal(amount);
