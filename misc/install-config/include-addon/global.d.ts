@@ -57,7 +57,17 @@ declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 
 //duskhaven additions
+declare const CharacterAttributesFrame: WoWAPI.Frame
+declare const CharacterModelFrame: WoWAPI.Frame
+
+
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
+declare function format(formatString: String, input:String):String;
+declare function format(formatString: String, input:number):String;
+declare function PaperDollFormatStat(labelName: String, add:number,value:number,subtract:number,frame:WoWAPI.Frame,otherFrame:WoWAPI.Frame):void;
+declare function GetInventoryItemLink(unit:UnitId,index:number):String;
+declare function strfind(searched:String, regex:String):string[];
+
 //
 
 /**
@@ -8585,6 +8595,7 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/PLAYER_ENTERING_WORLD
          */
         PLAYER_ENTERING_WORLD: null;
+        PLAYER_EQUIPMENT_CHANGED: null;
 
         /**
          * Fired when a player engages auto-attack. Note that firing a gun or a spell, or getting aggro, does NOT trigger this event
@@ -12075,6 +12086,7 @@ declare namespace WoWAPI {
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point, offsetX: number, offsetY: number): void;
         SetPoint(point: Point): void;
         SetPoint(point: Point, offsetX: number, offsetY: number): void;
+        SetPoint(point: Point, relativeTo: Region | string,offsetX: number, offsetY: number): void;
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
 
 
@@ -12699,6 +12711,8 @@ declare namespace WoWAPI {
      */
     interface Region extends UIObject {
 
+        SetToplevel(set:bool):void;
+
         /**
          * Clear all attachment points for this object.
          */
@@ -12792,6 +12806,7 @@ declare namespace WoWAPI {
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point, offsetX: number, offsetY: number): void;
         SetPoint(point: Point): void;
         SetPoint(point: Point, offsetX: number, offsetY: number): void;
+        SetPoint(point: Point, relativeTo: Region | string,offsetX: number, offsetY: number): void;
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
 
         /**
