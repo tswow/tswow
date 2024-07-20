@@ -52,6 +52,7 @@ export enum SpellAttributesMask {
     CAN_PROC_ON_TRIGGERED    = 0x2,
     REQUIRE_MANA_COST        = 0x4,
     REQUIRE_SPELL_MOD        = 0x8,
+    USE_STACKS_FOR_CHARGES   = 0x10,
     REDUCE_PROC60            = 0x80,
     CANT_PROC_FROM_ITEM_CAST = 0x100,
 
