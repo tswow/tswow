@@ -118,6 +118,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnEnchantTriggered);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpellHealing);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpellDamage);
+    LUA_HANDLE(player_events, PlayerEvents, OnRunesSpent);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);

@@ -8133,6 +8133,8 @@ declare namespace _hidden {
 
         OnUpdateSpellHealing(callback: (player: TSPlayer, healingPower: TSMutableNumber<int32>) => void)
         OnUpdateSpellDamage(callback: (player: TSPlayer, SpellPower: TSMutableNumber<int32>, School: TSNumber<uint8>) => void)
+
+        OnRunesSpent(callback: (Caster: TSPlayer, Runes: TSNumber<uint8>) => void);
     }
 
     export class Account<T> {

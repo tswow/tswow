@@ -615,7 +615,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               294 */
     get PREVENT_REGENERATE_POWER()            { return this.value(294, x=>new PreventRegeneratePower(x)) }
     /** Enum Value:                                               295 */
-    get SPELL_AURA295()                       { return this.value(295, x=>x) }
+    get MOD_ARMOR_PENETRATION_PCT_FROM_CASTER() { return this.value(295, x=>x) }
     /** Enum Value:                                               296 */
     get SET_VEHICLE_ID()                      { return this.value(296, x=>new SetVehicleId(x)) }
     /** Enum Value:                                               297 */

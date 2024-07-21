@@ -353,6 +353,7 @@ struct TSEvents
 
         EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
         EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)
+        EVENT(OnRunesSpent, TSPlayer, TSNumber<uint8>)
     } Player;
 
     struct AccountEvents
