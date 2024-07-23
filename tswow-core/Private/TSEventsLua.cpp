@@ -110,6 +110,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
     LUA_HANDLE(player_events, PlayerEvents, OnReputationPriceDiscount);
     LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedWeaponDamageMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageDoneMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod); // same as above but for crit chance

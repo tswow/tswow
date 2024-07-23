@@ -2649,3 +2649,19 @@ TSArray<TSAuraApplication> TSUnit::GetAppliedAurasById(uint32 spellId) {
 TSNumber<uint32> TSUnit::GetDiseasesByCaster(TSGUID casterGUID, bool remove) {
     return unit->GetDiseasesByCaster(casterGUID.asGUID(), remove);
 }
+
+TSArray<TSUnit> TSUnit::SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount) {
+    std::list<Unit*> ExcludedUnits = {};
+    for (auto tsUnit : exclude) {
+        ExcludedUnits.push_back(tsUnit.unit);
+    }
+
+    auto units = unit->SelectNearbyTargets(ExcludedUnits, dist, amount);
+    TSArray<TSUnit> out;
+    out.reserve(units.size());
+    for (Unit* u : units) {
+        out.push(TSUnit(u));
+    }
+
+    return out;
+}

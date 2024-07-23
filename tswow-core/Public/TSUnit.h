@@ -240,6 +240,8 @@ public:
     TSArray<TSAuraApplication> GetAppliedAurasById(uint32);
 
     TSNumber<uint32> GetDiseasesByCaster(TSGUID casterGUID, bool remove);
+
+    TSArray<TSUnit> SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

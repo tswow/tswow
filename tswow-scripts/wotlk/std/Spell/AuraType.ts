@@ -623,7 +623,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               298 */
     get SPELL_AURA298()                       { return this.value(298, x=>x) }
     /** Enum Value:                                               299 */
-    get SPELL_AURA299()                       { return this.value(299, x=>x) }
+    get PROC_TRIGGER_COPY_OF_TRIGGER()        { return this.value(299, x=>x) }
     /** Enum Value:                                               300 */
     get SHARE_DAMAGE_PCT()                    { return this.value(300, x=>new ShareDamagePct(x)) }
     /** Enum Value:                                               301 */
