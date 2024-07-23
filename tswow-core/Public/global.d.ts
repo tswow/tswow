@@ -432,6 +432,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      */
 	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
 
+    SendShopMail(subject: string, body: string, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
+
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
      *
