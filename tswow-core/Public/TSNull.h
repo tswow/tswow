@@ -21,3 +21,9 @@ bool operator==(TSNull const& lhs, T const& rhs) { return !rhs; }
 
 template <typename T>
 bool operator==(T const& lhs, TSNull const& rhs) { return !lhs; }
+
+template <typename T>
+bool operator!=(TSNull const& lhs, T const& rhs) { return rhs; }
+
+template <typename T>
+bool operator!=(T const& lhs, TSNull const& rhs) { return lhs; }

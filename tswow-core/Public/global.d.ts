@@ -8435,6 +8435,9 @@ declare namespace _hidden {
 
         OnHeal(callback: (info: TSHealInfo) => void) : T;
         OnHeal(id: EventID, callback: (info: TSHealInfo) => void) : T;
+
+        CanAuraBeBrokenBySpell(callback: (Attacker: TSUnit, Victim: TSUnit, Aura: TSAura, DamageSpell: TSSpellInfo, DamageType: TSNumber<uint8>, CanBreak: TSMutable<bool, bool>) => void) : T;
+        CanAuraBeBrokenBySpell(id: EventID, callback: (Attacker: TSUnit, Victim: TSUnit, Aura: TSAura, DamageSpell: TSSpellInfo, DamageType: TSNumber<uint8>, CanBreak: TSMutable<bool, bool>) => void) : T;
     }
 
     export class Creature<T> {

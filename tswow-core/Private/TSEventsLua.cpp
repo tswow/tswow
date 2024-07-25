@@ -228,6 +228,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHeal);
 
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, CanAuraBeBrokenBySpell);
+
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnJustEnteredCombat);
