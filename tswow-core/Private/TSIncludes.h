@@ -26,7 +26,6 @@
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
 #define eObjectAccessor()       ObjectAccessor::
-#define REGEN_TIME_FULL
 
 #define HIGHGUID_PLAYER         HighGuid::Player
 #define HIGHGUID_UNIT           HighGuid::Unit
