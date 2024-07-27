@@ -12745,6 +12745,7 @@ declare namespace WoWAPI {
          * @returns number, number
          */
         GetCenter(): LuaMultiReturn<[number, number]>;
+        GetRect(): LuaMultiReturn<[number, number, number, number]>;
 
         /**
          * Returns the distance from the bottom/left edge of the screen to the requested edge of an object, scaled with the objects's effective scale.
@@ -13154,6 +13155,7 @@ declare namespace WoWAPI {
      * The main wow frame object
      */
     interface Frame extends Region, ObjectHookScript<Frame>, ObjectSetScript<Frame> {
+
 
         /**
          * Creates a new FontString as a child of a frame.
