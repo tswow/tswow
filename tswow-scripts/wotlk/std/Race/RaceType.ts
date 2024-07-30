@@ -41,4 +41,6 @@ export enum RaceMask {
     //
     , BLOODELF = 0x200
     , DRAENEI  = 0x400
+
+    , ALL = 0x7FFF
 }

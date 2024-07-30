@@ -94,7 +94,7 @@ declare function IsTrialAccount(): boolean;
 declare namespace WoWAPI {
     /**
      * Achievement links are returned by GetAchievementLink().
-     * @example |cffffff00|Hachievement:2186:00000000002FDDE9:1:12:19:8:4294967295:4294967295:4294967295:4294967295|h[The Immortal]|h|r
+     * @example |cffffff00|Hachievement:2186:00000000002FDDE:1:12:1:8:4294967295:4294967295:4294967295:4294967295|h[The Immortal]|h|r
      */
     type AchievementLink = Hyperlink;
 }
@@ -3396,7 +3396,7 @@ declare namespace WoWAPI {
         CHANNEL6: ChatTypeInfoBody,
         CHANNEL7: ChatTypeInfoBody,
         CHANNEL8: ChatTypeInfoBody,
-        CHANNEL9: ChatTypeInfoBody,
+        CHANNEL: ChatTypeInfoBody,
         CHANNEL10: ChatTypeInfoBody,
         ACHIVEMENT: ChatTypeInfoBody,
         GUILD_ACHIVEMENT: ChatTypeInfoBody
@@ -3733,7 +3733,7 @@ declare const FACTION_BAR_COLORS: {
 };
 
 declare const WORLD_QUEST_ICONS_BY_PROFESSION: {
-    129: "worldquest-icon-firstaid",
+    12: "worldquest-icon-firstaid",
     164: "worldquest-icon-blacksmithing",
     165: "worldquest-icon-leatherworking",
     171: "worldquest-icon-alchemy",
@@ -13923,6 +13923,26 @@ declare const WorldMapFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
 
 declare const TalentMicroButton: WoWAPI.Button
+declare const CharacterHeadSlot: WoWAPI.Button
+declare const CharacterNeckSlot: WoWAPI.Button
+declare const CharacterShoulderSlot: WoWAPI.Button
+declare const CharacterBackSlot: WoWAPI.Button
+declare const CharacterChestSlot: WoWAPI.Button
+declare const CharacterShirtSlot: WoWAPI.Button
+declare const CharacterTabardSlot: WoWAPI.Button
+declare const CharacterWristSlot: WoWAPI.Button
+declare const CharacterHandsSlot: WoWAPI.Button
+declare const CharacterWaistSlot: WoWAPI.Button
+declare const CharacterLegsSlot: WoWAPI.Button
+declare const CharacterFeetSlot: WoWAPI.Button
+declare const CharacterFinger0Slot: WoWAPI.Button
+declare const CharacterFinger1Slot: WoWAPI.Button
+declare const CharacterTrinket0Slot: WoWAPI.Button
+declare const CharacterTrinket1Slot: WoWAPI.Button
+declare const CharacterMainHandSlot: WoWAPI.Button
+declare const CharacterSecondaryHandSlot: WoWAPI.Button
+declare const CharacterRangedSlot: WoWAPI.Button
+declare const CharacterAmmoSlot: WoWAPI.Button
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
