@@ -213,5 +213,10 @@ export function ClientPatches(
             patch('blue-moon', [
                 [0x5CFBC0, [0xC7, 0x05, 0x74, 0x8E, 0xD3, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xC3]]
             ]),
+
+            // rce exploit
+            patch ('rce', [
+                [0x2A7, [0xC0]],
+            ]),
         ]
 }
