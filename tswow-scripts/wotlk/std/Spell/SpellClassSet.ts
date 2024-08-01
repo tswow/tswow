@@ -51,7 +51,14 @@ export abstract class ClassSet<T> extends MaskCell<T> {
     abstract get B() : MaskCell32<T> ;
     abstract get C() : MaskCell32<T> ;
 
-    set(a: number, b: number, c: number) {
+    set(a , b, c) {
+        this.A.set(a);
+        this.B.set(b);
+        this.C.set(c);
+        return this.owner;
+    }
+
+    set2([a, b, c]) {
         this.A.set(a);
         this.B.set(b);
         this.C.set(c);
