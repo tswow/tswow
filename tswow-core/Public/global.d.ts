@@ -8129,7 +8129,7 @@ declare namespace _hidden {
 
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
         
-        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, SpellType: TSNumber<uint8>) => void);
+        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, SpellType: TSNumber<uint8>) => void);
         OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, TakenTotalMod: TSMutableNumber<float>, SpellType: TSNumber<uint8>) => void);
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutableNumber<float>) => void);
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
@@ -8438,6 +8438,9 @@ declare namespace _hidden {
 
         CanAuraBeBrokenBySpell(callback: (Attacker: TSUnit, Victim: TSUnit, Aura: TSAura, DamageSpell: TSSpellInfo, DamageType: TSNumber<uint8>, CanBreak: TSMutable<bool, bool>) => void) : T;
         CanAuraBeBrokenBySpell(id: EventID, callback: (Attacker: TSUnit, Victim: TSUnit, Aura: TSAura, DamageSpell: TSSpellInfo, DamageType: TSNumber<uint8>, CanBreak: TSMutable<bool, bool>) => void) : T;
+
+        OnCustomMechanicMaskDamage(callback: (Attacker: TSUnit, SpellInfo: TSSpellInfo, MechanicMask: TSMutableNumber<uint32>) => void) : T;
+        OnCustomMechanicMaskDamage(id: EventID, callback: (Attacker: TSUnit, SpellInfo: TSSpellInfo, MechanicMask: TSMutableNumber<uint32>) => void) : T;
     }
 
     export class Creature<T> {

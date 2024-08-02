@@ -227,6 +227,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnObjectTargetSelect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHeal);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCustomMechanicMaskDamage);
 
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, CanAuraBeBrokenBySpell);
 

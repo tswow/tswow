@@ -344,7 +344,7 @@ struct TSEvents
          )
 
         EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
-        EVENT(OnCustomScriptedDamageDoneMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSNumber<uint8> SpellType)
+        EVENT(OnCustomScriptedDamageDoneMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, TSNumber<uint8> SpellType)
         EVENT(OnCustomScriptedDamageTakenMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> TakenTotalMod, TSNumber<uint8> SpellType)
         EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
         EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
@@ -546,6 +546,7 @@ struct TSEvents
 
         ID_EVENT(OnHeal, TSHealInfo)
         ID_EVENT(CanAuraBeBrokenBySpell, TSUnit, TSUnit, TSAura, TSSpellInfo, TSNumber<uint8>, TSMutable<bool, bool>)
+        ID_EVENT(OnCustomMechanicMaskDamage, TSUnit, TSSpellInfo, TSMutableNumber<uint32>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

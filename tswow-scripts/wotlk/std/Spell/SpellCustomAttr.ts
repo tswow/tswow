@@ -9,6 +9,7 @@ export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRo
     protected createSQL(): spell_custom_attrRow {
         return SQL.spell_custom_attr.add(this.owner.ID)
             .attributes.set(0)
+            .attributesEx.set(0)
     }
     protected findSQL(): spell_custom_attrRow {
         return SQL.spell_custom_attr.query({entry:this.owner.ID});
@@ -18,6 +19,7 @@ export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRo
     }
 
     get Attribute() { return this.wrapSQL(0, (sql)=>sql.attributes); }
+    get AttributeEx() { return this.wrapSQL(0, (sql)=>sql.attributesEx); }
 }
 
 export class SpellCustomAttr extends MaskCell<Spell> {
@@ -26,10 +28,15 @@ export class SpellCustomAttr extends MaskCell<Spell> {
 
     @Transient
     private mask: MaskCell32<any>;
+
+    @Transient
+    private mask2: MaskCell32<any>;
+
     constructor(owner: Spell) {
         super(owner);
         this.sql = new SpellCustomAttrSQL(owner);
         this.mask = new MaskCell32(undefined,this.sql.Attribute,false);
+        this.mask2 = new MaskCell32(undefined,this.sql.AttributeEx,false);
     }
 
     get() {
@@ -42,12 +49,21 @@ export class SpellCustomAttr extends MaskCell<Spell> {
         this.mask.setBit(bit,value);
         return this.owner;
     }
+    getEx() {
+        return this.mask2.get();
+    }
+    setEx(value: number) {
+        this.mask2.set(value);
+        return this.owner;
+    }
+
     clearAll(): Spell {
         this.mask.clearAll();
+        this.mask2.clearAll();
         return this.owner;
     }
     toString(): string {
-        return this.mask.toString();
+        return this.mask.toString() + ":" + this.mask2.toString();
     }
     protected deserialize(value: any): void {
         (this.mask as any).deserialize(value);
