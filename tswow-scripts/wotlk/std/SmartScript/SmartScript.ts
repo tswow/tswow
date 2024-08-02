@@ -27,11 +27,10 @@ import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
 
 function findId(type: number, entry: number) {
-    let oldest = SQL.smart_scripts.queryAll(
-        {source_type:type,entryorguid:entry}
-    ).sort((a,b)=>b.id>a.id ? 1 : -1)[0];
-    if(oldest===undefined) return 0;
-    return oldest.id.get()+1;
+    let highest = SQL.smart_scripts.queryAll({source_type: type, entryorguid: entry})
+        .sort((a, b) => b.id.get() - a.id.get())[0];
+
+    return highest === undefined ? 0 : highest.id.get() + 1;
 }
 
 export function getRealEntryOrGuid(row: smart_scriptsRow)
