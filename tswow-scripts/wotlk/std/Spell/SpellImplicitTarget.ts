@@ -119,5 +119,6 @@ export enum SpellImplicitTarget {
     DEST_CHANNEL_CASTER         = 106,
     UNK_DEST_AREA_UNK107        = 107,
     GAMEOBJECT_CONE             = 108,
+    UNIT_NEARBY_ENEMY_WO_AURA   = 109,
     UNIT_CONE_ENTRY110          = 110,
 }

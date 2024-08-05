@@ -103,6 +103,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCalcZeroDiff);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcGroupGain);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcIntellectManaBonus);
+    LUA_HANDLE(player_events, PlayerEvents, OnCalcAgilityCritBonus);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcSkillGainChance);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcTalentPoints);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAttackPower);
@@ -115,11 +116,23 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod); // same as above but for crit chance
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedHealMod);
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedAutoattackMod);
     LUA_HANDLE(player_events, PlayerEvents, OnPowerSpent);
     LUA_HANDLE(player_events, PlayerEvents, OnEnchantTriggered);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpellHealing);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpellDamage);
     LUA_HANDLE(player_events, PlayerEvents, OnRunesSpent);
+    LUA_HANDLE(player_events, PlayerEvents, OnPowerChanged);
+
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpeedRating);
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateLeechRating);
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateAvoidanceRating);
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateMasteryRating);
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateThornsRating);
+
+    LUA_HANDLE(player_events, PlayerEvents, OnCalcFallDamage);
+    LUA_HANDLE(player_events, PlayerEvents, GainComboPoint);
+    LUA_HANDLE(player_events, PlayerEvents, ClearComboPoints);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
@@ -228,7 +241,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHeal);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCustomMechanicMaskDamage);
-
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnSuccessfulInterrupt);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcSpellDuration);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, CanAuraBeBrokenBySpell);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");

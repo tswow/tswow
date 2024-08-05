@@ -131,6 +131,7 @@ public:
     TSNumber<uint32> GetTalentCost();
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
+    TSNumber<uint32> GetAllEffectsMechanicMask();
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);

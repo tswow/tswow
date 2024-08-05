@@ -6353,6 +6353,7 @@ declare interface TSUnit extends TSWorldObject {
     GetDiseasesByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
 
     SelectNearbyTargets(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
+    SelectNearbyTargetWithoutAura(exclude: TSUnit, dist: float, Aura: uint32) : TSUnit
 
     RemoveAllControlled(): void;
 
@@ -6471,6 +6472,25 @@ declare interface TSUnit extends TSWorldObject {
      * @return uint32 powerAmount
      */
     GetPower(type : Powers|-1) : TSNumber<uint32>
+
+    /**
+     * Returns the [Unit]'s power amount for given power type.
+     *
+     *     enum Powers
+     *     {
+     *         POWER_MANA        = 0,
+     *         POWER_RAGE        = 1,
+     *         POWER_FOCUS       = 2,
+     *         POWER_ENERGY      = 3,
+     *         POWER_HAPPINESS   = 4,
+     *         POWER_RUNE        = 5,
+     *         POWER_RUNIC_POWER = 6,
+     *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
+     *
+     * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+     * @return uint32 powerAmount
+     */
+    GetCreatePowerValue(type : Powers|-1) : TSNumber<uint32>
 
     /**
      * Returns the [Unit]'s max power amount for given power type.
@@ -7466,6 +7486,9 @@ declare interface TSUnit extends TSWorldObject {
 
     RollChance(chance: uint8) : bool
     RollChanceF(chance: float) : bool
+
+
+    HasAuraWithMechanic(mech: uint32) : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -7736,6 +7759,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
+    GetAllEffectsMechanicMask(): TSNumber<uint32>
 }
 
 declare class TSSpellEffectInfo {
@@ -8090,6 +8114,14 @@ declare namespace _hidden {
                 , baseInt: TSNumber<float>
                 , bonusInt: TSNumber<float>
             )=>void)
+        OnCalcAgilityCritBonus(
+            callback: (
+                  Player: TSPlayer
+                , Crit: TSMutableNumber<float>
+                , Agility: TSNumber<float>
+                , BaseCrit: TSNumber<float>
+                , CritRatio: TSNumber<float>
+            )=>void)
         OnCalcSkillGainChance(callback: (
               player: TSPlayer
             , chance: TSMutableNumber<int>
@@ -8134,6 +8166,7 @@ declare namespace _hidden {
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutableNumber<float>) => void);
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
         OnCustomScriptedWeaponDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, TotalDamagePercentMod: TSMutableNumber<float>, FixedBonus: TSMutableNumber<int32> , SpellBonus: TSMutableNumber<int32>) => void);
+        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
 
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
         OnEnchantTriggered(callback: (Caster: TSPlayer, On: TSUnit, Item: TSItem, Spell: TSSpellInfo) => void);
@@ -8142,6 +8175,17 @@ declare namespace _hidden {
         OnUpdateSpellDamage(callback: (player: TSPlayer, SpellPower: TSMutableNumber<int32>, School: TSNumber<uint8>) => void)
 
         OnRunesSpent(callback: (Caster: TSPlayer, Runes: TSNumber<uint8>) => void);
+        OnPowerChanged(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, CurPower: TSNumber<uint32>, MaxPower: TSNumber<uint32>) => void);
+    
+        OnUpdateSpeedRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
+        OnUpdateLeechRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
+        OnUpdateAvoidanceRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
+        OnUpdateMasteryRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
+        OnUpdateThornsRating(callback: ( Player: TSPlayer, Value: TSNumber<float>) => void)
+
+        OnCalcFallDamage(callback: (player: TSPlayer, value: TSMutableNumber<uint32>) => void)
+        GainComboPoint(callback: (player: TSPlayer, amount: TSNumber<int8>) => void)
+        ClearComboPoints(callback: (player: TSPlayer) => void)
     }
 
     export class Account<T> {
@@ -8441,6 +8485,12 @@ declare namespace _hidden {
 
         OnCustomMechanicMaskDamage(callback: (Attacker: TSUnit, SpellInfo: TSSpellInfo, MechanicMask: TSMutableNumber<uint32>) => void) : T;
         OnCustomMechanicMaskDamage(id: EventID, callback: (Attacker: TSUnit, SpellInfo: TSSpellInfo, MechanicMask: TSMutableNumber<uint32>) => void) : T;
+    
+        OnSuccessfulInterrupt(callback: (Caster: TSUnit, Interruptee: TSUnit, Spell: TSSpell) => void);
+        OnSuccessfulInterrupt(id: EventID, callback: (Caster: TSUnit, interruptee: TSUnit, Spell: TSSpell) => void);
+
+        OnCalcSpellDuration(callback: (Info: TSSpellInfo, Player: TSPlayer, Duration: TSMutableNumber<int32>) => void);
+        OnCalcSpellDuration(id: EventID, callback: (Info: TSSpellInfo, Player: TSPlayer, Duration: TSMutableNumber<int32>) => void);
     }
 
     export class Creature<T> {

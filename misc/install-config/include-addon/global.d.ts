@@ -12931,6 +12931,8 @@ declare namespace WoWAPI {
         SetTexCoord(left: number, right: number, top: number, bottom: number): void;
         SetTexCoord(ULx: number, ULy: number, LLx: number, LLy: number, URx: number, URy: number, LRx: number, LRy: number): void;
 
+        GetTexCoords()
+
         /**
          * Changes the texture of a Texture widget.
          *
@@ -14164,6 +14166,10 @@ declare function UnitFactionGroup(unitId: WoWAPI.UnitId): LuaMultiReturn<[string
  * @see https://wow.gamepedia.com/API_UnitClass
  */
 declare function UnitClass(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string, number]>;
+
+/**
+ */
+declare function UnitPowerType(unitId: WoWAPI.UnitId): LuaMultiReturn<[number, string]>;
 
 /**
  * Returns the current health of the specified unit

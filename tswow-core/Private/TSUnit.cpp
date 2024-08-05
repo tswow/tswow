@@ -843,6 +843,31 @@ TSNumber<uint32> TSUnit::GetPower(int type)
 }
 
 /**
+ * Returns the [Unit]'s power amount for given power type.
+ *
+ *     enum Powers
+ *     {
+ *         POWER_MANA        = 0,
+ *         POWER_RAGE        = 1,
+ *         POWER_FOCUS       = 2,
+ *         POWER_ENERGY      = 3,
+ *         POWER_HAPPINESS   = 4,
+ *         POWER_RUNE        = 5,
+ *         POWER_RUNIC_POWER = 6,
+ *         MAX_POWERS        = 7,
+ *         POWER_ALL         = 127,         // default for class?
+ *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
+ *
+ * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+ * @return uint32 powerAmount
+ */
+TSNumber<uint32> TSUnit::GetCreatePowerValue(int type)
+{
+    Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
+    return unit->GetCreatePowerValue(power);
+}
+
+/**
  * Returns the [Unit]'s max power amount for given power type.
  *
  *     enum Powers
@@ -2636,6 +2661,10 @@ bool TSUnit::RollChanceF(float chance) {
     return roll_chance_f(chance);
 }
 
+bool TSUnit::HasAuraWithMechanic(uint32 mech) {
+    return unit->HasAuraWithMechanic(mech);
+}
+
 TSArray<TSAuraApplication> TSUnit::GetAppliedAurasById(uint32 spellId) {
     auto auras = unit->GetAppliedAurasById(spellId);
     TSArray<TSAuraApplication> out;
@@ -2664,4 +2693,10 @@ TSArray<TSUnit> TSUnit::SelectNearbyTargets(TSArray<TSUnit> exclude, float dist,
     }
 
     return out;
+}
+
+TSUnit TSUnit::SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 Aura) {
+    Unit* target = unit->SelectNearbyTargetWithoutAura(exclude.unit, dist, Aura);
+
+    return TSUnit(target);
 }

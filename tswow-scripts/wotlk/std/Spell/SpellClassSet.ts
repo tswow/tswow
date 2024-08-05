@@ -65,6 +65,10 @@ export abstract class ClassSet<T> extends MaskCell<T> {
         return this.owner;
     }
 
+    get2() : [any, any, any] {
+        return [this.A.get(), this.B.get(), this.C.get()]
+    }
+
     objectify() {
         let values: string[] = []
         for(let i=0;i<96;++i) {

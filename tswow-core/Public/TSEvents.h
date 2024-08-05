@@ -307,7 +307,8 @@ struct TSEvents
              , TSNumber<float>
              , TSNumber<float>
          );
-         EVENT(OnCalcSkillGainChance
+        EVENT(OnCalcAgilityCritBonus, TSPlayer, TSMutableNumber<float> , TSNumber<float> , TSNumber<float> , TSNumber<float>);
+        EVENT(OnCalcSkillGainChance
              , TSPlayer
              , TSMutableNumber<int32>
              , TSNumber<int>
@@ -352,9 +353,22 @@ struct TSEvents
         EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
         EVENT(OnEnchantTriggered, TSPlayer player, TSUnit target, TSItem item, TSSpellInfo spellInfo)
 
+        EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage)
+
         EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
         EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)
         EVENT(OnRunesSpent, TSPlayer, TSNumber<uint8>)
+        EVENT(OnPowerChanged, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint32>)
+
+        EVENT(OnUpdateSpeedRating, TSPlayer, TSNumber<float>)
+        EVENT(OnUpdateLeechRating, TSPlayer, TSNumber<float>)
+        EVENT(OnUpdateAvoidanceRating, TSPlayer, TSNumber<float>)
+        EVENT(OnUpdateMasteryRating, TSPlayer, TSNumber<float>)
+        EVENT(OnUpdateThornsRating, TSPlayer, TSNumber<float>)
+
+        EVENT(OnCalcFallDamage, TSPlayer, TSMutableNumber<uint32>)
+        EVENT(GainComboPoint, TSPlayer, TSNumber<int8>)
+        EVENT(ClearComboPoints, TSPlayer)
     } Player;
 
     struct AccountEvents
@@ -547,6 +561,8 @@ struct TSEvents
         ID_EVENT(OnHeal, TSHealInfo)
         ID_EVENT(CanAuraBeBrokenBySpell, TSUnit, TSUnit, TSAura, TSSpellInfo, TSNumber<uint8>, TSMutable<bool, bool>)
         ID_EVENT(OnCustomMechanicMaskDamage, TSUnit, TSSpellInfo, TSMutableNumber<uint32>)
+        ID_EVENT(OnSuccessfulInterrupt, TSUnit caster, TSUnit who, TSSpell spell)
+        ID_EVENT(OnCalcSpellDuration, TSSpellInfo Info, TSPlayer Player, TSMutableNumber<int32> Dur)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

@@ -353,6 +353,11 @@ TSNumber<uint32> TSSpellInfo::GetTargets()
     return info->Targets;
 }
 
+TSNumber<uint32> TSSpellInfo::GetAllEffectsMechanicMask()
+{
+    return info->GetAllEffectsMechanicMask();
+}
+
 TSSpellEffectInfo TSSpellInfo::GetEffect(uint32 index)
 {
     return TSSpellEffectInfo(&info->GetEffect(static_cast<SpellEffIndex>(index)));

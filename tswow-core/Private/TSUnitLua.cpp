@@ -215,6 +215,7 @@ void TSLua::load_unit_methods(sol::state& state)
 
     LUA_FIELD(ts_unit, TSUnit, RollChance);
     LUA_FIELD(ts_unit, TSUnit, RollChanceF);
+    LUA_FIELD(ts_unit, TSUnit, HasAuraWithMechanic);
 
     LUA_FIELD(ts_unit, TSUnit, GetDiseasesByCaster);
 

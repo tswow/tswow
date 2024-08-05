@@ -91,6 +91,7 @@ void TSLua::load_spell_info_methods(sol::state& state)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetEffect);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTotem);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTalentCost);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAllEffectsMechanicMask);
     state.set_function("GetSpellInfo", &GetSpellInfo);
     state.set_function("GetTalentSpellCost", &GetTalentSpellCost);
 }

@@ -108,6 +108,7 @@ public:
     TSNumber<uint32> GetHealth();
     TSNumber<uint32> PowerSelectorHelper(TSUnit unit, int powerType = -1);
     TSNumber<uint32> GetPower(int type);
+    TSNumber<uint32> GetCreatePowerValue(int type);
     TSNumber<uint32> GetMaxPower(int type);
     TSNumber<float> GetPowerPct(int type);
     TSNumber<uint32> GetPowerType();
@@ -242,6 +243,9 @@ public:
     TSNumber<uint32> GetDiseasesByCaster(TSGUID casterGUID, bool remove);
 
     TSArray<TSUnit> SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount);
+    TSUnit SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 Aura);
+
+    bool HasAuraWithMechanic(uint32);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;
