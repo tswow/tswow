@@ -224,6 +224,8 @@ class TC_GAME_API TSWorldObjectCollection
     TSWorldObject find(std::function<bool(TSWorldObject)> callback);
     TSNumber<uint32> get_length();
     TSWorldObject get(uint32 index);
+    void SortByHealth(bool ascending = false);
+    void resize(uint32 count);
 };
 
 #define BROADCAST_PHASE_ID 0xffffff

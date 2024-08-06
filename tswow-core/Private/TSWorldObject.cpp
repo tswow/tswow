@@ -1303,6 +1303,17 @@ void TSWorldObjectCollection::filterInPlace(std::function<bool(TSWorldObject)> c
     }
 }
 
+void TSWorldObjectCollection::SortByHealth(bool ascending)
+{
+    m_info->sort(Trinity::HealthPctOrderPred(ascending));
+}
+
+void TSWorldObjectCollection::resize(uint32 count)
+{
+    m_info->resize(count);
+}
+
+
 TSNumber<uint32> TSWorldObjectCollection::get_length()
 {
     return m_info->size();

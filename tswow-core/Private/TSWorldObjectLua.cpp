@@ -131,4 +131,6 @@ void TSLua::load_world_object_methods(sol::state& state)
     LUA_FIELD(ts_worldobject_collection, TSWorldObjectCollection, find);
     LUA_FIELD(ts_worldobject_collection, TSWorldObjectCollection, get_length);
     LUA_FIELD(ts_worldobject_collection, TSWorldObjectCollection, get);
+    LUA_FIELD(ts_worldobject_collection, TSWorldObjectCollection, SortByHealth);
+    LUA_FIELD(ts_worldobject_collection, TSWorldObjectCollection, resize);
 }

@@ -5747,12 +5747,14 @@ declare interface TSWorldObjectCollection {
     filterInPlace(callback: (obj: TSWorldObject)=>bool): void
     forEach(callback: (obj: TSWorldObject)=>void) :void
     find(callback: (obj: TSWorldObject)=>bool): TSWorldObject
-    length: TSNumber<uint32>
+    get_length(): TSNumber<uint32>
     /**
      * @warn This is an O(n) operation, because the backing type is an std::list
      * @param index
      */
     get(index: uint32): TSWorldObject
+    SortByHealth(ascending: bool) : void
+    resize(amount: uint32) : void
 }
 
 declare interface TSMutableWorldObject {
@@ -8166,7 +8168,7 @@ declare namespace _hidden {
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutableNumber<float>) => void);
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
         OnCustomScriptedWeaponDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, TotalDamagePercentMod: TSMutableNumber<float>, FixedBonus: TSMutableNumber<int32> , SpellBonus: TSMutableNumber<int32>) => void);
-        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
+        OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
 
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
         OnEnchantTriggered(callback: (Caster: TSPlayer, On: TSUnit, Item: TSItem, Spell: TSSpellInfo) => void);
