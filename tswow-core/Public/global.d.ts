@@ -8483,6 +8483,9 @@ declare namespace _hidden {
         OnHeal(callback: (info: TSHealInfo, Amount: TSMutableNumber<int32>) => void) : T;
         OnHeal(id: EventID, callback: (info: TSHealInfo, Amount: TSMutableNumber<int32>) => void) : T;
 
+        OnPersistentAARemoved(callback: (Caster: TSUnit, Dest: TSSpellDestination) => void) : T;
+        OnPersistentAARemoved(id: EventID, callback: (Caster: TSUnit, Dest: TSSpellDestination) => void) : T;
+
         OnJumpStart(callback: (info: TSSpellInfo, caster: TSUnit, speedXY: TSMutableNumber<float>, SpeedZ: TSMutableNumber<float>, Dist: TSNumber<float>, PosX: TSNumber<float>, PosY: TSNumber<float>, PosZ: TSNumber<float>) => void) : T;
         OnJumpStart(id: EventID, callback: (info: TSSpellInfo, caster: TSUnit, speedXY: TSMutableNumber<float>, SpeedZ: TSMutableNumber<float>, Dist: TSNumber<float>, PosX: TSNumber<float>, PosY: TSNumber<float>, PosZ: TSNumber<float>) => void) : T;
 

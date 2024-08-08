@@ -565,6 +565,7 @@ struct TSEvents
         ID_EVENT(OnCalcSpellDuration, TSSpellInfo Info, TSPlayer Player, TSMutableNumber<int32> Dur)
 
         ID_EVENT(OnJumpStart, TSSpellInfo, TSUnit, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>)
+        ID_EVENT(OnPersistentAARemoved, TSUnit, TSSpellDestination)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
