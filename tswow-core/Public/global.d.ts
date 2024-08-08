@@ -6356,6 +6356,7 @@ declare interface TSUnit extends TSWorldObject {
 
     SelectNearbyTargets(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
     SelectNearbyTargetWithoutAura(exclude: TSUnit, dist: float, Aura: uint32) : TSUnit
+    SelectNearbyAllies(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
 
     RemoveAllControlled(): void;
 
@@ -8308,8 +8309,8 @@ declare namespace _hidden {
             , effectMask: TSNumber<uint32>
         )=>void): T
 
-        OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutableNumber<uint32>)=>void): T
-        OnPeriodicDamage(id: EventID, callback : (aura: TSAuraEffect, damage: TSMutableNumber<uint32>)=>void): T
+        OnPeriodicDamage(callback : (aura: TSAuraEffect, target: TSUnit, damage: TSMutableNumber<uint32>)=>void): T
+        OnPeriodicDamage(id: EventID, callback : (aura: TSAuraEffect, target: TSUnit, damage: TSMutableNumber<uint32>)=>void): T
 
         OnCalcMiss(callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo,SpellMissInfo>, effectMask: TSMutableNumber<uint32>) => void)
         OnCalcMiss(id: EventID, callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo,SpellMissInfo>, effectMask: TSMutableNumber<uint32>) => void)
@@ -8479,8 +8480,11 @@ declare namespace _hidden {
         OnAuraRemoved(callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
         OnAuraRemoved(id: EventID, callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
 
-        OnHeal(callback: (info: TSHealInfo) => void) : T;
-        OnHeal(id: EventID, callback: (info: TSHealInfo) => void) : T;
+        OnHeal(callback: (info: TSHealInfo, Amount: TSMutableNumber<int32>) => void) : T;
+        OnHeal(id: EventID, callback: (info: TSHealInfo, Amount: TSMutableNumber<int32>) => void) : T;
+
+        OnJumpStart(callback: (info: TSSpellInfo, caster: TSUnit, speedXY: TSMutableNumber<float>, SpeedZ: TSMutableNumber<float>, Dist: TSNumber<float>, PosX: TSNumber<float>, PosY: TSNumber<float>, PosZ: TSNumber<float>) => void) : T;
+        OnJumpStart(id: EventID, callback: (info: TSSpellInfo, caster: TSUnit, speedXY: TSMutableNumber<float>, SpeedZ: TSMutableNumber<float>, Dist: TSNumber<float>, PosX: TSNumber<float>, PosY: TSNumber<float>, PosZ: TSNumber<float>) => void) : T;
 
         CanAuraBeBrokenBySpell(callback: (Attacker: TSUnit, Victim: TSUnit, Aura: TSAura, DamageSpell: TSSpellInfo, DamageType: TSNumber<uint8>, CanBreak: TSMutable<bool, bool>) => void) : T;
         CanAuraBeBrokenBySpell(id: EventID, callback: (Attacker: TSUnit, Victim: TSUnit, Aura: TSAura, DamageSpell: TSSpellInfo, DamageType: TSNumber<uint8>, CanBreak: TSMutable<bool, bool>) => void) : T;

@@ -1137,7 +1137,7 @@ bool TSWorldObject::IsNeutralToAll()
  */
 TSNumber<uint32> TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool triggered)
 {
-    return obj->CastSpell(_target.obj, spell, triggered);
+    return obj->CastSpell(_target.obj, spell, CastSpellExtraArgs(triggered));
 }
 
 TSNumber<uint32> TSWorldObject::CastSpell(TSItem _target, uint32 spell, bool triggered)

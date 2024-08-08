@@ -244,6 +244,7 @@ public:
 
     TSArray<TSUnit> SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount);
     TSUnit SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 Aura);
+    TSArray<TSUnit> SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, uint32 amount);
 
     bool HasAuraWithMechanic(uint32);
 private:

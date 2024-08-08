@@ -2700,3 +2700,19 @@ TSUnit TSUnit::SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 
 
     return TSUnit(target);
 }
+
+TSArray<TSUnit> TSUnit::SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, uint32 amount) {
+    std::list<Unit*> ExcludedUnits = {};
+    for (auto tsUnit : exclude) {
+        ExcludedUnits.push_back(tsUnit.unit);
+    }
+
+    auto units = unit->SelectNearbyAllies(ExcludedUnits, dist, amount);
+    TSArray<TSUnit> out;
+    out.reserve(units.size());
+    for (Unit* u : units) {
+        out.push(TSUnit(u));
+    }
+
+    return out;
+}

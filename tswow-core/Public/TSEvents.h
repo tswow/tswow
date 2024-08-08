@@ -509,7 +509,7 @@ struct TSEvents
         ID_EVENT(OnApply, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
         ID_EVENT(OnDamageEarly, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
         ID_EVENT(OnDamageLate, TSSpell, TSMutableNumber<uint32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
-        ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSMutableNumber<uint32>)
+        ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSUnit, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcSpellPowerLevelPenalty
             , TSSpellInfo spell
             , TSMutableNumber<float> penalty
@@ -558,11 +558,13 @@ struct TSEvents
         ID_EVENT(OnAuraApplied, TSUnit, TSAura, TSUnit)
         ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
 
-        ID_EVENT(OnHeal, TSHealInfo)
+        ID_EVENT(OnHeal, TSHealInfo, TSMutableNumber<int32>)
         ID_EVENT(CanAuraBeBrokenBySpell, TSUnit, TSUnit, TSAura, TSSpellInfo, TSNumber<uint8>, TSMutable<bool, bool>)
         ID_EVENT(OnCustomMechanicMaskDamage, TSUnit, TSSpellInfo, TSMutableNumber<uint32>)
         ID_EVENT(OnSuccessfulInterrupt, TSUnit caster, TSUnit who, TSSpell spell)
         ID_EVENT(OnCalcSpellDuration, TSSpellInfo Info, TSPlayer Player, TSMutableNumber<int32> Dur)
+
+        ID_EVENT(OnJumpStart, TSSpellInfo, TSUnit, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
