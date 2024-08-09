@@ -59,6 +59,7 @@ declare function base64_encode(str: string): string;
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
+declare const ItemRefTooltip: WoWAPI.Frame
 
 
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
@@ -11892,6 +11893,7 @@ declare function securecall(call: string | ((...args: any[]) => any), ...args: a
  * @see https://wow.gamepedia.com/API_hooksecurefunc
  */
 declare function hooksecurefunc(table?: object, functionName?: string, handler?: (...args: any[]) => any): void;
+declare function hooksecurefunc(functionName?: string, handler?: (...args: any[]) => any): void;
 
 /**
  * Determines whether in-combat lockdown restrictions are active
@@ -13157,7 +13159,7 @@ declare namespace WoWAPI {
      * The main wow frame object
      */
     interface Frame extends Region, ObjectHookScript<Frame>, ObjectSetScript<Frame> {
-
+		reagentIndex: number;
 
         /**
          * Creates a new FontString as a child of a frame.
@@ -13945,6 +13947,8 @@ declare const CharacterMainHandSlot: WoWAPI.Button
 declare const CharacterSecondaryHandSlot: WoWAPI.Button
 declare const CharacterRangedSlot: WoWAPI.Button
 declare const CharacterAmmoSlot: WoWAPI.Button
+
+declare const TradeSkillFrame: WoWAPI.Frame
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
