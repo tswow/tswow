@@ -4,9 +4,9 @@ local hooksecurefunc, select, UnitBuff, UnitDebuff, UnitAura, UnitGUID,
       GetGlyphSocketInfo, tonumber, strfind
 
 local kinds = {
-  spell = "SpellID",
+  spell = "Spell",
   item = "ItemID",
-  unit = "NPC ID",
+  unit = "creature_template",
   achievement = "AchievementID",
   criteria = "CriteriaID",
   ability = "AbilityID",
@@ -61,6 +61,11 @@ local function addLine(tooltip, id, kind)
   if not id or id == "" then return end
   if type(id) == "table" and #id == 1 then id = id[1] end
 
+  if (_G['tooltipInfo'][kind] ~= null) then
+    if (_G['tooltipInfo'][kind][tonumber(id)] ~= null) then
+        id = _G['tooltipInfo'][kind][tonumber(id)]
+    end
+end
   -- Check if we already added to this tooltip. Happens on the talent frame
   local frame, text
   for i = 1,15 do
@@ -68,6 +73,8 @@ local function addLine(tooltip, id, kind)
     if frame then text = frame:GetText() end
     if text and string.find(text, kind .. ":") then return end
   end
+
+
 
   local left, right
   if type(id) == "table" then
@@ -172,6 +179,8 @@ end)
 
 hooksecurefunc(ItemRefTooltip, "SetHyperlink", onSetHyperlink)
 hooksecurefunc(GameTooltip, "SetHyperlink", onSetHyperlink)
+hooksecurefunc(firstRankToolTip, "SetHyperlink", onSetHyperlink)
+hooksecurefunc(secondRankToolTip, "SetHyperlink", onSetHyperlink)
 
 -- Spells
 hooksecurefunc(GameTooltip, "SetUnitBuff", function(self,...)
