@@ -8500,6 +8500,9 @@ declare namespace _hidden {
 
         OnCalcSpellDuration(callback: (Info: TSSpellInfo, Player: TSPlayer, Duration: TSMutableNumber<int32>) => void);
         OnCalcSpellDuration(id: EventID, callback: (Info: TSSpellInfo, Player: TSPlayer, Duration: TSMutableNumber<int32>) => void);
+
+        OnCastCancelled(callback: (me: TSUnit, spell: TSSpell, Timer: TSNumber<int32>, ChannelDuration: TSNumber<int32>)=>void)
+        OnCastCancelled(id: EventID, callback: (me: TSUnit, spell: TSSpell, Timer: TSNumber<int32>, ChannelDuration: TSNumber<int32>) => void);
     }
 
     export class Creature<T> {
@@ -8954,8 +8957,6 @@ declare namespace _hidden {
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
-
-        OnCastCancelled(callback: (me: TSUnit, spell: TSSpellInfo)=>void)
 
         OnDamageDealt(callback: (from: TSUnit, To: TSUnit, damage) => void)
         OnDamageTaken(callback: (who: TSUnit, from: TSUnit, damage: int32) => void)

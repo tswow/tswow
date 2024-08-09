@@ -477,8 +477,6 @@ struct TSEvents
         EVENT(OnLiquidStatusChanged, TSUnit, TSMutableNumber<uint32> newStatus);
         EVENT(OnOutdoorsChanged, TSUnit, TSMutable<bool,bool> isOutdoors);
 
-        EVENT(OnCastCancelled, TSUnit, TSSpellInfo)
-
         EVENT(OnDamageDealt, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnLossOfControl, TSUnit, TSNumber<uint32>)
@@ -566,6 +564,8 @@ struct TSEvents
 
         ID_EVENT(OnJumpStart, TSSpellInfo, TSUnit, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>)
         ID_EVENT(OnPersistentAARemoved, TSUnit, TSSpellDestination)
+
+        ID_EVENT(OnCastCancelled, TSUnit, TSSpell, TSNumber<int32>, TSNumber<int32>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
