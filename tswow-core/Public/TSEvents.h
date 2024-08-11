@@ -698,6 +698,9 @@ struct TSEvents
             , TSMutableNumber<uint32>
             , TSPlayer killer
         )
+
+        ID_EVENT(OnTotemSummoned, TSUnit, TSCreature)
+        ID_EVENT(OnTotemDespawn, TSCreature, TSUnit)
     } Creature;
 
     struct GameObjectEvents : public TSMappedEventsRegistry

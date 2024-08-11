@@ -4339,3 +4339,20 @@ void TSPlayer::LSendShowMailBox1(TSNumber<uint32> guid)
 {
     return SendShowMailBox(guid);
 }
+
+TSArray<TSGUID> TSPlayer::GetTotems() {
+    std::list<ObjectGuid> temp = {};
+    for (uint8 slot = SUMMON_SLOT_TOTEM_FIRE; slot < MAX_TOTEM_SLOT; ++slot) {
+        if (!player->m_SummonSlot[slot])
+            continue;
+
+        temp.push_back(player->m_SummonSlot[slot]);
+    }
+
+    TSArray<TSGUID> out;
+    out.reserve(temp.size());
+    for (ObjectGuid t : temp)
+        out.push(TSGUID(t));
+
+    return out;
+}

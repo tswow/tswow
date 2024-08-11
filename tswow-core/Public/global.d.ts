@@ -2307,6 +2307,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
 
     GetFace(): TSNumber<uint8>;
     SetFace(face: uint8);
+
+    GetTotems() : TSArray<TSGUID>
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -8523,6 +8525,12 @@ declare namespace _hidden {
 
         OnKilledUnit(callback: (killer: TSCreature, killed: TSUnit)=>void): T;
         OnKilledUnit(id: EventID, callback: (killer: TSCreature, killed: TSUnit)=>void): T;
+
+        OnTotemSummoned(callback: (summoner: TSUnit, summon: TSCreature)=>void): T;
+        OnTotemSummoned(id: EventID, callback: (summoner: TSUnit, summon: TSCreature)=>void): T;
+
+        OnTotemDespawn(callback: (despawning: TSCreature, summoner: TSUnit)=>void): T;
+        OnTotemDespawn(id: EventID, callback: (despawning: TSCreature, summoner: TSUnit)=>void): T;
 
         OnSummoned(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
         OnSummoned(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;

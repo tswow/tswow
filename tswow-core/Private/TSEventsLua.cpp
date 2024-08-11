@@ -304,6 +304,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcGain);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCalcBaseGain);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMovementInform);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnTotemSummoned);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnTotemDespawn);
 
     auto gameobject_events = state.new_usertype<TSEvents::GameObjectEvents>("GameObjectEvents");
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnUpdate);
