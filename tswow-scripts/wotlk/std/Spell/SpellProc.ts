@@ -150,6 +150,14 @@ export class SimpleClassMask<T> extends CellSystem<T>
         this.c = c;
     }
 
+    setSimple([a, b, c]) {
+        this.a.set(a);
+        this.b.set(b);
+        this.c.set(c);
+
+        return this.owner;
+    }
+
     get A() { return new MaskCell32(this.owner, this.a) };
     get B() { return new MaskCell32(this.owner, this.b) };
     get C() { return new MaskCell32(this.owner, this.c) };
