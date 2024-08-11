@@ -10086,6 +10086,7 @@ declare interface TSDamageInfo {
     GetAbsorb(): TSNumber<uint32>
     GetBlock(): TSNumber<uint32>
     GetHitMask(): TSNumber<uint32>
+    IsNull() : bool
 }
 
 declare class TSPacketWrite {
