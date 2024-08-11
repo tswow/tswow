@@ -219,6 +219,8 @@ void TSLua::load_unit_methods(sol::state& state)
 
     LUA_FIELD(ts_unit, TSUnit, GetDiseasesByCaster);
 
+    LUA_FIELD(ts_unit, TSUnit, HasUnitMovementFlag);
+
     LUA_FIELD_OVERLOAD_RET_2_1(ts_unit, TSUnit, SetCharmedBy, TSUnit, uint32, TSAuraApplication);
     LUA_FIELD_OVERLOAD_2_1(ts_unit, TSUnit, Jump, float, float, bool);
     ts_unit.set_function("GetControlled", &TSUnit::LGetControlled);

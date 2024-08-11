@@ -7492,8 +7492,9 @@ declare interface TSUnit extends TSWorldObject {
     RollChance(chance: uint8) : bool
     RollChanceF(chance: float) : bool
 
-
     HasAuraWithMechanic(mech: uint32) : bool
+
+    HasUnitMovementFlag(flag: uint32) : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {

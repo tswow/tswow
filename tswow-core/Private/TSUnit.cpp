@@ -2716,3 +2716,8 @@ TSArray<TSUnit> TSUnit::SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, 
 
     return out;
 }
+
+bool TSUnit::HasUnitMovementFlag(uint32 flag)
+{
+    return unit->HasUnitMovementFlag(flag);
+}

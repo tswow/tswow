@@ -247,6 +247,8 @@ public:
     TSArray<TSUnit> SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, uint32 amount);
 
     bool HasAuraWithMechanic(uint32);
+
+    bool HasUnitMovementFlag(uint32 flag);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;
