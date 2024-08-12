@@ -2309,6 +2309,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     SetFace(face: uint8);
 
     GetTotems() : TSArray<TSGUID>
+
+    IsInFeralForm() : bool
 }
 
 declare interface TSCorpse extends TSWorldObject {

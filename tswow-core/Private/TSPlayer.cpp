@@ -4356,3 +4356,7 @@ TSArray<TSGUID> TSPlayer::GetTotems() {
 
     return out;
 }
+
+bool TSPlayer::IsInFeralForm() {
+    return player->IsInFeralForm();
+}

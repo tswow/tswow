@@ -365,6 +365,8 @@ public:
 
 	TSArray<TSGUID> GetTotems();
 
+	bool IsInFeralForm();
+
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);
