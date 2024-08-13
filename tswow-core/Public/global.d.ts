@@ -7497,6 +7497,19 @@ declare interface TSUnit extends TSWorldObject {
     HasAuraWithMechanic(mech: uint32) : bool
 
     HasUnitMovementFlag(flag: uint32) : bool
+
+    GetFlatModifierValue(unitMod: uint8, modifierType: uint8) : TSNumber<float>
+    GetPctModifierValue(unitMod: uint8, modifierType: uint8) : TSNumber<float>
+
+    SetStatFlatModifier(unitMod: uint8, modifierType: uint8, val: float) : void
+    SetStatPctModifier(unitMod: uint8, modifierType: uint8, val: float) : void
+
+    IsSummon() : bool
+    IsGuardian() : bool
+    IsPet() : bool
+    IsHunterPet() : bool
+    IsTotem() : bool
+    IsVehicle() : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -8808,6 +8821,120 @@ declare namespace _hidden {
             victim: TSCreature
           , gain: TSMutableNumber<uint32>
           , killer: TSPlayer
+        )=>void)
+
+        // pets
+        OnPetUpdateResistance(callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+            , school: SpellSchools
+        )=>void)
+        OnPetUpdateResistance(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+            , school: SpellSchools
+        )=>void)
+        OnPetUpdateArmor(callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+        )=>void)
+        OnPetUpdateArmor(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+        )=>void)
+        OnPetUpdateMaxHealth(callback: (
+            creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+        )=>void)
+        OnPetUpdateMaxHealth(id: EventID, callback: (
+            creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+        )=>void)
+        OnPetUpdateMaxPower(callback: (
+            creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+            , powerType: Powers
+        )=>void)
+        OnPetUpdateMaxPower(id: EventID, callback: (
+            creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+            , powerType: Powers
+        )=>void)
+        OnPetUpdateAttackPowerDamage(callback:(
+              creature: TSCreature
+            , owner: TSPlayer
+            , base: TSMutableNumber<float> /*base*/
+            , mod: TSMutableNumber<float> /*mod*/
+            , multiplier: TSMutableNumber<float> /*multiplier*/
+            , ranged: bool /*ranged*/
+        )=>void)
+        OnPetUpdateAttackPowerDamage(id: EventID, callback:(
+              creature: TSCreature
+            , owner: TSPlayer
+            , base: TSMutableNumber<float> /*base*/
+            , mod: TSMutableNumber<float> /*mod*/
+            , multiplier: TSMutableNumber<float> /*multiplier*/
+            , ranged: bool /*ranged*/
+        )=>void)
+        OnPetUpdateDamagePhysical(callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , min: TSMutableNumber<float>
+            , max: TSMutableNumber<float>
+            , bonus: TSNumber<float>
+            , attType: WeaponAttackType
+        )=>void)
+        OnPetUpdateDamagePhysical(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , min: TSMutableNumber<float>
+            , max: TSMutableNumber<float>
+            , bonus: TSNumber<float>
+            , attType: WeaponAttackType
+        )=>void)
+        OnPetUpdateSpellPower(callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<int32>
+        )=>void)
+        OnPetUpdateSpellPower(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<int32>
+        )=>void)
+        OnPetUpdateStat(callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+            , ownerBonus: TSMutableNumber<float>
+        )=>void)
+        OnPetUpdateStat(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , value: TSMutableNumber<float>
+            , ownerBonus: TSMutableNumber<float>
+        )=>void)
+
+        // guardian
+        OnGuardianUpdateDamagePhysical(callback: (
+              creature: TSCreature
+            , owner: TSPlayer 
+            , bonus: TSMutableNumber<float>
+            , attType: WeaponAttackType
+        )=>void)
+        OnGuardianUpdateDamagePhysical(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
+            , bonus: TSMutableNumber<float>
+            , attType: WeaponAttackType
         )=>void)
     }
 

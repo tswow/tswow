@@ -249,6 +249,18 @@ public:
     bool HasAuraWithMechanic(uint32);
 
     bool HasUnitMovementFlag(uint32 flag);
+
+    TSNumber<float> GetFlatModifierValue(uint8 unitMod, uint8 modifierType) const;
+    TSNumber<float> GetPctModifierValue(uint8 unitMod, uint8 modifierType) const;
+    void SetStatFlatModifier(uint8 unitMod, uint8 modifierType, float val);
+    void SetStatPctModifier(uint8 unitMod, uint8 modifierType, float val);
+
+    bool IsSummon();
+    bool IsGuardian();
+    bool IsPet();
+    bool IsHunterPet();
+    bool IsTotem();
+    bool IsVehicle();
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

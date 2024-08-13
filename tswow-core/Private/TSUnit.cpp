@@ -2721,3 +2721,38 @@ bool TSUnit::HasUnitMovementFlag(uint32 flag)
 {
     return unit->HasUnitMovementFlag(flag);
 }
+
+void TSUnit::SetStatFlatModifier(uint8 unitMod, uint8 modifierType, float val) {
+    unit->SetStatFlatModifier(UnitMods(unitMod), UnitModifierFlatType(modifierType), val);
+}
+
+void TSUnit::SetStatPctModifier(uint8 unitMod, uint8 modifierType, float val) {
+    unit->SetStatPctModifier(UnitMods(unitMod), UnitModifierPctType(modifierType), val);
+}
+
+TSNumber<float> TSUnit::GetFlatModifierValue(uint8 unitMod, uint8 modifierType) const {
+    return unit->GetFlatModifierValue(UnitMods(unitMod), UnitModifierFlatType(modifierType));
+}
+
+TSNumber<float> TSUnit::GetPctModifierValue(uint8 unitMod, uint8 modifierType) const {
+    return unit->GetPctModifierValue(UnitMods(unitMod), UnitModifierPctType(modifierType));
+}
+
+bool TSUnit::IsSummon() {
+    return unit->IsSummon();
+}
+bool TSUnit::IsGuardian() {
+    return unit->IsGuardian();
+}
+bool TSUnit::IsPet() {
+    return unit->IsPet();
+}
+bool TSUnit::IsHunterPet() {
+    return unit->IsHunterPet();
+}
+bool TSUnit::IsTotem() {
+    return unit->IsTotem();
+}
+bool TSUnit::IsVehicle() {
+    return unit->IsVehicle();
+}

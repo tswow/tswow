@@ -701,6 +701,22 @@ struct TSEvents
 
         ID_EVENT(OnTotemSummoned, TSUnit, TSCreature)
         ID_EVENT(OnTotemDespawn, TSCreature, TSUnit)
+
+        ID_EVENT(OnPetUpdateResistance, TSCreature, TSPlayer, TSMutableNumber<float>, TSNumber<uint32> school)
+        ID_EVENT(OnPetUpdateArmor, TSCreature, TSPlayer, TSMutableNumber<float>)
+        ID_EVENT(OnPetUpdateMaxHealth, TSCreature, TSPlayer, TSMutableNumber<float>)
+        ID_EVENT(OnPetUpdateMaxPower, TSCreature, TSPlayer, TSMutableNumber<float>, TSNumber<int8> powerType)
+        ID_EVENT(OnPetUpdateAttackPowerDamage, TSCreature, TSPlayer, TSMutableNumber<float> base, TSMutableNumber<float> mod, TSMutableNumber<float> multiplier, bool ranged)
+        ID_EVENT(OnPetUpdateDamagePhysical, TSCreature, TSPlayer, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<float>, TSNumber<uint8> attType)
+        ID_EVENT(OnPetUpdateSpellPower, TSCreature, TSPlayer, TSMutableNumber<int32>)
+        ID_EVENT(OnPetUpdateStat, TSCreature, TSPlayer, TSMutableNumber<float>, TSMutableNumber<float>)
+
+        ID_EVENT(OnGuardianUpdateDamagePhysical
+            , TSCreature
+            , TSPlayer
+            , TSMutableNumber<float>
+            , TSNumber<uint8> attType
+        )
     } Creature;
 
     struct GameObjectEvents : public TSMappedEventsRegistry
