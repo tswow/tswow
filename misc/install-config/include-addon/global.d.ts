@@ -59,7 +59,11 @@ declare function base64_encode(str: string): string;
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
-declare const ItemRefTooltip: WoWAPI.Frame
+declare const ItemRefTooltip: WoWAPI.GameTooltip
+declare const ItemRefShoppingTooltip1: WoWAPI.GameTooltip
+declare const ItemRefShoppingTooltip2: WoWAPI.GameTooltip
+declare const ShoppingTooltip1: WoWAPI.GameTooltip
+declare const ShoppingTooltip2: WoWAPI.GameTooltip
 
 
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
@@ -68,6 +72,8 @@ declare function format(formatString: String, input:number):String;
 declare function PaperDollFormatStat(labelName: String, add:number,value:number,subtract:number,frame:WoWAPI.Frame,otherFrame:WoWAPI.Frame):void;
 declare function GetInventoryItemLink(unit:UnitId,index:number):String;
 declare function strfind(searched:String, regex:String):string[];
+declare function select(index:number,link:any):string;
+declare function GetItemGem(link:string, index:number):string[];
 
 //
 
