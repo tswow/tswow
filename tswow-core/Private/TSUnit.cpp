@@ -2756,3 +2756,7 @@ bool TSUnit::IsTotem() {
 bool TSUnit::IsVehicle() {
     return unit->IsVehicle();
 }
+
+bool TSUnit::HasOffhandWeapon() {
+    return unit->haveOffhandWeapon();
+}

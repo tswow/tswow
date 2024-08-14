@@ -7510,6 +7510,8 @@ declare interface TSUnit extends TSWorldObject {
     IsHunterPet() : bool
     IsTotem() : bool
     IsVehicle() : bool
+
+    HasOffhandWeapon() : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -8207,6 +8209,9 @@ declare namespace _hidden {
         OnCalcFallDamage(callback: (player: TSPlayer, value: TSMutableNumber<uint32>) => void)
         GainComboPoint(callback: (player: TSPlayer, amount: TSNumber<int8>) => void)
         ClearComboPoints(callback: (player: TSPlayer) => void)
+
+        OnEquipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
+        OnUnequipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
     }
 
     export class Account<T> {
@@ -8547,6 +8552,12 @@ declare namespace _hidden {
 
         OnTotemDespawn(callback: (despawning: TSCreature, summoner: TSUnit)=>void): T;
         OnTotemDespawn(id: EventID, callback: (despawning: TSCreature, summoner: TSUnit)=>void): T;
+
+        OnPetSummoned(callback: (summoner: TSUnit, summon: TSCreature)=>void): T;
+        OnPetSummoned(id: EventID, callback: (summoner: TSUnit, summon: TSCreature)=>void): T;
+
+        OnPetDespawn(callback: (despawning: TSCreature, summoner: TSPlayer)=>void): T;
+        OnPetDespawn(id: EventID, callback: (despawning: TSCreature, summoner: TSPlayer)=>void): T;
 
         OnSummoned(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
         OnSummoned(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;

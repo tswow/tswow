@@ -369,6 +369,9 @@ struct TSEvents
         EVENT(OnCalcFallDamage, TSPlayer, TSMutableNumber<uint32>)
         EVENT(GainComboPoint, TSPlayer, TSNumber<int8>)
         EVENT(ClearComboPoints, TSPlayer)
+
+        EVENT(OnEquipOffhandWeapon, TSPlayer, TSItem)
+        EVENT(OnUnequipOffhandWeapon, TSPlayer, TSItem)
     } Player;
 
     struct AccountEvents
@@ -701,6 +704,9 @@ struct TSEvents
 
         ID_EVENT(OnTotemSummoned, TSUnit, TSCreature)
         ID_EVENT(OnTotemDespawn, TSCreature, TSUnit)
+
+        ID_EVENT(OnPetSummoned, TSUnit, TSCreature)
+        ID_EVENT(OnPetDespawn, TSCreature, TSPlayer)
 
         ID_EVENT(OnPetUpdateResistance, TSCreature, TSPlayer, TSMutableNumber<float>, TSNumber<uint32> school)
         ID_EVENT(OnPetUpdateArmor, TSCreature, TSPlayer, TSMutableNumber<float>)

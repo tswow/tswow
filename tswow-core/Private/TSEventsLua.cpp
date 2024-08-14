@@ -134,6 +134,9 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, GainComboPoint);
     LUA_HANDLE(player_events, PlayerEvents, ClearComboPoints);
 
+    LUA_HANDLE(player_events, PlayerEvents, OnEquipOffhandWeapon);
+    LUA_HANDLE(player_events, PlayerEvents, OnUnequipOffhandWeapon);
+
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
     LUA_HANDLE(account_events, AccountEvents, OnFailedAccountLogin);
@@ -307,6 +310,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnTotemSummoned);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnTotemDespawn);
     // PETS
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetSummoned);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetDespawn);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetUpdateResistance);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetUpdateArmor);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetUpdateMaxHealth);

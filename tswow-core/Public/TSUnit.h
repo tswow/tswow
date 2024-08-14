@@ -261,6 +261,8 @@ public:
     bool IsHunterPet();
     bool IsTotem();
     bool IsVehicle();
+
+    bool HasOffhandWeapon();
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;
