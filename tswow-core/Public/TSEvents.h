@@ -585,7 +585,7 @@ struct TSEvents
         ID_EVENT(OnMovementInform, TSCreature, TSNumber<uint32>, TSNumber<uint32>)
         ID_EVENT(OnPassengerBoarded, TSCreature, TSUnit, TSNumber<int8>, bool)
         ID_EVENT(OnSpellClick, TSCreature, TSUnit, bool)
-        ID_EVENT(OnUpdateAI, TSCreature, TSNumber<uint32>)
+        ID_EVENT(OnCombatTick, TSCreature, TSNumber<uint32>)
         ID_EVENT(OnGenerateLoot, TSCreature, TSPlayer)
         ID_EVENT(OnCreate, TSCreature, TSMutable<bool,bool>)
         ID_EVENT_FN(OnReload, ReloadCreature, TSCreature)

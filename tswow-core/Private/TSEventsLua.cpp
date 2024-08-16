@@ -261,7 +261,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnWaypointPathEnded);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPassengerBoarded);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnSpellClick);
-    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnUpdateAI);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCombatTick);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnGenerateLoot);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCreate);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnReload);

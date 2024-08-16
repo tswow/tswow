@@ -8645,8 +8645,8 @@ declare namespace _hidden {
         OnSpellClick(callback: (creature: TSCreature, clicker: TSUnit, isFirst: boolean)=>void): T;
         OnSpellClick(id: EventID, callback: (creature: TSCreature, clicker: TSUnit, isFirst: boolean)=>void): T;
 
-        OnUpdateAI(callback: (creature: TSCreature, diff: uint32)=>void): T;
-        OnUpdateAI(id: EventID, callback: (creature: TSCreature, diff: uint32)=>void): T;
+        OnCombatTick(callback: (creature: TSCreature, diff: uint32)=>void): T;
+        OnCombatTick(id: EventID, callback: (creature: TSCreature, diff: uint32)=>void): T;
 
         OnGossipHello(callback: (creature: TSCreature, player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void): T
         OnGossipHello(id: EventID, callback: (creature: TSCreature, player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void): T

@@ -73,10 +73,10 @@ export enum CreatureFlagsExtra
     IGNORE_PATHFINDING   = 0x20000000,
     /** creature is immune to knockback effects */
     IMMUNITY_KNOCKBACK   = 0x40000000,
-    UNUSED_31            = 0x80000000,
+    TICK_AI              = 0x80000000,
     UNUSED               = (UNUSED_22 |
                                                 UNUSED_23 | UNUSED_24 | UNUSED_25 |
-                                                UNUSED_26 | UNUSED_27 | UNUSED_31), // SKIP
+                                                UNUSED_26 | UNUSED_27), // SKIP
 
     DB_ALLOWED           = (0xFFFFFFFF & ~(UNUSED | DUNGEON_BOSS)) // SKIP
 };
