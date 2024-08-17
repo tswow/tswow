@@ -380,3 +380,7 @@ TSNumber<uint32> TSDamageInfo::GetHitMask()
     return 0;
 #endif
 }
+TSNumber<uint32> TSDamageInfo::GetHitInfo()
+{
+    return static_cast<uint32>(m_info->GetHitInfo());
+}

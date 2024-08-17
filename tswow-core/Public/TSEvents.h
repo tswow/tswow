@@ -347,12 +347,13 @@ struct TSEvents
         EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
         EVENT(OnCustomScriptedDamageDoneMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, TSNumber<uint8> SpellType)
         EVENT(OnCustomScriptedDamageTakenMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> TakenTotalMod, TSNumber<uint8> SpellType)
-        EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
+        EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritChance)
         EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
         EVENT(OnCustomScriptedWeaponDamageMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> TotalDamagePercentMod, TSMutableNumber<int32> FixedBonus, TSMutableNumber<int32> SpellBonus)
         EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
         EVENT(OnEnchantTriggered, TSPlayer player, TSUnit target, TSItem item, TSSpellInfo spellInfo)
-
+        EVENT(OnCustomScriptedCritDamageMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritDamMod)
+        
         EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage)
 
         EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
@@ -372,6 +373,9 @@ struct TSEvents
 
         EVENT(OnEquipOffhandWeapon, TSPlayer, TSItem)
         EVENT(OnUnequipOffhandWeapon, TSPlayer, TSItem)
+
+        EVENT(OnActionButtonSet, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint8>)
+        EVENT(OnActionButtonDelete, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint8>)
     } Player;
 
     struct AccountEvents
@@ -569,6 +573,7 @@ struct TSEvents
         ID_EVENT(OnPersistentAARemoved, TSUnit, TSSpellDestination)
 
         ID_EVENT(OnCastCancelled, TSUnit, TSUnit, TSSpell, TSNumber<int32>, TSNumber<int32>)
+        ID_EVENT(OnSpellCastFinished, TSSpell, TSUnit, TSNumber<uint32>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

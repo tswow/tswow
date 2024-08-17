@@ -113,4 +113,5 @@ class TC_GAME_API TSDamageInfo {
     TSNumber<uint32> GetAbsorb();
     TSNumber<uint32> GetBlock();
     TSNumber<uint32> GetHitMask();
+    TSNumber<uint32> GetHitInfo();
 };

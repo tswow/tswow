@@ -110,11 +110,13 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateRangedAttackPower);
     LUA_HANDLE(player_events, PlayerEvents, OnGlyphInitForLevel);
     LUA_HANDLE(player_events, PlayerEvents, OnReputationPriceDiscount);
+
     LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedWeaponDamageMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageDoneMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);
-    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod); // same as above but for crit chance
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod);
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritDamageMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedHealMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedAutoattackMod);
     LUA_HANDLE(player_events, PlayerEvents, OnPowerSpent);
@@ -136,6 +138,9 @@ void TSLua::load_events(sol::state& state)
 
     LUA_HANDLE(player_events, PlayerEvents, OnEquipOffhandWeapon);
     LUA_HANDLE(player_events, PlayerEvents, OnUnequipOffhandWeapon);
+
+    LUA_HANDLE(player_events, PlayerEvents, OnActionButtonSet);
+    LUA_HANDLE(player_events, PlayerEvents, OnActionButtonDelete);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
@@ -250,6 +255,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, CanAuraBeBrokenBySpell);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnJumpStart);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCastCancelled);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnSpellCastFinished);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);

@@ -8190,7 +8190,8 @@ declare namespace _hidden {
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
         OnCustomScriptedWeaponDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, TotalDamagePercentMod: TSMutableNumber<float>, FixedBonus: TSMutableNumber<int32> , SpellBonus: TSMutableNumber<int32>) => void);
         OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
-
+        OnCustomScriptedCritDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);
+        
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
         OnEnchantTriggered(callback: (Caster: TSPlayer, On: TSUnit, Item: TSItem, Spell: TSSpellInfo) => void);
 
@@ -8212,6 +8213,9 @@ declare namespace _hidden {
 
         OnEquipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
         OnUnequipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
+
+        OnActionButtonSet(callback: (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
+        OnActionButtonDelete(callback:  (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
     }
 
     export class Account<T> {
@@ -8526,6 +8530,9 @@ declare namespace _hidden {
 
         OnCastCancelled(callback: (me: TSUnit, tar: TSUnit, spell: TSSpell, Timer: TSNumber<int32>, ChannelDuration: TSNumber<int32>)=>void)
         OnCastCancelled(id: EventID, callback: (me: TSUnit, tar: TSUnit, spell: TSSpell, Timer: TSNumber<int32>, ChannelDuration: TSNumber<int32>) => void);
+
+        OnSpellCastFinished(callback: (Spell: TSSpell, Caster: TSUnit, Reason: SpellFinishReason)=>void): T;
+        OnSpellCastFinished(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, Reason: SpellFinishReason)=>void): T;
     }
 
     export class Creature<T> {
@@ -10226,6 +10233,7 @@ declare interface TSDamageInfo {
     GetAbsorb(): TSNumber<uint32>
     GetBlock(): TSNumber<uint32>
     GetHitMask(): TSNumber<uint32>
+    GetHitInfo(): TSNumber<uint32>
     IsNull() : bool
 }
 

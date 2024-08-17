@@ -71,4 +71,5 @@ void TSLua::load_damage_metods(sol::state& state)
     LUA_FIELD(ts_damageinfo, TSDamageInfo, GetAbsorb);
     LUA_FIELD(ts_damageinfo, TSDamageInfo, GetBlock);
     LUA_FIELD(ts_damageinfo, TSDamageInfo, GetHitMask);
+    LUA_FIELD(ts_damageinfo, TSDamageInfo, GetHitInfo);
 }
