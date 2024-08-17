@@ -5,11 +5,11 @@ local hooksecurefunc, select, UnitBuff, UnitDebuff, UnitAura, UnitGUID,
 
 local kinds = {
   spell = "Spell",
-  item = "ItemID",
+  item = "item_template",
   unit = "creature_template",
   achievement = "AchievementID",
   criteria = "CriteriaID",
-  ability = "AbilityID",
+  ability = "SkillLine",
   enchant = "EnchantID",
   gem = "GemID",
   macro = "MacroID",
