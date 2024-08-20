@@ -503,3 +503,7 @@ TSNumber<uint32> GetTalentCost(uint32 entry)
 {
     return GetTalentSpellCost(entry);
 }
+
+TSNumber<uint32> TSSpellInfo::GetMaxTicks(TSUnit caster) {
+    return info->GetMaxTicks(caster.unit);
+}

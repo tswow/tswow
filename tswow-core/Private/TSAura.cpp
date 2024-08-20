@@ -381,6 +381,15 @@ void TSAura::Remove()
 #endif
 }
 
+bool TSAura::ModStackAmount(int32 number, uint8 removeMode, bool resetTimer) {
+    return aura->ModStackAmount(number, AuraRemoveMode(removeMode), resetTimer);
+}
+
+void TSAura::ModifyDuration(int32 Time) {
+    aura->SetDuration(aura->GetDuration() + Time);
+    aura->SetMaxDuration(aura->GetMaxDuration() + Time);
+}
+
 TSAuraEffect TSAura::GetEffect(uint8 index)
 {
     return TSAuraEffect(aura->GetEffect(index));
@@ -452,4 +461,3 @@ TSSpell TSProcEventInfo::GetSpell()
 {
     return TSSpell(const_cast<Spell*>(m_info->GetProcSpell()));
 }
-

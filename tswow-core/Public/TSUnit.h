@@ -263,6 +263,8 @@ public:
     bool IsVehicle();
 
     bool HasOffhandWeapon();
+
+    float GetPPMProcChance(uint32 speed, float PPM, TSSpellInfo spell);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

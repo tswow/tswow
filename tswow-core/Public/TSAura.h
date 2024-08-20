@@ -94,6 +94,8 @@ public:
     void SetMaxDuration(int32 duration);
     void SetStackAmount(uint8 amount);
     void Remove();
+    bool ModStackAmount(int32 number, uint8 removeMode, bool resetTimer);
+    void ModifyDuration(int32 Time);
 private:
     TSLua::Array<TSAuraApplication> LGetApplications();
     friend class TSLua;

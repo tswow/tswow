@@ -3457,6 +3457,9 @@ declare interface TSAura extends TSEntityProvider {
      * Remove this [Aura] from the [Unit] it is applied to.
      */
     Remove() : void
+
+    ModStackAmount(amount: int32, mode: uint8, resetTimes: bool) : bool
+    ModifyDuration(amount: int32) : void
 }
 
 declare interface TSAuraEffect extends TSEntityProvider {
@@ -7512,6 +7515,8 @@ declare interface TSUnit extends TSWorldObject {
     IsVehicle() : bool
 
     HasOffhandWeapon() : bool
+
+    GetPPMProcChance(speed: uint32, PPM: float, spell: TSSpellInfo) : float
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
@@ -7783,6 +7788,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
     GetAllEffectsMechanicMask(): TSNumber<uint32>
+    GetMaxTicks(caster: TSWorldObject): TSNumber<uint32> 
 }
 
 declare class TSSpellEffectInfo {
@@ -10289,146 +10295,6 @@ declare class TSPacketRead {
     Size(): TSNumber<uint32>
 }
 
-// @dh-begin
-declare class TSJumpChargeParams {
-    Speed: float;
-    TreatSpeedAsMoveTimeSeconds: bool;
-    JumpGravity: float;
-}
-
-declare class TSCustomCharacterPoint {
-    Type: CustomCharacterPointType;
-    SpecId: uint32;
-    Sum: uint32;
-    Max: uint32;
-}
-
-declare class TSCustomClassSpecDetail {
-    Name: string;
-    SpellIconId: uint32;
-    SpecId: uint32;
-}
-
-declare class TSCustomCharacterTalent {
-    SpellId: uint32;
-    TabId: uint32;
-    CurrentRank: uint8;
-    Type: uint8;
-}
-
-declare class TSCustomTalentPrereq {
-    TabId: uint32;
-    Talent: uint32;
-    ReqId: uint32;
-    ReqRank: uint32;
-}
-
-declare class TSCustomPlayerSpec {
-    Id: uint32;
-    CharGuid: uint64;
-    Name: string;
-    Description: string;
-    Active: bool;
-    SpellIconId: uint32;
-    SpecTabId: uint32;
-
-    Talents: TSDictionary<uint32, TSDictionary<uint32, TSCustomCharacterTalent>>;
-    PointsSpent: TSDictionary<uint32, uint8>;
-    ChoiceNodesChosen: TSDictionary<uint32, uint32>;
-}
-
-declare class TSCustomTalentChoice {
-    SpellId: uint32;
-    Active: bool;
-}
-
-declare class TSCustomTalent {
-    SpellId: uint32;
-    TalentTabId: uint32;
-    ColumnIndex: uint32;
-    RowIndex: uint32;
-    RankCost: uint8;
-    TabPointReq: uint16;
-    RequiredLevel: uint8;
-    TalentType: CustomCharacterPointType;
-    NodeType: CustomNodeType;
-    NodeIndex: uint8;
-
-    NumberOfRanks: uint8;
-    PreReqType: CustomPrereqReqirementType;
-    Choices: TSDictionary<uint8, TSCustomTalentChoice>;
-    UnlearnSpells: TSArray<uint32>;
-    Ranks: TSDictionary<uint8, uint32>;
-    RanksRev: TSDictionary<uint32, uint8>;
-}
-
-declare class TSCustomTalentTab {
-    Id: uint32;
-    Classmask: uint32;
-    Racemask: uint32;
-    Name: string;
-    SpellIconId: uint32;
-    Background: string;
-    Description: string;
-    Role: uint8;
-    SpellString: string;
-    TalentType: CustomCharacterPointType;
-    TabIndex: uint32;
-    Talents: TSDictionary<uint32, TSCustomTalent>;
-}
-
-declare class TSPlayerLoadout {
-    Active: bool;
-    Id: uint8;
-    TabId: uint32;
-    Name: string;
-    TalentString: string;
-}
-
-declare class TSNodeMetaData {
-    SpellId: uint32;
-    Row: uint8;
-    Col: uint8;
-    PointReq: uint8;
-    NodeIndex: uint8;
-    Unlocks: TSArray<TSNodeMetaData>;
-}
-
-declare class TSTreeMetaData {
-    TabId: uint32;
-    MaxXDim: uint8;
-    MaxYDim: uint8;
-    Nodes: TSDictionary<uint8, TSDictionary<uint8, TSNodeMetaData>>;
-    NodeLocation: TSDictionary<uint32, TSNodeMetaData>;
-}
-
-declare class TSCustomCache {
-    GetJumpChargeParams(id: number) : TSJumpChargeParams;
-    TryGetTabIdForSpell(player: TSPlayer, spell: number) : TSNumber<uint32>;
-    TryGetSpellIdForTab(player: TSPlayer, tab: number) : TSNumber<uint32>;
-    TryGetCharacterTalents(player: TSPlayer, tab: number) : TSDictionary<uint32, TSCustomCharacterTalent>;
-    TryGetAllCharacterSpec(player: TSPlayer) : TSArray<TSCustomPlayerSpec>;
-    TryGetCharacterActiveSpec(player: TSPlayer) : TSCustomPlayerSpec;
-    TryGetCharacterSpec(player: TSPlayer) : TSCustomPlayerSpec;
-    GetTalent(player: TSPlayer, spell: uint32) : TSCustomTalent;
-    GetSpecPoints(player: TSPlayer, pointType: CustomCharacterPointType, spec: uint32) : TSCustomCharacterPoint;
-    UpdateCharPoints(player: TSPlayer, points: TSCustomCharacterPoint) : TSCustomCharacterPoint;
-    UpdateCharacterSpec(player: TSPlayer, spec: TSCustomPlayerSpec);
-    GetCommonCharacterPoint(player: TSPlayer, pointType: CustomCharacterPointType) : TSCustomCharacterPoint;
-    GetMaxPointDefaults(cpt: CustomCharacterPointType) : TSCustomCharacterPoint;
-    TryGetTabPointType(tabId: uint32) : TSCustomCharacterPoint;
-    TryGetTalentTab(player: TSPlayer, tabId: uint32) : TSCustomTalentTab;
-    TryGetCustomTalentTabs(player: TSPlayer, cpt : CustomCharacterPointType) : TSArray<TSCustomTalentTab>;
-    AddCharacterSpecSlot(player: TSPlayer);
-    GetSpecPoints(player: TSPlayer, pointType: CustomCharacterPointType) : TSCustomCharacterPoint;
-    GetChoiceNodeFromindex(index: uint8) : TSNumber<uint32>;
-
-    Ping() : TSNumber<uint8>;
-}
-
-declare function GetCacheManager(): TSCustomCache;
-// @dh-end
-
 declare function WorldDatabaseInfo(): TSDatabaseConnectionInfo
 declare function CharacterDatabaseInfo(): TSDatabaseConnectionInfo
 declare function AuthDatabaseInfo(): TSDatabaseConnectionInfo
@@ -10509,3 +10375,6 @@ declare type ZoneCategory = uint32;
 declare function TS_ZONE_CATEGORY(color: uint32): ZoneCategory
 declare function TS_ZONE_SCOPED(cat: ZoneCategory): void
 declare function TS_ZONE_SCOPED_N(cat: ZoneCategory): void
+
+declare function AddPct(pct: double, of: double)
+declare function CalcPct(pct: double, of: double)

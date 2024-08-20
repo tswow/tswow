@@ -132,6 +132,7 @@ public:
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
     TSNumber<uint32> GetAllEffectsMechanicMask();
+    TSNumber<uint32> GetMaxTicks(TSUnit caster);
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);

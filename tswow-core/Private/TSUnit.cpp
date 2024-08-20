@@ -2760,3 +2760,7 @@ bool TSUnit::IsVehicle() {
 bool TSUnit::HasOffhandWeapon() {
     return unit->haveOffhandWeapon();
 }
+
+float TSUnit::GetPPMProcChance(uint32 speed, float PPM, TSSpellInfo spell) {
+    return unit->GetPPMProcChance(speed, PPM, spell->info);
+}
