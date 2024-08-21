@@ -56,7 +56,7 @@ public:
         return m_entity->m_timers.has_timer(name);
     }
 
-    TSTimer<T> GetNamedTimer(std::string name) {
+    TSTimer<T>* GetNamedTimer(std::string name) {
         return m_entity->m_timers.get_named(name);
     }
 
