@@ -3979,13 +3979,13 @@ void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLev
     {
         for (auto const& [id, quest] : sObjectMgr->GetQuestTemplates())
         {
-            if (quest.GetRequiredClasses() && player->SatisfyQuestClass(&quest, false))
+            if (quest->GetRequiredClasses() && player->SatisfyQuestClass(quest.get(), false))
             {
-                if (limitQuestsByLevel && ! player->SatisfyQuestLevel(&quest, false)) {
+                if (limitQuestsByLevel && ! player->SatisfyQuestLevel(quest.get(), false)) {
                     continue;
                 }
 
-                player->LearnQuestRewardedSpells(&quest);
+                player->LearnQuestRewardedSpells(quest.get());
             }
         }
     }
