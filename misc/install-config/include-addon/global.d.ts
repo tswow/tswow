@@ -56,6 +56,26 @@ declare function __TS__New(target: any): any;
 declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 
+declare const CharacterAttributesFrame: WoWAPI.Frame
+declare const CharacterModelFrame: WoWAPI.Frame
+declare const ItemRefTooltip: WoWAPI.GameTooltip
+declare const ItemRefShoppingTooltip1: WoWAPI.GameTooltip
+declare const ItemRefShoppingTooltip2: WoWAPI.GameTooltip
+declare const ShoppingTooltip1: WoWAPI.GameTooltip
+declare const ShoppingTooltip2: WoWAPI.GameTooltip
+
+
+declare function HideUIPanel(frame: WoWAPI.Frame): void;
+declare function format(formatString: String, input:String):String;
+declare function format(formatString: String, input:number):String;
+declare function PaperDollFormatStat(labelName: String, add:number,value:number,subtract:number,frame:WoWAPI.Frame,otherFrame:WoWAPI.Frame):void;
+declare function GetInventoryItemLink(unit:UnitId,index:number):String;
+declare function strfind(searched:String, regex:String):string[];
+declare function select(index:number,link:any):string;
+declare function GetItemGem(link:string, index:number):string[];
+
+//
+
 /**
  * Returns the highest expansion id the current account has been flagged for.
  */
@@ -8581,6 +8601,7 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/PLAYER_ENTERING_WORLD
          */
         PLAYER_ENTERING_WORLD: null;
+        PLAYER_EQUIPMENT_CHANGED: null;
 
         /**
          * Fired when a player engages auto-attack. Note that firing a gun or a spell, or getting aggro, does NOT trigger this event
@@ -11877,6 +11898,7 @@ declare function securecall(call: string | ((...args: any[]) => any), ...args: a
  * @see https://wow.gamepedia.com/API_hooksecurefunc
  */
 declare function hooksecurefunc(table?: object, functionName?: string, handler?: (...args: any[]) => any): void;
+declare function hooksecurefunc(functionName?: string, handler?: (...args: any[]) => any): void;
 
 /**
  * Determines whether in-combat lockdown restrictions are active
@@ -12008,7 +12030,7 @@ declare function GetRealmName(): string;
 /// <reference path="../auction.d.ts" />
 
 declare namespace WoWAPI {
-    interface GameTooltip extends UIObject, GameTooltipHookScript, GameTooltipSetScript {
+    interface GameTooltip extends UIObject, GameTooltipHookScript, GameTooltipSetScript, Frame {
 
         /**
          * Adds Line to tooltip with textLeft on left side of line and textRight on right side
@@ -12071,6 +12093,7 @@ declare namespace WoWAPI {
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point, offsetX: number, offsetY: number): void;
         SetPoint(point: Point): void;
         SetPoint(point: Point, offsetX: number, offsetY: number): void;
+        SetPoint(point: Point, relativeTo: Region | string,offsetX: number, offsetY: number): void;
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
 
 
@@ -12695,6 +12718,8 @@ declare namespace WoWAPI {
      */
     interface Region extends UIObject {
 
+        SetToplevel(set:bool):void;
+
         /**
          * Clear all attachment points for this object.
          */
@@ -12727,6 +12752,7 @@ declare namespace WoWAPI {
          * @returns number, number
          */
         GetCenter(): LuaMultiReturn<[number, number]>;
+        GetRect(): LuaMultiReturn<[number, number, number, number]>;
 
         /**
          * Returns the distance from the bottom/left edge of the screen to the requested edge of an object, scaled with the objects's effective scale.
@@ -12788,6 +12814,7 @@ declare namespace WoWAPI {
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point, offsetX: number, offsetY: number): void;
         SetPoint(point: Point): void;
         SetPoint(point: Point, offsetX: number, offsetY: number): void;
+        SetPoint(point: Point, relativeTo: Region | string,offsetX: number, offsetY: number): void;
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
 
         /**
@@ -12910,6 +12937,8 @@ declare namespace WoWAPI {
          */
         SetTexCoord(left: number, right: number, top: number, bottom: number): void;
         SetTexCoord(ULx: number, ULy: number, LLx: number, LLy: number, URx: number, URy: number, LRx: number, LRy: number): void;
+
+        GetTexCoords()
 
         /**
          * Changes the texture of a Texture widget.
@@ -13123,7 +13152,7 @@ declare namespace WoWAPI {
         /**
          * Controls how far into the frame the background will be drawn (use higher values the thicker the edges are)
          */
-        insets: {
+        insets?: {
             left: number;
             right: number;
             top: number;
@@ -13135,6 +13164,7 @@ declare namespace WoWAPI {
      * The main wow frame object
      */
     interface Frame extends Region, ObjectHookScript<Frame>, ObjectSetScript<Frame> {
+		reagentIndex: number;
 
         /**
          * Creates a new FontString as a child of a frame.
@@ -13190,7 +13220,7 @@ declare namespace WoWAPI {
          * Returns the Frame Strata the frame is in.
          */
         GetFrameStrata(): FrameStrata;
-        
+
         /**
          * Returns the region's scale relative to its immediate parent (if it has one)
          * 3.3.5a Frame:GetScale() and Frame:GetEffectiveScale not Region:
@@ -13304,6 +13334,11 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
+
+        /**
+         *  Returns Frame level
+         */
+        GetFrameLevel(): number;
 
         RegisterForDrag(button: WoWAPI.MouseButton): void;
 
@@ -13615,7 +13650,7 @@ declare namespace WoWAPI {
         /**
          * Execute the click action of the button.
          */
-        Click(): void;
+        Click(self?: WoWAPI.Button, button?: string): void;
 
         /**
          * Disable the Button so that it cannot be clicked
@@ -13675,6 +13710,7 @@ declare namespace WoWAPI {
         SetButtonState(state: string): void;
         SetDisabledAtlas(atlasName: string): void;
         SetDisabledFontObject(fontObject: FontObject): void;
+        SetDisabledTexture(texture: string|Texture): void;
         SetDisabledTexture(texture: string): void;
         SetEnabled(isEnable: bool): void;
         SetFontString(fontString: string|FontObject): void;
@@ -13682,13 +13718,16 @@ declare namespace WoWAPI {
         SetFormattedText(formatstring: string): void;
         SetHighlightAtlas(atlasName: string): void;
         SetHighlightFontObject(fontObject: FontObject): void;
+        SetHighlightTexture(texture: string|Texture): void;
         SetHighlightTexture(texture: string): void;
         SetMotionScriptsWhileDisabled(shouldFire: bool): void;
         SetNormalAtlas(atlasName: string): void;
         SetNormalFontObject(fontObject: FontObject): void;
+        SetNormalTexture(texture: string|Texture): void;
         SetNormalTexture(texture: string): void;
         SetPushedAtlas(atlasName: string): void;
         SetPushedTextOffset(x: number, y: number): void;
+        SetPushedTexture(texture: string|Texture): void;
         SetPushedTexture(texture: string): void;
         SetText(textLabel:string): void;
         UnlockHighlight(): void;
@@ -13891,6 +13930,30 @@ declare const FocusFrame: WoWAPI.Frame;
 declare const WorldFrame: WoWAPI.Frame;
 declare const WorldMapFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
+
+declare const TalentMicroButton: WoWAPI.Button
+declare const CharacterHeadSlot: WoWAPI.Button
+declare const CharacterNeckSlot: WoWAPI.Button
+declare const CharacterShoulderSlot: WoWAPI.Button
+declare const CharacterBackSlot: WoWAPI.Button
+declare const CharacterChestSlot: WoWAPI.Button
+declare const CharacterShirtSlot: WoWAPI.Button
+declare const CharacterTabardSlot: WoWAPI.Button
+declare const CharacterWristSlot: WoWAPI.Button
+declare const CharacterHandsSlot: WoWAPI.Button
+declare const CharacterWaistSlot: WoWAPI.Button
+declare const CharacterLegsSlot: WoWAPI.Button
+declare const CharacterFeetSlot: WoWAPI.Button
+declare const CharacterFinger0Slot: WoWAPI.Button
+declare const CharacterFinger1Slot: WoWAPI.Button
+declare const CharacterTrinket0Slot: WoWAPI.Button
+declare const CharacterTrinket1Slot: WoWAPI.Button
+declare const CharacterMainHandSlot: WoWAPI.Button
+declare const CharacterSecondaryHandSlot: WoWAPI.Button
+declare const CharacterRangedSlot: WoWAPI.Button
+declare const CharacterAmmoSlot: WoWAPI.Button
+
+declare const TradeSkillFrame: WoWAPI.Frame
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
@@ -14112,6 +14175,10 @@ declare function UnitFactionGroup(unitId: WoWAPI.UnitId): LuaMultiReturn<[string
  * @see https://wow.gamepedia.com/API_UnitClass
  */
 declare function UnitClass(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string, number]>;
+
+/**
+ */
+declare function UnitPowerType(unitId: WoWAPI.UnitId): LuaMultiReturn<[number, string]>;
 
 /**
  * Returns the current health of the specified unit

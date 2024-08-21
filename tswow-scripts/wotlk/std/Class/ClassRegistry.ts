@@ -36,6 +36,7 @@ export enum ClassMask {
     , MAGE         = 0x80
     , WARLOCK      = 0x100
     , DRUID        = 0x400
+    , ALL          = 0x7FFF
 }
 
 export class ClassRegistryClass
