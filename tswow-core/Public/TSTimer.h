@@ -77,6 +77,10 @@ public:
         m_delay = delay;
     }
 
+    void  ModDelay(int32 mod) {
+        m_delay += mod;
+    }
+
     TSNumber<uint64> GetDiff()
     {
         return m_diff;
@@ -214,6 +218,29 @@ public:
         }
 
         m_timers.push_back(TSTimer<T>(name, time, repeats, flags, callback));
+    }
+
+    bool has_timer(std::string name) {
+        for (int i = 0; i < m_timers.size(); ++i)
+        {
+            if (m_timers[i].GetName() == name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    TSTimer<T>* get_named(std::string name) {
+        for (int i = 0; i < m_timers.size(); ++i)
+        {
+            if (m_timers[i].GetName() == name)
+            {
+                return *m_timers[i];
+            }
+        }
+
+        return TSTimer<T>("", 0, 0, 0, new TimerCallback<T>());
     }
 
     void remove_on_death()

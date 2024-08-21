@@ -52,6 +52,14 @@ public:
     TSWorldEntityProvider(TSWorldEntity<T>* entity)
         : m_entity(entity){}
 
+    bool HasNamedTimer(std::string name) {
+        return m_entity->m_timers.has_timer(name);
+    }
+
+    TSTimer<T> GetNamedTimer(std::string name) {
+        return m_entity->m_timers.get_named(name);
+    }
+
     void AddNamedTimer(std::string const& name, uint32_t time, int32_t loops, uint32_t flags, TimerCallback<T> callback)
     {
         m_entity->m_timers.add_named(name, time, loops, flags, callback);
