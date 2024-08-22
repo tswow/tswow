@@ -56,8 +56,16 @@ public:
         return m_entity->m_timers.has_timer(name);
     }
 
-    TSTimer<T>* GetNamedTimer(std::string name) {
+    TSTimer<T> GetNamedTimer(std::string name) {
         return m_entity->m_timers.get_named(name);
+    }
+
+    void StopNamedTimer(std::string name) {
+        m_entity->m_timers.stop_named(name); 
+    }
+
+    TSNumber<int64> ModNamedTimer(std::string name, int32 mod) {
+        return m_entity->m_timers.mod_named(name, mod);
     }
 
     void AddNamedTimer(std::string const& name, uint32_t time, int32_t loops, uint32_t flags, TimerCallback<T> callback)

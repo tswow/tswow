@@ -77,8 +77,9 @@ public:
         m_delay = delay;
     }
 
-    void  ModDelay(int32 mod) {
+    int64 ModDelay(int32 mod) {
         m_delay += mod;
+        return m_delay - m_diff;
     }
 
     TSNumber<uint64> GetDiff()
@@ -168,6 +169,20 @@ class TSTimers {
     bool m_ticking = false;
 public:
 
+    void stop_named(std::string name) {
+        for (int i = 0; i < m_timers.size(); ++i)
+            if (m_timers[i].GetName() == name)
+                m_timers[i].Stop();
+    }
+
+    int64 mod_named(std::string name, int32 mod) {
+        for (int i = 0; i < m_timers.size(); ++i)
+            if (m_timers[i].GetName() == name) {
+                return m_timers[i].ModDelay(mod);
+            }
+        return 0;
+    }
+
     void add(uint32_t time, int32_t repeats, uint32_t flags, TimerCallback<T> callback)
     {
         m_timers.push_back(TSTimer<T>("", time, repeats, flags, callback));
@@ -231,12 +246,12 @@ public:
         return false;
     }
 
-    TSTimer<T>* get_named(std::string name) {
+    TSTimer<T> get_named(std::string name) {
         for (int i = 0; i < m_timers.size(); ++i)
         {
             if (m_timers[i].GetName() == name)
             {
-                return *m_timers[i];
+                return m_timers[i];
             }
         }
 

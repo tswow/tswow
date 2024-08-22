@@ -2464,7 +2464,8 @@ declare class TSChannel {
 
 declare interface TSWorldEntityProvider<T> {
     HasNamedTimer(name: string) : bool
-    GetNamedTimer(name: string) : TSTimer
+    StopNamedTimer(name: string) : void
+    ModNamedTimer(name: string, mod: int32) : TSNumber<int64>
 
     AddNamedTimer(name: string, delay: uint32, repeats: uint32, flags: uint32, callback: (owner: T, timer: TSTimer)=>void);
     AddNamedTimer(name: string, delay: uint32, repeats: uint32, callback: (owner: T, timer: TSTimer)=>void);
