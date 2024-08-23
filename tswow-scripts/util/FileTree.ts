@@ -422,7 +422,7 @@ export class WDirectory extends WNode {
         const recurse = (cur: string) => {
             const curDir = path.join(this.path, cur);
             let halt = false;
-            if (curDir == "modules\\.gitignore" || curDir == "modules\\.gitmodules" || curDir == "modules\\README.md")
+            if (curDir.endsWith("modules\\.gitignore") || curDir.endsWith("modules\\.gitmodules") || curDir.endsWith("modules\\README.md"))
             {
                 halt = true;
                 return true;
