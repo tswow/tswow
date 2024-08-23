@@ -255,7 +255,7 @@ export class Realm {
         ]
 
         return (
-            `INSERT INTO realmlist VALUES (${values.map(x=>x[1])
+            `REPLACE INTO realmlist VALUES (${values.map(x=>x[1])
                 .join(',')});`
         );
     }
