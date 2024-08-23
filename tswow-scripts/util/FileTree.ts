@@ -422,38 +422,39 @@ export class WDirectory extends WNode {
         const recurse = (cur: string) => {
             const curDir = path.join(this.path, cur);
             let halt = false;
-            if (fs.statSync(curDir).isDirectory())
-                fs.readdirSync(curDir).find(x => {
-                    let node = path.join(cur, x);
-                    let full = path.join(this.path, node)
-                    let stat = fs.statSync(full);
-                    if (stat.isDirectory()) {
-                        if (targets == 'DIRECTORIES' || targets == 'BOTH') {
-                            switch (callback(new WNode(cbPath(node)))) {
-                                case 'HALT': {
-                                    halt = true;
-                                    return true;
-                                }
-                                case 'ENDPOINT': {
-                                    return false;
-                                }
-                            }
-                        }
-
-                        if (rec == 'RECURSE') {
-                            recurse(node);
-                        }
-                    }
-
-                    if (stat.isFile()) {
-                        if (targets == 'FILES' || targets == 'BOTH') {
-                            if (callback(new WNode(cbPath(node))) == 'HALT') {
+            if (curDir == "modules\\.gitignore" || curDir == "modules\\.gitmodules" || curDir == "modules\\README.md")
+                return true;
+            fs.readdirSync(curDir).find(x => {
+                let node = path.join(cur, x);
+                let full = path.join(this.path, node)
+                let stat = fs.statSync(full);
+                if (stat.isDirectory()) {
+                    if (targets == 'DIRECTORIES' || targets == 'BOTH') {
+                        switch (callback(new WNode(cbPath(node)))) {
+                            case 'HALT': {
                                 halt = true;
                                 return true;
                             }
+                            case 'ENDPOINT': {
+                                return false;
+                            }
                         }
                     }
-                })
+
+                    if (rec == 'RECURSE') {
+                        recurse(node);
+                    }
+                }
+
+                if (stat.isFile()) {
+                    if (targets == 'FILES' || targets == 'BOTH') {
+                        if (callback(new WNode(cbPath(node))) == 'HALT') {
+                            halt = true;
+                            return true;
+                        }
+                    }
+                }
+            })
             return halt;
         }
         recurse('');
