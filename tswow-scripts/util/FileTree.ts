@@ -423,7 +423,11 @@ export class WDirectory extends WNode {
             const curDir = path.join(this.path, cur);
             let halt = false;
             if (curDir == "modules\\.gitignore" || curDir == "modules\\.gitmodules" || curDir == "modules\\README.md")
+            {
+                halt = true;
                 return true;
+            }
+                
             fs.readdirSync(curDir).find(x => {
                 let node = path.join(cur, x);
                 let full = path.join(this.path, node)
