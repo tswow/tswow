@@ -39,6 +39,12 @@ export enum PowerTypeEnum
     ELIXIR = 4,
     RUNES = 5,
     RUNIC_POWER = 6,
+    FOCUS = 2,
+    INSANITY = 6,
+    WRATH = 6,
+    DISCORD = 3,
+    HARMONY = 6,
+
 }
 export class SpellRuneCost extends MainEntity<SpellRuneCostRow> {
     get ID() { return this.row.ID.get(); }
