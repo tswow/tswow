@@ -58,6 +58,7 @@ export enum FactionTemplateValues {
     STORMWIND              = 11,
     NEUTRAL_HOSTILE        = 21,
     NEUTRAL_PASSIVE        = 35,
+    BLACKROCK              = 40,
     IRONFORGE              = 57,
     GNOMEREGAN             = 64,
     RATCHET                = 69,
