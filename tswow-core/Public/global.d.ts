@@ -8174,6 +8174,12 @@ declare namespace _hidden {
             , attackPower: TSMutableNumber<float>
         ) => void)
 
+        OnCalcIntellectCritBonus(
+            callback: (
+                  player: TSPlayer
+                , bonus: TSMutableNumber<float>
+            )=>void)
+
         /**
          * @param player
          * @param activeGlyphSlots - Bitmask of GlyphMask representing the active glyphs.
