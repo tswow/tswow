@@ -2764,3 +2764,7 @@ bool TSUnit::HasOffhandWeapon() {
 float TSUnit::GetPPMProcChance(uint32 speed, float PPM, TSSpellInfo spell) {
     return unit->GetPPMProcChance(speed, PPM, spell->info);
 }
+
+void TSUnit::SetControlled(bool apply, uint32 unitState) {
+    unit->SetControlled(apply, UnitState(unitState));
+}

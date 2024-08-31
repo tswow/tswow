@@ -265,6 +265,7 @@ public:
     bool HasOffhandWeapon();
 
     float GetPPMProcChance(uint32 speed, float PPM, TSSpellInfo spell);
+    void SetControlled(bool apply, uint32 unitState);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

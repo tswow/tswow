@@ -7522,6 +7522,7 @@ declare interface TSUnit extends TSWorldObject {
     HasOffhandWeapon() : bool
 
     GetPPMProcChance(speed: uint32, PPM: float, spell: TSSpellInfo) : float
+    SetControlled(apply: bool, unitState: uint32) : void
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
