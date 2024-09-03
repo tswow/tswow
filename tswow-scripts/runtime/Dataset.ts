@@ -92,16 +92,12 @@ export class Dataset {
 
     gamebuildSQL() {
         return `INSERT INTO build_info VALUES`
-            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a",NULL,NULL,NULL,`
-            +  ` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-            +  ` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
+            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a")`
             +  ` ON DUPLICATE KEY UPDATE`
             +  ` majorVersion=3,`
             +  ` minorVersion=3,`
             +  ` bugfixVersion=5,`
-            +  ` hotfixVersion="a",`
-            +  ` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-            +  ` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
+            +  ` hotfixVersion="a"`
             +  `;`
     }
 
