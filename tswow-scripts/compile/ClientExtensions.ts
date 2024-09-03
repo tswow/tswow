@@ -13,7 +13,7 @@ export namespace ClientExtensions {
             + `-A Win32`
             + ` -S "${spaths.misc.client_extensions.abs().get()}" `
             + ` -B "${bpaths.client_extensions.abs().get()}"`
-            + ` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
+            + ` -DBOOST_ROOT="${bpaths.boost.boost_1_82_0.abs().get()}"`
             , 'inherit');
 
             wsys.exec(`${cmake}`
