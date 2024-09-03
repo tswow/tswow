@@ -266,6 +266,8 @@ public:
 
     float GetPPMProcChance(uint32 speed, float PPM, TSSpellInfo spell);
     void SetControlled(bool apply, uint32 unitState);
+
+    bool HasDispellableAuraOfType(uint32 DispelMask);
 private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;

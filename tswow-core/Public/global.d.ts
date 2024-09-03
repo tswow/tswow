@@ -7503,6 +7503,7 @@ declare interface TSUnit extends TSWorldObject {
     RollChanceF(chance: float) : bool
 
     HasAuraWithMechanic(mech: uint32) : bool
+    HasDispellableAuraOfType(DispelMask: uint32) : bool
 
     HasUnitMovementFlag(flag: uint32) : bool
 

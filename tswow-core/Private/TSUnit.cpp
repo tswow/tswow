@@ -2768,3 +2768,7 @@ float TSUnit::GetPPMProcChance(uint32 speed, float PPM, TSSpellInfo spell) {
 void TSUnit::SetControlled(bool apply, uint32 unitState) {
     unit->SetControlled(apply, UnitState(unitState));
 }
+
+bool TSUnit::HasDispellableAuraOfType(uint32 DispelMask) {
+    return unit->HasDispellableAuraOfType(DispelMask);
+}
