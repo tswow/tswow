@@ -629,7 +629,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               301 */
     get SCHOOL_HEAL_ABSORB()                  { return this.value(301, x=>new SchoolHealAbsorb(x)) }
     /** Enum Value:                                               302 */
-    get SPELL_AURA302()                       { return this.value(302, x=>x) }
+    get MOD_CHANGE_DAMAGE_SCHOOL_OF_SPELL()   { return this.value(302, x=>x) }
     /** Enum Value:                                               303 */
     get MOD_DAMAGE_DONE_VERSUS_AURASTATE()    { return this.value(303, x=>x) }
     /** Enum Value:                                               304 */
@@ -733,7 +733,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum value:                                               353 */
     get MOD_RESTED_XP_RECOVERY_RATE()               { return this.value(353, x=>x) }
     /** Enum value:                                               354 */
-    get MOD_CHANGE_DAMAGE_SCHOOL_OF_SPELL()         { return this.value(354, x=>x) }
+    get oldMOD_CHANGE_DAMAGE_SCHOOL_OF_SPELL()         { return this.value(354, x=>x) }
     /** Enum value:                                               355 */
     get ADD_COMBAT_RATING_PCT_TO_SPELL_EFFECT()     { return this.value(355, x=>x) }
 }
