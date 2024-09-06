@@ -8952,12 +8952,14 @@ declare namespace _hidden {
             , owner: TSPlayer
             , value: TSMutableNumber<float>
             , ownerBonus: TSMutableNumber<float>
+            , stat: Stats
         )=>void)
         OnPetUpdateStat(id: EventID, callback: (
               creature: TSCreature
             , owner: TSPlayer
             , value: TSMutableNumber<float>
             , ownerBonus: TSMutableNumber<float>
+            , stat: Stats
         )=>void)
 
         // guardian
