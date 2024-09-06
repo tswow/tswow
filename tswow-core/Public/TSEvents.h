@@ -724,7 +724,7 @@ struct TSEvents
         ID_EVENT(OnPetUpdateAttackPowerDamage, TSCreature, TSPlayer, TSMutableNumber<float> base, TSMutableNumber<float> mod, TSMutableNumber<float> multiplier, bool ranged)
         ID_EVENT(OnPetUpdateDamagePhysical, TSCreature, TSPlayer, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<float>, TSNumber<uint8> attType)
         ID_EVENT(OnPetUpdateSpellPower, TSCreature, TSPlayer, TSMutableNumber<int32>)
-        ID_EVENT(OnPetUpdateStat, TSCreature, TSPlayer, TSMutableNumber<float>, TSMutableNumber<float>)
+        ID_EVENT(OnPetUpdateStat, TSCreature, TSPlayer, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<uint32> stat)
 
         ID_EVENT(OnGuardianUpdateDamagePhysical
             , TSCreature
