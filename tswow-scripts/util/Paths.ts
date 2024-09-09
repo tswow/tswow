@@ -21,7 +21,7 @@ import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.23061/TDB_full_world_335.23061_2023_06_14.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24081/TDB_full_world_335.24081_2024_08_17.7z"
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
@@ -559,13 +559,13 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         boost: dir({
-            boost_1_74_0: dir({
-                lib64_msvc_14_2: dirn('lib64-msvc-14.2',{
-                    fslib: file('libboost_filesystem-vc142-mt-x64-1_74.lib')
+            boost_1_82_0: dir({
+                lib64_msvc_14_3: dirn('lib64-msvc-14.3',{
+                    fslib: file('libboost_filesystem-vc143-mt-x64-1_81.lib')
                 })
             })
         }),
-        boostArchive: file('boost_1_74_0.zip'),
+        boostArchive: file('boost_1_82_0.zip'),
         tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
