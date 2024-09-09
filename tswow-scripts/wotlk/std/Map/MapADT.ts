@@ -84,7 +84,7 @@ export class MapADT<T extends Map> extends CellSystem<T> {
     add(mod: string, blobs: [minx: number, miny: number, maxx: number, maxy: number, teleportName?: string][]) {
         if(!isWindows()) {
             console.log(`ADT generation is not yet implemented for linux, skipping adt generation.`)
-            return;
+            return this.owner;
         }
         mod = mod.split('.').join(path.sep)
         if(this.owner.Directory.get().split(/[\n \r\t]/).join('').length === 0) {
