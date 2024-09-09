@@ -10,9 +10,7 @@ runs:
     - name: Install deps
       shell: bash
       run: |
-        sudo apt install -y gcc g++ make cmake cmake-format clang clang-format clang-tidy libtool make meson ninja-build pkg-config
-        sudo apt install -y python3-dev
-        sudo apt install -y libbz2-dev libglu1-mesa-dev liblua5.3-dev libncurses-dev libomp-dev libreadline-dev libsdl2-dev libssl-dev zlib1g-dev
-        sudo apt install -y libboost-dev libboost-atomic-dev libboost-chrono-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-regex-dev libboost-serialization-dev libboost-system-dev libboost-thread-dev libboost-test-dev
-        sudo apt install -y libmariadb-dev-compat libmariadb-dev libpq-dev libpqtypes-dev postgresql-server-dev-all libsqlite3-dev
-        sudo apt install -y p7zip-full
+        apt-get update
+        apt-get install git clang cmake make gcc g++ libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mysql-server p7zip
+        update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+        update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
