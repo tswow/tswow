@@ -55,7 +55,7 @@ filter_items(source_files "/lib/")
 add_library(${buildModule} SHARED \${transpiler_files} \${source_files})
 target_link_libraries(${buildModule} \${libs})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-target_compile_definitions(${buildModule} PUBLIC 'TRINITY=1'
+target_compile_definitions(${buildModule} PUBLIC "TRINITY=1")
 
 source_group("Transpiled" FILES \${transpiler_files})
 source_group("Source" FILES \${source_files})
