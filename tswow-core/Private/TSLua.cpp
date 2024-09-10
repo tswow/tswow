@@ -420,10 +420,12 @@ static constexpr size_t lua_garbage_page_size = 8192;
 using lua_garbage_page_type = std::array<char, lua_garbage_page_size>;
 size_t lua_garbage_page = 0;
 size_t lua_garbage_offset = lua_garbage_page_size; // saves an extra if statement below
+size_t lua_garbage_total = 0;
 static std::vector<std::unique_ptr<lua_garbage_page_type>> lua_garbage_stack;
 
 void* add_lua_garbage(size_t size)
 {
+    lua_garbage_total += size;
     if (lua_garbage_offset + size >= lua_garbage_page_size)
     {
         lua_garbage_stack.push_back(std::make_unique<lua_garbage_page_type>());
@@ -439,4 +441,14 @@ void clear_lua_garbage()
     lua_garbage_stack.clear();
     lua_garbage_page = 0;
     lua_garbage_offset = lua_garbage_page_size;
+}
+
+size_t GetLuaGarbageCur()
+{
+    return lua_garbage_page * lua_garbage_page_size + lua_garbage_offset;
+}
+
+size_t GetLuaGarbageTotal()
+{
+    return lua_garbage_total;
 }

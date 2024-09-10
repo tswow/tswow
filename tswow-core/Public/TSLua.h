@@ -148,3 +148,5 @@ private:
 // used by the pointer system to get class references even when we have to fake them
 TC_GAME_API void* add_lua_garbage(size_t size);
 TC_GAME_API void clear_lua_garbage();
+TC_GAME_API size_t GetLuaGarbageCur();
+TC_GAME_API size_t GetLuaGarbageTotal();
