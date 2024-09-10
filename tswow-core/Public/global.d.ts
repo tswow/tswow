@@ -10058,15 +10058,15 @@ declare function GetGuildByName(name: string): TSGuild | undefined
 declare function GetGuildByLeader(guid: uint64): TSGuild | undefined
 
 // typecasts
-declare function ToWorldObject(obj: TSObject): Maybe<TSWorldObject>
-declare function ToItem(obj: TSObject): Maybe<TSItem>
-declare function ToUnit(obj: TSObject): Maybe<TSUnit>
-declare function ToCreature(obj: TSObject): Maybe<TSCreature>
-declare function ToPlayer(obj: TSObject): Maybe<TSPlayer>
-declare function ToGameObject(obj: TSObject): Maybe<TSGameObject>
+declare function ToWorldObject(obj: TSObject | undefined): Maybe<TSWorldObject>
+declare function ToItem(obj: TSObject | undefined): Maybe<TSItem>
+declare function ToUnit(obj: TSObject | undefined): Maybe<TSUnit>
+declare function ToCreature(obj: TSObject | undefined): Maybe<TSCreature>
+declare function ToPlayer(obj: TSObject | undefined): Maybe<TSPlayer>
+declare function ToGameObject(obj: TSObject | undefined): Maybe<TSGameObject>
 
-declare function ToInstance(map: TSMap): Maybe<TSInstance>
-declare function ToBattleground(map: TSMap): Maybe<TSBattleground>
+declare function ToInstance(map: TSMap | undefined): Maybe<TSInstance>
+declare function ToBattleground(map: TSMap | undefined): Maybe<TSBattleground>
 
 // tracy
 declare type ZoneCategory = uint32;
