@@ -342,32 +342,32 @@ void TSObject::RemoveFlag(uint16 index,uint32 flag)
 
 TSPlayer TSObject::ToPlayer()
 {
-    return TSPlayer((Player*)obj);
+    return ::ToPlayer(*this);
 }
 
 TSUnit TSObject::ToUnit()
 {
-    return TSUnit((Unit*)obj);
+    return ::ToUnit(*this);
 }
 
 TSWorldObject TSObject::ToWorldObject()
 {
-    return TSWorldObject((WorldObject*)obj);
+    return ::ToWorldObject(*this);
 }
 
 TSGameObject TSObject::ToGameObject()
 {
-    return TSGameObject((GameObject*)obj);
+    return ::ToGameObject(*this);
 }
 
 TSCreature TSObject::ToCreature()
 {
-    return TSCreature((Creature*)obj);
+    return ::ToCreature(*this);
 }
 
 TSCorpse TSObject::ToCorpse()
 {
-    return TSCorpse((Corpse*)obj);
+    return ::ToCorpse(*this);
 }
 
 bool TSObject::IsPlayer()
@@ -449,4 +449,46 @@ TSItem TSObject::ToItem()
 bool TSObject::IsItem()
 {
     return obj->isType(TYPEMASK_ITEM);
+}
+
+TSWorldObject ToWorldObject(TSObject obj)
+{
+    if (obj.obj && obj.obj->isType(TYPEMASK_WORLDOBJECT))
+    {
+        return TSWorldObject(static_cast<WorldObject*>(obj.obj));
+    }
+    else
+    {
+        return TSWorldObject(nullptr);
+    }
+}
+
+TSUnit ToUnit(TSObject obj)
+{
+    return TSUnit(obj.obj ? obj.obj->ToUnit() : nullptr);
+}
+
+TSCreature ToCreature(TSObject obj)
+{
+    return TSCreature(obj.obj ? obj.obj->ToCreature() : nullptr);
+}
+
+TSPlayer ToPlayer(TSObject obj)
+{
+    return TSPlayer(obj.obj ? obj.obj->ToPlayer() : nullptr);
+}
+
+TSGameObject ToGameObject(TSObject obj)
+{
+    return TSGameObject(obj.obj ? obj.obj->ToGameObject() : nullptr);
+}
+
+TSItem ToItem(TSObject obj)
+{
+    return TSItem((obj.obj && obj.obj->isType(TYPEMASK_ITEM)) ? static_cast<Item*>(obj.obj) : nullptr);
+}
+
+TSCorpse ToCorpse(TSObject obj)
+{
+    return TSCorpse(obj.obj ? obj->ToCorpse() : nullptr);
 }

@@ -18,6 +18,7 @@
 
 #include "TSBase.h"
 #include "TSUnit.h"
+#include "TSLua.h"
 
 struct CalcDamageInfo;
 struct SpellNonMeleeDamage;
@@ -113,3 +114,8 @@ class TC_GAME_API TSDamageInfo {
     TSNumber<uint32> GetBlock();
     TSNumber<uint32> GetHitMask();
 };
+
+LUA_PTR_TYPE(TSDamageInfo)
+LUA_PTR_TYPE(TSHealInfo)
+LUA_PTR_TYPE(TSSpellDamageInfo)
+LUA_PTR_TYPE(TSMeleeDamageInfo)

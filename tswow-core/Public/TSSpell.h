@@ -22,6 +22,7 @@
 #include "TSPosition.h"
 #include "TSSpellInfo.h"
 #include "TSPosition.h"
+#include "TSLua.h"
 
 struct SpellModifier;
 class Spell;
@@ -148,3 +149,9 @@ private:
     bool m_dependent;
     bool m_disabled;
 };
+
+LUA_PTR_TYPE(TSSpell)
+LUA_PTR_TYPE(TSSpellModifier)
+LUA_PTR_TYPE(TSSpellDestination)
+LUA_PTR_TYPE(TSSpellImplicitTargetInfo)
+LUA_PTR_TYPE(TSDispelInfo)

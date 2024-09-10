@@ -30,6 +30,8 @@ type bool = boolean;
 type TSArray<T> = T[];
 type TSString = string;
 
+type Maybe<T> = T | undefined
+
 declare const BROADCAST_PHASE_ID: TSNumber<uint32>
 
 declare const enum Gender /**@realType:uint8 */ {
@@ -359,8 +361,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * talent count.
      */
     GetQuestRewardPermTalentPoints(): TSNumber<uint32>
-    GetBG(): TSBattleground
-    GetBGPlayer(): TSBattlegroundPlayer
+    GetBG(): TSBattleground | undefined
+    GetBGPlayer(): TSBattlegroundPlayer | undefined
 
     /**
      * Generates a creature outfit from this player.
@@ -800,7 +802,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [Group] group
      */
-    GetOriginalGroup() : TSGroup
+    GetOriginalGroup() : TSGroup | undefined
 
     /**
      * Returns a random Raid Member [Player] object within radius specified of [Player]
@@ -808,7 +810,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param float radius
      * @return [Player] player
      */
-    GetNextRandomRaidMember(radius : float) : TSPlayer
+    GetNextRandomRaidMember(radius : float) : TSPlayer | undefined
 
     /**
      * Returns [Player]s current sub group
@@ -822,7 +824,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [Group] group
      */
-    GetGroupInvite() : TSGroup
+    GetGroupInvite() : TSGroup | undefined
 
     /**
      * Returns rested experience bonus
@@ -973,7 +975,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [Unit] target
      */
-    GetComboTarget() : TSUnit
+    GetComboTarget() : TSUnit | undefined
 
     /**
      * Returns [Player]'s combo points
@@ -1028,7 +1030,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint8 slot
      * @return [Item] item
      */
-    GetEquippedItemBySlot(slot : uint8) : TSItem
+    GetEquippedItemBySlot(slot : uint8) : TSItem | undefined
 
     /**
      * Returns the [Player]s current resting bonus
@@ -1069,7 +1071,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint8 slot : the slot the [Item] is in within the bag, you can get this with [Item:GetSlot]
      * @return [Item] item : [Item] or nil
      */
-    GetItemByPos(bag : uint8,slot : uint8) : TSItem
+    GetItemByPos(bag : uint8,slot : uint8) : TSItem | undefined
 
     /**
      * Returns an [Item] from the player by guid.
@@ -1079,7 +1081,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint64 guid : an item guid
      * @return [Item] item
      */
-    GetItemByGUID(guid : uint64 | TSGUID) : TSItem
+    GetItemByGUID(guid : uint64 | TSGUID) : TSItem | undefined
 
     /**
      * Returns an [Item] from the player by entry.
@@ -1089,7 +1091,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 entryId
      * @return [Item] item
      */
-    GetItemByEntry(entry : uint32) : TSItem
+    GetItemByEntry(entry : uint32) : TSItem | undefined
 
     /**
      * Returns the database textID of the [WorldObject]'s gossip header text for the [Player]
@@ -1103,7 +1105,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [Unit] unit
      */
-    GetSelection() : TSUnit
+    GetSelection() : TSUnit | undefined
 
     /**
      * Returns the [Player]s currently selected [Unit] object,
@@ -1113,7 +1115,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @warn currently only works across maps if the selected unit is a player.
      * @return [Unit] target unit
      */
-    GetGlobalSelection(): TSUnit
+    GetGlobalSelection(): TSUnit | undefined
 
     /**
      * Returns the [Player]s GM Rank
@@ -1185,14 +1187,14 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [Guild] guild
      */
-    GetGuild() : TSGuild
+    GetGuild() : TSGuild | undefined
 
     /**
      * Returns the [Player]s [Group] object
      *
      * @return [Group] group
      */
-    GetGroup() : TSGroup
+    GetGroup() : TSGroup | undefined
 
     /**
      * Returns the [Player]s account ID
@@ -1213,7 +1215,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [Corpse] corpse
      */
-    GetCorpse() : TSCorpse
+    GetCorpse() : TSCorpse | undefined
 
     /**
      * Returns the [Player]s database locale index
@@ -1906,7 +1908,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 slot : equipment slot to equip the item to The slot can be [EquipmentSlots] or [InventorySlots]
      * @return [Item] equippedItem : item or nil if equipping failed
      */
-    EquipItem(item : TSItem | uint32, slot : EquipmentSlots|InventorySlots) : TSItem
+    EquipItem(item : TSItem | uint32, slot : EquipmentSlots|InventorySlots) : TSItem | undefined
 
     /**
      * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.
@@ -1975,7 +1977,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 itemCount = 1 : amount of the item to add
      * @return [Item] item : the item that was added or nil
      */
-    AddItem(itemId : uint32,itemCount : uint32, propertyId?: int32) : TSItem
+    AddItem(itemId : uint32,itemCount : uint32, propertyId?: int32) : TSItem | undefined
 
     /**
      * Removes the given amount of the specified [Item] from the player.
@@ -2229,7 +2231,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param [Player] invited : player to add to group
      * @return [Group] createdGroup : the created group or nil
      */
-    GroupCreate(invited : TSPlayer) : TSGroup
+    GroupCreate(invited : TSPlayer) : TSGroup | undefined
 
     /**
      * Starts a cinematic for the [Player]
@@ -2916,14 +2918,14 @@ declare interface TSCreature extends TSUnit {
      *
      * @return [Group] lootRecipientGroup : the group or `nil`
      */
-    GetLootRecipientGroup() : TSGroup
+    GetLootRecipientGroup() : TSGroup | undefined
 
     /**
      * Returns the [Player] that can loot this [Creature].
      *
      * @return [Player] lootRecipient : the player or `nil`
      */
-    GetLootRecipient() : TSPlayer
+    GetLootRecipient() : TSPlayer | undefined
 
     /**
      * Returns the [Creature]'s script name.
@@ -2993,7 +2995,7 @@ declare interface TSCreature extends TSUnit {
      * @param float o
      */
     SetHomePosition(x : float,y : float,z : float,o : float) : void
-    FindThreatListEntry(targetType : uint32,playerOnly : bool,position : uint32,dist : float,aura : int32) : TSUnit
+    FindThreatListEntry(targetType : uint32,playerOnly : bool,position : uint32,dist : float,aura : int32) : TSUnit | undefined
     GetThreatList() : TSArray<TSUnit>
 
     /**
@@ -3209,7 +3211,7 @@ declare interface TSCreature extends TSUnit {
      *
      * This should be called every update cycle for the Creature's AI.
      */
-    SelectVictim() : TSUnit
+    SelectVictim() : TSUnit | undefined
 
     /**
      * Transform the [Creature] into another Creature.
@@ -3311,14 +3313,14 @@ declare interface TSAura extends TSEntityProvider {
      */
     GetApplications(): TSArray<TSAuraApplication>
 
-    GetEffect(index: uint8): TSAuraEffect
+    GetEffect(index: uint8): TSAuraEffect | undefined
 
     /**
      * Returns the [Unit] that casted the [Spell] that caused this [Aura] to be applied.
      *
      * @return [Unit] caster
      */
-    GetCaster() : TSWorldObject
+    GetCaster() : TSWorldObject | undefined
 
     /**
      * Returns the GUID of the [Unit] that casted the [Spell] that caused this [Aura] to be applied.
@@ -3409,7 +3411,7 @@ declare interface TSAura extends TSEntityProvider {
 
 declare interface TSAuraEffect extends TSEntityProvider {
     IsNull(): bool;
-    GetCaster(): TSUnit;
+    GetCaster(): TSUnit | undefined;
     GetCasterGUID(): TSGUID
     GetAura(): TSAura;
     GetSpellInfo(): TSSpellInfo;
@@ -3467,7 +3469,7 @@ declare interface TSGuild {
      *
      * @return [Player] leader
      */
-    GetLeader() : TSPlayer
+    GetLeader() : TSPlayer | undefined
 
     /**
      * Returns [Guild] leader GUID
@@ -3964,9 +3966,9 @@ declare interface TSQuest {
 
 declare interface TSMainThreadContext {
     GetAllPlayers(): TSArray<TSPlayer>;
-    GetPlayer(guid: uint64): TSPlayer
-    GetPlayer(name: string): TSPlayer
-    GetMap(mapid: uint32, instanceId?: uint32): TSMap
+    GetPlayer(guid: uint64): TSPlayer | undefined
+    GetPlayer(name: string): TSPlayer | undefined
+    GetMap(mapid: uint32, instanceId?: uint32): TSMap | undefined
     SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>): void;
 }
 
@@ -3984,7 +3986,7 @@ declare interface TSWeather
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsNull() : bool
     HasInstanceScript(): bool
-    GetInstanceScript(): TSInstance
+    GetInstanceScript(): TSInstance | undefined
     GetUnits(): TSArray<TSWorldObject>
     DoDelayed(callback: (map: TSMap, mgr: TSMainThreadContext)=>void): void;
     /**
@@ -3993,16 +3995,16 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     GetGameObjects(entry?: uint32): TSArray<TSGameObject>
 
-    SpawnCreature(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSCreature
-    SpawnGameObject(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSGameObject
+    SpawnCreature(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSCreature | undefined
+    SpawnGameObject(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSGameObject | undefined
 
     /**
      * @param entry only return creatures of this entry.
      * Leave out to select all creatures.
      */
     GetCreatures(entry?: uint32): TSArray<TSCreature>
-    GetCreatureByDBGUID(dbguid: uint32): TSCreature;
-    GetGameObjectByDBGUID(dbguid: uint32): TSGameObject;
+    GetCreatureByDBGUID(dbguid: uint32): TSCreature | undefined;
+    GetGameObjectByDBGUID(dbguid: uint32): TSGameObject | undefined;
 
     /**
      * Returns a creature in this map by its map id
@@ -4010,7 +4012,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @important - This is NOT the creatures guid in the database,
      *              use "GetCreatureBySpawnGUID" for that.
      */
-    GetCreature(guid: uint32 | TSGUID): TSCreature;
+    GetCreature(guid: uint32 | TSGUID): TSCreature | undefined;
 
     /**
      * Returns a gameobject in this map by its map id
@@ -4018,12 +4020,12 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @important - This is NOT the gameobject guid in the database,
      *              use "GetGameObjectBySpawnGUID" for that.
      */
-    GetGameObject(guid: uint32 | TSGUID): TSGameObject;
+    GetGameObject(guid: uint32 | TSGUID): TSGameObject | undefined;
 
     /**
      * Returns a player in this map by its guid
      */
-    GetPlayer(guid: uint32 | TSGUID): TSPlayer;
+    GetPlayer(guid: uint32 | TSGUID): TSPlayer | undefined;
 
     /**
      * Check if 2 positions are within LoS of each other, following different checks.
@@ -4051,10 +4053,14 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * Returns `true` if the [Map] is a non-arena [BattleGround], `false` otherwise.
      *
      * @return bool isBattleGround
+     * @deprecated use free function 'ToBattleground'
      */
     IsBG() : bool
 
-    ToBG(): TSBattleground
+    /**
+     * @deprecated use free function 'ToBattleground'
+     */
+    ToBG(): TSBattleground | undefined
 
     /**
      * Returns `true` if the [Map] is an instance, `false` otherwise.
@@ -4063,7 +4069,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     IsInstance() : bool
 
-    ToInstance(): TSInstance
+    ToInstance(): TSInstance | undefined
 
     /**
      * Returns `true` if the [Map] is a dungeon, `false` otherwise.
@@ -4171,7 +4177,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      *
      * @param uint64 guid
      */
-    GetWorldObject(guid : uint64) : TSWorldObject
+    GetWorldObject(guid : uint64) : TSWorldObject | undefined
 
     /**
      * Sets the [Weather] type based on [WeatherType] and grade supplied.
@@ -4730,8 +4736,8 @@ declare interface TSBattleground extends TSMap {
     GetStatus() : TSNumber<uint32>
 
     IsRandom(): bool;
-    GetScore(guid: TSNumber<uint32> | TSGUID): TSBattlegroundScore
-    GetBGPlayer(guid: TSNumber<uint32> | TSGUID): TSBattlegroundPlayer;
+    GetScore(guid: TSNumber<uint32> | TSGUID): TSBattlegroundScore | undefined
+    GetBGPlayer(guid: TSNumber<uint32> | TSGUID): TSBattlegroundPlayer | undefined
     GetBGPlayers(): TSArray<TSBattlegroundPlayer>;
     SetStartPosition(teamId: uint32, x: float, y: float, z: float, o: float): void;
     GetStartX(teamid: TeamId): TSNumber<float>
@@ -4748,10 +4754,10 @@ declare interface TSBattleground extends TSMap {
     RewardReputation(faction: uint32, reputation: uint32, team?: TeamId): void;
     UpdateWorldState(variable: uint32, value: uint32): void;
     EndBG(winnerTeam?: TeamId): void;
-    GetBGRaid(faction: TeamId): TSGroup;
+    GetBGRaid(faction: TeamId): TSGroup | undefined
     GetBGPlayerCount(team?: TeamId): TSNumber<uint32>
     GetBGAlivePlayerCount(team?: TeamId): TSNumber<uint32>
-    AddCreature(entry: uint32, type: uint32, x: float, y: float, z: float, o: float, respawnTime?: uint32, teamId?: TeamId): TSCreature;
+    AddCreature(entry: uint32, type: uint32, x: float, y: float, z: float, o: float, respawnTime?: uint32, teamId?: TeamId): TSCreature | undefined;
     AddObject(type: uint32, entry:uint32, x: float, y: float, z: float, o: float, rot0: float, rot1: float, rot2: float, rot3: float, respawnTime?: uint32, goState?: uint32): bool;
     AddSpiritGuide(type: uint32, x: float, y: float, z: float, o: float, teamId?: TeamId): void;
     OpenDoor(type: uint32): void;
@@ -4771,8 +4777,8 @@ declare interface TSBattleground extends TSMap {
     GetObjectType(guid: TSGUID): TSNumber<int32>
     SetHoliday(isHoliday: bool): void;
     IsHoliday(): bool;
-    GetBGGameObject(type: uint32, logErrors?: bool): TSGameObject;
-    GetBGCreature(type: uint32, logErrors?: bool): TSCreature;
+    GetBGGameObject(type: uint32, logErrors?: bool): TSGameObject | undefined
+    GetBGCreature(type: uint32, logErrors?: bool): TSCreature | undefined
 }
 
 declare interface TSGUIDSet {
@@ -4817,7 +4823,7 @@ declare interface TSInstance extends TSMap {
     GetMaxResetDelay(): TSNumber<uint32>
     GetTeamIDInInstance(): TSNumber<uint32>
     GetFactionInInstance(): TSNumber<uint32>
-    GetBossInfo(id: uint32): TSBossInfo
+    GetBossInfo(id: uint32): TSBossInfo | undefined
     RemoveFromMap(player:TSPlayer, deleteFromWorld: boolean): void
 }
 
@@ -4909,7 +4915,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @return [Player] player
      */
-    GetLootRecipient() : TSPlayer
+    GetLootRecipient() : TSPlayer | undefined
 
     /**
      * Returns the [Group] that can loot the [GameObject]
@@ -4918,7 +4924,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @return [Group] group
      */
-    GetLootRecipientGroup() : TSGroup
+    GetLootRecipientGroup() : TSGroup | undefined
 
     /**
      * Returns the guid of the [GameObject] that is used as the ID in the database
@@ -5030,7 +5036,7 @@ declare interface TSSpell extends TSEntityProvider {
      *
      * @return [WorldObject] original caster
      */
-    GetOriginalCaster(): TSWorldObject
+    GetOriginalCaster(): TSWorldObject | undefined
 
     /**
      * Returns the [WorldObject] that originally casted the [Spell], or the current caster.
@@ -5190,9 +5196,9 @@ declare interface TSDispelInfo
 
 declare interface TSProcEventInfo
 {
-    GetActor(): TSUnit;
-    GetActionTarget(): TSUnit;
-    GetProcTarget(): TSUnit;
+    GetActor(): TSUnit | undefined;
+    GetActionTarget(): TSUnit | undefined;
+    GetProcTarget(): TSUnit | undefined;
     GetTypeMask(): TSNumber<uint32>
     GetSpellTypeMask(): TSNumber<uint32>
     GetSpellPhaseMask(): TSNumber<uint32>
@@ -5224,7 +5230,7 @@ declare interface TSVehicle {
      *
      * @return [Unit] owner
      */
-    GetOwner() : TSUnit
+    GetOwner() : TSUnit | undefined
 
     /**
      * Returns the [Vehicle]'s entry
@@ -5239,7 +5245,7 @@ declare interface TSVehicle {
      * @param int8 seat
      * @return [Unit] passenger
      */
-    GetPassenger(seatId : int8) : TSUnit
+    GetPassenger(seatId : int8) : TSUnit | undefined
 
     /**
      * Adds [Unit] passenger to a specified seat in the [Vehicle]
@@ -5425,9 +5431,9 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      */
     GetO() : TSNumber<float>
     GetPosition() : TSPosition
-    GetNearestPlayer(range?: float,hostile?: uint32 | Attitude,dead?: uint32 | DeathStatus) : TSPlayer
-    GetNearestGameObject(range?: float,entry?: uint32,hostile?: uint32 | Attitude) : TSGameObject
-    GetNearestCreature(range?: float,entry?: uint32, hostile?: uint32 | Attitude, dead?: uint32 | DeathStatus) : TSCreature
+    GetNearestPlayer(range?: float,hostile?: uint32 | Attitude,dead?: uint32 | DeathStatus) : TSPlayer | undefined
+    GetNearestGameObject(range?: float,entry?: uint32,hostile?: uint32 | Attitude) : TSGameObject | undefined
+    GetNearestCreature(range?: float,entry?: uint32, hostile?: uint32 | Attitude, dead?: uint32 | DeathStatus) : TSCreature | undefined
 
     /**
      * Returns the distance from this [WorldObject] to another [WorldObject]
@@ -5488,7 +5494,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 respawnDelay = 30 : respawn time in seconds
      * @return [GameObject] gameObject
      */
-    SummonGameObject(entry : uint32,x : float,y : float,z : float,o : float,respawnDelay : uint32) : TSGameObject
+    SummonGameObject(entry : uint32,x : float,y : float,z : float,o : float,respawnDelay : uint32) : TSGameObject | undefined
 
     /**
      * Spawns the creature at specified location.
@@ -5515,7 +5521,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 despawnTimer = 0 : despawn time in milliseconds
      * @return [Creature] spawnedCreature
      */
-    SpawnCreature(entry : uint32,x : float,y : float,z : float,o : float,spawnType : TempSummonType,despawnTimer : uint32) : TSCreature
+    SpawnCreature(entry : uint32,x : float,y : float,z : float,o : float,spawnType : TempSummonType,despawnTimer : uint32) : TSCreature | undefined
 
     /**
      * Returns true if the given [WorldObject] or coordinates are in the [WorldObject]'s line of sight
@@ -5687,28 +5693,28 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      */
     PlayDistanceSound(soundId : uint32,player : TSPlayer) : void
 
-    GetGameObject(guid: TSNumber<uint32> | TSGUID): TSGameObject
-    GetCorpse(guid: TSNumber<uint32> | TSGUID ): TSCorpse
-    GetUnit(guid: TSGUID): TSUnit
-    GetCreature(guid: TSNumber<uint32> | TSGUID): TSCreature
-    GetPlayer(guid: TSNumber<uint32> | TSGUID): TSPlayer
+    GetGameObject(guid: TSNumber<uint32> | TSGUID): TSGameObject | undefined
+    GetCorpse(guid: TSNumber<uint32> | TSGUID ): TSCorpse | undefined
+    GetUnit(guid: TSGUID): TSUnit | undefined
+    GetCreature(guid: TSNumber<uint32> | TSGUID): TSCreature | undefined
+    GetPlayer(guid: TSNumber<uint32> | TSGUID): TSPlayer | undefined
     GetFactionTemplate(): TSFactionTemplate
 }
 
 declare interface TSWorldObjectCollection {
     filterInPlace(callback: (obj: TSWorldObject)=>bool): void
     forEach(callback: (obj: TSWorldObject)=>void) :void
-    find(callback: (obj: TSWorldObject)=>bool): TSWorldObject
+    find(callback: (obj: TSWorldObject)=>bool): TSWorldObject | undefined
     length: TSNumber<uint32>
     /**
      * @warn This is an O(n) operation, because the backing type is an std::list
      * @param index
      */
-    get(index: uint32): TSWorldObject
+    get(index: uint32): TSWorldObject | undefined
 }
 
 declare interface TSMutableWorldObject {
-    get(): TSWorldObject
+    get(): TSWorldObject | undefined
     set(obj: TSWorldObject): void
 }
 
@@ -5721,7 +5727,7 @@ declare class TSObject extends TSEntityProvider {
     IsCorpse() : bool
     IsItem() : bool
 
-    GetEffectiveOwner(): TSUnit
+    GetEffectiveOwner(): TSUnit | undefined
 
     /**
      * Returns `true` if the specified flag is set, otherwise `false`.
@@ -5938,12 +5944,36 @@ declare class TSObject extends TSEntityProvider {
      * @param uint32 flag
      */
     RemoveFlag(index : uint16,flag : uint32) : void
-    ToCorpse() : TSCorpse
-    ToGameObject() : TSGameObject
-    ToUnit() : TSUnit
-    ToCreature() : TSCreature
-    ToPlayer() : TSPlayer
-    ToItem(): TSItem
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
+    ToCorpse() : TSCorpse | undefined
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
+    ToGameObject() : TSGameObject | undefined
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
+    ToUnit() : TSUnit | undefined
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
+    ToCreature() : TSCreature | undefined
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
+    ToPlayer() : TSPlayer | undefined
+
+    /**
+     * @deprecated use free function 'ToCorpse'
+     */
+    ToItem(): TSItem | undefined
 }
 
 declare interface TSUnit extends TSWorldObject {
@@ -6241,7 +6271,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return [Unit] owner
      */
-    GetOwner() : TSUnit
+    GetOwner() : TSUnit | undefined
 
     /**
      * Returns the [Unit]'s owner's GUID.
@@ -6289,7 +6319,7 @@ declare interface TSUnit extends TSWorldObject {
      * Returns the [Unit]'s pet.
      * @param index
      */
-    GetPet(index?: number): TSCreature
+    GetPet(index?: number): TSCreature | undefined
 
     /**
      * Returns the GUID of the [Unit]'s charmer or owner.
@@ -6302,7 +6332,7 @@ declare interface TSUnit extends TSWorldObject {
 
     RemoveAllControlled(): void;
 
-    GetFirstControlled(): TSUnit;
+    GetFirstControlled(): TSUnit | undefined
 
     RemoveAllMinionsByEntry(entry: uint32) :void;
 
@@ -6315,7 +6345,7 @@ declare interface TSUnit extends TSWorldObject {
     /**
      * Returns the [Unit]'s charmer or owner.
      */
-    GetController(): TSUnit
+    GetController(): TSUnit | undefined
 
     /**
      * Returns the GUID of the [Unit]'s charmer or owner or its own GUID.
@@ -6345,7 +6375,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return [Unit] victim
      */
-    GetVictim() : TSUnit
+    GetVictim() : TSUnit | undefined
 
     /**
      * Returns the currently casted [Spell] of given type or nil.
@@ -6361,7 +6391,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [CurrentSpellTypes] spellType
      * @return [Spell] castedSpell
      */
-    GetCurrentSpell(type : CurrentSpellTypes) : TSSpell
+    GetCurrentSpell(type : CurrentSpellTypes) : TSSpell | undefined
 
     /**
      * Returns the [Unit]'s current stand state.
@@ -6604,7 +6634,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
      * @return [Aura] aura : aura object or nil
      */
-    GetAura(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : TSAura
+    GetAura(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : TSAura | undefined
 
     /**
      * Returns the [Aura] of the given spell entry on the [Unit] or nil.
@@ -6615,7 +6645,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param reqEffMask = 0 (any): bitmask of the effects that must be active for the matching aura
      * @return [Aura] aura : aura object or nil
      */
-    GetAuraOfRankedSpell(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : TSAura
+    GetAuraOfRankedSpell(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8) : TSAura | undefined
 
     /**
      * Returns the [AuraApplication] of the given spell entry on the [Unit] or nil.
@@ -6627,7 +6657,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param except = null: application to exclude from search result
      * @return [Aura] aura : aura object or nil
      */
-    GetAuraApplication(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
+    GetAuraApplication(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication | undefined
 
     /**
      * Returns the [AuraApplication] of the given spell entry on the [Unit] or nil.
@@ -6639,7 +6669,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param except = null: application to exclude from search result
      * @return [Aura] aura : aura object or nil
      */
-    GetAuraApplicationOfRankedSpell(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication
+    GetAuraApplicationOfRankedSpell(spellID : uint32, casterGuid?: TSGUID, itemCasterGuid?: TSGUID, reqEffMask?: uint8, except?: TSAuraApplication) : TSAuraApplication | undefined
 
     /**
      * Returns all [AuraApplication]s attached to this [Unit].
@@ -6722,8 +6752,8 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return [Vehicle] vehicle
      */
-    GetVehicleKit() : TSVehicle
-    GetVehicle() : TSVehicle
+    GetVehicleKit() : TSVehicle | undefined
+    GetVehicle() : TSVehicle | undefined
 
     /**
      * Returns the Critter Guid
@@ -7301,7 +7331,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [Unit] target : aura will be applied on the target
      * @return [Aura] aura
      */
-    AddAura(spell : uint32,target : TSUnit) : TSAura
+    AddAura(spell : uint32,target : TSUnit) : TSAura | undefined
 
     /**
      * Removes [Aura] of the given spell entry from the [Unit].
@@ -7701,7 +7731,7 @@ declare class TSSpellEffectInfo {
 
 declare interface TSSpellCastTargets {
     IsNull() : bool
-    GetUnit() : TSUnit;
+    GetUnit() : TSUnit | undefined;
 }
 
 declare interface TSCondition {
@@ -7725,7 +7755,7 @@ declare interface TSCondition {
 }
 
 declare interface TSConditionSourceInfo {
-    GetTarget(index: uint32): TSWorldObject;
+    GetTarget(index: uint32): TSWorldObject | undefined;
     GetLastFailedCondition(): TSCondition;
 }
 
@@ -7769,13 +7799,13 @@ declare interface TSSmartScriptValues {
     GetTargetList(id: uint32, ref: TSWorldObject): TSArray<TSWorldObject>;
     StoreCounter(id: uint32, value: uint32, reset: uint32): void;
     GetCounterValue(id: uint32): TSNumber<uint32>
-    GetUnitArg(): TSUnit;
+    GetUnitArg(): TSUnit | undefined;
     GetUIntArg1(): TSNumber<uint32>
     GetUIntArg2(): TSNumber<uint32>
     GetBoolArg(): bool;
     GetSpellArg(): TSSpellInfo;
-    GetGameObjectArg(): TSGameObject;
-    GetSelf(): TSWorldObject;
+    GetGameObjectArg(): TSGameObject | undefined;
+    GetSelf(): TSWorldObject | undefined;
 }
 
 declare interface TSAssert {
@@ -8077,10 +8107,10 @@ declare namespace _hidden {
 
     export class Guild<T> {
         OnAddMember(callback: (guild : TSGuild,player : TSPlayer,plRank : TSMutableNumber<uint8>)=>void);
-        OnRemoveMember(callback: (guild : TSGuild,player : TSPlayer,isDisbanding : bool,isKicked : bool)=>void);
+        OnRemoveMember(callback: (guild : TSGuild,player : TSPlayer | undefined,isDisbanding : bool,isKicked : bool)=>void);
         OnMOTDChanged(callback: (guild : TSGuild,newMotd : string)=>void);
         OnInfoChanged(callback: (guild : TSGuild,newInfo : string)=>void);
-        OnCreate(callback: (guild : TSGuild,leader : TSPlayer,name : string)=>void);
+        OnCreate(callback: (guild : TSGuild,leader : TSPlayer | undefined,name : string)=>void);
         OnDisband(callback: (guild : TSGuild)=>void);
         OnMemberWitdrawMoney(callback: (guild : TSGuild,player : TSPlayer,amount : TSMutableNumber<uint32>,isRepair : bool)=>void);
         OnMemberDepositMoney(callback: (guild : TSGuild,player : TSPlayer,amount : TSMutableNumber<uint32>)=>void);
@@ -8118,8 +8148,8 @@ declare namespace _hidden {
         OnSuccessfulDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
         OnSuccessfulDispel(id: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void): T;
 
-        OnEffect(callback: (spell: TSSpell, cancel: TSMutable<boolean,boolean>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
-        OnEffect(id: EventID, callback: (spell: TSSpell, cancel: TSMutable<boolean,boolean>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
+        OnEffect(callback: (spell: TSSpell, cancel: TSMutable<boolean,boolean>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit | undefined, item: TSItem | undefined, obj: TSGameObject | undefined, corpse: TSCorpse | undefined)=>void);
+        OnEffect(id: EventID, callback: (spell: TSSpell, cancel: TSMutable<boolean,boolean>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit | undefined, item: TSItem | undefined, obj: TSGameObject | undefined, corpse: TSCorpse | undefined)=>void);
         /**
          * @note Use with Player.OnGlyphInitForLevel
          */
@@ -8351,8 +8381,8 @@ declare namespace _hidden {
     }
 
     export class Creature<T> {
-        OnGenerateLoot(callback: (generating: TSCreature, killer: TSPlayer)=>void): T;
-        OnGenerateLoot(id: EventID, callback: (generating: TSCreature, killer: TSPlayer)=>void): T;
+        OnGenerateLoot(callback: (generating: TSCreature, killer: TSPlayer | undefined)=>void): T;
+        OnGenerateLoot(id: EventID, callback: (generating: TSCreature, killer: TSPlayer | undefined)=>void): T;
 
         OnMoveInLOS(callback: (creature: TSCreature, seen: TSUnit)=>void): T;
         OnMoveInLOS(id: EventID, callback: (creature: TSCreature, seen: TSUnit)=>void): T;
@@ -8360,11 +8390,11 @@ declare namespace _hidden {
         OnJustEnteredCombat(callback: (creature: TSCreature, target: TSUnit)=>void): T;
         OnJustEnteredCombat(id: EventID, callback: (creature: TSCreature, target: TSUnit)=>void): T;
 
-        OnDeathEarly(callback: (dying: TSCreature, killer: TSUnit)=>void): T;
-        OnDeathEarly(id: EventID, callback: (dying: TSCreature, killer: TSUnit)=>void): T;
+        OnDeathEarly(callback: (dying: TSCreature, killer: TSUnit | undefined)=>void): T;
+        OnDeathEarly(id: EventID, callback: (dying: TSCreature, killer: TSUnit | undefined)=>void): T;
 
-        OnDeath(callback: (dying: TSCreature, killer: TSUnit)=>void): T;
-        OnDeath(id: EventID, callback: (dying: TSCreature, killer: TSUnit)=>void): T;
+        OnDeath(callback: (dying: TSCreature, killer: TSUnit | undefined)=>void): T;
+        OnDeath(id: EventID, callback: (dying: TSCreature, killer: TSUnit | undefined)=>void): T;
 
         OnKilledUnit(callback: (killer: TSCreature, killed: TSUnit)=>void): T;
         OnKilledUnit(id: EventID, callback: (killer: TSCreature, killed: TSUnit)=>void): T;
@@ -8372,8 +8402,8 @@ declare namespace _hidden {
         OnSummoned(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
         OnSummoned(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
 
-        OnDespawn(callback: (despawning: TSCreature, summoner: TSWorldObject)=>void): T;
-        OnDespawn(id: EventID, callback: (despawning: TSCreature, summoner: TSWorldObject)=>void): T;
+        OnDespawn(callback: (despawning: TSCreature, summoner: TSWorldObject | undefined)=>void): T;
+        OnDespawn(id: EventID, callback: (despawning: TSCreature, summoner: TSWorldObject | undefined)=>void): T;
 
         OnIsSummoned(callback: (summoned: TSCreature, summoner: TSWorldObject)=>void): T;
         OnIsSummoned(id: EventID, callback: (summoned: TSCreature, summoner: TSWorldObject)=>void): T;
@@ -8381,8 +8411,8 @@ declare namespace _hidden {
         OnSummonDespawn(callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
         OnSummonDespawn(id: EventID, callback: (summoner: TSCreature, summon: TSCreature)=>void): T;
 
-        OnSummonDies(callback: (summoner: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
-        OnSummonDies(id: EventID, callback: (summoner: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
+        OnSummonDies(callback: (summoner: TSCreature, summon: TSCreature, killer: TSUnit | undefined)=>void): T;
+        OnSummonDies(id: EventID, callback: (summoner: TSCreature, summon: TSCreature, killer: TSUnit | undefined)=>void): T;
 
         OnHitBySpell(callback: (target: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
         OnHitBySpell(id: EventID, callback: (target: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
@@ -8779,12 +8809,12 @@ declare namespace _hidden {
         /**
          *  Fires BEFORE auras are removed and kill procs
          */
-        OnDeathEarly(callback: (victim: TSUnit, killer: TSUnit)=>void);
+        OnDeathEarly(callback: (victim: TSUnit, killer: TSUnit | undefined)=>void);
 
         /**
          * Fires AFTER auras are removed and kill procs
          */
-        OnDeath(callback: (victim: TSUnit, killer: TSUnit)=>void);
+        OnDeath(callback: (victim: TSUnit, killer: TSUnit | undefined)=>void);
 
         OnEnterCombat(callback: (unit: TSUnit)=>void);
         OnExitCombat(callback: (unit: TSUnit)=>void);
@@ -8818,8 +8848,8 @@ declare namespace _hidden {
         OnUpdateLate(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void): T
         OnUpdateLate(id: EventID, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void): T
 
-        OnKillPlayer(callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void): T
-        OnKillPlayer(id: EventID, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void): T
+        OnKillPlayer(callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer | undefined)=>void): T
+        OnKillPlayer(id: EventID, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer | undefined)=>void): T
 
         OnEndEarly(callback: (bg: TSBattleground,winner: TSMutableNumber<uint32>)=>void): T
         OnEndEarly(id: EventID, callback: (bg: TSBattleground,winner: TSMutableNumber<uint32>)=>void): T
@@ -8834,11 +8864,11 @@ declare namespace _hidden {
         OnEndLate(callback: (bg: TSBattleground,winner: uint32)=>void): T
         OnEndLate(id: EventID, callback: (bg: TSBattleground,winner: uint32)=>void): T
 
-        OnKillCreature(callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void): T
-        OnKillCreature(id: EventID, callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void): T
+        OnKillCreature(callback: (bg: TSBattleground,victim: TSCreature, killer: TSPlayer)=>void): T
+        OnKillCreature(id: EventID, callback: (bg: TSBattleground,victim: TSCreature, killer: TSPlayer)=>void): T
 
-        OnRemovePlayer(callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void): T
-        OnRemovePlayer(id: EventID, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void): T
+        OnRemovePlayer(callback: (bg: TSBattleground,guid: uint64,player: TSPlayer | undefined, teamId: uint32)=>void): T
+        OnRemovePlayer(id: EventID, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer | undefined, teamId: uint32)=>void): T
 
         OnPlayerUnderMap(callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<boolean,boolean>)=>void): T
         OnPlayerUnderMap(id: EventID, callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<boolean,boolean>)=>void): T
@@ -9589,6 +9619,8 @@ declare function IsHolidayActive(holiday: uint16): boolean
 declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
+declare function GetLuaGarbageCur(): TSNumber<uint64>
+declare function GetLuaGarbageTotal(): TSNumber<uint64>
 
 /**
  * @param entry - The id to be used for the new item template.
@@ -9806,7 +9838,7 @@ declare class TSClass {
 
 // Item functions
 declare function CreateLootItem(id: uint32, reference?: uint32, chance?: float, lootmode?: uint16, needsQuest?: bool, groupId?: uint8, minCount?: uint8, maxCount?: uint8)
-declare function CreateItem(entry: uint32, count: uint32): TSItem;
+declare function CreateItem(entry: uint32, count: uint32): TSItem | undefined;
 declare function CreateTSMutable<T>(ptr: T): TSMutable<T,T>;
 
 // Database functions
@@ -9981,11 +10013,11 @@ declare function MsgStringArray(arrSize: number, stringSize: number): (field: an
 declare function CreateCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
 
 // Null values
-declare function NULL_UNIT(): TSUnit;
-declare function NULL_PLAYER(): TSPlayer;
-declare function NULL_GAMEOBJECT(): TSGameObject;
-declare function NULL_MAP(): TSMap;
-declare function NULL_SPELLINFO(): TSSpellInfo;
+declare function NULL_UNIT(): TSUnit | undefined;
+declare function NULL_PLAYER(): TSPlayer | undefined;
+declare function NULL_GAMEOBJECT(): TSGameObject | undefined;
+declare function NULL_MAP(): TSMap | undefined;
+declare function NULL_SPELLINFO(): TSSpellInfo | undefined;
 
 // Type conversions
 declare function ToStr(val: number);
@@ -10015,15 +10047,26 @@ declare function GetWorldDBConnection(): TSWorldDatabaseConnection
 declare function GetAuthDBConnection(): TSAuthDatabaseConnection
 declare function GetCharactersDBConnection(): TSCharactersDatabaseConnection
 
-declare function GetSpellInfo(entry: uint32): TSSpellInfo
+declare function GetSpellInfo(entry: uint32): TSSpellInfo | undefined
 declare function GetTalentSpellCost(entry: uint32): TSNumber<uint32>
-declare function GetItemTemplate(entry: uint32): TSItemTemplate
-declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate
-declare function GetFactionTemplate(entry: uint32): TSFactionTemplate
-declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate
-declare function GetGuild(guid: uint32): TSGuild
-declare function GetGuildByName(name: string): TSGuild
-declare function GetGuildByLeader(guid: uint64): TSGuild
+declare function GetItemTemplate(entry: uint32): TSItemTemplate | undefined
+declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate | undefined
+declare function GetFactionTemplate(entry: uint32): TSFactionTemplate | undefined
+declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate | undefined
+declare function GetGuild(guid: uint32): TSGuild | undefined
+declare function GetGuildByName(name: string): TSGuild | undefined
+declare function GetGuildByLeader(guid: uint64): TSGuild | undefined
+
+// typecasts
+declare function ToWorldObject(obj: TSObject | undefined): Maybe<TSWorldObject>
+declare function ToItem(obj: TSObject | undefined): Maybe<TSItem>
+declare function ToUnit(obj: TSObject | undefined): Maybe<TSUnit>
+declare function ToCreature(obj: TSObject | undefined): Maybe<TSCreature>
+declare function ToPlayer(obj: TSObject | undefined): Maybe<TSPlayer>
+declare function ToGameObject(obj: TSObject | undefined): Maybe<TSGameObject>
+
+declare function ToInstance(map: TSMap | undefined): Maybe<TSInstance>
+declare function ToBattleground(map: TSMap | undefined): Maybe<TSBattleground>
 
 // tracy
 declare type ZoneCategory = uint32;

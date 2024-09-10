@@ -4,6 +4,7 @@
 #include <TSBase.h>
 #include <TSMain.h>
 #include <TSArray.h>
+#include "TSLua.h"
 
 #include <list>
 #include <vector>
@@ -151,3 +152,5 @@ private:
     TSLua::Array<TSWorldObject> LGetTargetList(uint32 id, TSWorldObject ref);
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSCondition)
