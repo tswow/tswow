@@ -80,13 +80,6 @@ export namespace MapData {
             + ` -i ${dataset.client.path.Data.abs()}/`
           wsys.exec(prog,'inherit')
           break;
-        case 'azerothcore':
-          wfs.remove(mpath(dataset.config.client_path,'Buildings'))
-          ipaths.bin.core.pick('azerothcore').build.pick(type).vmap4extractor
-            .copy(mpath(dataset.config.client_path,'vmap4extractor.exe'))
-            wsys.execIn(dataset.config.client_path,'vmap4extractor.exe','inherit')
-          new WNode(dataset.config.client_path).join('Buildings').copy(dataset.path.Buildings)
-          break;
       }
     }
 
@@ -96,9 +89,6 @@ export namespace MapData {
     ) {
       switch(dataset.config.EmulatorCore) {
         case 'trinitycore':
-          break;
-        case 'azerothcore':
-          dataset.path.vmaps.mkdir();
           break;
       }
         let prog = `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).vmap4assembler.get()}`

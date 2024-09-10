@@ -31,8 +31,6 @@ TSNumber<uint32> TSAreaTriggerEntry::GetEntry()
 {
 #if TRINITY
     return m_entry->ID;
-#elif AZEROTHCORE
-    return m_entry->
 #endif
 }
 

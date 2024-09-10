@@ -4,9 +4,9 @@ import { BuildArgs, dataset, ipaths } from '../../../data/Settings';
 import { TSImage, TSImages } from "../Images/Image";
 import { ClassRegistry } from './ClassRegistry';
 
-const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
-const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
-const WORLDSTATE_LOCAL = "Interface\\WorldStateFrame\\ICONS-CLASSES.BLP"
+const SQUARES_LOCAL = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES.BLP"
+const CIRCLES_LOCAL = "Interface/TARGETINGFRAME/UI-Classes-Circles.blp"
+const WORLDSTATE_LOCAL = "Interface/WorldStateFrame/ICONS-CLASSES.BLP"
 const SQUARES_PATH = dataset.luaxml_source.join(SQUARES_LOCAL)
 const CIRCLES_PATH = dataset.luaxml_source.join(CIRCLES_LOCAL)
 const WORLDSTATE_PATH = dataset.luaxml_source.join(WORLDSTATE_LOCAL)

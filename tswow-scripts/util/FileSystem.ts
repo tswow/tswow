@@ -191,7 +191,7 @@ export namespace wfsa {
                     }
                 });
             } else if (await wfsa.isDirectory(fpath)) {
-                fs.rmdir(resfp(fpath), {recursive: true}, (err) => {
+                fs.rm(resfp(fpath), {recursive: true}, (err) => {
                     if (err) {
                         rej(err);
                     } else {
@@ -354,7 +354,7 @@ export namespace wfs {
         if (fs.lstatSync(resfp(removedPath)).isFile()) {
             fs.unlinkSync(resfp(removedPath));
         } else {
-            fs.rmdirSync(resfp(removedPath), {recursive: true});
+            fs.rmSync(resfp(removedPath), {recursive: true});
         }
     }
 

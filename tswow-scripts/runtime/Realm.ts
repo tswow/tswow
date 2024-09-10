@@ -336,11 +336,6 @@ export class Realm {
         this.worldserver.setAutoRestart(this.config.AutoRestart);
 
         switch(this.core) {
-            case 'azerothcore':
-                this.path.worldserver_conf.copy(this.path.join('configs/worldserver.conf.dist'))
-                this.worldserver.startIn(this.path.get(),
-                    wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()));
-                break;
             case 'trinitycore':
                 this.worldserver.startIn(this.path.get(),
                     wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()),

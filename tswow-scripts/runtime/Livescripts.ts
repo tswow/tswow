@@ -43,7 +43,7 @@ const scripts_tsconfig_json =
       "forceConsistentCasingInFileNames": true
     },
     "include":["./","../Ids.ts","../shared"],
-    "exclude":["../data","../addons"]
+    "exclude":["./build", "../data","../addons"]
 };
 
 const temp_config = (dataset: Dataset) => ({
@@ -57,7 +57,8 @@ const temp_config = (dataset: Dataset) => ({
     'skipLibCheck': true,
     'forceConsistentCasingInFileNames': true
 },
-'include': ['./shared','./livescripts']
+    'include': ['./shared','./livescripts'],
+    'exclude': ['./livescripts/build']
 });
 
 export class LiveScriptsConfig extends ConfigFile {
@@ -107,7 +108,8 @@ const lua_tsconfig_json = {
                 , 'import':'LuaORM'
             }
         ]
-    }
+    },
+    "exclude": ["./livescripts/build"]
 }
 
 export class Livescripts {

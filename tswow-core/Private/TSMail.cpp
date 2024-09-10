@@ -147,8 +147,6 @@ void TSMail::AddItem(uint32 entry, uint8 count, TSPlayer player)
     auto guid = Item::CreateItem(entry,count,player->player)->GetGUID();
 #if TRINITY
     mail->AddItem(guid,entry);
-#elif AZEROTHCORE
-    mail->AddItem(guid.GetEntry(),entry);
 #endif
 }
 
@@ -162,8 +160,6 @@ void TSMail::SetSender(uint8 type, TSGUID guid)
     mail->messageType = type;
 #if TRINITY
     mail->sender = guid.asGUID();
-#elif AZEROTHCORE
-    mail->sender = ObjectGuid(guid).GetEntry();
 #endif
 }
 
@@ -191,8 +187,6 @@ TSNumber<uint16> TSMailDraft::GetTemplateID()
 {
 #ifdef TRINITY
     return draft->m_mailTemplateId;
-#elif AZEROTHCORE
-    return draft->GetMailTemplateId();
 #endif
 }
 
@@ -200,8 +194,6 @@ std::string TSMailDraft::GetSubject()
 {
 #ifdef TRINITY
     return draft->m_subject;
-#elif AZEROTHCORE
-    return draft->GetSubject();
 #endif
 }
 
@@ -209,8 +201,6 @@ std::string TSMailDraft::GetBody()
 {
 #ifdef TRINITY
     return draft->m_body;
-#elif AZEROTHCORE
-    return draft->GetBody();
 #endif
 }
 
@@ -218,8 +208,6 @@ TSNumber<uint32> TSMailDraft::GetMoney()
 {
 #ifdef TRINITY
     return draft->m_money;
-#elif AZEROTHCORE
-    return draft->GetMoney();
 #endif
 }
 
@@ -227,8 +215,6 @@ TSNumber<uint32> TSMailDraft::GetCOD()
 {
 #ifdef TRINITY
     return draft->m_COD;
-#elif AZEROTHCORE
-    return draft->GetCOD();
 #endif
 }
 
@@ -256,8 +242,6 @@ void TSMailDraft::SetTemplateID(uint16 id)
 {
 #if TRINITY
     draft->m_mailTemplateId = id;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMailDraft::SetTemplateID not implemented for AzerothCore");
 #endif
 }
 
@@ -265,8 +249,6 @@ void TSMailDraft::SetSubject(std::string const& subject)
 {
 #if TRINITY
     draft->m_subject = subject;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMailDraft::SetSubject not implemented for AzerothCore");
 #endif
 }
 
@@ -274,8 +256,6 @@ void TSMailDraft::SetBody(std::string const& body)
 {
 #if TRINITY
     draft->m_body = body;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMailDraft::SetBody not implemented for AzerothCore");
 #endif
 }
 

@@ -44,7 +44,7 @@ TSVehicle::TSVehicle()
 bool TSVehicle::IsOnBoard(TSUnit _passenger)
 {
     auto passenger = _passenger.unit;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return passenger->IsOnVehicle(vehicle->GetBase());
 #else
     return vehicle->HasOnBoard(passenger);
@@ -58,7 +58,7 @@ bool TSVehicle::IsOnBoard(TSUnit _passenger)
  */
 TSUnit  TSVehicle::GetOwner()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSUnit(vehicle->GetBase());
 #else
      return TSUnit(vehicle->GetOwner());
@@ -74,8 +74,6 @@ TSNumber<uint32> TSVehicle::GetEntry()
 {
 #if defined TRINITY
     return vehicle->GetVehicleInfo()->ID;
-#elif AZEROTHCORE
-    return vehicle->GetVehicleInfo()->m_ID;
 #endif
 }
 
@@ -99,7 +97,7 @@ TSUnit  TSVehicle::GetPassenger(int8 seatId)
 void TSVehicle::AddPassenger(TSUnit _passenger,int8 seatId)
 {
     auto passenger = _passenger.unit;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     vehicle->AddPassenger(passenger, seatId);
 #else
     if (vehicle->CanBoard(passenger))
@@ -115,7 +113,7 @@ void TSVehicle::AddPassenger(TSUnit _passenger,int8 seatId)
 void TSVehicle::RemovePassenger(TSUnit _passenger)
 {
     auto passenger = _passenger.unit;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     vehicle->RemovePassenger(passenger);
 #else
     vehicle->UnBoard(passenger, false);

@@ -23,8 +23,6 @@ class WorldObject;
 
 #if TRINITY
 typedef std::vector<WorldObject*> TSObjectVector;
-#elif AZEROTHCORE
-typedef std::list<WorldObject*> TSObjectVector;
 #endif
 
 struct Condition;

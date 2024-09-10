@@ -6,7 +6,6 @@
 
 static bool ResolveBossScript(Creature* creature, uint32& boss, InstanceScript *& script)
 {
-// TODO: enable for ac
 #if TRINITY
     if (!creature || !creature->GetCreatureData()) return false;
     uint32 _boss = sObjectMgr->GetCreatureBoss(creature->GetSpawnId());
@@ -16,8 +15,6 @@ static bool ResolveBossScript(Creature* creature, uint32& boss, InstanceScript *
     boss = _boss;
     script = _script;
     return true;
-#elif AZEROTHCORE
-    return false;
 #endif
 }
 

@@ -8,8 +8,6 @@ int32 TotemCreatureAI::Permissible(Creature const* creature)
 {
 #if TRINITY
     if(creature->m_isTempCreature)
-#elif AZEROTHCORE
-    if(creature->m_isTempWorldObject)
 #endif
     {
         // TODO: Fix this instead of +1

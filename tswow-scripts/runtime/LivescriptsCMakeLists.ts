@@ -4,7 +4,7 @@ import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 
 export function getLivescriptCMakeLists(emu: EmulatorCore, buildType: BuildType, buildModule: string) {
-return `cmake_minimum_required(VERSION 3.12)
+return `cmake_minimum_required(VERSION 3.22)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -55,11 +55,7 @@ filter_items(source_files "/lib/")
 add_library(${buildModule} SHARED \${transpiler_files} \${source_files})
 target_link_libraries(${buildModule} \${libs})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-target_compile_definitions(${buildModule} PUBLIC ${
-    emu === 'trinitycore'
-        ? 'TRINITY=1'
-        : 'AZEROTHCORE=1'
-    })
+target_compile_definitions(${buildModule} PUBLIC "TRINITY=1")
 
 source_group("Transpiled" FILES \${transpiler_files})
 source_group("Source" FILES \${source_files})
@@ -82,8 +78,6 @@ target_precompile_headers(${buildModule} PUBLIC \${headers})
 # defines
 ${(()=>{
     switch(emu) {
-        case 'azerothcore':
-            return `target_compile_definitions(${buildModule} PUBLIC AZEROTHCORE=1)`
         case 'trinitycore':
             return `target_compile_definitions(${buildModule} PUBLIC TRINITY=1)`
         default:
