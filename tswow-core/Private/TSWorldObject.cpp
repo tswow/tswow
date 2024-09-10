@@ -89,9 +89,6 @@ TSNumber<uint64> TSWorldObject::GetPhaseID()
 {
 #if TRINITY
     return uint32(obj->m_phase_id);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetPhaseID not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -105,16 +102,6 @@ void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
 {
 #if TRINITY
     obj->SetPhaseMask(phaseMask, update, id);
-#elif AZEROTHCORE
-    obj->SetPhaseMask(phaseMask, update);
-    if (id != 0)
-    {
-        TS_LOG_ERROR(
-              "tswow.api"
-            , "TSWorldObject::SetPhaseMask not implemented for AzerothCore with phase id parameter (phase ids not implemented)"
-        );
-    }
-
 #endif
 }
 #endif
@@ -274,7 +261,7 @@ TSPosition TSWorldObject::GetRelativePoint(float dist,float rad) {
 TSNumber<float> TSWorldObject::GetAngle(TSWorldObject _target,float x,float y)
 {
     auto target = _target.obj;
-#if defined TRINITY && !AZEROTHCORE
+#if defined TRINITY
     if (target)
         return obj->GetAbsoluteAngle(target);
     else
@@ -327,8 +314,6 @@ TSGameObject  TSWorldObject::SummonGameObject(uint32 entry,float x,float y,float
 #ifdef TRINITY
     QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
     return TSGameObject(obj->SummonGameObject(entry, Position(x, y, z, o), rot, std::chrono::seconds(respawnDelay)));
-#elif AZEROTHCORE
-    return TSGameObject(obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
 #else
     return TSGameObject(obj->SummonGameObject(entry, x, y, z, o, std::chrono::seconds(respawnDelay)));
 #endif
@@ -375,7 +360,7 @@ TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,fl
             type = TEMPSUMMON_TIMED_DESPAWN;
             break;
         case 4:
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
             type = TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT;
 #else
             type = TEMPSUMMON_TIMED_OOC_DESPAWN;
@@ -393,7 +378,7 @@ TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,fl
         case 8:
             type = TEMPSUMMON_MANUAL_DESPAWN;
             break;
-#if !defined TRINITY && !AZEROTHCORE
+#if !defined TRINITY
         case 9:
             type = TEMPSUMMON_TIMED_OOC_OR_CORPSE_DESPAWN;
             break;
@@ -404,8 +389,6 @@ TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,fl
     }
 #ifdef TRINITY
     auto c = (Creature*) (obj->SummonCreature(entry, x, y, z, o, type, std::chrono::milliseconds(despawnTimer)));
-#elif AZEROTHCORE
-    auto c = (Creature*) (obj->SummonCreature(entry, Position(x, y, z, o), type, despawnTimer));
 #endif
     return TSCreature(c);
 }
@@ -736,7 +719,7 @@ bool WorldObjectInRangeCheck::operator()(WorldObject* u)
             {
                 if (i_obj_fact)
                 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
                     if ((i_obj_fact->IsHostileTo(*target->GetFactionTemplateEntry())) != (i_hostile == 1))
                         return false;
 #else
@@ -768,8 +751,6 @@ TSArray<TSCreature> TSWorldObject::GetCreaturesInRange(float range, uint32 entry
     {
         arr.push(TSCreature(*it));
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetCreaturesInRange not implemented for AzerothCore.");
 #endif
     return arr;
 }
@@ -786,8 +767,6 @@ TSArray<TSUnit> TSWorldObject::GetUnitsInRange(float range, uint32 hostile, uint
     {
         arr.push(TSUnit(*it));
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetUnitsInRange not implemented for AzerothCore.");
 #endif
     return arr;
 }
@@ -804,8 +783,6 @@ TSArray<TSPlayer> TSWorldObject::GetPlayersInRange(float range, uint32 hostile, 
     {
         arr.push(TSPlayer(*it));
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetPlayersInRange not implemented for AzerothCore");
 #endif
     return arr;
 }
@@ -822,8 +799,6 @@ TSArray<TSGameObject> TSWorldObject::GetGameObjectsInRange(float range, uint32 e
     {
         arr.push(TSGameObject(*it));
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetGameObjectsInRange not implemented for AzerothCore");
 #endif
     return arr;
 }
@@ -836,9 +811,6 @@ TSPlayer TSWorldObject::GetNearestPlayer(float range, uint32 hostile, uint32 dea
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
     Cell::VisitAllObjects(obj, searcher, range);
     return target ? TSPlayer(target->ToPlayer()) : TSPlayer(nullptr);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetNearestPlayer not implemented for AzerothCore");
-    return TSPlayer(nullptr);
 #endif
 }
 
@@ -850,9 +822,6 @@ TSGameObject TSWorldObject::GetNearestGameObject(float range, uint32 entry, uint
     Trinity::GameObjectLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
     Cell::VisitAllObjects(obj, searcher, range);
     return target ? TSGameObject(target->ToGameObject()) : TSGameObject(nullptr);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetNearestGameObject not implemented for AzerothCore");
-    return TSGameObject(nullptr);
 #endif
 }
 
@@ -864,9 +833,6 @@ TSCreature TSWorldObject::GetNearestCreature(float range, uint32 entry, uint32 h
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
     Cell::VisitAllObjects(obj, searcher, range);
     return target ? TSCreature(target->ToCreature()) : TSCreature(nullptr);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetNearestCreate not implemented for AzerothCore");
-    return TSCreature(nullptr);
 #endif
 }
 
@@ -1081,9 +1047,6 @@ bool TSWorldObject::IsFriendlyTo(TSWorldObject object)
 {
 #if TRINITY
     return obj->IsFriendlyTo(object.obj);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsFriendlyTo not implemented for AzerothCore");
-    return true;
 #endif
 }
 
@@ -1091,9 +1054,6 @@ bool TSWorldObject::IsHostileTo(TSWorldObject object)
 {
 #if TRINITY
     return obj->IsHostileTo(object.obj);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsHostileTo not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -1101,9 +1061,6 @@ bool TSWorldObject::IsFriendlyToPlayers()
 {
 #if TRINITY
     return !obj->IsHostileToPlayers();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsFriendlyToPlayers not implemented for AzerothCore");
-    return true;
 #endif
 
 }
@@ -1112,9 +1069,6 @@ bool TSWorldObject::IsHostileToPlayers()
 {
 #if TRINITY
     return obj->IsHostileToPlayers();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsHostileToPlayers not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -1122,9 +1076,6 @@ bool TSWorldObject::IsNeutralToAll()
 {
 #if TRINITY
     return obj->IsNeutralToAll();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsNeutralToAll not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -1137,31 +1088,12 @@ bool TSWorldObject::IsNeutralToAll()
  */
 TSNumber<uint32> TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool triggered)
 {
-#if TRINITY
     return obj->CastSpell(_target.obj, spell, triggered);
-#elif AZEROTHCORE
-    if (!_target.IsNull() && !_target.IsUnit())
-    {
-        TS_LOG_ERROR("tswow.api", "TSWorldObject::CastSpell not implemented for GameObject targets on AzerothCore.");
-        return SPELL_FAILED_UNKNOWN;
-    }
-    Unit* target = _target.obj->ToUnit();
+}
 
-    if (Unit * unit = obj->ToUnit())
-    {
-        return unit->CastSpell(target, spell, triggered);
-    }
-
-    if (GameObject* gobj = obj->ToGameObject())
-    {
-        if (triggered)
-        {
-            TS_LOG_ERROR("tswow.api", "TSWorldObject::CastSpell 'triggered' parameter not implemented for AzerothCore.");
-        }
-        gobj->CastSpell(target, spell);
-        return SPELL_FAILED_SUCCESS;
-    }
-#endif
+TSNumber<uint32> TSWorldObject::CastSpell(TSItem _target, uint32 spell, bool triggered)
+{
+    return obj->CastSpell(_target.item, spell, triggered);
 }
 
 /**
@@ -1175,19 +1107,7 @@ TSNumber<uint32> TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, b
  */
 TSNumber<uint32> TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered)
 {
-#if AZEROTHCORE
-    if (Unit* unit = obj->ToUnit())
-    {
-        // SpellCastResult Unit::CastSpell(float x, float y, float z, uint32 spellId, bool triggered, Item* castItem, AuraEffect const* triggeredByAura, ObjectGuid originalCaster)
-        return unit->CastSpell(_x, _y, _z, spell, triggered);
-    }
-
-    if (GameObject* gobj = obj->ToGameObject())
-    {
-        TS_LOG_ERROR("tswow.api", "TSWorldObject::CastSpellAoF not implemented for AzerothCore");
-        return 0;
-    }
-#elif TRINITY
+#if TRINITY
     CastSpellExtraArgs args;
     if (triggered)
         args.TriggerFlags = TRIGGERED_FULL_MASK;
@@ -1224,7 +1144,6 @@ TSNumber<uint32> TSWorldObject::CastCustomSpell(
     bool has_bp1 = bp1 != 0;
     bool has_bp2 = bp2 != 0;
 
-#ifdef TRINITY
     CastSpellExtraArgs args;
     if (has_bp0)
         args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
@@ -1239,53 +1158,46 @@ TSNumber<uint32> TSWorldObject::CastCustomSpell(
     if (originalCaster)
         args.SetOriginalCaster(ObjectGuid(originalCaster));
     return obj->CastSpell(target, spell, args);
-#else
-    if (Unit* unit = obj->ToUnit())
-    {
-        if (Unit* unitTarget = target->ToUnit())
-        {
-            CustomSpellValues args;
-            if (has_bp0)
-                args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
-
-            if (has_bp1)
-                args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp1);
-
-            if (has_bp2)
-                args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp2);
-            return unit->CastCustomSpell(
-                spell
-                , args
-                , unitTarget
-                , triggered
-                    ? TriggerCastFlags::TRIGGERED_FULL_MASK
-                    : TriggerCastFlags::TRIGGERED_NONE
-                , castItem
-            );
-        }
-    }
-
-    if (GameObject * gobj = obj->ToGameObject())
-    {
-        TS_LOG_ERROR("tswow.api", "TSWorldObject::CastCustomSpell not implemented for GameObjects with AzerothCore.");
-        return SPELL_FAILED_UNKNOWN;
-    }
-
-    if (GameObject * gobj = target->ToGameObject())
-    {
-        TS_LOG_ERROR("tswow.api", "TSWorldObject::CastCustomSpell not implemented for GameObjects with AzerothCore.");
-        return SPELL_FAILED_UNKNOWN;
-    }
-#endif
 }
+
+TSNumber<uint32> TSWorldObject::CastCustomSpell(
+      TSItem _target
+    , uint32 spell
+    , bool triggered
+    , int32 bp0
+    , int32 bp1
+    , int32 bp2
+    , TSItem _castItem
+    , uint64 originalCaster
+) {
+    auto target = _target.item;
+    auto castItem = _castItem.item;
+    bool has_bp0 = bp0 != 0;
+    bool has_bp1 = bp1 != 0;
+    bool has_bp2 = bp2 != 0;
+
+    CastSpellExtraArgs args;
+    if (has_bp0)
+        args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
+    if (has_bp1)
+        args.AddSpellMod(SPELLVALUE_BASE_POINT1, bp1);
+    if (has_bp2)
+        args.AddSpellMod(SPELLVALUE_BASE_POINT2, bp2);
+    if (triggered)
+        args.TriggerFlags = TRIGGERED_FULL_MASK;
+    if (castItem)
+        args.SetCastItem(castItem);
+    if (originalCaster)
+        args.SetOriginalCaster(ObjectGuid(originalCaster));
+    return obj->CastSpell(target, spell, args);
+}
+
 
 void TSWorldObject::DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback)
 {
 #if TRINITY
     obj->m_delayedCallbacks.push_back(callback);
     obj->GetMap()->m_delayedGuids.insert(obj->GetGUID());
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::DoDelayed not implemented on AzerothCore");
 #endif
 }
 
@@ -1295,8 +1207,6 @@ void TSWorldObject::LDoDelayed(sol::protected_function callback)
 #if TRINITY
     obj->m_delayedLuaCallbacks.push_back(callback);
     obj->GetMap()->m_delayedGuids.insert(obj->GetGUID());
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSWorldObject::DoDelayed not implemented on AzerothCore");
 #endif
 }
 
@@ -1430,4 +1340,14 @@ TSPlayer TSWorldObject::LGetPlayer1(TSNumber<uint32> lowGuid)
 bool TSWorldObject::IsBehind(TSWorldObject o)
 {
     return !o.obj->HasInArc(static_cast<float>(M_PI), obj);
+}
+
+bool TSWorldObject::IsOutdoors()
+{
+    return obj->IsOutdoors();
+}
+
+TSNumber<uint32> TSWorldObject::GetLiquidStatus()
+{
+    return static_cast<uint32>(obj->GetLiquidStatus());
 }

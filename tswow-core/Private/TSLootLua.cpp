@@ -18,6 +18,7 @@ void TSLua::load_loot_methods(sol::state& state)
     LUA_FIELD(ts_lootitem, TSLootItem, SetFakeRandomPropertyID);
     LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomSuffix);
     LUA_FIELD(ts_lootitem, TSLootItem, GetFakeRandomPropertyID);
+    LUA_FIELD(ts_lootitem, TSLootItem, GetTemplate);
 
     auto ts_loot = state.new_usertype<TSLoot>("TSLoot");
     LUA_FIELD_OVERLOAD_3_3(ts_loot, TSLoot, AddItem, uint32, uint8, uint8, uint16, bool, uint8);

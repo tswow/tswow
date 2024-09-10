@@ -43,7 +43,7 @@ const scripts_tsconfig_json =
       "forceConsistentCasingInFileNames": true
     },
     "include":["./","../Ids.ts","../shared"],
-    "exclude":["../data","../addons"]
+    "exclude":["./build", "../data","../addons"]
 };
 
 const temp_config = (dataset: Dataset) => ({
@@ -57,7 +57,8 @@ const temp_config = (dataset: Dataset) => ({
     'skipLibCheck': true,
     'forceConsistentCasingInFileNames': true
 },
-'include': ['./shared','./livescripts']
+    'include': ['./shared','./livescripts'],
+    'exclude': ['./livescripts/build']
 });
 
 export class LiveScriptsConfig extends ConfigFile {
@@ -107,7 +108,8 @@ const lua_tsconfig_json = {
                 , 'import':'LuaORM'
             }
         ]
-    }
+    },
+    "exclude": ["./livescripts/build"]
 }
 
 export class Livescripts {
@@ -244,7 +246,7 @@ export class Livescripts {
         try {
             wsys.execIn(
                   `${this.mod.path.abs()}`
-                , `node -r source-map-support/register`
+                , `node --stack-trace-limit=1000 -r source-map-support/register`
                 + ` ${ipaths.bin.scripts.typescript2cxx.typescript2cxx.main_js.abs()} tsconfig.json`
                 + ` ${(args.join(' '))}`
                 + ` --ipaths=${ipaths.abs()}`
@@ -344,11 +346,6 @@ export class Livescripts {
             })
         }
 
-        // Build datascripts
-        if(this.mod.datascripts.exists() && ! Args.hasFlag('--no-inline',args) && this.config.InlineScripts) {
-            await Datascripts.build(dataset,['--inline-only'])
-        }
-
         // Build scripts
         let generateType: 'lua'|'c++' = args.includes('lua')
             ? 'lua'
@@ -363,13 +360,6 @@ export class Livescripts {
             case 'c++':
                 this.buildCxx(dataset,buildType,args);
                 break;
-        }
-
-        // Reload
-        if(!isTranspileOnly) {
-            dataset.realms()
-                .filter(x=>x.worldserver.isRunning())
-                .forEach(x=>x.worldserver.send(`reload livescripts`))
         }
 
         term.log(this.logName(),`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)
@@ -405,7 +395,7 @@ export class Livescripts {
             , '(module|dataset)[]? --transpile-only'
             , 'Comiles and hotswaps livescripts for select modules or'
             + 'modules within a dataset'
-            , args => {
+            , async args => {
                 const buildType = Identifier
                     .getBuildType(args,NodeConfig.DefaultBuildType)
 
@@ -413,9 +403,22 @@ export class Livescripts {
                       args
                     , 'MATCH_ANY'
                     , NodeConfig.DefaultDataset
-                )
+                );
 
-                return Promise.all(datasets.map(dataset=>{
+                // Build datascripts
+                if(!Args.hasFlag('--no-inline',args))
+                {
+                    for(const dataset of datasets)
+                    {
+                        if(dataset.modules().find(x=>x.datascripts.exists()))
+                        {
+                            await Datascripts.build(dataset,['--inline-only'])
+                        }
+                    }
+                }
+
+                // Build livescripts
+                for(const dataset of datasets) {
                     let modules = Identifier.getModules(args,'ALLOW_NONE')
                     if(modules.length === 0) {
                         modules = dataset.modules().filter(x=>x.livescripts.exists())
@@ -435,12 +438,25 @@ export class Livescripts {
                                 + ` and dataset ${dataset.fullName} have no overlapping modules with livescripts`
                             )
                         }
-
                     }
-                    return Promise.all(modules.map(x=>{
-                        return x.livescripts.build(dataset,buildType,args);
-                    }))
-                }));
+
+                    for(const module of modules)
+                    {
+                        await module.livescripts.build(dataset,buildType,args);
+                    }
+                };
+
+                // Reload scripts
+                if(!Args.hasFlag('transpile-only',args)) {
+                    datasets.forEach(dataset=>{
+                        dataset.realms()
+                            .filter(x=>x.worldserver.isRunning())
+                            .forEach(x=>{
+                                term.log(x.logName(),'Sending script reloading command')
+                                x.worldserver.send(`reload livescripts`)
+                            })
+                    })
+                }
             }
         ).addAlias('scripts').addAlias('script').addAlias('livescript')
 

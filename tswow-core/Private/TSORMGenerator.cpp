@@ -111,7 +111,9 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
             {
                 TS_LOG_INFO(
                       "tswow.orm"
-                    , "Primary key count changed: %s.%s"
+                    , "Primary key count changed: {}.{}"
+                    , m_dbName.c_str()
+                    , m_name.c_str()
                 );
 
                 pkChanged = true;
@@ -130,7 +132,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
                     {
                         TS_LOG_INFO(
                               "tswow.orm"
-                            , "New primary key: %s.%s.%s"
+                            , "New primary key: {}.{}.{}"
                             , m_dbName.c_str()
                             , m_name.c_str()
                             , eff.m_name.c_str()
@@ -142,7 +144,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
                     {
                         TS_LOG_INFO(
                               "tswow.orm"
-                            , "Primary key type changed: %s.%s.%s (%s != %s)"
+                            , "Primary key type changed: {}.{}.{} ({} != {})"
                             , m_dbName.c_str()
                             , m_name.c_str()
                             , eff.m_name.c_str()
@@ -158,7 +160,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
             {
                 TS_LOG_INFO(
                       "tswow.orm"
-                    , "Primary keys changed: %s.%s (must rebuild entire table)"
+                    , "Primary keys changed: {}.{} (must rebuild entire table)"
                     , m_dbName.c_str()
                     , m_name.c_str()
                 );
@@ -188,7 +190,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
             {
                 TS_LOG_INFO(
                       "tswow.orm"
-                    , "Column removed: %s.%s.%s"
+                    , "Column removed: {}.{}.{}"
                     , m_dbName.c_str()
                     , m_name.c_str()
                     , old.m_name.c_str()
@@ -208,7 +210,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
                 // update column type
                 TS_LOG_INFO(
                     "tswow.orm"
-                    , "Column type changed: %s.%s.%s (%s -> %s)"
+                    , "Column type changed: {}.{}.{} ({} -> {})"
                     , m_dbName.c_str()
                     , m_name.c_str()
                     , old.m_name.c_str()
@@ -243,7 +245,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
             {
                 TS_LOG_INFO(
                     "tswow.orm"
-                    , "Column added: %s.%s.%s"
+                    , "Column added: {}.{}.{}"
                     , m_dbName.c_str()
                     , m_name.c_str()
                     , eff.m_name.c_str()
@@ -336,7 +338,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
         createQuery += ");";
         TS_LOG_INFO(
               "tswow.orm"
-            , "Table created: %s.%s"
+            , "Table created: {}.{}"
             , m_dbName.c_str()
             , m_name.c_str()
         );

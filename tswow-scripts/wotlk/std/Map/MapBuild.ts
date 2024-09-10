@@ -52,6 +52,7 @@ function copyMapDBCs(mod: string) {
     DBC.LightSkybox.write(path.join(dbfilesdir,'LightSkybox.dbc'))
     DBC.LightfloatBand.write(path.join(dbfilesdir,'LightfloatBand.dbc'))
     DBC.LightintBand.write(path.join(dbfilesdir,'LightintBand.dbc'))
+    DBC.WMOAreaTable.write(path.join(dbfilesdir,'WMOAreaTable.dbc'))
     fs.writeFileSync(path.join(dbfilesdir,'WHY_THESE_FILES_HERE.txt'),
             `These files are written here so you can set your`
         + ` noggit project directory to your modules 'assets'.`

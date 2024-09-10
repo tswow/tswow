@@ -328,6 +328,16 @@ void TSItemTemplate::SetTotemCategory(uint32 value) {
     info->TotemCategory = value;
     info->m_isDirty = true;
 };
+TSNumber<uint32> TSItemTemplate::GetSocketContent(uint32 index) { return info->Socket[index].Content; };
+void TSItemTemplate::SetSocketContent(uint32 index, uint32 value) {
+    info->Socket[index].Content = value;
+    info->m_isDirty = true;
+}
+TSNumber<uint32> TSItemTemplate::GetSocketColor(uint32 index) { return info->Socket[index].Color; };
+void TSItemTemplate::SetSocketColor(uint32 index, uint32 value) {
+    info->Socket[index].Color = value;
+    info->m_isDirty = true;
+}
 TSNumber<uint32> TSItemTemplate::GetSocketBonus() { return info->socketBonus; };
 void TSItemTemplate::SetSocketBonus(uint32 value) {
     info->socketBonus = value;
@@ -478,16 +488,11 @@ TSNumber<int32> TSItemTemplate::GetFeralBonus(int32 extraDPS) { return info->get
 TSNumber<int32> TSItemTemplate::GetTotalAPBonus() {
 #if TRINITY
     return info->GetTotalAPBonus(); 
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSItemTemplate::GetTotalAPBonus not implemented for AzerothCore");
-    return 0;
 #endif
 }
 TSNumber<float> TSItemTemplate::GetItemLevelIncludingQuality() {
 #if TRINITY
     return info->GetItemLevelIncludingQuality(); 
-#elif AZEROTHCORE
-    return info->GetItemLevelIncludingQuality(1);
 #endif
 };
 TSNumber<uint32> TSItemTemplate::GetSkill() { return info->GetSkill(); };
@@ -507,8 +512,6 @@ TSItemTemplate GetItemTemplate(uint32 entry)
 {
 #if TRINITY
     return TSItemTemplate(sObjectMgr->GetItemTemplateMutable(entry));
-#elif AZEROTHCORE
-    return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
 #endif
 }
 
@@ -640,8 +643,6 @@ void TSItemTemplate::Save()
     trans->Append(stmt);
 
     CharacterDatabase.CommitTransaction(trans);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSItemTemplate::SaveItemTemplate not implemented for AzerothCore");
 #endif
 
 }

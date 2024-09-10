@@ -303,6 +303,11 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD_OVERLOAD_RET_0_3(ts_player, TSPlayer, GetOutfitCopy, uint32_t, int32_t, int32_t);
     ts_player.set_function("GetSpellMap", &TSPlayer::LGetSpellMap);
 
+    ts_player.set_function("EquipItem", sol::overload(
+        [](TSPlayer& player, TSItem item, uint32 slot) { return player.EquipItem(item,slot); },
+        [](TSPlayer& player, uint32 entry, uint32 slot) { return player.EquipItem(entry,slot); }
+    ));
+    
     ts_player.set_function("SendMail", sol::overload(
         [](TSPlayer& player, uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, sol::table items ) {
             TSArray<TSItem> tsitems;

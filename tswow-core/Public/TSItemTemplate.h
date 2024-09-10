@@ -154,6 +154,10 @@ public:
     void SetBagFamily(uint32 value);
     TSNumber<uint32> GetTotemCategory();
     void SetTotemCategory(uint32 value);
+    TSNumber<uint32> GetSocketContent(uint32 index);
+    void SetSocketContent(uint32 index,uint32 value);
+    TSNumber<uint32> GetSocketColor(uint32 index);
+    void SetSocketColor(uint32 index,uint32 value);
     TSNumber<uint32> GetSocketBonus();
     void SetSocketBonus(uint32 value);
     TSNumber<uint32> GetGemProperties();

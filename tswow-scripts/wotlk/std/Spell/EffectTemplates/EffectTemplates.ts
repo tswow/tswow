@@ -13,6 +13,7 @@ import { SkillLineRegistry } from "../../SkillLines/SkillLines";
 import { SoundEntryRegistry } from "../../Sound/SoundEntry";
 import { TaxiPathRegistry } from "../../Taxi/Taxi";
 import { EffectClassSet } from "../SpellClassSet";
+import { DispelType } from "../SpellDispelType";
 import { SpellEffectMechanic } from "../SpellEffectMechanics";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellRadiusRegistry } from "../SpellRadius";
@@ -181,8 +182,8 @@ export class LearnSpell extends TargetBase {
 }
 // 37
 // 38
-export class Dispel extends TargetBase {
-    get SchoolMask() { return makeMaskCell32(SchoolMask,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
+export class Dispel extends PointsBase {
+    get DispelType() { return makeEnumCell(DispelType,this,this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 39
 export class Language extends TargetBase {

@@ -186,6 +186,7 @@ export abstract class LocSystem<T> extends CellSystem<T> {
     get ptBR() { return this.lang('ptBR'); }
     get itIT() { return this.lang('itIT'); }
     get Unk() { return this.lang('Unk'); }
+    get Unk2() { return this.lang('Unk2'); }
 
     clear() {
         Languages.forEach(x=>{

@@ -3,7 +3,9 @@
 #include "TSWorldObject.h"
 #include "TSGlobal.h"
 #include <regex>
+#if 0
 #include "document.hpp"
+#endif
 #include <fstream>
 #include <memory>
 #include <array>
@@ -22,9 +24,7 @@ sol::state& TSLua::GetState()
 
 static std::filesystem::path LibRoot()
 {
-#if AZEROTHCORE
-    return std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib";
-#elif TRINITY
+#if TRINITY
     return std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib";
 #endif
 }
@@ -130,9 +130,7 @@ void TSLua::handle_error(sol::protected_function_result const& res)
     {
         return;
     }
-#if AZEROTHCORE
-    std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
-#elif TRINITY
+#if TRINITY
     std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
 #endif
     lua_path = std::filesystem::absolute(lua_path);
@@ -202,7 +200,8 @@ void TSLua::handle_error(sol::protected_function_result const& res)
             std::string str = buffer.str();
 
             // todo: sourcemap corrupts the heap, fix that before enabling this.
-            if (str.size() > 0 && false)
+#if 0
+            if (str.size() > 0)
             {
                 SourceMap::SrcMapDoc doc(str);
                 if (doc.map->getRowCount() < match.lineNo)
@@ -221,9 +220,10 @@ void TSLua::handle_error(sol::protected_function_result const& res)
                 std::string replacement = match.spaces + srcFile + ":" + std::to_string(srcLine);
                 what.replace(match.start, match.len, replacement);
             }
+#endif
         }
     }
-    TS_LOG_ERROR("tswow.lua", "%s", what.c_str());
+    TS_LOG_ERROR("tswow.lua", "{}", what.c_str());
 }
 
 void TSLua::execute_file(std::filesystem::path file)

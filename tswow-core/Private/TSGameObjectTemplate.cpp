@@ -1,8 +1,6 @@
 #include "TSGameObjectTemplate.h"
 #if TRINITY
 #include "GameObjectData.h"
-#elif AZEROTHCORE
-#include "GameObject.h"
 #endif
 #include "ObjectMgr.h"
 

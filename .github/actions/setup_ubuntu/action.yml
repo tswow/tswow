@@ -6,7 +6,11 @@ runs:
     - name: Select node version
       uses: actions/setup-node@v3
       with:
-        node-version: 16.13.1
+        node-version: 18.12.1
     - name: Install deps
       shell: bash
-      run: sudo apt-get remove --purge mysql-common && sudo apt-get update && sudo apt-get install git clang cmake make gcc g++ libmariadbclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mariadb-server p7zip libmariadb-client-lgpl-dev-compat
+      run: |
+        sudo apt-get update
+        sudo apt-get install git clang cmake make gcc g++ libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mysql-server p7zip
+        sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+        sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100

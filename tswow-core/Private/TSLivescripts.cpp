@@ -35,16 +35,14 @@ static std::map<fs::path, TSLibrary> libraries;
 
 void TSLivescripts::Load()
 {
-#if AZEROTHCORE
-    fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / LIVESCRIPT_BUILD_TYPE;
-#elif TRINITY
+#if TRINITY
     fs::path libPath = fs::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / LIVESCRIPT_BUILD_TYPE;
 #endif
     // Unload libraries
     for(auto & [path,lib] : libraries)
     {
         DL_CLOSE(lib.handle);
-        TS_LOG_INFO("tswow.livescripts", "Unloading library %s", path.string().c_str());
+        TS_LOG_INFO("tswow.livescripts", "Unloading library {}", path.string().c_str());
     }
     libraries.clear();
 
@@ -78,10 +76,10 @@ void TSLivescripts::Load()
         libraries[file] = { time,dll,modName };
         if (!ptr)
         {
-            TS_LOG_ERROR("tswow.livescripts", "Could not find main function for library %s", modName.c_str());
+            TS_LOG_ERROR("tswow.livescripts", "Could not find main function for library {}", modName.c_str());
             continue;
         }
-        TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName.c_str());
+        TS_LOG_INFO("tswow.livescripts", "Loaded livescript {}", modName.c_str());
         ptr(&ts_events);
     }
 }

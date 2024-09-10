@@ -92,16 +92,12 @@ export class Dataset {
 
     gamebuildSQL() {
         return `INSERT INTO build_info VALUES`
-            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a",NULL,NULL,NULL,`
-            +  ` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-            +  ` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
+            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a")`
             +  ` ON DUPLICATE KEY UPDATE`
             +  ` majorVersion=3,`
             +  ` minorVersion=3,`
             +  ` bugfixVersion=5,`
-            +  ` hotfixVersion="a",`
-            +  ` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-            +  ` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
+            +  ` hotfixVersion="a"`
             +  `;`
     }
 
@@ -147,10 +143,6 @@ export class Dataset {
                 worldSql = this.path.world_sql.abs().get()
             } else {
                 switch(this.config.EmulatorCore) {
-                    case 'azerothcore': {
-                        worldSql = ipaths.bin.sql_ac.db_world.get()
-                        break;
-                    }
                     case 'trinitycore': {
                         worldSql = ipaths.bin.tdb.get()
                         break;
@@ -164,9 +156,6 @@ export class Dataset {
             case 'trinitycore':
                 await mysql.applySQLFiles(db,'world');
                 break;
-            case 'azerothcore':
-                // todo: updates
-                break;
         }
     }
 
@@ -177,6 +166,18 @@ export class Dataset {
         }
 
         if(type === 'DEST' || type === 'BOTH') {
+            if (force)
+            {
+                if(this.path.dbc_source.exists() && this.path.dbc.exists())
+                {
+                    this.path.dbc_source.copy(this.path.dbc,true);
+                }
+
+                if(this.path.luaxml_source.exists() && this.path.luaxml.exists())
+                {
+                    this.path.luaxml_source.copy(this.path.luaxml,true);
+                }
+            }
             await this.setupDatabase(this.worldDest , force);
         }
     }

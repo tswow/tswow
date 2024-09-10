@@ -331,13 +331,14 @@ export class DBCLocCell<T> extends LocSystem<T> {
             case 'zhCN': return 5;
             case 'zhTW': return 6;
             case 'enTW': return 7;
-            case 'zhTW': return 8;
+            case 'ruRU': return 8;
             case 'esES': return 9;
             case 'esMX': return 10;
-            case 'ruRU': return 11;
-            case 'ptPT': return 12;
+            case 'ptPT': return 11;
+            case 'ptBR': return 12;
             case 'itIT': return 13;
             case 'Unk': return 14;
+            case 'Unk2': return 15;
         }
         return 15;
     }

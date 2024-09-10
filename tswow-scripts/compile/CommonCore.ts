@@ -18,7 +18,7 @@ import { ipaths } from "../util/Paths"
 import { isWindows } from "../util/Platform"
 import { bpaths } from "./CompilePaths"
 
-export function copyExtLibs(core: 'trinitycore'|'azerothcore', type: string) {
+export function copyExtLibs(core: 'trinitycore', type: string) {
     if (isWindows()) {
         [
             bpaths.mysql.find_subdir().lib.libmysql_dll,
