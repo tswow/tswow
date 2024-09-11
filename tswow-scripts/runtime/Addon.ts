@@ -26,6 +26,7 @@ import { BuildCommand, CleanCommand, CreateCommand, ListCommand } from "./Comman
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 import { applyTSTLHack } from "./TSTLHack";
 
@@ -196,7 +197,7 @@ export class Addon {
         // 3. Run tstl
         wsys.execIn(
               this.path.get()
-            , `node ${ipaths.node_modules.tstl_js.abs()}`
+            , `${NodeExecutable} ${ipaths.node_modules.tstl_js.abs()}`
         )
 
         // 4. Copy all lua files

@@ -279,6 +279,7 @@ export function InstallPath(pathIn: string, tdb: string) {
         Crashes: dir({}),
 
         startBat: file('start.bat'),
+        startJs: file('start.js'),
 
         bin: dir({
             package: dir({
@@ -287,6 +288,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             node: dir(
             {
                 npm: file('npm'),
+                node_exe: file('node.exe')
             }),
             changes: dir({
                 changeFile: dynfile(name=>name)

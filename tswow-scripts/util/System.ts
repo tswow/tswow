@@ -111,6 +111,7 @@ export namespace wsys {
         if( data !== undefined && data !== null ) {
             str = data.toString();
         }
+        term.debug('misc', `Finished executing program`)
         return str;
     }
 
@@ -128,6 +129,7 @@ export namespace wsys {
         let str = '';
         const data = child_process.execSync(program,
             {stdio: stdio, cwd: wfs.absPath(dirname), ...settings});
+        term.debug('misc', `Finished executing program`)
         if(stdio==='pipe' && data !== null && data !== undefined) {
             str = data.toString();
         }

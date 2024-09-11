@@ -10,6 +10,7 @@ import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 
 /**
@@ -395,7 +396,7 @@ export class Datascripts {
                 && x.endsWith('-v8.log'))
             .forEach((x,i)=>{
                 wsys.exec(
-                      `node --prof-process ${x}`
+                      `${NodeExecutable} --prof-process ${x}`
                     + ` > node-profiling${i==0?'':`-${i}`}.txt`
                 )
                 wfs.remove(x)

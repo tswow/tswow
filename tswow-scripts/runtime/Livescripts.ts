@@ -17,6 +17,7 @@ import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { getLivescriptCMakeLists } from "./LivescriptsCMakeLists";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 import { applyTSTLHack } from "./TSTLHack";
 
@@ -171,7 +172,7 @@ export class Livescripts {
             term.log(this.logName(),`Compiling ts->lua`)
             wsys.execIn(
                 this.mod.path.get()
-            , `node ${ipaths.node_modules.tstl_js.abs()}`
+            , `${NodeExecutable} ${ipaths.node_modules.tstl_js.abs()}`
             )
         }
 
@@ -246,7 +247,7 @@ export class Livescripts {
         try {
             wsys.execIn(
                   `${this.mod.path.abs()}`
-                , `node --stack-trace-limit=1000 -r source-map-support/register`
+                , `${NodeExecutable} --stack-trace-limit=1000 -r source-map-support/register`
                 + ` ${ipaths.bin.scripts.typescript2cxx.typescript2cxx.main_js.abs()} tsconfig.json`
                 + ` ${(args.join(' '))}`
                 + ` --ipaths=${ipaths.abs()}`

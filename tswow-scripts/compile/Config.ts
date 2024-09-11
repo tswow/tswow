@@ -16,6 +16,7 @@
  */
 import { NodeConfigClass } from '../util/NodeConfig';
 import { ipaths } from '../util/Paths';
+import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { bpaths, spaths } from './CompilePaths';
@@ -35,8 +36,7 @@ export namespace Config {
             devDependencies: spaths.package_json.readJson({}).devDependencies,
             scripts: {
                   start:
-                      `node -r source-map-support/register `
-                    + ipaths.bin.scripts.runtime.runtime.TSWoW_js.relativeTo(ipaths)
+                      `node start`
             },
             author:'tswow',
             license: "GPL-3.0-only",
@@ -164,6 +164,7 @@ export namespace Config {
         ipaths.bin.revisions.tswow.write(`${commit}${h.length>0?'+':''}`)
 
         ipaths.startBat.write(`./bin/node/npm run start %*`)
+        ipaths.startJs.write(`require('child_process').execSync(\`${isWindows() ? '"bin/node/node.exe' : 'node'}  -r source-map-support/register bin\\scripts\\runtime\\runtime\\TSWoW.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
         // todo: realm/dataset configs
     }
 }
