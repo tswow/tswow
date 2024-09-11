@@ -36,7 +36,7 @@ bool sol_lua_check(sol::types<type_in>, lua_State* L, int index, Handler&& handl
     {\
         using Tu = sol::meta::unqualified_t<type_in>;\
         sol::stack::unqualified_checker<type_in, sol::lua_type_of_v<Tu>> c{};\
-        bool h = c.check(L, index, std::forward<Handler>(handler), tracking);\
+        c.check(L, index, std::forward<Handler>(handler), tracking);\
         return true;\
     }\
     else\
