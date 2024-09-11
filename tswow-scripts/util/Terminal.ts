@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import termkit = require('terminal-kit');
-import { wfs } from './FileSystem';
 import { getTerminalCategory, TerminalCategory } from './TerminalCategories';
 import { termc } from './TerminalColors';
+import * as fs from 'fs';
 
 const t = termkit.terminal;
 // Overwrite old log
-wfs.write('./log.txt', '');
-const logStream = wfs.writeStream('./log.txt');
+fs.writeFileSync('./log.txt', '');
+const logStream = fs.createWriteStream('./log.txt', {flags: 'a'});
 
 /**
  * Contains functions for handling console output
@@ -176,7 +176,7 @@ export namespace term {
 
                 history.splice(0,Math.max(0,history.length - historyCount))
                 if(historyPath !== undefined) {
-                    wfs.write(historyPath,history.join('\n'));
+                    fs.writeFileSync(historyPath,history.join('\n'));
                 }
                 break;
             case 'BACKSPACE':
@@ -292,9 +292,11 @@ export namespace term {
         showName = showNameIn
         // load history file
         if(historyPath !== undefined) {
-            history = wfs.readOr(historyPath,'')
-                .split('\n')
-                .filter(x=>x.length>0)
+            if (fs.existsSync(historyPath)) {
+                history = fs.readFileSync(historyPath, 'utf-8')
+                    .split('\n')
+                    .filter(x=>x.length>0)
+            }
         }
 
         t.on('key', (name: string, data: any) => {
