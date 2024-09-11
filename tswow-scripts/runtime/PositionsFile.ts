@@ -2,10 +2,12 @@ import * as clipboardy from 'clipboardy';
 import { wfs } from "../util/FileSystem";
 import { ipaths } from '../util/Paths';
 import { NodeConfig } from "./NodeConfig";
+import { term } from '../util/Terminal';
 
 export namespace PositionsFile {
     let oldContent = ""
     export function initialize() {
+        term.debug('misc', `Initializing positions file`)
         if(!NodeConfig.WritePosToClipboard) {
             return;
         }

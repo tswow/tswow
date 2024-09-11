@@ -345,6 +345,7 @@ export class Realm {
     }
 
     async connect() {
+        term.debug(this.logName(), `Connecting to ${this.name} databases`)
         await this.characters.connect()
         await this.config.Dataset.connect();
         await mysql.installCharacters(this.characters,this.core);
@@ -385,6 +386,7 @@ export class Realm {
     }
 
     static async initialize() {
+        term.debug('misc', `Initializing realms`)
         // Create default realm if it's selected
         if(NodeConfig.DefaultRealm === 'default.realm') {
             ipaths.modules.join('default/realms/realm').mkdir()
@@ -404,7 +406,7 @@ export class Realm {
             , 'relamnames time --force'
             , 'Shuts down the specified realms. If the --force flag is supplied, time is ignored.'
             , args => {
-                let delay = args.map(x=>parseInt(x)).find(x=>x!==NaN) || 0
+                let delay = args.map(x=>parseInt(x)).find(x=>!isNaN(x)) || 0
                 let realms = Identifier.getRealms(
                         args
                     , 'MATCH_ANY'

@@ -22,6 +22,7 @@ export interface PackageMeta {
 
 export class Package {
     static async packageClient(dataset: Dataset, fullDBC: boolean, fullInterface: boolean) {
+        term.log('client', `Packaging client for ${dataset.name}`)
         await Datascripts.build(dataset,['--no-shutdown']);
         await Addon.build(dataset);
 
@@ -114,9 +115,11 @@ export class Package {
         })
 
         let metas: PackageMeta[] = []
+        term.debug('client', `Packaging ${Object.entries(listfiles).length}`)
         Object.entries(listfiles).forEach(([mpq,list])=>{
-            let packageFile = ipaths.package.join(`${dataset.fullName}.${mpq}`)
-            let listfile = ipaths.bin.package.file(packageFile.toString());
+            term.debug('client', `Packaing ${mpq}`)
+            let packageFile = ipaths.package.file(`${dataset.fullName}.${mpq}`)
+            let listfile = ipaths.bin.package.file(packageFile.get());
             listfile.write(list);
             ipaths.package.mkdir();
             wsys.exec(
@@ -129,7 +132,7 @@ export class Package {
             let meta: PackageMeta = {
                 md5s: []
               , size: wfs.stat(packageFile).size
-              , filename: packageFile.basename().toString()
+              , filename: packageFile.basename().get()
               , chunkSize
             }
             metas.push(meta);
@@ -161,6 +164,7 @@ export class Package {
     static Command = commands.addCommand('package')
 
     static initialize() {
+        term.debug('misc', `Initializing packages`)
         this.Command.addCommand(
               'client'
             , 'dataset --fullDBC --fullInterface'

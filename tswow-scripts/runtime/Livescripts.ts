@@ -376,6 +376,7 @@ export class Livescripts {
     }
 
     static initialize() {
+        term.debug('misc', `Initializing livescripts`)
         ListCommand.addCommand(
               'livescripts'
             , 'module?'

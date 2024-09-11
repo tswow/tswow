@@ -2,9 +2,11 @@ import * as chokidar from "chokidar";
 import * as fs from "fs";
 import { WFile } from "../util/FileTree";
 import { ipaths } from "../util/Paths";
+import { term } from "../util/Terminal";
 
 export class Crashes {
     static initialize() {
+        term.debug('misc', `Initializing crashlog handler`)
         chokidar.watch(ipaths.modules.abs().get(),{
             ignored: [
                 /build$/

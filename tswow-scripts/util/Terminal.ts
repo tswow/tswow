@@ -269,6 +269,13 @@ export namespace term {
         pipe(cat,termc.yellow(message))
     }
 
+    export function debug(cat: TerminalCategory, message: string) {
+        if (process.argv.includes('log-debug'))
+        {
+            pipe(cat,termc.magenta(message))
+        }
+    }
+
     export function setInputCallback(callbackIn: (args: string) => any) {
         callback = callbackIn;
     }

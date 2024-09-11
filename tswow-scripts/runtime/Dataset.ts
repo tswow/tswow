@@ -102,6 +102,7 @@ export class Dataset {
     }
 
     async setupClientData() {
+        term.debug(this.logName(), `Setting up client data`)
         let anyChange: boolean = false;
         if(!this.path.luaxml_source.exists()) {
             MapData.luaxml(this);
@@ -238,6 +239,7 @@ export class Dataset {
     }
 
     static initialize() {
+        term.debug('dataset', `Initializing datasets`)
         CreateCommand.addCommand(
             'dataset'
           , 'module dataset clientPatch=12340'

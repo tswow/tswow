@@ -155,6 +155,7 @@ export class Module {
     private static cachedEndpoints?: ModuleEndpoint[] = undefined;
     private static cachedNamedEndpoints?: {[identifier: string]: ModuleEndpoint[]} = undefined;
     static cacheEndpoints(shouldCache: boolean) {
+        term.debug('misc', `Caching endpoints`)
         if(Args.hasFlag('nocache',process.argv)) {
             return;
         }
@@ -268,6 +269,7 @@ export class Module {
     static command = commands.addCommand('module')
 
     static initialize() {
+        term.debug('misc', `Initializing modules`)
         ListCommand.addCommand('module','','',_=>{
             this.endpoints()
                 .filter(x=>term.log('modules',`${x.fullName}: ${x.path.get()}`))

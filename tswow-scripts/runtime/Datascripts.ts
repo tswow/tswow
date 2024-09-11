@@ -180,6 +180,7 @@ export class Datascripts {
     compile() {
         this.path.swcrc.writeJson(datascripts_swcrc)
         try {
+            term.debug('datascripts', `Compiling datascripts at ${this.path.abs().get()}`)
             wsys.execIn(
                   this.path.dirname().get()
                 , `swc datascripts -d datascripts/build`,'inherit'
@@ -225,8 +226,10 @@ export class Datascripts {
     }
 
     static initialize() {
+        term.debug('misc', `Initializing datascripts`)
         this.installWowLib();
         if(!ipaths.node_modules.wow.exists()) {
+            term.log('datascripts', `Running 'npm i' because ${ipaths.node_modules.wow.abs().get()} does not exist.`)
             wsys.exec(`npm i`);
         }
 

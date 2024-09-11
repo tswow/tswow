@@ -122,9 +122,11 @@ export class Connection {
             return this.status;
         }
 
+        term.debug('mysql', `Connecting to mysql server ${this.cfg.host}:${this.cfg.database}:${this.cfg.database}`)
         const creator = mysql_lib.createConnection(this.configWithoutDb());
 
         return this.status = new Promise<void>(async (res,rej)=>{
+            term.debug('mysql', `Creating database ${this.cfg.database}`)
             creator.query(
                   `CREATE DATABASE IF NOT EXISTS \`${this.cfg.database}\`;`
                 , (createErr)=>{
@@ -132,6 +134,7 @@ export class Connection {
                         return rej(createErr);
                     }
                     creator.end((endErr)=>{
+                        term.debug('mysql', `Closed initial connection, proceeding with connection pool`)
                         if(endErr) {
                             return rej(endErr);
                         }
@@ -145,6 +148,12 @@ export class Connection {
     }
 
     async disconnect() {
+        if (!this.con)
+        {
+            term.error('mysql', 'Tried to disconnect from an undefined connection');
+            return
+        }
+        term.debug('mysql', `Disconnecting from mysql server ${this.cfg.host}:${this.cfg.database}:${this.cfg.database}`)
         return new Promise<void>((res,rej)=>{
             this.con?.end((err)=>{
                 this.con = undefined;
@@ -159,6 +168,8 @@ export class Connection {
 
     async clean() {
         await this.disconnect();
+
+        term.debug('mysql', `Dropping database ${this.cfg.database}`)
         await new Promise<void>((res,rej)=>{
             let con = mysql_lib.createConnection(this.configWithoutDb());
             con.query(`DROP DATABASE IF EXISTS \`${this.config().database}\`;`,(err)=>{
@@ -445,6 +456,7 @@ export namespace mysql {
     }
 
     export async function initialize() {
+        term.debug('mysql', `Initializing MySQL`)
         if(hasOwnProcess()) {
             await startProcess();
 
