@@ -183,7 +183,7 @@ export class Datascripts {
             term.debug('datascripts', `Compiling datascripts at ${this.path.abs().get()}`)
             wsys.execIn(
                   this.path.dirname().get()
-                , `swc datascripts -d datascripts/build`,'inherit'
+                , `swc datascripts -d datascripts/build --sync`,'inherit'
             )
         } catch(err) {
             this.path.swcrc.remove();
