@@ -12,6 +12,7 @@ void TSLua::load_spell_methods(sol::state& state)
     LUA_FIELD(ts_spell, TSSpell, GetCastTime);
     LUA_FIELD(ts_spell, TSSpell, GetEntry);
     LUA_FIELD(ts_spell, TSSpell, GetGlyphSlot);
+    LUA_FIELD(ts_spell, TSSpell, GetState);
     LUA_FIELD(ts_spell, TSSpell, GetPowerCost);
     LUA_FIELD(ts_spell, TSSpell, GetDuration);
     LUA_FIELD(ts_spell, TSSpell, GetTargetDest);

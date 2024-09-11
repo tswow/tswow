@@ -251,6 +251,11 @@ TSNumber<uint32> TSSpell::GetGlyphSlot()
     return spell->m_glyphIndex;
 }
 
+TSNumber<uint32> TSSpell::GetState()
+{
+    return spell->getState();
+}
+
 int32 TSSpell::GetBasePoints(uint32 index)
 {
     return spell->m_spellValue->EffectBasePoints[index];

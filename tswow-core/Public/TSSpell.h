@@ -50,6 +50,7 @@ public:
     TSNumber<uint32> GetPowerCost();
     TSNumber<int32> GetDuration();
     TSNumber<uint32> GetGlyphSlot();
+    TSNumber<uint32> GetState();
     TSPosition GetTargetDest();
     TSObject  GetTarget();
     TSSpellInfo GetSpellInfo();
