@@ -10075,6 +10075,8 @@ declare function ToUnit(obj: TSObject | undefined): Maybe<TSUnit>
 declare function ToCreature(obj: TSObject | undefined): Maybe<TSCreature>
 declare function ToPlayer(obj: TSObject | undefined): Maybe<TSPlayer>
 declare function ToGameObject(obj: TSObject | undefined): Maybe<TSGameObject>
+declare function ToBattleground(map: TSMap | undefined): Maybe<TSBattleground>
+declare function ToInstance(map: TSMap | undefined): Maybe<TSInstance>
 
 declare function ToInstance(map: TSMap | undefined): Maybe<TSInstance>
 declare function ToBattleground(map: TSMap | undefined): Maybe<TSBattleground>
