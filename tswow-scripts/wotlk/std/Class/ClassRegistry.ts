@@ -183,14 +183,23 @@ export class ClassRegistryClass
         interface GTFile {
             add(c: {Data:number}): any;
             queryAll(g: any): GtItem[];
+            getRow(index: number): GtItem
+            rowCount: number
         }
 
         // Copy over stats
-        const p = (size: number, dbc: GTFile) =>
-            dbc.queryAll({})
-            .filter((x,i)=>x.index>=(parent-1)*size && x.index<(parent-1)*size+size)
         const g = (size: number, dbc: GTFile) =>
-            p(size,dbc).forEach((x)=>x.clone().Data.set(x.Data.get()))
+        {
+            while (dbc.rowCount < (id) * size) {
+                dbc.add({Data: 1});
+            }
+
+            for (let i = 0; i < size; ++i)
+            {
+                const data = dbc.getRow((parent - 1) * size + i).Data.get()
+                dbc.getRow((id - 1) * size + i).Data.set(data)
+            }
+        }
         g(100,DBC.GtChanceToMeleeCrit)
         g(100,DBC.GtChanceToSpellCrit)
         g(100,DBC.GtOCTRegenHP)
@@ -200,11 +209,17 @@ export class ClassRegistryClass
         g(1,DBC.GtChanceToMeleeCritBase)
         g(1,DBC.GtChanceToSpellCritBase)
         g(320,DBC.GtCombatRatings)
-        DBC.GtOCTClassCombatRatingScalar.queryAll({})
-            .filter((x)=>x.index>=(parent-1)*32 && x.index < (parent-1)*32+32)
-            .forEach((x,i)=>{
-                const g = x.clone({ID: (classIndex+1)*32+i})
-            });
+        while (DBC.GtOCTClassCombatRatingScalar.rowCount < 32 * id)
+        {
+            DBC.GtOCTClassCombatRatingScalar.add({ID: DBC.GtOCTClassCombatRatingScalar.rowCount + 1, Data: 1})
+        }
+
+        for (let i = 0; i < 32; ++i)
+        {
+            const data = DBC.GtOCTClassCombatRatingScalar.getRow((parent - 1) * 32 + i).Data.get()
+            DBC.GtOCTClassCombatRatingScalar.getRow((id - 1) * 32 + i).Data.set(data)
+        }
+
 
         SQL.player_classlevelstats
             .queryAll({class:rParent.ID.get()}).map(x=>x.clone(id,x.level.get()));
