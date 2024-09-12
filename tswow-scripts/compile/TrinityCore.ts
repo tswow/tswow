@@ -61,7 +61,7 @@ export namespace TrinityCore {
             }
 
             sol_sourcedir.copy(ipaths.bin.include);
-            bpaths.TrinityCore.lua_headers.src.iterateDef(node=>{
+            bpaths.TrinityCore.lua_headers.iterateDef(node=>{
                 if(node.endsWith('.h')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
