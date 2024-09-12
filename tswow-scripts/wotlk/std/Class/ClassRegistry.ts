@@ -115,8 +115,18 @@ export class ClassRegistryClass
     }
 
     create(mod: string, clsId: string, parentClass: EnumCon<keyof typeof ClassIDs>) {
+        if (clsId.length == 0)
+        {
+            throw new Error(`Empty class id`)
+        }
+
         for(let i=0;i<clsId.length;++i) {
             let cc = clsId.charCodeAt(i);
+            if (i === 0 && cc>=48 && cc<=57)
+            {
+                throw new Error(`Class IDs cannot start with a number`)
+            }
+
             if(!(cc>=97&&cc<=122) && !(cc>=48 && cc<=57) && !(cc>=65&&cc<=90)) {
                 throw new Error(
                     `Non ascii character in class id ${clsId}`
