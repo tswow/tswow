@@ -516,7 +516,7 @@ struct TSEvents
         ID_EVENT(OnTick, TSAuraEffect)
         ID_EVENT(OnRemove, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
         ID_EVENT(OnApply, TSAuraEffect, TSAuraApplication, TSNumber<uint32>)
-        ID_EVENT(OnDamageEarly, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
+        ID_EVENT(OnDamageEarly, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, TSMutable<bool,bool>, TSNumber<uint32> effectMask)
         ID_EVENT(OnDamageLate, TSSpell, TSMutableNumber<uint32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
         ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSUnit, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcSpellPowerLevelPenalty

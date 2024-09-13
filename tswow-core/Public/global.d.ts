@@ -8326,7 +8326,7 @@ declare namespace _hidden {
           , damage: TSMutableNumber<int32>
           , info: TSSpellDamageInfo
           , type: TSNumber<uint32>
-          , isCrit: bool
+          , isCrit: TSMutable<bool,bool>
           , effectMask: TSNumber<uint32>
         )=>void): T
         OnDamageEarly(id: EventID, callback : (
@@ -8334,7 +8334,7 @@ declare namespace _hidden {
           , damage: TSMutableNumber<int32>
           , info: TSSpellDamageInfo
           , type: TSNumber<uint32>
-          , isCrit: bool
+          , isCrit: TSMutable<bool,bool>
           , effectMask: TSNumber<uint32>
         )=>void): T
 
