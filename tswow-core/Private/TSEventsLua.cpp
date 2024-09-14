@@ -133,6 +133,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAvoidanceRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateMasteryRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateThornsRating);
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomStatAura);
 
     LUA_HANDLE(player_events, PlayerEvents, OnCalcFallDamage);
     LUA_HANDLE(player_events, PlayerEvents, GainComboPoint);

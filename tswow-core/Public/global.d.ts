@@ -8225,6 +8225,7 @@ declare namespace _hidden {
         OnUpdateAvoidanceRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
         OnUpdateMasteryRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
         OnUpdateThornsRating(callback: ( Player: TSPlayer, Value: TSNumber<float>) => void)
+        OnCustomStatAura(callback: ( Player: TSPlayer, apply: bool, Stat: TSNumber<uint8>, Mode: TSNumber<uint8>, Amount: TSNumber<float>) => void)
 
         OnCalcFallDamage(callback: (player: TSPlayer, value: TSMutableNumber<uint32>) => void)
         GainComboPoint(callback: (player: TSPlayer, amount: TSNumber<int8>) => void)

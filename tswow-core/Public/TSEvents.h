@@ -370,6 +370,7 @@ struct TSEvents
         EVENT(OnUpdateAvoidanceRating, TSPlayer, TSNumber<float>)
         EVENT(OnUpdateMasteryRating, TSPlayer, TSNumber<float>)
         EVENT(OnUpdateThornsRating, TSPlayer, TSNumber<float>)
+        EVENT(OnCustomStatAura, TSPlayer, bool, TSNumber<uint8>, TSNumber<uint8>, TSNumber<float>)
 
         EVENT(OnCalcFallDamage, TSPlayer, TSMutableNumber<uint32>)
         EVENT(GainComboPoint, TSPlayer, TSNumber<int8>)
