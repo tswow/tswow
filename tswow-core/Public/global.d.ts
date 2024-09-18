@@ -8553,6 +8553,9 @@ declare namespace _hidden {
 
         OnSpellCastFinished(callback: (Spell: TSSpell, Caster: TSUnit, Reason: SpellFinishReason)=>void): T;
         OnSpellCastFinished(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, Reason: SpellFinishReason)=>void): T;
+
+        CanMoveWhileChanneling(callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>)=>void): T;
+        CanMoveWhileChanneling(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>)=>void): T;
     }
 
     export class Creature<T> {

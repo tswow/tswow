@@ -579,6 +579,8 @@ struct TSEvents
 
         ID_EVENT(OnCastCancelled, TSUnit, TSUnit, TSSpell, TSNumber<int32>, TSNumber<int32>)
         ID_EVENT(OnSpellCastFinished, TSSpell, TSUnit, TSNumber<uint32>)
+
+        ID_EVENT(CanMoveWhileChanneling, TSSpell, TSUnit, TSMutable<bool, bool>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry
