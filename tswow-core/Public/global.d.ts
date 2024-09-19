@@ -7786,7 +7786,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetRuneCostID() : TSNumber<uint32>
 	GetSchoolMask() : TSNumber<uint32>
 	GetSpeed() : TSNumber<uint32>
-	GetSpellFamilyFlags() : TSNumber<uint32>
+	GetSpellFamilyFlags(flag: uint32) : TSNumber<uint32>
 	GetSpellFamilyName() : TSNumber<uint32>
 	GetSpellIconID() : TSNumber<uint32>
 	GetSpellLevel() : TSNumber<uint32>
@@ -7803,6 +7803,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
+    GetRank(): TSNumber<uint32>
 
     /** @epoch-start */
     HasAura(auraType: uint32): boolean
@@ -10359,6 +10360,7 @@ declare function GetAuthDBConnection(): TSAuthDatabaseConnection
 declare function GetCharactersDBConnection(): TSCharactersDatabaseConnection
 
 declare function GetSpellInfo(entry: uint32): TSSpellInfo
+declare function GetSpellWithRank(entry: uint32, rank: uint32): TSSpellInfo
 declare function GetTalentSpellCost(entry: uint32): TSNumber<uint32>
 declare function GetItemTemplate(entry: uint32): TSItemTemplate
 declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate

@@ -117,7 +117,7 @@ public:
     TSNumber<uint32> GetRuneCostID();
     TSNumber<uint32> GetSchoolMask();
     TSNumber<uint32> GetSpeed();
-    TSNumber<uint32> GetSpellFamilyFlags();
+    TSNumber<uint32> GetSpellFamilyFlags(uint32 flag);
     TSNumber<uint32> GetSpellFamilyName();
     TSNumber<uint32> GetSpellIconID();
     TSNumber<uint32> GetSpellLevel();
@@ -135,6 +135,7 @@ public:
     TSNumber<uint32> GetTalentCost();
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
+    TSNumber<uint32> GetRank();
 
     /** epoch-start */
     bool HasAura(uint32 auraType);
@@ -145,5 +146,6 @@ public:
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);
+TC_GAME_API TSSpellInfo GetSpellWithRank(uint32 entry, uint32 rank);
 TC_GAME_API TSNumber<uint32> GetTalentCost(uint32 entry);
 

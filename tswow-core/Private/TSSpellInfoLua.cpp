@@ -76,6 +76,7 @@ void TSLua::load_spell_info_methods(sol::state& state)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSchoolMask);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSpeed);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSpellFamilyFlags);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetRank);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSpellFamilyName);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSpellIconID);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetSpellLevel);
@@ -92,5 +93,6 @@ void TSLua::load_spell_info_methods(sol::state& state)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTotem);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTalentCost);
     state.set_function("GetSpellInfo", &GetSpellInfo);
+    state.set_function("GetSpellWithRank", &GetSpellWithRank);
     state.set_function("GetTalentSpellCost", &GetTalentSpellCost);
 }

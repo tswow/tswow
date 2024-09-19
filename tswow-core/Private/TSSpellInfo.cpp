@@ -283,9 +283,14 @@ TSNumber<uint32> TSSpellInfo::GetSpeed()
     return info->Speed;
 }
 
-TSNumber<uint32> TSSpellInfo::GetSpellFamilyFlags()
+TSNumber<uint32> TSSpellInfo::GetSpellFamilyFlags(uint32 flag)
 {
-    return info->SpellFamilyFlags;
+    return info->SpellFamilyFlags[flag];
+}
+
+TSNumber<uint32> TSSpellInfo::GetRank()
+{
+    return info->GetRank();
 }
 
 TSNumber<uint32> TSSpellInfo::GetSpellFamilyName()
@@ -366,6 +371,11 @@ TSEntity * TSSpellInfo::GetData()
 TSSpellInfo GetSpellInfo(uint32 entry)
 {
     return TSSpellInfo(sSpellMgr->GetSpellInfo(entry));
+}
+
+TSSpellInfo GetSpellWithRank(uint32 entry, uint32 rank)
+{
+    return TSSpellInfo(sSpellMgr->GetSpellInfo(sSpellMgr->GetSpellWithRank(entry, rank)));
 }
 
 TSSpellEffectInfo::TSSpellEffectInfo()
