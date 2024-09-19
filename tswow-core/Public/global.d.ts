@@ -8210,6 +8210,7 @@ declare namespace _hidden {
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
         OnCustomScriptedWeaponDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, TotalDamagePercentMod: TSMutableNumber<float>, FixedBonus: TSMutableNumber<int32> , SpellBonus: TSMutableNumber<int32>) => void);
         OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
+        OnCustomScriptedAutoattackDamageTakenMod(callback: (player: TSPlayer, Attacker: TSUnit, TakenTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
         OnCustomScriptedCritDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);
         
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);

@@ -359,6 +359,7 @@ struct TSEvents
         EVENT(OnCustomScriptedCritDamageMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritDamMod)
         
         EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage)
+        EVENT(OnCustomScriptedAutoattackDamageTakenMod, TSPlayer player, TSUnit attacker, TSMutableNumber<float> TakenTotalMod, TSMutableNumber<uint32> Damage)
 
         EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
         EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)

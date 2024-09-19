@@ -39,15 +39,15 @@ export namespace SevenZipInstall {
             return;
         }
 
-        // await DownloadFile(
-        //       SZIP_DOWNLOAD_URL
-        //     , bpaths.sevenZipArchive
-        // )
+        await DownloadFile(
+              SZIP_DOWNLOAD_URL
+            , bpaths.sevenZipArchive
+        )
 
-        // await DownloadFile(
-        //       SZ_SFX_DOWNLOAD_URL
-        //     , bpaths.sevenZip.sz_sfx
-        // )
+        await DownloadFile(
+              SZ_SFX_DOWNLOAD_URL
+            , bpaths.sevenZip.sz_sfx
+        )
 
         if(!bpaths.sevenZip.sevenZa_exe.exists()) {
             await ExtractZip(
