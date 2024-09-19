@@ -330,7 +330,7 @@ export namespace TrinityCore {
         spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
         spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
-        await DownloadFile(TDB_URL,bpaths.tdbArchive.get());
+        // await DownloadFile(TDB_URL,bpaths.tdbArchive.get());
         if(!bpaths.tdbSql.exists()) {
             term.log('build','Extracting tdb')
             SevenZip.extract(

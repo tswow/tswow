@@ -241,6 +241,7 @@ public:
     TSArray<TSAuraApplication> GetAppliedAurasById(uint32);
 
     TSNumber<uint32> GetDiseasesByCaster(TSGUID casterGUID, bool remove);
+    TSNumber<uint32> GetBleedsByCaster(TSGUID casterGUID, bool remove);
 
     TSArray<TSUnit> SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount);
     TSUnit SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 Aura);

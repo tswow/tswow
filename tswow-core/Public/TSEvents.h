@@ -568,7 +568,7 @@ struct TSEvents
         ID_EVENT(OnAuraApplied, TSUnit, TSAura, TSUnit)
         ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
 
-        ID_EVENT(OnHeal, TSHealInfo, TSMutableNumber<int32>)
+        ID_EVENT(OnHeal, TSUnit, TSUnit, TSMutableNumber<uint32>)
         ID_EVENT(CanAuraBeBrokenBySpell, TSUnit, TSUnit, TSAura, TSSpellInfo, TSNumber<uint8>, TSMutable<bool, bool>)
         ID_EVENT(OnCustomMechanicMaskDamage, TSUnit, TSSpellInfo, TSMutableNumber<uint32>)
         ID_EVENT(OnSuccessfulInterrupt, TSUnit caster, TSUnit who, TSSpell spell)

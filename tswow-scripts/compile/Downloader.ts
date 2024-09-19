@@ -16,11 +16,12 @@ export async function DownloadFile(url: string, file: FilePath) {
                 , fileName: wfs.basename(resfp(file))
                 , directory: wfs.dirname(resfp(file))
                 , cloneFiles: false
-                , maxAttempts: 3
+                , maxAttempts: 10
             }
         ).download();
         term.success('build',`Finished downloading ${url}`)
     } catch(error) {
-        throw new Error(`Failed to download ${url}: ${error.message}`)
+        console.log(wfs.basename(resfp(file)), wfs.dirname(resfp(file)));
+        throw new Error(`Failed to download ${url}: ${error.message} : ${error.code} : ${error.responseBody}`)
     }
 }

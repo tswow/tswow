@@ -6365,6 +6365,7 @@ declare interface TSUnit extends TSWorldObject {
     GetAppliedAurasById(entry: uint32) : TSArray<TSAuraApplication>;
 
     GetDiseasesByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
+    GetBleedsByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
 
     SelectNearbyTargets(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
     SelectNearbyTargetWithoutAura(exclude: TSUnit, dist: float, Aura: uint32) : TSUnit
@@ -8527,8 +8528,8 @@ declare namespace _hidden {
         OnAuraRemoved(callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
         OnAuraRemoved(id: EventID, callback: (aura: TSAura, who: TSUnit, reason: uint32) => void) : T;
 
-        OnHeal(callback: (info: TSHealInfo, Amount: TSMutableNumber<int32>) => void) : T;
-        OnHeal(id: EventID, callback: (info: TSHealInfo, Amount: TSMutableNumber<int32>) => void) : T;
+        OnHeal(callback: (Me: TSUnit, Target: TSUnit, Amount: TSMutableNumber<uint32>) => void) : T;
+        OnHeal(id: EventID, callback: (Me: TSUnit, Target: TSUnit, Amount: TSMutableNumber<uint32>) => void) : T;
 
         OnPersistentAARemoved(callback: (Caster: TSUnit, Dest: TSSpellDestination) => void) : T;
         OnPersistentAARemoved(id: EventID, callback: (Caster: TSUnit, Dest: TSSpellDestination) => void) : T;

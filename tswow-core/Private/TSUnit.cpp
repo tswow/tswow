@@ -2679,6 +2679,10 @@ TSNumber<uint32> TSUnit::GetDiseasesByCaster(TSGUID casterGUID, bool remove) {
     return unit->GetDiseasesByCaster(casterGUID.asGUID(), remove);
 }
 
+TSNumber<uint32> TSUnit::GetBleedsByCaster(TSGUID casterGUID, bool remove) {
+    return unit->GetBleedsByCaster(casterGUID.asGUID(), remove);
+}
+
 TSArray<TSUnit> TSUnit::SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount) {
     std::list<Unit*> ExcludedUnits = {};
     for (auto tsUnit : exclude) {

@@ -27,10 +27,10 @@ export namespace IMInstall {
             return;
         }
 
-        await DownloadFile(
-             IMAGEMAGICK_URL
-           , bpaths.imArchive
-        )
+        // await DownloadFile(
+        //      IMAGEMAGICK_URL
+        //    , bpaths.imArchive
+        // )
 
         if(!bpaths.im.exists()) {
             await ExtractZip(
