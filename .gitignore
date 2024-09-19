@@ -5,4 +5,4 @@ install_garbage
 log.txt
 build.conf
 build/
-tswow-scripts/compile/*
+tswow-scripts/compile
