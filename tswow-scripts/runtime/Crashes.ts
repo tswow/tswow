@@ -6,6 +6,11 @@ import { term } from "../util/Terminal";
 
 export class Crashes {
     static initialize() {
+        if (process.argv.includes('nowatch') || process.argv.includes('nowatch-strict'))
+        {
+            return
+        }
+
         term.debug('misc', `Initializing crashlog handler`)
         chokidar.watch(ipaths.modules.abs().get(),{
             ignored: [
