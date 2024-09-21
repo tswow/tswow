@@ -27,6 +27,8 @@ import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
+import { AttachedScript } from "../SmartScript/AttachedScript";
+import { SmartScripts } from "../SmartScript/SmartScript"
 import { LootSetPointer } from "../Loot/Loot";
 import { MapRegistry } from "../Map/Maps";
 import { Codegen, CodegenSettings, GenerateCode } from "../Misc/Codegen";
@@ -50,6 +52,7 @@ import { GameObjectDisplayRegistry, GameObjectInstances } from "./GameObjects";
 import { GameObjectTemplateAddon } from "./GameObjectTemplateAddon";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_AURA_GENERATOR, GAMEOBJECT_TYPE_BARBER_CHAIR, GAMEOBJECT_TYPE_BINDER, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CAPTURE_POINT, GAMEOBJECT_TYPE_CHAIR, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_DO_NOT_USE, GAMEOBJECT_TYPE_DO_NOT_USE_2, GAMEOBJECT_TYPE_DUEL_ARBITER, GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FISHINGNODE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GENERIC, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_GUARDPOST, GAMEOBJECT_TYPE_GUILD_BANK, GAMEOBJECT_TYPE_MAILBOX, GAMEOBJECT_TYPE_MAP_OBJECT, GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, GAMEOBJECT_TYPE_MEETINGSTONE, GAMEOBJECT_TYPE_MINI_GAME, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_RITUAL, GAMEOBJECT_TYPE_SPELLCASTER, GAMEOBJECT_TYPE_SPELL_FOCUS, GAMEOBJECT_TYPE_TEXT, GAMEOBJECT_TYPE_TRANSPORT, GAMEOBJECT_TYPE_TRAP, GAMEOBJECT_TYPE_TRAPDOOR } from "./GameObjectTypes";
 import { InstanceDoorObjects } from "./InstanceDoorObject";
+import { GameObjectAI } from "./GameObjectAI";
 
 export class GameObjectTemplateInstances<T extends GameObjectTemplate>
     extends MultiRowSystem<GameObjectInstance,T>
@@ -123,7 +126,7 @@ export class GameObjectTemplate extends TransformedEntityID<gameobject_templateR
     get Faction() { return this.Addon.Faction; }
     get Flags()   { return this.Addon.Flags; }
     get Gold()    { return this.Addon.Gold; }
-
+    get AIName() { return new GameObjectAI(this); }
     get Type() { return new GameObjectType(this, this.row.type); }
     get ID() { return this.row.entry.get(); }
     get Name() { return new GameObjectName(this); }
@@ -132,6 +135,12 @@ export class GameObjectTemplate extends TransformedEntityID<gameobject_templateR
     get Size() { return this.wrap(this.row.size); }
     get Display() {
         return GameObjectDisplayRegistry.ref(this, this.row.displayId);
+    }
+    get Scripts() {
+        return new AttachedScript(this, ()=>{
+            this.row.AIName.set('SmartGameObjectAI');
+            return SmartScripts.gameObject(this.ID);
+        })
     }
 
     @Transient
