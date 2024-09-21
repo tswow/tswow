@@ -494,6 +494,7 @@ struct TSEvents
         EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnLossOfControl, TSUnit, TSNumber<uint32>)
         EVENT(OnRageGainedViaAttack, TSUnit, TSUnit, TSMutableNumber<uint32> rage_damage)
+        EVENT(OnCustomDamageTaken, TSUnit, TSUnit, TSMutableNumber<uint32>)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry

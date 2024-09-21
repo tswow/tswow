@@ -9146,6 +9146,8 @@ declare namespace _hidden {
         OnLossOfControl(callback: (who: TSUnit, state: uint32) => void)
 
         OnRageGainedViaAttack(callback: (To: TSUnit, Victim: TSUnit, RageDamage: TSMutableNumber<uint32>) => void)
+
+        OnCustomDamageTaken(callback: (who: TSUnit, Victim: TSUnit, damage: TSMutableNumber<uint32>) => void)
     }
 
     export class Battleground<T> {
