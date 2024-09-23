@@ -527,6 +527,8 @@ struct TSEvents
             , TSMutableNumber<float> penalty
             , TSUnit caster
         )
+        ID_EVENT(OnCalcProcChanceEarly, TSProcEventInfo, TSMutableNumber<float> chance)
+        ID_EVENT(OnCalcProcChanceLate, TSProcEventInfo, TSMutableNumber<float> chance)
         ID_EVENT(OnTrainerSend, TSSpellInfo spell, TSNumber<uint32> trainerId, TSPlayer receiver, TSMutable<bool,bool> allowTrain)
         ID_EVENT(OnCalcMiss, TSSpell, TSUnit, TSMutableNumber<uint32>, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcCrit, TSSpell, TSMutableNumber<float>)
