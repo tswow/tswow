@@ -26,67 +26,65 @@ export class SpellCustomAttr extends MaskCell<Spell> {
     @Transient
     private sql: SpellCustomAttrSQL;
 
-    @Transient
-    private mask: MaskCell32<any>;
+    protected deserialize(value: any) {
+        throw new Error(`Deserialize not implemented for SpellAttributes`);
+    }
 
-    @Transient
-    private mask2: MaskCell32<any>;
+    clearAll() {
+        this.cells().forEach((x)=>x.set(0));
+        return this.owner;
+    }
+
+    protected cells() {
+        return [
+            this.sql.Attribute,
+            this.sql.AttributeEx,
+        ]
+    }
+
+    protected cell(no: number) {
+        return this.cells()[Math.floor(no/32)]
+    }
+
+    protected bitno(no: number) { return no%32; }
 
     constructor(owner: Spell) {
         super(owner);
         this.sql = new SpellCustomAttrSQL(owner);
-        this.mask = new MaskCell32(undefined,this.sql.Attribute,false);
-        this.mask2 = new MaskCell32(undefined,this.sql.AttributeEx,false);
     }
 
-    get() {
-        return this.mask.get();
-    }
-    getBit(bit: number): boolean {
-        return this.mask.getBit(bit);
-    }
-    setBit(bit: number, value: Bit): Spell {
-        this.mask.setBit(bit,value);
-        return this.owner;
-    }
-    getEx() {
-        return this.mask2.get();
-    }
-    setEx(value: number) {
-        this.mask2.set(value);
-        return this.owner;
-    }
-
-    clearAll(): Spell {
-        this.mask.clearAll();
-        this.mask2.clearAll();
-        return this.owner;
-    }
-    toString(): string {
-        return this.mask.toString() + ":" + this.mask2.toString();
-    }
-    protected deserialize(value: any): void {
-        (this.mask as any).deserialize(value);
-    }
-
-    set(values: number | string[])
-    {
-        if(typeof(values) === 'number')
-        {
-            this.mask.set(values);
+    setBit(no: number, value: boolean)  {
+        if(value) {
+            const cell = this.cell(no);
+            cell.set((cell.get()|1<<this.bitno(no))>>>0);
+        } else {
+            const cell = this.cell(no);
+            cell.set((cell.get()&~(1<<this.bitno(no)))>>>0);
         }
-        else
-        {
-            this.clearAll();
-            return this.add(values);
-        }
+        return this.owner;
     }
 
-    add(values: string[])
+    toString() {
+        return this.cells().reduce((p,c)=>p+c.get().toString(2),"");
+    }
+
+    getBit(no: number): boolean {
+        const cell = this.cell(no);
+        return ((cell.get()&1<<this.bitno(no))>>>0) !== 0;
+    }
+
+    // todo: fix autocompletion
+    set(keys: string[])
     {
-        for(let value of values)
+        this.clearAll();
+        this.add(keys);
+        return this.owner;
+    }
+    add(keys: string[])
+    {
+        for(let key of keys)
         {
-            this[value].set(1);
+            this[key].set(1);
         }
         return this.owner;
     }
@@ -117,4 +115,8 @@ export class SpellCustomAttr extends MaskCell<Spell> {
     get BINARY_SPELL()                  { return this.bit(20); }
     get SCHOOL_MASK_NORMAL_WITH_MAGIC() { return this.bit(21); }
     get LIQUID_AURA()                   { return this.bit(22); }
+    get IS_TALENT()                     { return this.bit(23); }
+
+    get CANNOT_BE_SAVED()               { return this.bit(31); }
+
 }

@@ -203,7 +203,7 @@ export class Spell extends MainEntityID<SpellRow> {
     get AutoLearn() { return new SpellAutoLearns(this); }
 
     /** Custom server core attributes for this spell */
-    readonly CustomAttributes = new SpellCustomAttr(this);
+    get CustomAttributes() { return new SpellCustomAttr(this) };
     /** Custom server core damage bonuses */
     readonly BonusData = new SpellBonusData(this);
     /** Custom server core spell threat bonuses */
@@ -376,7 +376,7 @@ export class Spell extends MainEntityID<SpellRow> {
             // Masks
             code.non_zero_bitmask('FacingCasterFlags',this.FacingCasterFlags);
             code.non_zero_bitmask('CreatureTargets',this.CreatureTargets)
-            code.non_zero_bitmask('CustomAttributes',this.CustomAttributes)
+            code.bitmask('CustomAttributes',this.CustomAttributes)
             code.bitmask('Attributes',this.Attributes);
             code.non_zero_bitmask('InterruptFlags',this.InterruptFlags)
             code.non_zero_bitmask('SchoolMask',this.SchoolMask)
