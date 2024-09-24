@@ -16,6 +16,7 @@
  */
 
 export enum SpellImplicitTarget {
+    UNIT_NONE                   = 0,
     UNIT_CASTER                 = 1,
     UNIT_NEARBY_ENEMY           = 2,
     UNIT_NEARBY_ALLY            = 3,
