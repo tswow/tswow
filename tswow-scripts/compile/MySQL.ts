@@ -22,10 +22,10 @@ import ExtractZip = require('extract-zip')
 
 export namespace MySQL {
     export async function find() {
-        await DownloadFile(
-             MYSQL_URL
-           , bpaths.mysqlArchive
-        )
+        // await DownloadFile(
+        //      MYSQL_URL
+        //    , bpaths.mysqlArchive
+        // )
 
         if(!bpaths.mysql.exists()) {
             await ExtractZip(
@@ -36,7 +36,7 @@ export namespace MySQL {
 
 
         // Delete unused library
-        bpaths.mysql.find_subdir().lib.mysqlserver_lib.remove();
+        // bpaths.mysql.find_subdir().lib.mysqlserver_lib.remove();
 
         // Install the necessary mysql files
         ;[

@@ -23,10 +23,10 @@ import ExtractZip = require('extract-zip')
 
 export namespace CMake {
     export async function find(): Promise<WNode> {
-        await DownloadFile(
-              CMAKE_DOWNLOAD_URL
-            , bpaths.cmakeArchive
-        )
+        // await DownloadFile(
+        //       CMAKE_DOWNLOAD_URL
+        //     , bpaths.cmakeArchive
+        // )
 
         if(!bpaths.cmake.exists()) {
             await ExtractZip(
