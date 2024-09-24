@@ -197,6 +197,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnDamageTaken);
     LUA_HANDLE(unit_events, UnitEvents, OnLossOfControl);
     LUA_HANDLE(unit_events, UnitEvents, OnRageGainedViaAttack);
+    LUA_HANDLE(unit_events, UnitEvents, OnCustomDamageTaken);
 
     auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);
@@ -219,6 +220,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcResist);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcMeleeMiss);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcSpellPowerLevelPenalty);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcProcChanceEarly);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcProcChanceLate);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnTrainerSend);
 
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCheckAreaTarget);

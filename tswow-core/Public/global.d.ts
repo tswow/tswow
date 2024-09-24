@@ -8430,6 +8430,16 @@ declare namespace _hidden {
             , caster: TSUnit
         )=>void): T
 
+        /** Called before any chance calculations */
+        OnCalcProcChanceEarly(callback: (EventInfo: TSProcEventInfo, chance: TSMutableNumber<float>) => void): T
+        /** Called before any chance calculations */
+        OnCalcProcChanceEarly(id: EventID, callback: (EventInfo: TSProcEventInfo, chance: TSMutableNumber<float>) => void): T
+
+        /** Called after chance calculations */
+        OnCalcProcChanceLate(callback: (EventInfo: TSProcEventInfo, chance: TSMutableNumber<float>) => void): T
+        /** Called after chance calculations */
+        OnCalcProcChanceLate(id: EventID, callback: (EventInfo: TSProcEventInfo, chance: TSMutableNumber<float>) => void): T
+
         OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<boolean,boolean>)=>void): T
         OnTrainerSend(id: EventID, callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<boolean,boolean>)=>void): T
 
@@ -9146,6 +9156,8 @@ declare namespace _hidden {
         OnLossOfControl(callback: (who: TSUnit, state: uint32) => void)
 
         OnRageGainedViaAttack(callback: (To: TSUnit, Victim: TSUnit, RageDamage: TSMutableNumber<uint32>) => void)
+
+        OnCustomDamageTaken(callback: (who: TSUnit, Victim: TSUnit, damage: TSMutableNumber<uint32>) => void)
     }
 
     export class Battleground<T> {

@@ -494,6 +494,7 @@ struct TSEvents
         EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnLossOfControl, TSUnit, TSNumber<uint32>)
         EVENT(OnRageGainedViaAttack, TSUnit, TSUnit, TSMutableNumber<uint32> rage_damage)
+        EVENT(OnCustomDamageTaken, TSUnit, TSUnit, TSMutableNumber<uint32>)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
@@ -526,6 +527,8 @@ struct TSEvents
             , TSMutableNumber<float> penalty
             , TSUnit caster
         )
+        ID_EVENT(OnCalcProcChanceEarly, TSProcEventInfo, TSMutableNumber<float> chance)
+        ID_EVENT(OnCalcProcChanceLate, TSProcEventInfo, TSMutableNumber<float> chance)
         ID_EVENT(OnTrainerSend, TSSpellInfo spell, TSNumber<uint32> trainerId, TSPlayer receiver, TSMutable<bool,bool> allowTrain)
         ID_EVENT(OnCalcMiss, TSSpell, TSUnit, TSMutableNumber<uint32>, TSMutableNumber<uint32>)
         ID_EVENT(OnCalcCrit, TSSpell, TSMutableNumber<float>)
