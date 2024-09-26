@@ -11,8 +11,6 @@ TSUnit TSMeleeDamageInfo::GetAttacker()
 {
 #if TRINITY
     return TSUnit(_info->Attacker);
-#elif AZEROTHCORE
-    return TSUnit(_info->attacker);
 #endif
 }
 
@@ -20,8 +18,6 @@ TSUnit TSMeleeDamageInfo::GetTarget()
 {
 #if TRINITY
     return TSUnit(_info->Target);
-#elif AZEROTHCORE
-    return TSUnit(_info->target);
 #endif
 }
 
@@ -29,8 +25,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetSchool1()
 {
 #if TRINITY
     return _info->Damages[0].DamageSchoolMask;
-#elif AZEROTHCORE
-    return _info->damageSchoolMask;
 #endif
 
 }
@@ -39,9 +33,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetSchool2()
 {
 #if TRINITY
     return _info->Damages[1].DamageSchoolMask;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMeleeDamageInfo::GetSchool2 not implemented for AzerothCore.");
-    return 0;
 #endif
 }
 
@@ -49,8 +40,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetDamage1()
 {
 #if TRINITY
     return _info->Damages[0].Damage;
-#elif AZEROTHCORE
-    return _info->damage;
 #endif
 }
 
@@ -58,9 +47,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetDamage2()
 {
 #if TRINITY
     return _info->Damages[1].Damage;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMeleeDamageInfo::GetDamage2 not implemented for AzerothCore.");
-    return 0;
 #endif
 }
 
@@ -68,8 +54,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetAbsorb1()
 {
 #if TRINITY
     return _info->Damages[0].Absorb;
-#elif AZEROTHCORE
-    return _info->absorb;
 #endif
 }
 
@@ -77,9 +61,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetAbsorb2()
 {
 #if TRINITY
     return _info->Damages[1].Absorb;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMeleeDamageInfo::GetAbsorb2 not implemented for AzerothCore.");
-    return 0;
 #endif
 }
 
@@ -87,8 +68,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetResist1()
 {
 #if TRINITY
     return _info->Damages[0].Resist;
-#elif AZEROTHCORE
-    return _info->resist;
 #endif
 
 }
@@ -97,9 +76,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetResist2()
 {
 #if TRINITY
     return _info->Damages[1].Resist;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMeleeDamageInfo::GetResist2 not implemented for AzerothCore.");
-    return 0;
 #endif
 }
 
@@ -107,8 +83,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetBlocked()
 {
 #if TRINITY
     return _info->Blocked;
-#elif AZEROTHCORE
-    return _info->blocked_amount;
 #endif
 }
 
@@ -126,8 +100,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetAttackType()
 {
 #if TRINITY
     return _info->AttackType;
-#elif AZEROTHCORE
-    return _info->attackType;
 #endif 
 }
 
@@ -135,8 +107,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetProcAttacker()
 {
 #if TRINITY
     return _info->ProcAttacker;
-#elif AZEROTHCORE
-    return _info->procAttacker;
 #endif
 }
 
@@ -144,8 +114,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetProcVictim()
 {
 #if TRINITY
     return _info->ProcVictim;
-#elif AZEROTHCORE
-    return _info->procVictim;
 #endif
 }
 
@@ -153,8 +121,6 @@ TSNumber<uint32> TSMeleeDamageInfo::GetCleanDamage()
 {
 #if TRINITY
     return _info->CleanDamage;
-#elif AZEROTHCORE
-    return _info->cleanDamage;
 #endif
 }
 
@@ -162,8 +128,6 @@ TSNumber<uint8> TSMeleeDamageInfo::GetMeleeHitOutcome()
 {
 #if TRINITY
     return _info->HitOutCome;
-#elif AZEROTHCORE
-    return _info->hitOutCome;
 #endif
 }
 
@@ -185,8 +149,6 @@ TSNumber<uint32> TSSpellDamageInfo::GetSpellID()
 {
 #if TRINITY
     return _info->SpellID;
-#elif AZEROTHCORE
-    return _info->spellInfo ? _info->spellInfo->Id : 0;
 #endif
 }
 
@@ -219,10 +181,6 @@ bool TSSpellDamageInfo::GetPeriodicLog()
 {
 #if TRINITY
     return _info->periodicLog;
-#elif AZEROTHCORE
-    // TODO: not sure if this is the same thing
-    LOG_WARN("tswow.api", "TSMeleeDamageInfo::GetPeriodicLog might not be implemented correctly for AzerothCore.");
-    return _info->physicalLog;
 #endif
 }
 
@@ -250,9 +208,6 @@ bool TSSpellDamageInfo::GetFullBlock()
 {
 #if TRINITY
     return _info->fullBlock;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSMeleeDamageInfo::GetFullBlock not implemented for AzerothCore.");
-    return 0;
 #endif
 }
 
@@ -266,8 +221,6 @@ void TSHealInfo::SetEffectiveHeal(uint32 amount)
 {
 #if TRINITY
     m_info->SetEffectiveHeal(amount);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSHealInfo::SetEffectiveHeal not implemented for AzerothCore");
 #endif
 }
 TSUnit TSHealInfo::GetHealer()
@@ -287,8 +240,6 @@ TSNumber<uint32> TSHealInfo::GetEffectiveHeal()
 {
 #if TRINITY
     return m_info->GetEffectiveHeal();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSHealInfo::GetEffectiveHeal not implemented for AzerothCore");
 #endif
 }
 TSNumber<uint32> TSHealInfo::GetAbsorb()
@@ -307,9 +258,6 @@ TSNumber<uint32> TSHealInfo::GetHitMask()
 {
 #if TRINITY
     return m_info->GetHitMask();
-#elif AZEROTHCORE
-    TS_LOG_INFO("tswow.api", "TSHealInfo::GetHitMask not implemented on AzerothCore");
-    return 0;
 #endif
 }
 
@@ -373,8 +321,5 @@ TSNumber<uint32> TSDamageInfo::GetHitMask()
 {
 #if TRINITY
     return m_info->GetHitMask();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSDamageInfo::GetHitMask not implemented on AzerothCore");
-    return 0;
 #endif
 }

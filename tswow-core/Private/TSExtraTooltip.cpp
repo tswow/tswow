@@ -13,8 +13,6 @@ bool handle_extra_tooltip_message(Player* player, Player* receiver, std::string&
 
 #if TRINITY
     if (player != receiver || !player->CanBeGameMaster()) {
-#elif AZEROTHCORE
-    if (player != receiver || player->GetSession()->GetSecurity() < AccountTypes::SEC_GAMEMASTER) {
 #endif
         return false;
     }

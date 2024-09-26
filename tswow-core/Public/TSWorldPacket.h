@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 #include "TSArray.h"
 
 class TC_GAME_API TSWorldPacket {
@@ -105,6 +106,9 @@ public:
     TSArray<uint8> ReadBytes(uint32 size);
     void WriteBytes(uint32 index, TSArray<uint8>&);
     void WriteBytes(TSArray<uint8>&);
+
+    void Seek(size_t ofs);
+    size_t Tell() const;
 };
 
 namespace WorldPackets {
@@ -128,3 +132,6 @@ public:
 };
 
 #define CreateWorldPacket TSWorldPacket
+
+//LUA_PTR_TYPE(TSWorldPacket)
+//LUA_PTR_TYPE(TSWorldStatePacket)

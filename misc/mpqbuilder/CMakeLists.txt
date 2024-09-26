@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.22)
 project(mpqbuilder)
 set( Boost_USE_STATIC_LIBS ON )
 FIND_PACKAGE( Boost 1.60 COMPONENTS filesystem REQUIRED )
@@ -6,7 +6,8 @@ add_executable(mpqbuilder mpqbuilder.cpp)
 add_executable(luaxmlreader luaxmlreader.cpp)
 
 include (FetchContent)
-FetchContent_Declare (storm
+FetchContent_Declare(
+  storm
   GIT_REPOSITORY https://github.com/ladislav-zezula/StormLib.git
   GIT_TAG 60c2dd0fa16d3506722e25fee9b6fa4082b0c1e5
 )

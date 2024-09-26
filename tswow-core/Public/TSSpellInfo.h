@@ -17,6 +17,7 @@
 #pragma once
 #include "TSClasses.h"
 #include "TSEntity.h"
+#include "TSLua.h"
 
 class TC_GAME_API TSSpellEffectInfo
 {
@@ -149,3 +150,5 @@ TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);
 TC_GAME_API TSSpellInfo GetSpellWithRank(uint32 entry, uint32 rank);
 TC_GAME_API TSNumber<uint32> GetTalentCost(uint32 entry);
 
+LUA_PTR_TYPE(TSSpellInfo)
+LUA_PTR_TYPE(TSSpellEffectInfo)

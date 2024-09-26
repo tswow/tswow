@@ -30,9 +30,6 @@
 #include "SpellHistory.h"
 #include "ThreatManager.h"
 #endif
-#if AZEROTHCORE
-#include "ThreatMgr.h"
-#endif
 #include "ObjectGuid.h"
 #include "CreatureAI.h"
 #include "MotionMaster.h"
@@ -78,7 +75,7 @@ bool TSCreature::IsReputationGainDisabled()
 bool TSCreature::CanCompleteQuest(uint32 quest_id)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->hasInvolvedQuest(quest_id);
 #else
     return creature->HasInvolvedQuest(quest_id);
@@ -139,7 +136,7 @@ bool TSCreature::IsTappedBy(TSPlayer _player)
 {
     auto player = _player.player;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->isTappedBy(player);
 #else
     return creature->IsTappedBy(player);
@@ -154,7 +151,7 @@ bool TSCreature::IsTappedBy(TSPlayer _player)
  */
 bool TSCreature::HasLootRecipient()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->hasLootRecipient();
 #else
     return creature->HasLootRecipient();
@@ -169,7 +166,7 @@ bool TSCreature::HasLootRecipient()
  */
 bool TSCreature::CanAggro()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return !creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
 #else
     return creature->CanInitiateAttack();
@@ -218,7 +215,7 @@ bool TSCreature::IsInEvadeMode()
  */
 bool TSCreature::IsElite()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->isElite();
 #else
     return creature->IsElite();
@@ -266,7 +263,7 @@ bool TSCreature::IsRacialLeader()
  */
 bool TSCreature::IsWorldBoss()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->isWorldBoss();
 #else
     return creature->IsWorldBoss();
@@ -286,11 +283,6 @@ bool TSCreature::HasCategoryCooldown(uint32 spell)
 #if defined TRINITY
     if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
         return info->GetCategory() && creature->GetSpellHistory()->HasCooldown(spell);
-    else
-        return false;
-#elif AZEROTHCORE
-    if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
-        return info->GetCategory() && creature->HasSpellCooldown(spell);
     else
         return false;
 #else
@@ -320,7 +312,7 @@ bool TSCreature::HasSpell(uint32 id)
 bool TSCreature::HasQuest(uint32 questId)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->hasQuest(questId);
 #else
     return creature->HasQuest(questId);
@@ -355,7 +347,7 @@ bool TSCreature::CanFly()
     return creature->CanFly();
 }
 
-#if defined(TRINITY) || AZEROTHCORE
+#if defined TRINITY
 /**
  * Returns `true` if the [Creature] is an invisible trigger,
  *   and returns `false` otherwise.
@@ -388,11 +380,7 @@ bool TSCreature::IsDamageEnoughForLootingAndReward()
 bool TSCreature::CanStartAttack(TSUnit _target,bool force)
 {
     auto target = _target.unit;
-#ifndef AZEROTHCORE
     return creature->CanStartAttack(target, force);
-#else
-    return creature->CanStartAttack(target);
-#endif
 }
 
 /**
@@ -428,14 +416,14 @@ TSNumber<uint32> TSCreature::GetRespawnDelay()
  */
 TSNumber<float> TSCreature::GetWanderRadius()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->GetWanderDistance();
 #else
     return creature->GetRespawnRadius();
 #endif
 }
 
-#if defined(TRINITY) || AZEROTHCORE
+#if defined TRINITY
 /**
  * Returns the current waypoint path ID of the [Creature].
  *
@@ -456,8 +444,6 @@ TSNumber<uint32> TSCreature::GetCurrentWaypointID()
 {
 #ifdef TRINITY
     return creature->GetCurrentWaypointInfo().first;
-#elif AZEROTHCORE
-    return creature->GetCurrentWaypointID();
 #else
     return creature->GetMotionMaster()->getLastReachedWaypoint();
 #endif
@@ -483,7 +469,7 @@ TSNumber<float> TSCreature::GetAggroRange(TSUnit _target)
 {
     auto target = _target.unit;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return creature->GetAggroRange(target);
 #else
     float AttackDist = creature->GetAttackDistance(target);
@@ -506,9 +492,6 @@ TSNumber<float> TSCreature::GetAttackDistance(TSUnit _target)
 #if TRINITY
     auto target = _target.unit;
     return creature->GetAttackDistance(target);
-#else
-    TS_LOG_ERROR("tswow.api","TSCreature::GetAttackDistance not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -519,7 +502,7 @@ TSNumber<float> TSCreature::GetAttackDistance(TSUnit _target)
  */
 TSGroup TSCreature::GetLootRecipientGroup()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSGroup(creature->GetLootRecipientGroup());
 #else
      return TSGroup(creature->GetGroupLootRecipient());
@@ -591,11 +574,6 @@ TSNumber<uint32> TSCreature::GetCreatureSpellCooldownDelay(uint32 spell)
         return creature->GetSpellHistory()->GetRemainingCooldown(spellInfo);
     else
         return 0;
-#elif AZEROTHCORE
-    if (sSpellMgr->GetSpellInfo(spell))
-        return creature->GetSpellCooldown(spell);
-    else
-        return 0;
 #else
     return creature->GetCreatureSpellCooldownDelay(spell);
 #endif
@@ -623,7 +601,7 @@ TSNumber<uint32> TSCreature::GetCorpseDelay()
 TSPosition TSCreature::GetHomePosition()
 {
     float x, y, z, o;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->GetHomePosition(x, y, z, o);
 #else
     creature->GetRespawnCoord(x, y, z, &o);
@@ -643,7 +621,7 @@ TSPosition TSCreature::GetHomePosition()
 void TSCreature::SetHomePosition(float x,float y,float z,float o)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->SetHomePosition(x, y, z, o);
 #else
     creature->SetRespawnCoord(x, y, z, o);
@@ -709,9 +687,6 @@ TSUnit  TSCreature::FindThreatListEntry(uint32 targetType,bool playerOnly,uint32
 {
 #if TRINITY
     auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
-#elif AZEROTHCORE
-    auto const& threatlist = creature->getThreatMgr().getThreatList();
-    LOG_WARN("tswow.api", "TSCreature::GetAITarget might not be correctly implemented for AzerothCore");
 #endif
 
     std::list<Unit*> targetList;
@@ -720,8 +695,6 @@ TSUnit  TSCreature::FindThreatListEntry(uint32 targetType,bool playerOnly,uint32
     {
 #if TRINITY
         Unit* target = itr->GetVictim();
-#elif AZEROTHCORE
-        Unit* target = itr->getTarget();
 #endif
         if (!target)
             continue;
@@ -835,7 +808,7 @@ TSNumber<uint32> TSCreature::GetShieldBlockValue()
 }
 #endif
 
-#if defined(TRINITY) || AZEROTHCORE
+#if defined TRINITY
 TSNumber<uint16> TSCreature::GetLootMode()
 {
     return creature->GetLootMode();
@@ -851,9 +824,6 @@ TSNumber<uint32> TSCreature::GetDBTableGUIDLow()
 {
 #ifdef TRINITY
     return creature->GetSpawnId();
-#elif AZEROTHCORE
-    // on mangos based this is same as lowguid
-    return creature->GetGUID().GetCounter();
 #endif
 }
 
@@ -877,14 +847,14 @@ void TSCreature::SetNPCFlags(uint32 flags)
 void TSCreature::SetDisableGravity(bool disable)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->SetDisableGravity(disable);
 #else
     creature->SetLevitate(disable);
 #endif
 }
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
 void TSCreature::SetLootMode(uint16 lootMode)
 {
 
@@ -900,7 +870,7 @@ void TSCreature::SetLootMode(uint16 lootMode)
 void TSCreature::SetDeathState(int32 state)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->setDeathState((DeathState)state);
 #else
     creature->SetDeathState((DeathState)state);
@@ -928,7 +898,7 @@ void TSCreature::SetWalk(bool enable)
 void TSCreature::SetEquipmentSlots(uint32 main_hand,uint32 off_hand,uint32 ranged)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, main_hand);
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, off_hand);
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
@@ -947,7 +917,7 @@ void TSCreature::SetEquipmentSlots(uint32 main_hand,uint32 off_hand,uint32 range
 void TSCreature::SetAggroEnabled(bool allow)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     if (allow)
         creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
     else
@@ -980,10 +950,7 @@ void TSCreature::SetDisableReputationGain(bool disable)
  */
 void TSCreature::SetInCombatWithZone()
 {
-#if defined AZEROTHCORE
-    if (creature->IsAIEnabled)
-        creature->AI()->DoZoneInCombat();
-#elif defined TRINITY
+#if defined TRINITY
     if (creature->IsAIEnabled())
         creature->AI()->DoZoneInCombat();
 #else
@@ -999,7 +966,7 @@ void TSCreature::SetInCombatWithZone()
 void TSCreature::SetWanderRadius(float dist)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->SetWanderDistance(dist);
 #else
     creature->SetRespawnRadius(dist);
@@ -1058,7 +1025,7 @@ void TSCreature::SetNoCallAssistance(bool val)
 void TSCreature::SetHover(bool enable)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->SetHover(enable);
 #else
     // Copy paste from Aura::HandleAuraHover
@@ -1097,8 +1064,6 @@ void TSCreature::DespawnOrUnsummon(uint32 msTimeToDespawn)
 {
 #if defined TRINITY
     creature->DespawnOrUnsummon(Milliseconds(msTimeToDespawn));
-#elif AZEROTHCORE
-    creature->DespawnOrUnsummon(msTimeToDespawn);
 #endif
 }
 
@@ -1123,7 +1088,7 @@ void TSCreature::RemoveCorpse()
  */
 void TSCreature::MoveWaypoint()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->GetMotionMaster()->MovePath(creature->GetWaypointPath(), true);
 #else
     creature->GetMotionMaster()->MoveWaypoint();
@@ -1198,7 +1163,7 @@ void TSCreature::SaveToDB()
  */
 TSUnit  TSCreature::SelectVictim()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSUnit(creature->SelectVictim());
 #else
      return TSUnit(creature->SelectHostileTarget());
@@ -1214,14 +1179,14 @@ TSUnit  TSCreature::SelectVictim()
 void TSCreature::UpdateEntry(uint32 entry,uint32 dataGuidLow)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->UpdateEntry(entry, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
 #else
     creature->UpdateEntry(entry, ALLIANCE, dataGuidLow ? eObjectMgr->GetCreatureData(dataGuidLow) : NULL);
 #endif
 }
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
 /**
  * Resets [Creature]'s loot mode to default
  */
@@ -1310,7 +1275,7 @@ TSNumber<uint32> TSCreature::GetCreatureFamily()
 {
     uint32 entry = creature->GetEntry();
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
     return cInfo->family;
 #else
@@ -1333,8 +1298,6 @@ void TSCreature::UpdateLevelDependantStats()
 {
 #if TRINITY
     creature->UpdateLevelDependantStats();
-#elif AZEROTHCORE
-    LOG_WARN("tswow.api", "TSCreature::UpdateLevelDependantStats not implemented for AzerothCore");
 #endif
 }
 
@@ -1342,28 +1305,19 @@ void TSCreature::SetOutfit(TSOutfit const& outfit)
 {
 #if TRINITY
     creature->SetOutfit(outfit.m_outfit);
-#elif AZEROTHCORE
-    LOG_WARN("tswow.api", "TSCreature::SetOutfit not implemented for AzerothCore.");
 #endif
 }
 
 void TSCreature::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj)
 {
-#if AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSCreature::FireSmartEvent not implemented for AzerothCore");
-#endif
 #if TRINITY
     if (!creature->IsAIEnabled()) return;
-#elif AZEROTHCORE
-    if (!creature->IsAIEnabled) return;
 #endif
     auto ai = creature->AI();
     if (SmartAI * sai = dynamic_cast<SmartAI*>(ai))
     {
 #if TRINITY
         sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
-#elif AZEROTHCORE
-        // TODO: azerothcore version
 #endif
     }
 }
@@ -1372,8 +1326,6 @@ bool TSCreature::IsAIEnabled()
 {
 #if TRINITY
     return creature->IsAIEnabled();
-#elif AZEROTHCORE
-    return creature->IsAIEnabled;
 #endif
 }
 
@@ -1416,9 +1368,6 @@ TSOutfit TSCreature::GetOutfit()
 {
 #if TRINITY
     return creature->GetOutfit();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSCreature::GetOutfit not implemented for AzerothCore");
-    return TSOutfit();
 #endif
 }
 
@@ -1426,9 +1375,6 @@ TSOutfit TSCreature::GetOutfitCopy(Outfit settings, int32_t race, int32_t gender
 {
 #if TRINITY
     return TSOutfit(GetOutfit(), settings, race, gender);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSCreature::GetOutfitCopy not implemented for AzerothCore");
-    return TSOutfit();
 #endif
 }
 

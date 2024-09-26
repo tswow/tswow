@@ -22,6 +22,7 @@
 #include "TSPosition.h"
 #include "TSSpellInfo.h"
 #include "TSPosition.h"
+#include "TSLua.h"
 
 struct SpellModifier;
 class Spell;
@@ -49,6 +50,7 @@ public:
     TSNumber<uint32> GetPowerCost();
     TSNumber<int32> GetDuration();
     TSNumber<uint32> GetGlyphSlot();
+    TSNumber<uint32> GetState();
     TSPosition GetTargetDest();
     TSObject  GetTarget();
     TSSpellInfo GetSpellInfo();
@@ -148,3 +150,9 @@ private:
     bool m_dependent;
     bool m_disabled;
 };
+
+LUA_PTR_TYPE(TSSpell)
+LUA_PTR_TYPE(TSSpellModifier)
+LUA_PTR_TYPE(TSSpellDestination)
+LUA_PTR_TYPE(TSSpellImplicitTargetInfo)
+LUA_PTR_TYPE(TSDispelInfo)

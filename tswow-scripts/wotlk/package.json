@@ -4,9 +4,9 @@
   "description": "",
   "main": "wotlk.js",
   "types": "wotlk.d.ts",
+  "dependencies": {},
   "devDependencies": {},
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git"
   },

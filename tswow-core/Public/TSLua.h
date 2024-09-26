@@ -9,6 +9,68 @@
 
 #define LUA_FIELD(target,cls,fn) target.set_function(#fn,&cls::fn)
 
+#define LUA_PTR_TYPE_CON(type_in,con_in)\
+inline int sol_lua_push(lua_State* L, const type_in& value) {\
+    int amount;\
+    if (value)\
+    {\
+       	using Tu = sol::meta::unqualified_t<type_in>;\
+        sol::stack::unqualified_pusher<type_in> p{};\
+        amount = p.push(L, value);\
+    }\
+    else\
+    {\
+        amount = sol::stack::push(L, sol::nil);\
+    }\
+    return amount;\
+}\
+template <typename Handler>\
+bool sol_lua_check(sol::types<type_in>, lua_State* L, int index, Handler&& handler, sol::stack::record& tracking) {\
+    int absolute_index = lua_absindex(L, index);\
+    sol::type v = sol::type_of(L, absolute_index);\
+    if (v == sol::type::nil)\
+    {\
+        return true;\
+    }\
+    else if (v == sol::type::userdata)\
+    {\
+        using Tu = sol::meta::unqualified_t<type_in>;\
+        sol::stack::unqualified_checker<type_in, sol::lua_type_of_v<Tu>> c{};\
+        c.check(L, index, std::forward<Handler>(handler), tracking);\
+        return true;\
+    }\
+    else\
+    {\
+        tracking.use(1);\
+        sol::stack::check<sol::userdata>(L, absolute_index, handler);\
+        return false;\
+    }\
+}\
+inline type_in& sol_lua_get(sol::types<type_in> types, lua_State* L, int index, sol::stack::record& tracking)\
+{\
+    int absolute_index = lua_absindex(L, index);\
+    sol::type v = sol::type_of(L, absolute_index);\
+    if (v == sol::type::nil)\
+    {\
+        tracking.use(1);\
+        void* c = add_lua_garbage(sizeof(type_in));\
+        type_in* ptr = reinterpret_cast<type_in*>(c);\
+        *ptr = con_in;\
+        return *ptr;\
+    }\
+    else\
+    {\
+        void* memory = lua_touserdata(L, index);\
+        tracking.use(1);\
+        void* rawdata = sol::detail::align_usertype_pointer(memory);\
+        void** pudata = static_cast<void**>(rawdata);\
+        void* udata = *pudata;\
+				return *sol::stack::unqualified_getter<sol::detail::as_value_tag<type_in>>::get_no_lua_nil_from(L, udata, index, tracking);\
+    }\
+}\
+
+#define LUA_PTR_TYPE(type_in) LUA_PTR_TYPE_CON(type_in,type_in(nullptr))
+
 class TC_GAME_API TSLua
 {
 public:
@@ -82,3 +144,9 @@ private:
     template <typename C, typename T>
     static void load_world_entity_methods_t(sol::state & state, sol::usertype<T> & target, std::string const& name);
 };
+
+// used by the pointer system to get class references even when we have to fake them
+TC_GAME_API void* add_lua_garbage(size_t size);
+TC_GAME_API void clear_lua_garbage();
+TC_GAME_API size_t GetLuaGarbageCur();
+TC_GAME_API size_t GetLuaGarbageTotal();

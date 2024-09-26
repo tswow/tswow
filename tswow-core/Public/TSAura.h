@@ -20,6 +20,7 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSArray.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 #include <vector>
@@ -116,3 +117,8 @@ class TC_GAME_API TSProcEventInfo
     TSHealInfo GetHealInfo();
     TSSpell GetSpell();
 };
+
+LUA_PTR_TYPE(TSAuraEffect)
+LUA_PTR_TYPE(TSAuraApplication)
+LUA_PTR_TYPE(TSAura)
+LUA_PTR_TYPE(TSProcEventInfo)

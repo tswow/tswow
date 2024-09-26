@@ -16,13 +16,15 @@
  */
 import { isWindows } from './Platform';
 import { wsys } from './System';
+import { term } from './Terminal';
 
 export namespace SevenZip {
     export function extract(sevenZipPath: string, archive: string, out: string) {
+        term.debug('misc', `Extracting ${archive} to ${out}`)
         if(isWindows()) {
             wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
         } else {
-            wsys.execIn(out,`p7zip -d -k "${archive}"`,'inherit')
+            wsys.execIn(out,`7z x "${archive}"`,'inherit')
         }
     }
 

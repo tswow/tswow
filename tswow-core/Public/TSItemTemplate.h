@@ -18,6 +18,7 @@
 
 #include "TSClasses.h"
 #include "TSEntity.h"
+#include "TSLua.h"
 
 struct ItemTemplate;
 
@@ -236,3 +237,4 @@ public:
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);
+LUA_PTR_TYPE_CON(TSItemTemplate,TSItemTemplate())

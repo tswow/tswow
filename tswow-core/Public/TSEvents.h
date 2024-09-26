@@ -488,6 +488,7 @@ struct TSEvents
         ID_EVENT(OnCheckFishingCast, TSSpell, TSWorldObject, TSNumber<uint32>, TSMutableNumber<uint8>)
         // @epoch-end
         ID_EVENT(OnSuccessfulDispel, TSSpell, TSNumber<uint32>)
+        ID_EVENT(OnCancel, TSSpell, TSNumber<uint32> oldState)
         ID_EVENT(OnEffect, TSSpell, TSMutable<bool,bool> preventDefault, TSSpellEffectInfo, TSNumber<uint32> mode, TSUnit unitTarget, TSItem itemTarget, TSGameObject gameObjectTarget, TSCorpse corpseTarget)
         ID_EVENT(OnEffectApplyGlyph
             , TSSpell

@@ -46,8 +46,6 @@ void TSInstance::DoCloseDoorOrButton(TSGUID guid)
 {
 #if TRINITY
     m_script->DoCloseDoorOrButton(guid.asGUID());
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::DoCloseDoorOrButton not implemented for AzerothCore");
 #endif
 }
 
@@ -55,8 +53,6 @@ void TSInstance::DoRespawnGameObject(TSGUID guid, uint32 seconds)
 {
 #if TRINITY
     m_script->DoRespawnGameObject(guid.asGUID(), Seconds(seconds));
-#elif AZEROTHCORE
-    m_script->DoRespawnGameObject(ObjectGuid(guid), seconds);
 #endif
 }
 
@@ -89,24 +85,12 @@ void TSInstance::DoRemoveAurasDueToSpellOnPlayers(uint32 spell, bool includePets
 {
 #if TRINITY
     m_script->DoRemoveAurasDueToSpellOnPlayers(spell, includePets, includeControlled);
-#elif AZEROTHCORE
-    if (includePets || includeControlled)
-    {
-        TS_LOG_ERROR("tswow.api", "TSInstance::DoRemoveAurasDueToSpellOnPlayers not implemented for AzerothCore with includePets/includeControlled set");
-    }
-    m_script->DoRemoveAurasDueToSpellOnPlayers(spell);
 #endif
 }
 void TSInstance::DoCastSpellOnPlayers(uint32 spell, bool includePets, bool includeControlled)
 {
 #if TRINITY
     m_script->DoCastSpellOnPlayers(spell, includePets, includeControlled);
-#elif AZEROTHCORE
-    if (includePets || includeControlled)
-    {
-        TS_LOG_ERROR("tswow.api", "TSInstance::DoCastSpellOnPlayers not implemented for AzerothCore with includePets/includeControlled set");
-    }
-    m_script->DoCastSpellOnPlayers(spell);
 #endif
 }
 
@@ -134,8 +118,6 @@ void TSInstance::BindAllPlayers()
 {
 #if TRINITY
     m_script->instance->PermBindAllPlayers();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::BindAllPlayers not implemented for AzerothCore");
 #endif
 }
 
@@ -143,8 +125,6 @@ bool TSInstance::HasPermBoundPlayers()
 {
 #if TRINITY
     return m_script->instance->HasPermBoundPlayers();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::HasPermBoundPlayers not implemented for AzerothCore");
 #endif
 }
 
@@ -152,8 +132,6 @@ TSNumber<uint32> TSInstance::GetMaxPlayers()
 {
 #if TRINITY
     return m_script->instance->GetMaxPlayers();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::GetMaxPlayers not implemented for AzerothCore");
 #endif
 }
 
@@ -161,8 +139,6 @@ TSNumber<uint32> TSInstance::GetMaxResetDelay()
 {
 #if TRINITY
     return m_script->instance->GetMaxResetDelay();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::GetMaxResetDelay not implemented for AzerothCore");
 #endif
 }
 
@@ -170,9 +146,6 @@ TSNumber<uint32> TSInstance::GetTeamIDInInstance()
 {
 #if TRINITY
     return m_script->instance->GetTeamIdInInstance();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::GetTeamIDInInstance not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -180,9 +153,6 @@ TSNumber<uint32> TSInstance::GetFactionInInstance()
 {
 #if TRINITY
     return m_script->instance->GetTeamInInstance();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSInstance::GetFactionIDInInstance not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -228,9 +198,6 @@ TSGUIDSet TSBossInfo::GetMinionGUIDs()
 {
 #if TRINITY
     return TSGUIDSet(&m_info->minion);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBossInfo::GetMinionGUIDs not implemented for AzerothCore");
-    return TSGUIDSet(nullptr);
 #endif
 }
 
@@ -238,9 +205,6 @@ TSGUIDSet TSBossInfo::GetDoorsClosedDuringEncounter()
 {
 #if TRINITY
     return TSGUIDSet(&m_info->door[DoorType::DOOR_TYPE_ROOM]);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBossInfo::GetDoorsClosedDuringEncounter not implemented for AzerothCore");
-    return TSGUIDSet(nullptr);
 #endif
 }
 
@@ -248,9 +212,6 @@ TSGUIDSet TSBossInfo::GetDoorsOpenDuringEncounter()
 {
 #if TRINITY
     return TSGUIDSet(&m_info->door[DoorType::DOOR_TYPE_SPAWN_HOLE]);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBossInfo::GetDoorsOpenDuringEncounter not implemented for AzerothCore");
-    return TSGUIDSet(nullptr);
 #endif
 }
 
@@ -258,9 +219,6 @@ TSGUIDSet TSBossInfo::GetDoorsOpenAfterEncounter()
 {
 #if TRINITY
     return TSGUIDSet(&m_info->door[DoorType::DOOR_TYPE_PASSAGE]);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBossInfo::GetDoorsOpenAfterEncounter not implemented for AzerothCore");
-    return TSGUIDSet(nullptr);
 #endif
 }
 
@@ -271,8 +229,6 @@ bool TSBossInfo::IsWithinBoundary(float x, float y, float z)
     {
         if (!part->IsWithinBoundary(Position(x, y, z))) return false;
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBossInfo::IsWithinBoundary not implemented for AzerothCore");
 #endif
     return true;
 }
@@ -287,8 +243,6 @@ bool TSBossInfo::IsWithinBoundary(TSWorldObject obj)
             return false;
         }
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBossInfo::IsWithinBoundary not implemented for AzerothCore");
 #endif
     return true;
 }
@@ -313,12 +267,12 @@ void TSInstance::SetInstanceData64(uint32 id, uint64 data)
     m_script->SetData64(id, data);
 }
 
-TSGUID TSInstance::GetInstanceGuidData(uint32 id)
+TSGUID TSInstance::GetInstanceGUIDData(uint32 id)
 {
     return TSGUID(m_script->GetGuidData(id));
 }
 
-void TSInstance::SetInstanceGuidData(uint32 id, TSGUID data)
+void TSInstance::SetInstanceGUIDData(uint32 id, TSGUID data)
 {
     m_script->SetGuidData(id, data->asGUID());
 }

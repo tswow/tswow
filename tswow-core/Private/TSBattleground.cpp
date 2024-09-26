@@ -41,8 +41,6 @@
 
 #if TRINITY
 #define TSTeamId(x) x
-#elif AZEROTHCORE
-#define TSTeamId(x) TeamId(x)
 #endif
 
 TS_CLASS_DEFINITION(TSBattlegroundScore, BattlegroundScore, m_score)
@@ -421,8 +419,6 @@ void TSBattlegroundScore::ApplyBaseToPacket(TSBattleground bg, TSWorldPacket pac
 TSBattlegroundPlayer::TSBattlegroundPlayer(TSBattleground bg, uint64 guid, uint32 team, int64 offlineRemoveTime)
 #if TRINITY
     : TSEntityProvider(&bg.bg->m_playerEntityMap[guid])
-#elif AZEROTHCORE // TODO: fix
-    : TSEntityProvider(nullptr)
 #endif
     , m_guid(guid)
     , m_team(team)
@@ -480,11 +476,7 @@ std::string TSBattleground::GetBGName()
 TSNumber<uint32> TSBattleground::GetAlivePlayersCountByTeam(uint32 team)
 {
 
-#ifndef AZEROTHCORE
     return bg->GetAlivePlayersCountByTeam((Team)team);
-#else
-    return bg->GetAlivePlayersCountByTeam((TeamId)team);
-#endif
 }
 
 /**
@@ -507,9 +499,6 @@ TSNumber<uint32> TSBattleground::GetBracketID()
 {
 #if TRINITY
     return bg->GetBracketId();
-#else
-    TS_LOG_ERROR("tswow.api","TSBattleground::GetBracketID not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -536,11 +525,7 @@ TSNumber<uint32> TSBattleground::GetEndTime()
 TSNumber<uint32> TSBattleground::GetFreeSlotsForTeam(uint32 team)
 {
 
-#ifndef AZEROTHCORE
     return bg->GetFreeSlotsForTeam((Team)team);
-#else
-    return bg->GetFreeSlotsForTeam((TeamId)team);
-#endif
 }
 
 /**
@@ -560,11 +545,7 @@ TSNumber<uint32> TSBattleground::GetInstanceID()
  */
 TSNumber<uint32> TSBattleground::GetTypeID()
 {
-#ifndef AZEROTHCORE
     return bg->GetTypeID();
-#else
-    return bg->GetBgTypeID();
-#endif
 }
 
 /**
@@ -594,11 +575,7 @@ TSNumber<uint32> TSBattleground::GetMinLevel()
  */
 TSNumber<uint32> TSBattleground::GetMaxPlayers()
 {
-#ifndef AZEROTHCORE
     return bg->GetMaxPlayers();
-#else
-    return bg->GetMaxPlayersPerTeam() * 2;
-#endif
 }
 
 /**
@@ -608,11 +585,7 @@ TSNumber<uint32> TSBattleground::GetMaxPlayers()
  */
 TSNumber<uint32> TSBattleground::GetMinPlayers()
 {
-#ifndef AZEROTHCORE
     return bg->GetMinPlayers();
-#else
-    return bg->GetMaxPlayersPerTeam() * 2;
-#endif
 }
 
 /**
@@ -671,9 +644,6 @@ TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
 #if TRINITY
             , player.second.Team
             , player.second.OfflineRemoveTime
-#elif AZEROTHCORE
-            , 0
-            , 0
 #endif
         ));
     }
@@ -715,9 +685,6 @@ TSBattlegroundPlayer TSBattleground::GetBGPlayer(TSGUID guid)
 #if TRINITY
                 , player.second.Team
                 , player.second.OfflineRemoveTime
-#elif AZEROTHCORE
-                , 0
-                , 0
 #endif
             );
         }
@@ -782,8 +749,6 @@ void TSBattleground::PlaySound(uint32 sound, uint32 team)
     {
 #if TRINITY
         bg->PlaySoundToTeam(sound, team);
-#elif AZEROTHCORE
-        TS_LOG_ERROR("tswow.api", "TSBattleground::PlaySound not implemented for AzerothCore with non-neutral team.");
 #endif
     }
 }
@@ -881,15 +846,6 @@ TSCreature TSBattleground::AddCreature(uint32 entry, uint32 type, float x, float
 {
 #if TRINITY
     return TSCreature(bg->AddCreature(entry, type, Position(x, y, z, o), TeamId(teamId), respawnTime));
-#elif AZEROTHCORE
-    if (teamId != TS_TEAM_NEUTRAL)
-    {
-        TS_LOG_ERROR("tswow.api", "TSBattleground::AddCreature not implemented for AzerothCore with non-neutral teamId");
-    }
-    else
-    {
-        return TSCreature(bg->AddCreature(entry, type, x, y, z, o,respawnTime));
-    }
 #endif
 }
 
@@ -897,8 +853,6 @@ bool TSBattleground::AddObject(uint32 type, uint32 entry, float x, float y, floa
 {
 #if TRINITY
     return bg->AddObject(type, entry, Position(x, y, z, o), rot0, rot1, rot2, rot3, respawnTime, GOState(goState));
-#elif AZEROTHCORE
-    return bg->AddObject(type, entry, x, y, z, o, rot0, rot1, rot2, rot3, respawnTime, GOState(goState));
 #endif
 }
 
@@ -906,8 +860,6 @@ void TSBattleground::AddSpiritGuide(uint32 type, float x, float y, float z, floa
 {
 #if TRINITY
     bg->AddSpiritGuide(type, Position(x, y, z, o), TeamId(teamId));
-#elif AZEROTHCORE
-    bg->AddSpiritGuide(type, x, y, z, o, TeamId(teamId));
 #endif
 }
 
@@ -977,9 +929,6 @@ bool TSBattleground::RemoveObjectFromWorld(uint32 type)
 {
 #if TRINITY
     return bg->RemoveObjectFromWorld(type);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSBattleground::RemoveObjectFromWorld not implemented for AzerothCore.");
-    return false;
 #endif
 }
 TSNumber<int32> TSBattleground::GetObjectType(TSGUID guid)
@@ -994,8 +943,6 @@ bool TSBattleground::IsHoliday()
 {
 #if TRINITY
     return bg->m_HonorMode == BG_HOLIDAY;
-#elif AZEROTHCORE
-    return bg->m_HonorMode == BG_HOLIDAY;
 #endif
 }
 
@@ -1003,9 +950,6 @@ TSGameObject TSBattleground::GetBGGameObject(uint32 type, bool logErrors)
 {
 #if TRINITY
     return TSGameObject(bg->GetBGObject(type, logErrors));
-#elif AZEROTHCORE
-    // ac always logs errors
-    return TSGameObject(bg->GetBGObject(type));
 #endif
 }
 
@@ -1013,8 +957,6 @@ TSCreature TSBattleground::GetBGCreature(uint32 type, bool logErrors)
 {
 #if TRINITY
     return TSCreature(bg->GetBGCreature(type, logErrors));
-#elif AZEROTHCORE
-    return TSCreature(bg->GetBGCreature(type));
 #endif
 }
 

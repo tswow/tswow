@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSBase.h"
+#include "TSLua.h"
 
 struct AreaTriggerEntry;
 struct TSAreaTriggerEvents;
@@ -44,4 +45,7 @@ public:
 };
 
 void InitializeAreaTriggerEvents(uint32 entry, TSAreaTriggerEvents* events);
+
 TSAreaTriggerEvents* GetAreaTriggerEvents(uint32 entry);
+
+LUA_PTR_TYPE(TSAreaTriggerEntry);

@@ -183,7 +183,7 @@ bool TSItem::IsEquipped()
  */
 bool TSItem::HasQuest(uint32 quest)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return item->hasQuest(quest);
 #else
     return item->HasQuest(quest);
@@ -298,9 +298,6 @@ std::string TSItem::GetItemLink(uint8 locale)
         item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
         (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
     return oss.str();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSItem::GetItemLink not implemented for AzerothCore");
-    return "";
 #endif
 }
 
@@ -578,7 +575,7 @@ TSNumber<uint32> TSItem::GetBagSize()
 void TSItem::SetOwner(TSPlayer _player)
 {
     auto player = _player.player;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     item->SetOwnerGUID(player->TS_GET_GUID());
 #else
     item->SetOwnerGuid(player->TS_GET_GUID());
@@ -670,10 +667,6 @@ void TSItem::SaveToDB()
 #if defined TRINITY
     CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
     item->SaveToDB(trans);
-#elif defined AZEROTHCORE
-    //SQLTransaction trans = SQLTransaction(NULL);
-    //item->SaveToDB(trans);
-    TS_LOG_ERROR("tswow.api", "TSItem::SaveToDB not implemented for AzerothCore");
 #else
     item->SaveToDB();
 #endif

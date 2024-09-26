@@ -107,9 +107,6 @@ TSNumber<uint32> TSAuraEffect::GetRemainingTicks()
 {
 #if TRINITY
     return aura->GetRemainingTicks();
-#elif AZEROTHCORE
-    LOG_WARN("tswow.api", "TSAuraEffect::GetRemainingTicks might not be correctly implemented for AzerothCore");
-    return aura->GetTotalTicks() - aura->GetTickNumber();
 #endif
 }
 
@@ -174,8 +171,6 @@ bool TSAuraApplication::IsSelfCast()
 {
 #if TRINITY
     return aura->IsSelfcast();
-#elif AZEROTHCORE
-    return aura->IsSelfcasted();
 #endif
 }
 
@@ -251,7 +246,7 @@ TSNumber<uint32> TSAura::GetCasterLevel()
  */
 TSNumber<int32> TSAura::GetDuration()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return aura->GetDuration();
 #else
     return aura->GetAuraDuration();
@@ -278,7 +273,7 @@ TSNumber<uint32> TSAura::GetAuraID()
  */
 TSNumber<int32> TSAura::GetMaxDuration()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return aura->GetMaxDuration();
 #else
     return aura->GetAuraMaxDuration();
@@ -304,7 +299,7 @@ TSNumber<uint32> TSAura::GetStackAmount()
  */
 TSWorldObject  TSAura::GetOwner()
 {
-#if defined TRINITY || defined AZEROTHCORE
+#if defined TRINITY
      return TSWorldObject(aura->GetOwner());
 #else
      return TSWorldObject(aura->GetTarget());
@@ -318,7 +313,7 @@ TSWorldObject  TSAura::GetOwner()
  */
 void TSAura::SetDuration(int32 duration)
 {
-#if defined TRINITY || defined AZEROTHCORE
+#if defined TRINITY
     aura->SetDuration(duration);
 #else
     aura->GetHolder()->SetAuraDuration(duration);
@@ -340,7 +335,7 @@ void TSAura::SetDuration(int32 duration)
  */
 void TSAura::SetMaxDuration(int32 duration)
 {
-#if defined TRINITY || defined AZEROTHCORE
+#if defined TRINITY
     aura->SetMaxDuration(duration);
 #else
     aura->GetHolder()->SetAuraMaxDuration(duration);
@@ -362,7 +357,7 @@ void TSAura::SetMaxDuration(int32 duration)
  */
 void TSAura::SetStackAmount(uint8 amount)
 {
-#if defined TRINITY || defined AZEROTHCORE
+#if defined TRINITY
     aura->SetStackAmount(amount);
 #else
     aura->GetHolder()->SetStackAmount(amount);
@@ -374,7 +369,7 @@ void TSAura::SetStackAmount(uint8 amount)
  */
 void TSAura::Remove()
 {
-#if defined TRINITY || defined AZEROTHCORE
+#if defined TRINITY
     aura->Remove();
 #else
     aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);

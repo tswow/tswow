@@ -21,6 +21,7 @@
 #include "TSClasses.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -106,3 +107,8 @@ private:
 
     friend class TSLua;
 };
+
+TC_GAME_API TSInstance ToInstance(TSMap);
+TC_GAME_API TSBattleground ToBattleground(TSMap);
+
+LUA_PTR_TYPE(TSMap)

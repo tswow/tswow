@@ -19,6 +19,7 @@
 #include "TSMain.h"
 #include "TSArray.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -92,3 +93,5 @@ private:
     void LSetMembersGroup0(TSGUID guid, uint8 subGroup);
     void LSetMembersGroup1(TSNumber<uint32> guid, uint8 subGroup);
 };
+
+LUA_PTR_TYPE(TSGroup)

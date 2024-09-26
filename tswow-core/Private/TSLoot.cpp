@@ -17,8 +17,6 @@
 #include "TSLoot.h"
 #if TRINITY
 #include "Loot.h"
-#elif AZEROTHCORE
-#include "LootMgr.h"
 #endif
 #include "LootMgr.h"
 #include "ObjectGuid.h"
@@ -193,9 +191,6 @@ bool TSLoot::GetGeneratesNormally()
 {
 #if TRINITY
     return loot->generateNormally;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSLoot::GetGeneratesNormally not implemented for AzerothCore");
-    return true;
 #endif
 }
 
@@ -203,8 +198,6 @@ void TSLoot::SetGeneratesNormally(bool generatesNormally)
 {
 #if TRINITY
     loot->generateNormally = generatesNormally;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSLoot::SetGeneratesNormally not implemented for AzerothCore");
 #endif
 }
 

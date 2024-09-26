@@ -3,8 +3,6 @@
 #include "TSMainThreadContext.h"
 #if TRINITY
 #include "MapManager.h"
-#elif AZEROTHCORE
-#include "MapMgr.h"
 #endif
 #include "Player.h"
 #include "Map.h"
@@ -56,8 +54,6 @@ void TSMainThreadContext::SendMail(uint8 senderType, uint64 from, uint64 to, std
 
 #if TRINITY
     draft.SendMailTo(trans, MailReceiver(player, ObjectGuid(to)), sender, MAIL_CHECK_MASK_NONE, delay);
-#elif AZEROTHCORE
-    draft.SendMailTo(trans, MailReceiver(player, uint32(to)), sender, MAIL_CHECK_MASK_NONE, delay);
 #endif
     CharacterDatabase.CommitTransaction(trans);
 }

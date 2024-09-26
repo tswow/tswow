@@ -76,6 +76,7 @@ export class Client {
     }
 
     async kill() {
+        term.debug('client', `Killing client`)
         let processes = processMap[this.dataset.fullName];
         let count = 0;
         if(processes !== undefined) {
@@ -112,6 +113,7 @@ export class Client {
     }
 
     writeRealmlist() {
+        term.debug('client', `Writing realmlist`)
         const realmlist = this.path.Data.locale().realmlist_wtf.readString();
         if(realmlist !== 'set realmlist localhost') {
             wfs.makeBackup(this.path.Data.locale().realmlist_wtf.get())
@@ -203,7 +205,7 @@ export class Client {
             } else {
                 // todo: stupid bugged code
                 //term.warn('client',
-                //    `Unclean wow.exe detected. Consider `
+                //    `Unclean Wow.exe detected. Consider `
                 // + `replacing it with a clean 3.3.5a client`)
             }
         }
@@ -214,6 +216,7 @@ export class Client {
             term.success('client',`Source wow client hash is ${hash}`);
         }
 
+        term.debug('client', `Writing ClientExtensions.dll`)
         if(this.dataset.config.client_patches.includes(EXTENSION_DLL_PATCH_NAME)) {
             if(!ipaths.bin.ClientExtensions_dll.exists()) {
                 throw new Error(
@@ -228,16 +231,19 @@ export class Client {
                 .copy(this.path.ClientExtensions_dll)
         }
 
+        term.debug('client', `Applying client patches`)
         const usedPatchNames = this.dataset.config.client_patches
         const usedPatches = (await this.exePatches())
             .filter(x=>usedPatchNames.includes(x.name));
         usedPatches.forEach(cat=>{
+            term.debug('client', `Applying client patch ${cat.name}`)
             cat.patches.forEach(patch=>{
                 patch.values.forEach((value,offset)=>{
                     wowbin.writeUInt8(value,patch.address+offset);
                 })
             })
         })
+        term.debug('client', `Writing patched wow.exe`)
         this.path.wow_exe.writeBuffer(wowbin);
     }
 
@@ -259,12 +265,14 @@ export class Client {
     }
 
     installAddons() {
+        term.debug('client', `Installing addons`)
         ipaths.bin.addons.iterate('FLAT','DIRECTORIES','FULL',node=>{
             node.copy(this.path.Interface.AddOns.join(node.basename()));
         })
     }
 
     clearCache() {
+        term.debug('client', `Clearing cache`)
         return this.path.Cache.remove();
     }
 
@@ -298,6 +306,7 @@ export class Client {
     }
 
     static initialize() {
+        term.debug('client', `Initializing client`)
         if(!process.argv.includes('noclient') && NodeConfig.AutoStartClient > 0) {
             Identifier.getDataset(NodeConfig.DefaultDataset)
                 .client.startup(NodeConfig.AutoStartClient)

@@ -20,6 +20,7 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSWorldObject.h"
+#include "TSLua.h"
 
 class TSGameObjectTemplate;
 
@@ -56,3 +57,5 @@ public:
     void SendCustomAnim(uint32 anim);
     TSNumber<uint8> GetGoAnimProgress();
 };
+
+LUA_PTR_TYPE(TSGameObject)

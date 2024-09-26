@@ -374,3 +374,5 @@ private:
 		void LSendShowMailBox1(TSNumber<uint32> guid);
 		friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSPlayer)

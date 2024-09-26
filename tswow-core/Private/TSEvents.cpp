@@ -23,8 +23,6 @@
 #include "TSBattleground.h"
 #if TRINITY
 #include "MapManager.h"
-#elif AZEROTHCORE
-#include "MapMgr.h"
 #endif
 #include "GameObject.h"
 #include "Creature.h"

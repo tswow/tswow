@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 class TC_GAME_API TSQuest {
 public:
@@ -45,3 +46,5 @@ public:
     TSArray<TSNumber<uint32>> GetRewardChoiceItems();
     /** @epoch-end */
 };
+
+LUA_PTR_TYPE(TSQuest)

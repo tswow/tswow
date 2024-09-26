@@ -53,7 +53,6 @@ export namespace TrinityCore {
 
         if(!globalOnly) {
             let sol_sourcedir = [
-                bpaths.AzerothCore.sol_headers,
                 bpaths.TrinityCore.sol_headers
             ].find(x=>x.exists())
 
@@ -62,7 +61,7 @@ export namespace TrinityCore {
             }
 
             sol_sourcedir.copy(ipaths.bin.include);
-            bpaths.TrinityCore.lua_headers.src.iterateDef(node=>{
+            bpaths.TrinityCore.lua_headers.iterateDef(node=>{
                 if(node.endsWith('.h')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
@@ -243,7 +242,7 @@ export namespace TrinityCore {
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                 +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
-                +` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
+                +` -DBOOST_ROOT="${bpaths.boost.boost_1_82_0.abs().get()}"`
                 +` -DTRACY_ENABLE="${tracyEnabled?'ON':'OFF'}"`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-better-timer',[process.argv,args1])?'ON':'OFF'}"`
@@ -251,7 +250,7 @@ export namespace TrinityCore {
                 +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
-                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_74_0.abs().get()}`,...process.env}});
+                wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_82_0.abs().get()}`,...process.env}});
                 if(generateOnly) return;
                 wsys.exec(buildCommand, 'inherit');
             } else {
@@ -309,7 +308,7 @@ export namespace TrinityCore {
         });
 
         if(isWindows()) {
-            [bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib]
+            [bpaths.boost.boost_1_82_0.lib64_msvc_14_3.fslib]
                 .forEach(x=>{
                     x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))
                 })

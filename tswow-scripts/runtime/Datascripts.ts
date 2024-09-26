@@ -10,6 +10,7 @@ import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 
 /**
@@ -180,6 +181,7 @@ export class Datascripts {
     compile() {
         this.path.swcrc.writeJson(datascripts_swcrc)
         try {
+            term.debug('datascripts', `Compiling datascripts at ${this.path.abs().get()}`)
             wsys.execIn(
                   this.path.dirname().get()
                 , `swc datascripts -d datascripts/build --sync`,'inherit'
@@ -225,8 +227,10 @@ export class Datascripts {
     }
 
     static initialize() {
+        term.debug('misc', `Initializing datascripts`)
         this.installWowLib();
         if(!ipaths.node_modules.wow.exists()) {
+            term.log('datascripts', `Running 'npm i' because ${ipaths.node_modules.wow.abs().get()} does not exist.`)
             wsys.exec(`npm i`);
         }
 
@@ -392,7 +396,7 @@ export class Datascripts {
                 && x.endsWith('-v8.log'))
             .forEach((x,i)=>{
                 wsys.exec(
-                      `node --prof-process ${x}`
+                      `${NodeExecutable} --prof-process ${x}`
                     + ` > node-profiling${i==0?'':`-${i}`}.txt`
                 )
                 wfs.remove(x)

@@ -1,11 +1,13 @@
 import { commands } from "../util/Commands";
 import { ipaths } from "../util/Paths";
+import { term } from "../util/Terminal";
 import { BuildCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { NodeConfig } from "./NodeConfig";
 
 export class MiscCommands {
     static initialize() {
+        term.debug('misc', `Initializing misc commands`)
         BuildCommand.addCommand(
               'all'
             , '(see arguments to build datscripts/addon/livescripts)'

@@ -92,20 +92,17 @@ export class Dataset {
 
     gamebuildSQL() {
         return `INSERT INTO build_info VALUES`
-            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a",NULL,NULL,NULL,`
-            +  ` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-            +  ` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
+            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a")`
             +  ` ON DUPLICATE KEY UPDATE`
             +  ` majorVersion=3,`
             +  ` minorVersion=3,`
             +  ` bugfixVersion=5,`
-            +  ` hotfixVersion="a",`
-            +  ` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-            +  ` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
+            +  ` hotfixVersion="a"`
             +  `;`
     }
 
     async setupClientData() {
+        term.debug(this.logName(), `Setting up client data`)
         let anyChange: boolean = false;
         if(!this.path.luaxml_source.exists()) {
             MapData.luaxml(this);
@@ -147,10 +144,6 @@ export class Dataset {
                 worldSql = this.path.world_sql.abs().get()
             } else {
                 switch(this.config.EmulatorCore) {
-                    case 'azerothcore': {
-                        worldSql = ipaths.bin.sql_ac.db_world.get()
-                        break;
-                    }
                     case 'trinitycore': {
                         worldSql = ipaths.bin.tdb.get()
                         break;
@@ -168,9 +161,6 @@ export class Dataset {
                     await mysql.applyExtraSQLUpdates(db, this.path.sql_updates.world);
                 }
                 
-                break;
-            case 'azerothcore':
-                // todo: updates
                 break;
         }
     }
@@ -254,6 +244,7 @@ export class Dataset {
     }
 
     static initialize() {
+        term.debug('dataset', `Initializing datasets`)
         CreateCommand.addCommand(
             'dataset'
           , 'module dataset clientPatch=12340'

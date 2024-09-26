@@ -48,7 +48,7 @@ TSGameObject::TSGameObject() : TSWorldObject()
 bool TSGameObject::HasQuest(uint32 questId)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return go->hasQuest(questId);
 #else
     return go->HasQuest(questId);
@@ -160,7 +160,7 @@ TSPlayer  TSGameObject::GetLootRecipient()
  */
 TSGroup  TSGameObject::GetLootRecipientGroup()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSGroup(go->GetLootRecipientGroup());
 #else
      return TSGroup(go->GetGroupLootRecipient());
@@ -176,9 +176,6 @@ TSNumber<uint32> TSGameObject::GetDBTableGUIDLow()
 {
 #ifdef TRINITY
     return go->GetSpawnId();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGameObject::GetDBTableGUIDLow is not implemented for AzerothCore.");
-    return 0;
 #else
     // on mangos based this is same as lowguid
     return go->GetGUIDLow();
@@ -265,7 +262,7 @@ void TSGameObject::RemoveFromWorld(bool deldb)
 {
 
     // cs_gobject.cpp copy paste
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     ObjectGuid ownerGuid = go->GetOwnerGUID();
 #else
     ObjectGuid ownerGuid = go->GetOwnerGuid();
@@ -354,8 +351,6 @@ void TSGameObject::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var
     {
         sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGameObject::FireSmartEvent not implemented for AzerothCore");
 #endif
 }
 

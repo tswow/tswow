@@ -111,7 +111,7 @@ bool TSPlayer::HasTalent(uint32 spellId,uint8 spec)
  */
 bool TSPlayer::HasAchieved(uint32 achievementId)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->HasAchieved(achievementId);
 #else
     return player->GetAchievementMgr().HasAchievement(achievementId);
@@ -419,7 +419,7 @@ bool TSPlayer::IsInGuild()
  */
 bool TSPlayer::IsGM()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->IsGameMaster();
 #else
     return player->isGameMaster();
@@ -470,11 +470,7 @@ bool TSPlayer::CanCompleteQuest(uint32 entry)
  */
 bool TSPlayer::IsHorde()
 {
-#ifdef AZEROTHCORE
-    return (player->GetTeamId() == TEAM_HORDE);
-#else
     return (player->GetTeam() == HORDE);
-#endif
 }
 
 /**
@@ -484,11 +480,7 @@ bool TSPlayer::IsHorde()
  */
 bool TSPlayer::IsAlliance()
 {
-#ifdef AZEROTHCORE
-    return (player->GetTeamId() == TEAM_ALLIANCE);
-#else
     return (player->GetTeam() == ALLIANCE);
-#endif
 }
 
 /**
@@ -626,7 +618,7 @@ bool TSPlayer::IsRested()
  */
 bool TSPlayer::InBGQueue()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->InBattlegroundQueue();
 #else
     return player->InBattleGroundQueue();
@@ -652,7 +644,7 @@ bool TSPlayer::InArena()
  */
 bool TSPlayer::InBG()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->InBattleground();
 #else
     return player->InBattleGround();
@@ -820,7 +812,7 @@ TSNumber<uint32> TSPlayer::GetLatency()
     return player->GetSession()->GetLatency();
 }
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
 /**
  * Returns the faction ID the [Player] is currently flagged as champion for
  *
@@ -901,7 +893,7 @@ TSNumber<uint32> TSPlayer::GetXPRestBonus(uint32 xp)
  */
 TSNumber<uint32> TSPlayer::GetBGTypeID()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->GetBattlegroundTypeId();
 #else
     return player->GetBattleGroundTypeId();
@@ -915,7 +907,7 @@ TSNumber<uint32> TSPlayer::GetBGTypeID()
  */
 TSNumber<uint32> TSPlayer::GetBattlegroundID()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->GetBattlegroundId();
 #else
     return player->GetBattleGroundId();
@@ -1105,7 +1097,7 @@ TSNumber<int32> TSPlayer::GetReputation(uint32 faction)
  */
 TSUnit  TSPlayer::GetComboTarget()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSUnit(ObjectAccessor::GetUnit(*player,player->GetComboTarget()->GetGUID()));
 #else
      return TSUnit(player->GetMap()->GetUnit(player->GetComboTargetGuid()));
@@ -1176,7 +1168,7 @@ TSNumber<uint32> TSPlayer::GetQuestLevel(TSQuest _quest)
 {
     auto quest = _quest.quest;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return player->GetQuestLevel(quest);
 #else
     return player->GetQuestLevelForPlayer(quest);
@@ -1295,7 +1287,7 @@ TSNumber<uint32> TSPlayer::GetGossipTextID(TSWorldObject _obj)
  */
 TSUnit  TSPlayer::GetSelection()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSUnit(player->GetSelectedUnit());
 #else
      return TSUnit(player->GetMap()->GetUnit(player->GetSelectionGuid()));
@@ -1422,11 +1414,7 @@ TSNumber<uint32> TSPlayer::GetAccountID()
 std::string TSPlayer::GetAccountName()
 {
     std::string accName;
-#ifndef AZEROTHCORE
     (eAccountMgr->GetName(player->GetSession()->GetAccountId(), accName));
-#else
-    (AccountMgr::GetName(player->GetSession()->GetAccountId(), accName));
-#endif
     return accName;
 }
 
@@ -1484,8 +1472,6 @@ void TSPlayer::RemoveAllItemMods()
 {
 #if TRINITY
    player->_RemoveAllItemMods();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::RemoveAllItemMods not implemented for AzerothCore");
 #endif
 }
 
@@ -1511,8 +1497,6 @@ void TSPlayer::RemoveItemMods(TSItem item, uint8 slot)
         if (slot == EQUIPMENT_SLOT_RANGED)
             player->_ApplyAmmoBonuses();
     }
-#elif AZEROTHCORE
-TS_LOG_ERROR("tswow.api", "TSPlayer::RemoveItemMods not implemented for AzerothCore");
 #endif 
 }
 
@@ -1520,8 +1504,6 @@ void TSPlayer::ApplyAllItemMods()
 {
 #if TRINITY
     player->_ApplyAllItemMods();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyAllItemMods not implemented for AzerothCore");
 #endif    
 }
 
@@ -1529,8 +1511,6 @@ void TSPlayer::ApplyItemMods(TSItem item, uint8 slot, bool apply, bool updateAur
 {
 #if TRINITY
     player->_ApplyItemMods(item.item, slot, apply, updateAuras);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyItemMods not implemented for AzerothCore");
 #endif  
 }
 
@@ -1544,8 +1524,6 @@ void TSPlayer::UpdateCache()
         const ItemTemplate* itemTemplate = sObjectMgr->GetItemTemplate(fields[0].GetUInt32());
         SendItemQueryPacket(itemTemplate);
     } while (result->NextRow());
-    #elif AZEROTHCORE
-        TS_LOG_ERROR("tswow.api", "TSPlayer::UpdateCache not implemented for AzerothCore");
     #endif
 }
 
@@ -1899,7 +1877,7 @@ void TSPlayer::SetBindPoint(float x,float y,float z,uint32 mapId,uint32 areaId)
 {
 
 WorldLocation loc(mapId, x, y, z);
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     player->SetHomebind(loc, areaId);
 #else
     player->SetHomebindToLocation(loc, areaId);
@@ -1925,7 +1903,7 @@ void TSPlayer::UnlockAchievement(uint32 entry)
     player->UnlockAchievement(entry);
 }
 
-#if !defined TRINITY && !AZEROTHCORE
+#if !defined TRINITY
 /**
  * Toggle the [Player]s FFA flag
  *
@@ -1959,7 +1937,7 @@ void TSPlayer::ResetPetTalents(int32 pType)
  */
 void TSPlayer::ResetAchievements()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     player->ResetAchievements();
 #else
     player->GetAchievementMgr().Reset();
@@ -2018,11 +1996,7 @@ void TSPlayer::ModifyHonorPoints(int32 amount)
  */
 void TSPlayer::SaveToDB()
 {
-#ifndef AZEROTHCORE
     player->SaveToDB();
-#else
-    player->SaveToDB(false, false);
-#endif
 }
 
 /**
@@ -2068,8 +2042,6 @@ void TSPlayer::Mute(uint32 muteseconds)
     oss << "UPDATE account SET mutetime = " << muteTime << " WHERE id = " << player->GetSession()->GetAccountId();
 #if TRINITY
     LoginDatabase.PExecute("{}", oss.str().c_str());
-#elif AZEROTHCORE
-    LoginDatabase.Execute("%s", oss.str().c_str());
 #endif
 }
 
@@ -2100,8 +2072,6 @@ void TSPlayer::SendAuctionMenu(TSUnit _unit)
 
 #ifdef TRINITY
     AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit->GetFaction());
-#elif AZEROTHCORE
-    AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit->getFaction());
 #else
     AuctionHouseEntry const* ahEntry = AuctionHouseMgr::GetAuctionHouseEntry(unit);
 #endif
@@ -2119,8 +2089,6 @@ WorldPacket data(MSG_AUCTION_HELLO, 12);
 #else
     player->GetSession()->SendPacket(&data);
 #endif
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendAuctionMenu not implemented for AzerothCore");
 #endif
 }
 
@@ -2145,8 +2113,6 @@ void TSPlayer::SendCreatureQueryPacket(uint32 entry)
         WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
         curSes->SendPacket(&response);
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendCreatureQueryPacket not implemented for AzerothCore");
 #endif
 }
 
@@ -2159,8 +2125,6 @@ void TSPlayer::SendGameObjectQueryPacket(uint32 entry)
         WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
         curSes->SendPacket(&response);
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendGameObjectQueryPacket not implemented for AzerothCore");
 #endif
 }
 
@@ -2184,8 +2148,6 @@ void TSPlayer::SendItemQueryPacket(TSItemTemplate curItem)
             player->GetSession()->SendPacket(&response);
         }
 }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacket not implemented for AzerothCore");
 #endif
 }
 
@@ -2258,7 +2220,7 @@ void TSPlayer::SendGuildInvite(TSPlayer _plr)
 {
     auto plr = _plr.player;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     if (Guild* guild = player->GetGuild())
         guild->HandleInviteMember(player->GetSession(), plr->GetName());
 #else
@@ -2282,7 +2244,7 @@ void TSPlayer::LogoutPlayer(bool save)
  */
 void TSPlayer::RemoveFromBGRaid()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     player->RemoveFromBattlegroundOrBattlefieldRaid();
 #else
     player->RemoveFromBattleGroundRaid();
@@ -2302,11 +2264,7 @@ void TSPlayer::UnbindInstance(uint32 map,uint32 difficulty)
 #ifndef CLASSIC
 
     if (difficulty < MAX_DIFFICULTY)
-#ifndef AZEROTHCORE
         player->UnbindInstance(map, (Difficulty)difficulty);
-#else
-        sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUID(), map, Difficulty(difficulty), true, player);
-#endif//AZEROTHCORE
 #else//CLASSIC
     player->UnbindInstance(map);
 #endif
@@ -2325,19 +2283,6 @@ void TSPlayer::UnbindAllInstances()
             player->UnbindInstance(itr);
         else
             ++itr;
-    }
-#elif defined AZEROTHCORE
-    for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
-    {
-        const BoundInstancesMap& binds = sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i));
-        for (BoundInstancesMap::const_iterator itr = binds.begin(); itr != binds.end();)
-        {
-            if (itr->first != player->GetMapId())
-                //player->UnbindInstance(itr, Difficulty(i));
-                sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUID(), itr->first, Difficulty(i), true, player);
-            else
-                ++itr;
-        }
     }
 #else
     for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
@@ -2362,11 +2307,7 @@ void TSPlayer::UnbindAllInstances()
 void TSPlayer::LeaveBG(bool teleToEntryPoint)
 {
 
-#ifndef AZEROTHCORE
     player->LeaveBattleground(teleToEntryPoint);
-#else
-    player->LeaveBattleground();
-#endif
 }
 
 /**
@@ -2382,8 +2323,6 @@ TSNumber<uint32> TSPlayer::DurabilityRepair(uint16 position,bool cost,float disc
 {
 #if TRINITY
     return player->DurabilityRepair(position, cost, discountMod);
-#elif AZEROTHCORE
-    return player->DurabilityRepair(position, cost, discountMod,false);
 #endif
 }
 
@@ -2651,7 +2590,7 @@ void TSPlayer::CompleteQuest(uint32 entry)
     // Add quest items for quests that require items
     for (uint8 x = 0; x < QUEST_ITEM_OBJECTIVES_COUNT; ++x)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
         uint32 id = quest->RequiredItemId[x];
         uint32 count = quest->RequiredItemCount[x];
 #else
@@ -2676,7 +2615,7 @@ void TSPlayer::CompleteQuest(uint32 entry)
     // All creature/GO slain/cast (not required, but otherwise it will display "Creature slain 0/10")
     for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
         int32 creature = quest->RequiredNpcOrGo[i];
         uint32 creatureCount = quest->RequiredNpcOrGoCount[i];
 
@@ -2723,7 +2662,7 @@ void TSPlayer::CompleteQuest(uint32 entry)
                 player->GetReputationMgr().SetReputation(factionEntry, repValue);
     }
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     // If the quest requires a SECOND reputation to complete
     if (uint32 repFaction = quest->GetRepObjectiveFaction2())
     {
@@ -2767,9 +2706,8 @@ void TSPlayer::AddQuest(uint32 entry)
 
     Quest const* quest = eObjectMgr->GetQuestTemplate(entry);
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     // check item starting quest (it can work incorrectly if added without item in inventory)
-#ifndef AZEROTHCORE
     ItemTemplateContainer const& itc = sObjectMgr->GetItemTemplateStore();
 
     auto itr = std::find_if(std::begin(itc), std::end(itc), [quest](ItemTemplateContainer::value_type const& value)
@@ -2782,16 +2720,6 @@ void TSPlayer::AddQuest(uint32 entry)
         return;
     }
 
-#else
-    ItemTemplateContainer const* itc = sObjectMgr->GetItemTemplateStore();
-    ItemTemplateContainer::const_iterator result = find_if(itc->begin(), itc->end(), Finder<uint32, ItemTemplate>(entry, &ItemTemplate::StartQuest));
-
-    if(itr != itc->end())
-    {
-        return;
-    }
-
-#endif
     // ok, normal (creature/GO starting) quest
     if (player->CanAddQuest(quest, true))
         player->AddQuestAndCheckCompletion(quest, NULL);
@@ -2820,8 +2748,6 @@ void TSPlayer::AddQuest(uint32 entry)
     }
 #endif
 
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::AddQuest not implemented for AzerothCore");
 #endif
 }
 
@@ -2847,7 +2773,7 @@ void TSPlayer::RemoveQuest(uint32 entry)
             // we ignore unequippable quest items in this case, its' still be equipped
             player->TakeQuestSourceItem(logQuest, false);
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
             if (quest->HasFlag(QUEST_FLAGS_FLAGS_PVP))
             {
                 player->pvpInfo.IsHostile = player->pvpInfo.IsInHostileArea || player->HasPvPForcingQuest();
@@ -2857,7 +2783,7 @@ void TSPlayer::RemoveQuest(uint32 entry)
         }
     }
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     player->RemoveActiveQuest(entry, false);
     player->RemoveRewardedQuest(entry);
 #else
@@ -2949,8 +2875,6 @@ void TSPlayer::SetXP(uint32 xp)
     }
 
     player->SetXP(newXP);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SetXP not implemented for AzerothCore");
 #endif
 }
 
@@ -2958,9 +2882,6 @@ TSNumber<uint32> TSPlayer::GetXP()
 {
 #if TRINITY
     return player->GetXP();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api","TSPlayer::GetXP not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -3156,16 +3077,11 @@ void TSPlayer::AdvanceAllSkills(uint32 step)
         {
 #if TRINITY
             if (entry->CategoryID == SKILL_CATEGORY_LANGUAGES || entry->CategoryID == SKILL_CATEGORY_GENERIC)
-#elif AZEROTHCORE
-            if (entry->categoryId == SKILL_CATEGORY_LANGUAGES || entry->categoryId == SKILL_CATEGORY_GENERIC)
 #endif
                 continue;
 #if TRINITY
             if (player->HasSkill(entry->ID))
                 player->UpdateSkill(entry->ID, step);
-#elif AZEROTHCORE
-            if (player->HasSkill(entry->id))
-                player->UpdateSkill(entry->id, step);
 #endif
         }
     }
@@ -3198,13 +3114,7 @@ void TSPlayer::AdvanceSkill(uint32 _skillId,uint32 _step)
  */
 bool TSPlayer::Teleport(uint32 mapId,float x,float y,float z,float o)
 {
-#if defined AZEROTHCORE
-    if (player->IsInFlight())
-    {
-        player->GetMotionMaster()->MovementExpired();
-        player->m_taxi.ClearTaxiDestinations();
-    }
-#elif defined TRINITY
+#if defined TRINITY
     if (player->IsInFlight())
         player->FinishTaxiFlight();
     else
@@ -3235,18 +3145,14 @@ void TSPlayer::AddLifetimeKills(uint32 val)
 TSItem TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     uint32 noSpaceForCount = 0;
     ItemPosCountVec dest;
     InventoryResult msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, itemCount, &noSpaceForCount);
     if (msg != EQUIP_ERR_OK)
         itemCount -= noSpaceForCount;
 
-#ifndef AZEROTHCORE
     Item* item = player->StoreNewItem(dest, itemId, true, propertyId >= 0 ? propertyId : GenerateItemRandomPropertyId(itemId));
-#else
-    Item* item = player->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
-#endif
     if (item)
         player->SendNewItem(item, itemCount, true, false);
      return TSItem(item);
@@ -3319,11 +3225,7 @@ void TSPlayer::ResetTypeCooldowns(uint32 category,bool update)
         return spellInfo && spellInfo->GetCategory() == category;
     }, update);
 #else
-#ifndef AZEROTHCORE
     player->RemoveSpellCategoryCooldown(category, update);
-#else
-    player->RemoveCategoryCooldown(category);
-#endif
 #endif
 }
 
@@ -3418,14 +3320,10 @@ WorldPacket data(SMSG_MESSAGECHAT, 100);
     data << int32(LANG_ADDON);
 #if TRINITY
     data << uint64(player->TS_GET_GUID());
-#elif AZEROTHCORE
-    data << uint64(player->TS_GET_GUID().GetRawValue());
 #endif
     data << uint32(0);
 #if TRINITY
     data << uint64(receiver->TS_GET_GUID());
-#elif AZEROTHCORE
-    data << uint64(receiver->TS_GET_GUID().GetRawValue());
 #endif
     data << uint32(fullmsg.length() + 1);
     data << fullmsg;
@@ -3466,8 +3364,6 @@ void TSPlayer::LearnSpell(uint32 id)
 
 #ifdef TRINITY
     player->LearnSpell(id, false);
-#elif AZEROTHCORE
-    player->learnSpell(id);
 #else
     player->learnSpell(id, false);
 #endif
@@ -3487,7 +3383,7 @@ void TSPlayer::LearnTalent(uint32 id,uint32 rank)
     player->SendTalentsInfoData(false);
 #endif
 
-#if !defined TRINITY && !AZEROTHCORE
+#if !defined TRINITY
     // if player has a pet, update owner talent auras
     if (player->GetPet())
         player->GetPet()->CastOwnerTalentAuras();
@@ -3526,7 +3422,7 @@ void TSPlayer::ResurrectPlayer(float percent,bool sickness)
  */
 void TSPlayer::GossipMenuAddItem(uint32 _icon, std::string const& msg,uint32 _sender,uint32 _intid,bool _code, std::string const& _promptMsg,uint32 _money)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GossipOptionIcon(_icon), msg, _sender, _intid, _promptMsg, _money, _code);
 #else
 #ifndef CLASSIC
@@ -3544,7 +3440,7 @@ void TSPlayer::GossipMenuAddItem(uint32 _icon, std::string const& msg,uint32 _se
  */
 void TSPlayer::GossipComplete()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     player->PlayerTalkClass->SendCloseGossip();
 #else
     player->PlayerTalkClass->CloseGossip();
@@ -3836,7 +3732,7 @@ TSGroup TSPlayer::GroupCreate(TSPlayer _invited)
     if (!group->IsCreated())
     {
         group->RemoveInvite(player);
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
         group->Create(player);
         sGroupMgr->AddGroup(group);
 #else
@@ -3844,7 +3740,7 @@ TSGroup TSPlayer::GroupCreate(TSPlayer _invited)
 #endif
     }
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     group->BroadcastGroupUpdate();
 #else
 #endif
@@ -3927,16 +3823,6 @@ void TSPlayer::AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 cou
     dest.push_back(ItemPosCount(bag<<8|slot,count));
     Item* item = player->StoreNewItem(dest, itemId, true, propertyId >= 0 ? propertyId : GenerateItemRandomPropertyId(itemId));
     if (item) player->SendNewItem(item, count, true, false);
-#elif AZEROTHCORE
-    ItemPosCountVec dest;
-    dest.push_back(ItemPosCount(bag<<8|slot,count));
-    Item* item = player->StoreNewItem(dest, itemId, true, propertyId >= 0 ? propertyId : 0);
-    if (item) player->SendNewItem(item, count, true, false);
-
-    if (propertyId < 0)
-    {
-        TS_LOG_ERROR("tswow.api", "TSPlayer::AddItemToSlowRaw not implemented for AzerothCore");
-    }
 #endif
 }
 
@@ -3979,18 +3865,16 @@ void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLev
     {
         for (auto const& [id, quest] : sObjectMgr->GetQuestTemplates())
         {
-            if (quest.GetRequiredClasses() && player->SatisfyQuestClass(&quest, false))
+            if (quest->GetRequiredClasses() && player->SatisfyQuestClass(quest.get(), false))
             {
-                if (limitQuestsByLevel && ! player->SatisfyQuestLevel(&quest, false)) {
+                if (limitQuestsByLevel && ! player->SatisfyQuestLevel(quest.get(), false)) {
                     continue;
                 }
 
-                player->LearnQuestRewardedSpells(&quest);
+                player->LearnQuestRewardedSpells(quest.get());
             }
         }
     }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::LearnClassSpells not implemented for AzerothCore");
 #endif
 }
 
@@ -3998,9 +3882,6 @@ TSNumber<uint8> TSPlayer::GetHairStyle()
 {
 #if TRINITY
     return player->GetHairStyleId();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetHairStyle not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -4008,8 +3889,6 @@ void TSPlayer::SetHairStyle(uint8 style)
 {
 #if TRINITY
     player->SetHairStyleId(style);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SetHairStyle not implemented for AzerothCore");
 #endif
 }
 
@@ -4017,17 +3896,12 @@ TSNumber<uint8> TSPlayer::GetHairColor()
 {
 #if TRINITY
     return player->GetHairColorId();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetHairColor not implemented for AzerothCore");
-    return 0;
 #endif
 }
 void TSPlayer::SetHairColor(uint8 color)
 {
 #if TRINITY
     player->SetHairColorId(color);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SetHairColor not implemented for AzerothCore");
 #endif
 }
 
@@ -4035,9 +3909,6 @@ TSNumber<uint8> TSPlayer::GetFacialStyle()
 {
 #if TRINITY
     return player->GetFacialStyle();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetFacialStyle not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -4045,8 +3916,6 @@ void TSPlayer::SetFacialStyle(uint8 style)
 {
 #if TRINITY
     player->SetFacialStyle(style);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SetFacialStyle not implemented for AzerothCore");
 #endif
 
 }
@@ -4055,9 +3924,6 @@ TSNumber<uint8> TSPlayer::GetSkinColor()
 {
 #if TRINITY
     return player->GetSkinId();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetSkinColor not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -4065,8 +3931,6 @@ void TSPlayer::SetSkinColor(uint8 color)
 {
 #if TRINITY
     player->SetSkinId(color);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SetSkinColor not implemented for AzerothCore");
 #endif
 }
 
@@ -4074,9 +3938,6 @@ TSNumber<uint8> TSPlayer::GetFace()
 {
 #if TRINITY
     return player->GetFaceId();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetFace not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -4084,8 +3945,6 @@ void TSPlayer::SetFace(uint8 face)
 {
 #if TRINITY
     player->SetFaceId(face);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SetFace not implemented for AzerothCore");
 #endif
 }
 
@@ -4098,8 +3957,6 @@ void TSPlayer::SendUpdateEventStates(uint32 eventId)
 {
 #if TRINITY
     sGameEventMgr->SendWorldStateUpdate(player, eventId);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendUpdateEventStates not implemented for AzerothCore");
 #endif
 }
 
@@ -4122,9 +3979,6 @@ TSOutfit TSPlayer::GetOutfitCopy(uint32_t settings, int32_t race, int32_t gender
 {
 #if TRINITY
     return TSOutfit(*this, settings, race, gender);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetOutfitCopy not implemented for AzerothCore");
-    return TSOutfit();
 #endif
 }
 
@@ -4133,9 +3987,6 @@ bool TSPlayer::CanBeTank()
 #if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_TANK;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeTank not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -4145,9 +3996,6 @@ bool TSPlayer::CanBeHealer()
 #if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_HEALER;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeHealer not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -4157,9 +4005,6 @@ bool TSPlayer::CanBeDPS()
 #if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_DAMAGE;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeDPS not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -4169,9 +4014,6 @@ bool TSPlayer::CanBeLeader()
 #if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_LEADER;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeLeader not implemented for AzerothCore");
-    return false;
 #endif
 }
 
@@ -4179,9 +4021,6 @@ TSNumber<uint32> TSPlayer::GetTalentPointsInTree(uint32 tabId)
 {
 #if TRINITY
     return player->GetTalentPointsInTree(tabId);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::GetTalentPointsInTree not implemented for AzerothCore");
-    return 0;
 #endif
 }
 

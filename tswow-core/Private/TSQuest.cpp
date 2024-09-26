@@ -68,7 +68,7 @@ bool TSQuest::log()
  */
 bool TSQuest::HasFlag(uint32 flag)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return quest->HasFlag(flag);
 #else
     return quest->HasQuestFlag((QuestFlags)flag);
@@ -164,7 +164,7 @@ TSNumber<int32> TSQuest::GetNextQuestInChain()
  */
 TSNumber<uint32> TSQuest::GetFlags()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return quest->GetFlags();
 #else
     return quest->GetQuestFlags();

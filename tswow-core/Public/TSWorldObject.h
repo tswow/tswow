@@ -24,6 +24,7 @@
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 #include "TSItem.h"
+#include "TSLua.h"
 #include <chrono>
 #include <vector>
 #include <list>
@@ -234,3 +235,5 @@ class TC_GAME_API TSWorldObjectCollection
 };
 
 #define BROADCAST_PHASE_ID 0xffffff
+
+LUA_PTR_TYPE(TSWorldObject)
