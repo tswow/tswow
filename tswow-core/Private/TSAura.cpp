@@ -292,6 +292,18 @@ TSNumber<uint32> TSAura::GetStackAmount()
     return aura->GetStackAmount();
 }
 
+/** @epoch-start */
+/**
+ * Returns the number of charges remaining on the aura.
+ *
+ * @return uint32 charges
+ */
+TSNumber<uint32> TSAura::GetCharges()
+{
+    return aura->GetCharges();
+}
+/** @epoch-end */
+
 /**
  * Returns the [Unit] that the [Aura] has been applied to.
  *
@@ -363,6 +375,18 @@ void TSAura::SetStackAmount(uint8 amount)
     aura->GetHolder()->SetStackAmount(amount);
 #endif
 }
+
+/** @epoch-start */
+/**
+ * Change the amount of remaining charges the [Aura] has on the [Unit].
+ *
+ * @param uint32 amount
+ */
+void TSAura::SetCharges(uint8 amount)
+{
+    aura->SetCharges(amount);
+}
+/** @epoch-end */
 
 /**
  * Remove this [Aura] from the [Unit] it is applied to.

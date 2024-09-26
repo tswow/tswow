@@ -45,10 +45,16 @@ void TSLua::load_aura_methods(sol::state& state)
     LUA_FIELD(ts_aura, TSAura, GetAuraID);
     LUA_FIELD(ts_aura, TSAura, GetMaxDuration);
     LUA_FIELD(ts_aura, TSAura, GetStackAmount);
+    /** @epoch-start */
+    LUA_FIELD(ts_aura, TSAura, GetCharges);
+    /** @epoch-end */
     LUA_FIELD(ts_aura, TSAura, GetOwner);
     LUA_FIELD(ts_aura, TSAura, SetDuration);
     LUA_FIELD(ts_aura, TSAura, SetMaxDuration);
     LUA_FIELD(ts_aura, TSAura, SetStackAmount);
+    /** @epoch-start */
+    LUA_FIELD(ts_aura, TSAura, SetCharges);
+    /** @epoch-end */
     LUA_FIELD(ts_aura, TSAura, Remove);
     LUA_FIELD(ts_aura, TSAura, GetEffect);
     ts_aura.set_function("GetApplications", &TSAura::LGetApplications);

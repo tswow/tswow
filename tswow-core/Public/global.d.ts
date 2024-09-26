@@ -3396,7 +3396,16 @@ declare interface TSAura extends TSEntityProvider {
      *
      * @return uint32 stack_amount
      */
-    GetStackAmount() : TSNumber<uint32>
+    GetStackAmount(): TSNumber<uint32>
+
+    /** @epoch-start */
+    /**
+     * Returns the number of charges remaining on the aura.
+     *
+     * @return uint32 charges
+     */
+    GetCharges(): TSNumber<uint32>
+    /** @epoch-end */
 
     /**
      * Returns the [Unit] that the [Aura] has been applied to.
@@ -3436,7 +3445,16 @@ declare interface TSAura extends TSEntityProvider {
      *
      * @param uint32 amount
      */
-    SetStackAmount(amount : uint8) : void
+    SetStackAmount(amount: uint8): void
+
+    /** @epoch-start */
+    /**
+     * Change the amount of remaining charges the [Aura] has on the [Unit].
+     *
+     * @param uint32 amount
+     */
+    SetCharges(amount: uint8): void
+    /** @epoch-end */
 
     /**
      * Remove this [Aura] from the [Unit] it is applied to.

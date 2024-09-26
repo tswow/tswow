@@ -88,12 +88,18 @@ public:
     TSNumber<uint32> GetAuraID();
     TSNumber<int32> GetMaxDuration();
     TSNumber<uint32> GetStackAmount();
+    /** @epoch-start */
+    TSNumber<uint32> GetCharges();
+    /** @epoch-end */
     TSWorldObject GetOwner();
     TSAuraEffect GetEffect(uint8 index);
     TSArray<TSAuraApplication> GetApplications();
     void SetDuration(int32 duration);
     void SetMaxDuration(int32 duration);
     void SetStackAmount(uint8 amount);
+    /** @epoch-start */
+    void SetCharges(uint8 amount);
+    /** @epoch-end */
     void Remove();
     void RefreshDuration(bool withMods);
 private:
