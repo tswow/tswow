@@ -61,6 +61,7 @@ import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
 import { CreatureResistances } from "./CreatureResistances";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
+import { CreatureSpells } from "./CreatureSpells";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
@@ -371,6 +372,10 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
         return new CreatureTemplateInstances(this);
     }
 
+    get Spells() {
+        return new CreatureSpells(this);
+    }
+
     codify(settings: CodegenSettings & {mod?: string, id?: string, all_locs?: boolean, name?: string})
     {
         const mod = settings.mod || 'mod';
@@ -479,6 +484,10 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
 
             this.Resistances.forEach(x=>{
                 code.line(`.Resistances.add('${x.School.objectify()}',${x.Resistance.get()})`)
+            })
+
+            this.Spells.forEach(x=>{
+                code.line(`.Spells.add('${x.Index.get()}',${x.Spell.get()})`)
             })
 
             code.non_def_num('Stats.ArmorMod',this.Stats.ArmorMod)
