@@ -8233,6 +8233,9 @@ declare namespace _hidden {
         GainComboPoint(callback: (player: TSPlayer, amount: TSNumber<int8>) => void)
         ClearComboPoints(callback: (player: TSPlayer) => void)
 
+        OnEquipMainhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
+        OnUnequipMainhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
+
         OnEquipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
         OnUnequipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
 

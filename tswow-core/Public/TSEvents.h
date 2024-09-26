@@ -377,6 +377,9 @@ struct TSEvents
         EVENT(GainComboPoint, TSPlayer, TSNumber<int8>)
         EVENT(ClearComboPoints, TSPlayer)
 
+        EVENT(OnEquipMainhandWeapon, TSPlayer, TSItem)
+        EVENT(OnUnequipMainhandWeapon, TSPlayer, TSItem)
+
         EVENT(OnEquipOffhandWeapon, TSPlayer, TSItem)
         EVENT(OnUnequipOffhandWeapon, TSPlayer, TSItem)
 
