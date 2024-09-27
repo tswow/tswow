@@ -140,6 +140,9 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, GainComboPoint);
     LUA_HANDLE(player_events, PlayerEvents, ClearComboPoints);
 
+    LUA_HANDLE(player_events, PlayerEvents, OnEquipMainhandWeapon);
+    LUA_HANDLE(player_events, PlayerEvents, OnUnequipMainhandWeapon);
+
     LUA_HANDLE(player_events, PlayerEvents, OnEquipOffhandWeapon);
     LUA_HANDLE(player_events, PlayerEvents, OnUnequipOffhandWeapon);
 

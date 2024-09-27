@@ -102,6 +102,7 @@ declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
 declare const enum TimerLoops {} /** TSTimer.h:TimerLoops */
 declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
+declare const enum SpellCustomErrors {} /** SharedDefines.h:SpellCustomErrors */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
 declare const enum InventorySlots /**@realType:uint32*/{
     BAG_1 = 19,
@@ -8233,6 +8234,9 @@ declare namespace _hidden {
         GainComboPoint(callback: (player: TSPlayer, amount: TSNumber<int8>) => void)
         ClearComboPoints(callback: (player: TSPlayer) => void)
 
+        OnEquipMainhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
+        OnUnequipMainhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
+
         OnEquipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
         OnUnequipOffhandWeapon(callback: (player: TSPlayer, item: TSItem) => void)
 
@@ -8286,8 +8290,8 @@ declare namespace _hidden {
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCast(id: EventID, callback : (spell: TSSpell)=>void): T;
 
-        OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>)=>void): T;
-        OnCheckCast(id: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>)=>void): T;
+        OnCheckCast(callback: (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>, customError: TSMutable<SpellCustomErrors,SpellCustomErrors>)=>void): T;
+        OnCheckCast(id: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>, customError: TSMutable<SpellCustomErrors,SpellCustomErrors>)=>void): T;
 
         OnSuccessfulDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
         OnSuccessfulDispel(id: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void): T;
