@@ -762,6 +762,7 @@ struct TSEvents
         ID_EVENT(OnQuestReward, TSGameObject, TSPlayer, TSQuest, TSNumber<uint32>)
         ID_EVENT(OnGenerateLoot, TSGameObject, TSPlayer)
         ID_EVENT(OnGenerateFishLoot, TSGameObject, TSPlayer, TSLoot, bool)
+        ID_EVENT(OnTrapTriggered, TSGameObject, TSUnit, TSUnit)
     } GameObject;
 
     struct MapEvents : public TSMappedEventsDirect {

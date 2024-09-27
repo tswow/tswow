@@ -355,6 +355,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnQuestReward);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnGenerateLoot);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnGenerateFishLoot);
+    LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnTrapTriggered);
 
     auto map_events = state.new_usertype<TSEvents::MapEvents>("MapEvents");
     LUA_MAPPED_HANDLE(map_events, MapEvents, OnCreate);

@@ -9489,6 +9489,9 @@ declare namespace _hidden {
 
         OnGenerateFishLoot(callback: (obj: TSGameObject, player: TSPlayer, loot: TSLoot, isJunk: bool)=>void)
         OnGenerateFishLoot(id: EventID, callback: (obj: TSGameObject, player: TSPlayer, loot: TSLoot, isJunk: bool)=>void)
+
+        OnTrapTriggered(callback: (obj: TSGameObject, owner: TSUnit, target: TSUnit, )=>void)
+        OnTrapTriggered(id: EventID, callback: (obj: TSGameObject, owner: TSUnit, target: TSUnit, )=>void)
     }
 
     export class Map<T> {
