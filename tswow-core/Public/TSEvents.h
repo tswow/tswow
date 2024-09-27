@@ -511,7 +511,7 @@ struct TSEvents
         ID_EVENT(OnUnlearn, TSSpellInfo, TSPlayer, bool disabled, bool learn_low_rank)
 
         ID_EVENT(OnCast, TSSpell)
-        ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>)
+        ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>, TSMutableNumber<uint32>)
         ID_EVENT(OnSuccessfulDispel, TSSpell, TSNumber<uint32>)
         ID_EVENT(OnEffect, TSSpell, TSMutable<bool,bool> preventDefault, TSSpellEffectInfo, TSNumber<uint32> mode, TSUnit unitTarget, TSItem itemTarget, TSGameObject gameObjectTarget, TSCorpse corpseTarget)
         ID_EVENT(OnEffectApplyGlyph
