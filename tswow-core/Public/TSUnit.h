@@ -83,6 +83,7 @@ public:
     TSGUID GetCharmGUID();
     TSGUID GetPetGUID(uint32 slot = 0);
     TSCreature GetPet(uint32 slot = 0);
+    TSGUID GetSummonedObjectGUID(uint32 slot = 0);
 
     TSUnit GetController();
     TSGUID GetControllerGUID();

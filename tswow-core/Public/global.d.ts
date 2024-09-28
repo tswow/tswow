@@ -6355,6 +6355,13 @@ declare interface TSUnit extends TSWorldObject {
     GetPet(index?: number): TSCreature
 
     /**
+     * Returns the GUID of the [Unit]'s object.
+     * 
+     * @return uint64 objectGUID
+     */
+    GetSummonedObjectGUID(index?: number) : TSGUID
+
+    /**
      * Returns the GUID of the [Unit]'s charmer or owner.
      *
      * @return uint64 controllerGUID

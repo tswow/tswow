@@ -64,6 +64,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, GetCharmGUID);
     LUA_FIELD(ts_unit, TSUnit, GetPetGUID);
     LUA_FIELD(ts_unit, TSUnit, GetPet);
+    LUA_FIELD(ts_unit, TSUnit, GetSummonedObjectGUID);
     LUA_FIELD(ts_unit, TSUnit, GetController);
     LUA_FIELD(ts_unit, TSUnit, GetControllerGUID);
     LUA_FIELD(ts_unit, TSUnit, GetControllerGUIDS);

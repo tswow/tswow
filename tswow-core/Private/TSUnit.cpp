@@ -659,6 +659,16 @@ TSCreature TSUnit::GetPet(uint32 slot)
     return GetCreature(GetPetGUID(slot));
 }
 
+/** 
+* Returns the GUID of the [Unit]'s object.
+* 
+* @return uint64 objectGUID
+*/
+TSGUID TSUnit::GetSummonedObjectGUID(uint32 summonSlot)
+{
+    return TSGUID(unit->m_ObjectSlot[summonSlot]);
+}
+
 /**
  * Returns the GUID of the [Unit]'s charmer or owner.
  *
