@@ -7452,8 +7452,10 @@ declare interface TSUnit extends TSWorldObject {
      * @param bool durabilityloss = true : if false, the damage does not do durability damage
      * @param [SpellSchools] school = MAX_SPELL_SCHOOL : school the damage is done in or MAX_SPELL_SCHOOL for direct damage
      * @param uint32 spell = 0 : spell that inflicts the damage
+     * @param [SpellSchoolMask] schoolmask : bitmask of spell school (1 << SPELL_SCHOOL), use with school = MAX_SPELL_SCHOOL to take an effect
+     *                                (note that MAX_SPELL_SCHOOL works differently if schoolMask > 0)
      */
-    DealDamage(target : TSUnit,damage : uint32,durabilityloss : bool,school : SpellSchools,spell? : uint32) : void
+    DealDamage(target : TSUnit,damage : uint32,durabilityloss : bool,school : SpellSchools,spell? : uint32,schoolMask? : SpellSchoolMask | uint32) : void
 
     /**
      * Makes the [Unit] heal the target [Unit] with given spell

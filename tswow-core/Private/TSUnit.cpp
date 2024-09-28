@@ -2282,21 +2282,28 @@ void TSUnit::NearTeleport(float x,float y,float z,float o)
  * @param uint32 damage : amount to damage
  * @param bool durabilityloss = true : if false, the damage does not do durability damage
  * @param [SpellSchools] school = MAX_SPELL_SCHOOL : school the damage is done in or MAX_SPELL_SCHOOL for direct damage
+ *                                (note that MAX_SPELL_SCHOOL works differently if schoolMask > 0)
  * @param uint32 spell = 0 : spell that inflicts the damage
+ * @param [SpellSchoolMask] schoolmask : bitmask of spell school (1 << SPELL_SCHOOL), use with school = MAX_SPELL_SCHOOL to take an effect
  */
-void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 school,uint32 spell)
+void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 school,uint32 spell, uint32 schoolMask)
 {
     auto target = _target.unit;
 
     // flat melee damage without resistence/etc reduction
-    if (school == MAX_SPELL_SCHOOL)
+    if (school == MAX_SPELL_SCHOOL && !schoolMask)
     {
         Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
         return;
     }
 
-    SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
+    SpellSchoolMask schoolmask;
+
+    if (!schoolMask)
+        schoolmask = SpellSchoolMask(1 << school);
+    else
+        schoolmask = SpellSchoolMask(schoolMask);
 
     if (Unit::IsDamageReducedByArmor(schoolmask))
         damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
