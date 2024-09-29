@@ -3357,6 +3357,8 @@ declare interface TSCreature extends TSUnit {
      * Updates max hp, hp, and stats
      */
     UpdateLevelDependantStats(): void;
+
+    LearnPetSpell(spell: uint32): void;
 }
 
 declare interface TSAura extends TSEntityProvider {
@@ -8205,12 +8207,11 @@ declare namespace _hidden {
 
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
         
-        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, SpellType: TSNumber<uint8>) => void);
-        OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, TakenTotalMod: TSMutableNumber<float>, SpellType: TSNumber<uint8>) => void);
+        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
+        OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, TakenTotalMod: TSMutableNumber<float>, IsPet: bool) => void);
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutableNumber<float>) => void);
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
-        OnCustomScriptedWeaponDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, TotalDamagePercentMod: TSMutableNumber<float>, FixedBonus: TSMutableNumber<int32> , SpellBonus: TSMutableNumber<int32>) => void);
-        OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
+        OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
         OnCustomScriptedAutoattackDamageTakenMod(callback: (player: TSPlayer, Attacker: TSUnit, TakenTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
         OnCustomScriptedCritDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);
         
@@ -8994,6 +8995,15 @@ declare namespace _hidden {
             , owner: TSPlayer
             , bonus: TSMutableNumber<float>
             , attType: WeaponAttackType
+        )=>void)
+
+        InitPetSpells(callback: (
+              creature: TSCreature
+            , owner: TSPlayer 
+        )=>void)
+        InitPetSpells(id: EventID, callback: (
+              creature: TSCreature
+            , owner: TSPlayer
         )=>void)
     }
 

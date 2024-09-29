@@ -39,6 +39,7 @@
 #include "Player.h"
 #include "TSMap.h"
 #include "TSOutfit.h"
+#include "Pet.h"
 #if TRINITY
 #include "CreatureOutfit.h"
 #endif
@@ -1435,3 +1436,9 @@ TSNumber<float> TSCreature::GetThreat(TSUnit target, bool includeOffline)
     return creature->GetThreatManager().GetThreat(target, includeOffline);
 }
 
+void TSCreature::LearnPetSpell(uint32_t spell) {
+    if (creature->IsPet()) {
+        if (Pet* asPet = const_cast<Pet*>(creature->ToPet()))
+            asPet->learnSpell(spell);
+    }
+}

@@ -114,7 +114,6 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCalcIntellectCritBonus);
 
     LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
-    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedWeaponDamageMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageDoneMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod);
@@ -337,6 +336,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetUpdateDamagePhysical);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetUpdateSpellPower);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnPetUpdateStat);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, InitPetSpells);
     // GUARDIANS
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnGuardianUpdateDamagePhysical);
 

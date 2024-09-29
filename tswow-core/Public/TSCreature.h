@@ -145,6 +145,8 @@ public:
 
     TSNumber<float> GetThreat(TSUnit target, bool include_offline = false);
 
+    void LearnPetSpell(uint32_t spell);
+
 private:
     TSLua::Array<TSUnit> LGetThreatList();
     friend class TSLua;
