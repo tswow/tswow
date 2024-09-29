@@ -9086,8 +9086,8 @@ declare namespace _hidden {
         OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutableNumber<uint32>)=>void);
         OnBank(id: EventID, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutableNumber<uint32>)=>void);
 
-        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<InventoryResult,InventoryResult>)=>void);
-        OnCanEquip(id: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<InventoryResult,InventoryResult>)=>void);
+        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, notLoading: boolean, result: TSMutable<InventoryResult,InventoryResult>)=>void);
+        OnCanEquip(id: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, notLoading: boolean, result: TSMutable<InventoryResult,InventoryResult>)=>void);
 
         OnEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, isMerge: boolean)=>void)
         OnEquip(id: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, isMerge: boolean)=>void)
