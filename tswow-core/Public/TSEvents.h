@@ -896,7 +896,7 @@ struct TSEvents
          ID_EVENT(OnCanChangeEquipState, TSItemTemplate, TSMutable<bool,bool>)
          ID_EVENT(OnUnequip, TSItem, TSPlayer, bool, TSMutableNumber<uint32> result)
          ID_EVENT(OnBank, TSItem, TSPlayer, TSNumber<uint8> bag, TSNumber<uint8> slot, bool swap, TSMutableNumber<uint32> result)
-         ID_EVENT(OnCanEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool swap, TSMutableNumber<uint32> result)
+         ID_EVENT(OnCanEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool swap, bool not_loading, TSMutableNumber<uint32> result)
          ID_EVENT(OnEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool isMerge)
          ID_EVENT(OnCanUse, TSItem, TSPlayer, TSMutableNumber<uint32> result)
          ID_EVENT(OnCanUseType, TSItemTemplate, TSPlayer, TSMutableNumber<uint32> result)
