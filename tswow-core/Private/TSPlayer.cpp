@@ -1040,6 +1040,16 @@ TSNumber<float> TSPlayer::GetHealthBonusFromStamina()
     return player->GetHealthBonusFromStamina();
 }
 
+/** 
+ * Returns combar rating multiplier
+ * 
+ * @return float mult
+ */
+TSNumber<float> TSPlayer::GetRatingMultiplier(uint32 cr)
+{
+    return player->GetRatingMultiplier(CombatRating(cr));
+}
+
 /**
  * Returns raid or dungeon difficulty
  *

@@ -83,6 +83,7 @@ public:
     TSGUID GetCharmGUID();
     TSGUID GetPetGUID(uint32 slot = 0);
     TSCreature GetPet(uint32 slot = 0);
+    TSGUID GetSummonedObjectGUID(uint32 slot = 0);
 
     TSUnit GetController();
     TSGUID GetControllerGUID();
@@ -219,7 +220,7 @@ public:
     void AddUnitState(uint32 state);
     void ClearUnitState(uint32 state);
     void NearTeleport(float x, float y, float z, float o);
-    void DealDamage(TSUnit target, uint32 damage, bool durabilityloss, uint32 school, uint32 spell = 0);
+    void DealDamage(TSUnit target, uint32 damage, bool durabilityloss, uint32 school, uint32 spell = 0, uint32 schoolMask = 0);
     void DealHeal(TSUnit target, uint32 spell, uint32 amount, bool critical);
     void Kill(TSUnit target, bool durLoss);
     void AddThreat(TSUnit victim, float threat, uint32 spell = 0, uint32 schoolMask = 0, bool ignoreModifiers = true, bool ignoreRedirects = true, bool raw = false);
