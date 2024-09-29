@@ -119,6 +119,7 @@ public:
 	TSNumber<uint16> GetMaxSkillValue(uint32 skill);
 	TSNumber<float> GetManaBonusFromIntellect();
 	TSNumber<float> GetHealthBonusFromStamina();
+	TSNumber<float> GetRatingMultiplier(uint32 cr);
 	TSNumber<int32> GetDifficulty(bool isRaid);
 	TSNumber<uint32> GetGuildRank();
 	TSNumber<uint32> GetFreeTalentPoints();

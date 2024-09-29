@@ -979,6 +979,13 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     GetHealthBonusFromStamina() : TSNumber<float>
 
     /**
+     * Returns rating multiplier
+     * 
+     * @return float mult
+     */
+    GetRatingMultiplier(combatRating : uint32) : TSNumber<float>
+
+    /**
      * Returns raid or dungeon difficulty
      *
      * @param bool isRaid = true : argument is TrinityCore only
