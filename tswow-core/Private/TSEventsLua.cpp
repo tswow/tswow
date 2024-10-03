@@ -201,6 +201,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnRageGainedViaAttack);
     LUA_HANDLE(unit_events, UnitEvents, OnCustomDamageTaken);
     LUA_HANDLE(unit_events, UnitEvents, OnUpdateDisplayPower);
+    LUA_HANDLE(unit_events, UnitEvents, OnHandleShapeshiftPower);
 
     auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);

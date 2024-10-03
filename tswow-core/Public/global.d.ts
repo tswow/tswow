@@ -9197,6 +9197,8 @@ declare namespace _hidden {
         OnCustomDamageTaken(callback: (who: TSUnit, Victim: TSUnit, damage: TSMutableNumber<uint32>) => void)
 
         OnUpdateDisplayPower(callback: (who: TSUnit, displayPower: TSMutableNumber<int8>) => void)
+
+        OnHandleShapeshiftPower(callback: (who: TSUnit, shapeshiftForm: TSNumber<int32>, power: TSMutableNumber<int8>) => void)
     }
 
     export class Battleground<T> {
