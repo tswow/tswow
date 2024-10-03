@@ -32,4 +32,5 @@ public:
     TSUnit GetPassenger(int8 seatId);
     void AddPassenger(TSUnit passenger, int8 seatId);
     void RemovePassenger(TSUnit passenger);
+    TSNumber<uint32> GetPowerDisplayID();
 };

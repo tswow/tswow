@@ -5324,7 +5324,14 @@ declare interface TSVehicle {
      *
      * @param [Unit] passenger
      */
-    RemovePassenger(passenger : TSUnit) : void
+    RemovePassenger(passenger: TSUnit): void
+
+    /**
+     * Returns the [Vehicle]'s display power
+     *
+     * @return uint32 power
+     */
+    GetPowerDisplayID(): TSNumber<uint32>
 }
 
 declare interface TSCollisionEntry {

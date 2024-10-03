@@ -122,6 +122,15 @@ void TSVehicle::RemovePassenger(TSUnit _passenger)
 #endif
 }
 
+/**
+ * Returns the [Vehicle]'s display power
+ *
+ * @return uint32 power
+ */
+TSNumber<uint32> TSVehicle::GetPowerDisplayID()
+{
+    return vehicle->GetVehicleInfo()->PowerDisplayID;
+}
 
 #endif // CLASSIC
 #endif // TBC
