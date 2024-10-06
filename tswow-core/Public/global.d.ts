@@ -5373,6 +5373,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     IsFriendlyToPlayers(): bool
     IsHostileToPlayers(): bool
     IsNeutralToAll(): bool
+    IsValidAttackTarget(obj: TSWorldObject, spellInfo?: TSSpellInfo): bool
     DoDelayed(callback: (obj: TSWorldObject, mgr: TSMainThreadContext)=>void): void
 
     /**
