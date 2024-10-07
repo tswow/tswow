@@ -499,6 +499,7 @@ struct TSEvents
         EVENT(OnCustomDamageTaken, TSUnit, TSUnit, TSMutableNumber<uint32>)
         EVENT(OnUpdateDisplayPower, TSUnit, TSMutableNumber<int8>)
         EVENT(OnHandleShapeshiftPower, TSUnit, TSNumber<int32>, TSMutableNumber<int8>)
+        EVENT(OnCooldownReset, TSUnit, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint32>)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
