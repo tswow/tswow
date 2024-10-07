@@ -12521,7 +12521,9 @@ declare namespace WoWAPI {
 
     type UIDropdownInfo = {
         text: string,
-        func?: () => void,
+        func?: (self: any, arg1: any, arg2: any, check: any) => void,
+        arg1?: any,
+        arg2?: any,
         checked: boolean
     };
 
