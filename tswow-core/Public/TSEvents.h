@@ -280,10 +280,6 @@ struct TSEvents
              , TSMutableNumber<float>
              , TSNumber<uint32> attackType
          )
-        EVENT(OnUpdateHaste
-             , TSPlayer
-             , TSMutableNumber<float>
-         )
          EVENT(OnCalcGreyLevel
              , TSPlayer killer
              , TSMutableNumber<uint8> greyLevel
@@ -732,6 +728,8 @@ struct TSEvents
 
         ID_EVENT(OnPetSummoned, TSUnit, TSCreature)
         ID_EVENT(OnPetDespawn, TSCreature, TSPlayer)
+
+        ID_EVENT(OnDamageTaken, TSCreature, TSUnit, TSNumber<uint32>)
 
         ID_EVENT(OnPetUpdateResistance, TSCreature, TSPlayer, TSMutableNumber<float>, TSNumber<uint32> school)
         ID_EVENT(OnPetUpdateArmor, TSCreature, TSPlayer, TSMutableNumber<float>)

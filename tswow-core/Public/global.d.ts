@@ -8152,10 +8152,6 @@ declare namespace _hidden {
             , value: TSMutableNumber<float>
             , attackType: WeaponAttackType
         )=>void)
-        OnUpdateHaste(callback: (
-              player: TSPlayer
-            , newVal: TSMutableNumber<float>
-        )=>void)
         OnCalcGreyLevel(callback: (
               player: TSPlayer
             , level: TSMutableNumber<uint8>
@@ -9115,6 +9111,9 @@ declare namespace _hidden {
           , player: TSPlayer
           , reward: TSItem
         )=>void)
+
+        OnDamageTaken(event: EventID, callback: (who: TSCreature, from: TSUnit, damage: int32) => void)
+        OnDamageTaken(callback: (who: TSCreature, from: TSUnit, damage: int32) => void)
     }
 
     export class Unit {
