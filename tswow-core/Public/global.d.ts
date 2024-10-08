@@ -2319,6 +2319,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     GetTotems() : TSArray<TSGUID>
 
     IsInFeralForm() : bool
+
+    GetRatingBonusValue(Rating: uint32) : float
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -8149,7 +8151,10 @@ declare namespace _hidden {
             , value: TSMutableNumber<float>
             , attackType: WeaponAttackType
         )=>void)
-
+        OnUpdateHaste(callback: (
+              player: TSPlayer
+            , newVal: TSMutableNumber<float>
+        )=>void)
         OnCalcGreyLevel(callback: (
               player: TSPlayer
             , level: TSMutableNumber<uint8>

@@ -4370,3 +4370,7 @@ TSArray<TSGUID> TSPlayer::GetTotems() {
 bool TSPlayer::IsInFeralForm() {
     return player->IsInFeralForm();
 }
+
+float TSPlayer::GetRatingBonusValue(uint32 Rating) {
+    return player->GetRatingBonusValue(CombatRating(Rating));
+}

@@ -368,6 +368,8 @@ public:
 
 	bool IsInFeralForm();
 
+	float GetRatingBonusValue(uint32 Rating);
+
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);

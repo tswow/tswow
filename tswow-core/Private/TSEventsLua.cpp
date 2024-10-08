@@ -99,6 +99,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateResistance);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateShieldBlock);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateCrit);
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateHaste);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcGreyLevel);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcZeroDiff);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcGroupGain);

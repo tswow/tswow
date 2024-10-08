@@ -280,6 +280,10 @@ struct TSEvents
              , TSMutableNumber<float>
              , TSNumber<uint32> attackType
          )
+        EVENT(OnUpdateHaste
+             , TSPlayer
+             , TSMutableNumber<float>
+         )
          EVENT(OnCalcGreyLevel
              , TSPlayer killer
              , TSMutableNumber<uint8> greyLevel

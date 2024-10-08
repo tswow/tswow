@@ -282,6 +282,7 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, GetPlayerIP);
     LUA_FIELD(ts_player, TSPlayer, GetGuildName);
     LUA_FIELD(ts_player, TSPlayer, GetAccountName);
+    LUA_FIELD(ts_player, TSPlayer, GetRatingBonusValue);
     LUA_FIELD_OVERLOAD_0_1(ts_player, TSPlayer, KillPlayer, bool);
     LUA_FIELD(ts_player, TSPlayer, Whisper);
     LUA_FIELD(ts_player, TSPlayer, TextEmote);
