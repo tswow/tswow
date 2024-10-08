@@ -5375,6 +5375,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     IsFriendlyToPlayers(): bool
     IsHostileToPlayers(): bool
     IsNeutralToAll(): bool
+    IsValidAttackTarget(obj: TSWorldObject, spellInfo?: TSSpellInfo): bool
     DoDelayed(callback: (obj: TSWorldObject, mgr: TSMainThreadContext)=>void): void
 
     /**
@@ -8600,7 +8601,7 @@ declare namespace _hidden {
         OnSpellCastFinished(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, Reason: SpellFinishReason)=>void): T;
 
         CanMoveWhileChanneling(callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>)=>void): T;
-        CanMoveWhileChanneling(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>)=>void): T;
+        CanMoveWhileChanneling(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>) => void): T;
     }
 
     export class Creature<T> {
@@ -9204,6 +9205,8 @@ declare namespace _hidden {
         OnUpdateDisplayPower(callback: (who: TSUnit, displayPower: TSMutableNumber<int8>) => void)
 
         OnHandleShapeshiftPower(callback: (who: TSUnit, shapeshiftForm: TSNumber<int32>, power: TSMutableNumber<int8>) => void)
+
+        OnCooldownReset(callback: (who: TSUnit, spellId: TSNumber<uint32>, categoryID: TSNumber<uint32>, itemID: TSNumber<uint32>) => void)
     }
 
     export class Battleground<T> {

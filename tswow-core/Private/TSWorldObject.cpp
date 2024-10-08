@@ -1128,6 +1128,11 @@ bool TSWorldObject::IsNeutralToAll()
 #endif
 }
 
+bool TSWorldObject::IsValidAttackTarget(TSWorldObject object, TSSpellInfo bySpell)
+{
+    return obj->IsValidAttackTarget(object.obj, bySpell->info);
+}
+
 /**
  * Makes the [WorldObject] cast the spell on the target.
  *
