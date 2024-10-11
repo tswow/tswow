@@ -29,7 +29,7 @@ export const BOOST_URL = 'https://github.com/tswow/misc/releases/download/boost-
 export const MYSQL_URL = 'https://github.com/tswow/misc/releases/download/mysql-5.7.32/mysql-5.7.32-winx64.zip'
 export const OPENSSL_URL = 'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip'
 export const IMAGEMAGICK_URL = 'https://github.com/tswow/misc/releases/download/imagemagick-7.1.0/ImageMagick-7.1.0-portable-Q16-x64.zip'
-export const NODE_URL = 'https://nodejs.org/dist/v18.12.1/node-v18.12.1-win-x64.zip'
+export const NODE_URL = 'https://nodejs.org/dist/v20.18.0/node-v20.18.0-win-x64.zip'
 export const TDB_URL_COMPILE = TDB_URL // change value at reference
 
 // Misc settings
