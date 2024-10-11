@@ -118,6 +118,7 @@ public:
     bool IsHostileToPlayers();
     bool IsNeutralToAll();
     bool IsValidAttackTarget(TSWorldObject object, TSSpellInfo bySpell = nullptr);
+    bool IsValidAssistTarget(TSWorldObject object, TSSpellInfo bySpell = nullptr);
 
     TSNumber<uint32> CastSpell(TSWorldObject target, uint32 spell, bool triggered = false);
     TSNumber<uint32> CastSpell(TSItem target, uint32 spell, bool triggered = false);
