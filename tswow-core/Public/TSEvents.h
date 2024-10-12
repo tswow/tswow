@@ -311,7 +311,7 @@ struct TSEvents
              , TSPlayer
              , TSMutableNumber<float>
          );
-        EVENT(OnCalcAgilityCritBonus, TSPlayer, TSMutableNumber<float> , TSNumber<float> , TSNumber<float> , TSNumber<float>);
+        EVENT(OnCalcAgilityCritBonus, TSPlayer, TSMutableNumber<float> , TSNumber<float>);
         EVENT(OnCalcSkillGainChance
              , TSPlayer
              , TSMutableNumber<int32>

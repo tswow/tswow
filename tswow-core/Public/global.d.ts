@@ -8184,8 +8184,6 @@ declare namespace _hidden {
                   Player: TSPlayer
                 , Crit: TSMutableNumber<float>
                 , Agility: TSNumber<float>
-                , BaseCrit: TSNumber<float>
-                , CritRatio: TSNumber<float>
             )=>void)
         OnCalcSkillGainChance(callback: (
               player: TSPlayer
