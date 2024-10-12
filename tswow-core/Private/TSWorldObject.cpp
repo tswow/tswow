@@ -1133,6 +1133,11 @@ bool TSWorldObject::IsValidAttackTarget(TSWorldObject object, TSSpellInfo bySpel
     return obj->IsValidAttackTarget(object.obj, bySpell->info);
 }
 
+bool TSWorldObject::IsValidAssistTarget(TSWorldObject object, TSSpellInfo bySpell)
+{
+    return obj->IsValidAssistTarget(object.obj, bySpell->info);
+}
+
 /**
  * Makes the [WorldObject] cast the spell on the target.
  *
