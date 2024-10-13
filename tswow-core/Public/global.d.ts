@@ -9029,6 +9029,10 @@ declare namespace _hidden {
               creature: TSCreature
             , owner: TSPlayer
         )=>void)
+
+        // New Duskhaven Hooks
+        OnDamageTaken(event: EventID, callback: (who: TSCreature, from: TSUnit, damage: int32) => void)
+        OnDamageTaken(callback: (who: TSCreature, from: TSUnit, damage: int32) => void)
     }
 
     export class Quest<T> {
@@ -9110,9 +9114,6 @@ declare namespace _hidden {
           , player: TSPlayer
           , reward: TSItem
         )=>void)
-
-        OnDamageTaken(event: EventID, callback: (who: TSCreature, from: TSUnit, damage: int32) => void)
-        OnDamageTaken(callback: (who: TSCreature, from: TSUnit, damage: int32) => void)
     }
 
     export class Unit {
