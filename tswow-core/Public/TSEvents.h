@@ -311,6 +311,27 @@ struct TSEvents
              , TSPlayer
              , TSMutableNumber<float>
          );
+
+        EVENT(OnCalcBlockValueFlat
+             , TSPlayer
+             , TSMutableNumber<float>
+         );
+
+        EVENT(OnCalcBlockValuePctMod
+             , TSPlayer
+             , TSMutableNumber<float>
+         );
+
+        EVENT(OnCalcDodgeFromAgility
+             , TSPlayer
+             , TSMutableNumber<float>
+         );
+
+        EVENT(OnCalcParryFromStr
+             , TSPlayer
+             , TSMutableNumber<float>
+         );
+
         EVENT(OnCalcAgilityCritBonus, TSPlayer, TSMutableNumber<float> , TSNumber<float>);
         EVENT(OnCalcSkillGainChance
              , TSPlayer

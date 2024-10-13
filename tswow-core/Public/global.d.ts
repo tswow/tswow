@@ -8210,6 +8210,30 @@ declare namespace _hidden {
                 , bonus: TSMutableNumber<float>
             )=>void)
 
+        OnCalcBlockValueFlat(
+            callback: (
+                  player: TSPlayer
+                , flat: TSMutableNumber<float>
+            )=>void)
+
+        OnCalcBlockValuePctMod(
+            callback: (
+                  player: TSPlayer
+                , mod: TSMutableNumber<float>
+            )=>void)
+
+        OnCalcDodgeFromAgility(
+            callback: (
+                  player: TSPlayer
+                , diminishing: TSMutableNumber<float>
+            )=>void)
+
+        OnCalcParryFromStr(
+            callback: (
+                  player: TSPlayer
+                , diminishing: TSMutableNumber<float>
+            )=>void)
+
         /**
          * @param player
          * @param activeGlyphSlots - Bitmask of GlyphMask representing the active glyphs.
