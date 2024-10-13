@@ -8291,6 +8291,8 @@ declare namespace _hidden {
 
         OnActionButtonSet(callback: (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
         OnActionButtonDelete(callback:  (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
+    
+        CanLoot(callback: (Player: TSPlayer, Source: TSWorldObject, CanLoot: TSMutable<boolean,boolean>) => void)
     }
 
     export class Account<T> {
@@ -9637,6 +9639,12 @@ declare namespace _hidden {
 
         OnBossStateChange(callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
         OnBossStateChange(id: EventID, callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
+
+        OnRaidBossKilled(callback: (instance: TSInstance, encounters: uint32, source: TSUnit)=>void): T
+        OnRaidBossKilled(id: EventID, callback: (instance: TSInstance, encounters: uint32, source: TSUnit)=>void): T
+
+        OnDungeonCompleted(callback: (instance: TSInstance)=>void): T
+        OnDungeonCompleted(id: EventID, callback: (instance: TSInstance)=>void): T
 
         OnCanKillBoss(callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<boolean,boolean>)=>void) : T
         OnCanKillBoss(id: EventID, callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<boolean,boolean>)=>void) : T

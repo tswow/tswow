@@ -405,6 +405,8 @@ struct TSEvents
 
         EVENT(OnActionButtonSet, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint8>)
         EVENT(OnActionButtonDelete, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint8>)
+
+        EVENT(CanLoot, TSPlayer, TSWorldObject, TSMutable<bool,bool>)
     } Player;
 
     struct AccountEvents
@@ -912,6 +914,10 @@ struct TSEvents
         ID_EVENT(OnLoadMinionData, TSInstance)
         ID_EVENT(OnLoadDoorData, TSInstance)
         ID_EVENT(OnLoadObjectData, TSInstance)
+
+        ID_EVENT(OnRaidBossKilled, TSInstance, TSNumber<uint32> CompletedEncounters, TSUnit source)
+        ID_EVENT(OnDungeonCompleted, TSInstance)
+
     } Instance;
 
      struct ItemEvents : public TSMappedEventsRegistry

@@ -153,6 +153,8 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnActionButtonSet);
     LUA_HANDLE(player_events, PlayerEvents, OnActionButtonDelete);
 
+    LUA_HANDLE(player_events, PlayerEvents, CanLoot);
+
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
     LUA_HANDLE(account_events, AccountEvents, OnFailedAccountLogin);
@@ -430,6 +432,9 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnLoadMinionData);
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnLoadDoorData);
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnLoadObjectData);
+
+    LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnRaidBossKilled);
+    LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnDungeonCompleted);
 
     auto item_events = state.new_usertype<TSEvents::ItemEvents>("ItemEvents");
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnUse);
