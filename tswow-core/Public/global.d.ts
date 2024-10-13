@@ -8108,7 +8108,8 @@ declare namespace _hidden {
         OnMovieComplete(callback: (player : TSPlayer,movieId : uint32)=>void);
         OnPlayerRepop(callback: (player : TSPlayer)=>void);
         OnSendMail(callback: (player: TSPlayer, draft: TSMailDraft, delay: TSMutableNumber<uint32>)=>void);
-        OnFlightPathMount(callback: (player: TSPlayer, display: TSMutableNumber<uint32>, cancel: TSMutable<boolean, boolean>)=>void);
+        OnActivateTaxiPathEarly(callback: (player: TSPlayer, cancel: TSMutable<boolean, boolean>)=>void);
+        OnSendDoFlight(callback: (player: TSPlayer, path: TSNumber<uint32>, display: TSMutableNumber<uint32>, cancel: TSMutable<boolean, boolean>)=>void);
         OnGenerateItemLoot(callback: (player: TSPlayer, item: TSItem, loot: TSLoot, type: uint32)=>void);
         OnLootCorpse(callback: (player: TSPlayer, corpse: TSCorpse)=>void);
         OnTradeCompleted(callback: (me: TSPlayer, him: TSPlayer, myItems: TSArray<TSItem>, hisItems: TSArray<TSItem>, myGold: uint32, hisGold: uint32) => void);

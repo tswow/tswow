@@ -181,7 +181,8 @@ struct TSEvents
          EVENT(OnPlayerRepop, TSPlayer)
          EVENT(OnSendMail, TSPlayer, TSMailDraft, TSMutableNumber<uint32>)
 
-         EVENT(OnFlightPathMount, TSPlayer, TSMutableNumber<uint32>, TSMutable<bool, bool>)
+         EVENT(OnActivateTaxiPathEarly, TSPlayer, TSMutable<bool, bool>)
+         EVENT(OnSendDoFlight, TSPlayer, TSNumber<uint32>, TSMutableNumber<uint32>, TSMutable<bool, bool>)
 
          EVENT(OnGenerateItemLoot, TSPlayer, TSItem, TSLoot, TSNumber<uint32>)
          EVENT(OnLootCorpse, TSPlayer, TSCorpse)
