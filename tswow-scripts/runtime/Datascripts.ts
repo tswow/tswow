@@ -10,7 +10,7 @@ import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
-import { NodeExecutable } from "./Node";
+import { NodeExecutable, NpmExecutable, NpxExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 
 /**
@@ -133,7 +133,7 @@ export class Datascripts {
                       this.logName()
                     , `Installing ${this.mod.fullName} datascript library...`
                 )
-                wsys.exec(`npm i -S ${this.path.build.abs()}`)
+                wsys.exec(`${NpmExecutable} i -S ${this.path.build.abs()}`)
             }
         }
     }
@@ -153,7 +153,8 @@ export class Datascripts {
         }
         if(this.config.TypeGeneration === 'watch' && ! process.argv.includes('server-mode')) {
             watchTsc(
-                  ipaths.node_modules.typescript_js.abs().get()
+                  NodeExecutable
+                , ipaths.node_modules.typescript_js.abs().get()
                 , this.path.abs().get()
                 , this.logName()
             );
@@ -174,7 +175,7 @@ export class Datascripts {
     symlink() {
         this.path.build.package_json.writeJson(lib_package_json(this.mod.fullName))
         if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
-            wsys.exec(`npm i -S ${this.path.build.get()}`)
+            wsys.exec(`${NpmExecutable} i -S ${this.path.build.get()}`)
         }
     }
 
@@ -183,8 +184,8 @@ export class Datascripts {
         try {
             term.debug('datascripts', `Compiling datascripts at ${this.path.abs().get()}`)
             wsys.execIn(
-                  this.path.dirname().get()
-                , `swc datascripts -d datascripts/build --sync`,'inherit'
+                this.path.dirname().get()
+                , `${NpxExecutable} swc datascripts -d datascripts/build --sync`,'inherit'
             )
         } catch(err) {
             this.path.swcrc.remove();
@@ -196,7 +197,7 @@ export class Datascripts {
     compileTypes(declare: boolean) {
         term.log(this.logName(),`Compiling types for ${this.path}`)
         try {
-            wsys.execIn(this.path.get(),'tsc','inherit');
+            wsys.execIn(this.path.get(),`${NpxExecutable} tsc`,'inherit');
         } catch(error) {
             // error printed by tsc
         }
@@ -222,7 +223,7 @@ export class Datascripts {
     static installWowLib() {
         if(!ipaths.node_modules.wow.exists()) {
             term.log('datascripts','Linking wow data libraries...');
-            wsys.exec(`npm i -S ${ipaths.bin.scripts.wow.get()}`)
+            wsys.exec(`${NpmExecutable} i -S ${ipaths.bin.scripts.wow.get()}`)
         }
     }
 
@@ -231,7 +232,7 @@ export class Datascripts {
         this.installWowLib();
         if(!ipaths.node_modules.wow.exists()) {
             term.log('datascripts', `Running 'npm i' because ${ipaths.node_modules.wow.abs().get()} does not exist.`)
-            wsys.exec(`npm i`);
+            wsys.exec(`${NpmExecutable} i`);
         }
 
         BuildCommand.addCommand(
@@ -372,7 +373,7 @@ export class Datascripts {
 
         try {
             wsys.exec(
-                    `node -r source-map-support/register`
+                    `${NodeExecutable} -r source-map-support/register`
                 + ` ${ipaths.node_modules.wow.data.index.get()}`
                 + ` --ipaths=./`
                 + ` --dataset=${dataset.path.get()}`

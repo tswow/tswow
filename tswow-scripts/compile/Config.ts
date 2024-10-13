@@ -45,7 +45,12 @@ export namespace Config {
         if(!ipaths.package_lock_json.exists()) {
             spaths.package_lock_json.copy(ipaths.package_lock_json)
         }
-        wsys.execIn(ipaths.get(), 'npm i');
+
+        if (isWindows()) {
+            wsys.execIn(ipaths.get(), `${ipaths.bin.node.npm_exe.abs().get()} i`);
+        } else {
+            wsys.execIn(ipaths.get(), 'npm i');
+        }
 
         ipaths.modules.mkdir();
 

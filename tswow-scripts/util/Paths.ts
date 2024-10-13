@@ -287,8 +287,9 @@ export function InstallPath(pathIn: string, tdb: string) {
             }),
             node: dir(
             {
-                npm: file('npm'),
-                node_exe: file('node.exe')
+                node_exe: file('node.exe'),
+                npx_exe: file('npx'),
+                npm_exe: file('npm')
             }),
             changes: dir({
                 changeFile: dynfile(name=>name)
