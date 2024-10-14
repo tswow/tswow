@@ -8292,7 +8292,7 @@ declare namespace _hidden {
         OnActionButtonSet(callback: (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
         OnActionButtonDelete(callback:  (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
     
-        CanLoot(callback: (Player: TSPlayer, Source: TSWorldObject, CanLoot: TSMutable<boolean,boolean>) => void)
+        CanLoot(callback: (Player: TSPlayer, Source: TSCreature, CanLoot: TSMutable<boolean,boolean>) => void)
     }
 
     export class Account<T> {
@@ -9640,8 +9640,8 @@ declare namespace _hidden {
         OnBossStateChange(callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
         OnBossStateChange(id: EventID, callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
 
-        OnRaidBossKilled(callback: (instance: TSInstance, encounters: uint32, source: TSUnit)=>void): T
-        OnRaidBossKilled(id: EventID, callback: (instance: TSInstance, encounters: uint32, source: TSUnit)=>void): T
+        OnRaidBossKilled(callback: (instance: TSInstance, encounters: uint32, BossMask: uint32, source: TSUnit)=>void): T
+        OnRaidBossKilled(id: EventID, callback: (instance: TSInstance, encounters: uint32, BossMask: uint32, source: TSUnit)=>void): T
 
         OnDungeonCompleted(callback: (instance: TSInstance)=>void): T
         OnDungeonCompleted(id: EventID, callback: (instance: TSInstance)=>void): T
@@ -10492,5 +10492,5 @@ declare function TS_ZONE_CATEGORY(color: uint32): ZoneCategory
 declare function TS_ZONE_SCOPED(cat: ZoneCategory): void
 declare function TS_ZONE_SCOPED_N(cat: ZoneCategory): void
 
-declare function AddPct(pct: double, of: double)
-declare function CalcPct(pct: double, of: double)
+declare function now() : uint64
+declare function GetNextResetTime() : uint64

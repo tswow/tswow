@@ -20,6 +20,7 @@ enum class TimerLoops {
 };
 
 TSNumber<uint64> TC_GAME_API now();
+TSNumber<uint64> TC_GAME_API GetNextResetTime();
 
 template <typename T>
 class TSTimer;
