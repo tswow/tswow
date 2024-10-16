@@ -8293,6 +8293,7 @@ declare namespace _hidden {
         OnActionButtonDelete(callback:  (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
     
         CanLoot(callback: (Player: TSPlayer, Source: TSCreature, CanLoot: TSMutable<boolean,boolean>) => void)
+        CanRoll(callback: (Player: TSPlayer, Source: TSNumber<uint32>, CanRoll: TSMutable<boolean,boolean>) => void)
     }
 
     export class Account<T> {

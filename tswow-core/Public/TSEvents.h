@@ -407,6 +407,7 @@ struct TSEvents
         EVENT(OnActionButtonDelete, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint8>)
 
         EVENT(CanLoot, TSPlayer, TSCreature, TSMutable<bool,bool>)
+        EVENT(CanRoll, TSPlayer, TSCreature, TSMutable<bool,bool>)
     } Player;
 
     struct AccountEvents

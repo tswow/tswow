@@ -154,6 +154,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnActionButtonDelete);
 
     LUA_HANDLE(player_events, PlayerEvents, CanLoot);
+    LUA_HANDLE(player_events, PlayerEvents, CanRoll);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
