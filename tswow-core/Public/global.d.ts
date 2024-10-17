@@ -8232,7 +8232,13 @@ declare namespace _hidden {
             callback: (
                   player: TSPlayer
                 , diminishing: TSMutableNumber<float>
-            )=>void)
+            ) => void)
+        OnUpdateStats(
+            callback: (
+                  player: TSPlayer
+                , value: TSMutableNumber<float>
+                , type: Stats
+            ) => void)
 
         /**
          * @param player
