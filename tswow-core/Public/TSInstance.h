@@ -40,6 +40,7 @@ public:
     bool IsWithinBoundary(TSWorldObject obj);
 };
 
+
 class TC_GAME_API TSInstance : public TSMap {
 public:
     InstanceScript* m_script;
@@ -73,4 +74,12 @@ public:
     TSNumber<uint32> GetTeamIDInInstance();
     TSNumber<uint32> GetFactionInInstance();
     TSBossInfo GetBossInfo(uint32 id);
+
+    uint32 m_activeCriteria = 0;
+    void SetActiveCriteria(uint32 id) {
+        m_activeCriteria = id;
+    }
+    uint32 GetActiveCriteria() {
+        return m_activeCriteria;
+    }
 };

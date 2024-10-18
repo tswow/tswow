@@ -813,6 +813,7 @@ struct TSEvents
         ID_EVENT(OnCheckEncounter, TSMap, TSPlayer)
         ID_EVENT(OnWeatherUpdate, TSMap, TSWeather)
         ID_EVENT(OnWeatherChange, TSMap, TSWeather)
+        ID_EVENT(CopyMapIfAble, TSMap, TSMutableNumber<uint32>)
     } Map;
 
     struct BattlegroundEvents : public TSMappedEventsDirect
@@ -916,7 +917,8 @@ struct TSEvents
         ID_EVENT(OnLoadDoorData, TSInstance)
         ID_EVENT(OnLoadObjectData, TSInstance)
 
-        ID_EVENT(OnRaidBossKilled, TSInstance, TSNumber<uint32> BossMask, TSNumber<uint32> CompletedEncounters, TSUnit source)
+        ID_EVENT(OnRaidBossKilled, TSInstance, TSUnit source)
+        ID_EVENT(OnDungeonBossKilled, TSInstance, TSUnit source)
         ID_EVENT(OnDungeonCompleted, TSInstance)
 
     } Instance;
