@@ -64,7 +64,7 @@ declare const ItemRefShoppingTooltip1: WoWAPI.GameTooltip
 declare const ItemRefShoppingTooltip2: WoWAPI.GameTooltip
 declare const ShoppingTooltip1: WoWAPI.GameTooltip
 declare const ShoppingTooltip2: WoWAPI.GameTooltip
-
+declare const UISpecialFrames: string[]
 
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
 declare function format(formatString: String, input:String):String;

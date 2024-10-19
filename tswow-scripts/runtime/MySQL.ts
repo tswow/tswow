@@ -197,7 +197,7 @@ export namespace mysql {
                 wsys.exec(
                     `${ipaths.bin.mysql.mysqld_exe.get()}`
                     + ` --initialize`
-                    + ` --log_syslog=0`
+                  //  + ` --log_syslog=0`
                     + ` --datadir=${ipaths.coredata.database.abs()}`);
             } catch(error) {
                 term.error('mysql',`Failed to start MySQL: ${error.message}`)
@@ -245,22 +245,27 @@ export namespace mysql {
             + ` IDENTIFIED BY '${pass}';`
             + `\nGRANT ALL ON *.* TO '${user}'@'localhost';`
             + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`);
-            + "`\nSET @@GLOBAL.wait_timeout=2147483"
+            //+ "`\nSET @@GLOBAL.wait_timeout=2147483"
         await disconnect();
         mysqlprocess.start(ipaths.bin.mysql.mysqld_exe.get(),
             [
                 `--port=${NodeConfig.DatabaseHostedPort}`,
-                '--log_syslog=0',
+               // '--log_syslog=0',
                 '--console',
                 '--wait-timeout=2147483',
                 '--wait_timeout=2147483',
                 `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
                 `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
             ]);
+            mysqlprocess.onMessage((message)=>{
+                term.log('mysql',message);
+            })
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
         let val = await Promise.race([
             mysqlprocess.waitForMessage('Execution of init_file*ended.', true),
+            mysqlprocess.waitForMessage('The innodb_system data file \'ibdata1\' must be writable', true),
             mysqlprocess.waitForMessage('Can\'t start server', true),
+            mysqlprocess.waitForMessage('*ready for connections*',true)
         ]);
         if(val.includes('Can\'t start server')) {
             if(val.includes('Bind on TCP/IP')) {
@@ -274,6 +279,9 @@ export namespace mysql {
             }
             // easier for newbies to not get the spam output
             process.exit(0);
+        }else if(val.includes('The innodb_system data file \'ibdata1\' must be writable'))
+        {
+            term.error('mysql',`Failed to start MySQL with the following error (see log ): ${val}`)
         }
         ipaths.bin.mysql_startup.remove();
         term.success('mysql','Mysql process started');

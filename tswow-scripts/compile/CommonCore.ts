@@ -22,11 +22,15 @@ export function copyExtLibs(core: 'trinitycore'|'azerothcore', type: string) {
     if (isWindows()) {
         [
             bpaths.mysql.find_subdir().lib.libmysql_dll,
-            bpaths.mysql.find_subdir().lib.libmysqld_dll
+            //bpaths.mysql.find_subdir().lib.libmysqld_dll
         ].forEach(x=>{
             x.copy(ipaths.bin.core.pick(core).build.pick(type).join(x.basename()))
         })
         bpaths.openssl.libcrypto_dll
             .copy(ipaths.bin.core.pick(core).build.pick(type).libcrypto)
+            bpaths.openssl.libssl_dll
+            .copy(ipaths.bin.core.pick(core).build.pick(type).libssl)
+            bpaths.openssl.legacy_dll
+            .copy(ipaths.bin.core.pick(core).build.pick(type).legacy)
     }
 }

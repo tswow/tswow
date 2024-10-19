@@ -346,6 +346,9 @@ export function InstallPath(pathIn: string, tdb: string) {
                 mysql_exe: file('mysql.exe'),
                 mysqld_exe: file('mysqld.exe'),
                 mysqldump_exe: file('mysqldump.exe'),
+                libssl_dll: file('libssl-3-x64.dll'),
+                libprotobufLite_dll: file('libprotobuf-lite.dll'),
+                abseil_dll: file('abseil_dll.dll')
             }),
             sZip: dirn('7zip',{
                 sza_exe: file('7za.exe')
@@ -430,7 +433,9 @@ export function InstallPath(pathIn: string, tdb: string) {
                     authserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}authserver.conf.dist`),
                     worldserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}worldserver.conf.dist`),
 
-                    libcrypto: file('libcrypto-1_1-x64.dll'),
+                    libcrypto: file('libcrypto-3-x64.dll'),
+                    libssl: file('libssl-3-x64.dll'),
+                    legacy: file('legacy.dll'),
                     configs: custom((i)=>generateTree(i,dir({}))),
                 }))
             })),
@@ -526,9 +531,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         cmakeArchive: file('cmake-3.25.0-win64-x64.zip'),
-        mysqlArchive: file('mysql-5.7.32-winx64.zip'),
-        nodeArchive: file('node-v18.12.1-win-x64.zip'),
-        node: dirn('node-v18.12.1-win-x64',{}),
+        mysqlArchive: file('mysql-8.0.40-winx64'),
+        nodeArchive: file('node-v20.18.0-win-x64.zip'),
+        node: dirn('node-v20.18.0-win-x64',{}),
 
         sourceAdt: file('source.adt'),
 
@@ -538,11 +543,14 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     bin: dir({
                         mysqld_exe: file('mysqld.exe'),
                         mysql_exe: file('mysql.exe'),
-                        mysqldump_exe: file('mysqldump.exe')
+                        mysqldump_exe: file('mysqldump.exe'),
+                        libssl_dll: file('libssl-3-x64.dll'),
+                        libprotobufLite_dll: file('libprotobuf-lite.dll'),
+                        abseil_dll: file('abseil_dll.dll')
                     }),
                     lib: dir({
                         libmysql_dll: file('libmysql.dll'),
-                        libmysqld_dll: file('libmysqld.dll'),
+                        //libmysqld_dll: file('libmysqld.dll'),
                         mysqlserver_lib: file('mysqlserver.lib'),
                         libmysql_lib: file('libmysql.lib')
                     })
@@ -550,10 +558,12 @@ export function BuildPaths(pathIn: string, tdb: string) {
             },
         }),
 
-        opensslArchive: file('openssl1_1_1m.zip'),
+        opensslArchive: file('openssl3.zip'),
 
         openssl: dir({
-            libcrypto_dll: file('libcrypto-1_1-x64.dll'),
+            libcrypto_dll: file('libcrypto-3-x64.dll'),
+            legacy_dll: file('/bin/legacy.dll'),
+            libssl_dll: file('libssl-3-x64.dll'),
             lib: dir({
                 libcrypto_lib: file('libcrypto.lib')
             })

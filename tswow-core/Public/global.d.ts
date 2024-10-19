@@ -87,11 +87,11 @@ declare const enum Class /** @realType: uint8 */ {
     SHAMAN        = 7,  // TITLE Shaman
     MAGE          = 8,  // TITLE Mage
     WARLOCK       = 9,  // TITLE Warlock
-    DEMON_HUNTER  = 10, // TITLE DemonHunter
     DRUID         = 11, // TITLE Druid
     MONK          = 12, // TITLE Monk
     BARD          = 13, // TITLE Bard
-    TINKER        = 14  // TITLE Tinker
+    TINKER        = 14, // TITLE Tinker
+    DEMON_HUNTER  = 15, // TITLE DemonHunter
 }
 declare type ClassID = Class | uint8
 
