@@ -68,6 +68,7 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { PageMaterialCell } from "./PageMaterial";
+import { Stat } from "./ItemStats";
 
 export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
     protected createDBC(): ItemRow {
@@ -418,6 +419,258 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                 code.end_block(`)`)
             }
         })
+    }
+
+        // custom additions
+    IsWeapon() : bool {
+        return this.Class.getClass() == 2
+    }
+
+    Is2hWeapon() : bool {
+        return this.InventoryType.TWOHAND.is()
+    }
+
+    IsRanged() : bool {
+        return this.InventoryType.RANGED.is() || this.InventoryType.THROWN.is() || this.InventoryType.WAND_GUN.is();
+    }
+
+    ItemValue: float = 0
+    MainStat: Stat = 0
+
+    clearStats() : ItemTemplate {
+        this.Stats.clearAll()
+        return this
+    }
+
+    fixSpeed() : ItemTemplate {
+        if (this.IsWeapon()) {
+            let Delay : uint32 = this.Delay.getAsMilliseconds()
+            let Recalc = Delay
+
+            if (this.Is2hWeapon()) {
+                Recalc = Math.max(3600, Delay)
+            } else if (this.Class.getSubclass() == 19 || this.Class.getSubclass() == 16) {
+                Recalc = Math.max(3000, Delay)
+            } else if (this.IsRanged()) {
+                Recalc = Math.max(3000, Delay)
+            } else if (Delay > 1999) {
+                Recalc = Math.max(2600, Delay)
+            } else
+                Recalc = Math.min(1500, Delay)
+
+            this.Delay.set(Recalc, 'MILLISECONDS')
+        }
+
+        return this.fixDPS()
+    }
+
+    fixDPS() : ItemTemplate {
+        if (this.IsWeapon()) {
+            let DPS = this.Is2hWeapon() ? this.ItemLevel.get()*.95 : this.Class.getSubclass() == 19 ? this.ItemLevel.get() * 1.3 : this.ItemLevel.get() * .7
+            if (this.MainStat == Stat.INTELLECT && this.Class.getSubclass() != 19) {
+                DPS /= 2
+                let SP = 5*DPS
+                this.Stats.addSpellPower(SP)
+            }
+
+            let Avg = DPS*this.Delay.getAsSeconds()
+            let Variance = .24 * Avg
+            this.Damage.forEach((IDam) => {
+                if (IDam.School.PHYSICAL.is()) {
+                    IDam.Min.set(Avg - Variance)
+                    IDam.Max.set(Avg + Variance)
+                }
+            })
+        }
+        return this
+    }
+
+    setStats(Main: [number, float], ...Secondary: [number, float][]): ItemTemplate {
+        this.InitItemValue()
+        this.clearStats()
+        const WithStam : bool = !this.IsWeapon() || !(Main.length > 1)
+        let SplitVal : float = this.ItemValue
+        let RawForMain = Main[1] * (SplitVal)
+        let ProposedMain = Main[0]
+        let AmountForMain = (RawForMain)**(1/1.5)
+        this.MainStat = ProposedMain
+
+        if (this.MainStat == 0 || (this.IsWeapon() && !this.WeaponHasAllowableMainStat())) {
+            this.GenMainStat()
+        }
+
+        SplitVal -= RawForMain
+        if (WithStam) {
+            let ForStam = (AmountForMain/2)/(2/3)
+            AmountForMain /= 2
+            this.Stats.addStamina(ForStam)
+        }
+
+        this.Stats.add(this.MainStat, AmountForMain)
+
+        if (Secondary.length > 0) {
+            Secondary.forEach(([Sec, Pct]) => {
+                this.Stats.add(Sec, (Pct*SplitVal)**(1/1.5))
+            })
+        }
+
+        return this
+    }
+
+    GenMainStat() {
+        const Class = this.Class.getSubclass()
+        const Roll = Math.random() * 100
+        if (this.IsWeapon()) {
+            switch (Class) {
+                case 0:
+                case 16:
+                case 1:
+                case 5:
+                    this.MainStat = Roll > 50 ? Stat.STRENGTH : Stat.AGILITY
+                    break
+                case 15:
+                case 7:
+                case 4:
+                case 13:
+                    this.MainStat = Roll > 50 ? Stat.INTELLECT : Stat.AGILITY
+                    break
+                case 8:
+                    this.MainStat = Stat.STRENGTH
+                    break
+                case 6:
+                    this.MainStat = Stat.AGILITY
+                    break;
+                case 10:
+                    this.MainStat = Roll > 80 ? Stat.AGILITY : Stat.INTELLECT
+                    break;
+                case 2:
+                case 18:
+                case 3:
+                    this.MainStat = Roll > 80 ? Stat.STRENGTH : Stat.AGILITY
+                    break;
+                case 19:
+                    this.MainStat = Stat.INTELLECT
+                    break
+            }
+        } else {
+            switch (Class) {
+                case 0: // Jewelry
+                    let Any = [Stat.AGILITY, Stat.STRENGTH, Stat.INTELLECT, Stat.STAMINA]
+                    this.MainStat = Any[Math.floor(Math.random() * Any.length)]
+                    break
+                case 1: // Cloth
+                    this.MainStat = Stat.INTELLECT
+                    break
+                case 2: // leather
+                    this.MainStat = Roll > 75 ? Stat.INTELLECT : Stat.AGILITY
+                    break
+                case 3: // mail
+                    this.MainStat = Roll > 60 ? Stat.INTELLECT : Stat.AGILITY
+                    break
+                case 4: // plate
+                    this.MainStat = Roll > 70 ? Stat.INTELLECT : Stat.STRENGTH
+                    break
+                case 6: // shield
+                    this.MainStat = Roll > 50 ? Stat.STRENGTH : Stat.AGILITY
+                    break
+            }
+        }
+    }
+
+    WeaponHasAllowableMainStat() : bool {
+        let Suggestion = this.MainStat
+        if (this.IsWeapon()) {
+            const Class = this.Class.getSubclass()
+            switch (Class) {
+                case 0:
+                case 16:
+                case 1:
+                case 5:
+                    return Suggestion == Stat.STRENGTH || Suggestion == Stat.AGILITY
+                case 15:
+                case 7:
+                case 4:
+                case 13:
+                    return Suggestion == Stat.INTELLECT || Suggestion == Stat.AGILITY
+                case 8:
+                    return Suggestion == Stat.STRENGTH
+                case 6:
+                    return Suggestion == Stat.AGILITY
+                case 10:
+                    return Suggestion == Stat.AGILITY || Suggestion == Stat.INTELLECT
+                case 2:
+                case 18:
+                case 3:
+                    return Suggestion == Stat.STRENGTH || Suggestion == Stat.AGILITY
+                case 19:
+                    return Suggestion == Stat.INTELLECT
+                default:
+                    return false
+            }
+        }
+        return false;
+    }
+
+
+    InitItemValue() : ItemTemplate {
+        if (this.ItemValue < 1)
+            this.ItemValue = this.getItemValue()
+        return this
+    }
+
+    getItemValue() : float {
+        let SlotWeight = 0
+
+        if (this.InventoryType.TWOHAND.is())
+            SlotWeight = 1.0
+        else if (this.InventoryType.WEAPON.is())
+            SlotWeight = .42
+        else {
+            let Slot = this.InventoryType.get()
+            switch(Slot) {
+                case ItemInventoryType.MAINHAND:
+                    SlotWeight = .42
+                    break
+                case (ItemInventoryType.HEAD):
+                case (ItemInventoryType.ROBE):
+                case (ItemInventoryType.CHEST):
+                case (ItemInventoryType.LEGS):
+                    SlotWeight = 1.0
+                    break
+                case (ItemInventoryType.SHOULDER):
+                case (ItemInventoryType.HANDS): 
+                case (ItemInventoryType.FEET): 
+                case (ItemInventoryType.WAIST): 
+                    SlotWeight = .77
+                    break
+                case (ItemInventoryType.WRISTS): 
+                case (ItemInventoryType.NECK): 
+                case (ItemInventoryType.FINGER): 
+                case (ItemInventoryType.BACK): 
+                case (ItemInventoryType.OFFHAND):
+                case (ItemInventoryType.SHIELD): 
+                    SlotWeight = .55
+                    break
+                case (ItemInventoryType.RANGED): 
+                case (ItemInventoryType.THROWN): 
+                case (ItemInventoryType.WAND_GUN):
+                    SlotWeight = .30
+                    break
+            }
+        }
+
+        const Q = this.Quality.get()
+        switch(Q) {
+            case ItemQuality.GREEN:
+                return SlotWeight*(.45*this.ItemLevel.get()-2)**1.5
+            case ItemQuality.BLUE:
+                return SlotWeight*(.53*this.ItemLevel.get()-1.15)**1.5
+            case ItemQuality.PURPLE:
+            case ItemQuality.ORANGE:
+                return SlotWeight*((.67*this.ItemLevel.get()-1)**1.5)
+            default:
+                return 0.0
+        }
     }
 }
 

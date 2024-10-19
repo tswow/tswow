@@ -87,11 +87,11 @@ declare const enum Class /** @realType: uint8 */ {
     SHAMAN        = 7,  // TITLE Shaman
     MAGE          = 8,  // TITLE Mage
     WARLOCK       = 9,  // TITLE Warlock
-    DEMON_HUNTER  = 10, // TITLE DemonHunter
     DRUID         = 11, // TITLE Druid
     MONK          = 12, // TITLE Monk
     BARD          = 13, // TITLE Bard
-    TINKER        = 14  // TITLE Tinker
+    TINKER        = 14, // TITLE Tinker
+    DEMON_HUNTER  = 15, // TITLE DemonHunter
 }
 declare type ClassID = Class | uint8
 
@@ -4891,6 +4891,9 @@ declare interface TSInstance extends TSMap {
     GetFactionInInstance(): TSNumber<uint32>
     GetBossInfo(id: uint32): TSBossInfo
     RemoveFromMap(player:TSPlayer, deleteFromWorld: boolean): void
+
+    SetActiveCriteria(id: uint32): void
+    GetActiveCriteria():  uint32
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -8232,7 +8235,13 @@ declare namespace _hidden {
             callback: (
                   player: TSPlayer
                 , diminishing: TSMutableNumber<float>
-            )=>void)
+            ) => void)
+        OnUpdateStats(
+            callback: (
+                  player: TSPlayer
+                , value: TSMutableNumber<float>
+                , type: Stats
+            ) => void)
 
         /**
          * @param player
@@ -8293,6 +8302,7 @@ declare namespace _hidden {
         OnActionButtonDelete(callback:  (Player: TSPlayer, Button: TSNumber<uint8>, Action: TSNumber<uint32>, Type: TSNumber<uint8>) => void)
     
         CanLoot(callback: (Player: TSPlayer, Source: TSCreature, CanLoot: TSMutable<boolean,boolean>) => void)
+        CanRoll(callback: (Player: TSPlayer, Source: TSNumber<uint32>, CanRoll: TSMutable<boolean,boolean>) => void)
     }
 
     export class Account<T> {
@@ -9607,6 +9617,9 @@ declare namespace _hidden {
 
         OnWeatherUpdate(callback: (map: TSMap, weather: TSWeather)=>void): T
         OnWeatherUpdate(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
+
+        CopyMapIfAble(callback: (map: TSMap, mapId: TSMutableNumber<uint32>)=>void): T
+        CopyMapIfAble(id: EventID, callback: (map: TSMap, mapId: TSMutableNumber<uint32>)=>void): T
     }
 
     export class Instance<T> {
@@ -9640,8 +9653,11 @@ declare namespace _hidden {
         OnBossStateChange(callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
         OnBossStateChange(id: EventID, callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
 
-        OnRaidBossKilled(callback: (instance: TSInstance, encounters: uint32, BossMask: uint32, source: TSUnit)=>void): T
-        OnRaidBossKilled(id: EventID, callback: (instance: TSInstance, encounters: uint32, BossMask: uint32, source: TSUnit)=>void): T
+        OnRaidBossKilled(callback: (instance: TSInstance, source: TSUnit)=>void): T
+        OnRaidBossKilled(id: EventID, callback: (instance: TSInstance, source: TSUnit)=>void): T
+
+        OnDungeonBossKilled(callback: (instance: TSInstance, source: TSUnit)=>void): T
+        OnDungeonBossKilled(id: EventID, callback: (instance: TSInstance, source: TSUnit)=>void): T
 
         OnDungeonCompleted(callback: (instance: TSInstance)=>void): T
         OnDungeonCompleted(id: EventID, callback: (instance: TSInstance)=>void): T
@@ -9971,7 +9987,7 @@ declare class TSJsonArray {
     PushString(value: string): this;
 
     SetGUIDNumber(index: uint32, value: TSGUID): this;
-    GetGUIDNumber(index: uint32, def?: TSGUID): string;
+    GetGUIDNumber(index: uint32, def?: TSGUID): TSGUID;
     HasGUIDNumber(index: uint32): bool;
     InsertGUIDNumber(index: uint32, value: TSGUID): this;
     PushGUIDNumber(value: TSGUID): this;

@@ -118,6 +118,8 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCalcDodgeFromAgility);
     LUA_HANDLE(player_events, PlayerEvents, OnCalcParryFromStr);
 
+    LUA_HANDLE(player_events, PlayerEvents, OnUpdateStats);
+
     LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageDoneMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);
@@ -154,6 +156,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnActionButtonDelete);
 
     LUA_HANDLE(player_events, PlayerEvents, CanLoot);
+    LUA_HANDLE(player_events, PlayerEvents, CanRoll);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
