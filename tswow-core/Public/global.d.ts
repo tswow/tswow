@@ -10509,4 +10509,5 @@ declare function TS_ZONE_SCOPED(cat: ZoneCategory): void
 declare function TS_ZONE_SCOPED_N(cat: ZoneCategory): void
 
 declare function now() : uint64
+declare function GetGameTime() : uint64
 declare function GetNextResetTime() : uint64
