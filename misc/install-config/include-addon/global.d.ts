@@ -65,6 +65,10 @@ declare const ItemRefShoppingTooltip2: WoWAPI.GameTooltip
 declare const ShoppingTooltip1: WoWAPI.GameTooltip
 declare const ShoppingTooltip2: WoWAPI.GameTooltip
 declare const UISpecialFrames: string[]
+declare const QuestLogDetailScrollChildFrame: WoWAPI.Frame
+declare const QuestInfoRequiredMoneyText: WoWAPI.fontString
+declare const QuestInfoGroupSize: WoWAPI.fontString
+declare const QuestInfoDescriptionHeader: WoWAPI.Frame
 
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
 declare function format(formatString: String, input:String):String;
@@ -74,7 +78,9 @@ declare function GetInventoryItemLink(unit:UnitId,index:number):String;
 declare function strfind(searched:String, regex:String):string[];
 declare function select(index:number,link:any):string;
 declare function GetItemGem(link:string, index:number):string[];
-
+declare function GetNumQuestLeaderBoards(): number;
+declare function GetQuestLogSelection(): number;
+declare function GetQuestLink(index: number): string;
 //
 
 /**
@@ -13994,7 +14000,7 @@ declare function UIDropDownMenu_SetText(dropdown: WoWAPI.Frame, text: string): v
  * @param callback the initializer function
  */
 declare function UIDropDownMenu_Initialize(dropdown: WoWAPI.Frame, callback: (self: WoWAPI.Frame, level: number, menuList: number) => void): void;
-
+declare function UIDropDownMenu_JustifyText(dropdown: WoWAPI.Frame, position: WoWAPI.HorizontalAlign): void;
 /**
  * create an info object for a dropdown element
  */
