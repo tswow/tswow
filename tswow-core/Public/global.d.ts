@@ -91,6 +91,7 @@ declare const enum CorpseType {} /** Corpse.h:CorpseType */
 declare const enum CreatureFamily {} /** SharedDefines.h:CreatureFamily */
 declare const enum RemoveMethod {} /** SharedDefines.h:RemoveMethod */
 declare const enum QuestFlags {} /** QuestDef.h:QuestFlags */
+declare const enum Team {} /** SharedDefines.h:Team */
 declare const enum TeamId {} /** SharedDefines.h:TeamId */
 declare const enum WeatherType {} /** SharedDefines.h:WeatherType */
 declare const enum GOState {} /** SharedDefines.h:GOState */
@@ -1146,6 +1147,13 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return [TeamId] teamId
      */
+    GetTeamID() : TSNumber<uint32>
+
+    /**
+     * Returns the [Player]s [Team]
+     *
+     * @return [Team] team
+     */
     GetTeam() : TSNumber<uint32>
 
     /**
@@ -1863,7 +1871,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 xp : experience to give
      * @param [Unit] victim = nil
      */
-    GiveXP(xp : uint32,victim : TSUnit) : void
+    GiveXP(xp : uint32,victim : TSUnit | undefined) : void
 
     /**
      * Toggle the [Player]s 'Do Not Disturb' flag

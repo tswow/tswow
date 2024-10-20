@@ -1319,9 +1319,19 @@ TSNumber<uint32> TSPlayer::GetGuildID()
  *
  * @return [TeamId] teamId
  */
-TSNumber<uint32> TSPlayer::GetTeam()
+TSNumber<uint32> TSPlayer::GetTeamID()
 {
     return player->GetTeamId();
+}
+
+/**
+ * Returns the [Player]s [Team]
+ *
+ * @return [Team] team
+ */
+TSNumber<uint32> TSPlayer::GetTeam()
+{
+    return player->GetTeam();
 }
 
 /**
@@ -2849,8 +2859,10 @@ void TSPlayer::Say(std::string const& text,uint32 lang)
  */
 void TSPlayer::GiveXP(uint32 xp,TSUnit _victim)
 {
-    auto victim = _victim.unit;
-    player->GiveXP(xp, victim);
+    if (_victim)
+        player->GiveXP(xp, _victim.unit);
+    else
+        player->GiveXP(xp, nullptr);
 }
 
 /**

@@ -149,6 +149,7 @@ public:
 	TSNumber<uint32> GetGMRank();
 	TSNumber<uint32> GetGuildID();
 	TSNumber<uint32> GetTeam();
+	TSNumber<uint32> GetTeamID();
 	TSNumber<uint32> GetItemCount(uint32 entry, bool checkinBank);
 	TSNumber<uint32> GetLifetimeKills();
 	std::string GetPlayerIP();
