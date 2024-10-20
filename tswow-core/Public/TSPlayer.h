@@ -365,6 +365,8 @@ public:
 
 	void SendQuestGiverStatusMultiple();
 
+	TSNumber<uint32> GetXPForDifficulty(uint8 difficulty);
+
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);

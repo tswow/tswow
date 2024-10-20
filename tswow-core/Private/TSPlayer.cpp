@@ -4166,3 +4166,8 @@ void TSPlayer::SendQuestGiverStatusMultiple()
 {
     player->SendQuestGiverStatusMultiple();
 }
+
+TSNumber<uint32> TSPlayer::GetXPForDifficulty(uint8 difficulty)
+{
+    return player->GetXPForDifficulty(difficulty);
+}

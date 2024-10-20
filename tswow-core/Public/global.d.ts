@@ -2278,6 +2278,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     SetFace(face: uint8);
 
     SendQuestGiverStatusMultiple() : void
+
+    GetXPForDifficulty(difficulty: uint8) : TSNumber<uint32>;
 }
 
 declare interface TSCorpse extends TSWorldObject {
