@@ -12456,6 +12456,7 @@ declare namespace WoWAPI {
     type FilterMode = "LINEAR" | "BILINEAR" | "TRILINEAR" | "NEAREST";
     type MouseWheelDelta = 1 | -1;
     type Align = "HORIZONTAL" | "VERTICAL";
+    type BlendMode = "DISABLE" | "BLEND" | "ALPHAKEY" | "ADD" | "MOD";
 
     namespace Event {
         type OnEvent = "OnEvent";
@@ -12933,6 +12934,23 @@ declare namespace WoWAPI {
          * @param a Alpha component (1.0 is opaque, 0.0 is transparent). The default value is 1.0.
          */
         SetColorTexture(r: number, g: number, b: number, a?: number): void;
+
+        /**
+         * Sets the blend mode of the texture.
+         *
+         * @param mode Blend mode to use.
+         * 
+         * "DISABLE" - Ignores the alpha channel completely when rendering the texture.
+         * 
+         * "BLEND" - Uses the alpha channel with a normal blending overlay.
+         * 
+         * "ALPHAKEY" - Interprets the alpha with any black value being transparent, and any non-black value being opaque.
+         * 
+         * "ADD" - Uses the alpha channel with an additive blending overlay.
+         * 
+         * "MOD" - Ignores the alpha channel, multiplying the image against the back-ground.
+         */
+        SetBlendMode(mode: WoWAPI.BlendMode): void;
     }
 
     /**
