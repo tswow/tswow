@@ -21,7 +21,8 @@ import ExtractZip = require('extract-zip')
 
 export namespace Boost {
     export async function install() {
-        await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
+        if(!bpaths.boostArchive.exists())
+            await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
 
         if(!bpaths.boost.boost_1_82_0.exists())
         {

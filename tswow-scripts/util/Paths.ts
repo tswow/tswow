@@ -531,7 +531,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         cmakeArchive: file('cmake-3.25.0-win64-x64.zip'),
-        mysqlArchive: file('mysql-8.0.40-winx64'),
+        mysqlArchive: file('mysql-8.0.40-winx64.zip'),
         nodeArchive: file('node-v20.18.0-win-x64.zip'),
         node: dirn('node-v20.18.0-win-x64',{}),
 

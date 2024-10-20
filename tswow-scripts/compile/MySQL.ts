@@ -22,10 +22,12 @@ import ExtractZip = require('extract-zip')
 
 export namespace MySQL {
     export async function find() {
-        await DownloadFile(
-             MYSQL_URL
-           , bpaths.mysqlArchive
-        )
+        if(!bpaths.mysqlArchive.exists()) {
+            await DownloadFile(
+                 MYSQL_URL
+               , bpaths.mysqlArchive
+            )
+        }
 
         if(!bpaths.mysql.exists()) {
             await ExtractZip(

@@ -21,10 +21,12 @@ import ExtractZip = require('extract-zip')
 
 export namespace OpenSSL {
     export async function find() {
-        await DownloadFile(
-             OPENSSL_DOWNLOAD_URL
-           , bpaths.opensslArchive
-        )
+        if(!bpaths.opensslArchive.exists()) {
+            await DownloadFile(
+                 OPENSSL_DOWNLOAD_URL
+               , bpaths.opensslArchive
+            )
+        }
 
         if(!bpaths.openssl.exists()) {
             await ExtractZip(

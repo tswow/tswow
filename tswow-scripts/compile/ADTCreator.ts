@@ -29,10 +29,12 @@ export namespace ADTCreator {
             })
         }
 
-        await DownloadFile(
-              SOURCE_ADT_URL
-            , bpaths.sourceAdt.get()
-        )
+        if (!bpaths.sourceAdt.exists())
+            await DownloadFile(
+                  SOURCE_ADT_URL
+                , bpaths.sourceAdt.get()
+            )
+        
         wfs.copy(bpaths.sourceAdt,ipaths.bin.sourceAdt);
     }
 }

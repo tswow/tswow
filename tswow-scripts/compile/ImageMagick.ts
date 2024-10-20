@@ -27,6 +27,7 @@ export namespace IMInstall {
             return;
         }
 
+    if(!bpaths.imArchive.exists())
         await DownloadFile(
              IMAGEMAGICK_URL
            , bpaths.imArchive

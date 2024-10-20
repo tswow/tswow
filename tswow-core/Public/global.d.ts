@@ -4894,6 +4894,7 @@ declare interface TSInstance extends TSMap {
 
     SetActiveCriteria(id: uint32): void
     GetActiveCriteria():  uint32
+    HandleGameObject(guid: uint32, Open: bool): void
 }
 
 declare interface TSGameObject extends TSWorldObject {

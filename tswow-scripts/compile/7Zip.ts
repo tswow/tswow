@@ -38,18 +38,22 @@ export namespace SevenZipInstall {
         if(!isWindows()) {
             return;
         }
-
-        await DownloadFile(
-              SZIP_DOWNLOAD_URL
-            , bpaths.sevenZipArchive
-        )
-
-        await DownloadFile(
-              SZ_SFX_DOWNLOAD_URL
-            , bpaths.sevenZip.sz_sfx
-        )
-
+        
         if(!bpaths.sevenZip.sevenZa_exe.exists()) {
+
+            if(!bpaths.sevenZipArchive.exists())
+                await DownloadFile(
+                      SZIP_DOWNLOAD_URL
+                    , bpaths.sevenZipArchive
+                )
+
+            if(!bpaths.sevenZip.sz_sfx.exists())
+                await DownloadFile(
+                      SZ_SFX_DOWNLOAD_URL
+                    , bpaths.sevenZip.sz_sfx
+                )
+
+        
             await ExtractZip(
                   bpaths.sevenZipArchive.get()
                 , {dir:bpaths.sevenZip.abs().get()}

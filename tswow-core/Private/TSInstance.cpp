@@ -196,6 +196,13 @@ TSBossInfo TSInstance::GetBossInfo(uint32 id)
     return TSBossInfo(&m_script->bosses[id]);
 }
 
+void TSInstance::HandleGameObject(uint32 guid, bool open)
+{
+    if (GameObject* go = map->GetGameObjectBySpawnId(guid)) {
+        go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
+    }
+}
+
 TSGUIDSet::TSGUIDSet(std::set<ObjectGuid>* set)
     : m_set(set)
 {}
