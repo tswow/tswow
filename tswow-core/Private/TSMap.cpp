@@ -24,6 +24,7 @@
 #include "TSBattleground.h"
 #include "TSInstance.h"
 #include "TSGUID.h"
+#include "TSWeather.h"
 
 #include "ObjectMgr.h"
 #include "CreatureData.h"
@@ -279,6 +280,21 @@ void TSMap::SetWeather(uint32 zoneId,uint32 weatherType,float grade)
     if (Weather::IsValidWeatherType(weatherType))
         map->SetWeather(zoneId, (WeatherType)weatherType, grade, false);
 #endif
+}
+
+/**
+ * Returns [Weather] for a zone or generates one if none exists.
+ *
+ * @param uint32 zoneId : The ID of the zone.
+ * @return [Weather] The weather object of the zone
+ */
+TSWeather TSMap::GetOrGenerateZoneDefaultWeather(uint32 zoneId)
+{
+    Weather* weather = map->GetOrGenerateZoneDefaultWeather(zoneId);
+    if (weather)
+        return TSWeather(weather);
+    else
+        return TSWeather(nullptr);
 }
 
 /**
