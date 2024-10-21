@@ -348,7 +348,8 @@ export function InstallPath(pathIn: string, tdb: string) {
                 mysqldump_exe: file('mysqldump.exe'),
                 libssl_dll: file('libssl-3-x64.dll'),
                 libprotobufLite_dll: file('libprotobuf-lite.dll'),
-                abseil_dll: file('abseil_dll.dll')
+                abseil_dll: file('abseil_dll.dll'),
+                libcrypto_dll: file('libcrypto-3-x64.dll')
             }),
             sZip: dirn('7zip',{
                 sza_exe: file('7za.exe')
@@ -546,7 +547,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
                         mysqldump_exe: file('mysqldump.exe'),
                         libssl_dll: file('libssl-3-x64.dll'),
                         libprotobufLite_dll: file('libprotobuf-lite.dll'),
-                        abseil_dll: file('abseil_dll.dll')
+                        abseil_dll: file('abseil_dll.dll'),
+                        libcrypto_dll: file('libcrypto-3-x64.dll')
                     }),
                     lib: dir({
                         libmysql_dll: file('libmysql.dll'),
