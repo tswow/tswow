@@ -10071,7 +10071,8 @@ declare function StopGameEvent(event_id: uint16): void
  * @param copyItemID? - the old template to be used as a base.
  *                      defaults to 38 (Recruits Shirt, shirt slot equip)
  */
-declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
+declare function CreateItemTemplate(entry: uint32, copyItemID?: uint32): TSItemTemplate;
+declare function santizeForDB(input: string): string;
 // end of Global.h
 
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
