@@ -367,6 +367,9 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnSendScore);
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnWeight);
     LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnSelect);
+    LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnPlayerCapturedFlag);
+    LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnPlayerReturnedFlag);
+    LUA_MAPPED_HANDLE(battleground_events, BattlegroundEvents, OnPlayerCapturedAreaPoint);
 
     auto instance_events = state.new_usertype<TSEvents::InstanceEvents>("InstanceEvents");
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnCreate);

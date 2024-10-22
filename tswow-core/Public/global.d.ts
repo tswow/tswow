@@ -9359,6 +9359,37 @@ declare namespace _hidden {
         OnSelect(id: EventID, callback: (
               bgType: TSMutableNumber<uint32>
         )=>void): T
+
+        OnPlayerCapturedFlag(callback: (
+            bg: TSBattleground
+          , player: TSPlayer
+          , object: TSNumber<uint32>
+        )=>void): T;
+        OnPlayerCapturedFlag(id: EventID, callback: (
+            bg: TSBattleground
+          , player: TSPlayer
+          , object: TSNumber<uint32>
+        )=>void): T;
+
+        OnPlayerReturnedFlag(callback: (
+            bg: TSBattleground
+          , player: TSPlayer
+        )=>void): T;
+        OnPlayerReturnedFlag(id: EventID, callback: (
+            bg: TSBattleground
+          , player: TSPlayer
+        )=>void): T;
+
+        OnPlayerCapturedAreaPoint(callback: (
+            bg: TSBattleground
+          , player: TSPlayer
+          , point: TSNumber<uint32>
+        )=>void): T;
+        OnPlayerCapturedAreaPoint(id: EventID, callback: (
+            bg: TSBattleground
+          , player: TSPlayer
+          , point: TSNumber<uint32>
+        )=>void): T;
     }
 
     export class CustomPacket {

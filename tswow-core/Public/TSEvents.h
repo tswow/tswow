@@ -844,6 +844,10 @@ struct TSEvents
             OnSelect
             , TSMutableNumber<uint32> bgType
         )
+
+        ID_EVENT(OnPlayerCapturedFlag, TSBattleground, TSPlayer, TSNumber<uint32> object);
+        ID_EVENT(OnPlayerReturnedFlag, TSBattleground, TSPlayer);
+        ID_EVENT(OnPlayerCapturedAreaPoint, TSBattleground, TSPlayer, TSNumber<uint32> point);
     } Battleground;
 
     struct InstanceEvents : public TSMappedEventsDirect
