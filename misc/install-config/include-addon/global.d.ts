@@ -14183,7 +14183,7 @@ declare function UnitFactionGroup(unitId: WoWAPI.UnitId): LuaMultiReturn<[string
  * @param unitId unit to query, e.g. "player"
  * @see https://wow.gamepedia.com/API_UnitClass
  */
-declare function UnitClass(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string, number]>;
+declare function UnitClass(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string]>;
 
 /**
  */
