@@ -125,6 +125,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritDamageMod);
+    LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedCritHealingMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedHealMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedAutoattackMod);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedAutoattackDamageTakenMod);
