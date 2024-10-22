@@ -195,6 +195,8 @@ struct TSEvents
 
          EVENT(OnCheckAreaIsPvP, TSPlayer, TSMutable<bool,bool>)
 
+         EVENT(OnRewardHonorEarly, TSMutable<bool, bool>)
+
          EVENT(
              OnTradeCompleted
              , TSPlayer me

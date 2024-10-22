@@ -8281,6 +8281,8 @@ declare namespace _hidden {
             player: TSPlayer
           , creature: TSCreature
         ) => void);
+
+        OnRewardHonorEarly(callback: (cancel: TSMutable<boolean,boolean>)=>void);
     }
 
     export class Account<T> {
