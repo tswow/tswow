@@ -382,6 +382,7 @@ struct TSEvents
         EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
         EVENT(OnEnchantTriggered, TSPlayer player, TSUnit target, TSItem item, TSSpellInfo spellInfo)
         EVENT(OnCustomScriptedCritDamageMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritDamMod)
+        EVENT(OnCustomScriptedCritHealingMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritDamMod)
         
         EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, bool IsPet)
         EVENT(OnCustomScriptedAutoattackDamageTakenMod, TSPlayer player, TSUnit attacker, TSMutableNumber<float> TakenTotalMod, TSMutableNumber<uint32> Damage)

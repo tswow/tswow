@@ -8272,6 +8272,7 @@ declare namespace _hidden {
         OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
         OnCustomScriptedAutoattackDamageTakenMod(callback: (player: TSPlayer, Attacker: TSUnit, TakenTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
         OnCustomScriptedCritDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);
+        OnCustomScriptedCritHealingMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);
         
         OnPowerSpent(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, PowerCost: TSNumber<int32>) => void);
         OnEnchantTriggered(callback: (Caster: TSPlayer, On: TSUnit, Item: TSItem, Spell: TSSpellInfo) => void);
@@ -10074,7 +10075,8 @@ declare function StopGameEvent(event_id: uint16): void
  * @param copyItemID? - the old template to be used as a base.
  *                      defaults to 38 (Recruits Shirt, shirt slot equip)
  */
-declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
+declare function CreateItemTemplate(entry: uint32, copyItemID?: uint32): TSItemTemplate;
+declare function santizeForDB(input: string): string;
 // end of Global.h
 
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>

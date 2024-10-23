@@ -26,6 +26,8 @@
 #include "Timer.h"
 #include "GameEventMgr.h"
 #include "TSItemTemplate.h"
+#include <algorithm>
+#include <unordered_map>
 
 TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 {
@@ -40,6 +42,42 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 void SendWorldMessage(std::string const& string)
 {
     sWorld->SendServerMessage(SERVER_MSG_STRING, string);
+}
+
+std::string santizeForDB(std::string const& input)
+{
+    std::unordered_map<char, std::string> sanitizeMap = {
+        //Escapes
+        {'\'', "''"},      // Escape single quote
+        {'\"', "\"\""},    // Escape double quote
+        {'\\', "\\\\"},    // Escape backslash
+        {'\0', "\\0"},     // Escape null character
+        {'\n', "\\n"},     // Escape newline
+        {'\r', "\\r"},     // Escape carriage return
+        {'\b', "\\b"},     // Escape backspace
+        {'\t', "\\t"},     // Escape tab
+        {'\z', "\\z"},     // Escape ASCII Z
+        {'%', "\\%"},      // Escape percent sign
+
+        //Removals
+        {'*', ""},         // Remove *
+        {'/', ""},         // Remove /
+        {'#', ""},         // Remove #
+        {'-', ""},         // Remove -
+        {';', ""},         // Remove ;
+        {'_', ""},         // Remove _
+    };
+
+    std::string sanitized;
+    for (char c : input) {
+        if (sanitizeMap.find(c) != sanitizeMap.end()) {
+            sanitized += sanitizeMap[c];
+        }
+        else {
+            sanitized += c;
+        }
+    }
+    return sanitized;
 }
 
 TSNumber<uint32> GetCurrTime()

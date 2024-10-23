@@ -23,6 +23,8 @@
 
 TSItemTemplate TC_GAME_API CreateItemTemplate(uint32 entry,uint32 copyItemID = 38);
 
+std::string TC_GAME_API santizeForDB(std::string const& input);
+
 void TC_GAME_API SendWorldMessage(std::string const& string);
 
 TSNumber<uint32> TC_GAME_API GetCurrTime();
