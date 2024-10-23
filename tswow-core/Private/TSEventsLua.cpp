@@ -283,6 +283,7 @@ void TSLua::load_events(sol::state& state)
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnJustEnteredCombat);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnJustExitedCombat);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnJustEngagedWith);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnDeathEarly);
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnDeath);

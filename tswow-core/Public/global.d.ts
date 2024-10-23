@@ -8646,6 +8646,9 @@ declare namespace _hidden {
         OnJustEnteredCombat(callback: (creature: TSCreature, target: TSUnit)=>void): T;
         OnJustEnteredCombat(id: EventID, callback: (creature: TSCreature, target: TSUnit)=>void): T;
 
+        OnJustExitedCombat(callback: (creature: TSCreature, target: TSUnit)=>void): T;
+        OnJustExitedCombat(id: EventID, callback: (creature: TSCreature, target: TSUnit)=>void): T;
+
         OnDeathEarly(callback: (dying: TSCreature, killer: TSUnit)=>void): T;
         OnDeathEarly(id: EventID, callback: (dying: TSCreature, killer: TSUnit)=>void): T;
 

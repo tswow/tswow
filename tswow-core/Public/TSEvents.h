@@ -627,6 +627,7 @@ struct TSEvents
         TSRegistryRef& get_registry_ref(uint32_t id) override;
         ID_EVENT(OnMoveInLOS, TSCreature, TSUnit)
         ID_EVENT(OnJustEnteredCombat, TSCreature, TSUnit)
+        ID_EVENT(OnJustExitedCombat, TSCreature, TSUnit)
         ID_EVENT(OnJustEngagedWith, TSCreature, TSUnit)
         ID_EVENT(OnDeathEarly, TSCreature, TSUnit)
         ID_EVENT(OnDeath, TSCreature, TSUnit)
