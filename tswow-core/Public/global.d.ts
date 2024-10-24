@@ -4197,6 +4197,14 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
      */
     SetWeather(zoneId : uint32,weatherType : WeatherType,grade : float) : void
+
+    /**
+     * Returns [Weather] for a zone or generates one if none exists.
+     *
+     * @param uint32 zoneId : The ID of the zone.
+     * @return [Weather] weather object of the zone
+     */
+    GetOrGenerateZoneDefaultWeather(zoneId : uint32): TSWeather
 }
 
 declare class TSItemEntry
