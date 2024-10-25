@@ -13674,15 +13674,15 @@ declare namespace WoWAPI {
 
         GetButtonState(): string;
         GetDisabledFontObject(): string;
-        GetDisabledTexture(): string;
+        GetDisabledTexture(): WoWAPI.Texture;
         GetFontString(): FontString;
         GetHighlightFontObject(): FontObject;
-        GetHighlightTexture(): string;
+        GetHighlightTexture(): WoWAPI.Texture;
         //GetMotionScriptsWhileDisabled() - Get whether the button is allowed to run its OnEnter and OnLeave scripts even while disabled - New in 3.3.
         GetNormalFontObject(): FontObject;
-        GetNormalTexture(): string;
+        GetNormalTexture(): WoWAPI.Texture;
         //GetPushedTextOffset() - Get the text offset when this button is pushed (x, y) - New in 1.11.
-        GetPushedTexture(): string;
+        GetPushedTexture(): WoWAPI.Texture;
         GetText(): string;
         GetTextHeight(): number;
         GetTextWidth(): number;
