@@ -13436,6 +13436,21 @@ declare namespace WoWAPI {
          * @param orientation the orientation to set
          */
         SetOrientation(orientation: Align): void;
+
+        /**
+         * set the texture for the slider thumb
+         *
+         * @param filename filename
+         * @param texture reference to an existing Texture object
+         * @param layer path to a texture image file
+         */
+        SetThumbTexture(filename: string, layer?: WoWAPI.Layer): void;
+        SetThumbTexture(texture: WoWAPI.Texture, layer?: WoWAPI.Layer): void;
+
+        /**
+         * returns the texture for the slider thumb
+         */
+        GetThumbTexture(): WoWAPI.Texture;
     }
 
     interface EditBox extends Frame, FontInstance {
