@@ -166,6 +166,21 @@ export function ClientPatches(
                     gamebuild&0xff,
                     (gamebuild>>8)&0xff
                 ]]
-            ])
+            ]),
+            patch('no-ammo-check', [
+                [0x408940, [0xE9, 0xBA, 0x00, 0x00, 0x00, 0x90, 0x90]]
+            ]),
+            patch('windowed-mode-gamma-fix', [
+                [0xE94, [0xEB]]
+            ]),
+            patch('melee-swing-right-click', [
+                [0x2E1C67, [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90]]
+            ]),
+            patch('npc-turn-attack-anim', [
+                [0x33D7C9, [0xEB]]
+            ]),
+            patch('npc-evade-ghost-attack', [
+                [0x355BF, [0xEB]]
+            ]),
         ]
 }
