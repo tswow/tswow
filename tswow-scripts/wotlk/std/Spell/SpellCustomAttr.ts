@@ -117,6 +117,7 @@ export class SpellCustomAttr extends MaskCell<Spell> {
     get LIQUID_AURA()                   { return this.bit(22); }
     get IS_TALENT()                     { return this.bit(23); }
     get DONT_RESTART_P_TIMER()          {return this.bit(25)}
+    get USE_RANGED_NO_AMMO()            {return this.bit(26)}
 
     get CANNOT_BE_SAVED()               { return this.bit(31); }
     get REQUIRES_COMBAT() {return this.bit(32);}

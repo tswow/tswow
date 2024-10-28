@@ -2321,6 +2321,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     IsInFeralForm() : bool
 
     GetRatingBonusValue(Rating: uint32) : float
+
+    GetAttackSpeed(AttackType: uint8) : float
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -8305,6 +8307,10 @@ declare namespace _hidden {
     
         CanLoot(callback: (Player: TSPlayer, Source: TSCreature, CanLoot: TSMutable<boolean,boolean>) => void)
         CanRoll(callback: (Player: TSPlayer, Source: TSNumber<uint32>, CanRoll: TSMutable<boolean,boolean>) => void)
+        
+        ScaleRegenByHaste(callback: (Player: TSPlayer, RegenAmount: TSMutableNumber<float>) => void)
+        OnUpdateHasteRating(callback: (Player: TSPlayer, Rating: TSNumber<float>, OldRating: TSNumber<float>, NewPct: TSMutableNumber<float>, OldPct: TSMutableNumber<float>) => void)
+        LoadPresetAmmo(callback: (Player: TSPlayer, AmmoId: TSMutableNumber<uint32>) => void)
     }
 
     export class Account<T> {

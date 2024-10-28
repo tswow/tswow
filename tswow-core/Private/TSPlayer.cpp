@@ -4374,3 +4374,7 @@ bool TSPlayer::IsInFeralForm() {
 float TSPlayer::GetRatingBonusValue(uint32 Rating) {
     return player->GetRatingBonusValue(CombatRating(Rating));
 }
+
+float TSPlayer::GetAttackSpeed(uint8 AttackType) {
+    return player->m_modAttackSpeedPct[AttackType];
+}

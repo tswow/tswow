@@ -414,6 +414,10 @@ struct TSEvents
 
         EVENT(CanLoot, TSPlayer, TSCreature, TSMutable<bool,bool>)
         EVENT(CanRoll, TSPlayer, TSCreature, TSMutable<bool,bool>)
+
+        EVENT(ScaleRegenByHaste, TSPlayer, TSMutableNumber<float>)
+        EVENT(OnUpdateHasteRating, TSPlayer, TSNumber<float>, TSNumber<float>, TSMutableNumber<float>, TSMutableNumber<float>)
+        EVENT(LoadPresetAmmo, TSPlayer, TSMutableNumber<uint32>)
     } Player;
 
     struct AccountEvents

@@ -370,6 +370,8 @@ public:
 
 	float GetRatingBonusValue(uint32 Rating);
 
+	float GetAttackSpeed(uint8 AttackType);
+
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);
