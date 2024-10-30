@@ -65,6 +65,7 @@ public:
     bool IsPvPFlagged();
     bool IsOnVehicle();
     bool IsInCombat();
+    bool IsInCombatWith(TSUnit who);
     bool IsUnderWater();
     bool IsInWater();
     bool IsStopped();

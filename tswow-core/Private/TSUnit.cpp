@@ -460,6 +460,17 @@ bool TSUnit::IsInCombat()
 }
 
 /**
+ * Returns true if the [Unit] is in combat with [Unit].
+ *
+ * @return bool inCombatWith
+ */
+bool TSUnit::IsInCombatWith(TSUnit _who)
+{
+    auto who = _who.unit;
+    return unit->IsInCombatWith(who);
+}
+
+/**
  * Returns true if the [Unit] is under water.
  *
  * @return bool underWater

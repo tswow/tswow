@@ -6259,6 +6259,13 @@ declare interface TSUnit extends TSWorldObject {
     IsInCombat() : bool
 
     /**
+     * Returns true if the [Unit] is in combat with [Unit].
+     *
+     * @return bool inCombatWith
+     */
+    IsInCombatWith(who: TSUnit) : bool
+
+    /**
      * Returns true if the [Unit] is under water.
      *
      * @return bool underWater
