@@ -46,6 +46,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, IsPvPFlagged);
     LUA_FIELD(ts_unit, TSUnit, IsOnVehicle);
     LUA_FIELD(ts_unit, TSUnit, IsInCombat);
+    LUA_FIELD(ts_unit, TSUnit, IsInCombatWith);
     LUA_FIELD(ts_unit, TSUnit, IsUnderWater);
     LUA_FIELD(ts_unit, TSUnit, IsInWater);
     LUA_FIELD(ts_unit, TSUnit, IsStopped);
