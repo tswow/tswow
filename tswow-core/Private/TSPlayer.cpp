@@ -3258,7 +3258,7 @@ TSItem TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
         itemCount -= noSpaceForCount;
 
 #ifndef AZEROTHCORE
-    Item* item = player->StoreNewItem(dest, itemId, true, propertyId >= 0 ? propertyId : GenerateItemRandomPropertyId(itemId));
+    Item* item = player->StoreNewItem(dest, itemId, true, propertyId);
 #else
     Item* item = player->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
 #endif

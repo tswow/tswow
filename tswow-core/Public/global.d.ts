@@ -3725,7 +3725,7 @@ declare interface TSGroup {
      *
      * @return uint64 leaderGUID
      */
-    GetLeaderGUID() : TSNumber<uint64>
+    GetLeaderGUID() : TSGUID
 
     /**
      * Returns the [Group]'s GUID
