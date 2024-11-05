@@ -34,6 +34,7 @@ void TSLua::load_spell_info_methods(sol::state& state)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAreaGroupID);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAttributes);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAttributesCu);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAttributesCu1);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAttributesEx);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAttributesEx2);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetAttributesEx3);

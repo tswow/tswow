@@ -41,6 +41,11 @@ export class spell_custom_attrRow extends SqlRow<spell_custom_attrCreator,spell_
     get attributes() {return new SQLCell<mediumint, this>(this, 'attributes')}
 
     /**
+     * No comment (yet!)
+     */
+    get attributes1() {return new SQLCell<mediumint, this>(this, 'attributes1')}
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.

@@ -68,6 +68,11 @@ TSNumber<uint32> TSSpellInfo::GetAttributesCu()
     return info->AttributesCu;
 }
 
+TSNumber<uint32> TSSpellInfo::GetAttributesCu1()
+{
+    return info->AttributesCu1;
+}
+
 TSNumber<uint32> TSSpellInfo::GetAttributesEx()
 {
     return info->AttributesEx;

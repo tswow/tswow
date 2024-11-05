@@ -76,6 +76,7 @@ public:
     TSNumber<uint32> GetAreaGroupID();
     TSNumber<uint32> GetAttributes();
     TSNumber<uint32> GetAttributesCu();
+    TSNumber<uint32> GetAttributesCu1();
     TSNumber<uint32> GetAttributesEx();
     TSNumber<uint32> GetAttributesEx2();
     TSNumber<uint32> GetAttributesEx3();

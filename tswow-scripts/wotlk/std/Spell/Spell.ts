@@ -37,7 +37,7 @@ import { SpellAutoLearns } from "./SpellAutoLearn";
 import { SpellBonusData } from "./SpellBonusData";
 import { SpellCastTimeRegistry } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
-import { SpellCustomAttr } from "./SpellCustomAttr";
+import { SpellCustomAttr, SpellCustomAttr1 } from "./SpellCustomAttr";
 import { DefenseType } from "./SpellDefenseType";
 import { SpellDescriptionVariableRegistry } from "./SpellDescriptionVariable";
 import { SpellDifficultyRegistry } from "./SpellDifficulty";
@@ -206,6 +206,7 @@ export class Spell extends MainEntityID<SpellRow> {
 
     /** Custom server core attributes for this spell */
     readonly CustomAttributes = new SpellCustomAttr(this);
+    readonly CustomAttributesEx = new SpellCustomAttr1(this);
     /** Custom server core damage bonuses */
     readonly BonusData = new SpellBonusData(this);
     /** Custom server core spell threat bonuses */
