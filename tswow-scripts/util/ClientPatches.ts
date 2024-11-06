@@ -170,34 +170,34 @@ export function ClientPatches(
             patch('no-ammo-check', [ // credits to Aleist3r
                 [0x408940, [0xE9, 0xBA, 0x00, 0x00, 0x00, 0x90, 0x90]]
             ]),
-            patch('windowed-mode-gamma-fix', [ // credits to Robinisch
+            patch('windowed-mode-gamma-fix', [ // credits to Robinsch
                 [0xE94, [0xEB]]
             ]),
-            patch('melee-swing-right-click', [ // credits to Robinisch
+            patch('melee-swing-right-click', [ // credits to Robinsch
                 [0x2E1C67, [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90]]
             ]),
-            patch('npc-turn-attack-anim', [ // credits to Robinisch
+            patch('npc-turn-attack-anim', [ // credits to Robinsch
                 [0x33D7C9, [0xEB]]
             ]),
-            patch('npc-evade-ghost-attack', [ // credits to Robinisch
+            patch('npc-evade-ghost-attack', [ // credits to Robinsch
                 [0x355BF, [0xEB]]
             ]),
-            patch('non-throttled-item-cache-wdb-requests', [ // credits to Robinisch
+            patch('non-throttled-item-cache-wdb-requests', [ // credits to Robinsch
                 [0x2689FD, [0x00, 0x00]]
             ]),
-            patch('patch-area-trigger-timer', [ // credits to Robinisch
+            patch('patch-area-trigger-timer', [ // credits to Robinsch
                 [0x2DB241, [0x32]]
             ]),
-            patch('patch-mail-request-timeout', [ // credits to Robinisch
+            patch('patch-mail-request-timeout', [ // credits to Robinsch
                 [0x16D899, [0x05, 0x01, 0x00, 0x00, 0x00]]
             ]),
-            patch('missing-pre-cast-animation', [ // credits to Robinisch
+            patch('missing-pre-cast-animation', [ // credits to Robinsch
                 [0x33E0D6, [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90]]
             ]),
-            patch('naked-character-issue', [ // credits to Robinisch
+            patch('naked-character-issue', [ // credits to Robinsch
                 [0x1DDC5D, [0xEB]]
             ]),
-            patch('allow-chat-commands-while-dead', [ // credits to Robinisch
+            patch('allow-chat-commands-while-dead', [ // credits to Robinsch
                 [0x10CA41, [0xEB]]
             ]),
             patch('mouse-flickering-camera-snapping', [ // credits to bonbigz
