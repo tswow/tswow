@@ -1466,11 +1466,13 @@ void TSUnit::SetMaxHealth(uint32 amt)
  *
  * @param uint32 amount : new power amount
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+ * @param bool withPowerUpdate : if power should be updated with power update, default = true
+ * @param bool force : if power update should be forced, default = false
  */
-void TSUnit::SetPower(int type, uint32 amt)
+void TSUnit::SetPower(int type, uint32 amt, bool withPowerUpdate /*= true*/, bool force /*= false*/)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
-    unit->SetPower(power, amt);
+    unit->SetPower(power, amt, withPowerUpdate, force);
 }
 
 /**
@@ -1491,11 +1493,12 @@ void TSUnit::SetPower(int type, uint32 amt)
  *
  * @param int32 amount : amount to modify
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+ * @param bool withPowerUpdate : if power should be updated with power update, default = true
  */
-void TSUnit::ModifyPower(int type, int32 amt)
+void TSUnit::ModifyPower(int type, int32 amt, bool withPowerUpdate /*= true*/)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
-    unit->ModifyPower(power, amt);
+    unit->ModifyPower(power, amt, withPowerUpdate);
 }
 
 /**

@@ -7016,8 +7016,10 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param uint32 amount : new power amount
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+     * @param bool withPowerUpdate : if power should be updated with power update, default = true
+     * @param bool force : if power update should be forced, default = false
      */
-    SetPower(type: Powers|-1, amt : uint32) : void
+    SetPower(type: Powers|-1, amt : uint32, withPowerUpdate? : bool, force? : bool) : void
 
     /**
      * modifies the [Unit]'s power amount for the given power type.
@@ -7035,8 +7037,9 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param int32 amount : amount to modify
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
+     * @param bool withPowerUpdate : if power should be updated with power update, default = true
      */
-    ModifyPower(type: Powers|-1, amt : int32) : void
+    ModifyPower(type: Powers|-1, amt : int32, withPowerUpdate? : bool) : void
 
     /**
      * Sets the [Unit]'s max power amount for the given power type.
