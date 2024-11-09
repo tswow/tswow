@@ -9419,8 +9419,8 @@ declare namespace _hidden {
     }
 
     export class GameEvent<T> {
-        OnStart(callback: (event: uint16)=>void)
-        OnStart(id: EventID, callback: (event: uint16)=>void)
+        OnStart(callback: (event: uint16, thread: TSMainThreadContext)=>void)
+        OnStart(id: EventID, callback: (event: uint16, thread: TSMainThreadContext)=>void)
 
         OnUpdateState(callback: (event: uint16)=>void)
         OnUpdateState(id: EventID, callback: (event: uint16)=>void)

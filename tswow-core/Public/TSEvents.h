@@ -928,7 +928,7 @@ struct TSEvents
 
     struct GameEventsEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(GameEventsEvents)
-        ID_EVENT(OnStart, TSNumber<uint16>/*event_id*/)
+        ID_EVENT(OnStart, TSNumber<uint16>/*event_id*/, TSMainThreadContext)
         // todo: can we get a next_event_id here?
         ID_EVENT(OnUpdateState, TSNumber<uint16> cur_event_id)
         ID_EVENT(OnEnd, TSNumber<uint16> cur_event_id)
