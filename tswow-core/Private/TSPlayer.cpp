@@ -161,7 +161,19 @@ void TSPlayer::RemoveTransmog(uint32 slot)
 
 void TSPlayer::Transmogrify(uint32 slot, uint32 itemID)
 {
-    TransmogTrinityStrings res = sTransmogrification->Transmogrify(player, ObjectGuid(HighGuid::Item, 0, itemID), slot);
+    Item* itemTransmogrified = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+    itemTransmogrified->transmog = itemID;
+    itemTransmogrified->UpdatePlayedTime(player);
+    itemTransmogrified->SetOwnerGUID(player->GetGUID());
+    itemTransmogrified->SetNotRefundable(player);
+    itemTransmogrified->ClearSoulboundTradeable(player);
+    itemTransmogrified->SetState(ITEM_CHANGED, player);
+    if (itemTransmogrified->IsEquipped())
+    {
+        player->SetVisibleItemSlot(itemTransmogrified->GetSlot(), itemTransmogrified);
+        if (player->IsInWorld())
+            itemTransmogrified->SendUpdateToPlayer(player);
+    }
 }
 
 /**
