@@ -4579,7 +4579,7 @@ declare class TSItem extends TSObject {
      *
      * @return uint32 randomPropertyId
      */
-    GetRandomProperty() : TSNumber<uint32>
+    GetRandomProperty() : TSNumber<int32>
     GetRandomSuffix() : TSNumber<int32>
 
     /**
@@ -9684,6 +9684,9 @@ declare namespace _hidden {
 
         OnDungeonBossKilled(callback: (instance: TSInstance, source: TSUnit)=>void): T
         OnDungeonBossKilled(id: EventID, callback: (instance: TSInstance, source: TSUnit)=>void): T
+
+        OnUpdateCriteria(callback: (instance: TSInstance, victim: TSUnit)=>void): T
+        OnUpdateCriteria(id: EventID, callback: (instance: TSInstance, victim: TSUnit)=>void): T
 
         OnDungeonCompleted(callback: (instance: TSInstance)=>void): T
         OnDungeonCompleted(id: EventID, callback: (instance: TSInstance)=>void): T

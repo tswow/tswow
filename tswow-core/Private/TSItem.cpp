@@ -535,15 +535,15 @@ TSNumber<uint32> TSItem::GetStatsCount()
  *
  * @return uint32 randomPropertyId
  */
-TSNumber<uint32> TSItem::GetRandomProperty()
+TSNumber<int32> TSItem::GetRandomProperty()
 {
-    return item->GetTemplate()->RandomProperty;
+    return item->GetItemRandomPropertyId();
 }
 
 #ifndef CLASSIC
 TSNumber<int32> TSItem::GetRandomSuffix()
 {
-    return item->GetTemplate()->RandomSuffix;
+    return item->GetItemRandomPropertyId();
 }
 #endif
 
