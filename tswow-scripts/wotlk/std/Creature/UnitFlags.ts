@@ -71,6 +71,7 @@ enum UnitFlags2 {
     UNK2                       = 0x10000,
     PLAY_DEATH_ANIM            = 0x20000,
     ALLOW_CHEAT_SPELLS         = 0x40000,
+    CALL_GUARDS                = 0x80000,
 }
 
 export class UnitFlags extends MaskCell<CreatureTemplate> {
@@ -330,5 +331,8 @@ export class UnitFlags extends MaskCell<CreatureTemplate> {
     }
     get ALLOW_CHEAT_SPELLS() {
         return this.mask(1,UnitFlags2.ALLOW_CHEAT_SPELLS)
+    }
+    get CALL_GUARDS() {
+        return this.mask(1,UnitFlags2.CALL_GUARDS)
     }
 }
