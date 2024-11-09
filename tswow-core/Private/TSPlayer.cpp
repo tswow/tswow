@@ -130,6 +130,40 @@ bool TSPlayer::HasQuest(uint32 quest)
     return player->IsActiveQuest(quest);
 }
 
+//Transmog Here
+void TSPlayer::RemoveAllTransmog()
+{
+    for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
+    {
+        if (Item* newItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+        {
+            if (!newItem->transmog)
+                continue;
+            newItem->transmog = 0;
+            newItem->SetState(ITEM_CHANGED, player);
+            sTransmogrification->UpdateItem(player, newItem);
+        }
+    }
+}
+
+void TSPlayer::RemoveTransmog(uint32 slot)
+{
+    if (Item* newItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+    {
+        if (newItem->transmog)
+        {
+            newItem->transmog = 0;
+            newItem->SetState(ITEM_CHANGED, player);
+            sTransmogrification->UpdateItem(player, newItem);
+        }
+    }
+}
+
+void TSPlayer::Transmogrify(uint32 slot, uint32 itemID)
+{
+    TransmogTrinityStrings res = sTransmogrification->Transmogrify(player, ObjectGuid(HighGuid::Item, 0, itemID), slot);
+}
+
 /**
  * Returns 'true' if the [Player] has a skill by specific ID, 'false' otherwise.
  *

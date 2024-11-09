@@ -48,6 +48,11 @@ public:
 	bool HasTalent(uint32 spellId, uint8 spec);
 	bool HasAchieved(uint32 achievementId);
 	bool HasQuest(uint32 quest);
+	//Transmog
+	void RemoveTransmog(uint32 slot);
+	void Transmogrify(uint32 slot, uint32 itemID);
+	void RemoveAllTransmog();
+	//
 	bool HasSkill(uint32 skill);
 	bool HasSpell(uint32 id);
 	TSDictionary<TSNumber<uint32>, TSPlayerSpell> GetSpellMap();
