@@ -2288,6 +2288,11 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     SendQuestGiverStatusMultiple() : void
 
     GetXPForDifficulty(difficulty: uint8) : TSNumber<uint32>;
+
+    /**
+     * Whether the Player has run a random BG since they reset.
+     */
+    GetRandomWinner(): bool;
 }
 
 declare interface TSCorpse extends TSWorldObject {

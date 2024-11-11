@@ -368,6 +368,7 @@ public:
 
 	TSNumber<uint32> GetXPForDifficulty(uint8 difficulty);
 
+	bool GetRandomWinner();
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);
