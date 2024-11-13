@@ -465,7 +465,12 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 questId
      * @return bool hasQuest
      */
-    HasQuest(quest : uint32) : bool
+    HasQuest(quest: uint32): bool
+
+    //Transmog
+    RemoveTransmog(slot: uint32): void;
+    Transmogrify(slot: uint32, itemID: uint32): void;
+    RemoveAllTransmog(): void;
 
     /**
      * Returns 'true' if the [Player] has a skill by specific ID, 'false' otherwise.
