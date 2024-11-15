@@ -304,6 +304,7 @@ void TSLua::load_events(sol::state& state)
 
     /** @epoch-start */
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnCheckHasSpell);
+    LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnBeforeGuardSay);
     /** @epoch-end */
 
     auto gameobject_events = state.new_usertype<TSEvents::GameObjectEvents>("GameObjectEvents");

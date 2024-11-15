@@ -723,6 +723,8 @@ struct TSEvents
 
         /** @epoch-start */
         ID_EVENT(OnCheckHasSpell, TSCreature creature, TSNumber<uint32>, TSMutable<bool, bool>)
+
+        ID_EVENT(OnBeforeGuardSay, TSCreature, TSMutableNumber<uint32>);
         /** @epoch-end */
     } Creature;
 

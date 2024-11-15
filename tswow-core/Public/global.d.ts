@@ -8992,6 +8992,9 @@ declare namespace _hidden {
         /** @epoch-start */
         OnCheckHasSpell(callback: (creature: TSCreature, spell: TSNumber<uint32>, has_spell: TSMutable<bool, bool>) => void)
         OnCheckHasSpell(id: EventID, callback: (creature: TSCreature, spell: TSNumber<uint32>, has_spell: TSMutable<bool, bool>) => void)
+
+        OnBeforeGuardSay(callback: (creature: TSCreature, text: TSMutableNumber<uint32>) => void)
+        OnBeforeGuardSay(id: EventID, callback: (creature: TSCreature, text: TSMutableNumber<uint32>) => void)
         /** @epoch-end */
     }
 
