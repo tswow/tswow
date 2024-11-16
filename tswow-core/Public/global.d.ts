@@ -101,6 +101,7 @@ declare const enum TypeID {} /** ObjectGuid.h:TypeID */
 declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
 declare const enum CharmType {} /** Unit.h:CharmType */
 declare const enum PlayerFlags {} /** Player.h:PlayerFlags */
+declare const enum MovementFlags {} /** UnitDefines.h:MovementFlags */
 
 declare const enum Powers /**@realType:int8 */ {
     HEALTH                        = -2,
@@ -2293,6 +2294,10 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * Whether the Player has run a random BG since they reset.
      */
     GetRandomWinner(): bool;
+
+    HasUnitMovementFlag(flag: uint32): bool;
+
+    RepopAtGraveyard(): void;
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -5818,6 +5823,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     /** @epoch-start */
     GetMapHeight(x: TSNumber<float>, y: TSNumber<float>, z: TSNumber<float>): TSNumber<float>
     GetRandomPoint(x: float, y: float, z: float, distance: float): TSPosition
+    GetFloorZ(): TSNumber<float>;
     /** @epoch-end */
 }
 

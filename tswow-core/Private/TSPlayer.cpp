@@ -4188,3 +4188,13 @@ bool TSPlayer::GetRandomWinner()
 {
     return player->GetRandomWinner();
 }
+
+bool TSPlayer::HasUnitMovementFlag(uint32 flag)
+{
+    return player->HasUnitMovementFlag(flag);
+}
+
+void TSPlayer::RepopAtGraveyard()
+{
+    player->RepopAtGraveyard();
+}

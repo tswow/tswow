@@ -369,6 +369,8 @@ public:
 	TSNumber<uint32> GetXPForDifficulty(uint8 difficulty);
 
 	bool GetRandomWinner();
+	bool HasUnitMovementFlag(uint32 flag);
+	void RepopAtGraveyard();
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);

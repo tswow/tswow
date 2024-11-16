@@ -174,6 +174,7 @@ public:
     /** @epoch-start */
     TSNumber<float> GetMapHeight(TSNumber<float> x, TSNumber<float> y, TSNumber<float> z);
     TSPosition GetRandomPoint(float x, float y, float z, float distance);
+    TSNumber<float> GetFloorZ();
     /** @epoch-end */
 private:
     friend class TSLua;

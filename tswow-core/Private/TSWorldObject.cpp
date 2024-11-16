@@ -1377,4 +1377,9 @@ TSPosition TSWorldObject::GetRandomPoint(float x, float y, float z, float distan
 
     return TSPosition(GetMap()->GetMapID(),pos.GetPositionX(),pos.GetPositionY(),pos.GetPositionZ(), 0);
 }
+
+TSNumber<float> TSWorldObject::GetFloorZ()
+{
+    return obj->GetFloorZ();
+}
 /** @epoch-end */
