@@ -17,7 +17,13 @@ export class CharacterProcedureType extends EnumCellTransform<SpellCharacterProc
     get WEAPON_TRAIL() { return this.value(8, x=>new WeaponTrail(this.owner.row,this.owner.index)) }
     get BLIZZARD() { return this.value(9, x=>new Blizzard(this.owner.row,this.owner.index)) }
     get FISHING_LINE() { return this.value(10, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+    get FREEZE() { return this.value(11, x=>new Freeze(this.owner.row,this.owner.index)) }
+    get CHAIN_2() { return this.value(12, x=>new ChainProcedure(this.owner.row,this.owner.index)) }
     get UNK_13() { return this.value(13, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+    get ALPHA() { return this.value(14, x=>new Alpha(this.owner.row,this.owner.index)) }
+    get FADE() { return this.value(15, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+    get UNK_MOUNT_TRANSITION() { return this.value(16, x=>new SpellCharacterProcedurePlain(this.owner.row,this.owner.index)) }
+    get ITEM_VISUAL() { return this.value(17, x=>new ItemVisual(this.owner.row,this.owner.index)) }
 }
 
 export class SpellCharacterProcedure extends CellSystemTop {
@@ -108,6 +114,17 @@ export class WeaponTrail extends SpellCharacterProcedure {
 export class Blizzard extends SpellCharacterProcedure {
     get ModelName() { return new MultiUIntWrapper(this, this.row.CharParamZero, 0); }
     get EmissionRate() { return new MultiFloatWrapper(this, this.row.CharParamOne, 1); }
+}
+
+export class Freeze extends SpellCharacterProcedure {
+}
+
+export class Alpha extends SpellCharacterProcedure {
+    get Alpha() { return new MultiFloatWrapper(this, this.row.CharParamZero, 0); }
+}
+
+export class ItemVisual extends SpellCharacterProcedure {
+    get Item() { return new MultiUIntWrapper(this, this.row.CharParamZero, 0); }
 }
 
 export class SpellCharacterProcedures<T> extends CellSystem<T> {
