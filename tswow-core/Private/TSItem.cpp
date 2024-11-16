@@ -232,6 +232,11 @@ bool TSItem::IsConjuredConsumable()
     return item->IsConjuredConsumable();
 }
 
+uint32 TSItem::GetTransmogID()
+{
+    return item->transmog;
+}
+
 /*int TSItem::IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
 {
     return item->IsRefundExpired();
