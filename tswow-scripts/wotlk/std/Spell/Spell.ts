@@ -65,6 +65,7 @@ import { SpellThreat } from "./SpellThreat";
 import { SpellVisualRegistry } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
+import { TrainerSpells } from "./TrainerSpell";
 
 export class Spell extends MainEntityID<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -203,6 +204,8 @@ export class Spell extends MainEntityID<SpellRow> {
     get StackGroups() { return new SpellSpellStackGroups(this); }
 
     get AutoLearn() { return new SpellAutoLearns(this); }
+    
+    get Trainer() { return new TrainerSpells(this, this.ID); }
 
     /** Custom server core attributes for this spell */
     readonly CustomAttributes = new SpellCustomAttr(this);
