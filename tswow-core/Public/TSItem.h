@@ -49,6 +49,7 @@ public:
     bool IsArmorVellum();
     bool IsConjuredConsumable();
     TSItemTemplate GetTemplate();
+    uint32 GetTransmogID();
     std::string GetItemLink(uint8 locale);
     TSGUID GetOwnerGUID();
     TSPlayer  GetOwner();

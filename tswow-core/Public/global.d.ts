@@ -4423,6 +4423,13 @@ declare class TSItem extends TSObject {
     IsConjuredConsumable() : bool
     //GetItemLink(locale : uint8) : string
 
+    /**
+     * Returns ID of the transmog value if the item is transmogged, 0 otherwise
+     *
+     * @return uint32 transmogID
+     */
+    GetTransmogID() : number
+
     GetTemplate(): TSItemTemplate
 
     GetOwnerGUID() : TSGUID
