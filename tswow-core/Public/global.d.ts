@@ -3178,6 +3178,8 @@ declare interface TSCreature extends TSUnit {
      */
     SetRespawnDelay(delay : uint32) : void
 
+    SetCorpseDelay(delay : uint32, ignoreCorpseDecayRatio: bool) : void
+
     /**
      * Sets the default movement type of the [Creature].
      *
@@ -4104,6 +4106,8 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     GetPlayer(guid: uint32 | TSGUID): TSPlayer;
 
+    RespawnAll(type: uint32 ) : void;
+
     /**
      * Check if 2 positions are within LoS of each other, following different checks.
      * 
@@ -4902,6 +4906,8 @@ declare interface TSInstance extends TSMap {
     SetActiveCriteria(id: uint32): void
     GetActiveCriteria():  uint32
     HandleGameObject(guid: uint32, Open: bool): void
+
+    TriggerResetHook(): void
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -9708,6 +9714,9 @@ declare namespace _hidden {
 
         OnLoadObjectData(callback: (instance: TSInstance)=>void): T
         OnLoadObjectData(id: EventID, callback: (instance: TSInstance)=>void): T
+
+        ResetInstance(callback: (instance: TSInstance)=>void): T
+        ResetInstance(id: EventID, callback: (instance: TSInstance)=>void): T
     }
 
     export class AuctionHouse<T> {

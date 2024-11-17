@@ -100,6 +100,7 @@ public:
     void SetInCombatWithZone();
     void SetWanderRadius(float dist);
     void SetRespawnDelay(uint32 delay);
+    void SetCorpseDelay(uint32 delay, bool ignoreCorpseDecayRatio = false);
     void SetDefaultMovementType(int32 type);
     void SetNoSearchAssistance(bool val);
     void SetNoCallAssistance(bool val);

@@ -565,3 +565,7 @@ TSGameObject TSMap::LGetGameObject1(TSNumber<uint32> guid)
 {
     return GetGameObject(guid);
 }
+
+void TSMap::RespawnAll(uint32 type) {
+    return map->RespawnAll(SpawnObjectTypeMask(type));
+}
