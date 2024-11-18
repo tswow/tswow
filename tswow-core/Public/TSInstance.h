@@ -76,11 +76,8 @@ public:
     TSBossInfo GetBossInfo(uint32 id);
     void HandleGameObject(uint32 guid, bool open);
 
-    uint32 m_activeCriteria = 0;
-    void SetActiveCriteria(uint32 id) {
-        m_activeCriteria = id;
-    }
-    uint32 GetActiveCriteria() {
-        return m_activeCriteria;
-    }
+    void SetActiveCriteria(uint32 id);
+    TSNumber<uint32> GetActiveCriteria();
+
+    void TriggerResetHook();
 };

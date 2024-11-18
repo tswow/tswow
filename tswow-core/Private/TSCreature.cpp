@@ -1015,6 +1015,12 @@ void TSCreature::SetRespawnDelay(uint32 delay)
     creature->SetRespawnDelay(delay);
 }
 
+void TSCreature::SetCorpseDelay(uint32 delay, bool ignoreCorpseDecayRatio)
+{
+
+    creature->SetCorpseDelay(delay, ignoreCorpseDecayRatio);
+}
+
 /**
  * Sets the default movement type of the [Creature].
  *

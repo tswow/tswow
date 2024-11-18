@@ -299,3 +299,18 @@ bool TSBossInfo::IsWithinBoundary(TSWorldObject obj)
 #endif
     return true;
 }
+
+TSNumber<uint32> TSInstance::GetActiveCriteria()
+{
+    return m_script->GetActiveCriteria();
+}
+
+void TSInstance::SetActiveCriteria(uint32 Criteria)
+{
+    return m_script->SetActiveCriteria(Criteria);
+}
+
+void TSInstance::TriggerResetHook()
+{
+    return m_script->TriggerResetHook();
+}

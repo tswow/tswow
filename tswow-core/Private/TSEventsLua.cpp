@@ -446,6 +446,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnRaidBossKilled);
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnDungeonCompleted);
     LUA_MAPPED_HANDLE(instance_events, InstanceEvents, OnUpdateCriteria);
+    LUA_MAPPED_HANDLE(instance_events, InstanceEvents, ResetInstance);
 
     auto item_events = state.new_usertype<TSEvents::ItemEvents>("ItemEvents");
     LUA_MAPPED_HANDLE(item_events, ItemEvents, OnUse);

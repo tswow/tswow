@@ -932,6 +932,7 @@ struct TSEvents
         ID_EVENT(OnDungeonBossKilled, TSInstance, TSUnit source)
         ID_EVENT(OnDungeonCompleted, TSInstance)
         ID_EVENT(OnUpdateCriteria, TSInstance, TSUnit victim)
+        ID_EVENT(ResetInstance, TSInstance)
 
     } Instance;
 

@@ -80,6 +80,8 @@ public:
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
     TSEntity * GetData();
     void DoDelayed(std::function<void(TSMap, TSMainThreadContext)> callback);
+
+    void RespawnAll(uint32 type);
 private:
     void LDoDelayed(sol::function callback);
 
