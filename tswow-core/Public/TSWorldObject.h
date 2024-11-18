@@ -175,6 +175,7 @@ public:
     TSNumber<float> GetMapHeight(TSNumber<float> x, TSNumber<float> y, TSNumber<float> z);
     TSPosition GetRandomPoint(float x, float y, float z, float distance);
     TSNumber<float> GetFloorZ();
+    void SetSmartData(TSNumber<uint32> field, TSNumber<uint32> data);
     /** @epoch-end */
 private:
     friend class TSLua;

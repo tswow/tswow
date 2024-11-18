@@ -5824,6 +5824,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetMapHeight(x: TSNumber<float>, y: TSNumber<float>, z: TSNumber<float>): TSNumber<float>
     GetRandomPoint(x: float, y: float, z: float, distance: float): TSPosition
     GetFloorZ(): TSNumber<float>;
+    SetSmartData(field: TSNumber<uint32>, data: TSNumber<uint32>): void;
     /** @epoch-end */
 }
 

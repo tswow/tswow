@@ -39,6 +39,9 @@
 #include "TSItem.h"
 #include "TSMainThreadContext.h"
 #include "TSGUID.h"
+#include "GameObjectAI.h"
+#include "CreatureAI.h"
+#include "SmartAI.h"
 
 TSWorldObject::TSWorldObject(WorldObject *objIn)
     : TSObject(objIn)
@@ -1381,5 +1384,21 @@ TSPosition TSWorldObject::GetRandomPoint(float x, float y, float z, float distan
 TSNumber<float> TSWorldObject::GetFloorZ()
 {
     return obj->GetFloorZ();
+}
+
+void TSWorldObject::SetSmartData(TSNumber<uint32> field, TSNumber<uint32> data)
+{
+    if (Creature* cTarget = obj->ToCreature())
+    {
+        CreatureAI* ai = cTarget->AI();
+        if (SmartAI * sai = dynamic_cast<SmartAI*>(ai))
+            sai->SetData(field, data);
+    }
+    else if (GameObject* oTarget = obj->ToGameObject())
+    {
+        GameObjectAI* ai = oTarget->AI();
+        if (SmartGameObjectAI * sai = dynamic_cast<SmartGameObjectAI*>(ai))
+            sai->SetData(field, data);
+    }
 }
 /** @epoch-end */
