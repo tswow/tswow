@@ -78,6 +78,47 @@ namespace ClientLua {
         return IsNumber(L, offset) ? _GetNumber(L, offset) : defValue;
     }
 }
+//HandleCharEnum internal function
+//this is for char select screen lua stuff
+CLIENT_DETOUR(LoadScriptFunctionsEarly, 0x004D95C0, __cdecl, int, ()) {
+    LOG_DEBUG << "Loading script functions";
+    DWORD old;
+    VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), PAGE_EXECUTE_READWRITE, &old);
+    memset(CAVE_START, NOP, JMP_SIZE * luaRegistry().size());
+
+    // write a jmp
+    *((unsigned char*)CAVE_START    ) = 0xed;
+    *((unsigned char*)CAVE_START + 1) = 0x26;
+
+    for (size_t i = 0; i < luaRegistry().size(); ++i)
+    {
+        size_t cur_cave = uint32_t(CAVE_START) + 2 + i * JMP_SIZE;
+        LuaFunction& fn = luaRegistry()[i];
+        LOG_DEBUG
+            << "Registering Lua function: "
+            << fn.name
+            << "@"
+            << fn.func
+            << " -> "
+            << relProjectPath(fn.file)
+            << ":"
+            << fn.line;
+        // write jmp
+        *(uint8_t*)cur_cave = JMP;
+        *(uint32_t*)(cur_cave + 1) = int32_t(fn.func) - ((int32_t)cur_cave) - JMP_SIZE;
+        FrameScriptRegisterFunction(fn.name.c_str(), (lua_CFunction)cur_cave);
+    }
+    DWORD dummy;
+    VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), old, &dummy);
+    lastCave = luaRegistry().size();
+    for (auto const& pair : LUA_FILES)
+    {
+        LOG_DEBUG << "Running lua file " << pair.first;
+        ClientLua::DoString(pair.second.c_str(), *_state);
+    }
+
+    return LoadScriptFunctionsEarly();
+}
 
 CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
     LOG_DEBUG << "Loading script functions";
