@@ -33,9 +33,9 @@ export function ClientPatches(
             patch('large-address-aware',[
                 [0x000126,[0x23]]
             ]),
-            patch('view-distacnce-unlock',[
-                [0x014137,[0x10,0x27]],
-                [0x4c99f0,[0x34]],
+            patch('view-distance-unlock',[
+                //[0x014137,[0x10,0x27]],
+                //[0x4c99f0,[0x34]],
                 [0x63cf0c,[
                     0x00,0x40,0x1c,0x46,0x00,0x40,0x1c,0x46
                 ]],
