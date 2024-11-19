@@ -9480,6 +9480,19 @@ declare namespace _hidden {
             , player: TSPlayer
             ) => void
         )
+
+        OnReceiveNotInWorld(callback: (
+            opcode: TSNumber<uint32>
+            , packet: TSPacketRead
+            , accountID: TSNumber<uint32>
+        ) => void
+        )
+        OnReceiveNotInWorld(id: EventID, callback: (
+            opcode: TSNumber<uint32>
+            , packet: TSPacketRead
+            , accountID: TSNumber<uint32>
+        ) => void
+        )
     }
 
     export class WorldPacket {

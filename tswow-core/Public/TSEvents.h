@@ -1003,6 +1003,7 @@ struct TSEvents
     struct CustomPacketEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(CustomPacketEvents)
         ID_EVENT(OnReceive, TSNumber<uint32> opcode, TSPacketRead, TSPlayer)
+        ID_EVENT(OnReceiveNotInWorld, TSNumber<uint32> opcode, TSPacketRead, TSNumber<uint32> accountID)
     } CustomPacket;
 
     struct WorldPacketEvents : public TSMappedEventsDirect {

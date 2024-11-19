@@ -95,8 +95,10 @@ class TSServerBuffer : public CustomPacketBuffer
 {
 public:
 	TSServerBuffer(TSPlayer player);
+	TSServerBuffer(uint32 accountID);
 	TSPlayer m_player = nullptr;
-	virtual void OnPacket(CustomPacketRead* value) override final;
+    uint32 account_id = 0;
+	virtual void OnPacket(CustomPacketRead* value);
 	virtual void OnError(CustomPacketResult error) override final;
 };
 

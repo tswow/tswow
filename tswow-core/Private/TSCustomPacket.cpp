@@ -77,6 +77,16 @@ TSServerBuffer::TSServerBuffer(TSPlayer player)
 {
 }
 
+TSServerBuffer::TSServerBuffer(uint32 accountID)
+	: CustomPacketBuffer(
+		MIN_FRAGMENT_SIZE
+		, BUFFER_QUOTA
+		, MAX_FRAGMENT_SIZE
+	)
+	, account_id(accountID)
+{
+}
+
 void TSServerBuffer::OnPacket(CustomPacketRead* value)
 {
 	// Expanded FIRE_ID macro because we need to reset the packet
@@ -87,34 +97,67 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	TSPacketRead read(value);
 	opcode_t opcode = value->Opcode();
 
-	auto& cbs = ts_events.CustomPacket.OnReceive_callbacks;
-	for (auto const& cb : cbs.m_cxx_callbacks)
+	if (m_player)
 	{
+        auto& cbs = ts_events.CustomPacket.OnReceive_callbacks;
+		for (auto const& cb : cbs.m_cxx_callbacks)
+		{
 			cb(opcode, read, m_player);
-	}
+		}
 
-	for (auto const& cb : cbs.m_lua_callbacks)
-	{
+		for (auto const& cb : cbs.m_lua_callbacks)
+		{
 			cb(opcode, read, m_player);
 			value->Reset();
-	}
+		}
 
-	if (opcode < cbs.m_id_cxx_callbacks.size())
-	{
+		if (opcode < cbs.m_id_cxx_callbacks.size())
+		{
 			for (auto const& cb : cbs.m_id_cxx_callbacks[opcode])
 			{
-					cb(opcode, read, m_player);
-					value->Reset();
+				cb(opcode, read, m_player);
+				value->Reset();
 			}
-	}
+		}
 
-	if (opcode < cbs.m_id_lua_callbacks.size())
-	{
+		if (opcode < cbs.m_id_lua_callbacks.size())
+		{
 			for (auto const& cb : cbs.m_id_lua_callbacks[opcode])
 			{
-					cb(opcode, read, m_player);
-					value->Reset();
+				cb(opcode, read, m_player);
+				value->Reset();
 			}
+		}
+	}else {
+        auto& cbs2 = ts_events.CustomPacket.OnReceiveNotInWorld_callbacks;
+		for (auto const& cb : cbs2.m_cxx_callbacks)
+		{
+			cb(opcode, read, account_id);
+		}
+
+		for (auto const& cb : cbs2.m_lua_callbacks)
+		{
+			cb(opcode, read, account_id);
+			value->Reset();
+		}
+
+		if (opcode < cbs2.m_id_cxx_callbacks.size())
+		{
+			for (auto const& cb : cbs2.m_id_cxx_callbacks[opcode])
+			{
+				cb(opcode, read, account_id);
+				value->Reset();
+			}
+		}
+
+		if (opcode < cbs2.m_id_lua_callbacks.size())
+		{
+			for (auto const& cb : cbs2.m_id_lua_callbacks[opcode])
+			{
+				cb(opcode, read, account_id);
+				value->Reset();
+			}
+		}
 	}
 }
 

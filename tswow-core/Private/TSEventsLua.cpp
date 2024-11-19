@@ -497,6 +497,7 @@ void TSLua::load_events(sol::state& state)
 
     auto custompacket_events = state.new_usertype<TSEvents::CustomPacketEvents>("CustomPacketEvents");
     LUA_MAPPED_HANDLE(custompacket_events, CustomPacketEvents, OnReceive);
+    LUA_MAPPED_HANDLE(custompacket_events, CustomPacketEvents, OnReceiveNotInWorld);
 
     auto worldpacket_events = state.new_usertype<TSEvents::WorldPacketEvents>("WorldPacketEvents");
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnReceive);
