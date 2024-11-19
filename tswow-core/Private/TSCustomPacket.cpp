@@ -30,6 +30,23 @@ void TSPacketWrite::SendToPlayer(TSPlayer player)
 	write->Destroy();
 }
 
+void TSPacketWrite::SendToNotInWorld(uint32 accountID)
+{
+
+	if (WorldSession* session = sWorld->FindSession(accountID))
+	{
+		auto& arr = write->buildMessages();
+		for (auto& chunk : arr)
+		{
+			WorldPacket packet(SERVER_TO_CLIENT_OPCODE, chunk.FullSize());
+			packet.append((uint8_t*)chunk.Data(), chunk.FullSize());
+			session->SendPacket(&packet);
+		}
+		// remove this line if we start sending a raw pointer to worldpacket
+		write->Destroy();
+	}
+}
+
 void TSPacketWrite::BroadcastMap(TSMap map, uint32_t teamOnly)
 {
 	auto& arr = write->buildMessages();

@@ -21,6 +21,7 @@ void TSLua::load_packet_methods(sol::state& state)
     LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteDouble);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, Size);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, SendToPlayer);
+    LUA_FIELD(ts_packetwrite, TSPacketWrite, SendToNotInWorld);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastMap);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, BroadcastAround);
     LUA_FIELD(ts_packetwrite, TSPacketWrite, WriteString);

@@ -10458,6 +10458,7 @@ declare class TSPacketWrite {
     Size(): TSNumber<uint32>
 
     SendToPlayer(player: TSPlayer): void;
+    SendToNotInWorld(accountID: TSNumber<uint32>): void;
     BroadcastMap(map: TSMap, teamOnly: uint32): void;
     /**
      * @param self default: true

@@ -49,6 +49,7 @@ public:
 	totalSize_t Size() { return write->Size(); }
 
 	void SendToPlayer(TSPlayer player);
+	void SendToNotInWorld(uint32 accountID);
 	void BroadcastMap(TSMap map, uint32_t teamOnly = 0);
 	void BroadcastAround(TSWorldObject obj, float range, bool self = true);
 };
