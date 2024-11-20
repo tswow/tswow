@@ -244,8 +244,8 @@ export function ClientPatches(
                     // padding remains
                     0x90
                 ]],
-                // ", " string
-                [0x5E2A50, [0x2C, 0x20]],
+                // " + " string
+                [0x5E2A50, [0x20, 0x2B, 0x20]],
                 // "s" string
                 [0x5E2A54, [0x73]],
                 // "RUNE_COST_DEATH" string
