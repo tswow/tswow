@@ -120,6 +120,7 @@ void TSLua::load_world_object_methods(sol::state& state)
     ));
 
     LUA_FIELD_OVERLOAD_4_1(ts_worldobject, TSWorldObject, CastSpellAoF, float, float, float, uint32, bool);
+    LUA_FIELD_OVERLOAD_5_1(ts_worldobject, TSWorldObject, CastSpellAoFWithOrigin, TSWorldObject, float, float, float, uint32, bool);
 
     auto ts_mutable_worldobject = state.new_usertype<TSMutableWorldObject>("TSMutableWorldObject");
     LUA_FIELD(ts_mutable_worldobject, TSMutableWorldObject, get);

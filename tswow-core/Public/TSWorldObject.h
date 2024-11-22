@@ -122,6 +122,7 @@ public:
     TSNumber<uint32> CastSpell(TSItem target, uint32 spell, bool triggered = false);
 
     TSNumber<uint32> CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered = false);
+    TSNumber<uint32> CastSpellAoFWithOrigin(TSWorldObject origin, float _x, float _y, float _z, uint32 spell, bool triggered = false);
     TSNumber<uint32> CastCustomSpell(
           TSWorldObject target
         , uint32 spell

@@ -5460,6 +5460,18 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered?: bool) : SpellCastResult
 
     /**
+      * Makes the [Unit] cast the spell to the given coordinates but sets given Unit as original caster, used for area effect spells.
+      *
+      * @param [Unit] origin = nil : can be self or another unit
+      * @param float x
+      * @param float y
+      * @param float z
+      * @param uint32 spell : entry of a spell
+      * @param bool triggered = false : if true the spell is instant and has no cost
+      */
+    CastSpellAoFWithOrigin(origin : TSWorldObject, _x : float,_y : float,_z : float,spell : uint32,triggered?: bool) : SpellCastResult
+
+    /**
      * Returns the name of the [WorldObject]
      *
      * @return string name

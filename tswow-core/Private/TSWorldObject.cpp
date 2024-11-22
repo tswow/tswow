@@ -1130,6 +1130,18 @@ TSNumber<uint32> TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint3
 #endif
 }
 
+TSNumber<uint32> TSWorldObject::CastSpellAoFWithOrigin(TSWorldObject origin, float _x, float _y, float _z, uint32 spell, bool triggered)
+{
+    CastSpellExtraArgs args;
+
+    if (triggered)
+        args.TriggerFlags = TRIGGERED_FULL_MASK;
+
+    args.SetOriginalCaster(origin.GetGUID().asGUID());
+
+    return obj->CastSpell(Position(_x, _y, _z), spell, args);
+}
+
 /**
  * Casts the [Spell] at target [Unit] with custom basepoints or casters.
  * See also [Unit:CastSpell].
