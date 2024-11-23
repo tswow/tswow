@@ -938,9 +938,9 @@ export const Ids = {
     instance_encounter_achievement: new DynamicIDGenerator('instance_encounter_achievement',0),
 
     /**
-     * Starts at 105, highest base value is 104
+     * Starts at 1000, highest base value is 325
      */
-    spawn_group_templates: new StaticIDGenerator('spawn_group_template', 105),
+    spawn_group_templates: new StaticIDGenerator('spawn_group_template', 1000),
 
     /**
      * Starts at 100, highest base value is 52
