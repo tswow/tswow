@@ -195,6 +195,7 @@ import { SoundSamplePreferencesDBCFile } from "./dbc/SoundSamplePreferences"
 import { SoundWaterTypeDBCFile } from "./dbc/SoundWaterType"
 import { SpamMessagesDBCFile } from "./dbc/SpamMessages"
 import { SpellDBCFile } from "./dbc/Spell"
+import { SpellAdditionalCostDataDBCFile } from "./dbc/SpellAdditionalCostData"
 import { SpellCastTimesDBCFile } from "./dbc/SpellCastTimes"
 import { SpellCategoryDBCFile } from "./dbc/SpellCategory"
 import { SpellChainEffectsDBCFile } from "./dbc/SpellChainEffects"
@@ -1162,6 +1163,11 @@ export const DBC = {
     /**
      * No comment (yet!)
      */
+    SpellAdditionalCostData : new SpellAdditionalCostDataDBCFile(),
+
+    /**
+     * No comment (yet!)
+     */
     SpellCastTimes : new SpellCastTimesDBCFile(),
 
     /**
@@ -1833,6 +1839,8 @@ export const DBCLoader = {
     SpamMessages : (path: string) => SpamMessagesDBCFile.read(path),
 
     Spell : (path: string) => SpellDBCFile.read(path),
+
+    SpellAdditionalCostData : (path: string) => SpellAdditionalCostDataDBCFile.read(path),
 
     SpellCastTimes : (path: string) => SpellCastTimesDBCFile.read(path),
 
