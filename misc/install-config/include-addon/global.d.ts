@@ -13436,6 +13436,21 @@ declare namespace WoWAPI {
          * @param orientation the orientation to set
          */
         SetOrientation(orientation: Align): void;
+
+        /**
+         * set the texture for the slider thumb
+         *
+         * @param filename filename
+         * @param texture reference to an existing Texture object
+         * @param layer path to a texture image file
+         */
+        SetThumbTexture(filename: string, layer?: WoWAPI.Layer): void;
+        SetThumbTexture(texture: WoWAPI.Texture, layer?: WoWAPI.Layer): void;
+
+        /**
+         * returns the texture for the slider thumb
+         */
+        GetThumbTexture(): WoWAPI.Texture;
     }
 
     interface EditBox extends Frame, FontInstance {
@@ -13674,15 +13689,15 @@ declare namespace WoWAPI {
 
         GetButtonState(): string;
         GetDisabledFontObject(): string;
-        GetDisabledTexture(): string;
+        GetDisabledTexture(): WoWAPI.Texture;
         GetFontString(): FontString;
         GetHighlightFontObject(): FontObject;
-        GetHighlightTexture(): string;
+        GetHighlightTexture(): WoWAPI.Texture;
         //GetMotionScriptsWhileDisabled() - Get whether the button is allowed to run its OnEnter and OnLeave scripts even while disabled - New in 3.3.
         GetNormalFontObject(): FontObject;
-        GetNormalTexture(): string;
+        GetNormalTexture(): WoWAPI.Texture;
         //GetPushedTextOffset() - Get the text offset when this button is pushed (x, y) - New in 1.11.
-        GetPushedTexture(): string;
+        GetPushedTexture(): WoWAPI.Texture;
         GetText(): string;
         GetTextHeight(): number;
         GetTextWidth(): number;
@@ -13909,6 +13924,7 @@ declare const FocusFrame: WoWAPI.Frame;
 declare const WorldFrame: WoWAPI.Frame;
 declare const WorldMapFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
+declare const UISpecialFrames: string[];
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
