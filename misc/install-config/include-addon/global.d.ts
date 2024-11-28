@@ -13924,6 +13924,7 @@ declare const FocusFrame: WoWAPI.Frame;
 declare const WorldFrame: WoWAPI.Frame;
 declare const WorldMapFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
+declare const UISpecialFrames: string[];
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
