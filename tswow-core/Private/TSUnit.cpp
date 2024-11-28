@@ -2243,6 +2243,17 @@ void TSUnit::RemoveAllAuras()
 }
 
 /**
+* Modifies [Aura State] of the [Unit].
+* 
+* @param uint32 auraState
+* @param bool isApplied
+*/
+void TSUnit::ModifyAuraState(uint8 auraState, bool isApplied)
+{
+    unit->ModifyAuraState(static_cast<AuraStateType>(auraState), isApplied);
+}
+
+/**
  * Adds the given unit state for the [Unit].
  *
  * @param [UnitState] state
@@ -2498,6 +2509,14 @@ void TSUnit::SetArmor(int32 val)
 bool TSUnit::HasAuraType(uint32 type)
 {
     return unit->HasAuraType(static_cast<AuraType>(type));
+}
+
+bool TSUnit::HasAuraState(uint8 auraState, TSSpellInfo _spell, TSUnit _caster)
+{
+    auto spellInfo = _spell ? _spell.info : nullptr;
+    auto caster = _caster ? _caster.unit : nullptr;
+
+    return unit->HasAuraState(static_cast<AuraStateType>(auraState), spellInfo, caster);
 }
 
 TSArray<TSUnit> TSUnit::GetControlled()

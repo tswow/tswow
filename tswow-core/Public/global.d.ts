@@ -6061,6 +6061,7 @@ declare interface TSUnit extends TSWorldObject {
     SetArmor(val: int32): TSNumber<uint32>
 
     HasAuraType(type: AuraType): bool
+    HasAuraState(auraState : uint8, spellInfo? : TSSpellInfo, caster? : TSUnit) : bool
 
     /**
      * The [Unit] tries to attack a given target
@@ -7468,6 +7469,14 @@ declare interface TSUnit extends TSWorldObject {
      *     Note: talents and racials are also auras, use with caution
      */
     RemoveAllAuras() : void
+
+    /**
+     * Modifies [Aura State] of the [Unit].
+     * 
+     * @param uint8 auraState
+     * @param bool isApplied
+     */
+    ModifyAuraState(auraState : uint8, isApplied : bool) : void
 
     /**
      * Adds the given unit state for the [Unit].

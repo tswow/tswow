@@ -55,6 +55,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, HealthAbovePct);
     LUA_FIELD_OVERLOAD_RET_1_3(ts_unit, TSUnit, HasAura, uint32, TSGUID, TSGUID, uint8);
     LUA_FIELD(ts_unit, TSUnit, HasAuraType);
+    LUA_FIELD(ts_unit, TSUnit, HasAuraState);
     LUA_FIELD(ts_unit, TSUnit, IsCasting);
     LUA_FIELD(ts_unit, TSUnit, HasUnitState);
     LUA_FIELD(ts_unit, TSUnit, GetOwner);
@@ -191,6 +192,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, AddAura);
     LUA_FIELD(ts_unit, TSUnit, RemoveAura);
     LUA_FIELD(ts_unit, TSUnit, RemoveAllAuras);
+    LUA_FIELD(ts_unit, TSUnit, ModifyAuraState);
     LUA_FIELD(ts_unit, TSUnit, AddUnitState);
     LUA_FIELD(ts_unit, TSUnit, ClearUnitState);
     LUA_FIELD(ts_unit, TSUnit, NearTeleport);

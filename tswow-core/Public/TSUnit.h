@@ -74,6 +74,7 @@ public:
     bool HealthAbovePct(int32 pct);
     bool HasAura(uint32 spell, TSGUID casterGUID = EmptyGUID(), TSGUID itemCasterGUID = EmptyGUID(), uint8 reqEffMask = 0);
     bool HasAuraType(uint32 auraType);
+    bool HasAuraState(uint8 auraState, TSSpellInfo spell = nullptr, TSUnit caster = nullptr);
     bool IsCasting();
     bool HasUnitState(uint32 state);
     TSUnit  GetOwner();
@@ -218,6 +219,7 @@ public:
     TSAura AddAura(uint32 spell, TSUnit target);
     void RemoveAura(uint32 spellId);
     void RemoveAllAuras();
+    void ModifyAuraState(uint8 auraState, bool isApplied);
     void AddUnitState(uint32 state);
     void ClearUnitState(uint32 state);
     void NearTeleport(float x, float y, float z, float o);
