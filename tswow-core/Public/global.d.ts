@@ -71,7 +71,7 @@ declare const enum Class /** @realType: uint8 */ {
 }
 declare type ClassID = Class | uint8
 
-declare const enum LiquidStatus {} /** Map.h:ZLiquidStatus */
+declare const enum LiquidStatus {} /** MapDefines.h:ZLiquidStatus */
 declare const enum EnchantmentSlot {} /** ItemDefines.h:EnchantmentSlot */
 declare const enum InventoryResult {} /** ItemDefines.h:InventoryResult */
 declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
