@@ -8308,6 +8308,8 @@ declare namespace _hidden {
         ) => void);
 
         OnRewardHonorEarly(callback: (cancel: TSMutable<boolean,boolean>)=>void);
+
+        OnSummonIfPossible(callback: (player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void);
     }
 
     export class Account<T> {

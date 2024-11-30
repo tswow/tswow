@@ -197,6 +197,8 @@ struct TSEvents
 
          EVENT(OnRewardHonorEarly, TSMutable<bool, bool>)
 
+         EVENT(OnSummonIfPossible, TSPlayer, TSMutable<bool, bool>)
+
          EVENT(
              OnTradeCompleted
              , TSPlayer me
