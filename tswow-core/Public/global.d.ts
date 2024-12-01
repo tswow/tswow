@@ -7898,6 +7898,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
     IsPositive(): boolean
     GetMinRange(positive: boolean): TSNumber<float>
     GetMaxRange(positive: boolean): TSNumber<float>
+    CalcPowerCost(caster: TSWorldObject, schoolmask: TSNumber<uint32>): TSNumber<uint32>;
     /** @epoch-end */
 }
 

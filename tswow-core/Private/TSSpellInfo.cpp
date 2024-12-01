@@ -524,4 +524,9 @@ TSNumber<float> TSSpellEffectInfo::CalcRadius(TSWorldObject caster)
 {
     return m_info->CalcRadius(caster.obj);
 }
+
+TSNumber<uint32> TSSpellInfo::CalcPowerCost(TSWorldObject caster, uint32 schoolmask)
+{
+    return info->CalcPowerCost(caster->obj, static_cast<SpellSchoolMask>(schoolmask));
+}
 /** epoch-end */

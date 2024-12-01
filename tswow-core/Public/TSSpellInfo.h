@@ -144,6 +144,8 @@ public:
     bool IsPositive();
     TSNumber<float> GetMinRange(bool positive = false);
     TSNumber<float> GetMaxRange(bool positive = false);
+
+    TSNumber<uint32> CalcPowerCost(TSWorldObject caster, uint32 schoolmask);
     /** epoch-end */
 };
 
