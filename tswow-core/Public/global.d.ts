@@ -5763,7 +5763,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 music : entry of a music
      * @param [Player] player = nil : [Player] to play the music to
      */
-    PlayMusic(musicid : uint32,player : TSPlayer) : void
+    PlayMusic(musicid : uint32,player : TSPlayer | null) : void
 
     /**
      * The [WorldObject] plays a sound to a [Player]
@@ -5776,7 +5776,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 sound : entry of a sound
      * @param [Player] player = nil : [Player] to play the sound to
      */
-    PlayDirectSound(soundId : uint32,player : TSPlayer) : void
+    PlayDirectSound(soundId : uint32,player : TSPlayer | null) : void
 
     /**
      * The [WorldObject] plays a sound to a [Player]
@@ -5790,7 +5790,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 sound : entry of a sound
      * @param [Player] player = nil : [Player] to play the sound to
      */
-    PlayDistanceSound(soundId : uint32,player : TSPlayer) : void
+    PlayDistanceSound(soundId : uint32,player : TSPlayer | null) : void
 
     GetGameObject(guid: TSNumber<uint32> | TSGUID): TSGameObject
     GetCorpse(guid: TSNumber<uint32> | TSGUID ): TSCorpse
