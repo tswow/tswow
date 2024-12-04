@@ -9524,6 +9524,9 @@ declare namespace _hidden {
 
         OnCreate(callback: (item: TSItem)=>void);
         OnCreate(id: EventID, callback: (item: TSItem)=>void);
+
+        OnCanDisenchant(callback: (item: TSItemTemplate, result: TSMutableNumber<uint32>)=>void);
+        OnCanDisenchant(id: EventID, callback: (item: TSItemTemplate, result: TSMutableNumber<uint32>)=>void);
     }
 
     export class GameObject<T> {
