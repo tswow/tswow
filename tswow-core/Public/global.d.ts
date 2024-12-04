@@ -2298,6 +2298,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     HasUnitMovementFlag(flag: uint32): bool;
 
     RepopAtGraveyard(): void;
+
+    UpdateLocalChannels(zone: uint32): void;
 }
 
 declare interface TSCorpse extends TSWorldObject {

@@ -4198,3 +4198,8 @@ void TSPlayer::RepopAtGraveyard()
 {
     player->RepopAtGraveyard();
 }
+
+void TSPlayer::UpdateLocalChannels(uint32 zone)
+{
+    player->UpdateLocalChannels(zone);
+}
