@@ -235,8 +235,8 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnOnResistAbsorbCalculate);
     /** @epoch-start */
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHealEarly);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnBeforeItemEnchantmentProc);
     /** @epoch-end */
-    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHealLate);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);

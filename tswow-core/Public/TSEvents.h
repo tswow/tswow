@@ -554,10 +554,11 @@ struct TSEvents
         ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
-            /** @epoch-start */
+        /** @epoch-start */
         ID_EVENT(OnHealEarly, TSSpellInfo, TSUnit, TSMutableNumber<uint32>)
-            /** @epoch-end */
         ID_EVENT(OnHealLate, TSSpellInfo, TSUnit, TSUnit, TSNumber<uint32>, TSNumber<uint32>, bool)
+        ID_EVENT(OnBeforeItemEnchantmentProc, TSSpellInfo, TSItem, TSDamageInfo, TSNumber<uint32>, TSNumber<uint8>, TSNumber<uint8>, TSMutableNumber<float>)
+        /** @epoch-end */
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

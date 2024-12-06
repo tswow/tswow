@@ -8655,6 +8655,25 @@ declare namespace _hidden {
             , totalamount: TSNumber<uint32>
             , critical: bool
         )=>void): T
+
+        OnBeforeItemEnchantmentProc(callback: (
+            spell: TSSpellInfo,
+            item: TSItem,
+            damangeInfo: TSDamageInfo,
+            enchant_id: TSNumber<uint32>,
+            enchant_slot: TSNumber<uint8>,
+            enchant_effect: TSNumber<uint8>,
+            chance: TSMutableNumber<float>
+        )=>void): T
+        OnBeforeItemEnchantmentProc(id: EventID, callback : (
+            spell: TSSpellInfo,
+            item: TSItem,
+            damangeInfo: TSDamageInfo,
+            enchant_id: TSNumber<uint32>,
+            enchant_slot: TSNumber<uint8>,
+            enchant_effect: TSNumber<uint8>,
+            chance: TSMutableNumber<float>
+        )=>void): T
     }
 
     export class Creature<T> {
