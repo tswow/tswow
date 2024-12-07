@@ -8658,6 +8658,7 @@ declare namespace _hidden {
 
         OnBeforeItemEnchantmentProc(callback: (
             spell: TSSpellInfo,
+            player: TSPlayer,
             item: TSItem,
             damangeInfo: TSDamageInfo,
             enchant_id: TSNumber<uint32>,
@@ -8667,6 +8668,7 @@ declare namespace _hidden {
         )=>void): T
         OnBeforeItemEnchantmentProc(id: EventID, callback : (
             spell: TSSpellInfo,
+            player: TSPlayer,
             item: TSItem,
             damangeInfo: TSDamageInfo,
             enchant_id: TSNumber<uint32>,
