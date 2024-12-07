@@ -69,6 +69,9 @@ struct TC_GAME_API MathClass {
     }
 
     TSNumber<double> random();
+
+public:
+    float PI = 3.14159265358979323846;
 };
 
 static MathClass Math;
