@@ -199,6 +199,8 @@ struct TSEvents
 
          EVENT(OnSummonIfPossible, TSPlayer, TSMutable<bool, bool>)
 
+         EVENT(OnBeforeUpdateLocalChannels, TSPlayer, TSMutable<bool, bool>)
+
          EVENT(
              OnTradeCompleted
              , TSPlayer me

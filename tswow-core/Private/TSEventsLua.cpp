@@ -86,6 +86,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnCheckAreaIsPvP);
     LUA_HANDLE(player_events, PlayerEvents, OnRewardHonorEarly);
     LUA_HANDLE(player_events, PlayerEvents, OnSummonIfPossible);
+    LUA_HANDLE(player_events, PlayerEvents, OnBeforeUpdateLocalChannels);
     //LUA_HANDLE(player_events, PlayerEvents, OnTradeComplete);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateDodgePercentage);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateBlockPercentage);

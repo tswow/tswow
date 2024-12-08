@@ -8313,6 +8313,8 @@ declare namespace _hidden {
         OnRewardHonorEarly(callback: (cancel: TSMutable<boolean,boolean>)=>void);
 
         OnSummonIfPossible(callback: (player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void);
+
+        OnBeforeUpdateLocalChannels(callback: (player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void);
     }
 
     export class Account<T> {
