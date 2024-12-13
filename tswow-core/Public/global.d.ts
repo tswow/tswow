@@ -2300,6 +2300,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     RepopAtGraveyard(): void;
 
     UpdateLocalChannels(zone: uint32): void;
+
+    GetAreaString(): string;
 }
 
 declare interface TSCorpse extends TSWorldObject {

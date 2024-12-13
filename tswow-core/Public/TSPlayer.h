@@ -371,8 +371,8 @@ public:
 	bool GetRandomWinner();
 	bool HasUnitMovementFlag(uint32 flag);
 	void RepopAtGraveyard();
-
 	void UpdateLocalChannels(uint32 zone);
+	std::string GetAreaString();
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);

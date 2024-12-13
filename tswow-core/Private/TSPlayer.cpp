@@ -4203,3 +4203,8 @@ void TSPlayer::UpdateLocalChannels(uint32 zone)
 {
     player->UpdateLocalChannels(zone);
 }
+
+std::string TSPlayer::GetAreaString()
+{
+    return player->GetAreaString();
+}
