@@ -10088,6 +10088,7 @@ declare interface TSDBJsonProvider {
 declare function GetCurrTime(): TSNumber<uint32>
 declare function GetUnixTime(): TSNumber<uint64>
 declare function SendWorldMessage(message: string);
+declare function SendSystemChannelMessage(team: uint32, channel: uint32, zone: uint32, message: string);
 declare function SyncHttpGet(url: string): string;
 declare function IsGameEventActive(event: uint16): boolean
 declare function IsHolidayActive(holiday: uint16): boolean

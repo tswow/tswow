@@ -24,6 +24,7 @@
 TSItemTemplate TC_GAME_API CreateItemTemplate(uint32 entry,uint32 copyItemID = 38);
 
 void TC_GAME_API SendWorldMessage(std::string const& string);
+void TC_GAME_API SendSystemChannelMessage(uint32 team, uint32 channel, uint32 zone, std::string const& message);
 
 TSNumber<uint32> TC_GAME_API GetCurrTime();
 TSNumber<uint64> TC_GAME_API GetUnixTime();

@@ -16,7 +16,7 @@
 
 #include "TSGlobal.h"
 #include "ObjectAccessor.h"
-
+#include "ObjectGuid.h"
 #include "HTTPRequest.h"
 
 #include "Mail.h"
@@ -25,7 +25,12 @@
 #include "World.h"
 #include "Timer.h"
 #include "GameEventMgr.h"
+#include "DBCStructure.h"
+#include "Chat.h"
+#include "Channel.h"
+#include "ChannelMgr.h"
 #include "TSItemTemplate.h"
+#include "TSChannel.h"
 
 TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 {
@@ -114,4 +119,21 @@ bool L_HAS_TAG(uint32_t id, sol::table list)
 TSLua::Array<TSNumber<uint16>> TC_GAME_API LGetActiveGameEvents()
 {
     return sol::as_table(*GetActiveGameEvents().vec);
+}
+
+void SendSystemChannelMessage(uint32 team, uint32 channel, uint32 zone, std::string const& message)
+{
+    ChannelMgr* cMgr = ChannelMgr::forTeam(team);
+    if (! cMgr)
+        return;
+
+    AreaTableEntry const* _zone = sAreaTableStore.LookupEntry(zone);
+    if (! _zone)
+        return;
+    
+    Channel* _channel = cMgr->GetSystemChannel(channel, _zone);
+    if (! _channel)
+        return;
+
+    _channel->System(message, 0);
 }
