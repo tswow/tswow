@@ -2709,4 +2709,9 @@ TSPlayer TSUnit::GetControllingPlayer()
 {
     return TSPlayer(unit->GetControllingPlayer());
 }
+
+TSNumber<uint32> TSUnit::GetLastExtraAttackSpell()
+{
+    return unit->GetLastExtraAttackSpell();
+}
 /** @epoch-end */

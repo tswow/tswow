@@ -254,6 +254,7 @@ public:
     // uint32 SpellDamageBonusTaken(Unit* caster, SpellInfo const* spellProto, uint32 pdamage, DamageEffectType damagetype);
     void AddThreatAllAssist(TSUnit victim, TSNumber<float> threat, uint32 spell, bool ignoreModifiers);
     TSPlayer GetControllingPlayer();
+    TSNumber<uint32> GetLastExtraAttackSpell();
     /** @epoch-end*/
 private:
     TSLua::Array<TSUnit> LGetControlled();

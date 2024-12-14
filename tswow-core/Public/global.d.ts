@@ -7618,6 +7618,7 @@ declare interface TSUnit extends TSWorldObject {
     MovePath(path_id: uint32, repeatable: boolean): void;
     AddThreatAllAssist(victim: TSUnit, threat: TSNumber<float>, spell: uint32, ignoreModifiers: bool): void;
     GetControllingPlayer(): TSPlayer;
+    GetLastExtraAttackSpell(): uint32;
     /** @epoch-end */
 }
 
