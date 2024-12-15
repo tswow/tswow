@@ -8681,6 +8681,17 @@ declare namespace _hidden {
             enchant_effect: TSNumber<uint8>,
             chance: TSMutableNumber<float>
         )=>void): T
+
+        OnCanResetAutoActions(id: EventID, callback : (
+            spell: TSSpellInfo,
+            caster: TSUnit,
+            reset: TSMutable<boolean,boolean>
+        ) => void): T
+        OnCanResetAutoActions(callback: (
+            spell: TSSpellInfo,
+            caster: TSUnit,
+            reset: TSMutable<boolean,boolean>
+        ) => void): T
     }
 
     export class Creature<T> {

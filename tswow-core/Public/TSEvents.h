@@ -560,6 +560,7 @@ struct TSEvents
         ID_EVENT(OnHealEarly, TSSpellInfo, TSUnit, TSMutableNumber<uint32>)
         ID_EVENT(OnHealLate, TSSpellInfo, TSUnit, TSUnit, TSNumber<uint32>, TSNumber<uint32>, bool)
         ID_EVENT(OnBeforeItemEnchantmentProc, TSSpellInfo, TSPlayer, TSItem, TSDamageInfo, TSNumber<uint32>, TSNumber<uint8>, TSNumber<uint8>, TSMutableNumber<float>)
+        ID_EVENT(OnCanResetAutoActions, TSSpellInfo, TSUnit, TSMutable<bool,bool>);
         /** @epoch-end */
     } Spell;
 
