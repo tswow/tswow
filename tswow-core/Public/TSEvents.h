@@ -1011,6 +1011,11 @@ struct TSEvents
         ID_EVENT(OnReceive, TSNumber<uint32> opcode, TSWorldPacket, TSPlayer)
         ID_EVENT(OnSend, TSWorldPacket, TSPlayer)
     } WorldPacket;
+
+    struct ZoneEvents : public TSMappedEventsDirect {
+        EVENTS_HEADER(ZoneEvents)
+        ID_EVENT(OnUpdate, TSInstance, TSNumber<uint32> diff)
+    } Zone;
 #if TRINITY
     struct TestEvents {
         TestEvents* operator->() { return this; }
