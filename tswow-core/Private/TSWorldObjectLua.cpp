@@ -90,10 +90,14 @@ void TSLua::load_world_object_methods(sol::state& state)
     ));
 
     ts_worldobject.set_function("CastCustomSpell", sol::overload(
-        [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, TSItem castItem, uint64 originalCaster)
-            { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, castItem, originalCaster); },
-        [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, TSItem castItem)
-            { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, castItem); },
+        [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, uint8 stacks, uint32 dur, TSItem castItem, uint64 originalCaster)
+            { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, stacks, dur, castItem, originalCaster); },
+        [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, uint8 stacks, uint32 dur, TSItem castItem)
+            { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, stacks, dur, castItem); },
+        [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, uint8 stacks, uint32 dur)
+            { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, stacks, dur); },
+        [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, uint8 stacks)
+            { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2, stacks); },
         [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2)
             { return caster.CastCustomSpell(target, spell, triggered, bp0, bp1, bp2); },
         [](TSWorldObject& caster, TSWorldObject target, uint32 spell, bool triggered, int32 bp0, int32 bp1)

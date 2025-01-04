@@ -131,6 +131,8 @@ public:
         , int32 bp0 = 0
         , int32 bp1 = 0
         , int32 bp2 = 0
+        , uint8 stackAmount = 0
+        , uint32 duration = 0
         , TSItem castItem = TSItem()
         , uint64 originalCaster = 0
     );

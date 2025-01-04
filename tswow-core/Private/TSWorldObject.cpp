@@ -1206,6 +1206,8 @@ TSNumber<uint32> TSWorldObject::CastCustomSpell(
     , int32 bp0
     , int32 bp1
     , int32 bp2
+    , uint8 stackAmount
+    , uint32 duration
     , TSItem _castItem
     , uint64 originalCaster
 ) {
@@ -1214,6 +1216,8 @@ TSNumber<uint32> TSWorldObject::CastCustomSpell(
     bool has_bp0 = bp0 != 0;
     bool has_bp1 = bp1 != 0;
     bool has_bp2 = bp2 != 0;
+    bool has_stack = stackAmount != 0;
+    bool has_dur = duration != 0;
 
     CastSpellExtraArgs args;
     if (has_bp0)
@@ -1222,6 +1226,10 @@ TSNumber<uint32> TSWorldObject::CastCustomSpell(
         args.AddSpellMod(SPELLVALUE_BASE_POINT1, bp1);
     if (has_bp2)
         args.AddSpellMod(SPELLVALUE_BASE_POINT2, bp2);
+    if (has_dur)
+        args.AddSpellMod(SPELLVALUE_DURATION, duration);
+    if (has_stack)
+        args.AddSpellMod(SPELLVALUE_AURA_STACK, stackAmount);
     if (triggered)
         args.TriggerFlags = TRIGGERED_FULL_MASK;
     if (castItem)

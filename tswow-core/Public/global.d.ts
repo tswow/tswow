@@ -5425,7 +5425,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
       * @param [Item] castItem = nil
       * @param uint64 originalCaster = 0
       */
-     CastCustomSpell(target : TSWorldObject | TSItem,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
+     CastCustomSpell(target : TSWorldObject | TSItem,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32, stacks? : uint8, dur? : uint32, castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
 
      /**
       * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
