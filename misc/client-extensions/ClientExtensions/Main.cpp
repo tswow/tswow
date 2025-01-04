@@ -19,8 +19,8 @@ public:
         ClientNetwork::initialize();
         LOG_INFO << "Client network initialized";
         //some people get windows crashes, idk
-        //ClientArguments::initialize(GetCommandLineA());
-        //LOG_INFO << "Client arguments initialized";
+        ClientArguments::initialize();
+        LOG_INFO << "Client arguments initialized";
         ClientDetours::Apply();
         LOG_INFO << "Client detours applied";
     }
