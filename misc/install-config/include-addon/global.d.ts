@@ -12449,7 +12449,7 @@ declare namespace WoWAPI {
     type VerticalAlign = "TOP" | "MIDDLE" | "BUTTOM";
     type Point = "TOP" | "RIGHT" | "BOTTOM" | "LEFT" | "TOPRIGHT" | "TOPLEFT" | "BOTTOMLEFT" | "BOTTOMRIGHT" | "CENTER";
     type Anchor = "ANCHOR_TOP" | "ANCHOR_RIGHT" | "ANCHOR_BOTTOM" | "ANCHOR_LEFT" | "ANCHOR_TOPRIGHT" | "ANCHOR_BOTTOMRIGHT" | "ANCHOR_TOPLEFT" | "ANCHOR_BOTTOMLEFT" | "ANCHOR_CURSOR" | "ANCHOR_PRESERVE" | "ANCHOR_NONE"
-    type Layer = "BACKGROUND" | "ARTWORK" | "OVERLAY";
+    type Layer = "BACKGROUND" | "BORDER" | "ARTWORK" | "OVERLAY" | "HIGHLIGHT";
     type FrameStrata = "WORLD" | "BACKGROUND" | "LOW" | "MEDIUM" | "HIGH" | "DIALOG" | "FULLSCREEN" | "FULLSCREEN_DIALOG" | "TOOLTIP";
     type Wrap = "CLAMP" | "CLAMPTOBLACK" | "CLAMPTOBLACKADDITIVE" | "CLAMPTOSHITE" | "REPEAT" | true | "MIRROR";
     type MouseButton = "LeftButton" | "RightButton" | "Middle" | "Button4" | "Button5";
