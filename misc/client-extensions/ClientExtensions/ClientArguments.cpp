@@ -35,19 +35,24 @@ namespace {
     }
 }
 
-void ClientArguments::initialize(std::string const& str)
+void ClientArguments::initialize()
 {
     arguments.clear();
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    std::wstring wide = converter.from_bytes(str);
+    int argc = 0;
+    wchar_t** argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    for (int i = 0; i < argc; i++)
+        arguments.emplace_back(u16tou8(argv[i]));
+    
+}
 
-    int argC;
-    LPWSTR* wstr = CommandLineToArgvW(wide.c_str(), &argC);
-    for (int i = 0; i < argC; ++i)
-    {
-        std::string v = converter.to_bytes(wstr[i]);
-        arguments.push_back(converter.to_bytes(wstr[i]));
-    }
+std::string ClientArguments::u16tou8(std::wstring_view u16)
+{
+    int u8len = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, u16.data(), u16.size() + 1, NULL, 0, NULL, NULL);
+    if (!u8len) return {};
+    std::string u8;
+    u8.resize(u8len);
+    WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, u16.data(), u16.size() + 1, u8.data(), u8len, NULL, NULL);
+    return u8;
 }
 
 std::string ClientArguments::GetString(std::string const& name, std::string const& def)

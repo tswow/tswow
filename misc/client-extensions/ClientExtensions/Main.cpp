@@ -15,9 +15,14 @@ public:
         LOG_INFO << "Client starting up";
         // gets this from scripts.generated.ih
         __init_scripts();
+        LOG_INFO << "Client init scripts";
         ClientNetwork::initialize();
-        ClientArguments::initialize(GetCommandLineA());
+        LOG_INFO << "Client network initialized";
+        //some people get windows crashes, idk
+        ClientArguments::initialize();
+        LOG_INFO << "Client arguments initialized";
         ClientDetours::Apply();
+        LOG_INFO << "Client detours applied";
     }
 };
 
@@ -31,7 +36,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
     if (fdwReason == DLL_PROCESS_ATTACH)
     {
         DisableThreadLibraryCalls(hinstDLL);
-        Main::startup();
+        CreateThread(nullptr, 0, [](LPVOID) -> DWORD {
+            Main::startup();
+            return 0;
+        }, nullptr, 0, nullptr);
     }
     return TRUE;
 }

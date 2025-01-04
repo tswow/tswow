@@ -12,6 +12,7 @@ class ClientArguments
     static double GetDouble(std::string const& name, double def);
     static int GetInt(std::string const& name, int def);
 private:
-    static void initialize(std::string const& str);
+    static void initialize();
+    static std::string u16tou8(std::wstring_view u16);
     friend class Main;
 };

@@ -16,7 +16,7 @@ namespace {
 Logger::Logger()
 {
 #if LOG_LEVEL > 0
-  m_file.open("client.log",std::ios::out);
+  m_file.open("log",std::ios::out);
 #endif
 }
 
