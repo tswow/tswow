@@ -2302,6 +2302,10 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     UpdateLocalChannels(zone: uint32): void;
 
     GetAreaString(): string;
+
+    CanSeeTransmog(): bool;
+
+    SetCanSeeTransmog(on: bool): void;
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -4655,6 +4659,10 @@ declare class TSItem extends TSObject {
      * Saves the [Item] to the database
      */
     SaveToDB() : void
+
+    
+    SetTransmog(entry: uint32): void;
+    GetTransmog(): TSNumber<uint32>;
 }
 
 declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityProvider<TSBattlegroundPlayer>{
@@ -7823,6 +7831,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
     /** @epoch-start */
     SuitableForTransmogrification(player: TSPlayer): boolean;
     GetItemLink(): string;
+    GetIcon(): string;
     /** @epoch-end  */
 }
 

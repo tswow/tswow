@@ -713,3 +713,13 @@ TSNumber<uint32> TSItem::GetEnchantmentCharges(uint32 slot)
 {
     return item->GetEnchantmentCharges(static_cast<EnchantmentSlot>(slot));
 }
+
+void TSItem::SetTransmog(uint32 entry)
+{
+    item->SetTransmog(entry);
+}
+
+TSNumber<uint32> TSItem::GetTransmog()
+{
+    return item->GetTransmog();
+}

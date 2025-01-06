@@ -4208,3 +4208,13 @@ std::string TSPlayer::GetAreaString()
 {
     return player->GetAreaString();
 }
+
+bool TSPlayer::CanSeeTransmog()
+{
+    return player->CanSeeTransmog();
+}
+
+void TSPlayer::SetCanSeeTransmog(bool on)
+{
+    player->SetCanSeeTransmog(on);
+}

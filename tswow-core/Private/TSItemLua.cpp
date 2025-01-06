@@ -69,6 +69,9 @@ void TSLua::load_item_methods(sol::state& state)
     LUA_FIELD(ts_item, TSItem, GetEnchantmentDuration);
     LUA_FIELD(ts_item, TSItem, GetEnchantmentCharges);
 
+    LUA_FIELD(ts_item, TSItem, SetTransmog);
+    LUA_FIELD(ts_item, TSItem, GetTransmog);
+
     LUA_FIELD(ts_item, TSItem, SaveToDB);
     state.set_function("CreateItem", sol::overload(
         [](uint32 entry, uint32 count) { return CreateItem(entry, count); },

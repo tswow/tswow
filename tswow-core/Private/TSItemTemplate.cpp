@@ -17,6 +17,8 @@
 #include "TSIncludes.h"
 #include "TSItemTemplate.h"
 #include "ObjectMgr.h"
+#include "DBCStores.h"
+#include "DBCStructure.h"
 #include <memory.h>
 #if TRINITY
 #include "QueryPackets.h"
@@ -678,5 +680,14 @@ std::string TSItemTemplate::GetItemLink()
         "|Hitem:" << info->ItemId << ":0:0:0:0:0:0:0:0:0|h[" << name << "]|h|r";
 
     return oss.str();
+}
+
+std::string TSItemTemplate::GetIcon()
+{
+    const ItemDisplayInfoEntry* dispInfo = sItemDisplayInfoStore.LookupEntry(info->DisplayInfoID);
+    if (!dispInfo)
+        return "";
+
+    return dispInfo->InventoryIcon[0];
 }
 /** @epoch-core */

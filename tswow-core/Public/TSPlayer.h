@@ -373,6 +373,9 @@ public:
 	void RepopAtGraveyard();
 	void UpdateLocalChannels(uint32 zone);
 	std::string GetAreaString();
+
+	bool CanSeeTransmog();
+	void SetCanSeeTransmog(bool on);
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);

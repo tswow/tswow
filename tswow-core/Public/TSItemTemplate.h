@@ -233,6 +233,7 @@ public:
     /** @epoch-start */
     bool SuitableForTransmogrification(TSPlayer player);
     std::string GetItemLink();
+    std::string GetIcon();
     /** @epoch-end */
 };
 

@@ -90,6 +90,9 @@ public:
     bool SetEnchantment(uint32 enchant, uint32 slot, uint32 duration);
     bool ClearEnchantment(uint32 slot);
     void SaveToDB();
+
+    void SetTransmog(uint32 entry);
+    TSNumber<uint32> GetTransmog();
 };
 
 TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);
