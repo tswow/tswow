@@ -409,7 +409,7 @@ export class Realm {
             , 'relamnames time --force'
             , 'Shuts down the specified realms. If the --force flag is supplied, time is ignored.'
             , args => {
-                let delay = args.map(x=>parseInt(x)).find(x=>x!==NaN) || 0
+                let delay = args.map(x=>parseInt(x)).find(x=>!Number.isNaN(x)) || 0
                 let realms = Identifier.getRealms(
                         args
                     , 'MATCH_ANY'
@@ -422,6 +422,13 @@ export class Realm {
                 }
 
                 return Promise.all(runningRealms.map(x=>{
+                    if(args.includes('--disable-auto-restart')) {
+                        x.worldserver.setAutoRestart(false);
+                    }else if(args.includes('--enable-auto-restart'))
+                    {
+                        x.worldserver.setAutoRestart(true);
+                    }
+
                     if(args.includes('--force')) {
                         return x.worldserver.stop();
                     } else {
@@ -451,6 +458,13 @@ export class Realm {
             , async args => {
                 await Promise.all(Identifier.getRealms(args,'MATCH_ANY',NodeConfig.DefaultRealm)
                     .map(x=>{
+                        if(args.includes('--disable-auto-restart')) {
+                            x.worldserver.setAutoRestart(false);
+                        }else if(args.includes('--enable-auto-restart'))
+                        {
+                            x.worldserver.setAutoRestart(true);
+                        }
+                        
                         return x.start(Identifier.getBuildType(args,NodeConfig.DefaultBuildType))
                     }))
             }
