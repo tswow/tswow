@@ -905,8 +905,8 @@ export const Ids = {
     /** Starts at 1000, highest base value is 32 */
     battleground_template: new DynamicIDGenerator('battleground_template', 100),
 
-    /** Starts at 100, highest base value is 84 */
-    game_event: new StaticIDGenerator('game_event',100),
+    /** Starts at 100, highest base value is 86 */
+    game_event: new StaticIDGenerator('game_event',90),
 
     /** Starts at 1, highest base value is 0 */
     game_event_condition: new StaticIDGenerator('game_event_condition',1),
