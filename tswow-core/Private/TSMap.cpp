@@ -548,6 +548,16 @@ void TSMap::LoadGrid(float x, float y)
     map->LoadGrid(x, y);
 }
 
+void TSMap::SpawnGroupSpawn(uint32 group, bool ignoreRespawn, bool force)
+{
+    map->SpawnGroupSpawn(group, ignoreRespawn, force);
+}
+
+void TSMap::SpawnGroupDespawn(uint32 group, bool deleteRespawnTimes)
+{
+    map->SpawnGroupDespawn(group, deleteRespawnTimes);
+}
+
 TC_GAME_API TSInstance ToInstance(TSMap map)
 {
     if (map.map && map->IsInstance())

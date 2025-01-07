@@ -82,6 +82,8 @@ public:
     TSEntity * GetData();
     void DoDelayed(std::function<void(TSMap, TSMainThreadContext)> callback);
     void LoadGrid(float x, float y);
+    void SpawnGroupSpawn(uint32 group, bool ignoreRespawn, bool force);
+    void SpawnGroupDespawn(uint32 group, bool deleteRespawnTimes);
 private:
     void LDoDelayed(sol::function callback);
 

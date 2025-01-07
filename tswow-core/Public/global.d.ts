@@ -4289,6 +4289,16 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @param y 
      */
     LoadGrid(x: float, y: float): void;
+
+    /**
+     * Activate a Spawn Group.
+     */
+    SpawnGroupSpawn(group: uint32, ignoreRespawn: boolean, force: boolean): void;
+
+    /**
+     * Deactivate a Spawn Group.
+     */
+    SpawnGroupDespawn(group: uint32, deleteRespawnTimes: boolean): void;
 }
 
 declare class TSItemEntry
