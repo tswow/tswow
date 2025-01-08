@@ -35,9 +35,13 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
     if (fdwReason == DLL_PROCESS_ATTACH)
     {
+        LOG_INFO << "Attach";
         DisableThreadLibraryCalls(hinstDLL);
+        LOG_INFO << "Pass DisableThreadLibraryCalls";
         CreateThread(nullptr, 0, [](LPVOID) -> DWORD {
+            LOG_INFO << "Thread Made";
             Main::startup();
+            LOG_INFO << "Main Done";
             return 0;
         }, nullptr, 0, nullptr);
     }
