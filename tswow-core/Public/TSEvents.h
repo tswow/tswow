@@ -201,6 +201,10 @@ struct TSEvents
 
          EVENT(OnBeforeUpdateLocalChannels, TSPlayer, TSMutable<bool, bool>)
 
+         EVENT(OnBeforeTogglePvP, TSPlayer, TSMutable<bool, bool>)
+
+         EVENT(OnCheckPvPTarget, TSPlayer, TSPlayer, TSMutable<bool, bool>)
+
          EVENT(
              OnTradeCompleted
              , TSPlayer me

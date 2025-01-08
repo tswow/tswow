@@ -376,6 +376,7 @@ public:
 
 	bool CanSeeTransmog();
 	void SetCanSeeTransmog(bool on);
+	void TogglePvP(bool enable);
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);

@@ -2306,6 +2306,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     CanSeeTransmog(): bool;
 
     SetCanSeeTransmog(on: bool): void;
+
+    TogglePvP(enable: bool): void;
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -8337,6 +8339,10 @@ declare namespace _hidden {
         OnSummonIfPossible(callback: (player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void);
 
         OnBeforeUpdateLocalChannels(callback: (player: TSPlayer, cancel: TSMutable<boolean,boolean>)=>void);
+
+        OnBeforeTogglePvP(callback: (player: TSPlayer, cancel: TSMutable<boolean, boolean>) => void);
+
+        OnCheckPvPTarget(callback: (attacker: TSPlayer, target: TSPlayer, valid: TSMutable<boolean, boolean>) => void);
     }
 
     export class Account<T> {

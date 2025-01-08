@@ -4218,3 +4218,28 @@ void TSPlayer::SetCanSeeTransmog(bool on)
 {
     player->SetCanSeeTransmog(on);
 }
+
+void TSPlayer::TogglePvP(bool enable)
+{
+    if (enable)
+    {
+        player->ApplyModFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP, enable);
+        player->ApplyModFlag(PLAYER_FLAGS, PLAYER_FLAGS_PVP_TIMER, !enable);
+    }
+    else
+    {
+        player->ToggleFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP);
+        player->ToggleFlag(PLAYER_FLAGS, PLAYER_FLAGS_PVP_TIMER);
+    }
+
+    if (player->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP))
+    {
+        if (!player->IsPvP() || player->pvpInfo.EndTimer)
+            player->UpdatePvP(true, true);
+    }
+    else
+    {
+        if (!player->pvpInfo.IsHostile && player->IsPvP())
+            player->pvpInfo.EndTimer = GameTime::GetGameTime();     // start toggle-off
+    }
+}
