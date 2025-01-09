@@ -268,6 +268,10 @@ export function ClientPatches(
                 // padding remains
                 [0xE2AFE, [0x90, 0x90, 0x90, 0x90]]
             ]),
+            patch('chain-spell-visual-crashfix', [
+                // Aleist3r: this needs some more testing, it probably breaks some spell visual thing but for now it's good enough
+                [0x32A36C, [0xEB]]
+            ]),
             // Aleist3r: commenting it out for now, if you grabbed modified exe, can safely uncomment it and line 227 in Client.ts as well as comment out line 226
             // later will probably be made into proper part of ClientExtensions.dll instead this kinda hacky approach
             /*patch('additional-cost-dbc', [
