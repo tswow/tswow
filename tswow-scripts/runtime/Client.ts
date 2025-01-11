@@ -223,7 +223,7 @@ export class Client {
                     + ` dll at ${ipaths.bin.ClientExtensions_dll.get()}`
                 )
             }
-            wowbin = wowbin.slice(0,0x758E98)   // made it to not eat certificate
+            wowbin = wowbin.slice(0,0x758E98)   // made it to not eat certificate data
             //wowbin = wowbin.slice(0,0x75dc00)   // Aleist3r: change requires our custom resized exe, better to not run that otherwise
             ipaths.bin.ClientExtensions_dll
                 .copy(this.path.ClientExtensions_dll)
