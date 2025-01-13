@@ -12974,6 +12974,13 @@ declare namespace WoWAPI {
         SetText(text: string): void;
 
         /**
+         * Sets the text displayed in the font string using format specifiers. Equivalent to :SetText(string.format("format", value)), but does not create a throwaway Lua string object, resulting in greater memory-usage efficiency.
+         * @param format A string containing format specifiers (as with string.format()).
+         * @param args A list of values to be included in the formatted string.
+         */
+        SetFormattedText(format: string, ...args: string[]): void;
+
+        /**
          * Returns how wide the string would be, in pixels, without wrapping
          * @see https://wow.gamepedia.com/API_FontString_GetStringWidth
          */
