@@ -3677,6 +3677,7 @@ declare function ShowRepairCursor():void;
 declare function GetNumBuybackItems():number;
 
 declare function SetPortraitToTexture(texture:WoWAPI.Texture,path:string):void;
+declare function SetPortraitTexture(texture:WoWAPI.Texture,unitToken:WoWAPI.UnitId,disableMasking?:boolean):void;
 
 declare const MAX_PLAYER_LEVEL_TABLE: {
     LE_EXPANSION_CLASSIC: 60,
@@ -14050,6 +14051,7 @@ declare function InterfaceOptions_AddCategory(panel: WoWAPI.FrameInterfaceCatego
 
 declare namespace WoWAPI {
     type UnitIdArena = "arena1" | "arena2" | "arena3" | "arena4" | "arena5";
+    type UnitIdBoss = "boss1" | "boss2" | "boss3" | "boss4" | "boss5" | "boss6" | "boss7" | "boss8";
     type UnitIdRaidPlayer = "raid1" | "raid2" | "raid3" | "raid4" | "raid5" | "raid6" | "raid7" | "raid8" | "raid9" |
         "raid10" | "raid11" | "raid12" | "raid13" | "raid14" | "raid15" | "raid16" | "raid17" | "raid18" | "raid19" | "raid20" |
         "raid21" | "raid22" | "raid23" | "raid24" | "raid25" | "raid26" | "raid27" | "raid28" | "raid29" | "raid30" | "raid31" |
@@ -14062,7 +14064,7 @@ declare namespace WoWAPI {
     type UnitIdParty = "party1" | "party2" | "party3" | "party4";
     type UnitIdPartyPet = "partypet1" | "partypet2" | "partypet3" | "partypet4";
     type UnitIdOther = "player" | "pet" | "focus" | "mouseover" | "vehicle" | "target" | "none" | "npc" | "targettarget";
-    type UnitId = UnitIdOther | UnitIdArena | UnitIdRaidPlayer | UnitIdRaidPlayerPet | UnitIdParty | UnitIdPartyPet;
+    type UnitId = UnitIdOther | UnitIdArena | UnitIdBoss | UnitIdRaidPlayer | UnitIdRaidPlayerPet | UnitIdParty | UnitIdPartyPet;
 
     type UnitRoleType = "TANK" | "DAMAGER" | "HEALER";
 
