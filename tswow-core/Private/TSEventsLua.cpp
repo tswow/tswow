@@ -120,6 +120,7 @@ void TSLua::load_events(sol::state& state)
 
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateStats);
 
+    LUA_HANDLE(player_events, PlayerEvents, ScriptedArmorPenMod);
     LUA_HANDLE(player_events, PlayerEvents, OnSuccessfulInterrupt);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageDoneMod); // After all custom mods in SpellDamagePctDone and Weapon Damage are calced by core
     LUA_HANDLE(player_events, PlayerEvents, OnCustomScriptedDamageTakenMod);

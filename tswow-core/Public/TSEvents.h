@@ -387,6 +387,8 @@ struct TSEvents
         EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, bool IsPet)
         EVENT(OnCustomScriptedAutoattackDamageTakenMod, TSPlayer player, TSUnit attacker, TSMutableNumber<float> TakenTotalMod, TSMutableNumber<uint32> Damage)
 
+        EVENT(ScriptedArmorPenMod, TSPlayer player, TSUnit against, TSMutableNumber<float> arpPct)
+
         EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
         EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)
         EVENT(OnRunesSpent, TSPlayer, TSNumber<uint8>)

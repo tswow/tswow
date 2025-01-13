@@ -96,6 +96,7 @@ public:
 	bool InBG();
 	bool CanBlock();
 	bool CanParry();
+	void UnsummonPet();
 	TSNumber<uint8> GetSpecsCount(uint32 entry, uint32 mapid, uint32 zone);
 	TSNumber<uint32> GetActiveSpec();
 	TSNumber<uint32> GetPhaseMaskForSpawn();

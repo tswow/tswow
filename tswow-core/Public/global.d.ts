@@ -776,6 +776,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      */
     CanParry() : bool
 
+    UnsummonPet() : void
+
     /**
      * Returns the amount of available specs the [Player] currently has
      *
@@ -8303,6 +8305,8 @@ declare namespace _hidden {
          ) => void)
 
         OnSuccessfulInterrupt(callback: (player: TSPlayer, interrupted: TSUnit, spell: TSSpell) => void);
+        
+        ScriptedArmorPenMod(callback: (player: TSPlayer, against: TSUnit, arpPct: TSMutableNumber<float>) => void);
         
         OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
         OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, TakenTotalMod: TSMutableNumber<float>, IsPet: bool) => void);

@@ -60,6 +60,7 @@
 #include "GossipDef.h"
 #include "Mail.h"
 #include "ObjectMgr.h"
+#include "Pet.h"
 #include "DBCStructure.h"
 #include "LFG.h"
 
@@ -723,6 +724,15 @@ bool TSPlayer::CanBlock()
 bool TSPlayer::CanParry()
 {
     return player->CanParry();
+}
+
+void TSPlayer::UnsummonPet() {
+    std::vector<Unit*> controlled;
+    for (Unit::ControlList::iterator itr = player->m_Controlled.begin(); itr != player->m_Controlled.end(); ++itr)
+        if ((*itr)->IsAlive())
+            controlled.push_back(*itr);
+    for (std::vector<Unit*>::iterator itr = controlled.begin(); itr != controlled.end(); ++itr)
+        ((Minion*)*itr)->UnSummon();
 }
 
 /*int TSPlayer::HasReceivedQuestReward(lua_State* L, Player* player)
