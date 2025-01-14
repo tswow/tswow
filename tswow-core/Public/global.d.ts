@@ -7872,6 +7872,8 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetTalentCost(): TSNumber<uint32>
     GetAllEffectsMechanicMask(): TSNumber<uint32>
     GetMaxTicks(caster: TSWorldObject): TSNumber<uint32> 
+    GetDuration(): TSNumber<int32>
+    GetMaxDuration(): TSNumber<int32>
 }
 
 declare class TSSpellEffectInfo {

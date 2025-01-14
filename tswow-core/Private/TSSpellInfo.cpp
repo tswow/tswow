@@ -353,6 +353,16 @@ TSNumber<uint32> TSSpellInfo::GetTargets()
     return info->Targets;
 }
 
+TSNumber<int32> TSSpellInfo::GetDuration()
+{
+    return info->GetDuration();
+}
+
+TSNumber<int32> TSSpellInfo::GetMaxDuration()
+{
+    return info->GetMaxDuration();
+}
+
 TSNumber<uint32> TSSpellInfo::GetAllEffectsMechanicMask()
 {
     return info->GetAllEffectsMechanicMask();

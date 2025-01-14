@@ -133,6 +133,9 @@ public:
     TSEntity * GetData();
     TSNumber<uint32> GetAllEffectsMechanicMask();
     TSNumber<uint32> GetMaxTicks(TSUnit caster);
+    
+    TSNumber<int32> GetDuration();
+    TSNumber<int32> GetMaxDuration();
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);
