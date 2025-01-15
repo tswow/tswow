@@ -330,4 +330,15 @@ void TSLua::load_player_methods(sol::state& state)
             return player.SendMail(senderType,from,subject,body);
         }
     ));
+
+
+
+    LUA_FIELD(ts_player, TSPlayer, HasRunes);
+    
+    LUA_FIELD(ts_player, TSPlayer, SetBaseRune);
+    LUA_FIELD(ts_player, TSPlayer, RestoreBaseRune);
+    LUA_FIELD(ts_player, TSPlayer, ConvertRune);
+    LUA_FIELD(ts_player, TSPlayer, SetRuneCooldown);
+    LUA_FIELD(ts_player, TSPlayer, ResyncRunes);
+
 }
