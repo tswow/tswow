@@ -8352,7 +8352,7 @@ declare namespace _hidden {
         CanRoll(callback: (Player: TSPlayer, Source: TSNumber<uint32>, CanRoll: TSMutable<boolean,boolean>) => void)
         
         ScaleRegenByHaste(callback: (Player: TSPlayer, RegenAmount: TSMutableNumber<float>) => void)
-        OnUpdateHasteRating(callback: (Player: TSPlayer, Rating: TSMutableNumber<float>, BonusRating: TSMutableNumber<float>, OldRating: TSNumber<float>, NewPct: TSMutableNumber<float>, OldPct: TSMutableNumber<float>) => void)
+        OnUpdateHasteRating(callback: (Player: TSPlayer, Rating: TSNumber<float>, BonusRating: TSMutableNumber<float>, OldRating: TSNumber<float>, NewPct: TSMutableNumber<float>, OldPct: TSMutableNumber<float>) => void)
         LoadPresetAmmo(callback: (Player: TSPlayer, Weapon: TSItemTemplate, AmmoId: TSMutableNumber<uint32>) => void)
     }
 
