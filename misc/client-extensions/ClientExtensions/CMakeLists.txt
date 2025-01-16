@@ -27,7 +27,6 @@ SET(CLIENT_EXTENSIONS_H
     ClientArguments.h
     ClientNetwork.h
     ClientMPQ.h
-    ClientDBCLoader.h
     FSRoot.h
     lua.hpp
 )
@@ -43,7 +42,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientMisc.cpp
-    ClientDBCLoader.cpp)
+)
 
 SET(CLIENT_EXTENSIONS_LUA
     ClientNetwork.lua
