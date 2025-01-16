@@ -699,7 +699,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum value:                                               336 */
     get MOD_AUTOATTACK_DAMAGE_PCT()                 { return this.value(336, x=>x) }
     /** Enum value:                                               336 */
-    get MOD_SCHOOL_MASK_DAMAGE_VS_CASTER()          { return this.value(336, x=>x) }
+    get MOD_SCHOOL_MASK_DAMAGE_VS_CASTER()          { return this.value(337, x=>x) }
     /** Enum value:                                               338 */
     get AREA_TRIGGER()                              { return this.value(338, x=>x) }
     /** Enum value:                                               339 */
