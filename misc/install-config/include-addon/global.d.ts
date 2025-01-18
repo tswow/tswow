@@ -12499,9 +12499,35 @@ declare namespace WoWAPI {
 
     type UIDropdownInfo = {
         text: string,
+        icon?: string,
+        value?: any,
         func?: () => void,
-        checked: boolean
+        arg1?: any,
+        arg2?: any,
+        isTitle?: boolean,
+        disabled?: boolean,
+        checked?: boolean,
+        hasArrow?: boolean,
+        hasColorSwatch?: boolean,
+        r?: number,
+        g?: number,
+        b?: number,
+        colorCode?: string,
+        swatchFunc?: () => void,
+        hasOpacity?: boolean,
+        opacity?: number,
+        opacityFunc?: () => void,
+        cancelFunc?: () => void,
+        notClickable?: boolean,
+        notCheckable?: boolean,
+        keepShownOnClick?: boolean,
+        tooltipTitle?: string,
+        tooltipText?: string,
+        justifyH?: WoWAPI.HorizontalAlign,
+        menuList?: object
     };
+
+    type UIDropDownMenuDisplayMode = "" | "MENU";
 
     /**
      * The Frame type
@@ -13967,9 +13993,10 @@ declare function UIDropDownMenu_SetText(dropdown: WoWAPI.Frame, text: string): v
  * initialize the given dropdown frame
  *
  * @param dropdown the dropdown frame
- * @param callback the initializer function
+ * @param initFunc the initializer function
+ * @param displayMode if "MENU", the visual elements of dropDown will be hidden and the menu, when shown, will be styled as a context menu rather than a dropdown list
  */
-declare function UIDropDownMenu_Initialize(dropdown: WoWAPI.Frame, callback: (self: WoWAPI.Frame, level: number, menuList: number) => void): void;
+declare function UIDropDownMenu_Initialize(dropdown: WoWAPI.Frame, initFunc: (self: WoWAPI.Frame, level: number, menuList: number) => void, displayMode?: WoWAPI.UIDropDownMenuDisplayMode): void;
 
 /**
  * create an info object for a dropdown element
@@ -13980,8 +14007,24 @@ declare function UIDropDownMenu_CreateInfo(): WoWAPI.UIDropdownInfo;
  * add the given info object to the current inizialized dropdown frame
  *
  * @param info the info to add
+ * @param level nesting level to which the menu item should be added. If 1, the menu item will be added to the outer-most menu level; 2 will add it to the first open sub-menu, 3 to the second open sub-menu, etc.
  */
-declare function UIDropDownMenu_AddButton(info: WoWAPI.UIDropdownInfo): void;
+declare function UIDropDownMenu_AddButton(info: WoWAPI.UIDropdownInfo, level?: number): void;
+
+/**
+ * Toggles a dropdown menu
+ * 
+ * @param level Nesting level of this dropdown
+ * @param value Custom value for the dropdown item, if 'level' > 1
+ * @param dropDownFrame The frame object to toggle, not its string name. This object should be derived from 'UIDropDownMenuTemplate'
+ * @param anchorName Sets the 'relativeTo' member of this frame
+ * @param xOffset Sets the x offset
+ * @param yOffset Sets the y offset
+ * @param menuList Automatically Passed to the to 'menuList' on the API UIDropDownMenu_Initialize function, and set to 'menuList' member on the dropDownFrame frame table
+ * @param button Drop down menu anchor point. Default is 'dropDownFrame' or successive parent dropdown menu button
+ * @param autoHideDelay Seconds to delay before hiding an inactive menu. Default is 2.
+ */
+declare function ToggleDropDownMenu(level: number, value: any, dropDownFrame: WoWAPI.Frame, anchorName?: string | WoWAPI.Frame, xOffset?: number, yOffset?: number, menuList?: object, button?: object, autoHideDelay?: number): void;
 
 declare function PlaySoundFile(path:string): void;
 declare function PlaySound(soundIndex:number): void;
