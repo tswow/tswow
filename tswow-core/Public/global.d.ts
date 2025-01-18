@@ -8888,19 +8888,21 @@ declare namespace _hidden {
         )=>void)
         OnUpdateAttackPowerDamage(callback:(
               creature: TSCreature
-            , base: TSMutableNumber<float> /*base*/
-            , mod: TSMutableNumber<float> /*mod*/
-            , multiplier: TSMutableNumber<float> /*multiplier*/
-            , isGuardian: bool /*isGuardian*/
-            , ranged: bool /*ranged*/
+            , base: TSMutableNumber<float>
+            , pos_mod: TSMutableNumber<float>
+            , neg_mod: TSMutableNumber<float>
+            , multiplier: TSMutableNumber<float>
+            , isGuardian: bool
+            , ranged: bool
         )=>void)
         OnUpdateAttackPowerDamage(id: EventID, callback:(
               creature: TSCreature
-            , base: TSMutableNumber<float> /*base*/
-            , mod: TSMutableNumber<float> /*mod*/
-            , multiplier: TSMutableNumber<float> /*multiplier*/
-            , isGuardian: bool /*isGuardian*/
-            , ranged: bool /*ranged*/
+            , base: TSMutableNumber<float>
+            , pos_mod: TSMutableNumber<float>
+            , neg_mod: TSMutableNumber<float>
+            , multiplier: TSMutableNumber<float>
+            , isGuardian: bool
+            , ranged: bool
         )=>void)
         OnUpdateDamagePhysical(callback: (
               creature: TSCreature

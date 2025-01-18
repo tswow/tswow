@@ -669,7 +669,8 @@ struct TSEvents
         ID_EVENT(OnUpdateAttackPowerDamage
             , TSCreature
             , TSMutableNumber<float> base
-            , TSMutableNumber<float> mod
+            , TSMutableNumber<float> pos_mod
+            , TSMutableNumber<float> neg_mod
             , TSMutableNumber<float> multiplier
             , bool isGuardian
             , bool ranged
