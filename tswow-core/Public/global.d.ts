@@ -9231,6 +9231,17 @@ declare namespace _hidden {
             , attackType: WeaponAttackType
         )=>void)
 
+        OnCalcMeleeSpellOutcome(callback: (
+            attacker: TSUnit
+          , victim: TSUnit
+          , missChance: TSMutableNumber<float>
+          , resistChance: TSMutableNumber<float>
+          , dodgeChance: TSMutableNumber<float>
+          , blockChance : TSMutableNumber<float>
+          , parryChance: TSMutableNumber<float>
+          , attackType: WeaponAttackType
+      )=>void)
+
         OnCalcThreatEarly(callback: (
               owner: TSUnit
             , target: TSUnit

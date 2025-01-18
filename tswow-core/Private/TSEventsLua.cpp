@@ -159,6 +159,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageLate);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMeleeCrit);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMeleeOutcome);
+    LUA_HANDLE(unit_events, UnitEvents, OnCalcMeleeSpellOutcome);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcThreatEarly);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcThreatLate);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcScaleThreat);

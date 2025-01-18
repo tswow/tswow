@@ -447,6 +447,16 @@ struct TSEvents
             , TSMutableNumber<float>
             , TSNumber<uint32>
         );
+        EVENT(OnCalcMeleeSpellOutcome
+            , TSUnit
+            , TSUnit
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSMutableNumber<float>
+            , TSNumber<uint32>
+        );
         EVENT(OnCalcThreatEarly
             , TSUnit
             , TSUnit
