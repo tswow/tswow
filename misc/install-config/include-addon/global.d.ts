@@ -13313,6 +13313,13 @@ declare namespace WoWAPI {
         SetMovable(movable: boolean): void;
 
         /**
+         * Sets whether a frame's children can be clipped
+         * @param clipsChildren true to allow clipping for children, false to disallow
+         * @see https://warcraft.wiki.gg/wiki/API_Frame_SetClipsChildren
+         */
+        SetClipsChildren(clipsChildren: boolean): void;
+
+        /**
          * Starts moving the frame-inheriting widget as the user moves the mouse cursor
          * @see https://wow.gamepedia.com/API_Frame_StartMoving
          */
