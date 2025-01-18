@@ -272,10 +272,6 @@ export function ClientPatches(
                 // Aleist3r: this needs some more testing, it probably breaks some spell visual thing but for now it's good enough
                 [0x32A36C, [0xEB]]
             ]),
-            patch('character-creation-crashfix', [
-                [0xE14D6, [0xEB, 0x1F, 0x90, 0x90, 0x90, 0x90]],
-                [0xE0967, [0xEB, 0x1C, 0x90, 0x90, 0x90, 0x90]]
-            ])
             /*patch('additional-sections', [
                 // Aleist3r: reworks basically unused certificate space to contain 3 additional sections being equivalent to .text, .rdata and .data
                 // also fixes some values that are apparently incorrectly calculated (according to CFF Explorer)

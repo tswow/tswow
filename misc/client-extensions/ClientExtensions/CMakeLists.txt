@@ -29,6 +29,9 @@ SET(CLIENT_EXTENSIONS_H
     ClientMPQ.h
     FSRoot.h
     lua.hpp
+    ClientExtensions.h
+    Characters/ClientCharacterFixes.h
+    Characters/ClientCharacterDefines.h
 )
 
 SET(CLIENT_EXTENSIONS_CPP
@@ -41,7 +44,8 @@ SET(CLIENT_EXTENSIONS_CPP
     TestModule.cpp
     ClientNetwork.cpp
     ClientMPQ.cpp
-    ClientMisc.cpp
+    ClientExtensions.cpp
+    Characters/ClientCharacterFixes.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA
