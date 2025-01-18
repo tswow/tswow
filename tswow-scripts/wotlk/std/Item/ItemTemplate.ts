@@ -149,7 +149,12 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         return TotemCategoryRegistry.ref(this, this.row.TotemCategory);
     }
     get Sheath() {
-        return makeEnumCell(ItemSheath,this, this.row.sheath);
+        return makeEnumCell(ItemSheath,this
+            , new MulticastCell(this, [
+                  this.row.sheath
+                , this.dbc.SheatheType
+            ])
+        );
     }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
