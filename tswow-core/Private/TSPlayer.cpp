@@ -4152,22 +4152,29 @@ void TSPlayer::LSendShowMailBox1(TSNumber<uint32> guid)
     return SendShowMailBox(guid);
 }
 
-
-
-void TSPlayer::SetBaseRune(uint8 index, uint8 runeType) {
+void TSPlayer::SetBaseRune(uint8 index, uint8 runeType)
+{
     RuneType tcRuneType = static_cast<RuneType>(runeType);
     player->SetBaseRune(index, tcRuneType);
 }
-void TSPlayer::RestoreBaseRune(uint8 index) {
+
+void TSPlayer::RestoreBaseRune(uint8 index)
+{
     player->RestoreBaseRune(index);
 }
-void TSPlayer::ConvertRune(uint8 index, uint8 runeType) {
+
+void TSPlayer::ConvertRune(uint8 index, uint8 runeType)
+{
     RuneType tcRuneType = static_cast<RuneType>(runeType);
     player->ConvertRune(index, tcRuneType);
 }
-void TSPlayer::SetRuneCooldown(uint8 index, uint32 cooldown, bool casted) {
+
+void TSPlayer::SetRuneCooldown(uint8 index, uint32 cooldown, bool casted)
+{
     player->SetRuneCooldown(index, cooldown, casted);
 }
-void TSPlayer::ResyncRunes() {
+
+void TSPlayer::ResyncRunes()
+{
     player->ResyncRunes();
 }

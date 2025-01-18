@@ -361,9 +361,7 @@ public:
 
 	TSOutfit GetOutfitCopy(uint32_t settings = Outfit::EVERYTHING, int32_t race = -1, int32_t gender = -1);
 
-
-
-    void SetBaseRune(uint8 index, uint8 runeType);
+	void SetBaseRune(uint8 index, uint8 runeType);
 	void RestoreBaseRune(uint8 index);
 	void ConvertRune(uint8 index, uint8 runeType);
 	void SetRuneCooldown(uint8 index, uint32 cooldown, bool casted);

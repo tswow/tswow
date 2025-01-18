@@ -2263,8 +2263,6 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     GetFace(): TSNumber<uint8>;
     SetFace(face: uint8);
 
-
-
     SetBaseRune(index: uint8, runeType: uint8): void;
     RestoreBaseRune(index: uint8): void;
     ConvertRune(index: uint8, runeType: uint8): void;
