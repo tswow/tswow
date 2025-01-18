@@ -45,8 +45,8 @@ export class ItemPrice extends CellSystem<ItemTemplate> {
         if(sellPrice > buyPrice) {
             throw new Error(`Tried to set an item price where sellPrice > buyPrice, this will lead to exploits. Use setUnsafe if you really must.`)
         }
-        else if(sellPrice > (buyPrice * 0.8) && buyPrice != 0 && sellPrice != 0 && buyPrice != 1 && sellPrice != 1) {
-            throw new Error(`Tried to set an item price where sellPrice > buyPrice with maximum discount (20%), this will lead to exploits. Use setUnsafe if you really must.`)
+        else if(sellPrice > (buyPrice * 0.75) && buyPrice != 0 && sellPrice != 0 && buyPrice != 1 && sellPrice != 1) {
+            throw new Error(`Tried to set an item price where sellPrice > buyPrice with maximum discount (25%), this will lead to exploits. Use setUnsafe if you really must.`)
         }
         const sell = sellPrice === -1 ? buyPrice / 4 : sellPrice
         return this.setUnsafe(
