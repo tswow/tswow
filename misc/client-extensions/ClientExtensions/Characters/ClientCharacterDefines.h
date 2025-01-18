@@ -3,7 +3,7 @@
 
 typedef std::string string;
 
-static uint32_t memoryTable[128];
+static uint32_t memoryTable[128] = { 0 };
 
 static uint32_t dummy = 0;
 
@@ -23,7 +23,7 @@ static char* sVulperaN = "Vulpera_Neutral";
 static char* sZandalari = "ZandalariTroll";
 
 static uint32_t raceNameTable[32] = {
-	0,
+	0,        // string pointers
 	0x9E4E2C, // Human
 	0x9E4E28, // Orc
 	0x9E4E20, // Dwarf
