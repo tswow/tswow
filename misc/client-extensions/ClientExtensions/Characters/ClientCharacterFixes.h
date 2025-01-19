@@ -5,6 +5,6 @@ class ClientExtensions;
 
 class CharacterFixes {
 private:
-	static void CharacterCreationFixes();
-	friend class ClientExtensions;
+    static void CharacterCreationFixes();
+    friend class ClientExtensions;
 };

@@ -3,6 +3,6 @@
 #include "Logger.h"
 
 void ClientExtensions::initialize() {
-	CharacterFixes::CharacterCreationFixes();
-	LOG_INFO << "Character creation fixes applied";
+    CharacterFixes::CharacterCreationFixes();
+    LOG_INFO << "Character creation fixes applied";
 }
