@@ -12978,6 +12978,13 @@ declare namespace WoWAPI {
          * "MOD" - Ignores the alpha channel, multiplying the image against the back-ground.
          */
         SetBlendMode(mode: WoWAPI.BlendMode): void;
+
+        /**
+         * 
+         * @param desaturated 1 to make the image grayscale, 0/nil for the original colors
+         * @returns shaderSupported - returns nil if desaturation isn't supported by the user's graphics card
+         */
+        SetDesaturated(desaturated: number): boolean;
     }
 
     /**
