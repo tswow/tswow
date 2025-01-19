@@ -13371,6 +13371,16 @@ declare namespace WoWAPI {
          */
         SetFrameLevel(level: number): void;
 
+        /**
+         * Modifies the size of the frame's hit rectangle - the area in which clicks are sent to the frame in question
+         * @param left pixels to move the frame's left hit edge to the right by
+         * @param right pixels to move the frame's right hit edge to the left by
+         * @param top pixels to move the frame's top hit edge down by
+         * @param bottom pixels to move the frame's bottom hit edge up by
+         * @see https://wowpedia.fandom.com/wiki/API_Frame_SetHitRectInsets
+         */
+        SetHitRectInsets(left: number, right: number, top: number, bottom: number): void;
+
         RegisterForDrag(button: WoWAPI.MouseButton): void;
 
         SetID(id: number): void;
