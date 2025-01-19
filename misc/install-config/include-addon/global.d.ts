@@ -12108,6 +12108,11 @@ declare namespace WoWAPI {
         GetItem(): LuaMultiReturn<[string, ItemLink]>;
 
         /**
+         * Get the text for the Tooltip
+         */
+        GetText(): string;
+
+        /**
          * unknown
          */
         GetMinimumWidth(): Unknown;
@@ -12345,6 +12350,13 @@ declare namespace WoWAPI {
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_SetSpell
          */
         SetSpell(spellBookId: number, bookType: "pet" | "spell"): void;
+
+        /**
+         * Shows the tooltip for the specified spell
+         * @param spellID the id of the spell
+         * @see https://wowpedia.fandom.com/wiki/UIOBJECT_GameTooltip
+         */
+        SetSpellByID(spellID: number): void;
 
         /**
          * Shows the tooltip for the specified talent
