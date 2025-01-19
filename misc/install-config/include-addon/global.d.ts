@@ -13346,6 +13346,13 @@ declare namespace WoWAPI {
         SetClipsChildren(clipsChildren: boolean): void;
 
         /**
+         * Sets whether a frame's text should wrap
+         * @param wrap true to allow text wrapping for children, false to disallow
+         * @see https://warcraft.wiki.gg/wiki/API_FontString_SetWordWrap
+         */
+        SetWordWrap(wrap: boolean): void;
+
+        /**
          * Starts moving the frame-inheriting widget as the user moves the mouse cursor
          * @see https://wow.gamepedia.com/API_Frame_StartMoving
          */
