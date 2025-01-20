@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include "ClientArguments.h"
 #include "ClientNetwork.h"
+#include "ClientExtensions.h"
 #include "scripts.generated.h"
 
 class Main
@@ -17,6 +18,7 @@ public:
         __init_scripts();
         ClientNetwork::initialize();
         ClientArguments::initialize(GetCommandLineA());
+        ClientExtensions::initialize();
         ClientDetours::Apply();
     }
 };
