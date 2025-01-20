@@ -3,6 +3,20 @@
 
 #include "ClientMacros.h"
 
+#include <functional>
+
+enum ObjectTypeMask : uint32_t {
+    TYPEMASK_OBJECT         = 0x0001,
+    TYPEMASK_ITEM           = 0x0002,
+    TYPEMASK_CONTAINER      = 0x0004,
+    TYPEMASK_UNIT           = 0x0008,
+    TYPEMASK_PLAYER         = 0x0010,
+    TYPEMASK_GAMEOBJECT     = 0x0020,
+    TYPEMASK_DYNAMICOBJECT  = 0x0040,
+    TYPEMASK_CORPSE         = 0x0080,
+};
+
+// functions
 CLIENT_FUNCTION(
     SFileOpenFile
     , 0x00424F80
@@ -49,3 +63,6 @@ CLIENT_FUNCTION(
         HANDLE a1
         )
 )
+
+CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, unsigned long long, ())
+CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (unsigned long long, unsigned int))

@@ -33,6 +33,8 @@ SET(CLIENT_EXTENSIONS_H
     ClientExtensions.h
     Characters/ClientCharacterFixes.h
     Characters/ClientCharacterDefines.h
+    Tooltip/ClientTooltipExtensions.h
+    Tooltip/ClientTooltipDefines.h
 )
 
 SET(CLIENT_EXTENSIONS_CPP
@@ -47,6 +49,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientMPQ.cpp
     ClientExtensions.cpp
     Characters/ClientCharacterFixes.cpp
+    Tooltip/ClientTooltipExtensions.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA
