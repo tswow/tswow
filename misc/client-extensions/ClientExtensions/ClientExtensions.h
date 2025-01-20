@@ -2,8 +2,6 @@
 
 #include "Characters/ClientCharacterFixes.h"
 
-class Main;
-
 class ClientExtensions {
 private:
     static void initialize();
