@@ -12108,6 +12108,11 @@ declare namespace WoWAPI {
         GetItem(): LuaMultiReturn<[string, ItemLink]>;
 
         /**
+         * Get the text for the Tooltip
+         */
+        GetText(): string;
+
+        /**
          * unknown
          */
         GetMinimumWidth(): Unknown;
@@ -12345,6 +12350,13 @@ declare namespace WoWAPI {
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_SetSpell
          */
         SetSpell(spellBookId: number, bookType: "pet" | "spell"): void;
+
+        /**
+         * Shows the tooltip for the specified spell
+         * @param spellID the id of the spell
+         * @see https://wowpedia.fandom.com/wiki/UIOBJECT_GameTooltip
+         */
+        SetSpellByID(spellID: number): void;
 
         /**
          * Shows the tooltip for the specified talent
@@ -12978,6 +12990,13 @@ declare namespace WoWAPI {
          * "MOD" - Ignores the alpha channel, multiplying the image against the back-ground.
          */
         SetBlendMode(mode: WoWAPI.BlendMode): void;
+
+        /**
+         * 
+         * @param desaturated 1 to make the image grayscale, 0/nil for the original colors
+         * @returns shaderSupported - returns nil if desaturation isn't supported by the user's graphics card
+         */
+        SetDesaturated(desaturated: number): boolean;
     }
 
     /**
@@ -13370,6 +13389,16 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
+
+        /**
+         * Modifies the size of the frame's hit rectangle - the area in which clicks are sent to the frame in question
+         * @param left pixels to move the frame's left hit edge to the right by
+         * @param right pixels to move the frame's right hit edge to the left by
+         * @param top pixels to move the frame's top hit edge down by
+         * @param bottom pixels to move the frame's bottom hit edge up by
+         * @see https://wowpedia.fandom.com/wiki/API_Frame_SetHitRectInsets
+         */
+        SetHitRectInsets(left: number, right: number, top: number, bottom: number): void;
 
         RegisterForDrag(button: WoWAPI.MouseButton): void;
 
