@@ -17,9 +17,33 @@ void CharacterFixes::CharacterCreationFixes() {
 
     // Name table
     // 0x4CDA43 - address of table where pointers to race name strings are stored
+    SetNewRaceNamePointerTable();
     VirtualProtect((LPVOID)0x4CDA43, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
     *(uint32_t*)0x4CDA43 = reinterpret_cast<uint32_t>(&raceNameTable);
     VirtualProtect((LPVOID)0x4CDA43, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
 
+    return;
+}
+
+void CharacterFixes::SetNewRaceNamePointerTable() {
+    memcpy(&raceNameTable, (const void*)0xB24180, 0x30);
+    raceNameTable[12] = reinterpret_cast<uint32_t>(&"Worgen");
+    raceNameTable[13] = reinterpret_cast<uint32_t>(&"Naga");
+    raceNameTable[14] = reinterpret_cast<uint32_t>(&"Pandaren_Alliance");
+    raceNameTable[15] = reinterpret_cast<uint32_t>(&"Queldo");
+    raceNameTable[16] = reinterpret_cast<uint32_t>(&"Pandaren_Horde ");
+    raceNameTable[17] = reinterpret_cast<uint32_t>(&"Nightborne");
+    raceNameTable[18] = reinterpret_cast<uint32_t>(&"VoidElf");
+    raceNameTable[19] = reinterpret_cast<uint32_t>(&"Vulpera_Alliance");
+    raceNameTable[20] = reinterpret_cast<uint32_t>(&"Vulpera_Horde");
+    raceNameTable[21] = reinterpret_cast<uint32_t>(&"Vulpera_Neutral");
+    raceNameTable[22] = reinterpret_cast<uint32_t>(&"Pandaren_Neutral");
+    raceNameTable[23] = reinterpret_cast<uint32_t>(&"ZandalariTroll");
+    raceNameTable[24] = reinterpret_cast<uint32_t>(&"Lightforged");
+    raceNameTable[25] = reinterpret_cast<uint32_t>(&"Eredar");
+
+    for (uint8_t i = 26; i < 32; i++)
+        raceNameTable[i] = reinterpret_cast<uint32_t>(&dummy);
+    
     return;
 }
