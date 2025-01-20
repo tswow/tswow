@@ -45,7 +45,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
-    CHaracters/CharacterFixes.cpp
+    Characters/CharacterFixes.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA
