@@ -33,7 +33,7 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
     uint32_t result = 0;
 
     if (spellVariable < SPELLVARIABLE_hp)
-        result = GetVariableValue(a0, a1, spellVariable, a3, spell, a5, a6, a7, a8, a9);
+        result = CFormula__GetVariableValue(a0, a1, spellVariable, a3, spell, a5, a6, a7, a8, a9);
     else {
         float value = 0.f;
         uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER));
@@ -60,7 +60,64 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
                 case SPELLVARIABLE_PPL3:
                     value = *((float*)(spell + 316));
                     break;
+                case SPELLVARIABLE_power1:
+                    // current mana
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 76));
+                    break;
+                case SPELLVARIABLE_power2:
+                    // current rage
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 80));
+                    break;
+                case SPELLVARIABLE_power3:
+                    // current focus
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 84));
+                    break;
+                case SPELLVARIABLE_power4:
+                    // current energy
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 88));
+                    break;
+                case SPELLVARIABLE_power5:
+                    // current happiness
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 92));
+                    break;
+                case SPELLVARIABLE_power6:
+                    // current runes
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 96));
+                    break;
+                case SPELLVARIABLE_power7:
+                    // current runic power
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 100));
+                    break;
+                case SPELLVARIABLE_POWER1:
+                    // max mana
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 108));
+                    break;
+                case SPELLVARIABLE_POWER2:
+                    // max rage
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 112));
+                    break;
+                case SPELLVARIABLE_POWER3:
+                    // max focus
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 116));
+                    break;
+                case SPELLVARIABLE_POWER4:
+                    // max energy
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 120));
+                    break;
+                case SPELLVARIABLE_POWER5:
+                    // max happiness
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 124));
+                    break;
+                case SPELLVARIABLE_POWER6:
+                    // max runes
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 128));
+                    break;
+                case SPELLVARIABLE_POWER7:
+                    // max runic power
+                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 132));
+                    break;
                 default:
+                    a1 = 1;
                     break;
             }
         }
@@ -82,6 +139,20 @@ void TooltipExtensions::SetNewVariablePointers() {
     spellVariables[145] = reinterpret_cast<uint32_t>(&"PPL1");
     spellVariables[146] = reinterpret_cast<uint32_t>(&"PPL2");
     spellVariables[147] = reinterpret_cast<uint32_t>(&"PPL3");
+    spellVariables[148] = reinterpret_cast<uint32_t>(&"power1");
+    spellVariables[149] = reinterpret_cast<uint32_t>(&"power2");
+    spellVariables[150] = reinterpret_cast<uint32_t>(&"power3");
+    spellVariables[151] = reinterpret_cast<uint32_t>(&"power4");
+    spellVariables[152] = reinterpret_cast<uint32_t>(&"power5");
+    spellVariables[153] = reinterpret_cast<uint32_t>(&"power6");
+    spellVariables[154] = reinterpret_cast<uint32_t>(&"power7");
+    spellVariables[155] = reinterpret_cast<uint32_t>(&"POWER1");
+    spellVariables[156] = reinterpret_cast<uint32_t>(&"POWER2");
+    spellVariables[157] = reinterpret_cast<uint32_t>(&"POWER3");
+    spellVariables[158] = reinterpret_cast<uint32_t>(&"POWER4");
+    spellVariables[159] = reinterpret_cast<uint32_t>(&"POWER5");
+    spellVariables[160] = reinterpret_cast<uint32_t>(&"POWER6");
+    spellVariables[161] = reinterpret_cast<uint32_t>(&"POWER7");
 
     return;
 }

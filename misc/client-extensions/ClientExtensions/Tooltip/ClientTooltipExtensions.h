@@ -1,7 +1,7 @@
 #pragma once
 #include "ClientTooltipDefines.h"
 
-CLIENT_FUNCTION(GetVariableValue, 0x5782D0, __fastcall, int, (uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+CLIENT_FUNCTION(CFormula__GetVariableValue, 0x5782D0, __fastcall, int, (uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 
 class TooltipExtensions {
 private:
