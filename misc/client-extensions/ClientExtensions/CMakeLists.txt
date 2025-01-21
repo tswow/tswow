@@ -20,6 +20,7 @@ target_include_directories(detours PUBLIC ${detours_SOURCE_DIR})
 # ClientExtensions
 FILE(GLOB ClientExtenisons ${CMAKE_CURRENT_SOURCE_DIR}/*)
 SET(CLIENT_EXTENSIONS_H
+    SharedDefines.h
     Logger.h
     ClientDetours.h
     ClientMacros.h
@@ -29,6 +30,11 @@ SET(CLIENT_EXTENSIONS_H
     ClientMPQ.h
     FSRoot.h
     lua.hpp
+    ClientExtensions.h
+    Characters/ClientCharacterFixes.h
+    Characters/ClientCharacterDefines.h
+    Tooltip/ClientTooltipExtensions.h
+    Tooltip/ClientTooltipDefines.h
 )
 
 SET(CLIENT_EXTENSIONS_CPP
@@ -41,7 +47,9 @@ SET(CLIENT_EXTENSIONS_CPP
     TestModule.cpp
     ClientNetwork.cpp
     ClientMPQ.cpp
-    ClientMisc.cpp
+    ClientExtensions.cpp
+    Characters/ClientCharacterFixes.cpp
+    Tooltip/ClientTooltipExtensions.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA

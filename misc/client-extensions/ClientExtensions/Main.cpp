@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include "ClientArguments.h"
 #include "ClientNetwork.h"
+#include "ClientExtensions.h"
 #include "scripts.generated.h"
 
 class Main
@@ -21,6 +22,8 @@ public:
         //some people get windows crashes, idk
         ClientArguments::initialize();
         LOG_INFO << "Client arguments initialized";
+        ClientExtensions::initialize();
+        LOG_INFO << "Client extensions initialized";
         ClientDetours::Apply();
         LOG_INFO << "Client detours applied";
     }
