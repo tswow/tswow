@@ -11,7 +11,7 @@ void CharacterFixes::CharacterCreationFixes() {
 
     for (uint8_t i = 0; i < patchedAddresses.size(); i++) {
         VirtualProtect((LPVOID)patchedAddresses[i], 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-        *(uint32_t*)patchedAddresses[i] = reinterpret_cast<uint32_t>(&memoryTable);
+        *reinterpret_cast<uint32_t*>(patchedAddresses[i]) = reinterpret_cast<uint32_t>(&memoryTable);
         VirtualProtect((LPVOID)patchedAddresses[i], 0x4, PAGE_EXECUTE_READ, &flOldProtect);
     }
 
@@ -19,7 +19,7 @@ void CharacterFixes::CharacterCreationFixes() {
     // 0x4CDA43 - address of table where pointers to race name strings are stored
     SetNewRaceNamePointerTable();
     VirtualProtect((LPVOID)0x4CDA43, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *(uint32_t*)0x4CDA43 = reinterpret_cast<uint32_t>(&raceNameTable);
+    *reinterpret_cast<uint32_t*>(0x4CDA43) = reinterpret_cast<uint32_t>(&raceNameTable);
     VirtualProtect((LPVOID)0x4CDA43, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
 
     return;

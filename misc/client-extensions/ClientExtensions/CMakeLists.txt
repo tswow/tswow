@@ -31,6 +31,7 @@ SET(CLIENT_EXTENSIONS_H
     FSRoot.h
     lua.hpp
     ClientExtensions.h
+    ClientDB.h
     Characters/ClientCharacterFixes.h
     Characters/ClientCharacterDefines.h
     Tooltip/ClientTooltipExtensions.h
@@ -48,6 +49,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
+    ClientDB.cpp
     Characters/ClientCharacterFixes.cpp
     Tooltip/ClientTooltipExtensions.cpp
 )
