@@ -8354,6 +8354,8 @@ declare namespace _hidden {
         ScaleRegenByHaste(callback: (Player: TSPlayer, RegenAmount: TSMutableNumber<float>) => void)
         OnUpdateHasteRating(callback: (Player: TSPlayer, Rating: TSNumber<float>, BonusRating: TSMutableNumber<float>, OldRating: TSNumber<float>, NewPct: TSMutableNumber<float>, OldPct: TSMutableNumber<float>) => void)
         LoadPresetAmmo(callback: (Player: TSPlayer, Weapon: TSItemTemplate, AmmoId: TSMutableNumber<uint32>) => void)
+
+        OnTempEnchant(callback: (Player: TSPlayer, EnchantId: TSNumber<uint32>) => void)
     }
 
     export class Account<T> {
