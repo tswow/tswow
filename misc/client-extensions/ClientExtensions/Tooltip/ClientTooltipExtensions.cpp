@@ -12,18 +12,18 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
 
     // change pointer to table with variables
     VirtualProtect((LPVOID)0x576B63, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *(uint32_t*)0x576B63 = reinterpret_cast<uint32_t>(&spellVariables);
+    *reinterpret_cast<uint32_t*>(0x576B63) = reinterpret_cast<uint32_t>(&spellVariables);
     VirtualProtect((LPVOID)0x576B63, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
     // update number of entries value
     VirtualProtect((LPVOID)0x576B7C, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *(uint32_t*)0x576B7C = (sizeof(spellVariables) / 4);
+    *reinterpret_cast<uint32_t*>(0x576B7C) = (sizeof(spellVariables) / 4);
     VirtualProtect((LPVOID)0x576B7C, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
     // copy table of pointers from address to spellVariables vector and add new entries
     memcpy(&spellVariables, (const void*)0xACE8F8, sizeof(uint32_t) * 140);
     SetNewVariablePointers();
     // change pointer of GetVariableTableValue to pointer to extended function
     VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *(uint32_t*)0x578E8B = (reinterpret_cast<uint32_t>(&GetVariableValueEx) - 0x578E8F);
+    *reinterpret_cast<uint32_t*>(0x578E8B) = (reinterpret_cast<uint32_t>(&GetVariableValueEx) - 0x578E8F);
     VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
 
     return;
@@ -41,80 +41,67 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
         if (ActivePlayer) {
             switch (spellVariable) {
                 case SPELLVARIABLE_hp:
-                    // $hp = current hp
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 72));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HP));
                     break;
                 case SPELLVARIABLE_HP:
-                    // $HP = max hp
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 104));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_HP));
                     break;
                 case SPELLVARIABLE_ppl1:
                 case SPELLVARIABLE_PPL1:
-                    value = *((float*)(spell + 308));
+                    // Real points per level, EFFECT_0
+                    value = *reinterpret_cast<float*>(spell + 308);
                     break;
                 case SPELLVARIABLE_ppl2:
                 case SPELLVARIABLE_PPL2:
-                    value = *((float*)(spell + 312));
+                    // Real points per level, EFFECT_1
+                    value = *reinterpret_cast<float*>(spell + 312);
                     break;
                 case SPELLVARIABLE_ppl3:
                 case SPELLVARIABLE_PPL3:
-                    value = *((float*)(spell + 316));
+                    // Real points per level, EFFECT_2
+                    value = *reinterpret_cast<float*>(spell + 316);
                     break;
                 case SPELLVARIABLE_power1:
-                    // current mana
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 76));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_MANA));
                     break;
                 case SPELLVARIABLE_power2:
-                    // current rage
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 80));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_RAGE));
                     break;
                 case SPELLVARIABLE_power3:
-                    // current focus
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 84));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_FOCUS));
                     break;
                 case SPELLVARIABLE_power4:
-                    // current energy
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 88));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_ENERGY));
                     break;
                 case SPELLVARIABLE_power5:
-                    // current happiness
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 92));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HAPPINESS));
                     break;
                 case SPELLVARIABLE_power6:
-                    // current runes
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 96));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_RUNES));
                     break;
                 case SPELLVARIABLE_power7:
-                    // current runic power
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 100));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_RUNIC_POWER));
                     break;
                 case SPELLVARIABLE_POWER1:
-                    // max mana
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 108));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_MANA));
                     break;
                 case SPELLVARIABLE_POWER2:
-                    // max rage
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 112));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_RAGE));
                     break;
                 case SPELLVARIABLE_POWER3:
-                    // max focus
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 116));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_FOCUS));
                     break;
                 case SPELLVARIABLE_POWER4:
-                    // max energy
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 120));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_ENERGY));
                     break;
                 case SPELLVARIABLE_POWER5:
-                    // max happiness
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 124));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_HAPPINESS));
                     break;
                 case SPELLVARIABLE_POWER6:
-                    // max runes
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 128));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_RUNES));
                     break;
                 case SPELLVARIABLE_POWER7:
-                    // max runic power
-                    value = static_cast<float>(*(int32_t*)(*(ActivePlayer + 52) + 132));
+                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_RUNIC_POWER));
                     break;
                 default:
                     a1 = 1;
@@ -123,8 +110,9 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
         }
 
         result = a3;
-        --*(uint32_t*)(a3 + 128);
-        *(float*)(a3 + 4 * *(uint32_t*)(a3 + 128)) = value;
+        uint32_t* offset = reinterpret_cast<uint32_t*>(a3 + 128);
+        --*offset;
+        *reinterpret_cast<float*>(a3 + 4 * *offset) = value;
     }
 
     return result;
