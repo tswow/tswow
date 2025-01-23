@@ -209,6 +209,7 @@ export namespace mysql {
                     `${ipaths.bin.mysql.mysqld_exe.get()}`
                     + ` --initialize`
                   //  + ` --log_syslog=0`
+                    + ` --verbose`
                     + ` --datadir=${ipaths.coredata.database.abs()}`);
             } catch(error) {
                 term.error('mysql',`Failed to start MySQL: ${error.message}`)
