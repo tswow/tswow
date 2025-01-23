@@ -267,6 +267,8 @@ void TSInstance::SetActiveCriteria(uint32 Criteria)
 void TSInstance::TriggerResetHook()
 {
     return m_script->TriggerResetHook();
+}
+
 TSNumber<uint32> TSInstance::GetInstanceData(uint32 id)
 {
     return m_script->GetData(id);

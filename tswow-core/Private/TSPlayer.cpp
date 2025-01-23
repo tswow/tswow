@@ -4272,6 +4272,8 @@ float TSPlayer::GetRatingBonusValue(uint32 Rating) {
 
 float TSPlayer::GetAttackSpeed(uint8 AttackType) {
     return player->m_modAttackSpeedPct[AttackType];
+}
+
 void TSPlayer::SetBaseRune(uint8 index, uint8 runeType)
 {
     RuneType tcRuneType = static_cast<RuneType>(runeType);
