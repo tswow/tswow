@@ -118,6 +118,6 @@ class TC_GAME_API TSDamageInfo {
 };
 
 LUA_PTR_TYPE(TSDamageInfo)
-LUA_PTR_TYPE(TSHealInfo)
+//LUA_PTR_TYPE(TSHealInfo)
 LUA_PTR_TYPE(TSSpellDamageInfo)
 LUA_PTR_TYPE(TSMeleeDamageInfo)
