@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSLua.h"
 
 class TC_GAME_API TSQuest {
 public:
@@ -40,3 +41,5 @@ public:
     TSNumber<uint32> GetFlags();
     TSNumber<uint32> GetType();
 };
+
+LUA_PTR_TYPE(TSQuest)

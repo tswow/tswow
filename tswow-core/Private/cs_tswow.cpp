@@ -11,8 +11,6 @@
 
 #if TRINITY
 using namespace Trinity::ChatCommands;
-#elif AZEROTHCORE
-using namespace Acore::ChatCommands;
 #endif
 
 #if TRINITY_COMPILER == TRINITY_COMPILER_GNU
@@ -81,13 +79,6 @@ public:
             { "id", Id, rbac::RBAC_PERM_ID, Console::No},
             { "test", testTable}
         };
-#elif AZEROTHCORE
-        static std::vector<ChatCommand> commandTable = {
-            { "at", At, SEC_GAMEMASTER, Console::No},
-            { "clearat", ClearAt, SEC_GAMEMASTER, Console::No},
-            { "id", Id, SEC_GAMEMASTER, Console::No},
-        };
-
 #endif
         return commandTable;
     }

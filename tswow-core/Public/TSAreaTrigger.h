@@ -18,11 +18,10 @@
 
 #include "TSMain.h"
 #include "TSBase.h"
+#include "TSLua.h"
 
 struct AreaTriggerEntry;
 struct TSAreaTriggerEvents;
-
-#if TRINITY
 
 class TC_GAME_API TSAreaTriggerEntry {
     AreaTriggerEntry* m_entry;
@@ -47,4 +46,4 @@ public:
 
 void InitializeAreaTriggerEvents(uint32 entry, TSAreaTriggerEvents* events);
 TSAreaTriggerEvents* GetAreaTriggerEvents(uint32 entry);
-#endif
+LUA_PTR_TYPE(TSAreaTriggerEntry);

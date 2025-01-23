@@ -488,16 +488,11 @@ TSNumber<int32> TSItemTemplate::GetFeralBonus(int32 extraDPS) { return info->get
 TSNumber<int32> TSItemTemplate::GetTotalAPBonus() {
 #if TRINITY
     return info->GetTotalAPBonus(); 
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSItemTemplate::GetTotalAPBonus not implemented for AzerothCore");
-    return 0;
 #endif
 }
 TSNumber<float> TSItemTemplate::GetItemLevelIncludingQuality() {
 #if TRINITY
     return info->GetItemLevelIncludingQuality(); 
-#elif AZEROTHCORE
-    return info->GetItemLevelIncludingQuality(1);
 #endif
 };
 TSNumber<uint32> TSItemTemplate::GetSkill() { return info->GetSkill(); };
@@ -517,8 +512,6 @@ TSItemTemplate GetItemTemplate(uint32 entry)
 {
 #if TRINITY
     return TSItemTemplate(sObjectMgr->GetItemTemplateMutable(entry));
-#elif AZEROTHCORE
-    return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
 #endif
 }
 
@@ -650,8 +643,6 @@ void TSItemTemplate::Save()
     trans->Append(stmt);
 
     CharacterDatabase.CommitTransaction(trans);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSItemTemplate::SaveItemTemplate not implemented for AzerothCore");
 #endif
 
 }

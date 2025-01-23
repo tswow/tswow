@@ -22,6 +22,7 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
+#include <set>
 
 std::vector<std::string> special_files = {
 	  "interface\\glues\\charactercreate\\ui-charactercreate-classes.blp"
@@ -35,10 +36,15 @@ HANDLE handle = NULL;
 namespace fs = boost::filesystem;
 
 fs::path findClientLang(fs::path directory) {
+    static std::set<std::string> localeIDs = {
+		"enUS", "enGB", "deDE", "frFR", "esES", "esMX",
+		"ruRU", "koKR", "zhCN", "zhTW", "ptBR", "itIT",
+		"enCN", "enTW", "ptPT"
+	};
 	fs::directory_iterator end;
 	for(fs::directory_iterator itr(directory); itr != end; ++itr)
 	{
-		if(fs::is_directory(itr->path()))
+		if(fs::is_directory(itr->path()) && localeIDs.find(itr->path().filename().string()) != localeIDs.end())
 		{
 			return itr->path();
 		}

@@ -22,7 +22,7 @@ import { getTerminalCategory, TerminalCategory } from './TerminalCategories';
 
 // tsc
 const tscWatchers: {[key: string]: Process} = {}
-export function watchTsc(tscEntry: string, dir: FilePath, name: TerminalCategory) {
+export function watchTsc(nodeExecutable: string, tscEntry: string, dir: FilePath, name: TerminalCategory) {
     if(tscWatchers[resfp(dir)]) return;
     term.log(name,`Starting TSC watcher in ${dir}`)
     let watcher = tscWatchers[resfp(dir)] = new Process(getTerminalCategory(name))
@@ -55,7 +55,7 @@ export function watchTsc(tscEntry: string, dir: FilePath, name: TerminalCategory
                     }
                 })
         })
-        .startIn(dir,'node',[tscEntry,'--w'])
+        .startIn(dir,nodeExecutable,[tscEntry,'--w'])
 }
 
 export async function destroyTSWatcher(dir: string) {

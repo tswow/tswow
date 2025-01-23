@@ -4,6 +4,7 @@
 #include <TSBase.h>
 #include <TSMain.h>
 #include <TSArray.h>
+#include "TSLua.h"
 
 #include <list>
 #include <vector>
@@ -23,8 +24,6 @@ class WorldObject;
 
 #if TRINITY
 typedef std::vector<WorldObject*> TSObjectVector;
-#elif AZEROTHCORE
-typedef std::list<WorldObject*> TSObjectVector;
 #endif
 
 struct Condition;
@@ -153,3 +152,5 @@ private:
     TSLua::Array<TSWorldObject> LGetTargetList(uint32 id, TSWorldObject ref);
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSCondition)

@@ -18,6 +18,7 @@ import * as child_process from 'child_process';
 import * as readline from 'readline';
 import { wfs } from './FileSystem';
 import { FilePath } from './FileTree';
+import { term } from './Terminal';
 
 /**
  * Contains functions for running external programs and managing processes and working directories.
@@ -32,6 +33,7 @@ export namespace wsys {
      * @param cb The function to execute
      */
     export async function inDirectory(dir: string, cb: () => any) {
+        term.debug('misc', `Changing working directory to ${dir}`)
         const old = process.cwd();
         process.chdir(dir);
         try {
@@ -50,6 +52,7 @@ export namespace wsys {
      * @param cb
      */
     export function inDirectorySync(dir: string, cb: () => any) {
+        term.debug('misc', `Changing working directory to ${dir}`)
         const old = process.cwd();
         process.chdir(dir);
         try {
@@ -85,6 +88,7 @@ export namespace wsys {
      * @returns Promise when the child process exits
      */
     export function execAsync(program: string, cwd?: string) {
+        term.debug('misc', `Executing progam ${program} in ${cwd ? cwd : process.cwd()}`)
         return new Promise<string>((res, rej) => {
             child_process.exec(program, {cwd: cwd ? cwd : process.cwd()}, (err, stdout, stderr) => {
                 return err ? rej(err) : res(stdout);
@@ -101,11 +105,13 @@ export namespace wsys {
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
     export function exec(program: string, stdio: 'ignore'|'inherit'|'pipe' = 'pipe', settings: child_process.ExecSyncOptionsWithBufferEncoding = {}) {
+        term.debug('misc', `Executing program ${program} with settings ${JSON.stringify(settings)}`)
         let str = '';
         const data = child_process.execSync(program, {stdio: stdio, ...settings});
         if( data !== undefined && data !== null ) {
             str = data.toString();
         }
+        term.debug('misc', `Finished executing program`)
         return str;
     }
 
@@ -119,9 +125,11 @@ export namespace wsys {
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
     export function execIn(dirname: FilePath, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit', settings: child_process.ExecSyncOptionsWithBufferEncoding = {})  {
+        term.debug('misc', `Executing program ${program} in ${dirname} with settings ${JSON.stringify(settings)}`)
         let str = '';
         const data = child_process.execSync(program,
             {stdio: stdio, cwd: wfs.absPath(dirname), ...settings});
+        term.debug('misc', `Finished executing program`)
         if(stdio==='pipe' && data !== null && data !== undefined) {
             str = data.toString();
         }

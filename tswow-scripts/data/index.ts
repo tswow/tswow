@@ -196,6 +196,8 @@ async function main() {
                 console.log(`${file}: ${color}${time}ms\x1b[0m`)
             })
     }
+
+    process.exit(0)
 }
 
 /**

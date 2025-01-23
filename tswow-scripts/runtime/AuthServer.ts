@@ -28,10 +28,12 @@ export namespace AuthServer {
     }
 
     export function stop() {
+        term.debug('authserver', 'Stopping authserver')
         return authserver.stop();
     }
 
     export async function start(type: BuildType = NodeConfig.DefaultBuildType) {
+        term.log('authserver', `Starting ${type} authserver`)
         authserver.setAutoRestart(NodeConfig.AutoRestartAuthServer)
 
         await stop();
@@ -45,6 +47,7 @@ export namespace AuthServer {
         ipaths.bin.core.pick('trinitycore').build.pick(type).authserver_conf_dist
             .copyOnNoTarget(ipaths.coredata.authserver.authserver_conf)
 
+        term.debug('authserver', 'Setting up realmlist table for authserver')
         await query('DELETE FROM realmlist;');
         await Promise.all(Realm.all().map(x=>query(x.realmlistSQL())));
         await Promise.all(Dataset.all().map(x=>query(x.gamebuildSQL())));
@@ -66,6 +69,7 @@ export namespace AuthServer {
     export const command = commands.addCommand('authserver');
 
     export async function initializeDatabase() {
+        term.debug('authserver', `Initializing authserver database`)
         if(NodeConfig.AutoStartAuthServer) {
             connection = new Connection(NodeConfig.DatabaseSettings('auth'),'auth');
             await connection.connect();
@@ -74,6 +78,7 @@ export namespace AuthServer {
     }
 
     export async function initializeServer() {
+        term.debug('misc', `Initializing authserver`)
         if(NodeConfig.AutoStartAuthServer) {
             await start(NodeConfig.DefaultBuildType);
         }

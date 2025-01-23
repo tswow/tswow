@@ -35,6 +35,7 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSEntity.h"
+#include "TSLua.h"
 
 class TSPlayer;
 class TSUnit;
@@ -98,3 +99,13 @@ public:
 
     bool operator==(TSObject& rhs);
 };
+
+TC_GAME_API TSItem ToItem(TSObject);
+TC_GAME_API TSWorldObject ToWorldObject(TSObject);
+TC_GAME_API TSUnit ToUnit(TSObject);
+TC_GAME_API TSCreature ToCreature(TSObject);
+TC_GAME_API TSPlayer ToPlayer(TSObject);
+TC_GAME_API TSGameObject ToGameObject(TSObject);
+TC_GAME_API TSCorpse ToCorpse(TSObject);
+
+LUA_PTR_TYPE(TSObject)

@@ -47,6 +47,7 @@ const timer = Timer.start();
 // can be called from multiple places
 async function initTerminal()
 {
+    term.debug('misc', `Initializing terminal`)
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,

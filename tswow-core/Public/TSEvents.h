@@ -553,6 +553,7 @@ struct TSEvents
         ID_EVENT(OnCast, TSSpell)
         ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>, TSMutableNumber<uint32>)
         ID_EVENT(OnSuccessfulDispel, TSSpell, TSNumber<uint32>)
+        ID_EVENT(OnCancel, TSSpell, TSNumber<uint32> oldState)
         ID_EVENT(OnEffect, TSSpell, TSMutable<bool,bool> preventDefault, TSSpellEffectInfo, TSNumber<uint32> mode, TSUnit unitTarget, TSItem itemTarget, TSGameObject gameObjectTarget, TSCorpse corpseTarget)
         ID_EVENT(OnEffectApplyGlyph
             , TSSpell
@@ -955,7 +956,7 @@ struct TSEvents
          ID_EVENT(OnCanChangeEquipState, TSItemTemplate, TSMutable<bool,bool>)
          ID_EVENT(OnUnequip, TSItem, TSPlayer, bool, TSMutableNumber<uint32> result)
          ID_EVENT(OnBank, TSItem, TSPlayer, TSNumber<uint8> bag, TSNumber<uint8> slot, bool swap, TSMutableNumber<uint32> result)
-         ID_EVENT(OnCanEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool swap, TSMutableNumber<uint32> result)
+         ID_EVENT(OnCanEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool swap, bool not_loading, TSMutableNumber<uint32> result)
          ID_EVENT(OnEquip, TSItem, TSPlayer, TSNumber<uint8> slot, bool isMerge)
          ID_EVENT(OnCanUse, TSItem, TSPlayer, TSMutableNumber<uint32> result)
          ID_EVENT(OnCanUseType, TSItemTemplate, TSPlayer, TSMutableNumber<uint32> result)
@@ -978,12 +979,11 @@ struct TSEvents
         ID_EVENT(OnRewardXP, TSQuest, TSPlayer, TSMutableNumber<uint32>)
         ID_EVENT(OnQuestRewardItem, TSQuest, TSPlayer, TSItem)
     } Quest;
-#if TRINITY
+
     struct AreaTriggerEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(AreaTriggerEvents)
-        ID_EVENT(OnTrigger, TSNumber<uint8>, TSPlayer, TSMutable<bool,bool>)
+        ID_EVENT(OnTrigger, TSAreaTriggerEntry, TSPlayer, TSMutable<bool,bool>)
     } AreaTrigger;
-#endif
 
     struct GameEventsEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(GameEventsEvents)
