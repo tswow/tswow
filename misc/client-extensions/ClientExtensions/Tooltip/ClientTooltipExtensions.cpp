@@ -5,7 +5,6 @@
 void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
     SpellTooltipRuneCostExtension();
-    return;
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
@@ -26,8 +25,6 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
     *reinterpret_cast<uint32_t*>(0x578E8B) = (reinterpret_cast<uint32_t>(&GetVariableValueEx) - 0x578E8F);
     VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
-
-    return;
 }
 
 // Assembly patch bytes
@@ -174,8 +171,13 @@ void TooltipExtensions::SetNewVariablePointers() {
     spellVariables[159] = reinterpret_cast<uint32_t>(&"POWER5");
     spellVariables[160] = reinterpret_cast<uint32_t>(&"POWER6");
     spellVariables[161] = reinterpret_cast<uint32_t>(&"POWER7");
+}
 
-    return;
+void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer)
+{
+    char* sRuneCost = FrameScript_GetText(runeCostKey, -1, 0);
+    SStrPrintf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
+    SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);      
 }
 
 void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
@@ -187,52 +189,34 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row
 
     if (*spellFamily == SPELLFAMILY_DEATHKNIGHT) {
         if (m_RuneBlood) {
-            sRuneCost = FrameScript_GetText("RUNE_COST_DEATH", -1, 0);
-
-            SStrPrintf(buff, 128, sRuneCost, m_RuneBlood);
-            SStrCopy_0(dest, buff, 0x7FFFFFFF);
-
+            AppendRuneCost("RUNE_COST_DEATH",m_RuneBlood, buff, dest);
             if (m_RuneBlood != 1)
                 SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
 
             if (m_RunicPower < 0) {
-                int32_t m_Amount = m_RunicPower * -1 / 10; // kinda stupid to write it thit way but otherwise seems to bug
-                sRuneCost = FrameScript_GetText("RUNIC_POWER_COST", -1, 0);
-
+                int32_t m_Amount = -m_RunicPower / 10; // kinda stupid to write it thit way but otherwise seems to bug
                 SStrCopy_0(dest, sConnectorPlus, 0x7FFFFFFF);
-                SStrPrintf(buff, 128, sRuneCost, m_Amount);
-                SStrCopy_0(dest, buff, 0x7FFFFFFF);
+                AppendRuneCost("RUNIC_POWER_COST",m_Amount, buff, dest);
             }
         }
     }
     else {
-        if (m_RuneBlood) {
-            sRuneCost = FrameScript_GetText("RUNE_COST_BLOOD", -1, 0);
+        RuneData runes[] = {
+            {"RUNE_COST_BLOOD", m_RuneBlood},
+            {"RUNE_COST_UNHOLY", m_RuneUnholy},
+            {"RUNE_COST_FROST", m_RuneFrost}
+        };
 
-            SStrPrintf(buff, 128, sRuneCost, m_RuneBlood);
-            SStrCopy_0(dest, buff, 0x7FFFFFFF);
+        bool addSpace = false;
 
-            if (m_RuneUnholy || m_RuneFrost)
-                SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
-        }
-
-        if (m_RuneUnholy) {
-            sRuneCost = FrameScript_GetText("RUNE_COST_UNHOLY", -1, 0);
-
-            SStrPrintf(buff, 128, sRuneCost, m_RuneUnholy);
-            SStrCopy_0(dest, buff, 0x7FFFFFFF);
-
-            if (m_RuneFrost)
-                SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
-        }
-
-        if (m_RuneFrost) {
-            sRuneCost = FrameScript_GetText("RUNE_COST_FROST", -1, 0);
-
-            SStrPrintf(buff, 128, sRuneCost, m_RuneFrost);
-            SStrCopy_0(dest, buff, 0x7FFFFFFF);
+        for (const auto& rune : runes) {
+            if (rune.count > 0) {
+                if (addSpace) {
+                    SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+                }
+                AppendRuneCost(rune.costKey, rune.count, buff, dest);
+                addSpace = true;
+            }
         }
     }
-
-    return;
-};
+}
