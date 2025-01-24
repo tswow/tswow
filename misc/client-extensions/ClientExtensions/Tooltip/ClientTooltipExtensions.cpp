@@ -178,35 +178,58 @@ void TooltipExtensions::SetNewVariablePointers() {
     return;
 }
 
-void TooltipExtensions::SetRuneCostTooltip(uint32_t dest, uint32_t buff, uint32_t* row, uint32_t* spellFamily) {
-    if (*(spellFamily) == 15) {
-        if (*(row + 1)) {
-            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_DEATH", -1, 0), *(row + 1));
+void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
+    char* sRuneCost;
+    int32_t m_RuneBlood = *(row + 1);
+    int32_t m_RuneUnholy = *(row + 2);
+    int32_t m_RuneFrost = *(row + 3);
+    int32_t m_RunicPower = *(row + 4);
+
+    if (*spellFamily == SPELLFAMILY_DEATHKNIGHT) {
+        if (m_RuneBlood) {
+            sRuneCost = FrameScript_GetText("RUNE_COST_DEATH", -1, 0);
+
+            SStrPrintf(buff, 128, sRuneCost, m_RuneBlood);
             SStrCopy_0(dest, buff, 0x7FFFFFFF);
-            if (*(row + 1) != 1)
-                SStrCopy_0(dest, (int)"s", 0x7FFFFFFF);
-            if (*reinterpret_cast<int32_t*>(row + 4) < 0) {
-                SStrCopy_0(dest, (int)" + ", 0x7FFFFFFF);
-                SStrPrintf(buff, 128, FrameScript_GetText("RUNIC_POWER_COST", -1, 0), (*(row + 4) * -1 / 10));
+
+            if (m_RuneBlood != 1)
+                SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
+
+            if (m_RunicPower < 0) {
+                int32_t m_Amount = m_RunicPower * -1 / 10; // kinda stupid to write it thit way but otherwise seems to bug
+                sRuneCost = FrameScript_GetText("RUNIC_POWER_COST", -1, 0);
+
+                SStrCopy_0(dest, sConnectorPlus, 0x7FFFFFFF);
+                SStrPrintf(buff, 128, sRuneCost, m_Amount);
                 SStrCopy_0(dest, buff, 0x7FFFFFFF);
             }
         }
     }
     else {
-        if (*(row + 1)) {
-            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_BLOOD", -1, 0), *(row + 1));
+        if (m_RuneBlood) {
+            sRuneCost = FrameScript_GetText("RUNE_COST_BLOOD", -1, 0);
+
+            SStrPrintf(buff, 128, sRuneCost, m_RuneBlood);
             SStrCopy_0(dest, buff, 0x7FFFFFFF);
-            if (*(row + 2) || *(row + 3))
-                SStrCopy_0(dest, 0x9E1050, 0x7FFFFFFF);
+
+            if (m_RuneUnholy || m_RuneFrost)
+                SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
         }
-        if (*(row + 2)) {
-            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_UNHOLY", -1, 0), *(row + 2));
+
+        if (m_RuneUnholy) {
+            sRuneCost = FrameScript_GetText("RUNE_COST_UNHOLY", -1, 0);
+
+            SStrPrintf(buff, 128, sRuneCost, m_RuneUnholy);
             SStrCopy_0(dest, buff, 0x7FFFFFFF);
-            if (*(row + 2) || *(row + 3))
-                SStrCopy_0(dest, 0x9E1050, 0x7FFFFFFF);
+
+            if (m_RuneFrost)
+                SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
         }
-        if (*(row + 3)) {
-            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_FROST", -1, 0), *(row + 3));
+
+        if (m_RuneFrost) {
+            sRuneCost = FrameScript_GetText("RUNE_COST_FROST", -1, 0);
+
+            SStrPrintf(buff, 128, sRuneCost, m_RuneFrost);
             SStrCopy_0(dest, buff, 0x7FFFFFFF);
         }
     }
