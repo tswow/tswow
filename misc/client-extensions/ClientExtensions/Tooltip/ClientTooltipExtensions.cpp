@@ -58,16 +58,12 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Restore the original memory protection
     VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, oldProtect, &oldProtect); 
 }
-
-static uint32_t CURRENT_FIELDS[] = {
+static uint32_t CURRENT_AND_MAX_FIELDS[] = {
     CURRENT_MANA, CURRENT_RAGE, CURRENT_FOCUS, CURRENT_ENERGY,
-    CURRENT_HAPPINESS, CURRENT_RUNES, CURRENT_RUNIC_POWER
-};
-static uint32_t MAX_FIELDS[] = {
+    CURRENT_HAPPINESS, CURRENT_RUNES, CURRENT_RUNIC_POWER,
     MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
     MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
 };
-
 int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
@@ -79,10 +75,8 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
 
         if (ActivePlayer) {
             // Arrays for current and max power fields
-            if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_power7) {
-                value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_FIELDS[spellVariable - SPELLVARIABLE_power1]));
-            } else if (spellVariable >= SPELLVARIABLE_POWER1 && spellVariable <= SPELLVARIABLE_POWER7) {
-                value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_FIELDS[spellVariable - SPELLVARIABLE_POWER1]));
+            if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_POWER7) {//the <= check saves if you extend later
+                value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_AND_MAX_FIELDS[spellVariable - SPELLVARIABLE_power1]));
             } else {
                 switch (spellVariable) {
                     case SPELLVARIABLE_hp:
@@ -119,30 +113,15 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
     return result;
 }
 
-
 void TooltipExtensions::SetNewVariablePointers() {
-    spellVariables[140] = reinterpret_cast<uint32_t>(&"hp");
-    spellVariables[141] = reinterpret_cast<uint32_t>(&"HP");
-    spellVariables[142] = reinterpret_cast<uint32_t>(&"ppl1");
-    spellVariables[143] = reinterpret_cast<uint32_t>(&"ppl2");
-    spellVariables[144] = reinterpret_cast<uint32_t>(&"ppl3");
-    spellVariables[145] = reinterpret_cast<uint32_t>(&"PPL1");
-    spellVariables[146] = reinterpret_cast<uint32_t>(&"PPL2");
-    spellVariables[147] = reinterpret_cast<uint32_t>(&"PPL3");
-    spellVariables[148] = reinterpret_cast<uint32_t>(&"power1");
-    spellVariables[149] = reinterpret_cast<uint32_t>(&"power2");
-    spellVariables[150] = reinterpret_cast<uint32_t>(&"power3");
-    spellVariables[151] = reinterpret_cast<uint32_t>(&"power4");
-    spellVariables[152] = reinterpret_cast<uint32_t>(&"power5");
-    spellVariables[153] = reinterpret_cast<uint32_t>(&"power6");
-    spellVariables[154] = reinterpret_cast<uint32_t>(&"power7");
-    spellVariables[155] = reinterpret_cast<uint32_t>(&"POWER1");
-    spellVariables[156] = reinterpret_cast<uint32_t>(&"POWER2");
-    spellVariables[157] = reinterpret_cast<uint32_t>(&"POWER3");
-    spellVariables[158] = reinterpret_cast<uint32_t>(&"POWER4");
-    spellVariables[159] = reinterpret_cast<uint32_t>(&"POWER5");
-    spellVariables[160] = reinterpret_cast<uint32_t>(&"POWER6");
-    spellVariables[161] = reinterpret_cast<uint32_t>(&"POWER7");
+    const char* tooltipSpellVariablesExtensions[22] = {
+        "hp", "HP", "ppl1", "ppl2", "ppl3", "PPL1", "PPL2", "PPL3",
+        "power1", "power2", "power3", "power4", "power5", "power6", "power7",
+        "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7"
+    };
+    for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++) {
+        spellVariables[140 + i] = reinterpret_cast<uint32_t>(tooltipSpellVariablesExtensions[i]);
+    }
 }
 
 void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer)
@@ -180,7 +159,6 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row
         };
 
         bool addSpace = false;
-
         for (const auto& rune : runes) {
             if (rune.count > 0) {
                 if (addSpace) {
