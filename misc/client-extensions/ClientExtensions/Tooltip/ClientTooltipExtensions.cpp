@@ -30,15 +30,12 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     return;
 }
 
-void TooltipExtensions::SpellTooltipRuneCostExtension() {
-    DWORD flOldProtect = 0;
-    // used code is stored as an array of literals, deal with it lol
-    uint8_t characters[34] = {
-        0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
-        0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
-        0x00, 0x00
-    };
-
+// Assembly patch bytes
+constexpr uint8_t PATCH_BYTES[34] = {
+    0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
+    0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
+    0x00, 0x00
+};
     // patch memory to skip existing code printing rune display and call dll function instead
     // used code:               // some explainations may not be really correct but whatever
     // lea ebx, [ebp - 0x248]   // ebp - 584 = address in memory of m_SpellClassSet of currently checked spell 
@@ -52,14 +49,17 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // call function;           // SetRuneCostTooltip(dest, buff, row, spellFamily)
     // jmp loc_623CD9;          // skip remaining code to loc_623CD9
 
-    VirtualProtect((LPVOID)0x623C71, 0x22, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    for (uint8_t i = 0; i < 34; i++)
-        *reinterpret_cast<uint8_t*>(0x623C71 + i) = characters[i];
-    // now write proper address for call function
-    *reinterpret_cast<uint32_t*>(0x623C8A) = (reinterpret_cast<uint32_t>(&SetRuneCostTooltip) - 0x623C8E);
-    VirtualProtect((LPVOID)0x623C71, 0x22, PAGE_EXECUTE_READ, &flOldProtect);
-
-    return;
+void TooltipExtensions::SpellTooltipRuneCostExtension() {
+    DWORD oldProtect;
+    // Change memory protection to allow writing
+    VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
+    // Apply the patch bytes
+    std::memcpy(reinterpret_cast<void*>( 0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
+    // Calculate and write the relative address for the function call
+    uintptr_t callAddress = reinterpret_cast<uintptr_t>(&SetRuneCostTooltip) - 0x623C8E;
+    *reinterpret_cast<uint32_t*>(0x623C8A) = static_cast<uint32_t>(callAddress);
+    // Restore the original memory protection
+    VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, oldProtect, &oldProtect); 
 }
 
 int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
