@@ -1,0 +1,77 @@
+#include "SpellTooltipExtensions.h"
+#include "windows.h"
+
+void TooltipExtensions::Apply()
+{
+    SpellTooltipRuneCostExtension();
+    return;
+}
+
+void TooltipExtensions::SpellTooltipRuneCostExtension() {
+    DWORD flOldProtect = 0;
+    // patched code is stored as an array of literals, deal with it lol
+    uint8_t characters[34] = {
+        0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
+        0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
+        0x00, 0x00
+    };
+
+    // patch memory to skip existing code printing rune display and call dll function instead
+    // patched code:            // some explainations may not be really correct but whatever
+    // lea ebx, [ebp - 0x248]   // ebp - 584 = address in memory of m_SpellClassSet of currently checked spell 
+    // push ebx                 // spellFamily
+    // lea eax, [esi];          // esi = address of used SpellRuneCost.dbc row
+    // push eax;                // row
+    // lea ecx, [ebp - 0x160];  // ebp - 352 = address where loaded string is stored
+    // push ecx;                // buff
+    // lea edx, [ebp - 0xE0];   // ebp - 224 = address where tooltip text is copied char by char
+    // push edx;                // dest
+    // call function;           // SetRuneCostTooltip(dest, buff, row, spellFamily)
+    // jmp loc_623EDE;          // skip remaining code to loc_623EDE
+
+    VirtualProtect((LPVOID)0x623C71, 0x22, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    for (uint8_t i = 0; i < 34; i++)
+        *reinterpret_cast<uint8_t*>(0x623C71 + i) = characters[i];
+    // now write proper address for call function
+    *reinterpret_cast<uint32_t*>(0x623C8A) = (reinterpret_cast<uint32_t>(&SetRuneCostTooltip) - 0x623C8E);
+    VirtualProtect((LPVOID)0x623C71, 0x22, PAGE_EXECUTE_READ, &flOldProtect);
+
+    return;
+}
+
+void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
+    char* sRuneCost;
+    int32_t m_RuneBlood = *(row + 1);
+    int32_t m_RuneUnholy = *(row + 2);
+    int32_t m_RuneFrost  = *(row + 3);
+    int32_t m_RunicPower = *(row + 4); // unused in stock code but defining it anywas
+
+    if (m_RuneBlood) {
+        sRuneCost = FrameScript_GetText("RUNE_COST_BLOOD", -1, 0);
+
+        SStrPrintf(buff, 128, sRuneCost, m_RuneBlood);
+        SStrCopy_0(dest, buff, 0x7FFFFFFF);
+
+        if (m_RuneUnholy || m_RuneFrost)
+            SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+    }
+
+    if (m_RuneUnholy) {
+        sRuneCost = FrameScript_GetText("RUNE_COST_UNHOLY", -1, 0);
+
+        SStrPrintf(buff, 128, sRuneCost, m_RuneUnholy);
+        SStrCopy_0(dest, buff, 0x7FFFFFFF);
+
+        if (m_RuneFrost)
+            SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+    }
+
+    if (m_RuneFrost) {
+        sRuneCost = FrameScript_GetText("RUNE_COST_FROST", -1, 0);
+
+        SStrPrintf(buff, 128, sRuneCost, m_RuneFrost);
+        SStrCopy_0(dest, buff, 0x7FFFFFFF);
+    }
+
+    return;
+};
