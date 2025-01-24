@@ -44,6 +44,10 @@ CLIENT_FUNCTION(SFileCloseFile, 0x422910, __stdcall, int, (HANDLE a1))
 CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, unsigned long long, ())
 CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (unsigned long long, unsigned int))
 
+CLIENT_FUNCTION(FrameScript_GetText, 0x819D40, __cdecl, char*, (char*, int, int))
+CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (int, int, char*, int))
+CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (int, int, int))
+
 // functions
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
     return *reinterpret_cast<int32_t*>(*(ActivePlayer + 52) + 4 * field);

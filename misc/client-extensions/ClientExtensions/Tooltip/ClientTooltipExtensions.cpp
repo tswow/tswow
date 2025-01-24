@@ -4,6 +4,7 @@
 
 void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
+    SpellTooltipRuneCostExtension();
     return;
 }
 
@@ -25,6 +26,38 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
     *reinterpret_cast<uint32_t*>(0x578E8B) = (reinterpret_cast<uint32_t>(&GetVariableValueEx) - 0x578E8F);
     VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
+
+    return;
+}
+
+void TooltipExtensions::SpellTooltipRuneCostExtension() {
+    DWORD flOldProtect = 0;
+    // used code is stored as an array of literals, deal with it lol
+    uint8_t characters[34] = {
+        0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
+        0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
+        0x00, 0x00
+    };
+
+    // patch memory to skip existing code printing rune display and call dll function instead
+    // used code:               // some explainations may not be really correct but whatever
+    // lea ebx, [ebp - 0x248]   // ebp - 584 = address in memory of m_SpellClassSet of currently checked spell 
+    // push ebx                 // spellFamily
+    // lea eax, [esi];          // esi = address of used SpellRuneCost.dbc row
+    // push eax;                // row
+    // lea ecx, [ebp - 0x160];  // ebp - 352 = address where loaded string is stored
+    // push ecx;                // buff
+    // lea edx, [ebp - 0xE0];   // ebp - 224 = address where tooltip text is copied char by char
+    // push edx;                // dest
+    // call function;           // SetRuneCostTooltip(dest, buff, row, spellFamily)
+    // jmp loc_623CD9;          // skip remaining code to loc_623CD9
+
+    VirtualProtect((LPVOID)0x623C71, 0x22, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    for (uint8_t i = 0; i < 34; i++)
+        *reinterpret_cast<uint8_t*>(0x623C71 + i) = characters[i];
+    // now write proper address for call function
+    *reinterpret_cast<uint32_t*>(0x623C8A) = (reinterpret_cast<uint32_t>(&SetRuneCostTooltip) - 0x623C8E);
+    VirtualProtect((LPVOID)0x623C71, 0x22, PAGE_EXECUTE_READ, &flOldProtect);
 
     return;
 }
@@ -144,3 +177,39 @@ void TooltipExtensions::SetNewVariablePointers() {
 
     return;
 }
+
+void TooltipExtensions::SetRuneCostTooltip(uint32_t dest, uint32_t buff, uint32_t* row, uint32_t* spellFamily) {
+    if (*(spellFamily) == 15) {
+        if (*(row + 1)) {
+            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_DEATH", -1, 0), *(row + 1));
+            SStrCopy_0(dest, buff, 0x7FFFFFFF);
+            if (*(row + 1) != 1)
+                SStrCopy_0(dest, (int)"s", 0x7FFFFFFF);
+            if (*reinterpret_cast<int32_t*>(row + 4) < 0) {
+                SStrCopy_0(dest, (int)" + ", 0x7FFFFFFF);
+                SStrPrintf(buff, 128, FrameScript_GetText("RUNIC_POWER_COST", -1, 0), (*(row + 4) * -1 / 10));
+                SStrCopy_0(dest, buff, 0x7FFFFFFF);
+            }
+        }
+    }
+    else {
+        if (*(row + 1)) {
+            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_BLOOD", -1, 0), *(row + 1));
+            SStrCopy_0(dest, buff, 0x7FFFFFFF);
+            if (*(row + 2) || *(row + 3))
+                SStrCopy_0(dest, 0x9E1050, 0x7FFFFFFF);
+        }
+        if (*(row + 2)) {
+            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_UNHOLY", -1, 0), *(row + 2));
+            SStrCopy_0(dest, buff, 0x7FFFFFFF);
+            if (*(row + 2) || *(row + 3))
+                SStrCopy_0(dest, 0x9E1050, 0x7FFFFFFF);
+        }
+        if (*(row + 3)) {
+            SStrPrintf(buff, 128, FrameScript_GetText("RUNE_COST_FROST", -1, 0), *(row + 3));
+            SStrCopy_0(dest, buff, 0x7FFFFFFF);
+        }
+    }
+
+    return;
+};
