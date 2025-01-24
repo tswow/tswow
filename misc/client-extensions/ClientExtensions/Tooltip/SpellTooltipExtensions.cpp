@@ -1,13 +1,13 @@
 #include "SpellTooltipExtensions.h"
 #include "windows.h"
 
-void TooltipExtensions::Apply()
+void SpellTooltipExtensions::Apply()
 {
     SpellTooltipRuneCostExtension();
     return;
 }
 
-void TooltipExtensions::SpellTooltipRuneCostExtension() {
+void SpellTooltipExtensions::SpellTooltipRuneCostExtension() {
     DWORD flOldProtect = 0;
     // patched code is stored as an array of literals, deal with it lol
     uint8_t characters[34] = {
@@ -39,7 +39,7 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     return;
 }
 
-void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
+void SpellTooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
     char* sRuneCost;
     int32_t m_RuneBlood = *(row + 1);
     int32_t m_RuneUnholy = *(row + 2);

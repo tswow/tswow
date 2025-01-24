@@ -2,5 +2,5 @@
 
 void ClientExtensions::initialize() {
     CharacterFixes::CharacterCreationFixes();
-    TooltipExtensions::Apply();
+    SpellTooltipExtensions::Apply();
 }
