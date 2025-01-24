@@ -59,6 +59,15 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, oldProtect, &oldProtect); 
 }
 
+static uint32_t CURRENT_FIELDS[] = {
+    CURRENT_MANA, CURRENT_RAGE, CURRENT_FOCUS, CURRENT_ENERGY,
+    CURRENT_HAPPINESS, CURRENT_RUNES, CURRENT_RUNIC_POWER
+};
+static uint32_t MAX_FIELDS[] = {
+    MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
+    MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
+};
+
 int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
@@ -69,73 +78,35 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
         uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER));
 
         if (ActivePlayer) {
-            switch (spellVariable) {
-                case SPELLVARIABLE_hp:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HP));
-                    break;
-                case SPELLVARIABLE_HP:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_HP));
-                    break;
-                case SPELLVARIABLE_ppl1:
-                case SPELLVARIABLE_PPL1:
-                    // Real points per level, EFFECT_0
-                    value = *reinterpret_cast<float*>(spell + 308);
-                    break;
-                case SPELLVARIABLE_ppl2:
-                case SPELLVARIABLE_PPL2:
-                    // Real points per level, EFFECT_1
-                    value = *reinterpret_cast<float*>(spell + 312);
-                    break;
-                case SPELLVARIABLE_ppl3:
-                case SPELLVARIABLE_PPL3:
-                    // Real points per level, EFFECT_2
-                    value = *reinterpret_cast<float*>(spell + 316);
-                    break;
-                case SPELLVARIABLE_power1:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_MANA));
-                    break;
-                case SPELLVARIABLE_power2:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_RAGE));
-                    break;
-                case SPELLVARIABLE_power3:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_FOCUS));
-                    break;
-                case SPELLVARIABLE_power4:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_ENERGY));
-                    break;
-                case SPELLVARIABLE_power5:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HAPPINESS));
-                    break;
-                case SPELLVARIABLE_power6:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_RUNES));
-                    break;
-                case SPELLVARIABLE_power7:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_RUNIC_POWER));
-                    break;
-                case SPELLVARIABLE_POWER1:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_MANA));
-                    break;
-                case SPELLVARIABLE_POWER2:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_RAGE));
-                    break;
-                case SPELLVARIABLE_POWER3:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_FOCUS));
-                    break;
-                case SPELLVARIABLE_POWER4:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_ENERGY));
-                    break;
-                case SPELLVARIABLE_POWER5:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_HAPPINESS));
-                    break;
-                case SPELLVARIABLE_POWER6:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_RUNES));
-                    break;
-                case SPELLVARIABLE_POWER7:
-                    value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_RUNIC_POWER));
-                    break;
-                default:
-                    a1 = 1;
-                    break;
+            // Arrays for current and max power fields
+            if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_power7) {
+                value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_FIELDS[spellVariable - SPELLVARIABLE_power1]));
+            } else if (spellVariable >= SPELLVARIABLE_POWER1 && spellVariable <= SPELLVARIABLE_POWER7) {
+                value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_FIELDS[spellVariable - SPELLVARIABLE_POWER1]));
+            } else {
+                switch (spellVariable) {
+                    case SPELLVARIABLE_hp:
+                        value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HP));
+                        break;
+                    case SPELLVARIABLE_HP:
+                        value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_HP));
+                        break;
+                    case SPELLVARIABLE_ppl1:
+                    case SPELLVARIABLE_PPL1:
+                        value = *reinterpret_cast<float*>(spell + 308);
+                        break;
+                    case SPELLVARIABLE_ppl2:
+                    case SPELLVARIABLE_PPL2:
+                        value = *reinterpret_cast<float*>(spell + 312);
+                        break;
+                    case SPELLVARIABLE_ppl3:
+                    case SPELLVARIABLE_PPL3:
+                        value = *reinterpret_cast<float*>(spell + 316);
+                        break;
+                    default:
+                        a1 = 1;
+                        break;
+                }
             }
         }
 
@@ -147,6 +118,7 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
 
     return result;
 }
+
 
 void TooltipExtensions::SetNewVariablePointers() {
     spellVariables[140] = reinterpret_cast<uint32_t>(&"hp");
