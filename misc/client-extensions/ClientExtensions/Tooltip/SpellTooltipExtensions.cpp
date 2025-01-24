@@ -4,7 +4,6 @@
 void SpellTooltipExtensions::Apply()
 {
     SpellTooltipRuneCostExtension();
-    return;
 }
 
 // Assembly patch bytes
@@ -28,14 +27,20 @@ constexpr uint8_t PATCH_BYTES[34] = {0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0
 void SpellTooltipExtensions::SpellTooltipRuneCostExtension() {
     DWORD oldProtect;
     // Change memory protection to allow writing
-    VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
+    VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
     // Apply the patch bytes
-    std::memcpy(reinterpret_cast<void*>( 0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
+    std::memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
     // Calculate and write the relative address for the function call
     uintptr_t callAddress = reinterpret_cast<uintptr_t>(&SetRuneCostTooltip) - 0x623C8E;
     *reinterpret_cast<uint32_t*>(0x623C8A) = static_cast<uint32_t>(callAddress);
     // Restore the original memory protection
     VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, oldProtect, &oldProtect); 
+}
+
+void SpellTooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer) {
+    char* sRuneCost = FrameScript_GetText(runeCostKey, -1, 0);
+    SStrPrintf(buff, 128, sRuneCost, runeCount); // sizeof(buff)
+    SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);
 }
 
 void SpellTooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
@@ -45,32 +50,22 @@ void SpellTooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t
     int32_t m_RuneFrost  = *(row + 3);
     int32_t m_RunicPower = *(row + 4); // unused in stock code but defining it anywas
 
-    if (m_RuneBlood) {
-        sRuneCost = FrameScript_GetText("RUNE_COST_BLOOD", -1, 0);
+    RuneData dkRunes[] = {
+        {"RUNE_COST_BLOOD", m_RuneBlood},
+        {"RUNE_COST_UNHOLY", m_RuneUnholy},
+        {"RUNE_COST_FROST", m_RuneFrost}
+    };
 
-        SStrPrintf(buff, 128, sRuneCost, m_RuneBlood);
-        SStrCopy_0(dest, buff, 0x7FFFFFFF);
+    bool addSpace = false;
 
-        if (m_RuneUnholy || m_RuneFrost)
-            SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+    for (const auto& rune : dkRunes) {
+        if (rune.count > 0)
+        {
+            if (addSpace)
+                SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+
+            AppendRuneCost(rune.costKey, rune.count, buff, dest);
+            addSpace = true;
+        }
     }
-
-    if (m_RuneUnholy) {
-        sRuneCost = FrameScript_GetText("RUNE_COST_UNHOLY", -1, 0);
-
-        SStrPrintf(buff, 128, sRuneCost, m_RuneUnholy);
-        SStrCopy_0(dest, buff, 0x7FFFFFFF);
-
-        if (m_RuneFrost)
-            SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
-    }
-
-    if (m_RuneFrost) {
-        sRuneCost = FrameScript_GetText("RUNE_COST_FROST", -1, 0);
-
-        SStrPrintf(buff, 128, sRuneCost, m_RuneFrost);
-        SStrCopy_0(dest, buff, 0x7FFFFFFF);
-    }
-
-    return;
 };
