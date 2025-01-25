@@ -79,6 +79,7 @@ declare const enum TimerLoops {} /** TSTimer.h:TimerLoops */
 declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
+declare const enum DuelState {} /** Player.h:DuelState */
 declare const enum InventorySlots /**@realType:uint32*/{
     BAG_1 = 19,
     BAG_2 = 20,
@@ -2308,6 +2309,10 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     SetCanSeeTransmog(on: bool): void;
 
     TogglePvP(enable: bool): void;
+
+    IsDueling(): bool;
+    GetDuelState(): uint8;
+    GetDuelOpponent(): TSPlayer | undefined;
 }
 
 declare interface TSCorpse extends TSWorldObject {

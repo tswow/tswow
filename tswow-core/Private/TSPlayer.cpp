@@ -4243,3 +4243,18 @@ void TSPlayer::TogglePvP(bool enable)
             player->pvpInfo.EndTimer = GameTime::GetGameTime();     // start toggle-off
     }
 }
+
+uint8 TSPlayer::GetDuelState()
+{
+    return player->duel->State;
+}
+
+bool TSPlayer::IsDueling()
+{
+    return player->duel != nullptr;
+}
+
+TSPlayer TSPlayer::GetDuelOpponent()
+{
+    return player->duel->Opponent;
+}

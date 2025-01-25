@@ -377,6 +377,9 @@ public:
 	bool CanSeeTransmog();
 	void SetCanSeeTransmog(bool on);
 	void TogglePvP(bool enable);
+	uint8 GetDuelState();
+	TSPlayer GetDuelOpponent();
+	bool IsDueling();
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);
