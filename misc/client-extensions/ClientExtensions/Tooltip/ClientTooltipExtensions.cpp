@@ -11,20 +11,14 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     DWORD flOldProtect = 0;
 
     // change pointer to table with variables
-    VirtualProtect((LPVOID)0x576B63, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *reinterpret_cast<uint32_t*>(0x576B63) = reinterpret_cast<uint32_t>(&spellVariables);
-    VirtualProtect((LPVOID)0x576B63, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
+    OverwriteUInt32AtAddress(0x576B63, reinterpret_cast<uint32_t>(&spellVariables));
     // update number of entries value
-    VirtualProtect((LPVOID)0x576B7C, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *reinterpret_cast<uint32_t*>(0x576B7C) = (sizeof(spellVariables) / 4);
-    VirtualProtect((LPVOID)0x576B7C, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
+    OverwriteUInt32AtAddress(0x576B7C, (sizeof(spellVariables) / 4));
     // copy table of pointers from address to spellVariables vector and add new entries
     memcpy(&spellVariables, (const void*)0xACE8F8, sizeof(uint32_t) * 140);
     SetNewVariablePointers();
     // change pointer of GetVariableTableValue to pointer to extended function
-    VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *reinterpret_cast<uint32_t*>(0x578E8B) = (reinterpret_cast<uint32_t>(&GetVariableValueEx) - 0x578E8F);
-    VirtualProtect((LPVOID)0x578E8B, 0x4, PAGE_EXECUTE_READ, &flOldProtect);
+    OverwriteUInt32AtAddress(0x578E8B, CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8B));
 }
 
 // Assembly patch bytes
@@ -49,14 +43,13 @@ constexpr uint8_t PATCH_BYTES[34] = {
 void TooltipExtensions::SpellTooltipRuneCostExtension() {
     DWORD oldProtect;
     // Change memory protection to allow writing
-    VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
+    VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
     // Apply the patch bytes
-    std::memcpy(reinterpret_cast<void*>( 0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
+    std::memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
     // Calculate and write the relative address for the function call
-    uintptr_t callAddress = reinterpret_cast<uintptr_t>(&SetRuneCostTooltip) - 0x623C8E;
-    *reinterpret_cast<uint32_t*>(0x623C8A) = static_cast<uint32_t>(callAddress);
+    *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8A);
     // Restore the original memory protection
-    VirtualProtect(reinterpret_cast<void*>( 0x623C71), 0x22, oldProtect, &oldProtect); 
+    VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, oldProtect, &oldProtect); 
 }
 static uint32_t CURRENT_AND_MAX_FIELDS[] = {
     CURRENT_MANA, CURRENT_RAGE, CURRENT_FOCUS, CURRENT_ENERGY,
@@ -119,9 +112,9 @@ void TooltipExtensions::SetNewVariablePointers() {
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
         "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7"
     };
-    for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++) {
+
+    for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)
         spellVariables[140 + i] = reinterpret_cast<uint32_t>(tooltipSpellVariablesExtensions[i]);
-    }
 }
 
 void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer)
@@ -140,14 +133,14 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row
 
     if (*spellFamily == SPELLFAMILY_DEATHKNIGHT) {
         if (m_RuneBlood) {
-            AppendRuneCost("RUNE_COST_DEATH",m_RuneBlood, buff, dest);
+            AppendRuneCost("RUNE_COST_DEATH", m_RuneBlood, buff, dest);
             if (m_RuneBlood != 1)
                 SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
 
             if (m_RunicPower < 0) {
-                int32_t m_Amount = -m_RunicPower / 10; // kinda stupid to write it thit way but otherwise seems to bug
+                int32_t m_Amount = -m_RunicPower / 10;
                 SStrCopy_0(dest, sConnectorPlus, 0x7FFFFFFF);
-                AppendRuneCost("RUNIC_POWER_COST",m_Amount, buff, dest);
+                AppendRuneCost("RUNIC_POWER_COST", m_Amount, buff, dest);
             }
         }
     }

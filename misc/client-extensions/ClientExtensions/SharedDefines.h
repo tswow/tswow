@@ -53,6 +53,8 @@ enum SpellFamilyNames
     SPELLFAMILY_PET         = 17
 };
 
+static uint32_t dummy = 0;
+
 static char* sConnectorPlus = " + ";
 static char* sPluralS = "s";
 static char* sSpace = " ";
@@ -74,3 +76,21 @@ CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, u
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
     return *reinterpret_cast<int32_t*>(*(ActivePlayer + 52) + 4 * field);
 };
+
+static void OverwriteUInt32AtAddress(uint32_t position, uint32_t newValue) {
+    DWORD flOldProtect = 0;
+
+    VirtualProtect((LPVOID)position, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    *reinterpret_cast<uint32_t*>(position) = newValue;
+    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
+};
+
+// Aleist3r: use bigger number as address1
+// address2 is direct write address, function automatically adds +4 to address
+// if the jump/call address is earlier in the memory (e.g. you're jumping from dll code back to wow.exe address), use backwards = true
+static uint32_t CalculateAddress(uint32_t address1, uint32_t address2, bool backwards = false) {
+    if (!backwards)
+        return address1 - (address2 + 4);
+    else
+        return (address2 + 4) - address1;
+}
