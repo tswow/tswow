@@ -13354,6 +13354,8 @@ declare namespace WoWAPI {
         SetID(id: number): void;
         
         GetID(): number;
+
+        SetClampedToScreen(yes: bool): void;
     }
 
     /**
