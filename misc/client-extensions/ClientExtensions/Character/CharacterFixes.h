@@ -1,5 +1,5 @@
 #pragma once
-#include "ClientCharacterDefines.h"
+#include "CharacterDefines.h"
 
 class CharacterFixes {
 private:

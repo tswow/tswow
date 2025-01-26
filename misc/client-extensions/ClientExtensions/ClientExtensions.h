@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ClientDB.h"
-#include "Characters/ClientCharacterFixes.h"
-#include "Tooltip/ClientTooltipExtensions.h"
+#include "Character/CharacterFixes.h"
+#include "Tooltip/SpellTooltipExtensions.h"
 
 class ClientExtensions {
 private:

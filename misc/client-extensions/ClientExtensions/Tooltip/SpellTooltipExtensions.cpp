@@ -1,4 +1,4 @@
-#include "ClientTooltipExtensions.h"
+#include "SpellTooltipExtensions.h"
 #include "windows.h"
 #include "Logger.h"
 
@@ -125,7 +125,6 @@ void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* b
 }
 
 void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
-    char* sRuneCost;
     int32_t m_RuneBlood = *(row + 1);
     int32_t m_RuneUnholy = *(row + 2);
     int32_t m_RuneFrost = *(row + 3);
