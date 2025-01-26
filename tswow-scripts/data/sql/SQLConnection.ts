@@ -223,7 +223,7 @@ export class SqlConnection {
     }
 
     static auth = new Connection(NodeConfig.DatabaseSettings('auth'));
-    //static characters = new Connection(getDefaultSettings('characters'));
+    static characters = new Connection(NodeConfig.DatabaseSettings('characters', 'default.realm'));
     static world_dst = new Connection(NodeConfig.DatabaseSettings('world',datasetName));
     static world_src = new Connection(NodeConfig.DatabaseSettings('world_source',datasetName))
 
@@ -231,7 +231,7 @@ export class SqlConnection {
 
     protected static endConnection() {
         Connection.end(this.auth);
-        //Connection.end(this.characters);
+        Connection.end(this.characters);
         Connection.end(this.world_src);
         Connection.end(this.world_dst);
         this.additional.forEach(x=>Connection.end(x));
@@ -240,7 +240,7 @@ export class SqlConnection {
 
     static connect() {
         this.endConnection();
-        [this.auth,this.world_dst,this.world_src]
+        [this.auth,this.world_dst,this.world_src,this.characters]
             .forEach((x)=>Connection.connect(x));
     }
 
@@ -271,6 +271,6 @@ export class SqlConnection {
     }
 
     static allDbs() {
-        return this.additional.concat([this.world_src,this.world_dst,this.auth]);
+        return this.additional.concat([this.world_src,this.world_dst,this.auth,this.characters]);
     }
 }
