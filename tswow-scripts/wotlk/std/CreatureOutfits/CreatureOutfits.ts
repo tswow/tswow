@@ -6,6 +6,10 @@ import { ClassIDs } from "../Class/ClassIDs";
 import { Genders } from "../Conditions/Settings/Gender";
 import { MainEntity } from "../Misc/Entity";
 import { RaceIDs } from "../Race/RaceType";
+import { DBC } from '../../DBCFiles';
+import { Ids } from '../Misc/Ids';
+import { std } from '../../wotlk';
+import { SQL } from '../../SQLFiles';
 
 export type RangedType =
     'MAINHAND_RANGED_ONLY' |
@@ -41,6 +45,8 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
     get Mainhand() { return this.wrap(this.row.mainhand); }
     get Offhand() { return this.wrap(this.row.offhand); }
     get Ranged() { return this.wrap(this.row.ranged); }
+
+    private texture = ''
 
     fromFile(
           filepath: string
@@ -158,5 +164,110 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
         this.Offhand.set(
             offhand === 0 && !emptyWeaponOverride ? -1 : offhand);
         return this;
+    }
+
+   private bakeModel() {
+        let modelID = 0
+        let combatReach = 1.5
+        let boundingRadius = 0.306
+
+        let extraInfo = DBC.CreatureDisplayInfoExtra.add(Ids.CreatureDisplayInfoExtra.id())
+            .DisplayRaceID.set(this.Race.get())
+            .DisplaySexID.set(this.Gender.get())
+            .SkinID.set(this.Skin.get())
+            .FaceID.set(this.Face.get())
+            .HairStyleID.set(this.Hair.get())
+            .HairColorID.set(this.HairColor.get())
+            .FacialHairID.set(this.FacialHair.get())
+            .BakeName.set(`${this.texture}.blp`)
+        
+        if(this.Head.get()) extraInfo.NPCItemDisplay.setIndex(0, std.Items.load(this.Head.get()).DisplayInfo.get())
+        if(this.Shoulders.get()) extraInfo.NPCItemDisplay.setIndex(1, std.Items.load(this.Shoulders.get()).DisplayInfo.get())
+        if(this.Shirt.get()) extraInfo.NPCItemDisplay.setIndex(2, std.Items.load(this.Shirt.get()).DisplayInfo.get())
+        if(this.Chest.get()) extraInfo.NPCItemDisplay.setIndex(3, std.Items.load(this.Chest.get()).DisplayInfo.get())
+        if(this.Waist.get()) extraInfo.NPCItemDisplay.setIndex(4, std.Items.load(this.Waist.get()).DisplayInfo.get())
+        if(this.Legs.get()) extraInfo.NPCItemDisplay.setIndex(5, std.Items.load(this.Legs.get()).DisplayInfo.get())
+        if(this.Feet.get()) extraInfo.NPCItemDisplay.setIndex(6, std.Items.load(this.Feet.get()).DisplayInfo.get())
+        if(this.Wrists.get()) extraInfo.NPCItemDisplay.setIndex(7, std.Items.load(this.Wrists.get()).DisplayInfo.get())
+        if(this.Hands.get()) extraInfo.NPCItemDisplay.setIndex(8, std.Items.load(this.Hands.get()).DisplayInfo.get())
+        if(this.Tabard.get()) extraInfo.NPCItemDisplay.setIndex(9, std.Items.load(this.Tabard.get()).DisplayInfo.get())
+        if(this.Back.get()) extraInfo.NPCItemDisplay.setIndex(10, std.Items.load(this.Back.get()).DisplayInfo.get())
+
+        switch(this.Race.get()) {
+            case RaceIDs.HUMAN:
+                this.Gender.get() == 0 ? modelID = 49 : modelID = 50
+                break
+            case RaceIDs.DWARF:
+                boundingRadius =  0.347
+                this.Gender.get() == 0 ? modelID = 53 : modelID = 54
+                break
+            case RaceIDs.GNOME:
+                boundingRadius =  0.3519
+                combatReach = 1.725
+                this.Gender.get() == 0 ? modelID = 182 : modelID = 183
+                break
+            case RaceIDs.NIGHTELF:
+                boundingRadius =  0.389
+                this.Gender.get() == 0 ? modelID = 55 : modelID = 56
+                break
+            case RaceIDs.DRAENEI:
+                this.Gender.get() == 0 ? modelID = 2248 : modelID = 2250
+                break
+            case RaceIDs.ORC:
+                boundingRadius =  0.372
+                this.Gender.get() == 0 ? modelID = 51 : modelID = 52
+                break
+            case RaceIDs.TROLL:
+                this.Gender.get() == 0 ? modelID = 185: modelID = 186
+                break
+            case RaceIDs.UNDEAD:
+                boundingRadius =  0.383
+                this.Gender.get() == 0 ? modelID = 57 : modelID = 58
+                break
+            case RaceIDs.TAUREN:
+                boundingRadius =  0.9747
+                combatReach = 4.05
+                this.Gender.get() == 0 ? modelID = 59 : modelID = 60
+                break
+            case RaceIDs.BLOODELF:
+                boundingRadius = 0.383
+                this.Gender.get() == 0 ? modelID = 2208 : modelID = 2209
+                break
+        }
+
+        let displayInfo = DBC.CreatureDisplayInfo.add(Ids.CreatureDisplayInfo.dynamicId())
+            .ModelID.set(modelID)
+            .SoundID.set(0)
+            .ExtendedDisplayInfoID.set(extraInfo.ID.get())
+            .CreatureModelAlpha.set(255)
+            .CreatureModelScale.set(1)
+            .NPCSoundID.set(this.NPCSounds.get())
+
+        SQL.creature_model_info.add(displayInfo.ID.get())
+            .Gender.set(this.Gender.get())
+            .CombatReach.set(combatReach)
+            .BoundingRadius.set(boundingRadius)
+
+        return displayInfo
+    }
+
+    /**
+     * Adds a baked texture to the model
+     * @param texture file name of the .blp texture in Textures/BakedNpcTextures
+     * @returns
+     */
+    addTexture(
+        texture: string
+    ) {
+        this.texture = texture
+        
+        return this
+    }
+
+    /**
+     * Returns the ID of the baked creature model
+     */
+    getBaked() {
+        return this.bakeModel().ID.get()
     }
 }
