@@ -422,6 +422,7 @@ struct TSEvents
         EVENT(LoadPresetAmmo, TSPlayer, TSItemTemplate, TSMutableNumber<uint32>)
 
         EVENT(OnTempEnchant, TSPlayer, TSNumber<uint32>)
+        EVENT(CheckLoadoutString, TSPlayer, std::string, TSMutable<bool, bool>)
     } Player;
 
     struct AccountEvents

@@ -12546,14 +12546,19 @@ declare namespace WoWAPI {
         func?: () => void,
         arg1?: any,
         arg2?: any,
-        isTitle?: boolean,
-        disabled?: boolean,
         checked?: boolean,
+        icon?: string,
+        iconOnly?: boolean,
+        isTitle?: boolean,
         hasArrow?: boolean,
         hasColorSwatch?: boolean,
-        r?: number,
-        g?: number,
-        b?: number,
+        iconXOffset?: number,
+        iconTooltipTitle?: string,
+        iconTooltipText?: string,
+        tCoordLeft?: number,
+        tCoordRight?: number,
+        tCoordTop?: number,
+        tCoordBottom?: number,
         colorCode?: string,
         swatchFunc?: () => void,
         hasOpacity?: boolean,
@@ -12561,12 +12566,17 @@ declare namespace WoWAPI {
         opacityFunc?: () => void,
         cancelFunc?: () => void,
         notClickable?: boolean,
-        notCheckable?: boolean,
+        notCheckable?: bool,
         keepShownOnClick?: boolean,
         tooltipTitle?: string,
         tooltipText?: string,
-        justifyH?: WoWAPI.HorizontalAlign,
-        menuList?: object
+        tooltipOnButton?: boolean,
+        tooltipWhileDisabled?: boolean,
+        justifyH?: HorizontalAlign,
+        fontObject?: FontObject,
+        owner?: Frame,
+        padding?: number,
+        menuList?: any;
     };
 
     type UIDropDownMenuDisplayMode = "" | "MENU";
@@ -13447,6 +13457,8 @@ declare namespace WoWAPI {
         SetID(id: number): void;
         
         GetID(): number;
+
+        SetClampedToScreen(yes: bool): void;
     }
 
     /**
@@ -14110,7 +14122,6 @@ declare function UIDropDownMenu_SetText(dropdown: WoWAPI.Frame, text: string): v
  * @param displayMode if "MENU", the visual elements of dropDown will be hidden and the menu, when shown, will be styled as a context menu rather than a dropdown list
  */
 declare function UIDropDownMenu_Initialize(dropdown: WoWAPI.Frame, initFunc: (self: WoWAPI.Frame, level: number, menuList: object) => void, displayMode?: WoWAPI.UIDropDownMenuDisplayMode, level?: number, menuList?: object): void;
-
 declare function UIDropDownMenu_JustifyText(dropdown: WoWAPI.Frame, position: WoWAPI.HorizontalAlign): void;
 
 /**

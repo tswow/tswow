@@ -8408,6 +8408,7 @@ declare namespace _hidden {
         LoadPresetAmmo(callback: (Player: TSPlayer, Weapon: TSItemTemplate, AmmoId: TSMutableNumber<uint32>) => void)
 
         OnTempEnchant(callback: (Player: TSPlayer, EnchantId: TSNumber<uint32>) => void)
+        CheckLoadoutString(callback: (Player: TSPlayer, loadout: string, Valid: TSMutable<boolean,boolean>) => void)
     }
 
     export class Account<T> {

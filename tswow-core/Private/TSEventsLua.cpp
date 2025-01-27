@@ -136,36 +136,28 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpellDamage);
     LUA_HANDLE(player_events, PlayerEvents, OnRunesSpent);
     LUA_HANDLE(player_events, PlayerEvents, OnPowerChanged);
-
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpeedRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateLeechRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAvoidanceRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateMasteryRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateThornsRating);
     LUA_HANDLE(player_events, PlayerEvents, OnCustomStatAura);
-
     LUA_HANDLE(player_events, PlayerEvents, OnCalcFallDamage);
     LUA_HANDLE(player_events, PlayerEvents, GainComboPoint);
     LUA_HANDLE(player_events, PlayerEvents, ClearComboPoints);
-
     LUA_HANDLE(player_events, PlayerEvents, OnEquipMainhandWeapon);
     LUA_HANDLE(player_events, PlayerEvents, OnUnequipMainhandWeapon);
-
     LUA_HANDLE(player_events, PlayerEvents, OnEquipOffhandWeapon);
     LUA_HANDLE(player_events, PlayerEvents, OnUnequipOffhandWeapon);
-
     LUA_HANDLE(player_events, PlayerEvents, OnActionButtonSet);
     LUA_HANDLE(player_events, PlayerEvents, OnActionButtonDelete);
-
     LUA_HANDLE(player_events, PlayerEvents, CanLoot);
     LUA_HANDLE(player_events, PlayerEvents, CanRoll);
-
     LUA_HANDLE(player_events, PlayerEvents, ScaleRegenByHaste);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateHasteRating);
-
     LUA_HANDLE(player_events, PlayerEvents, LoadPresetAmmo);
-
     LUA_HANDLE(player_events, PlayerEvents, OnTempEnchant);
+    LUA_HANDLE(player_events, PlayerEvents, CheckLoadoutString);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
