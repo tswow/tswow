@@ -35,12 +35,16 @@ void CustomDBC::LoadDB(CustomDBC dbc, const char* filename) {
             if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
                 SErrPrepareAppFatal(0x85100079, "Unable to read string size from %s", filename);
 
-            dbc.stringTable = SMemAlloc(Buffer, 0, 0, 0);
-            dbc.minIndex = 0;
-            dbc.maxIndex = 0;
+            dbc.stringTable = SMemAlloc(Buffer, filename, -2, 0);
 
             if (!SFileReadFile(FileBlock, dbc.stringTable, Buffer, 0, 0))
-                SErrPrepareAppFatal(0x85100086, "Unable to read string size from %s", filename);
+                SErrPrepareAppFatal(0x85100086, "%s: Cannot read string table", filename);
+
+            dbc.firstRow = SMemAlloc(dbc.numColumns * dbc.numRows * 4, filename, -2, 0);
+            memset(dbc.firstRow, 0, dbc.numColumns * dbc.numRows * 4);
+
+            dbc.minIndex = 0;
+            dbc.maxIndex = 0;
 
             SFileCloseFile(FileBlock);
             dbc.isLoaded = true;
