@@ -273,7 +273,7 @@ export class Realm {
     get core(): EmulatorCore {  return this.config.Dataset.config.EmulatorCore }
 
     async start(type: BuildType) {
-        term.log(this.logName(),`Starting worlserver for ${this.config.RealmName}...`)
+        term.log(this.logName(),`Starting worldserver for ${this.config.RealmName}...`)
         this.lastBuildType = type;
         await this.connect();
         await this.config.Dataset.setupDatabases('BOTH',false);
