@@ -52,6 +52,8 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientDB.cpp
     Character/CharacterFixes.cpp
     Tooltip/SpellTooltipExtensions.cpp
+    Camera/CVar.cpp
+    Camera/WorldSpace.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA
