@@ -4,15 +4,16 @@
 class CustomDBC {
 public:
     CustomDBC() {
-        isLoaded = false;
-        numRows = 0;
-        minIndex = 0xFFFFFFF;
-        maxIndex = 0xFFFFFFFF;
+        isLoaded    = false;
+        numRows     = 0;
+        minIndex    = 0xFFFFFFF;
+        maxIndex    = 0xFFFFFFFF;
         stringTable = 0;
-        firstRow = 0;
-        rows = 0;
+        firstRow    = 0;
+        numColumns  = 0;
+        rowSize     = 0;
     }
-    void LoadDB(CustomDBC dbc, const char* filename, uint32_t colCount, uint32_t rowSize);
+    void LoadDB(CustomDBC dbc, const char* filename);
 
     uint32_t* GetRow(CustomDBC dbc, uint32_t rowNum);
 private:
@@ -20,7 +21,9 @@ private:
     uint32_t numRows;
     uint32_t minIndex;
     uint32_t maxIndex;
-    uintptr_t* stringTable;
-    uintptr_t* firstRow;
+    void* stringTable;
+    void* firstRow;
     uintptr_t* rows;
+    uint32_t numColumns;
+    uint32_t rowSize;
 };

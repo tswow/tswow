@@ -1,46 +1,52 @@
 #include "CustomDBC.h"
 
-void CustomDBC::LoadDB(CustomDBC dbc, const char* filename, uint32_t colCount, uint32_t rowSize) {
-    uint32_t sig;
-    uint32_t something;
+void CustomDBC::LoadDB(CustomDBC dbc, const char* filename) {
+    uint32_t Buffer = 0;
+    void* FileBlock = 0;
+
+    // TODO: pointer to first row, values for minIndex and maxIndex
 
     if (!dbc.isLoaded) {
-        if (!SFileOpenFileEx(0, filename, 0x20000, something)) // TODO: 4th argument
+        if (!SFileOpenFileEx(0, filename, 0x20000, &FileBlock))
             SErrPrepareAppFatal(0x85100079, "Unable to open %s", filename);
 
-        if (!SFileReadFile(something, sig, 4, 0, 0, 0)) // TODO: 1st argument
+        if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
             SErrPrepareAppFatal(0x85100079, "Unable to read signature from %s", filename);
 
-        if (sig != 0x43424457)
-            SErrPrepareAppFatal(0x85100079, "Invalid signature 0x%x from %s", sig, filename);
+        if (Buffer != 0x43424457) // WDBC but little endian so technically CBDW
+            SErrPrepareAppFatal(0x85100079, "Invalid signature 0x%x from %s", Buffer, filename);
 
-        if (!SFileReadFile(something, dbc.numRows, 4, 0, 0, 0)) // TODO: 1st argument
+        if (!SFileReadFile(FileBlock, &dbc.numRows, 4, 0, 0))
             SErrPrepareAppFatal(0x85100079, "Unable to read record count from %s", filename);
 
         if (dbc.numRows) {
-            if (!SFileReadFile(something, sig, 4, 0, 0, 0)) // TODO: 1st argument
+            if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
                 SErrPrepareAppFatal(0x85100079, "Unable to read column count from %s", filename);
 
-            if (sig != 4)
-                SErrPrepareAppFatal(0x85100079, "%s has wrong number of columns (found %i, expected %i)", filename, sig, colCount);
+            if (Buffer != dbc.numColumns)
+                SErrPrepareAppFatal(0x85100079, "%s has wrong number of columns (found %i, expected %i)", filename, Buffer, dbc.numColumns);
 
-            if (!SFileReadFile(something, sig, 4, 0, 0, 0)) // TODO: 1st argument
+            if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
                 SErrPrepareAppFatal(0x85100079, "Unable to read row size from %s", filename);
 
-            if (sig != 16)
-                SErrPrepareAppFatal(0x85100079, "%s has wrong row size (found %i, expected %i)", filename, sig, rowSize);
+            if (Buffer != dbc.rowSize)
+                SErrPrepareAppFatal(0x85100079, "%s has wrong row size (found %i, expected %i)", filename, Buffer, dbc.rowSize);
 
-            if (!SFileReadFile(something, sig, 4, 0, 0, 0)) // TODO: 1st argument
+            if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
                 SErrPrepareAppFatal(0x85100079, "Unable to read string size from %s", filename);
 
-            // here should be some more code
+            dbc.stringTable = SMemAlloc(Buffer, 0, 0, 0);
+            dbc.minIndex = 0;
+            dbc.maxIndex = 0;
 
-            SFileCloseFile(&something);
+            if (!SFileReadFile(FileBlock, dbc.stringTable, Buffer, 0, 0))
+                SErrPrepareAppFatal(0x85100086, "Unable to read string size from %s", filename);
+
+            SFileCloseFile(FileBlock);
             dbc.isLoaded = true;
         }
-        else {
-            SFileCloseFile(&something);
-        }
+        else
+            SFileCloseFile(FileBlock);
     }
 }
 
