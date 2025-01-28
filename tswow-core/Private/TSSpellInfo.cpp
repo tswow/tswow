@@ -237,9 +237,6 @@ TSNumber<uint32> TSSpellInfo::GetPriority()
 {
 #if TRINITY
     return info->Priority;
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSSpellInfo::GetPriority not implemented for AzerothCore");
-    return 0;
 #endif
 }
 
@@ -395,8 +392,6 @@ TSNumber<uint32> TSSpellEffectInfo::GetEffectIndex()
 {
 #if TRINITY
     return static_cast<uint32>(m_info->EffectIndex);
-#elif AZEROTHCORE
-    return static_cast<uint32>(m_info->_effIndex);
 #endif
 }
 
@@ -486,16 +481,6 @@ TSNumber<int32> TSSpellEffectInfo::CalcValue(TSWorldObject caster)
 {
 #if TRINITY
     return m_info->CalcValue(caster.obj);
-#elif AZEROTHCORE
-    if (Unit* unit = caster.obj->ToUnit())
-    {
-        return m_info->CalcValue(unit);
-    }
-    else
-    {
-        TS_LOG_ERROR("tswow.api", "TSSpellEffectInfo::CalcValue not implemented for GameObjects on AzerothCore.");
-        return 0;
-    }
 #endif
 }
 

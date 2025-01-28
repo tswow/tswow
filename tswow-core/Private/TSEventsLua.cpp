@@ -219,6 +219,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCheckCast);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDispel);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCancel);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffect);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEffectApplyGlyph);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnHit);
@@ -280,6 +281,11 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCastCancelled);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnSpellCastFinished);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, CanMoveWhileChanneling);
+
+    LUA_HANDLE(spell_events, SpellEvents, OnLearn);
+    LUA_HANDLE(spell_events, SpellEvents, OnUnlearn);
+    LUA_HANDLE(spell_events, SpellEvents, OnAuraRemoved);
+    LUA_HANDLE(spell_events, SpellEvents, OnSuccessfulDispel);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);
@@ -474,10 +480,9 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSpellFinish);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnQuestRewardItem);
 
-#if TRINITY
     auto area_trigger_events = state.new_usertype<TSEvents::AreaTriggerEvents>("AreaTriggerEvents");
     LUA_MAPPED_HANDLE(area_trigger_events, AreaTriggerEvents, OnTrigger);
-#endif
+
     auto gameevent_events = state.new_usertype<TSEvents::GameEventsEvents>("GameEventsEvents");
     LUA_MAPPED_HANDLE(gameevent_events, GameEventsEvents, OnStart);
     LUA_MAPPED_HANDLE(gameevent_events, GameEventsEvents, OnUpdateState);

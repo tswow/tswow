@@ -237,8 +237,6 @@ export const SQL = {
 
     /**
      * SQL table of DBC data. Populating this table makes the server ignore the corresponding DBC file.
-     *
-     * Only use this table if AzerothCore already does, very few are actually used.
      */
     achievement_dbc : SQL_achievement_dbc,
 
@@ -1034,8 +1032,6 @@ export const SQL = {
 
     /**
      * SQL table of DBC data. Populating this table makes the server ignore the corresponding DBC file.
-     *
-     * Only use this table if AzerothCore already does, very few are actually used.
      */
     spell_dbc : SQL_spell_dbc,
 
@@ -1101,8 +1097,6 @@ export const SQL = {
 
     /**
      * SQL table of DBC data. Populating this table makes the server ignore the corresponding DBC file.
-     *
-     * Only use this table if AzerothCore already does, very few are actually used.
      */
     spelldifficulty_dbc : SQL_spelldifficulty_dbc,
 

@@ -137,11 +137,7 @@ TSNumber<uint16> TSObject::GetCoreUInt16(uint16 index,uint8 offset)
  */
 TSNumber<float> TSObject::GetScale()
 {
-#ifndef AZEROTHCORE
     return obj->GetObjectScale();
-#else
-    return obj->GetFloatValue(OBJECT_FIELD_SCALE_X);
-#endif
 }
 
 /**
@@ -189,8 +185,6 @@ TSGUID TSObject::GetGUID()
 TSNumber<uint32> TSObject::GetGUIDLow()
 {
 #ifdef TRINITY
-    return obj->GetGUID().GetCounter();
-#elif AZEROTHCORE
     return obj->GetGUID().GetCounter();
 #endif
 }
@@ -348,32 +342,32 @@ void TSObject::RemoveFlag(uint16 index,uint32 flag)
 
 TSPlayer TSObject::ToPlayer()
 {
-    return TSPlayer((Player*)obj);
+    return ::ToPlayer(*this);
 }
 
 TSUnit TSObject::ToUnit()
 {
-    return TSUnit((Unit*)obj);
+    return ::ToUnit(*this);
 }
 
 TSWorldObject TSObject::ToWorldObject()
 {
-    return TSWorldObject((WorldObject*)obj);
+    return ::ToWorldObject(*this);
 }
 
 TSGameObject TSObject::ToGameObject()
 {
-    return TSGameObject((GameObject*)obj);
+    return ::ToGameObject(*this);
 }
 
 TSCreature TSObject::ToCreature()
 {
-    return TSCreature((Creature*)obj);
+    return ::ToCreature(*this);
 }
 
 TSCorpse TSObject::ToCorpse()
 {
-    return TSCorpse((Corpse*)obj);
+    return ::ToCorpse(*this);
 }
 
 bool TSObject::IsPlayer()
@@ -385,8 +379,6 @@ bool TSObject::IsCreature()
 {
 #if TRINITY
     return obj != nullptr && obj->IsCreature();
-#elif AZEROTHCORE
-    return obj && obj->GetTypeId() == TYPEID_UNIT;
 #endif
 }
 
@@ -394,8 +386,6 @@ bool TSObject::IsUnit()
 {
 #if TRINITY
     return obj != nullptr && obj->IsUnit();
-#elif AZEROTHCORE
-    return IsCreature() || IsPlayer();
 #endif
 }
 
@@ -403,8 +393,6 @@ bool TSObject::IsGameObject()
 {
 #if TRINITY
     return obj != nullptr && obj->IsGameObject();
-#elif AZEROTHCORE
-    return obj && obj->isType(TYPEMASK_GAMEOBJECT);
 #endif
 }
 
@@ -412,8 +400,6 @@ bool TSObject::IsCorpse()
 {
 #if TRINITY
     return obj != nullptr && obj->IsCorpse();
-#elif AZEROTHCORE
-    return obj && obj->isType(TYPEMASK_CORPSE);
 #endif
 }
 
@@ -463,4 +449,46 @@ TSItem TSObject::ToItem()
 bool TSObject::IsItem()
 {
     return obj->isType(TYPEMASK_ITEM);
+}
+
+TSWorldObject ToWorldObject(TSObject obj)
+{
+    if (obj.obj && obj.obj->isType(TYPEMASK_WORLDOBJECT))
+    {
+        return TSWorldObject(static_cast<WorldObject*>(obj.obj));
+    }
+    else
+    {
+        return TSWorldObject(nullptr);
+    }
+}
+
+TSUnit ToUnit(TSObject obj)
+{
+    return TSUnit(obj.obj ? obj.obj->ToUnit() : nullptr);
+}
+
+TSCreature ToCreature(TSObject obj)
+{
+    return TSCreature(obj.obj ? obj.obj->ToCreature() : nullptr);
+}
+
+TSPlayer ToPlayer(TSObject obj)
+{
+    return TSPlayer(obj.obj ? obj.obj->ToPlayer() : nullptr);
+}
+
+TSGameObject ToGameObject(TSObject obj)
+{
+    return TSGameObject(obj.obj ? obj.obj->ToGameObject() : nullptr);
+}
+
+TSItem ToItem(TSObject obj)
+{
+    return TSItem((obj.obj && obj.obj->isType(TYPEMASK_ITEM)) ? static_cast<Item*>(obj.obj) : nullptr);
+}
+
+TSCorpse ToCorpse(TSObject obj)
+{
+    return TSCorpse(obj.obj ? obj->ToCorpse() : nullptr);
 }

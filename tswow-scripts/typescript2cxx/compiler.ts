@@ -106,17 +106,18 @@ export class Run {
                 const configPath = ts.findConfigFile('./', ts.sys.fileExists, sourcesOrConfigFile);
                 if (configPath) {
                     this.compileWithConfig(configPath, cmdLineOptions);
-                    return;
+                    process.exit(0)
                 } else {
                     throw new Error('Could not find a valid \'tsconfig.json\'.');
                 }
             }
 
             this.compileSources([sourcesOrConfigFile], cmdLineOptions);
-            return;
+            process.exit(0)
         }
 
         this.compileSources(sourcesOrConfigFile, cmdLineOptions);
+        process.exit(0)
     }
 
     public compileSources(sources: string[], cmdLineOptions: any): void {

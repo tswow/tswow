@@ -20,6 +20,7 @@
 #include "TSMain.h"
 #include "TSClasses.h"
 #include "TSWorldObject.h"
+#include "TSLua.h"
 
 class TSGameObjectTemplate;
 
@@ -53,3 +54,5 @@ public:
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
 };
+
+LUA_PTR_TYPE(TSGameObject)

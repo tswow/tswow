@@ -81,3 +81,6 @@ TSAchievementEvents* GetAchievementEvent(uint32 entry);
 
 TC_GAME_API TSAchievementEntry GetAchievementTemplate(uint32 entry);
 TC_GAME_API TSAchievementCriteriaEntry GetAchievementCriteria(uint32 entry);
+
+LUA_PTR_TYPE(TSAchievementEntry);
+LUA_PTR_TYPE(TSAchievementCriteriaEntry);

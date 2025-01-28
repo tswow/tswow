@@ -123,7 +123,7 @@ export function getAny(owner: any, prefix: string,type: string, inlineType: Inli
                 case 'livescript': {
                     const modobj = (filesLivescript[modname]||(filesLivescript[modname] = {}));
                     const fullText = `    events.${type}.${x}(${prefix}${func.getText()})`;
-                    (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
+                    (modobj[relativeFilename.get()]||(modobj[relativeFilename.get()]=[])).push(fullText);
                     break;
                 }
             }

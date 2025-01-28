@@ -51,7 +51,8 @@ export namespace Scripts {
                 wsys.execIn(buildDir,'tsc','inherit')
             } else {
                 watchTsc(
-                      spaths.node_modules.typescript_js.abs().get()
+                      'node'
+                    , spaths.node_modules.typescript_js.abs().get()
                     , buildDir,termCustom('build',wfs.basename(buildDir))
                 )
             }

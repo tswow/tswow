@@ -17,6 +17,7 @@ import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { getLivescriptCMakeLists } from "./LivescriptsCMakeLists";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 import { applyTSTLHack } from "./TSTLHack";
 
@@ -43,7 +44,7 @@ const scripts_tsconfig_json =
       "forceConsistentCasingInFileNames": true
     },
     "include":["./","../Ids.ts","../shared"],
-    "exclude":["../data","../addons"]
+    "exclude":["./build", "../data","../addons"]
 };
 
 const temp_config = (dataset: Dataset) => ({
@@ -57,7 +58,8 @@ const temp_config = (dataset: Dataset) => ({
     'skipLibCheck': true,
     'forceConsistentCasingInFileNames': true
 },
-'include': ['./shared','./livescripts']
+    'include': ['./shared','./livescripts'],
+    'exclude': ['./livescripts/build/lib']
 });
 
 export class LiveScriptsConfig extends ConfigFile {
@@ -107,7 +109,8 @@ const lua_tsconfig_json = {
                 , 'import':'LuaORM'
             }
         ]
-    }
+    },
+    "exclude": ["./livescripts/build/lib"]
 }
 
 export class Livescripts {
@@ -169,7 +172,7 @@ export class Livescripts {
             term.log(this.logName(),`Compiling ts->lua`)
             wsys.execIn(
                 this.mod.path.get()
-            , `node ${ipaths.node_modules.tstl_js.abs()}`
+            , `${NodeExecutable} ${ipaths.node_modules.tstl_js.abs()}`
             )
         }
 
@@ -244,7 +247,7 @@ export class Livescripts {
         try {
             wsys.execIn(
                   `${this.mod.path.abs()}`
-                , `node --stack-trace-limit=1000 -r source-map-support/register`
+                , `${NodeExecutable} --stack-trace-limit=1000 -r source-map-support/register`
                 + ` ${ipaths.bin.scripts.typescript2cxx.typescript2cxx.main_js.abs()} tsconfig.json`
                 + ` ${(args.join(' '))}`
                 + ` --ipaths=${ipaths.abs()}`
@@ -374,6 +377,7 @@ export class Livescripts {
     }
 
     static initialize() {
+        term.debug('misc', `Initializing livescripts`)
         ListCommand.addCommand(
               'livescripts'
             , 'module?'

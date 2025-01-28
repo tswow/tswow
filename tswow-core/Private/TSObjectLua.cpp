@@ -48,4 +48,12 @@ void TSLua::load_object_methods(sol::state& state)
     LUA_FIELD(ts_object, TSObject, IsUnit);
     LUA_FIELD(ts_object, TSObject, IsCorpse);
     LUA_FIELD(ts_object, TSObject, IsItem);
+
+    state.set_function("ToWorldObject", &ToWorldObject);
+    state.set_function("ToUnit", &ToUnit);
+    state.set_function("ToGameObject", &ToGameObject);
+    state.set_function("ToPlayer", &ToPlayer);
+    state.set_function("ToCreature", &ToCreature);
+    state.set_function("ToCorpse", &ToCorpse);
+    state.set_function("ToItem", &ToItem);
 }

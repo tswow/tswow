@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSArray.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -92,3 +93,6 @@ private:
     void LFilter(sol::protected_function predicate);
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSLootItem)
+LUA_PTR_TYPE(TSLoot)

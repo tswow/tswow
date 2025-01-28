@@ -124,7 +124,7 @@ TSNumber<uint32> TSSpell::GetPowerCost()
  */
 TSNumber<int32> TSSpell::GetDuration()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return spell->GetSpellInfo()->GetDuration();
 #else
     return GetSpellDuration(spell->m_spellInfo);
@@ -140,7 +140,7 @@ TSNumber<int32> TSSpell::GetDuration()
  */
 TSPosition TSSpell::GetTargetDest()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     float x, y, z;
     spell->m_targets.GetDstPos()->GetPosition(x, y, z);
 #else
@@ -164,7 +164,7 @@ TSPosition TSSpell::GetTargetDest()
  */
 TSObject  TSSpell::GetTarget()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     if (GameObject* target = spell->m_targets.GetGOTarget())
          return TSObject(target);
     else if (Item* target = spell->m_targets.GetItemTarget())
@@ -243,15 +243,17 @@ bool TSSpell::IsTriggeredByAura(uint32 aura)
 {
 #if TRINITY
     return spell->IsTriggeredByAura(sSpellMgr->GetSpellInfo(aura));
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSSpell::IsTriggeredByAura not implemented for AzerothCore");
-    return false;
 #endif
 }
 
 TSNumber<uint32> TSSpell::GetGlyphSlot()
 {
     return spell->m_glyphIndex;
+}
+
+TSNumber<uint32> TSSpell::GetState()
+{
+    return spell->getState();
 }
 
 int32 TSSpell::GetBasePoints(uint32 index)

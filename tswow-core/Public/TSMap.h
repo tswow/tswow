@@ -21,6 +21,8 @@
 #include "TSClasses.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
+#include "TSLua.h"
+#include "TSWeather.h"
 
 #include <sol/sol.hpp>
 
@@ -78,6 +80,7 @@ public:
     TSGameObject SpawnGameObject(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
     TSNumber<uint32> GetAreaID(float x, float y, float z, float phasemask);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
+    TSWeather GetOrGenerateZoneDefaultWeather(uint32 zoneId);
     TSEntity * GetData();
     void DoDelayed(std::function<void(TSMap, TSMainThreadContext)> callback);
 
@@ -107,3 +110,8 @@ private:
 
     friend class TSLua;
 };
+
+TC_GAME_API TSInstance ToInstance(TSMap);
+TC_GAME_API TSBattleground ToBattleground(TSMap);
+
+LUA_PTR_TYPE(TSMap)

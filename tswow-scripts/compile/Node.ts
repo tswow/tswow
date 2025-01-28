@@ -16,6 +16,7 @@
  */
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
+import { wsys } from '../util/System';
 import { NODE_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';

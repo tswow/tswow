@@ -21,7 +21,7 @@ import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24041/TDB_full_world_335.24041_2024_04_10.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24081/TDB_full_world_335.24081_2024_08_17.7z"
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
@@ -233,10 +233,10 @@ export const Languages =
     ];
 export function ClientPath(pathIn: string, devPatch: string) {
     return generateTree(pathIn,dir({
-        /** The wow.exe used to start the game */
-        wow_exe: file('wow.exe'),
-        /** The wow.exe without any patches applied */
-        wow_exe_clean: file('wow.exe.clean'),
+        /** The Wow.exe used to start the game */
+        wow_exe: file('Wow.exe'),
+        /** The Wow.exe without any patches applied */
+        wow_exe_clean: file('Wow.exe.clean'),
         Data: dir({
             devPatch: dirn(devPatch,{
                 Interface: dir({
@@ -279,6 +279,7 @@ export function InstallPath(pathIn: string, tdb: string) {
         Crashes: dir({}),
 
         startBat: file('start.bat'),
+        startJs: file('start.js'),
 
         bin: dir({
             package: dir({
@@ -286,7 +287,9 @@ export function InstallPath(pathIn: string, tdb: string) {
             }),
             node: dir(
             {
-                npm: file('npm'),
+                node_exe: file('node.exe'),
+                npx_exe: file('npx'),
+                npm_exe: file('npm')
             }),
             changes: dir({
                 changeFile: dynfile(name=>name)
@@ -302,7 +305,6 @@ export function InstallPath(pathIn: string, tdb: string) {
             addons: dir({}),
             revisions: dir({
                 trinitycore: file('trinitycore'),
-                azerothcore: file('azerothcore'),
                 tswow: file('tswow'),
             }),
             scripts: dir({
@@ -431,8 +433,8 @@ export function InstallPath(pathIn: string, tdb: string) {
                     vmap4extractor: file(`vmap4extractor${isWindows()?'.exe':''}`),
                     authserver: file(`authserver${isWindows()?'.exe':''}`),
                     tracy_client: file(`TracyClient.dll`),
-                    authserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}authserver.conf.dist`),
-                    worldserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}worldserver.conf.dist`),
+                    authserver_conf_dist: file(`authserver.conf.dist`),
+                    worldserver_conf_dist: file(`worldserver.conf.dist`),
 
                     libcrypto: file('libcrypto-3-x64.dll'),
                     libssl: file('libssl-3-x64.dll'),
@@ -595,46 +597,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
             identify_exe: file('identify.exe'),
         }),
 
-        AzerothCore: dir({
-            sol_headers: dirn('_deps/sol2-src/include',{}),
-            bin: dir({
-                // TODO: fix
-                libraries: custom(pathIn=>(type: string)=>{
-                    return []
-                }),
-                configs: custom((k)=>(name: string)=>{
-                    return generateTree(mpath(k,'bin',name),dir({}))
-                }),
-            }),
-
-            libraries: custom((pathIn=>(type: string)=>{
-                return (isWindows() ?
-                [
-                    `deps/zlib/${type}/zlib.lib`,
-                    `deps/SFMT/${type}/sfmt.lib`,
-                    `deps/g3dlite/${type}/g3dlib.lib`,
-                    `deps/fmt/${type}/fmt.lib`,
-                    `deps/recastnavigation/Detour/${type}/detour.lib`,
-                    `deps/argon2/${type}/argon2.lib`,
-                    `src/server/shared/${type}/shared.lib`,
-                    `src/server/database/${type}/database.lib`,
-                    `src/server/game/${type}/game.lib`,
-                    `src/common/${type}/common.lib`,
-                ]
-                :
-                [
-                    `install/trinitycore/lib/libcommon.so`,
-                    `install/trinitycore/lib/libdatabase.so`,
-                    `install/trinitycore/lib/libgame.so`,
-                    `install/trinitycore/lib/libshared.so`,
-                ]
-                ).map(x=>new WFile(mpath(pathIn,x)))
-            })),
-        }),
-
         TrinityCore: dir({
             sol_headers: dirn('_deps/sol2-src/include',{}),
-            lua_headers: dirn('_deps/lua-src',{ src: dir({})}),
+            lua_headers: dirn('_deps/lua-src',{}),
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
             lib_linux: dirn('install/trinitycore/lib',{}),
@@ -770,18 +735,6 @@ export function SourcePaths(pathIn: string) {
         }),
 
         cores: dir({
-            AzerothCore: dirn('azerothcore-wotlk',{
-                data: dir({
-                    sql: dir({
-                        type: enumDir({base:0,updates:0,custom:0},()=>({
-                            db_auth: dir({}),
-                            db_characters: dir({}),
-                            db_world: dir({}),
-                        }))
-                    })
-                })
-            }),
-
             TrinityCore: dir({
                 src: dir({}),
                 sql: dir({

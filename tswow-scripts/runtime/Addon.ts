@@ -26,6 +26,7 @@ import { BuildCommand, CleanCommand, CreateCommand, ListCommand } from "./Comman
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeExecutable } from "./Node";
 import { NodeConfig } from "./NodeConfig";
 import { applyTSTLHack } from "./TSTLHack";
 
@@ -182,6 +183,7 @@ export class Addon {
     }
 
     async build(dataset: Dataset) {
+        term.log(this.logName(),`Building addon for dataset ${dataset.name}`)
         // 1. Verify and set up environment
         if(!this.path.exists()) {
             throw new Error(`${this.mod.fullName} does not have an addon directory`)
@@ -189,14 +191,13 @@ export class Addon {
         this.path.build.remove();
         this.initialize();
         await dataset.setupClientData();
-        term.log(this.logName(),`Building addon for dataset ${dataset.name}`)
 
         applyTSTLHack();
 
         // 3. Run tstl
         wsys.execIn(
               this.path.get()
-            , `node ${ipaths.node_modules.tstl_js.abs()}`
+            , `${NodeExecutable} ${ipaths.node_modules.tstl_js.abs()}`
         )
 
         // 4. Copy all lua files
@@ -331,6 +332,7 @@ export class Addon {
     }
 
     static initialize() {
+        term.debug('misc', `Initializing addons`)
         ListCommand.addCommand(
             'addon'
           , 'module?'
