@@ -5834,12 +5834,12 @@ declare interface TSWorldObjectCollection {
     filterInPlace(callback: (obj: TSWorldObject)=>bool): void
     forEach(callback: (obj: TSWorldObject)=>void) :void
     find(callback: (obj: TSWorldObject)=>bool): TSWorldObject | undefined
-    length: TSNumber<uint32>
     /**
      * @warn This is an O(n) operation, because the backing type is an std::list
      * @param index
      */
-    get(index: uint32): TSWorldObject| undefined
+    get(index: uint32): TSWorldObject | undefined
+    get_length(): number
     SortByHealth(ascending: bool) : void
     resize(amount: uint32) : void
 }
