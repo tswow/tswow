@@ -15,13 +15,10 @@ struct VecXYZ : Vec3D<float> {
     }
 };
 
-
-CLIENT_FUNCTION(WorldFrame_3Dto2D,0x004F6D20, __fastcall,int,(WorldFrame* This, void* edx, VecXYZ* pos3d, VecXYZ* pos2d, uint32_t* flags));
-
+CLIENT_FUNCTION(WorldFrame_3Dto2D, 0x004F6D20, __fastcall,int,(WorldFrame* This, void* edx, VecXYZ* pos3d, VecXYZ* pos2d, uint32_t* flags));
 
 inline void WorldFrame_PercToScreenPos(float x, float y, float* resX, float* resY)
-{
-    
+{ 
     float g_UITexCoordAlphaMultiplier1 = *(float*)0x00AC0CB4;
     float g_UITexCoordAlphaMultiplier3 = *(float*)0x00AC0CBC;
     *resX = (x * (g_UITexCoordAlphaMultiplier3 * 1024.f)) / g_UITexCoordAlphaMultiplier1;
@@ -39,11 +36,9 @@ LUA_FUNCTION(ConvertCoordsToScreenSpace, (lua_State* L)) {
     int result = WorldFrame_3Dto2D(worldFrame,nullptr,&pos3d, &pos2d, &flags);
     float x;
     float y;
-    bool useUiScale = std::stof(GetCVar("useUiScale")->vStr) == 1;
     WorldFrame_PercToScreenPos(pos2d.x, pos2d.y, &x, &y);
-    float uiscale =  useUiScale ? std::stof(GetCVar("uiScale")->vStr) : 0.9;
-    ClientLua::PushNumber(L, (x / uiscale));
-    ClientLua::PushNumber(L, (y / uiscale));
+    ClientLua::PushNumber(L, x);
+    ClientLua::PushNumber(L, y);
     ClientLua::PushNumber(L, pos2d.z);
     return 3;
 }
