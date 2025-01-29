@@ -10,4 +10,5 @@ void (*SFileCloseFile)(HANDLE) = (void (*)(HANDLE))0x422910;
 
 //
 void* (*SMemAlloc)(uint32_t, const char*, uint32_t, uint32_t) = (void* (*)(uint32_t, const char*, uint32_t, uint32_t))0x76E540;
+void* (*SMemFree)(void*, const char*, uint32_t, uint32_t) = (void* (*)(void*, const char*, uint32_t, uint32_t))0x76E5A0;
 uint32_t (*SErrPrepareAppFatal)(uint32_t, const char*, ...) = (uint32_t (*)(uint32_t, const char*, ...))0x772A80;
