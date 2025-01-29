@@ -4499,11 +4499,11 @@ declare function PickupPlayerMoney(copper: number): void;
 
 /**
  * Puts the specified spell onto the mouse cursor
- * @param spell ID of the spell to pick up
+ * @param spell Name of the spell to pick up
  * @requires NO_COMBAT
  * @see https://wow.gamepedia.com/API_PickupSpell
  */
-declare function PickupSpell(spellId: number): void;
+declare function PickupSpell(spellName: string): void;
 
 /**
  * Attaches a pet in your stable to your cursor. 1 for the pet in the slot on the left, and 2 for the pet in the slot on the right
