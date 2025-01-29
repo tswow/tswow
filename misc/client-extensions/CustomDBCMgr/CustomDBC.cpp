@@ -4,8 +4,6 @@ void CustomDBC::LoadDB(CustomDBC dbc, const char* filename) {
     uint32_t Buffer = 0;
     void* FileBlock = 0;
 
-    // TODO: pointer to first row, values for minIndex and maxIndex
-
     if (!dbc.isLoaded) {
         if (!SFileOpenFileEx(0, filename, 0x20000, &FileBlock))
             SErrPrepareAppFatal(0x85100079, "Unable to open %s", filename);
