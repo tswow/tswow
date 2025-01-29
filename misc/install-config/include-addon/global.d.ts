@@ -57,6 +57,7 @@ declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 //dll additions
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
+declare function GetSpellDescription(spellID:number): string;
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
