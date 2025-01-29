@@ -45,7 +45,7 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Change memory protection to allow writing
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
     // Apply the patch bytes
-    std::memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
+    memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
     // Calculate and write the relative address for the function call
     *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8A);
     // Restore the original memory protection

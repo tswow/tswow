@@ -1,6 +1,7 @@
 #include "ClientLua.h"
 #include "Logger.h"
 #include "ClientDetours.h"
+#include "SharedDefines.h"
 #include "FSRoot.h"
 
 #include <vector>
@@ -166,12 +167,7 @@ CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
 
 CLIENT_DETOUR(UnloadScriptFunctions, 0x00512280, __cdecl, int, ()) {
     if (lastCave > 0)
-    {
-        DWORD old;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, PAGE_EXECUTE_READWRITE, &old);
-        memset(CAVE_START, NOP, JMP_SIZE * lastCave);
-        DWORD dummy;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, old, &dummy);
-    }
+        WriteBytesAtAddress(CAVE_START, NOP, JMP_SIZE * lastCave);
+
     return UnloadScriptFunctions();
 }

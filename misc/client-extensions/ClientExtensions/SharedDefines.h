@@ -1,5 +1,5 @@
 #pragma once
-#include "windows.h"
+#include "Windows.h"
 #include "ClientMacros.h"
 
 #include <functional>
@@ -84,6 +84,14 @@ static void OverwriteUInt32AtAddress(uint32_t position, uint32_t newValue) {
     *reinterpret_cast<uint32_t*>(position) = newValue;
     VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
 };
+
+static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
+    DWORD flOldProtect = 0;
+
+    VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    memset(position, byte, size);
+    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
+}
 
 // Aleist3r: use bigger number as address1
 // address2 is direct write address, function automatically adds +4 to address
