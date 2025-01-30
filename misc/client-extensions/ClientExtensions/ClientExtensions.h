@@ -1,5 +1,6 @@
 #pragma once
 #include "Characters/CharacterFixes.h"
+#include "Tooltip/SpellTooltipExtensions.h"
 
 class ClientExtensions {
 private:
