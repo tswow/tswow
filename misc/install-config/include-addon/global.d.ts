@@ -12479,13 +12479,14 @@ declare namespace WoWAPI {
     type VerticalAlign = "TOP" | "MIDDLE" | "BUTTOM";
     type Point = "TOP" | "RIGHT" | "BOTTOM" | "LEFT" | "TOPRIGHT" | "TOPLEFT" | "BOTTOMLEFT" | "BOTTOMRIGHT" | "CENTER";
     type Anchor = "ANCHOR_TOP" | "ANCHOR_RIGHT" | "ANCHOR_BOTTOM" | "ANCHOR_LEFT" | "ANCHOR_TOPRIGHT" | "ANCHOR_BOTTOMRIGHT" | "ANCHOR_TOPLEFT" | "ANCHOR_BOTTOMLEFT" | "ANCHOR_CURSOR" | "ANCHOR_PRESERVE" | "ANCHOR_NONE"
-    type Layer = "BACKGROUND" | "ARTWORK" | "OVERLAY";
+    type Layer = "BACKGROUND" | "ARTWORK" | "OVERLAY" | "BORDER";
     type FrameStrata = "WORLD" | "BACKGROUND" | "LOW" | "MEDIUM" | "HIGH" | "DIALOG" | "FULLSCREEN" | "FULLSCREEN_DIALOG" | "TOOLTIP";
     type Wrap = "CLAMP" | "CLAMPTOBLACK" | "CLAMPTOBLACKADDITIVE" | "CLAMPTOSHITE" | "REPEAT" | true | "MIRROR";
     type MouseButton = "LeftButton" | "RightButton" | "Middle" | "Button4" | "Button5";
     type FilterMode = "LINEAR" | "BILINEAR" | "TRILINEAR" | "NEAREST";
     type MouseWheelDelta = 1 | -1;
     type Align = "HORIZONTAL" | "VERTICAL";
+    type BlendMode = 'DISABLE' | 'BLEND' | 'ALPHAKEY' | 'ADD' | 'MOD'
 
     namespace Event {
         type OnEvent = "OnEvent";
@@ -12532,6 +12533,7 @@ declare namespace WoWAPI {
         arg2?: any,
         checked?: boolean,
         icon?: string,
+        iconInfo?: any,
         iconOnly?: boolean,
         isTitle?: boolean,
         hasArrow?: boolean,
@@ -12544,13 +12546,14 @@ declare namespace WoWAPI {
         tCoordTop?: number,
         tCoordBottom?: number,
         colorCode?: string,
+        disablecolor?: string,
         swatchFunc?: () => void,
         hasOpacity?: boolean,
         opacity?: number,
         opacityFunc?: () => void,
         cancelFunc?: () => void,
         notClickable?: boolean,
-        notCheckable?: bool,
+        notCheckable?: boolean,
         keepShownOnClick?: boolean,
         tooltipTitle?: string,
         tooltipText?: string,
@@ -12560,7 +12563,20 @@ declare namespace WoWAPI {
         fontObject?: FontObject,
         owner?: Frame,
         padding?: number,
-        menuList?: any;
+        menuList?: any,
+        ignoreAsMenuSelection?: boolean,
+        mouseOverIcon?: string,
+        noClickSound?: boolean,
+        noTooltipWhileEnabled?: boolean,
+        menuListDisplayMode?: string,
+        arrowXOffset?: number,
+        tooltipAnchor?: string,
+        tooltipWarning?: string,
+        tooltipInstruction?: string,
+        funcOnEnter?: (self: any, arg1: any, arg2: any) => void,
+        funcOnLeave?: (self: any, arg1: any, arg2: any) => void,
+        isNotRadio?: boolean,
+        minWidth?: number,
     };
 
     /**
@@ -13001,6 +13017,13 @@ declare namespace WoWAPI {
          * @param a Alpha component (1.0 is opaque, 0.0 is transparent). The default value is 1.0.
          */
         SetColorTexture(r: number, g: number, b: number, a?: number): void; // SetVertexColor????
+
+        SetVertTile(tiling: boolean): void;
+        SetHorizTile(tiling: boolean): void;
+        GetBlendMode() : BlendMode;
+        SetBlendMode(mode: BlendMode) : void;
+        IsDesaturated() : boolean;
+
     }
 
     /**
@@ -14063,7 +14086,7 @@ declare function UIDropDownMenu_AddButton(info: WoWAPI.UIDropdownInfo, level?: n
 declare function ToggleDropDownMenu(level: number, value: any, dropDownFrame: WoWAPI.Frame, anchorName?: string | WoWAPI.Frame, xOffset?: number, yOffset?: number, menuList?: object, button?: object, autoHideDelay?: number): void;
 
 declare function PlaySoundFile(path:string): void;
-declare function PlaySound(soundIndex:number): void;
+declare function PlaySound(id:any): void;
 
 /**
  * comma separated list of enabled flags
