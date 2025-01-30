@@ -12503,6 +12503,7 @@ declare namespace WoWAPI {
     type Align = "HORIZONTAL" | "VERTICAL";
     type BlendMode = "DISABLE" | "BLEND" | "ALPHAKEY" | "ADD" | "MOD";
 
+
     namespace Event {
         type OnEvent = "OnEvent";
         type OnLoad = "OnLoad";
@@ -12550,6 +12551,7 @@ declare namespace WoWAPI {
         arg2?: any,
         checked?: boolean,
         icon?: string,
+        iconInfo?: any,
         iconOnly?: boolean,
         isTitle?: boolean,
         hasArrow?: boolean,
@@ -12562,13 +12564,14 @@ declare namespace WoWAPI {
         tCoordTop?: number,
         tCoordBottom?: number,
         colorCode?: string,
+        disablecolor?: string,
         swatchFunc?: () => void,
         hasOpacity?: boolean,
         opacity?: number,
         opacityFunc?: () => void,
         cancelFunc?: () => void,
         notClickable?: boolean,
-        notCheckable?: bool,
+        notCheckable?: boolean,
         keepShownOnClick?: boolean,
         tooltipTitle?: string,
         tooltipText?: string,
@@ -12578,7 +12581,20 @@ declare namespace WoWAPI {
         fontObject?: FontObject,
         owner?: Frame,
         padding?: number,
-        menuList?: any;
+        menuList?: any,
+        ignoreAsMenuSelection?: boolean,
+        mouseOverIcon?: string,
+        noClickSound?: boolean,
+        noTooltipWhileEnabled?: boolean,
+        menuListDisplayMode?: string,
+        arrowXOffset?: number,
+        tooltipAnchor?: string,
+        tooltipWarning?: string,
+        tooltipInstruction?: string,
+        funcOnEnter?: (self: any, arg1: any, arg2: any) => void,
+        funcOnLeave?: (self: any, arg1: any, arg2: any) => void,
+        isNotRadio?: boolean,
+        minWidth?: number,
     };
 
     type UIDropDownMenuDisplayMode = "" | "MENU";
@@ -13020,31 +13036,14 @@ declare namespace WoWAPI {
          * @param b Blue component.
          * @param a Alpha component (1.0 is opaque, 0.0 is transparent). The default value is 1.0.
          */
-        SetColorTexture(r: number, g: number, b: number, a?: number): void;
+        SetColorTexture(r: number, g: number, b: number, a?: number): void; // SetVertexColor????
 
-        /**
-         * Sets the blend mode of the texture.
-         *
-         * @param mode Blend mode to use.
-         * 
-         * "DISABLE" - Ignores the alpha channel completely when rendering the texture.
-         * 
-         * "BLEND" - Uses the alpha channel with a normal blending overlay.
-         * 
-         * "ALPHAKEY" - Interprets the alpha with any black value being transparent, and any non-black value being opaque.
-         * 
-         * "ADD" - Uses the alpha channel with an additive blending overlay.
-         * 
-         * "MOD" - Ignores the alpha channel, multiplying the image against the back-ground.
-         */
-        SetBlendMode(mode: WoWAPI.BlendMode): void;
-
-        /**
-         * 
-         * @param desaturated 1 to make the image grayscale, 0/nil for the original colors
-         * @returns shaderSupported - returns nil if desaturation isn't supported by the user's graphics card
-         */
+        SetVertTile(tiling: boolean): void;
+        SetHorizTile(tiling: boolean): void;
+        GetBlendMode() : BlendMode;
+        SetBlendMode(mode: BlendMode) : void;
         SetDesaturated(desaturated: number): boolean;
+        IsDesaturated() : boolean;
     }
 
     /**
@@ -14155,7 +14154,7 @@ declare function UIDropDownMenu_AddButton(info: WoWAPI.UIDropdownInfo, level?: n
 declare function ToggleDropDownMenu(level: number, value: any, dropDownFrame: WoWAPI.Frame, anchorName?: string | WoWAPI.Frame, xOffset?: number, yOffset?: number, menuList?: object, button?: object, autoHideDelay?: number): void;
 
 declare function PlaySoundFile(path:string): void;
-declare function PlaySound(soundIndex:number): void;
+declare function PlaySound(id:any): void;
 
 /**
  * comma separated list of enabled flags
