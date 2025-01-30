@@ -3,8 +3,8 @@
 #include "Logger.h"
 
 void ClientExtensions::initialize() {
-    ClientDB::Apply();
-    LOG_INFO << "DBC Loader extension applied";
+    ClientDB::Load();
+    LOG_INFO << "Custom DBCs loaded";
     CharacterFixes::CharacterCreationFixes();
     LOG_INFO << "Character creation fixes applied";
     TooltipExtensions::Apply();

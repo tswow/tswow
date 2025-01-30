@@ -34,6 +34,7 @@ SET(CLIENT_EXTENSIONS_H
     ClientDB.h
     Character/CharacterFixes.h
     Character/CharacterDefines.h
+    CustomDBCMgr/CustomDBC.h
     Tooltip/SpellTooltipExtensions.h
     Tooltip/TooltipDefines.h
 )
@@ -51,6 +52,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientExtensions.cpp
     ClientDB.cpp
     Character/CharacterFixes.cpp
+    CustomDBCMgr/CustomDBC.cpp
     Tooltip/SpellTooltipExtensions.cpp
 )
 
@@ -74,7 +76,6 @@ target_link_libraries(ClientExtensions detours CustomPackets)
 target_include_directories(ClientExtensions PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
     ${CMAKE_SOURCE_DIR}/CustomPackets
-    ${CMAKE_SOURCE_DIR}/CustomDBCMgr
     ${detours_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR} # so "Scripts" can include it
 )

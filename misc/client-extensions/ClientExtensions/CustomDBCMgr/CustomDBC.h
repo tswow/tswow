@@ -1,5 +1,5 @@
 #pragma once
-#include "CustomDBCDefines.h"
+#include "SharedDefines.h"
 
 class CustomDBC {
 public:
