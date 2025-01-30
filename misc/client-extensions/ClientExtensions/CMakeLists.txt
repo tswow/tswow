@@ -45,7 +45,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientLua.cpp
     ClientArguments.cpp
     FSRoot.cpp
-    TestModule.cpp
+    ExampleModule.cpp
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
@@ -54,6 +54,7 @@ SET(CLIENT_EXTENSIONS_CPP
     Tooltip/SpellTooltipExtensions.cpp
     Camera/CVar.cpp
     Camera/WorldSpace.cpp
+    CustomLua/SpellFunctions.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA

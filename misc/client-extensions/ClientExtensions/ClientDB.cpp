@@ -6,6 +6,5 @@ void ClientDB::Apply() {
 
 uint32_t ClientDB::RegisterBaseEx(uint32_t a) {
     uint32_t result = ClientDB__RegisterBase(a);
-
     return result;
 }

@@ -13,20 +13,8 @@ std::vector<ClientDetours::Detour> & detours()
     return _detours;
 }
 
-int ClientDetours::Add(
-      std::string const& name
-    , void* clientFun
-    , void* yourFun
-    , std::string const& filename
-    , size_t lineno
-) {
-    detours().push_back({
-            name
-        , clientFun
-        , yourFun
-        , filename
-        , lineno
-        });
+int ClientDetours::Add(std::string const& name, void* clientFun, void* yourFun, std::string const& filename, size_t lineno) {
+    detours().push_back({name, clientFun, yourFun, filename, lineno});
     return 0;
 }
 

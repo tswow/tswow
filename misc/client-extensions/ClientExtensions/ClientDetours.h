@@ -16,13 +16,7 @@ public:
         std::string const m_filename;
         size_t m_lineno;
     };
-    static int Add(
-          std::string const& name
-        , void* clientFun
-        , void* yourFun
-        , std::string const& filename
-        , size_t lineno
- );
+    static int Add(std::string const& name, void* clientFun, void* yourFun, std::string const& filename, size_t lineno);
 private:
     static void Apply();
     ClientDetours() {};
