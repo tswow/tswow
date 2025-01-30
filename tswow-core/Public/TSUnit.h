@@ -277,3 +277,5 @@ private:
     TSLua::Array<TSUnit> LGetControlled();
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSUnit)

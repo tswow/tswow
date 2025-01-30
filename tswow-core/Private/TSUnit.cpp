@@ -101,9 +101,6 @@ bool TSUnit::IsMounted()
  */
 bool TSUnit::IsRooted()
 {
-#ifdef AZEROTHCORE
-    return unit->isInRoots() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT);
-#endif
 #ifdef TRINITY
     return unit->IsRooted() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT);
 #endif
@@ -136,7 +133,7 @@ bool TSUnit::IsInAccessiblePlaceFor(TSCreature _creature)
 {
     auto creature = _creature.creature;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return unit->isInAccessiblePlaceFor(creature);
 #else
     return unit->isInAccessablePlaceFor(creature);
@@ -150,7 +147,7 @@ bool TSUnit::IsInAccessiblePlaceFor(TSCreature _creature)
  */
 bool TSUnit::IsAuctioneer()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return unit->IsAuctioner();
 #else
     return unit->isAuctioner();
@@ -437,7 +434,7 @@ bool TSUnit::IsPvPFlagged()
  */
 bool TSUnit::IsOnVehicle()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return unit->GetVehicle();
 #else
     return unit->IsBoarded();
@@ -554,7 +551,7 @@ bool TSUnit::HasAura(uint32 spell, TSGUID casterGUID , TSGUID itemCasterGUID, ui
  */
 bool TSUnit::IsCasting()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return unit->HasUnitState(UNIT_STATE_CASTING);
 #else
     return unit->IsNonMeleeSpellCasted(false);
@@ -569,7 +566,7 @@ bool TSUnit::IsCasting()
  */
 bool TSUnit::HasUnitState(uint32 state)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return unit->HasUnitState(state);
 #else
     return unit->hasUnitState(state);
@@ -650,8 +647,6 @@ TSGUID TSUnit::GetCharmGUID()
 {
 #if TRINITY
     return TSGUID(unit->GetCharmedGUID());
-#elif AZEROTHCORE
-    return TS_GUID(unit->GetCharmGUID());
 #endif
 }
 
@@ -736,7 +731,7 @@ TSNumber<uint32> TSUnit::GetBaseSpellPower(uint32 spellschool)
  */
 TSUnit  TSUnit::GetVictim()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSUnit(unit->GetVictim());
 #else
      return TSUnit(unit->getVictim());
@@ -826,9 +821,6 @@ TSNumber<uint32> TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
 #ifdef TRINITY
     if (powerType == -1)
         return unit.unit->GetPowerType();
-#elif AZEROTHCORE
-    if (powerType == -1)
-        return unit.unit->getPowerType();
 #else
     if (powerType == -1)
         return unit.unit->GetPowerType();
@@ -966,8 +958,6 @@ TSNumber<uint32> TSUnit::GetPowerType()
 {
 #ifdef TRINITY
     return unit->GetPowerType();
-#elif AZEROTHCORE
-    return unit->getPowerType();
 #else
     return unit->GetPowerType();
 #endif
@@ -990,7 +980,7 @@ TSNumber<uint32> TSUnit::GetMaxHealth()
  */
 TSNumber<float> TSUnit::GetHealthPct()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return unit->GetHealthPct();
 #else
     return unit->GetHealthPercent();
@@ -1121,9 +1111,6 @@ std::string TSUnit::GetClassAsString(uint8 locale)
 #ifdef TRINITY
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
     return entry->Name[locale];
-#elif AZEROTHCORE
-    const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
-    return entry->name[locale];
 #endif
 }
 
@@ -1153,9 +1140,6 @@ std::string TSUnit::GetRaceAsString(uint8 locale)
 #ifdef TRINITY
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
     return entry->Name[locale];
-#elif AZEROTHCORE
-    const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
-    return entry->name[locale];
 #endif
 }
 
@@ -1177,7 +1161,7 @@ TSNumber<uint32> TSUnit::GetFaction()
  */
 TSAura  TSUnit::GetAura(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID, uint8 reqEffMask)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSAura(unit->GetAura(spellID, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask));
 #else
      return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
@@ -1186,7 +1170,7 @@ TSAura  TSUnit::GetAura(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID
 
 TSAura  TSUnit::GetAuraOfRankedSpell(uint32 spellID, TSGUID casterGUID, TSGUID itemCasterGUID, uint8 reqEffMask)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSAura(unit->GetAuraOfRankedSpell(spellID, casterGUID.asGUID(), itemCasterGUID.asGUID(), reqEffMask));
 #else
      return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
@@ -1225,7 +1209,7 @@ TSArray<TSUnit> TSUnit::GetUnfriendlyUnitsInRange(float range)
  */
 TSVehicle  TSUnit::GetVehicleKit()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSVehicle(unit->GetVehicleKit());
 #else
      return TSVehicle(unit->GetVehicleInfo());
@@ -1388,7 +1372,7 @@ void TSUnit::SetName(std::string const& name)
 void TSUnit::SetSpeed(uint32 type,float rate,bool forced)
 {
     (void)forced; // ensure that the variable is referenced in order to pass compiler checks
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetSpeedRate((UnitMoveType)type, rate);
 #else
     unit->SetSpeedRate((UnitMoveType)type, rate, forced);
@@ -1549,8 +1533,6 @@ void TSUnit::SetPowerType(uint32 type)
 
 #ifdef TRINITY
     unit->SetPowerType((Powers)type);
-#elif AZEROTHCORE
-    unit->setPowerType((Powers)type);
 #else
     unit->SetPowerType((Powers)type);
 #endif
@@ -1604,7 +1586,7 @@ void TSUnit::SetFacingToObject(TSWorldObject _obj)
  */
 void TSUnit::SetCreatorGUID(TSGUID guid)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetCreatorGUID(guid.asGUID());
 #else
     unit->SetCreatorGuid(ObjectGuid(guid));
@@ -1618,7 +1600,7 @@ void TSUnit::SetCreatorGUID(TSGUID guid)
  */
 void TSUnit::SetPetGUID(TSGUID guid)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetPetGUID(guid.asGUID());
 #else
     unit->SetPetGuid(ObjectGuid(guid));
@@ -1632,7 +1614,7 @@ void TSUnit::SetPetGUID(TSGUID guid)
  */
 void TSUnit::SetWaterWalk(bool enable)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetWaterWalking(enable);
 #else
     unit->SetWaterWalk(enable);
@@ -1671,19 +1653,6 @@ void TSUnit::SetFFA(bool apply)
         for (Unit::ControlList::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
             (*itr)->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
     }
-#elif AZEROTHCORE
-    if (apply)
-    {
-        unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-        for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
-            (*itr)->SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-}
-    else
-    {
-        unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-        for (Unit::ControlSet::iterator itr = unit->m_Controlled.begin(); itr != unit->m_Controlled.end(); ++itr)
-            (*itr)->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP);
-    }
 #else
     unit->SetFFAPvP(apply);
 #endif
@@ -1710,7 +1679,7 @@ void TSUnit::SetSanctuary(bool apply)
 
 void TSUnit::SetCritterGUID(TSGUID guid)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetCritterGUID(guid.asGUID());
 #else
     unit->SetCritterGuid(ObjectGuid(guid));
@@ -1730,7 +1699,7 @@ unit->SetControlled(apply, UNIT_STATE_STUNNED);
  */
 void TSUnit::SetRooted(bool apply)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetControlled(apply, UNIT_STATE_ROOT);
 #else
     unit->SetRoot(apply);
@@ -1744,7 +1713,7 @@ void TSUnit::SetRooted(bool apply)
  */
 void TSUnit::SetConfused(bool apply)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetControlled(apply, UNIT_STATE_CONFUSED);
 #else
     unit->SetConfused(apply);
@@ -1758,7 +1727,7 @@ void TSUnit::SetConfused(bool apply)
  */
 void TSUnit::SetFeared(bool apply)
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->SetControlled(apply, UNIT_STATE_FLEEING);
 #else
     unit->SetFeared(apply);
@@ -1782,8 +1751,6 @@ void TSUnit::ClearThreatList(bool apply,bool x)
 {
 #ifdef TRINITY
     unit->GetThreatManager().ClearAllThreat();
-#elif AZEROTHCORE
-    unit->getThreatMgr().clearReferences();
 #else
     unit->GetThreatManager().clearReferences();
 #endif
@@ -1807,7 +1774,7 @@ void TSUnit::Dismount()
 {
     if (unit->IsMounted())
     {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
         unit->Dismount();
         unit->RemoveAurasByType(SPELL_AURA_MOUNTED);
 #else
@@ -1875,8 +1842,6 @@ void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang, std::string const& 
 #if TRINITY
     ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
     //ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
-#elif AZEROTHCORE
-    //ChatHandler::BuildChatPacket(data, ChatMsg(type), msg.c_str(), Language(lang), 0, unit->TS_GET_GUID(), unit->GetName(), target->TS_GET_GUID(), target->GetName());
 #endif
     target->GetSession()->SendPacket(&data);
 }
@@ -1936,7 +1901,7 @@ void TSUnit::MoveRandom(float radius)
 {
     float x, y, z;
     unit->GetPosition(x, y, z);
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->GetMotionMaster()->MoveRandom(radius);
 #else
     unit->GetMotionMaster()->MoveRandomAroundPoint(x, y, z, radius);
@@ -2195,11 +2160,8 @@ TSAura TSUnit::AddAura(uint32 spell,TSUnit _target)
 #ifdef TRINITY
     SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
 #endif
-#ifdef AZEROTHCORE
-    SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
-#endif
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
      return TSAura(unit->AddAura(spell, target));
 #else
 
@@ -2261,7 +2223,7 @@ void TSUnit::ModifyAuraState(uint8 auraState, bool isApplied)
 void TSUnit::AddUnitState(uint32 state)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->AddUnitState(state);
 #else
     unit->addUnitState(state);
@@ -2276,7 +2238,7 @@ void TSUnit::AddUnitState(uint32 state)
 void TSUnit::ClearUnitState(uint32 state)
 {
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     unit->ClearUnitState(state);
 #else
     unit->clearUnitState(state);
@@ -2393,7 +2355,7 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
 void TSUnit::DealHeal(TSUnit _target,uint32 spell,uint32 amount,bool critical)
 {
     auto target = _target.unit;
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
     {
         HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
@@ -2422,7 +2384,7 @@ void TSUnit::Kill(TSUnit _target,bool durLoss)
 {
     auto target = _target.unit;
 
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     Unit::Kill(unit, target, durLoss);
 #else
     unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
@@ -2457,11 +2419,6 @@ void TSUnit::AddThreat(TSUnit _victim,float threat,uint32 spell,uint32 schoolMas
 
 #ifdef TRINITY
     unit->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, ignoreModifiers, ignoreRedirects, raw);
-#elif AZEROTHCORE
-    if (schoolMask > SPELL_SCHOOL_MASK_ALL)
-    {
-    }
-    unit->AddThreat(victim, threat, (SpellSchoolMask)schoolMask, spell ? sSpellMgr->GetSpellInfo(spell) : NULL);
 #else
 #ifdef CMANGOS
     SpellEntry const* spellEntry = GetSpellStore()->LookupEntry<SpellEntry>(spell);
@@ -2481,8 +2438,6 @@ void TSUnit::ScaleThreat(TSUnit victim, float scale, bool raw)
 {
 #if TRINITY
     unit->GetThreatManager().ScaleThreat(victim.unit, scale, raw);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSUnit::ScaleThreat not implemented for AzerothCore.");
 #endif
 }
 

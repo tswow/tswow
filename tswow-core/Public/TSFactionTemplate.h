@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSMain.h"
+#include "TSLua.h"
 
 struct FactionTemplateEntry;
 
@@ -23,3 +24,5 @@ class TC_GAME_API TSFactionTemplate
 };
 
 TC_GAME_API TSFactionTemplate GetFactionTemplate(uint32 entry);
+
+LUA_PTR_TYPE(TSFactionTemplate)

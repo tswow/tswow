@@ -1,4 +1,4 @@
-#include "ClientTooltipExtensions.h"
+#include "SpellTooltipExtensions.h"
 #include "windows.h"
 #include "Logger.h"
 
@@ -45,7 +45,7 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Change memory protection to allow writing
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
     // Apply the patch bytes
-    std::memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
+    memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
     // Calculate and write the relative address for the function call
     *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8A);
     // Restore the original memory protection
@@ -125,7 +125,6 @@ void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* b
 }
 
 void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
-    char* sRuneCost;
     int32_t m_RuneBlood = *(row + 1);
     int32_t m_RuneUnholy = *(row + 2);
     int32_t m_RuneFrost = *(row + 3);

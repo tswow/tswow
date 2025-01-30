@@ -1,6 +1,7 @@
 #include "ClientLua.h"
 #include "Logger.h"
 #include "ClientDetours.h"
+#include "SharedDefines.h"
 #include "FSRoot.h"
 
 #include <vector>
@@ -166,12 +167,26 @@ CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
 
 CLIENT_DETOUR(UnloadScriptFunctions, 0x00512280, __cdecl, int, ()) {
     if (lastCave > 0)
-    {
-        DWORD old;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, PAGE_EXECUTE_READWRITE, &old);
-        memset(CAVE_START, NOP, JMP_SIZE * lastCave);
-        DWORD dummy;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, old, &dummy);
-    }
+        WriteBytesAtAddress(CAVE_START, NOP, JMP_SIZE * lastCave);
+
     return UnloadScriptFunctions();
+}
+
+// Aleist3r: should probably be in its own file but cba
+LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
+
+    if (ClientLua::IsNumber(L, 1)) {
+        uint32_t spellId = ClientLua::GetNumber(L, 1);
+        char buffer[680];
+        char dest[1024];
+
+        if (ClientDB__GetLocalizedRow((void*)0xAD49D0, spellId, &buffer)) { // hex address is g_SpellRec struct
+            SpellParserParseText(&buffer, &dest, 1024, 0, 0, 0, 0, 1, 0);
+            ClientLua::PushString(L, dest);
+            return 1;
+        }
+    }
+
+    ClientLua::PushNil(L);
+    return 1;
 }

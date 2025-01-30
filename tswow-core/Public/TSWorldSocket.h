@@ -18,6 +18,7 @@
 
 #include <memory>
 #include "TSMain.h"
+#include "TSLua.h"
 
 class WorldSocket;
 class TC_GAME_API TSWorldSocket {
@@ -30,3 +31,5 @@ public:
     bool operator==(TSWorldSocket const& rhs) { return socket == rhs.socket; }
     bool IsNull() { return socket == nullptr; };
 };
+
+LUA_PTR_TYPE(TSWorldSocket)

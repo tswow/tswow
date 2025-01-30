@@ -48,6 +48,7 @@ export namespace MySQL {
             , bpaths.mysql.find_subdir().bin.libssl_dll
             , bpaths.mysql.find_subdir().bin.libprotobufLite_dll
             , bpaths.mysql.find_subdir().bin.abseil_dll
+            , bpaths.mysql.find_subdir().bin.libcrypto_dll
         ].forEach(x=>{
             x.copyOnNoTarget(ipaths.bin.mysql.join(x.basename()))
         })

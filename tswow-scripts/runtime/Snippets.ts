@@ -1,5 +1,6 @@
 import { Args } from "../util/Args";
 import { ipaths } from "../util/Paths";
+import { term } from "../util/Terminal";
 import { BuildCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -236,6 +237,7 @@ export namespace Snippets {
     }
 
     export function initialize() {
+        term.debug('misc', `Initializing snippets`)
         if(!ipaths.vscode.snippets_out.exists()) {
             generateSnippets(Module.endpoints(),false,false);
         }

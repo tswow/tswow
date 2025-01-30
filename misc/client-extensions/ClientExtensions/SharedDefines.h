@@ -1,5 +1,5 @@
 #pragma once
-#include "windows.h"
+#include "Windows.h"
 #include "ClientMacros.h"
 
 #include <functional>
@@ -72,6 +72,11 @@ CLIENT_FUNCTION(FrameScript_GetText, 0x819D40, __cdecl, char*, (char*, int, int)
 CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, uint32_t))
 CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, uint32_t))
 
+CLIENT_FUNCTION(ClientDB__GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
+CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+
+CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+
 // functions
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
     return *reinterpret_cast<int32_t*>(*(ActivePlayer + 52) + 4 * field);
@@ -84,6 +89,14 @@ static void OverwriteUInt32AtAddress(uint32_t position, uint32_t newValue) {
     *reinterpret_cast<uint32_t*>(position) = newValue;
     VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
 };
+
+static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
+    DWORD flOldProtect = 0;
+
+    VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    memset(position, byte, size);
+    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
+}
 
 // Aleist3r: use bigger number as address1
 // address2 is direct write address, function automatically adds +4 to address

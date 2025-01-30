@@ -36,7 +36,6 @@ export const DatascriptModules = AllModules.filter(x=>x.datascripts.exists())
 export const EmulatorCore = config.EmulatorCore;
 
 export function isTrinityCore() { return EmulatorCore === 'trinitycore'; }
-export function isAzerothCore() { return EmulatorCore === 'azerothcore'; }
 
 
 export const BuildArgs = new class BuildArgsClass {

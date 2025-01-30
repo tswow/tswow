@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include "TSLua.h"
 #include "TSLoot.h"
 #include "TSBase.h"
 #include "TSMain.h"
@@ -152,3 +153,5 @@ private:
     TSLua::Array<TSUnit> LGetThreatList();
     friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSCreature)

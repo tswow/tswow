@@ -22,7 +22,6 @@ import { term } from '../util/Terminal';
 import { setContext } from '../util/TSWoWContext';
 import { SevenZipInstall } from './7Zip';
 import { ADTCreator } from './ADTCreator';
-import { AzerothCore } from './AzerothCore';
 import { BLPConverter } from './BLPConverter';
 import { Boost } from './Boost';
 import { isInteractive } from './BuildConfig';
@@ -67,10 +66,6 @@ async function compile(type: string, compileArgs: string[]) {
         if (type == 'trinitycore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
     }
 
-    if (type == 'azerothcore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
-    if (type == 'azerothcore-relwithdebinfo') { await AzerothCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
-    if (type == 'azerothcore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
-
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
     if (isWindows() && isType('adtcreator')) { await ADTCreator.create(cmake); }
@@ -109,10 +104,6 @@ async function main() {
             , 'trinitycore-release'
             , 'trinitycore-relwithdebinfo'
             , 'trinitycore-debug'
-            , 'azerothcore'
-            , 'azerothcore-release'
-            , 'azerothcore-relwithdebinfo'
-            , 'azerothcore-debug'
             , 'mpqbuilder'
             , 'blpconverter'
             , 'config'

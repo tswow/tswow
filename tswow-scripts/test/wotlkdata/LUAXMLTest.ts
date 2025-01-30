@@ -47,7 +47,7 @@ const TEXT_FILE_LENGTH = 382;
 function clear() {
     _clearLUAXML();
     if (fs.existsSync('./tmp')) {
-        fs.rmdirSync('./tmp', {recursive: true});
+        fs.rmSync('./tmp', {recursive: true});
     }
 }
 

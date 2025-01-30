@@ -35,9 +35,7 @@ static std::map<fs::path, TSLibrary> libraries;
 
 void TSLivescripts::Load()
 {
-#if AZEROTHCORE
-    fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / LIVESCRIPT_BUILD_TYPE;
-#elif TRINITY
+#if TRINITY
     fs::path libPath = fs::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / LIVESCRIPT_BUILD_TYPE;
 #endif
     // Unload libraries

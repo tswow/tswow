@@ -59,8 +59,6 @@ void TSPacketWrite::BroadcastMap(TSMap map, uint32_t teamOnly)
 			Player* player = ref.GetSource();
 #if TRINITY
 			if (teamOnly == 0 || player->GetTeam() == teamOnly)
-#elif AZEROTHCORE
-			if (teamOnly == 0 || player->GetTeamId() == teamOnly)
 #endif
 			{
 				player->SendDirectMessage(&packet);

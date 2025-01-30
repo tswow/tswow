@@ -1,5 +1,5 @@
 #pragma once
-#include "ClientTooltipDefines.h"
+#include "TooltipDefines.h"
 
 CLIENT_FUNCTION(CFormula__GetVariableValue, 0x5782D0, __fastcall, int, (uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 

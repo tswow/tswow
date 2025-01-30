@@ -4,6 +4,7 @@
 #include "TSBase.h"
 #include "TSUnit.h"
 #include "TSMap.h"
+#include "TSLua.h"
 
 #include <sol/sol.hpp>
 
@@ -80,4 +81,14 @@ public:
     TSNumber<uint32> GetActiveCriteria();
 
     void TriggerResetHook();
+    TSNumber<uint32> GetInstanceData(uint32 id);
+    void SetInstanceData(uint32 id, uint32 data);
+    TSNumber<uint64> GetInstanceData64(uint32 id);
+    void SetInstanceData64(uint32 id, uint64 data);
+    TSGUID GetInstanceGUIDData(uint32 id);
+    void SetInstanceGUIDData(uint32 id, TSGUID data);
 };
+
+LUA_PTR_TYPE(TSGUIDSet)
+LUA_PTR_TYPE(TSBossInfo)
+LUA_PTR_TYPE_CON(TSInstance,TSInstance(nullptr,nullptr))

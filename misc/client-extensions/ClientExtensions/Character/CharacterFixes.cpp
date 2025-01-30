@@ -1,4 +1,4 @@
-#include "ClientCharacterFixes.h"
+#include "CharacterFixes.h"
 #include "windows.h"
 
 #include <vector>

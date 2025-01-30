@@ -377,6 +377,11 @@ public:
 	float GetRatingBonusValue(uint32 Rating);
 
 	float GetAttackSpeed(uint8 AttackType);
+	void SetBaseRune(uint8 index, uint8 runeType);
+	void RestoreBaseRune(uint8 index);
+	void ConvertRune(uint8 index, uint8 runeType);
+	void SetRuneCooldown(uint8 index, uint32 cooldown, bool casted);
+	void ResyncRunes();
 
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
@@ -387,3 +392,5 @@ private:
 		void LSendShowMailBox1(TSNumber<uint32> guid);
 		friend class TSLua;
 };
+
+LUA_PTR_TYPE(TSPlayer)
