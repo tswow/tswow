@@ -18,7 +18,7 @@ target_compile_options(detours PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
 target_include_directories(detours PUBLIC ${detours_SOURCE_DIR})
 
 # ClientExtensions
-FILE(GLOB ClientExtenisons ${CMAKE_CURRENT_SOURCE_DIR}/*)
+FILE(GLOB ClientExtensions ${CMAKE_CURRENT_SOURCE_DIR}/*)
 SET(CLIENT_EXTENSIONS_H
     SharedDefines.h
     Logger.h
