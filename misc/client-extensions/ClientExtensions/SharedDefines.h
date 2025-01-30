@@ -38,3 +38,7 @@ CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32
 CLIENT_FUNCTION(FrameScript_GetText, 0x819D40, __cdecl, char*, (char*, uint32_t, uint32_t))
 CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, uint32_t, (char*, uint32_t, char*, uint32_t))
 CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, uint32_t))
+
+CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+
+CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))

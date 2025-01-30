@@ -21,6 +21,8 @@ namespace ClientLua {
     CLIENT_FUNCTION(PushNumber, 0x0084E2A0, __cdecl, int, (lua_State* L, double value))
     CLIENT_FUNCTION(PushString, 0x0084E350, __cdecl, int, (lua_State* L, char const* value))
 
+    CLIENT_FUNCTION(PushNil, 0x84E280, __cdecl, int, (lua_State* L))
+
     std::string GetString(lua_State* L, int32_t offset, std::string const& defValue = "");
     double GetNumber(lua_State* L, int32_t offset, double defValue = 0);
 }
