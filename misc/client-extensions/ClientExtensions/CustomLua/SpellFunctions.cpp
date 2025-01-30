@@ -1,7 +1,6 @@
 #include "ClientLua.h"
-#include "ClientDetours.h"
+#include "SharedDefines.h"
 #include "Logger.h"
-
 // Aleist3r: should probably be in its own file but cba
 LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
 
