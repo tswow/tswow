@@ -181,7 +181,7 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
         char dest[1024];
 
         if (ClientDB__GetLocalizedRow((void*)0xAD49D0, spellId, &buffer)) { // hex address is g_SpellRec struct
-            SpellRec__sub_57ABC0(&buffer, &dest, 1024, 0, 0, 0, 0, 1, 0);
+            SpellParserParseText(&buffer, &dest, 1024, 0, 0, 0, 0, 1, 0);
             ClientLua::PushString(L, dest);
             LOG_DEBUG << dest;
             return 1;

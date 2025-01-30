@@ -75,7 +75,7 @@ CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, u
 CLIENT_FUNCTION(ClientDB__GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
 CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
 
-CLIENT_FUNCTION(SpellRec__sub_57ABC0, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 
 // functions
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
