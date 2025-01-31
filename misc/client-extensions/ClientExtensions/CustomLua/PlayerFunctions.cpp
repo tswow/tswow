@@ -21,18 +21,14 @@ LUA_FUNCTION(SetMasteryRatings, (lua_State* L)) {
     CharacterDefines::setMasteryRatingSpec(2,ClientLua::GetNumber(L, 3));
     CharacterDefines::setMasteryRatingSpec(3,ClientLua::GetNumber(L, 4));
 
-    LOG_DEBUG << "Mastery1:" << CharacterDefines::getMasteryRatingSpec(0);
-    LOG_DEBUG << "Mastery2:" << CharacterDefines::getMasteryRatingSpec(1);
-    LOG_DEBUG << "Mastery3:" << CharacterDefines::getMasteryRatingSpec(2);
-    LOG_DEBUG << "Mastery4:" << CharacterDefines::getMasteryRatingSpec(3);
-
     ClientLua::PushNil(L);
     return 1;
 }
 
 LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
-    CharacterDefines::setMasteryAmount(ClientLua::GetNumber(L, 1));
-    CharacterDefines::setMasteryPct(ClientLua::GetNumber(L, 2));
+    CharacterDefines::setMasteryPct(ClientLua::GetNumber(L, 1));
+    CharacterDefines::setMasteryAmount(ClientLua::GetNumber(L, 2));
+
     ClientLua::PushNil(L);
     return 1;
 }

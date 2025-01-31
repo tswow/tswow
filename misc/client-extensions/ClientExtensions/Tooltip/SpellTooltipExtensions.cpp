@@ -92,25 +92,21 @@ int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_
                         value = *reinterpret_cast<float*>(spell + 316);
                         break;
                     case SPELLVARIABLE_mastery1:
-                    case SPELLVARIABLE_MASTERY1: {
-                        LOG_DEBUG << "Mastery1:" << CharacterDefines::getMasteryRatingSpec(0);
-                        value = CharacterDefines::getMasteryRatingSpec(0);
-                        break; }
+                    case SPELLVARIABLE_MASTERY1:
+                        value = CharacterDefines::getMasteryForSpec(0);
+                        break;
                     case SPELLVARIABLE_mastery2:
-                    case SPELLVARIABLE_MASTERY2: {
-                        LOG_DEBUG << "Mastery2:" << CharacterDefines::getMasteryRatingSpec(1);
-                        value = CharacterDefines::getMasteryRatingSpec(1);
-                        break; }
+                    case SPELLVARIABLE_MASTERY2:
+                        value = CharacterDefines::getMasteryForSpec(1);
+                        break;
                     case SPELLVARIABLE_mastery3:
-                    case SPELLVARIABLE_MASTERY3: {
-                        LOG_DEBUG << "Mastery3:" << CharacterDefines::getMasteryRatingSpec(2);
-                        value = CharacterDefines::getMasteryRatingSpec(2);
-                        break; }
+                    case SPELLVARIABLE_MASTERY3:
+                        value = CharacterDefines::getMasteryForSpec(2);
+                        break;
                     case SPELLVARIABLE_mastery4:
-                    case SPELLVARIABLE_MASTERY4: {
-                        LOG_DEBUG << "Mastery4:" << CharacterDefines::getMasteryRatingSpec(3);
-                        value = CharacterDefines::getMasteryRatingSpec(3);
-                        break; }
+                    case SPELLVARIABLE_MASTERY4:
+                        value = CharacterDefines::getMasteryForSpec(3);
+                        break;
                     default:
                         *_this = 1;
                         break;
