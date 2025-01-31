@@ -93,23 +93,23 @@ int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_
                         break;
                     case SPELLVARIABLE_mastery1:
                     case SPELLVARIABLE_MASTERY1: {
-                        LOG_DEBUG << "Mastery1:" << masteryRatingSpec1;
-                        value = masteryRatingSpec1;
+                        LOG_DEBUG << "Mastery1:" << CharacterDefines::getMasteryRatingSpec(0);
+                        value = CharacterDefines::getMasteryRatingSpec(0);
                         break; }
                     case SPELLVARIABLE_mastery2:
                     case SPELLVARIABLE_MASTERY2: {
-                        LOG_DEBUG << "Mastery2:" << masteryRatingSpec2;
-                        value = masteryRatingSpec2;
+                        LOG_DEBUG << "Mastery2:" << CharacterDefines::getMasteryRatingSpec(1);
+                        value = CharacterDefines::getMasteryRatingSpec(1);
                         break; }
                     case SPELLVARIABLE_mastery3:
                     case SPELLVARIABLE_MASTERY3: {
-                        LOG_DEBUG << "Mastery3:" << masteryRatingSpec3;
-                        value = masteryRatingSpec3;
+                        LOG_DEBUG << "Mastery3:" << CharacterDefines::getMasteryRatingSpec(2);
+                        value = CharacterDefines::getMasteryRatingSpec(2);
                         break; }
                     case SPELLVARIABLE_mastery4:
                     case SPELLVARIABLE_MASTERY4: {
-                        LOG_DEBUG << "Mastery4:" << masteryRatingSpec4;
-                        value = masteryRatingSpec4;
+                        LOG_DEBUG << "Mastery4:" << CharacterDefines::getMasteryRatingSpec(3);
+                        value = CharacterDefines::getMasteryRatingSpec(3);
                         break; }
                     default:
                         *_this = 1;

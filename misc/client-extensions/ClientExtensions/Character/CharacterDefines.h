@@ -3,13 +3,21 @@
 
 #include <iostream>
 
-static uint32_t memoryTable[128] = { 0 };
-static uint32_t raceNameTable[32] = { 0 };
+namespace CharacterDefines {
+    inline uint32_t activeCharSpec = 0;
+    inline uint32_t masteryAmount = 0;
+    inline float masteryPct = 0;
+    inline float masteryRatingSpec[4] = { 0, 0, 0, 0 };
+   
+    inline void setMasteryRatingSpec(int index, float newValue) {masteryRatingSpec[index] = newValue;}
+    inline float getMasteryRatingSpec(int index) {return masteryRatingSpec[index];}
 
-uint32_t activeSpec = 0;
-uint32_t masteryAmount = 0;
-float masteryPct = 0;
-float masteryRatingSpec1 = 0;
-float masteryRatingSpec2 = 0;
-float masteryRatingSpec3 = 0;
-float masteryRatingSpec4 = 0;
+    inline void setCharActiveSpec(uint32_t newValue) {activeCharSpec = newValue;}
+    inline uint32_t getCharActiveSpec() {return activeCharSpec;}
+
+    inline void setMasteryAmount(uint32_t newValue) {masteryAmount = newValue;}
+    inline uint32_t getMasteryAmount() {return masteryAmount;}
+
+    inline void setMasteryPct(float newValue) {masteryPct = newValue;}
+    inline float getMasteryPct() {return masteryPct;}
+};
