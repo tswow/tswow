@@ -78,6 +78,7 @@ declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
 declare const enum TimerLoops {} /** TSTimer.h:TimerLoops */
 declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
+declare const enum AuraStateType {} /** SharedDefines.h:AuraStateType */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
 declare const enum DuelState {} /** Player.h:DuelState */
 declare const enum InventorySlots /**@realType:uint32*/{
@@ -7644,6 +7645,7 @@ declare interface TSUnit extends TSWorldObject {
     AddThreatAllAssist(victim: TSUnit, threat: TSNumber<float>, spell: uint32, ignoreModifiers: bool): void;
     GetControllingPlayer(): TSPlayer;
     GetLastExtraAttackSpell(): uint32;
+    ModifyAuraState(flag: uint8, apply: boolean): void;
     /** @epoch-end */
 }
 

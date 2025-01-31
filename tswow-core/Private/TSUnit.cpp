@@ -38,6 +38,7 @@
 #include "Player.h"
 #include "SpellHistory.h"
 #include "SpellMgr.h"
+#include "SharedDefines.h"
 
 #include <memory.h>
 
@@ -2713,5 +2714,10 @@ TSPlayer TSUnit::GetControllingPlayer()
 TSNumber<uint32> TSUnit::GetLastExtraAttackSpell()
 {
     return unit->GetLastExtraAttackSpell();
+}
+
+void TSUnit::ModifyAuraState(uint8 flag, bool apply)
+{
+    unit->ModifyAuraState(static_cast<AuraStateType>(flag), apply);
 }
 /** @epoch-end */
