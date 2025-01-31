@@ -1,4 +1,5 @@
 #include "SpellTooltipExtensions.h"
+#include "Character/CharacterDefines.h"
 #include "windows.h"
 #include "Logger.h"
 
@@ -90,6 +91,22 @@ int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_
                     case SPELLVARIABLE_PPL3:
                         value = *reinterpret_cast<float*>(spell + 316);
                         break;
+                    case SPELLVARIABLE_mastery1:
+                    case SPELLVARIABLE_MASTERY1:
+                        value = CharacterDefines::getMasteryForSpec(0);
+                        break;
+                    case SPELLVARIABLE_mastery2:
+                    case SPELLVARIABLE_MASTERY2:
+                        value = CharacterDefines::getMasteryForSpec(1);
+                        break;
+                    case SPELLVARIABLE_mastery3:
+                    case SPELLVARIABLE_MASTERY3:
+                        value = CharacterDefines::getMasteryForSpec(2);
+                        break;
+                    case SPELLVARIABLE_mastery4:
+                    case SPELLVARIABLE_MASTERY4:
+                        value = CharacterDefines::getMasteryForSpec(3);
+                        break;
                     default:
                         *_this = 1;
                         break;
@@ -107,10 +124,12 @@ int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_
 }
 
 void TooltipExtensions::SetNewVariablePointers() {
-    const char* tooltipSpellVariablesExtensions[22] = {
+    const char* tooltipSpellVariablesExtensions[30] = {
         "hp", "HP", "ppl1", "ppl2", "ppl3", "PPL1", "PPL2", "PPL3",
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
-        "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7"
+        "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
+        "mastery1", "mastery2", "mastery3", "mastery4",
+        "MASTERY1", "MASTERY2", "MASTERY3", "MASTERY4",
     };
 
     for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)

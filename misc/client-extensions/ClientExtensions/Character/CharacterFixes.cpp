@@ -35,6 +35,5 @@ void CharacterFixes::SetNewRaceNamePointerTable() {
 
     for (uint8_t i = 26; i < 32; i++)
         raceNameTable[i] = reinterpret_cast<uint32_t>(&dummy);
-    
     return;
 }
