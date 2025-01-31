@@ -57,11 +57,11 @@ static uint32_t CURRENT_AND_MAX_FIELDS[] = {
     MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
     MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
 };
-int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
+int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
     if (spellVariable < SPELLVARIABLE_hp)
-        result = CFormula__GetVariableValue(a0, a1, spellVariable, a3, spell, a5, a6, a7, a8, a9);
+        result = CFormula__GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
     else {
         float value = 0.f;
         uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER));
@@ -91,7 +91,7 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
                         value = *reinterpret_cast<float*>(spell + 316);
                         break;
                     default:
-                        a1 = 1;
+                        *_this = 1;
                         break;
                 }
             }

@@ -1,7 +1,7 @@
 #pragma once
 #include "TooltipDefines.h"
 
-CLIENT_FUNCTION(CFormula__GetVariableValue, 0x5782D0, __fastcall, int, (uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+CLIENT_FUNCTION(CFormula__GetVariableValue, 0x5782D0, __thiscall, int, (uint32_t*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 
 class TooltipExtensions {
 private:
@@ -11,7 +11,7 @@ private:
     static void SpellTooltipVariableExtension();
     static void SpellTooltipRuneCostExtension();
     static void AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer);
-    static int __fastcall GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9);
+    static int __fastcall GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9);
     friend class ClientExtensions;
 };
 
