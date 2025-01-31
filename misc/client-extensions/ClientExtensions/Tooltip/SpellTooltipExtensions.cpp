@@ -18,7 +18,7 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     memcpy(&spellVariables, (const void*)0xACE8F8, sizeof(uint32_t) * 140);
     SetNewVariablePointers();
     // change pointer of GetVariableTableValue to pointer to extended function
-    OverwriteUInt32AtAddress(0x578E8B, CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8B));
+    OverwriteUInt32AtAddress(0x578E8B, CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8F));
 }
 
 // Assembly patch bytes
@@ -47,7 +47,7 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Apply the patch bytes
     memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
     // Calculate and write the relative address for the function call
-    *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8A);
+    *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8E);
     // Restore the original memory protection
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, oldProtect, &oldProtect); 
 }

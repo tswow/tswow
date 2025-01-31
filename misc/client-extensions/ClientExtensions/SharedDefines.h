@@ -34,8 +34,7 @@ enum Field : uint32_t {
     MAX_RUNIC_POWER         = 33,
 };
 
-enum SpellFamilyNames
-{
+enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
     SPELLFAMILY_MAGE        = 3,
@@ -65,8 +64,8 @@ CLIENT_FUNCTION(SFileGetFileSize, 0x4218C0, __stdcall, DWORD /*lowest 32 bits in
 CLIENT_FUNCTION(SFileReadFile, 0x422530, __stdcall, int, (HANDLE handle /*likely a handle*/, char* data, DWORD bytesToRead, DWORD* bytesRead, int overlap /*just set to 0*/, int unk /*just set to 0*/))
 CLIENT_FUNCTION(SFileCloseFile, 0x422910, __stdcall, int, (HANDLE a1))
 
-CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, unsigned long long, ())
-CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (unsigned long long, unsigned int))
+CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
+CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
 
 CLIENT_FUNCTION(FrameScript_GetText, 0x819D40, __cdecl, char*, (char*, int, int))
 CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, uint32_t))
@@ -99,11 +98,11 @@ static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
 }
 
 // Aleist3r: use bigger number as address1
-// address2 is direct write address, function automatically adds +4 to address
 // if the jump/call address is earlier in the memory (e.g. you're jumping from dll code back to wow.exe address), use backwards = true
+// TODO: investigate what I did wrong with code, math was off
 static uint32_t CalculateAddress(uint32_t address1, uint32_t address2, bool backwards = false) {
     if (!backwards)
-        return address1 - (address2 + 4);
+        return address1 - address2;
     else
-        return (address2 + 4) - address1;
+        return address2 - address1;
 }
