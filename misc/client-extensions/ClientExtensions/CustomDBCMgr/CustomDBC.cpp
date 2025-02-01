@@ -4,6 +4,7 @@
 void CustomDBC::LoadDB(const char* filename) {
     uint32_t Buffer = 0;
     void* FileBlock = 0;
+
     if (this->isLoaded) return;
 
     if (!SFileOpenFileEx(0, filename, 0x20000, &FileBlock))
@@ -18,10 +19,11 @@ void CustomDBC::LoadDB(const char* filename) {
     if (!SFileReadFile(FileBlock, &this->numRows, 4, 0, 0))
         SErrPrepareAppFatal(0x85100079, "Unable to read record count from %s", filename);
 
-    if (!numRows) {
+    if (!this->numRows) {
         SFileCloseFile(FileBlock);
         return;
     }
+
     if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
         SErrPrepareAppFatal(0x85100079, "Unable to read column count from %s", filename);
 
