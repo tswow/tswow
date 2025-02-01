@@ -54,6 +54,7 @@ SET(CLIENT_EXTENSIONS_CPP
     Tooltip/SpellTooltipExtensions.cpp
     Camera/CVar.cpp
     Camera/WorldSpace.cpp
+    CustomLua/PlayerFunctions.cpp
     CustomLua/SpellFunctions.cpp
 )
 
