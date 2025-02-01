@@ -13224,7 +13224,7 @@ declare namespace WoWAPI {
          */
         CreateFontString(name?: string, layer?: Layer, inheritsFrom?: string): FontString;
 
-        RegisterForClicks(clickType:ClickType): void;
+        RegisterForClicks(...clickType: ClickType[]): void;
 
         /**
          * Creates a Texture object within the specified widget.
@@ -13780,7 +13780,7 @@ declare namespace WoWAPI {
         GetTextWidth(): number;
         IsEnabled(): bool;
         LockHighlight(): void;
-        RegisterForClicks(clickType: ClickType): void;
+        RegisterForClicks(...clickType: ClickType[]): void;
         RegisterForMouse(): void;
         SetButtonState(state: string): void;
         SetDisabledAtlas(atlasName: string): void;
