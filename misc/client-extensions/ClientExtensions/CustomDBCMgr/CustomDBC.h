@@ -8,9 +8,9 @@ public:
         numRows     = 0;
         minIndex    = 0;
         maxIndex    = 0;
-        stringTable = 0;
         rows        = 0;
     }
+    void* stringTable;
     uint32_t numColumns;
     uint32_t rowSize;
     void LoadDB(const char* filename);
@@ -23,6 +23,5 @@ private:
     uint32_t numRows;
     uint32_t minIndex;
     uint32_t maxIndex;
-    void* stringTable;
     void* rows;
 };

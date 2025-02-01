@@ -7,7 +7,9 @@ void CustomDBC::LoadDB(const char* filename) {
     int v26;
     int v27;
     int len;
-    if (this->isLoaded) return;
+
+    if (this->isLoaded)
+        return;
 
     if (!SFileOpenFileEx(0, filename, 0x20000, &FileBlock))
         SErrPrepareAppFatal(0x85100079, "Unable to open %s", filename);
@@ -37,14 +39,20 @@ void CustomDBC::LoadDB(const char* filename) {
 
     if (v27 != this->rowSize)
         SErrPrepareAppFatal(0x85100079, "%s has wrong row size (found %i, expected %i)", filename, v27, this->rowSize);
+
     if (!SFileReadFile(FileBlock, &len, 4, 0, 0))
         SErrPrepareAppFatal(0x85100079, "Unable to read string size from %s", filename);
-    this->rows = SMemAlloc(len, filename, -2, 0);
-    if (!SFileReadFile(FileBlock, this->rows, len, 0, 0))
+
+    this->rows = SMemAlloc(this->numRows * this->rowSize, filename, -2, 0);
+
+    if (!SFileReadFile(FileBlock, this->rows, this->numRows * this->rowSize, 0, 0))
         SErrPrepareAppFatal(0x85100079, "Unable to read row data from %s", filename);
+
     this->stringTable = SMemAlloc(len, filename, -2, 0);
+
     if (!SFileReadFile(FileBlock, this->stringTable, len, 0, 0))
         SErrPrepareAppFatal(0x85100086, "%s: Cannot read string table", filename);
+
     GetMinMaxIndices();
     SFileCloseFile(FileBlock);
     this->isLoaded = true;

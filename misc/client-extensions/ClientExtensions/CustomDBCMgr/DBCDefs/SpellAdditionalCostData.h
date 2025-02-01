@@ -21,9 +21,10 @@ public:
         CustomDBC::LoadDB(this->fileName);
         SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)CustomDBC::GetRow(2);
         LOG_DEBUG << row->spellID;
-        //LOG_DEBUG << (char*)this->stringTable[row->name];// idk how to get strings yet. this is just an idea.
+        LOG_DEBUG << reinterpret_cast<uintptr_t*>(this->stringTable);
+        LOG_DEBUG << reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
         LOG_DEBUG << row->cost;
         LOG_DEBUG << row->flag;
-        };
+    };
 };
 
