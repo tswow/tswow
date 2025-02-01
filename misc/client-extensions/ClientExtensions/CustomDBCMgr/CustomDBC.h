@@ -18,7 +18,6 @@ public:
     void GetMinMaxIndices();
     void* GetRow(uint32_t rowNum);
     virtual ~CustomDBC() = default;
-    
 private:
     bool isLoaded;
     uint32_t numRows;
