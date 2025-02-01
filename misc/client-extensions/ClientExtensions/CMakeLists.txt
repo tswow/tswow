@@ -31,9 +31,9 @@ SET(CLIENT_EXTENSIONS_H
     FSRoot.h
     lua.hpp
     ClientExtensions.h
-    ClientDB.h
     Character/CharacterFixes.h
     Character/CharacterDefines.h
+    CustomDBCMgr/ClientDB.h
     CustomDBCMgr/CustomDBC.h
     Tooltip/SpellTooltipExtensions.h
     Tooltip/TooltipDefines.h
@@ -50,8 +50,8 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
-    ClientDB.cpp
     Character/CharacterFixes.cpp
+    CustomDBCMgr/ClientDB.cpp
     CustomDBCMgr/CustomDBC.cpp
     Tooltip/SpellTooltipExtensions.cpp
     Camera/CVar.cpp
