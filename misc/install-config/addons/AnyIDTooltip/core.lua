@@ -179,7 +179,6 @@ end)
 
 hooksecurefunc(ItemRefTooltip, "SetHyperlink", onSetHyperlink)
 hooksecurefunc(GameTooltip, "SetHyperlink", onSetHyperlink)
-hooksecurefunc(firstRankToolTip, "SetHyperlink", onSetHyperlink)
 hooksecurefunc(secondRankToolTip, "SetHyperlink", onSetHyperlink)
 
 -- Spells
