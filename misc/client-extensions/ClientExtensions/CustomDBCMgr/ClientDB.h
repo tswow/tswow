@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SharedDefines.h"
-#include "CustomDBCMgr/CustomDBC.h"
+#include "DBCDefs/SpellAdditionalCostData.h"
 
 class ClientDB {
 private:
