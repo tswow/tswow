@@ -18,7 +18,7 @@ target_compile_options(detours PRIVATE /W4 /WX /Zi /MT /Gy /Gm- /Zl /Od)
 target_include_directories(detours PUBLIC ${detours_SOURCE_DIR})
 
 # ClientExtensions
-FILE(GLOB ClientExtenisons ${CMAKE_CURRENT_SOURCE_DIR}/*)
+FILE(GLOB ClientExtensions ${CMAKE_CURRENT_SOURCE_DIR}/*)
 SET(CLIENT_EXTENSIONS_H
     SharedDefines.h
     Logger.h
@@ -46,7 +46,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientLua.cpp
     ClientArguments.cpp
     FSRoot.cpp
-    TestModule.cpp
+    ExampleModule.cpp
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
@@ -54,6 +54,10 @@ SET(CLIENT_EXTENSIONS_CPP
     Character/CharacterFixes.cpp
     CustomDBCMgr/CustomDBC.cpp
     Tooltip/SpellTooltipExtensions.cpp
+    Camera/CVar.cpp
+    Camera/WorldSpace.cpp
+    CustomLua/PlayerFunctions.cpp
+    CustomLua/SpellFunctions.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA

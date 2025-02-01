@@ -1,5 +1,5 @@
 #pragma once
-#include "windows.h"
+#include "Windows.h"
 #include "ClientMacros.h"
 
 #include <functional>
@@ -34,8 +34,7 @@ enum Field : uint32_t {
     MAX_RUNIC_POWER         = 33,
 };
 
-enum SpellFamilyNames
-{
+enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
     SPELLFAMILY_MAGE        = 3,
@@ -74,12 +73,17 @@ CLIENT_FUNCTION(SMemFree, 0x76E5A0, __stdcall, bool, (void*, const char*, uint32
 
 CLIENT_FUNCTION(SErrPrepareAppFatal, 0x772A80, _cdecl, void, (uint32_t, const char*, ...))
 
-CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, unsigned long long, ())
-CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (unsigned long long, unsigned int))
+CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
+CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
 
 CLIENT_FUNCTION(FrameScript_GetText, 0x819D40, __cdecl, char*, (char*, int, int))
 CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, uint32_t))
 CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, uint32_t))
+
+CLIENT_FUNCTION(ClientDB__GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
+CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+
+CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 
 // functions
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
@@ -94,12 +98,20 @@ static void OverwriteUInt32AtAddress(uint32_t position, uint32_t newValue) {
     VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
 };
 
+static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
+    DWORD flOldProtect = 0;
+
+    VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
+    memset(position, byte, size);
+    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
+}
+
 // Aleist3r: use bigger number as address1
-// address2 is direct write address, function automatically adds +4 to address
 // if the jump/call address is earlier in the memory (e.g. you're jumping from dll code back to wow.exe address), use backwards = true
+// TODO: investigate what I did wrong with code, math was off
 static uint32_t CalculateAddress(uint32_t address1, uint32_t address2, bool backwards = false) {
     if (!backwards)
-        return address1 - (address2 + 4);
+        return address1 - address2;
     else
-        return (address2 + 4) - address1;
+        return address2 - address1;
 }

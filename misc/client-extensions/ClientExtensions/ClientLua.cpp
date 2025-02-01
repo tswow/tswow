@@ -1,6 +1,7 @@
 #include "ClientLua.h"
 #include "Logger.h"
 #include "ClientDetours.h"
+#include "SharedDefines.h"
 #include "FSRoot.h"
 
 #include <vector>
@@ -11,7 +12,7 @@
 #include "luafiles.generated.h"
 
 // new custom range
-CLIENT_ADDRESS(void, CAVE_START, 0x7743d2)
+CLIENT_ADDRESS(void, CAVE_START, 0x4E36FE) // 0x7743d2)
 constexpr int CAVE_SIZE = 0x26; // space for 7 functions
 
 #define JMP_SIZE 5
@@ -40,12 +41,7 @@ namespace
     bool isInitialized = false;
 
     CLIENT_FUNCTION(UnregisterGlobal,0x00817FD0, __cdecl,void,(char const* name))
-    CLIENT_FUNCTION(FrameScriptRegisterFunction
-        , 0x00817F90
-        , __cdecl
-        , void
-        , (char const* name, lua_CFunction fn)
-    )
+    CLIENT_FUNCTION(FrameScriptRegisterFunction, 0x00817F90, __cdecl, void, (char const* name, lua_CFunction fn))
 }
 
 namespace ClientLua {
@@ -87,12 +83,12 @@ CLIENT_DETOUR(LoadScriptFunctionsEarly, 0x004D95C0, __cdecl, int, ()) {
     memset(CAVE_START, NOP, JMP_SIZE * luaRegistry().size());
 
     // write a jmp
-    *((unsigned char*)CAVE_START    ) = 0xed;
-    *((unsigned char*)CAVE_START + 1) = 0x26;
+    //*((unsigned char*)CAVE_START    ) = 0xeb;
+    //*((unsigned char*)CAVE_START + 1) = 0x26;
 
     for (size_t i = 0; i < luaRegistry().size(); ++i)
     {
-        size_t cur_cave = uint32_t(CAVE_START) + 2 + i * JMP_SIZE;
+        size_t cur_cave = uint32_t(CAVE_START) + i * JMP_SIZE;
         LuaFunction& fn = luaRegistry()[i];
         LOG_DEBUG
             << "Registering Lua function: "
@@ -127,12 +123,12 @@ CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
     memset(CAVE_START, NOP, JMP_SIZE * luaRegistry().size());
 
     // write a jmp
-    *((unsigned char*)CAVE_START    ) = 0xed;
-    *((unsigned char*)CAVE_START + 1) = 0x26;
+    //*((unsigned char*)CAVE_START    ) = 0xeb;
+    //*((unsigned char*)CAVE_START + 1) = 0x26;
 
     for (size_t i = 0; i < luaRegistry().size(); ++i)
     {
-        size_t cur_cave = uint32_t(CAVE_START) + 2 + i * JMP_SIZE;
+        size_t cur_cave = uint32_t(CAVE_START) + i * JMP_SIZE;
         LuaFunction& fn = luaRegistry()[i];
         LOG_DEBUG
             << "Registering Lua function: "
@@ -166,12 +162,7 @@ CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
 
 CLIENT_DETOUR(UnloadScriptFunctions, 0x00512280, __cdecl, int, ()) {
     if (lastCave > 0)
-    {
-        DWORD old;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, PAGE_EXECUTE_READWRITE, &old);
-        memset(CAVE_START, NOP, JMP_SIZE * lastCave);
-        DWORD dummy;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, old, &dummy);
-    }
+        WriteBytesAtAddress(CAVE_START, NOP, JMP_SIZE * lastCave);
+
     return UnloadScriptFunctions();
 }

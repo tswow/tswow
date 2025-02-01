@@ -1,4 +1,5 @@
 #include "SpellTooltipExtensions.h"
+#include "Character/CharacterDefines.h"
 #include "windows.h"
 #include "Logger.h"
 
@@ -18,7 +19,7 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     memcpy(&spellVariables, (const void*)0xACE8F8, sizeof(uint32_t) * 140);
     SetNewVariablePointers();
     // change pointer of GetVariableTableValue to pointer to extended function
-    OverwriteUInt32AtAddress(0x578E8B, CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8B));
+    OverwriteUInt32AtAddress(0x578E8B, CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8F));
 }
 
 // Assembly patch bytes
@@ -45,9 +46,9 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Change memory protection to allow writing
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
     // Apply the patch bytes
-    std::memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
+    memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
     // Calculate and write the relative address for the function call
-    *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8A);
+    *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8E);
     // Restore the original memory protection
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, oldProtect, &oldProtect); 
 }
@@ -57,11 +58,11 @@ static uint32_t CURRENT_AND_MAX_FIELDS[] = {
     MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
     MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
 };
-int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
+int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
     if (spellVariable < SPELLVARIABLE_hp)
-        result = CFormula__GetVariableValue(a0, a1, spellVariable, a3, spell, a5, a6, a7, a8, a9);
+        result = CFormula__GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
     else {
         float value = 0.f;
         uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER));
@@ -90,8 +91,24 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
                     case SPELLVARIABLE_PPL3:
                         value = *reinterpret_cast<float*>(spell + 316);
                         break;
+                    case SPELLVARIABLE_mastery1:
+                    case SPELLVARIABLE_MASTERY1:
+                        value = CharacterDefines::getMasteryForSpec(0);
+                        break;
+                    case SPELLVARIABLE_mastery2:
+                    case SPELLVARIABLE_MASTERY2:
+                        value = CharacterDefines::getMasteryForSpec(1);
+                        break;
+                    case SPELLVARIABLE_mastery3:
+                    case SPELLVARIABLE_MASTERY3:
+                        value = CharacterDefines::getMasteryForSpec(2);
+                        break;
+                    case SPELLVARIABLE_mastery4:
+                    case SPELLVARIABLE_MASTERY4:
+                        value = CharacterDefines::getMasteryForSpec(3);
+                        break;
                     default:
-                        a1 = 1;
+                        *_this = 1;
                         break;
                 }
             }
@@ -107,10 +124,12 @@ int TooltipExtensions::GetVariableValueEx(uint32_t a0, uint32_t a1, uint32_t spe
 }
 
 void TooltipExtensions::SetNewVariablePointers() {
-    const char* tooltipSpellVariablesExtensions[22] = {
+    const char* tooltipSpellVariablesExtensions[30] = {
         "hp", "HP", "ppl1", "ppl2", "ppl3", "PPL1", "PPL2", "PPL3",
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
-        "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7"
+        "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
+        "mastery1", "mastery2", "mastery3", "mastery4",
+        "MASTERY1", "MASTERY2", "MASTERY3", "MASTERY4",
     };
 
     for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)
