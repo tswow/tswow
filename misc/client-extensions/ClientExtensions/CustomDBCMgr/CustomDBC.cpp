@@ -1,7 +1,7 @@
 #include "CustomDBC.h"
 #include "Logger.h"
 
-void CustomDBC::LoadDB(const char* filename) {
+CustomDBC* CustomDBC::LoadDB(const char* filename) {
     uint32_t Buffer = 0;
     void* FileBlock = 0;
     int v26;
@@ -9,7 +9,7 @@ void CustomDBC::LoadDB(const char* filename) {
     int len;
 
     if (this->isLoaded)
-        return;
+        return this;
 
     if (!SFileOpenFileEx(0, filename, 0x20000, &FileBlock))
         SErrPrepareAppFatal(0x85100079, "Unable to open %s", filename);
@@ -25,7 +25,7 @@ void CustomDBC::LoadDB(const char* filename) {
 
     if (!this->numRows) {
         SFileCloseFile(FileBlock);
-        return;
+        return this;
     }
 
     if (!SFileReadFile(FileBlock, &v26, 4, 0, 0))
@@ -56,6 +56,7 @@ void CustomDBC::LoadDB(const char* filename) {
     GetMinMaxIndices();
     SFileCloseFile(FileBlock);
     this->isLoaded = true;
+    return this;
 }
 
 void CustomDBC::UnloadDB() {

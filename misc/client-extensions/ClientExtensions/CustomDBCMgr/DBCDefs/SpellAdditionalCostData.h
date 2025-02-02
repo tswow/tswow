@@ -1,11 +1,10 @@
 #pragma once
 #include "CustomDBCMgr/CustomDBC.h"
 #include <string>
-#include "Logger.h"
 
 struct SpellAdditionalCostDataRow {
     int spellID;
-    void* resourceName;
+    char* resourceName;
     int cost;
     int flag;
 };
@@ -17,14 +16,20 @@ public:
         this->numColumns = 4;
         this->rowSize = 16;
     }
-    void LoadDB(){
+    
+    CustomDBC LoadDB(){
         CustomDBC::LoadDB(this->fileName);
-        SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)CustomDBC::GetRow(2);
-        LOG_DEBUG << row->spellID;
-        LOG_DEBUG << reinterpret_cast<uintptr_t*>(this->stringTable);
-        LOG_DEBUG << reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
-        LOG_DEBUG << row->cost;
-        LOG_DEBUG << row->flag;
+        SpellAdditionalCostData::setupStrings();
+        return *this;
+    };
+
+    void SpellAdditionalCostData::setupStrings() {
+        uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
+        for (uint32_t i = 0; i < this->numRows; i++) {
+            SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)ptr;
+            row->resourceName = reinterpret_cast<char*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
+            ptr += this->rowSize;
+        }
     };
 };
 
