@@ -14006,7 +14006,12 @@ declare const UISpecialFrames: string[];
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
 declare function type(thing: any): string;
-declare function tonumber(value: string|number, radix?:number): number
+declare function tonumber(value: string|number, radix?:number): number;
+declare function format(pattern: string, ...any:any): string;
+
+interface String {
+    format(...any:any): string;
+};
 
  /**
   * global strings
