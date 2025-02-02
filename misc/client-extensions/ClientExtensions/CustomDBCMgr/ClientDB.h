@@ -9,6 +9,7 @@
 class ClientDB {
 private:
     static void Load();
-    static CustomDBC getDBC(char* dbcName);
+    static CustomDBC* GetDBC(char* dbcName);
+    int handleLua(lua_State* L, char* dbcName, int index);
     friend class ClientExtensions;
 };

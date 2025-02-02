@@ -1,6 +1,5 @@
 #pragma once
 #include "CustomDBCMgr/CustomDBC.h"
-#include <string>
 
 struct SpellAdditionalCostDataRow {
     int spellID;
@@ -17,10 +16,10 @@ public:
         this->rowSize = 16;
     }
     
-    CustomDBC LoadDB(){
+    SpellAdditionalCostData* LoadDB(){
         CustomDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStrings();
-        return *this;
+        return this;
     };
 
     void SpellAdditionalCostData::setupStrings() {
@@ -31,5 +30,14 @@ public:
             ptr += this->rowSize;
         }
     };
+
+    int handleLuaRow(lua_State* L, void* rowPtr) override {
+        SpellAdditionalCostDataRow row = *(SpellAdditionalCostDataRow*)rowPtr;        
+        ClientLua::PushNumber(L, row.spellID);
+        ClientLua::PushString(L, row.resourceName);
+        ClientLua::PushNumber(L, row.cost);
+        ClientLua::PushNumber(L, row.flag);
+        return numColumns;
+    }
 };
 
