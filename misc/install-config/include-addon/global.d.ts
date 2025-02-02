@@ -56,6 +56,9 @@ declare function __TS__New(target: any): any;
 declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 
+// dll additions
+declare function GetSpellDescription(spellID: number): string;
+
 /**
  * Returns the highest expansion id the current account has been flagged for.
  */

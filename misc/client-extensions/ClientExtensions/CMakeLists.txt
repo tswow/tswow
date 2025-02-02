@@ -49,6 +49,7 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientMPQ.cpp
     ClientExtensions.cpp
     Characters/CharacterFixes.cpp
+    CustomLua/SpellFunctions.cpp
     Tooltip/SpellTooltipExtensions.cpp
 )
 
