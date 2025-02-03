@@ -16,7 +16,7 @@ public:
         this->rowSize = 16;
     }
     
-    SpellAdditionalCostData* LoadDB(){
+    SpellAdditionalCostData* LoadDB() {
         CustomDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStrings();
         return this;

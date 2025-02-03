@@ -1,11 +1,13 @@
 #include "ClientDB.h"
 #include "DBCDefs/SpellAdditionalCostData.h"
+#include "DBCDefs/SpellCustomAttributes.h"
 #include "Logger.h"
 
 static std::map<std::string, CustomDBC*> dbcMap;
 
 void ClientDB::Load() {
     dbcMap["SpellAdditionalCostData"] = SpellAdditionalCostData().LoadDB();
+    dbcMap["SpellCustomAttributes"] = SpellCustomAttributes().LoadDB();
 
     SpellAdditionalCostData* dbc = (SpellAdditionalCostData*)ClientDB::GetDBC("SpellAdditionalCostData");
     SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)(dbc->GetRow(2));

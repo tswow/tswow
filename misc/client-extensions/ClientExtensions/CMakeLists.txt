@@ -36,6 +36,7 @@ SET(CLIENT_EXTENSIONS_H
     CustomDBCMgr/ClientDB.h
     CustomDBCMgr/CustomDBC.h
     CustomDBCMgr/DBCDefs/SpellAdditionalCostData.h
+    CustomDBCMgr/DBCDefs/SpellCustomAttributes.h
     Tooltip/SpellTooltipExtensions.h
     Tooltip/TooltipDefines.h
 )
