@@ -1,25 +1,24 @@
 #include "ClientDB.h"
 #include "DBCDefs/SpellAdditionalCostData.h"
 #include "DBCDefs/SpellCustomAttributes.h"
+#include "CustomDBCMgr.h"
 #include "Logger.h"
 
 static std::map<std::string, CustomDBC*> dbcMap;
 
 void ClientDB::Load() {
+    GlobalMapContainer.addDBC("SpellAdditionalCostData");
     dbcMap["SpellAdditionalCostData"] = SpellAdditionalCostData().LoadDB();
+    GlobalMapContainer.addDBC("SpellCustomAttributes");
     dbcMap["SpellCustomAttributes"] = SpellCustomAttributes().LoadDB();
- LOG_DEBUG << "1";
-    SpellAdditionalCostData* dbc = (SpellAdditionalCostData*)ClientDB::GetDBC("SpellAdditionalCostData");
-     LOG_DEBUG << "2";
-    SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)(dbc->GetRow(2));
+    SACDRow* row = GlobalMapContainer.getRow<SACDRow>("SpellAdditionalCostData", 2);
+    if (row) {
+        LOG_DEBUG << "Spell ID: " << row->spellID << " resourceName: " << row->resourceName<< " Cost: " << row->cost<< " flag: " << row->flag;
+    } else {
+         LOG_DEBUG << "Row not found!";
+    }
+
     LOG_DEBUG << row->spellID;
-    LOG_DEBUG << row->resourceName;
-    LOG_DEBUG << row->cost;
-    LOG_DEBUG << row->flag;
-    SpellCustomAttributes* dbc2 = (SpellCustomAttributes*)ClientDB::GetDBC("SpellCustomAttributes");
-    SpellCustomAttributesRow* row2 = (SpellCustomAttributesRow*)(dbc2->GetRow(2));
-    LOG_DEBUG << row2->spellID;
-    LOG_DEBUG << row2->customAttr0;
 }
 
 CustomDBC* ClientDB::GetDBC(char* dbcName)

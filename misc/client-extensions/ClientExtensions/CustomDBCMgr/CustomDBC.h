@@ -24,6 +24,7 @@ public:
     void GetMinMaxIndices();
     void* GetRow(uint32_t rowNum);
     virtual int handleLuaRow(lua_State* L, void* rowPtr) {LOG_DEBUG << "something wrong"; return 0;};
+    //virtual DataRow getRow(int index) override {return 0;}
     virtual ~CustomDBC() = default;
 private:
     bool isLoaded;

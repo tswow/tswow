@@ -54,7 +54,7 @@ CustomDBC* CustomDBC::LoadDB(const char* filename) {
         SErrPrepareAppFatal(0x85100086, "%s: Cannot read string table", filename);
 
     GetMinMaxIndices();
-    SFileCloseFile(FileBlock);
+    //SFileCloseFile(FileBlock);
     this->isLoaded = true;
     return this;
 }
