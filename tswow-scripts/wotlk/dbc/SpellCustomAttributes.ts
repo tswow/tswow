@@ -18,7 +18,7 @@
 import { int, uint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
 import { PrimaryKey } from '../../data/table/PrimaryKey'
-import { DBCKeyCell, DBCULongCell } from '../../data/dbc/DBCCell'
+import { DBCKeyCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 
@@ -39,7 +39,7 @@ import { DBCRow } from '../../data/dbc/DBCRow'
     /**
      * Resource name, this is what's showing in spell tooltip in cost row
      */
-    get CustomAttribute0() { return new DBCULongCell(this,this.buffer,this.offset+4) }
+    get CustomAttribute0() { return new DBCUIntCell(this,this.buffer,this.offset+4) }
 
     /**
      * Creates a clone of this row with new primary keys.
@@ -55,7 +55,7 @@ import { DBCRow } from '../../data/dbc/DBCRow'
  * Used for object creation (Don't comment these)
  */
 export type SpellCustomAttributesCreator = {
-    CustomAttribute0?: bigint
+    CustomAttribute0?: uint
 }
 
 /**
@@ -63,7 +63,7 @@ export type SpellCustomAttributesCreator = {
  */
 export type SpellCustomAttributesQuery = {
     SpellID? : Relation<int>
-    CustomAttribute0? : Relation<long>
+    CustomAttribute0? : Relation<uint>
 }
 
 /**

@@ -52,9 +52,9 @@ enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_PET         = 17
 };
 
-enum SpellAttr0Custom : uint64_t {
-    SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x0000000000000001,   // Changes tooltip line responsible for cast time to "Instant"
-    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x0000000000000002,   // Self-descripting, don't display castbar at all
+enum SpellAttr0Custom : uint32_t {
+    SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
+    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, don't display castbar at all
 };
 
 static uint32_t dummy = 0;
