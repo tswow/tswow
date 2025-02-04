@@ -76,17 +76,12 @@ void CustomDBC::UnloadDB() {
 };
 
 void CustomDBC::GetMinMaxIndices() {
-    uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
-    for (uint32_t i = 0; i < numRows; i++) {
-        if (this->minIndex >= *ptr)
-            memcpy(&this->minIndex, ptr, 4);
-
-        if (this->maxIndex <= *ptr)
-            memcpy(&this->maxIndex, ptr, 4);
-
-        ptr += this->numColumns;
-    }
-};
+    uintptr_t* firstRow = reinterpret_cast<uintptr_t*>(this->rows);
+    uintptr_t* lastRow = firstRow + ((numRows - 1) * this->numColumns);
+    this->minIndex = *firstRow;  // First row is the minimum
+    this->maxIndex = *lastRow;   // Last row is the maximum
+    LOG_DEBUG << this->minIndex << " " << this->maxIndex;
+}
 
 void* CustomDBC::GetRow(uint32_t rowNum) {
     if (rowNum < this->minIndex || rowNum > this->maxIndex)
