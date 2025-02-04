@@ -12522,6 +12522,8 @@ declare namespace WoWAPI {
         type OnDragStop = "OnDragStop";
         type OnKeyDown = "OnKeyDown";
         type OnKeyUp = "OnKeyUp";
+        type OnDisable = "OnDisable";
+        type OnEnable = "OnEnable";
 
         type PlayerLogin = "PLAYER_LOGIN";
         type PlayerLogout = "PLAYER_LOGOUT";
@@ -12539,7 +12541,7 @@ declare namespace WoWAPI {
 
         type OnAny = OnEvent | OnLoad | OnUpdate | OnClick | OnEnter |
             OnLeave | OnHide | OnShow | OnMouseDown | OnMouseUp | OnMouseWheel |
-            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop | OnKeyDown | OnKeyUp;
+            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop | OnKeyDown | OnKeyUp | OnDisable | OnEnable;
     }
 
     type UIDropdownInfo = {
@@ -12595,6 +12597,11 @@ declare namespace WoWAPI {
         funcOnLeave?: (self: any, arg1: any, arg2: any) => void,
         isNotRadio?: boolean,
         minWidth?: number,
+
+        AutoHideButton?: boolean,
+        AHBTex?: string,
+        AHBHoverText?: string,
+        AHBClick?: () => void,
     };
 
     type UIDropDownMenuDisplayMode = "" | "MENU";
@@ -13188,7 +13195,6 @@ declare namespace WoWAPI {
 		HookScript(event: "OnPause", handler: (self: T) => void): void;
 		HookScript(event: "OnPlay", handler: (self: T) => void): void;
 		HookScript(event: "OnStop", handler: (self: T, requested:boolean) => void): void;
-		
 	}
 	
 	interface AnimationSetScript extends ScriptObjectSetScript {
