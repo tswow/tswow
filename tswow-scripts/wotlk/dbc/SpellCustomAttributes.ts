@@ -55,7 +55,7 @@ import { DBCRow } from '../../data/dbc/DBCRow'
  * Used for object creation (Don't comment these)
  */
 export type SpellCustomAttributesCreator = {
-    CustomAttribute0?: uint64
+    CustomAttribute0?: bigint
 }
 
 /**
@@ -63,7 +63,7 @@ export type SpellCustomAttributesCreator = {
  */
 export type SpellCustomAttributesQuery = {
     SpellID? : Relation<int>
-    ResourceName? : Relation<uint64>
+    CustomAttribute0? : Relation<long>
 }
 
 /**
