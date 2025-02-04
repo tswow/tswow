@@ -9,15 +9,15 @@ class CustomDBCMgr {
 public:
     std::unordered_map<std::string, CustomDBC> allCustomDBCs;
     static void CustomDBCMgr::Load();
-    void addDBC(std::string key);
+    void addDBC(std::string dbcName);
     //these stay in .h because haha template
     template <typename T>
-    void addRow(std::string key, int subKey, T row) {allCustomDBCs[key][subKey] = row;}
+    void addRow(std::string dbcName, int rowIndex, T row) {allCustomDBCs[dbcName][rowIndex] = row;}
     template <typename T>
-    T* getRow(std::string key, int id) {
-        auto it = allCustomDBCs.find(key);
+    T* getRow(std::string dbcName, int rowIndex) {
+        auto it = allCustomDBCs.find(dbcName);
         if (it != allCustomDBCs.end()) {
-            auto objIt = it->second.find(id);
+            auto objIt = it->second.find(rowIndex);
             if (objIt != it->second.end()) {
                 return std::any_cast<T>(&objIt->second);
             }

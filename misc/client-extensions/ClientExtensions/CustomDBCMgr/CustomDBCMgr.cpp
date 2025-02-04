@@ -4,8 +4,8 @@
 
 CustomDBCMgr GlobalDBCMap;
 
-void CustomDBCMgr::addDBC(std::string key){
-    allCustomDBCs[key] = CustomDBC();
+void CustomDBCMgr::addDBC(std::string dbcName){
+    allCustomDBCs[dbcName] = CustomDBC();
 }
 
 void CustomDBCMgr::Load() {
