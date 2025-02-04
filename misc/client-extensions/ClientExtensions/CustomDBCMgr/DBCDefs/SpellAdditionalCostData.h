@@ -1,5 +1,6 @@
 #pragma once
 #include "CustomDBCMgr/CustomDBC.h"
+#include "CustomDBCMgr/CustomDBCMgr.h"
 
 struct SpellAdditionalCostDataRow {
     int spellID;
@@ -16,28 +17,21 @@ public:
         this->rowSize = 16;
     }
     
-    SpellAdditionalCostData* LoadDB() {
+    SpellAdditionalCostData* LoadDB() { 
+        GlobalDBCMap.addDBC("SpellAdditionalCostData");
         CustomDBC::LoadDB(this->fileName);
-        SpellAdditionalCostData::setupStrings();
+        SpellAdditionalCostData::setupStringsAndTable();
         return this;
     };
 
-    void SpellAdditionalCostData::setupStrings() {
+    void SpellAdditionalCostData::setupStringsAndTable() {
         uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
         for (uint32_t i = 0; i < this->numRows; i++) {
             SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)ptr;
             row->resourceName = reinterpret_cast<char*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
+            GlobalDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
             ptr += this->numColumns;
         }
     };
-
-    int handleLuaRow(lua_State* L, void* rowPtr) override {
-        SpellAdditionalCostDataRow row = *(SpellAdditionalCostDataRow*)rowPtr;        
-        ClientLua::PushNumber(L, row.spellID);
-        ClientLua::PushString(L, row.resourceName);
-        ClientLua::PushNumber(L, row.cost);
-        ClientLua::PushNumber(L, row.flag);
-        return numColumns;
-    }
 };
 

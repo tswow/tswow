@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CustomDBCMgr/ClientDB.h"
 #include "Character/CharacterFixes.h"
 #include "Tooltip/SpellTooltipExtensions.h"
 
