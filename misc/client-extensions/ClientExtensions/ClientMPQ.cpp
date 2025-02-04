@@ -25,8 +25,8 @@ namespace ClientMPQ {
             return 0;
         }
         char* data = new char[low];
-        DWORD read = 0;
-        int readRes = SFileReadFile(handle, data, low, &read, 0, 0);
+        uint32_t read = 0;
+        int readRes = SFileReadFile(handle, data, low, &read, 0);
         if (!readRes)
         {
             LOG_ERROR << "Unknown read error: " << filename;

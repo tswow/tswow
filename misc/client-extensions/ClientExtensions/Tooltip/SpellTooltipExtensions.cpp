@@ -1,7 +1,17 @@
 #include "SpellTooltipExtensions.h"
 #include "Character/CharacterDefines.h"
+#include "CustomDBCMgr/CustomDBCMgr.h"
+#include "CustomDBCMgr/DBCDefs/SpellAdditionalCostData.h"
 #include "windows.h"
 #include "Logger.h"
+
+// Aleist3r: keeping it here as an example how to grab custom data
+// SpellAdditionalCostDataRow* row = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", 2);
+// if (row) {
+//     LOG_DEBUG << "Spell ID: " << row->spellID << " resourceName: " << row->resourceName<< " Cost: " << row->cost<< " flag: " << row->flag;
+// } else {
+//      LOG_DEBUG << "Row not found!";
+// }
 
 void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();

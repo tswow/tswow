@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ClientDB.h"
 #include "Character/CharacterFixes.h"
 #include "Tooltip/SpellTooltipExtensions.h"
 
