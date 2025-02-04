@@ -63,7 +63,7 @@ static uint32_t CURRENT_AND_MAX_FIELDS[] = {
 int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
-    SACDRow* row = GlobalMapContainer.getRow<SACDRow>("SpellAdditionalCostData", 2);
+    SpellAdditionalCostDataRow* row = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", 2);
     if (row) {
         LOG_DEBUG << "Spell ID: " << row->spellID << " resourceName: " << row->resourceName<< " Cost: " << row->cost<< " flag: " << row->flag;
     } else {

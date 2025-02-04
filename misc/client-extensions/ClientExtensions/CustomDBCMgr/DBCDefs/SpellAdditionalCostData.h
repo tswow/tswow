@@ -2,7 +2,7 @@
 #include "CustomDBCMgr/CustomDBC.h"
 #include "CustomDBCMgr/CustomDBCMgr.h"
 
-struct SACDRow {
+struct SpellAdditionalCostDataRow {
     int spellID;
     char* resourceName;
     int cost;
@@ -17,38 +17,21 @@ public:
         this->rowSize = 16;
     }
     
-    SpellAdditionalCostData* LoadDB() {
+    SpellAdditionalCostData* LoadDB() { 
+        GlobalDBCMap.addDBC("SpellAdditionalCostData");
         CustomDBC::LoadDB(this->fileName);
-        SpellAdditionalCostData::setupStrings();
-        SpellAdditionalCostData::setupTable();
+        SpellAdditionalCostData::setupStringsAndTable();
         return this;
     };
 
-    void SpellAdditionalCostData::setupStrings() {
+    void SpellAdditionalCostData::setupStringsAndTable() {
         uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
         for (uint32_t i = 0; i < this->numRows; i++) {
-            SACDRow* row = (SACDRow*)ptr;
+            SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)ptr;
             row->resourceName = reinterpret_cast<char*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
+            GlobalDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
             ptr += this->numColumns;
         }
     };
-
-     void SpellAdditionalCostData::setupTable() {
-        uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
-        for (uint32_t i = 0; i < this->numRows; i++) {
-            SACDRow* row = (SACDRow*)ptr;
-            GlobalMapContainer.addRow("SpellAdditionalCostData", row->spellID, SACDRow{row->spellID, row->resourceName,row->cost,row->flag});
-            ptr += this->numColumns;
-        }
-    };
-
-    int handleLuaRow(lua_State* L, void* rowPtr) override {
-        SACDRow row = *(SACDRow*)rowPtr;        
-        ClientLua::PushNumber(L, row.spellID);
-        ClientLua::PushString(L, row.resourceName);
-        ClientLua::PushNumber(L, row.cost);
-        ClientLua::PushNumber(L, row.flag);
-        return numColumns;
-    }
 };
 

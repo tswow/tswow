@@ -4,11 +4,13 @@
 #include <string>
 #include <any>
 
-class MapContainer {
+class CustomDBCMgr {
     using CustomDBC = std::unordered_map<int, std::any>;
 public:
     std::unordered_map<std::string, CustomDBC> allCustomDBCs;
+    static void CustomDBCMgr::Load();
     void addDBC(std::string key);
+    //these stay in .h because haha template
     template <typename T>
     void addRow(std::string key, int subKey, T row) {allCustomDBCs[key][subKey] = row;}
     template <typename T>
@@ -24,5 +26,5 @@ public:
     }
 };
 
-extern MapContainer GlobalMapContainer;
+extern CustomDBCMgr GlobalDBCMap;
 

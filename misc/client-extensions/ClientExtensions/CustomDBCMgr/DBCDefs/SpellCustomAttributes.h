@@ -15,14 +15,18 @@ public:
     }
 
     SpellCustomAttributes* LoadDB() {
+        GlobalDBCMap.addDBC("SpellCustomAttributes");
         CustomDBC::LoadDB(this->fileName);
+        SpellCustomAttributes::setupTable();
         return this;
     }
 
-    int handleLuaRow(lua_State* L, void* rowPtr) override {
-        SpellCustomAttributesRow row = *(SpellCustomAttributesRow*)rowPtr;
-        ClientLua::PushNumber(L, row.spellID);
-        ClientLua::PushNumber(L, row.customAttr0);
-        return numColumns;
-    }
+    void SpellCustomAttributes::setupTable() {
+        uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
+        for (uint32_t i = 0; i < this->numRows; i++) {
+            SpellCustomAttributesRow* row = (SpellCustomAttributesRow*)ptr;
+            GlobalDBCMap.addRow("SpellCustomAttributes", row->spellID, *row);
+            ptr += this->numColumns;
+        }
+    };
 };

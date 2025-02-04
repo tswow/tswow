@@ -33,7 +33,6 @@ SET(CLIENT_EXTENSIONS_H
     ClientExtensions.h
     Character/CharacterFixes.h
     Character/CharacterDefines.h
-    CustomDBCMgr/ClientDB.h
     CustomDBCMgr/CustomDBC.h
     CustomDBCMgr/CustomDBCMgr.h
     CustomDBCMgr/DBCDefs/SpellAdditionalCostData.h
@@ -54,7 +53,6 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientMPQ.cpp
     ClientExtensions.cpp
     Character/CharacterFixes.cpp
-    CustomDBCMgr/ClientDB.cpp
     CustomDBCMgr/CustomDBC.cpp
     CustomDBCMgr/CustomDBCMgr.cpp
     Tooltip/SpellTooltipExtensions.cpp
