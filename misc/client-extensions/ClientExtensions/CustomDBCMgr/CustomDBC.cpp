@@ -84,7 +84,7 @@ void CustomDBC::GetMinMaxIndices() {
         if (this->maxIndex <= *ptr)
             memcpy(&this->maxIndex, ptr, 4);
 
-        ptr += this->rowSize;
+        ptr += this->numColumns;
     }
 };
 
@@ -98,7 +98,7 @@ void* CustomDBC::GetRow(uint32_t rowNum) {
         if (rowNum == *ptr)
             break;
 
-        ptr += this->rowSize;
+        ptr += this->numColumns;
     }
 
     return ptr;

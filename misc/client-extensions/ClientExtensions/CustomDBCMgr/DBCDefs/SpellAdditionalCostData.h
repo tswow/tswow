@@ -27,7 +27,7 @@ public:
         for (uint32_t i = 0; i < this->numRows; i++) {
             SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)ptr;
             row->resourceName = reinterpret_cast<char*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
-            ptr += this->rowSize;
+            ptr += this->numColumns;
         }
     };
 
