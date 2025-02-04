@@ -8,8 +8,9 @@ static std::map<std::string, CustomDBC*> dbcMap;
 void ClientDB::Load() {
     dbcMap["SpellAdditionalCostData"] = SpellAdditionalCostData().LoadDB();
     dbcMap["SpellCustomAttributes"] = SpellCustomAttributes().LoadDB();
-
+ LOG_DEBUG << "1";
     SpellAdditionalCostData* dbc = (SpellAdditionalCostData*)ClientDB::GetDBC("SpellAdditionalCostData");
+     LOG_DEBUG << "2";
     SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)(dbc->GetRow(2));
     LOG_DEBUG << row->spellID;
     LOG_DEBUG << row->resourceName;
