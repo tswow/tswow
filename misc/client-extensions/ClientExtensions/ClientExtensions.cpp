@@ -1,10 +1,11 @@
 #include "windows.h"
 #include "ClientExtensions.h"
+#include "CustomDBCMgr/CustomDBCMgr.h"
 #include "Logger.h"
 
 void ClientExtensions::initialize() {
-    ClientDB::Apply();
-    LOG_INFO << "DBC Loader extension applied";
+    CustomDBCMgr::Load();
+    LOG_INFO << "Custom DBCs loaded";
     CharacterFixes::CharacterCreationFixes();
     LOG_INFO << "Character creation fixes applied";
     TooltipExtensions::Apply();
