@@ -1,4 +1,4 @@
-#pragma once
+#pragma optimize("", off)
 #include "CustomDBCMgr/CustomDBC.h"
 
 struct SpellCustomAttributesRow {
@@ -22,13 +22,12 @@ public:
     }
 
     void SpellCustomAttributes::setupTable() {
-        LOG_DEBUG << "SpellCustomAttributes setupTable 1";
         uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
         for (uint32_t i = 0; i < this->numRows; i++) {
             SpellCustomAttributesRow* row = (SpellCustomAttributesRow*)ptr;
             GlobalDBCMap.addRow("SpellCustomAttributes", row->spellID, *row);
             ptr += this->numColumns;
         }
-        LOG_DEBUG << "SpellCustomAttributes setupTable 2";
     };
 };
+#pragma optimize("", on)

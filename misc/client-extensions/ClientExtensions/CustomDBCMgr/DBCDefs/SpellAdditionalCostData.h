@@ -1,4 +1,4 @@
-#pragma once
+#pragma optimize("", off)
 #include "CustomDBCMgr/CustomDBC.h"
 #include "CustomDBCMgr/CustomDBCMgr.h"
 
@@ -32,7 +32,6 @@ public:
             GlobalDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
             ptr += this->numColumns;
         }
-        LOG_DEBUG << "SpellAdditionalCostData Strings Loaded";
     };
 };
-
+#pragma optimize("", on)

@@ -54,7 +54,6 @@ CustomDBC* CustomDBC::LoadDB(const char* filename) {
         SErrPrepareAppFatal(0x85100086, "%s: Cannot read string table", filename);
 
     GetMinMaxIndices();
-    //SFileCloseFile(FileBlock);
     this->isLoaded = true;
     return this;
 }
@@ -80,7 +79,6 @@ void CustomDBC::GetMinMaxIndices() {
     uintptr_t* lastRow = firstRow + ((numRows - 1) * this->numColumns);
     this->minIndex = *firstRow;  // First row is the minimum
     this->maxIndex = *lastRow;   // Last row is the maximum
-    LOG_DEBUG << this->minIndex << " " << this->maxIndex;
 }
 
 void* CustomDBC::GetRow(uint32_t rowNum) {
