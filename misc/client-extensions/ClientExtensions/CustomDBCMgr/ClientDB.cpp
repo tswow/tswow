@@ -15,6 +15,10 @@ void ClientDB::Load() {
     LOG_DEBUG << row->resourceName;
     LOG_DEBUG << row->cost;
     LOG_DEBUG << row->flag;
+    SpellCustomAttributes* dbc2 = (SpellCustomAttributes*)ClientDB::GetDBC("SpellCustomAttributes");
+    SpellCustomAttributesRow* row2 = (SpellCustomAttributesRow*)(dbc2->GetRow(2));
+    LOG_DEBUG << row2->spellID;
+    LOG_DEBUG << row2->customAttr0;
 }
 
 CustomDBC* ClientDB::GetDBC(char* dbcName)
