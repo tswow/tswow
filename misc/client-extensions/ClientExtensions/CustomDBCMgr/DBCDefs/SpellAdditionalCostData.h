@@ -32,6 +32,7 @@ public:
             GlobalDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
             ptr += this->numColumns;
         }
+        LOG_DEBUG << "SpellAdditionalCostData Strings Loaded";
     };
 };
 
