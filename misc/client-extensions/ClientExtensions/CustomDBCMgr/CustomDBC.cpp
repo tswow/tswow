@@ -55,6 +55,7 @@ CustomDBC* CustomDBC::LoadDB(const char* filename) {
 
     GetMinMaxIndices();
     this->isLoaded = true;
+    SFileCloseFile(FileBlock);
     return this;
 }
 
