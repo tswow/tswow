@@ -4,6 +4,15 @@
 struct SpellCustomAttributesRow {
     int spellID;
     uint32_t customAttr0;
+
+    int handleLuaPush(lua_State* L) {
+        ClientLua::PushNumber(L,spellID);
+        ClientLua::PushNumber(L,customAttr0);
+        return 2;
+    }
+    void test() {
+        LOG_DEBUG << "SpellCustomAttributesRow";
+    }
 };
 
 class SpellCustomAttributes : public CustomDBC {

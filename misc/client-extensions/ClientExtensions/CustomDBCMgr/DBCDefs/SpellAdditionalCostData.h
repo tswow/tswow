@@ -7,6 +7,18 @@ struct SpellAdditionalCostDataRow {
     char* resourceName;
     int cost;
     int flag;
+
+    int handleLuaPush(lua_State* L) {
+        ClientLua::PushNumber(L,spellID);
+        ClientLua::PushString(L,resourceName);
+        ClientLua::PushNumber(L,cost);
+        ClientLua::PushNumber(L,flag);
+        return 4;
+    }
+
+    void test() {
+        LOG_DEBUG << "SpellAdditionalCostDataRow";
+    }
 };
 
 class SpellAdditionalCostData : public CustomDBC {
