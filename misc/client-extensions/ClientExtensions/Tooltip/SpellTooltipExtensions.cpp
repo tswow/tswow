@@ -2,6 +2,7 @@
 #include "Character/CharacterDefines.h"
 #include "CustomDBCMgr/CustomDBCMgr.h"
 #include "CustomDBCMgr/DBCDefs/SpellAdditionalCostData.h"
+#include "CustomDBCMgr/DBCDefs/SpellCustomAttributes.h"
 #include "windows.h"
 #include "Logger.h"
 
@@ -16,6 +17,7 @@
 void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
     SpellTooltipRuneCostExtension();
+    SpellTooltipPowerCostExtension();
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
@@ -188,6 +190,65 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row
                 AppendRuneCost(rune.costKey, rune.count, buff, dest);
                 addSpace = true;
             }
+        }
+    }
+}
+
+constexpr uint8_t PATCH_BYTES2[31] = {
+    0x57, 0x51, 0x56, 0x8B, 0x4D, 0x2C, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x8D, 0x8D, 0x20,
+    0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0xFC, 0xFF, 0x00, 0x00, 0xE9, 0x3A, 0x01, 0x00, 0x00
+};
+
+void TooltipExtensions::SpellTooltipPowerCostExtension()
+{
+    DWORD oldProtect;
+    // Change memory protection to allow writing
+    VirtualProtect(reinterpret_cast<void*>(0x623D8A), 0x1F, PAGE_EXECUTE_READWRITE, &oldProtect);
+    // Apply the patch bytes
+    memcpy(reinterpret_cast<void*>(0x623D8A), PATCH_BYTES2, sizeof(PATCH_BYTES2));
+    // Calculate and write the relative address for the function call
+    *reinterpret_cast<uint32_t*>(0x623DA0) = CalculateAddress(reinterpret_cast<uint32_t>(&SetPowerCostTooltip), 0x623DA4);
+    // Restore the original memory protection
+    VirtualProtect(reinterpret_cast<void*>(0x623D8A), 0x1F, oldProtect, &oldProtect);
+}
+
+void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_t powerCost, uint32_t powerCostPerSec, char* powerString, PowerDisplayRec* powerDisplayRow) {
+    SpellAdditionalCostDataRow* additionalCostRow = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", spell->m_ID);
+    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
+    bool hasPowerCost = (powerCost != 0 || powerCostPerSec != 0);
+    char buffer[128];
+
+    if (!customAttributesRow || !(customAttributesRow->customAttr0 & SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST)) {
+        if (powerCost && !powerCostPerSec) {
+            if (powerDisplayRow) {
+                SStrCopy(buffer, FrameScript__GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
+                SStrPrintf(dest, 128, FrameScript__GetText("POWER_DISPLAY_COST", -1, 0), powerCost, buffer);
+            }
+            else {
+                SStrCopy(buffer, FrameScript__GetText(powerString, -1, 0), 128);
+                SStrPrintf(dest, 128, buffer, powerCost);
+            }
+        }
+        else if (powerCostPerSec > 0) {
+            if (powerDisplayRow) {
+                SStrCopy(buffer, FrameScript__GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
+                SStrPrintf(dest, 128, FrameScript__GetText("POWER_DISPLAY_COST_PER_TIME", -1, 0), powerCost, buffer, powerCostPerSec);
+            }
+            else {
+                SStrPrintf(buffer, 128, "%s_PER_TIME", powerString);
+                SStrPrintf(dest, 128, FrameScript__GetText(buffer, -1, 0), powerCost, powerCostPerSec);
+            }
+        }
+
+        if (additionalCostRow && additionalCostRow->cost) {
+            if (hasPowerCost)
+                SStrCopy_0(dest, " + ", 0x7FFFFFFF);
+
+            SStrPrintf(buffer, 128, "%d %s", additionalCostRow->cost, additionalCostRow->resourceName);
+            SStrCopy_0(dest, buffer, 0x7FFFFFFF);
+
+            if (additionalCostRow->flag == 1 && additionalCostRow->cost != 1)
+                SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
         }
     }
 }

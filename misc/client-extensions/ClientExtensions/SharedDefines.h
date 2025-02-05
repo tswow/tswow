@@ -55,6 +55,7 @@ enum SpellFamilyNames : uint32_t {
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
     SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, don't display castbar at all
+    SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST    = 0x00000004,   // Does not display power cost in tooltip
 };
 
 static uint32_t dummy = 0;
@@ -64,6 +65,16 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
+struct PowerDisplayRec
+{
+    uint32_t m_ID;
+    uint32_t m_actualType;
+    char* m_globalStringBaseTag;
+    uint8_t m_red;
+    uint8_t m_green;
+    uint8_t m_blue;
+};
+
 struct SpellRec
 {
     uint32_t m_ID;
@@ -195,7 +206,8 @@ CLIENT_FUNCTION(FrameScript__GetText, 0x819D40, __cdecl, char*, (char*, int, int
 CLIENT_FUNCTION(FrameScript__SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
 
 CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, ...))
-CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, uint32_t))
+CLIENT_FUNCTION(SStrCopy, 0x76ED20, __stdcall, char*, (char*, char*, uint32_t))
+CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, char*, (char*, char*, uint32_t))
 CLIENT_FUNCTION(SStrLen, 0x76EE30, __stdcall, char*, (char*))
 CLIENT_FUNCTION(SStrChr, 0x76E6E0, __cdecl, char*, (char*, char))
 
