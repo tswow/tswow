@@ -3,12 +3,25 @@
 #include "DBCDefs/SpellCustomAttributes.h"
 
 CustomDBCMgr GlobalDBCMap;
+std::unordered_map<std::string, std::function<int(lua_State*,int)>> dbcHandlers = {};
+
+void CustomDBCMgr::Load() {
+    SpellAdditionalCostData().LoadDB();
+    SpellCustomAttributes().LoadDB();
+}
 
 void CustomDBCMgr::addDBC(std::string dbcName){
     allCustomDBCs[dbcName] = CustomDBC();
 }
 
-void CustomDBCMgr::Load() {
-    SpellAdditionalCostData().LoadDB();
-    SpellCustomAttributes().LoadDB();
+void CustomDBCMgr::addDBCLuaHandler(std::string dbcName,  std::function<int(lua_State*,int)> func){
+    dbcHandlers[dbcName] = func;
+}
+
+int CustomDBCMgr::handleLua(lua_State* L, std::string dbcName, int row) {
+    auto it = dbcHandlers.find(dbcName);
+    if (it != dbcHandlers.end()) {
+        return it->second(L,row);
+    }
+    return 0;
 }

@@ -15,10 +15,6 @@ struct SpellAdditionalCostDataRow {
         ClientLua::PushNumber(L,flag);
         return 4;
     }
-
-    void test() {
-        LOG_DEBUG << "SpellAdditionalCostDataRow";
-    }
 };
 
 class SpellAdditionalCostData : public CustomDBC {
@@ -33,6 +29,7 @@ public:
         GlobalDBCMap.addDBC("SpellAdditionalCostData");
         CustomDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStringsAndTable();
+        CustomDBCMgr::addDBCLuaHandler("SpellAdditionalCostData",  SpellAdditionalCostData::handleLua);
         return this;
     };
 
@@ -45,5 +42,11 @@ public:
             ptr += this->numColumns;
         }
     };
+
+    static int handleLua(lua_State* L, int row) {
+        auto* r = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", row);
+        if (r) return r->handleLuaPush(L);
+        return 0;
+    }
 };
 #pragma optimize("", on)
