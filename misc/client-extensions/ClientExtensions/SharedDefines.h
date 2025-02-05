@@ -52,6 +52,23 @@ enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_PET         = 17
 };
 
+enum SpellEffect : uint32_t {
+    SPELL_EFFECT_TRADE_SKILL                    = 47,
+    SPELL_EFFECT_ATTACK                         = 78,
+};
+
+enum SpellAttr0 : uint32_t {
+    SPELL_ATTR0_REQ_AMMO                        = 0x00000002,
+    SPELL_ATTR0_ON_NEXT_SWING                   = 0x00000004,
+    SPELL_ATTR0_PASSIVE                         = 0x00000040,
+    SPELL_ATTR0_ON_NEXT_SWING_2                 = 0x00000400,
+};
+
+enum SpellAttr1 : uint32_t {
+    SPELL_ATTR1_CHANNELED_1                     = 0x00000004,
+    SPELL_ATTR1_CHANNELED_2                     = 0x00000040,
+};
+
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
     SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, don't display castbar at all
@@ -217,6 +234,7 @@ CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, ui
 CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 
 CLIENT_FUNCTION(SpellRec__GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
+CLIENT_FUNCTION(SpellRec__GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t, uint32_t))
 
 CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
 
