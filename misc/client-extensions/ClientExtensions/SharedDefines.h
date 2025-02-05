@@ -256,7 +256,7 @@ static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
 
     VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
     memset(position, byte, size);
-    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
+    VirtualProtect((LPVOID)position, size, flOldProtect, &flOldProtect);
 }
 
 // Aleist3r: use bigger number as address1
