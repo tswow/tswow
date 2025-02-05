@@ -39,3 +39,10 @@ LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
     ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(ActivePlayer));
     return 1;
 }
+
+LUA_FUNCTION(FireTalentUpdateEvent, (lua_State* L)) {
+    FrameScript__SignalEvent(625, 0);
+
+    ClientLua::PushNil(L);
+    return 1;
+}

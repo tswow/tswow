@@ -60,6 +60,7 @@ declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMu
 declare function GetSpellDescription(spellID:number): string;
 declare function GetActiveSpec(): number;
 declare function SetActiveSpec(specID: number): any;
+declare function FireTalentUpdateEvent(): any;
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
 declare function GetShapeshiftFormID(): number;

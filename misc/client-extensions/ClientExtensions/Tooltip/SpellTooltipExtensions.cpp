@@ -148,7 +148,7 @@ void TooltipExtensions::SetNewVariablePointers() {
 
 void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer)
 {
-    char* sRuneCost = FrameScript_GetText(runeCostKey, -1, 0);
+    char* sRuneCost = FrameScript__GetText(runeCostKey, -1, 0);
     SStrPrintf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
     SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);      
 }

@@ -191,7 +191,9 @@ CLIENT_FUNCTION(SErrPrepareAppFatal, 0x772A80, _cdecl, void, (uint32_t, const ch
 CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
 CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
 
-CLIENT_FUNCTION(FrameScript_GetText, 0x819D40, __cdecl, char*, (char*, int, int))
+CLIENT_FUNCTION(FrameScript__GetText, 0x819D40, __cdecl, char*, (char*, int, int))
+CLIENT_FUNCTION(FrameScript__SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
+
 CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, ...))
 CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, unsigned char, (char*, char*, uint32_t))
 CLIENT_FUNCTION(SStrLen, 0x76EE30, __stdcall, char*, (char*))
