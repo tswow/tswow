@@ -32,3 +32,10 @@ LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
     ClientLua::PushNil(L);
     return 1;
 }
+
+LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
+    void* ActivePlayer = ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_UNIT);
+
+    ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(ActivePlayer));
+    return 1;
+}

@@ -62,6 +62,7 @@ declare function GetActiveSpec(): number;
 declare function SetActiveSpec(specID: number): any;
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
+declare function GetShapeshiftFormID(): number;
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame

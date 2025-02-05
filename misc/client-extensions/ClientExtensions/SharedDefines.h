@@ -204,6 +204,8 @@ CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, ui
 
 CLIENT_FUNCTION(SpellRec__GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
 
+CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
+
 // functions
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
     return *reinterpret_cast<int32_t*>(*(ActivePlayer + 52) + 4 * field);
