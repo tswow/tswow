@@ -504,7 +504,7 @@ struct TSEvents
         ID_EVENT(OnUnlearn, TSSpellInfo, TSPlayer, bool disabled, bool learn_low_rank)
 
         ID_EVENT(OnCast, TSSpell)
-        ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>)
+        ID_EVENT(OnCheckCast, TSSpell, TSMutableNumber<uint8>, TSMutableNumber<uint32>)
         // @epoch-start
         ID_EVENT(OnCheckFishingCast, TSSpell, TSWorldObject, TSNumber<uint32>, TSMutableNumber<uint8>)
         // @epoch-end

@@ -8398,8 +8398,8 @@ declare namespace _hidden {
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCast(id: EventID, callback : (spell: TSSpell)=>void): T;
 
-        OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>)=>void): T;
-        OnCheckCast(id: EventID, callback: (spell: TSSpell, result: TSMutable<SpellCastResult, SpellCastResult>) => void): T;
+        OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>, custom_result: TSMutableNumber<uint32>)=>void): T;
+        OnCheckCast(id: EventID, callback: (spell: TSSpell, result: TSMutable<SpellCastResult, SpellCastResult>, custom_result: TSMutableNumber<uint32>) => void): T;
 
         OnCheckFishingCast(callback: (spell: TSSpell, caster: TSWorldObject, liquidType: LiquidTypes, result: TSMutable<SpellCastResult, SpellCastResult>) => void): T;
         OnCheckFishingCast(id: EventID, callback: (spell: TSSpell, caster: TSWorldObject, liquidType: LiquidTypes, result: TSMutable<SpellCastResult, SpellCastResult>) => void): T;
