@@ -65,12 +65,14 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Restore the original memory protection
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, oldProtect, &oldProtect); 
 }
+
 static uint32_t CURRENT_AND_MAX_FIELDS[] = {
     CURRENT_MANA, CURRENT_RAGE, CURRENT_FOCUS, CURRENT_ENERGY,
     CURRENT_HAPPINESS, CURRENT_RUNES, CURRENT_RUNIC_POWER,
     MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
     MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
 };
+
 int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
@@ -327,5 +329,5 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
     void* ptr = reinterpret_cast<void*>(0xAD2D30);
     sub_61FEC0(_this, dest, src, ptr, ptr, 0);
 
-    LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this << " | " << powerCost;
+    //LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this << " | " << powerCost;
 }
