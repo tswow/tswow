@@ -5,7 +5,7 @@
 #include "CustomDBCMgr/DBCDefs/SpellCustomAttributes.h"
 #include "windows.h"
 #include "Logger.h"
-
+#include <algorithm>
 // Aleist3r: keeping it here as an example how to grab custom data
 // SpellAdditionalCostDataRow* row = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", 2);
 // if (row) {
@@ -274,75 +274,58 @@ void TooltipExtensions::SpellCooldownExtension() {
 }
 
 void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uintptr_t* a7, uint32_t a6, uint32_t a8, char* src, void* _this, uint32_t powerCost) {
-    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
-    char buffer[128];
-    double recoveryTime = spell->m_categoryRecoveryTime >= spell->m_recoveryTime ? static_cast<double>(spell->m_categoryRecoveryTime) : static_cast<double>(spell->m_recoveryTime);
-    double divider = 0;
-    bool treatAsInstant = customAttributesRow && ((customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT) != 0);
+    const uint32_t MILLISECONDS_IN_MINUTE = 60000;
+    const uint32_t MILLISECONDS_IN_SECOND = 1000;
 
-    if (spell->m_effect[0] == SPELL_EFFECT_TRADE_SKILL || (spell->m_attributes & SPELL_ATTR0_PASSIVE) != 0)
+    if (spell->m_effect[0] == SPELL_EFFECT_TRADE_SKILL || (spell->m_attributes & SPELL_ATTR0_PASSIVE) != 0) {
         *a7 = 1;
-    else if (spell->m_effect[0] != SPELL_EFFECT_ATTACK) {
-        double castTime = SpellRec__GetCastTime(spell, a6, a8, 1);
-
-        if (castTime && !treatAsInstant) {
-            char* str;
-
-            if (castTime >= 60000) {
-                str = "SPELL_CAST_TIME_MIN";
-                divider = 60000.f;
-            }
-            else {
-                str = "SPELL_CAST_TIME_SEC";
-                divider = 1000.f;
-            }
-            SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
-            SStrPrintf(dest, 128, buffer, castTime / divider);
-            goto LABEL_2;
-        }
-
-        if ((spell->m_attributesEx & (SPELL_ATTR1_CHANNELED_1 | SPELL_ATTR1_CHANNELED_2)) != 0) {
-            SStrCopy(dest, FrameScript__GetText("SPELL_CAST_CHANNELED", -1, 0), 128);
-            goto LABEL_2;
-        }
-
-        if (!castTime || (castTime && treatAsInstant))
-            goto LABEL_1;
-
-        if ( (spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0)
-            SStrCopy(dest, FrameScript__GetText("SPELL_ON_NEXT_SWING", -1, 0), 128);
-        else if ( (spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0)
-            SStrCopy(dest, FrameScript__GetText("SPELL_ON_NEXT_RANGED", -1, 0), 128);
-        else {
-        LABEL_1:
-            if (!spell->m_powerType && powerCost) {
-            //LABEL_1: // Aleist3r: this is probably a bug looking at the code earlier so moved label 1 outside of this if
-                SStrCopy(dest, FrameScript__GetText("SPELL_CAST_TIME_INSTANT", -1, 0), 128);
-                goto LABEL_2;
-            }
-            SStrCopy(dest, FrameScript__GetText("SPELL_CAST_TIME_INSTANT_NO_MANA", -1, 0), 128);
-        }
-
-        LABEL_2:
-        if (recoveryTime <= 0)
-            src[0] = 0;
-        else {
-            char* str;
-
-            if (recoveryTime >= 60000) {
-                str = "SPELL_RECAST_TIME_MIN";
-                divider = 60000.f;
-            }
-            else {
-                str = "SPELL_RECAST_TIME_SEC";
-                divider = 1000.f;
-            }
-
-            SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
-            SStrPrintf(src, 128, buffer, recoveryTime / divider);
-        }
-        void* ptr = reinterpret_cast<void*>(0xAD2D30);
-        sub_61FEC0(_this, dest, src, ptr, ptr, 0);
+        return;
     }
-    LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this  << " | " << powerCost;
+    if (spell->m_effect[0] == SPELL_EFFECT_ATTACK) {
+        return;
+    }
+
+    char buffer[128];
+    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
+    bool treatAsInstant = customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT);
+
+    double castTime = SpellRec__GetCastTime(spell, a6, a8, 1);    
+    if (castTime && !treatAsInstant) {
+        bool isLongCast = castTime >= MILLISECONDS_IN_MINUTE;
+        char* castFlag = isLongCast ? "SPELL_CAST_TIME_MIN" : "SPELL_CAST_TIME_SEC";
+        double divisor = isLongCast ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
+
+        SStrCopy(buffer, FrameScript__GetText(castFlag, -1, 0), 128);
+        SStrPrintf(dest, 128, buffer, castTime / divisor);
+    } else {
+        char* castFlag = "SPELL_CAST_TIME_INSTANT_NO_MANA";
+        if ((spell->m_attributesEx & (SPELL_ATTR1_CHANNELED_1 | SPELL_ATTR1_CHANNELED_2)) != 0) {
+            castFlag = "SPELL_CAST_CHANNELED";
+        } else if ((spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0) {
+            castFlag = "SPELL_ON_NEXT_SWING";
+        } else if ((spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0) {
+            castFlag = "SPELL_ON_NEXT_RANGED";
+        } else if (!spell->m_powerType && powerCost > 0) {
+            castFlag = "SPELL_CAST_TIME_INSTANT";
+        }   
+        SStrCopy(dest, FrameScript__GetText(castFlag, -1, 0), 128);
+    } 
+
+    double recoveryTime = spell->m_categoryRecoveryTime > spell->m_recoveryTime ? spell->m_categoryRecoveryTime : spell->m_recoveryTime;
+    if (recoveryTime > 0) {
+        bool isLongRecovery = recoveryTime >= MILLISECONDS_IN_MINUTE;
+        char* str = isLongRecovery ? "SPELL_RECAST_TIME_MIN" : "SPELL_RECAST_TIME_SEC";
+        double divider = isLongRecovery ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
+        SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
+        SStrPrintf(src, 128, buffer, recoveryTime / divider);
+    } else {
+        //Al really had src[0] = 0;
+        //then tried to blame IDA for that.
+        *src = 0;
+    }
+
+    void* ptr = reinterpret_cast<void*>(0xAD2D30);
+    sub_61FEC0(_this, dest, src, ptr, ptr, 0);
+
+    LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this << " | " << powerCost;
 }
