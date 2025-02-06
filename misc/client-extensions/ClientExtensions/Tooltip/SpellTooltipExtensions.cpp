@@ -18,6 +18,7 @@ void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
     SpellTooltipRuneCostExtension();
     SpellTooltipPowerCostExtension();
+    SpellCooldownExtension();
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
@@ -251,4 +252,97 @@ void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_
                 SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
         }
     }
+}
+
+constexpr uint8_t PATCH_BYTES3[51] = {
+    0x8B, 0x4D, 0x2C, 0x8B, 0x45, 0xE4, 0x51, 0x50, 0x8D, 0x8D, 0x20, 0xFE, 0xFF, 0xFF, 0x51, 0x8B,
+    0x55, 0x1C, 0x8B, 0x45, 0x14, 0x52, 0x50, 0x8D, 0x4D, 0x18, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF,
+    0xFF, 0x8D, 0x8D, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0xD8,
+    0x01, 0x00, 0x00
+};
+
+void TooltipExtensions::SpellCooldownExtension() {
+    DWORD oldProtect;
+    // Change memory protection to allow writing
+    VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, PAGE_EXECUTE_READWRITE, &oldProtect);
+    // Apply the patch bytes
+    memcpy(reinterpret_cast<void*>(0x62443B), PATCH_BYTES3, sizeof(PATCH_BYTES3));
+    // Calculate and write the relative address for the function call
+    *reinterpret_cast<uint32_t*>(0x624465) = CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellCooldownTooltip), 0x624469);
+    // Restore the original memory protection
+    VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, oldProtect, &oldProtect);
+}
+
+void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uintptr_t* a7, uint32_t a6, uint32_t a8, char* src, void* _this, uint32_t powerCost) {
+    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
+    char buffer[128];
+    double recoveryTime = spell->m_categoryRecoveryTime >= spell->m_recoveryTime ? static_cast<double>(spell->m_categoryRecoveryTime) : static_cast<double>(spell->m_recoveryTime);
+    double divider = 0;
+    bool treatAsInstant = customAttributesRow && ((customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT) != 0);
+
+    if (spell->m_effect[0] == SPELL_EFFECT_TRADE_SKILL || (spell->m_attributes & SPELL_ATTR0_PASSIVE) != 0)
+        *a7 = 1;
+    else if (spell->m_effect[0] != SPELL_EFFECT_ATTACK) {
+        double castTime = SpellRec__GetCastTime(spell, a6, a8, 1);
+
+        if (castTime && !treatAsInstant) {
+            char* str;
+
+            if (castTime >= 60000) {
+                str = "SPELL_CAST_TIME_MIN";
+                divider = 60000.f;
+            }
+            else {
+                str = "SPELL_CAST_TIME_SEC";
+                divider = 1000.f;
+            }
+            SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
+            SStrPrintf(dest, 128, buffer, castTime / divider);
+            goto LABEL_2;
+        }
+
+        if ((spell->m_attributesEx & (SPELL_ATTR1_CHANNELED_1 | SPELL_ATTR1_CHANNELED_2)) != 0) {
+            SStrCopy(dest, FrameScript__GetText("SPELL_CAST_CHANNELED", -1, 0), 128);
+            goto LABEL_2;
+        }
+
+        if (!castTime || (castTime && treatAsInstant))
+            goto LABEL_1;
+
+        if ( (spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0)
+            SStrCopy(dest, FrameScript__GetText("SPELL_ON_NEXT_SWING", -1, 0), 128);
+        else if ( (spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0)
+            SStrCopy(dest, FrameScript__GetText("SPELL_ON_NEXT_RANGED", -1, 0), 128);
+        else {
+        LABEL_1:
+            if (!spell->m_powerType && powerCost) {
+            //LABEL_1: // Aleist3r: this is probably a bug looking at the code earlier so moved label 1 outside of this if
+                SStrCopy(dest, FrameScript__GetText("SPELL_CAST_TIME_INSTANT", -1, 0), 128);
+                goto LABEL_2;
+            }
+            SStrCopy(dest, FrameScript__GetText("SPELL_CAST_TIME_INSTANT_NO_MANA", -1, 0), 128);
+        }
+
+        LABEL_2:
+        if (recoveryTime <= 0)
+            src[0] = 0;
+        else {
+            char* str;
+
+            if (recoveryTime >= 60000) {
+                str = "SPELL_RECAST_TIME_MIN";
+                divider = 60000.f;
+            }
+            else {
+                str = "SPELL_RECAST_TIME_SEC";
+                divider = 1000.f;
+            }
+
+            SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
+            SStrPrintf(src, 128, buffer, recoveryTime / divider);
+        }
+        void* ptr = reinterpret_cast<void*>(0xAD2D30);
+        sub_61FEC0(_this, dest, src, ptr, ptr, 0);
+    }
+    LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this  << " | " << powerCost;
 }
