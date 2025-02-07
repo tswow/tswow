@@ -307,8 +307,8 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
 
     double recoveryTime = 0;
     auto it = CharacterDefines::spellChargeMap.find(spell->m_ID);
-    if (it != CharacterDefines::spellChargeMap.end())
-    {
+
+    if (it != CharacterDefines::spellChargeMap.end()) {
         CharacterDefines::SpellCharge temp = it->second;
         recoveryTime = temp.cooldown;
     }
@@ -321,7 +321,8 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
         double divider = isLongRecovery ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
         SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
         SStrPrintf(src, 128, buffer, recoveryTime / divider);
-    } else {
+    }
+    else {
         //Al really had src[0] = 0;
         //then tried to blame IDA for that.
         *src = 0;
