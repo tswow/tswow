@@ -6,13 +6,6 @@
 #include "windows.h"
 #include "Logger.h"
 #include <algorithm>
-// Aleist3r: keeping it here as an example how to grab custom data
-// SpellAdditionalCostDataRow* row = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", 2);
-// if (row) {
-//     LOG_DEBUG << "Spell ID: " << row->spellID << " resourceName: " << row->resourceName<< " Cost: " << row->cost<< " flag: " << row->flag;
-// } else {
-//      LOG_DEBUG << "Row not found!";
-// }
 
 void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
@@ -310,9 +303,18 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
             castFlag = "SPELL_CAST_TIME_INSTANT";
         }   
         SStrCopy(dest, FrameScript__GetText(castFlag, -1, 0), 128);
-    } 
+    }
 
-    double recoveryTime = spell->m_categoryRecoveryTime > spell->m_recoveryTime ? spell->m_categoryRecoveryTime : spell->m_recoveryTime;
+    double recoveryTime = 0;
+    auto it = CharacterDefines::spellChargeMap.find(spell->m_ID);
+    if (it != CharacterDefines::spellChargeMap.end())
+    {
+        CharacterDefines::SpellCharge temp = it->second;
+        recoveryTime = temp.cooldown;
+    }
+    else
+        recoveryTime = spell->m_categoryRecoveryTime > spell->m_recoveryTime ? spell->m_categoryRecoveryTime : spell->m_recoveryTime;
+
     if (recoveryTime > 0) {
         bool isLongRecovery = recoveryTime >= MILLISECONDS_IN_MINUTE;
         char* str = isLongRecovery ? "SPELL_RECAST_TIME_MIN" : "SPELL_RECAST_TIME_SEC";
@@ -327,8 +329,6 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
 
     void* ptr = reinterpret_cast<void*>(0xAD2D30);
     sub_61FEC0(_this, dest, src, ptr, ptr, 0);
-
-    //LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this << " | " << powerCost;
 }
 
 constexpr uint8_t PATCH_BYTES4[35] = {
@@ -349,12 +349,34 @@ void TooltipExtensions::SpellTooltipRemainingCooldownExtension() {
     VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, oldProtect, &oldProtect);
 }
 
-void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t a5) {
+void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t currentCooldown) {
     void* ptr = reinterpret_cast<void*>(0xAD2D30);
+    uint32_t recoveryTime = 0;
+    auto it = CharacterDefines::spellChargeMap.find(spell->m_ID);
 
-    if (a5) {
-        CGTooltip__GetDurationString(dest, 128, a5, "ITEM_COOLDOWN_TIME", 0, 1, 0);
+    if (it != CharacterDefines::spellChargeMap.end())
+    {
+        CharacterDefines::SpellCharge temp = it->second;
+        if (temp.remainingCooldown >= currentCooldown) {
+            uint32_t currAsync = OsGetAsyncTimeMs();
+
+            if (temp.remainingCooldown > (currAsync - temp.async))
+                recoveryTime = temp.remainingCooldown + (temp.async - currAsync);
+            else
+                recoveryTime = 0;
+
+            temp.remainingCooldown = recoveryTime;
+            temp.async = currAsync;
+            it->second = temp;
+        }
+        else
+            recoveryTime = currentCooldown;
+    }
+    else
+        recoveryTime = currentCooldown;
+
+    if (recoveryTime) {
+        CGTooltip__GetDurationString(dest, 128, recoveryTime, "ITEM_COOLDOWN_TIME", 0, 1, 0);
         sub_61FEC0(_this, dest, 0, ptr, ptr, 0);
     }
-    //LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << _this << " | " << a5;
 }

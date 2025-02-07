@@ -8,7 +8,7 @@ namespace CharacterDefines {
     inline uint32_t masteryAmount = 0;
     inline float masteryPct = 0;
     inline float masteryRatingSpec[4] = { 1, 1, 1, 1 };
-   
+
     inline void setMasteryRatingSpec(int index, float newValue) { masteryRatingSpec[index] = newValue; }
     inline float getMasteryRatingSpec(int index) { return masteryRatingSpec[index]; }
 
@@ -22,4 +22,14 @@ namespace CharacterDefines {
     inline float getMasteryPct() { return masteryPct; }
 
     inline float getMasteryForSpec(int index) { return ((static_cast<float>(masteryAmount) / getMasteryRatingSpec(index)) + masteryPct); }
+
+    struct SpellCharge {
+        uint8_t currentCharges      = 0;
+        uint8_t maxCharges          = 0;
+        uint32_t async              = 0;
+        uint32_t remainingCooldown  = 0;
+        uint32_t cooldown           = 0;
+    };
+
+    inline std::unordered_map<uint32_t, SpellCharge> spellChargeMap;
 };

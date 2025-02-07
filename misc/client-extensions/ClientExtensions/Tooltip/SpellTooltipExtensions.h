@@ -11,7 +11,7 @@ private:
     static void SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily);
     static void SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_t powerCost, uint32_t powerCostPerSec, char* powerString, PowerDisplayRec* powerDisplayRow);
     static void SetSpellCooldownTooltip(char* dest, SpellRec* spell, uintptr_t* a7, uint32_t a6, uint32_t a8, char* src, void* _this, uint32_t powerCost);
-    static void SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t a5);
+    static void SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t currentCooldown);
     static void SpellTooltipVariableExtension();
     static void SpellTooltipRuneCostExtension();
     static void SpellTooltipPowerCostExtension();
