@@ -18,7 +18,8 @@ void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
     SpellTooltipRuneCostExtension();
     SpellTooltipPowerCostExtension();
-    SpellCooldownExtension();
+    SpellTooltipCooldownExtension();
+    SpellTooltipRemainingCooldownExtension();
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
@@ -151,8 +152,7 @@ void TooltipExtensions::SetNewVariablePointers() {
         spellVariables[140 + i] = reinterpret_cast<uint32_t>(tooltipSpellVariablesExtensions[i]);
 }
 
-void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer)
-{
+void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer) {
     char* sRuneCost = FrameScript__GetText(runeCostKey, -1, 0);
     SStrPrintf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
     SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);      
@@ -202,8 +202,7 @@ constexpr uint8_t PATCH_BYTES2[31] = {
     0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0xFC, 0xFF, 0x00, 0x00, 0xE9, 0x3A, 0x01, 0x00, 0x00
 };
 
-void TooltipExtensions::SpellTooltipPowerCostExtension()
-{
+void TooltipExtensions::SpellTooltipPowerCostExtension() {
     DWORD oldProtect;
     // Change memory protection to allow writing
     VirtualProtect(reinterpret_cast<void*>(0x623D8A), 0x1F, PAGE_EXECUTE_READWRITE, &oldProtect);
@@ -263,7 +262,7 @@ constexpr uint8_t PATCH_BYTES3[51] = {
     0x01, 0x00, 0x00
 };
 
-void TooltipExtensions::SpellCooldownExtension() {
+void TooltipExtensions::SpellTooltipCooldownExtension() {
     DWORD oldProtect;
     // Change memory protection to allow writing
     VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, PAGE_EXECUTE_READWRITE, &oldProtect);
@@ -330,4 +329,32 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
     sub_61FEC0(_this, dest, src, ptr, ptr, 0);
 
     //LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << a7 << " | " << a6 << " | " << a8 << " | " << src << " | " << _this << " | " << powerCost;
+}
+
+constexpr uint8_t PATCH_BYTES4[35] = {
+    0x8B, 0x45, 0x10, 0x89, 0xF9, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x50, 0x51, 0x52, 0x8D, 0x95,
+    0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x31, 0xDB, 0xBB, 0x01, 0x00, 0x00,
+    0x00, 0xEB, 0x24
+};
+
+void TooltipExtensions::SpellTooltipRemainingCooldownExtension() {
+    DWORD oldProtect;
+    // Change memory protection to allow writing
+    VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, PAGE_EXECUTE_READWRITE, &oldProtect);
+    // Apply the patch bytes
+    memcpy(reinterpret_cast<void*>(0x624FF0), PATCH_BYTES4, sizeof(PATCH_BYTES4));
+    // Calculate and write the relative address for the function call
+    *reinterpret_cast<uint32_t*>(0x625006) = CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellRemainingCooldownTooltip), 0x62500A);
+    // Restore the original memory protection
+    VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, oldProtect, &oldProtect);
+}
+
+void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t a5) {
+    void* ptr = reinterpret_cast<void*>(0xAD2D30);
+
+    if (a5) {
+        CGTooltip__GetDurationString(dest, 128, a5, "ITEM_COOLDOWN_TIME", 0, 1, 0);
+        sub_61FEC0(_this, dest, 0, ptr, ptr, 0);
+    }
+    //LOG_DEBUG << "Stack: " << dest << " | " << spell << " | " << _this << " | " << a5;
 }
