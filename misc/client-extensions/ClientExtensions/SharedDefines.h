@@ -238,6 +238,8 @@ CLIENT_FUNCTION(SpellRec__GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, 
 
 CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
 
+CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
+
 CLIENT_FUNCTION(sub_61FEC0, 0x61FEC0, __thiscall, void, (void*, char*, char*, void*, void*, uint32_t))
 
 // functions

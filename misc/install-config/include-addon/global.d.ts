@@ -64,6 +64,7 @@ declare function FireTalentUpdateEvent(): any;
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
 declare function GetShapeshiftFormID(): number;
+declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
