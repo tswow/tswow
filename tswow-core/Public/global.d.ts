@@ -3364,7 +3364,8 @@ declare interface TSCreature extends TSUnit {
     GetEncounterPhase(): TSNumber<uint16>;
     SetEncounterPhase(phase: uint16): void;
     SetInterruptImmune(apply: boolean): void;
-    Talk(id: uint8, target?: TSUnit)
+    Talk(id: uint8, target?: TSUnit): void;
+    ResetCannotReachTimer(): void;
     /** @epoch-end */
 }
 

@@ -1455,4 +1455,9 @@ void TSCreature::Talk(uint8 id, TSUnit target)
     else
         creature->AI()->Talk(id, target->unit);
 }
+
+void TSCreature::ResetCannotReachTimer()
+{
+    creature->ResetCannotReachTimer();
+}
 /** @epoch-end */
