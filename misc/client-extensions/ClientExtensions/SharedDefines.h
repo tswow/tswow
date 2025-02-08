@@ -238,7 +238,7 @@ CLIENT_FUNCTION(SpellRec__GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, 
 
 CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
 CLIENT_FUNCTION(CGUnit_C__HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
-CLIENT_FUNCTION(CGUnit_C__HasAuraMatchingSpellClass, 0, __thiscall, bool, (void*, uint32_t, SpellRec*))
+CLIENT_FUNCTION(CGUnit_C__HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRec*))
 
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
 
