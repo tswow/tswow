@@ -58,6 +58,7 @@ namespace ClientLua {
         return IsNumber(L, offset) ? _GetNumber(L, offset) : defValue;
     }
 
+    //credit:https://github.com/FrostAtom/awesome_wotlk/blob/main/src/AwesomeWotlkLib/Entry.cpp#L38
     void allowOutOfBoundsPointer()
     {
         *(uint32_t*)0x00D415B8 = 1;
