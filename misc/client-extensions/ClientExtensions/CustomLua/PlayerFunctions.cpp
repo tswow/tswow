@@ -34,9 +34,15 @@ LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
 }
 
 LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
-    void* ActivePlayer = ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_UNIT);
+    uint64_t activePlayer = ClntObjMgrGetActivePlayer();
 
-    ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(ActivePlayer));
+    if (activePlayer) {
+        void* activeObjectPtr = ClntObjMgrObjectPtr(activePlayer, TYPEMASK_UNIT);
+        ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(activeObjectPtr));
+        return 1;
+    }
+
+    ClientLua::PushNumber(L, 0);
     return 1;
 }
 
@@ -69,8 +75,6 @@ LUA_FUNCTION(UpdateSpellChargeMap, (lua_State* L)) {
     }
     else
         CharacterDefines::spellChargeMap.insert(std::make_pair(spellID, temp));
-
-    LOG_DEBUG << "Charge data: " << spellID <<  " | " << temp.currentCharges << " | " << temp.maxCharges << " | " << temp.async << " | " << temp.cooldown;
 
     ClientLua::PushNil(L);
     return 1;
