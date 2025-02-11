@@ -9576,6 +9576,26 @@ declare namespace _hidden {
         OnSend(id: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
     }
 
+    export class Zone {
+        OnUpdate(callback: ( diff: TSNumber<uint32> )=>void);
+        OnUpdate(id: EventID, callback: ( diff: TSNumber<uint32>) =>void);
+
+        OnPlayerEnter(callback: (player: TSPlayer)=>void);
+        OnPlayerEnter(id: EventID, callback: (player: TSPlayer)=>void);
+
+        OnPlayerExit(callback: (player: TSPlayer)=>void);
+        OnPlayerExit(id: EventID, callback: (player: TSPlayer)=>void);
+
+        OnCreatureDied(callback: (victim: TSCreature, killer: TSPlayer)=>void);
+        OnCreatureDied(id: EventID, callback: (victim: TSCreature, killer: TSPlayer)=>void);
+
+        OnCreatureRespawn(callback: (unit: TSCreature)=>void);
+        OnCreatureRespawn(id: EventID, callback: (unit: TSCreature)=>void);
+
+        OnGOBUsed(callback: (what: TSGameObject, by: TSUnit)=>void);
+        OnGOBUsed(id: EventID, callback: (what: TSGameObject, by: TSUnit)=>void);
+    }
+
     export class GameEvent<T> {
         OnStart(callback: (event: uint16)=>void)
         OnStart(id: EventID, callback: (event: uint16)=>void)
@@ -9861,6 +9881,7 @@ declare class TSEvents {
     Condition: _hidden.Condition<void>;
     Instance: _hidden.Instance<void>;
     CustomPacket: _hidden.CustomPacket;
+    Zone: _hidden.Zone;
     WorldPacket: _hidden.WorldPacket;
     Unit: _hidden.Unit;
     Quest: _hidden.Quest<void>;
@@ -9887,6 +9908,7 @@ declare class TSEvents {
     static Condition: _hidden.Condition<void>;
     static Instance: _hidden.Instance<void>;
     static CustomPacket: _hidden.CustomPacket;
+    static Zone: _hidden.Zone;
     static WorldPacket: _hidden.WorldPacket;
     static Unit: _hidden.Unit;
     static Quest: _hidden.Quest<void>;
