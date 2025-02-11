@@ -739,7 +739,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return bool isInHostileArea
      */
-    IsInNoPvParea() : bool
+    IsInNoPvPArea() : bool
 
     /**
      * Returns the amount of available specs the [Player] currently has
