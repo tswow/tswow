@@ -725,7 +725,21 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return bool canParry
      */
-    CanParry() : bool
+    CanParry(): bool
+
+    /**
+     * Returns 'true' if the [Player] is in a contested or hostile zone, 'false' otherwise.
+     *
+     * @return bool isInHostileArea
+     */
+    IsInHostileArea(): bool
+
+    /**
+     * Returns 'true' if the [Player] is in a no-pvp area such as as sanctuary, 'false' otherwise.
+     *
+     * @return bool isInHostileArea
+     */
+    IsInNoPvParea(): bool
 
     /**
      * Returns the amount of available specs the [Player] currently has

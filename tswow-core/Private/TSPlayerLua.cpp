@@ -75,6 +75,8 @@ void TSLua::load_player_methods(sol::state& state)
     LUA_FIELD(ts_player, TSPlayer, InBG);
     LUA_FIELD(ts_player, TSPlayer, CanBlock);
     LUA_FIELD(ts_player, TSPlayer, CanParry);
+    LUA_FIELD(ts_player, TSPlayer, IsInHostileArea);
+    LUA_FIELD(ts_player, TSPlayer, IsInNoPvPArea);
     LUA_FIELD(ts_player, TSPlayer, GetSpecsCount);
     LUA_FIELD(ts_player, TSPlayer, GetActiveSpec);
     LUA_FIELD(ts_player, TSPlayer, GetPhaseMaskForSpawn);

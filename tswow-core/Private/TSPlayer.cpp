@@ -671,6 +671,16 @@ bool TSPlayer::CanParry()
     return player->CanParry();
 }
 
+bool TSPlayer::IsInHostileArea()
+{
+    return player->pvpInfo.IsInHostileArea;
+}
+
+bool TSPlayer::IsInNoPvPArea()
+{
+    return player->pvpInfo.IsInNoPvPArea;
+}
+
 /*int TSPlayer::HasReceivedQuestReward(lua_State* L, Player* player)
 {
     return player->IsQuestRewarded(entry);
