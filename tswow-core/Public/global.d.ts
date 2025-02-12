@@ -3390,6 +3390,11 @@ declare interface TSCreature extends TSUnit {
     LearnPetSpell(spell: uint32): void;
 }
 
+// declare interface TSArea extends TSEntityProvider {
+//     IsNull(): bool
+//     GetId(): TSNumber<uint32>
+// }
+
 declare interface TSAura extends TSEntityProvider {
     IsNull() : bool
 
