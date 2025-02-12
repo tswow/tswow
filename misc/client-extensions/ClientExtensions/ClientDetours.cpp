@@ -7,8 +7,7 @@
 
 #include <vector>
 
-std::vector<ClientDetours::Detour> & detours()
-{
+std::vector<ClientDetours::Detour> & detours() {
     static std::vector<ClientDetours::Detour> _detours;
     return _detours;
 }
@@ -18,12 +17,10 @@ int ClientDetours::Add(std::string const& name, void* clientFun, void* yourFun, 
     return 0;
 }
 
-void ClientDetours::Apply()
-{
+void ClientDetours::Apply() {
     DetourTransactionBegin();
     DetourUpdateThread(GetCurrentThread());
-    for (Detour const& detour : detours())
-    {
+    for (Detour const& detour : detours()) {
         LOG_INFO
             << "Detour: "
             << detour.m_name

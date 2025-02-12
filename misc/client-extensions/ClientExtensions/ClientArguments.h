@@ -4,8 +4,7 @@
 
 class Main;
 
-class ClientArguments
-{
+class ClientArguments {
     static bool Has(std::string const& name);
     static std::string GetString(std::string const& name, std::string const& def);
     static float GetFloat(std::string const& name, float def);

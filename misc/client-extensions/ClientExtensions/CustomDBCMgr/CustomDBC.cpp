@@ -11,60 +11,60 @@ CustomDBC* CustomDBC::LoadDB(const char* filename) {
     if (this->isLoaded)
         return this;
 
-    if (!SFileOpenFileEx(0, filename, 0x20000, &FileBlock))
-        SErrPrepareAppFatal(0x85100079, "Unable to open %s", filename);
+    if (!SFile::OpenFileEx(0, filename, 0x20000, &FileBlock))
+        SErr::PrepareAppFatal(0x85100079, "Unable to open %s", filename);
 
-    if (!SFileReadFile(FileBlock, &Buffer, 4, 0, 0))
-        SErrPrepareAppFatal(0x85100079, "Unable to read signature from %s", filename);
+    if (!SFile::ReadFile(FileBlock, &Buffer, 4, 0, 0))
+        SErr::PrepareAppFatal(0x85100079, "Unable to read signature from %s", filename);
 
     if (Buffer != 0x43424457) // WDBC but little endian so technically CBDW
-        SErrPrepareAppFatal(0x85100079, "Invalid signature 0x%x from %s", Buffer, filename);
+        SErr::PrepareAppFatal(0x85100079, "Invalid signature 0x%x from %s", Buffer, filename);
 
-    if (!SFileReadFile(FileBlock, &this->numRows, 4, 0, 0))
-        SErrPrepareAppFatal(0x85100079, "Unable to read record count from %s", filename);
+    if (!SFile::ReadFile(FileBlock, &this->numRows, 4, 0, 0))
+        SErr::PrepareAppFatal(0x85100079, "Unable to read record count from %s", filename);
 
     if (!this->numRows) {
-        SFileCloseFile(FileBlock);
+        SFile::CloseFile(FileBlock);
         return this;
     }
 
-    if (!SFileReadFile(FileBlock, &v26, 4, 0, 0))
-        SErrPrepareAppFatal(0x85100079, "Unable to read column count from %s", filename);
+    if (!SFile::ReadFile(FileBlock, &v26, 4, 0, 0))
+        SErr::PrepareAppFatal(0x85100079, "Unable to read column count from %s", filename);
 
     if (v26 != this->numColumns)
-        SErrPrepareAppFatal(0x85100079, "%s has wrong number of columns (found %i, expected %i)", filename, v26, this->numColumns);
+        SErr::PrepareAppFatal(0x85100079, "%s has wrong number of columns (found %i, expected %i)", filename, v26, this->numColumns);
 
-    if (!SFileReadFile(FileBlock, &v27, 4, 0, 0))
-        SErrPrepareAppFatal(0x85100079, "Unable to read row size from %s", filename);
+    if (!SFile::ReadFile(FileBlock, &v27, 4, 0, 0))
+        SErr::PrepareAppFatal(0x85100079, "Unable to read row size from %s", filename);
 
     if (v27 != this->rowSize)
-        SErrPrepareAppFatal(0x85100079, "%s has wrong row size (found %i, expected %i)", filename, v27, this->rowSize);
+        SErr::PrepareAppFatal(0x85100079, "%s has wrong row size (found %i, expected %i)", filename, v27, this->rowSize);
 
-    if (!SFileReadFile(FileBlock, &len, 4, 0, 0))
-        SErrPrepareAppFatal(0x85100079, "Unable to read string size from %s", filename);
+    if (!SFile::ReadFile(FileBlock, &len, 4, 0, 0))
+        SErr::PrepareAppFatal(0x85100079, "Unable to read string size from %s", filename);
 
-    this->rows = SMemAlloc(this->numRows * this->rowSize, filename, -2, 0);
+    this->rows = SMem::Alloc(this->numRows * this->rowSize, filename, -2, 0);
 
-    if (!SFileReadFile(FileBlock, this->rows, this->numRows * this->rowSize, 0, 0))
-        SErrPrepareAppFatal(0x85100079, "Unable to read row data from %s", filename);
+    if (!SFile::ReadFile(FileBlock, this->rows, this->numRows * this->rowSize, 0, 0))
+        SErr::PrepareAppFatal(0x85100079, "Unable to read row data from %s", filename);
 
-    this->stringTable = SMemAlloc(len, filename, -2, 0);
+    this->stringTable = SMem::Alloc(len, filename, -2, 0);
 
-    if (!SFileReadFile(FileBlock, this->stringTable, len, 0, 0))
-        SErrPrepareAppFatal(0x85100086, "%s: Cannot read string table", filename);
+    if (!SFile::ReadFile(FileBlock, this->stringTable, len, 0, 0))
+        SErr::PrepareAppFatal(0x85100086, "%s: Cannot read string table", filename);
 
     GetMinMaxIndices();
     this->isLoaded = true;
-    SFileCloseFile(FileBlock);
+    SFile::CloseFile(FileBlock);
     return this;
 }
 
 void CustomDBC::UnloadDB() {
     if (this->rows)
-        SMemFree(this->rows, "delete[]", -1, 0);
+        SMem::Free(this->rows, "delete[]", -1, 0);
 
     if (this->stringTable)
-        SMemFree(this->stringTable, "delete[]", -1, 0);
+        SMem::Free(this->stringTable, "delete[]", -1, 0);
 
     //TODO: expose the CustomDBC() constructor to wipe here?
     this->rows = 0;

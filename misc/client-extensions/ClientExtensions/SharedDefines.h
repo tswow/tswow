@@ -86,8 +86,7 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
-struct PowerDisplayRec
-{
+struct PowerDisplayRec {
     uint32_t m_ID;
     uint32_t m_actualType;
     char* m_globalStringBaseTag;
@@ -96,8 +95,7 @@ struct PowerDisplayRec
     uint8_t m_blue;
 };
 
-struct SpellRec
-{
+struct SpellRec {
     uint32_t m_ID;
     uint32_t m_category;
     uint32_t m_dispelType;
@@ -210,46 +208,76 @@ struct SpellIconRec {
     char* m_textureFilename;
 };
 
+struct SpellRuneCostRec {
+    uint32_t m_ID;
+    int32_t m_blood;
+    int32_t m_unholy;
+    int32_t m_frost;
+    int32_t m_runicPower;
+};
+
 // client functions
-// Defs cherrypicked from StormLib: https://github.com/ladislav-zezula/StormLib
-CLIENT_FUNCTION(SFileOpenFileEx, 0x424B50, __stdcall, bool, (HANDLE, const char*, uint32_t, HANDLE*))
-CLIENT_FUNCTION(SFileReadFile, 0x422530, __stdcall, bool, (HANDLE handle /*likely a handle*/, void* data, uint32_t bytesToRead, uint32_t* bytesRead, uint32_t* overlap /*just set to 0*/))
-CLIENT_FUNCTION(SFileCloseFile, 0x422910, __stdcall, void, (HANDLE a1))
+namespace CGPetInfo_C {
+    CLIENT_FUNCTION(GetPet, 0x5D3390, __cdecl, uint64_t, (uint32_t))
+}
 
-//
-CLIENT_FUNCTION(SFileOpenFile, 0x424F80, __stdcall, int, (char const* filename, HANDLE* a2 /*file handle out*/))
-CLIENT_FUNCTION(SFileGetFileSize, 0x4218C0, __stdcall, DWORD /*lowest 32 bits in size*/, (HANDLE handle, DWORD* highSize /*highest 32 bits in size*/))
+namespace CGUnit_C {
+    CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
+    CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
+    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRec*))
+}
 
-CLIENT_FUNCTION(SMemAlloc, 0x76E540, __stdcall, void*, (uint32_t, const char*, uint32_t, uint32_t))
-CLIENT_FUNCTION(SMemFree, 0x76E5A0, __stdcall, bool, (void*, const char*, uint32_t, uint32_t))
+namespace ClientDB {
+    CLIENT_FUNCTION(GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
+    CLIENT_FUNCTION(GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+}
 
-CLIENT_FUNCTION(SErrPrepareAppFatal, 0x772A80, _cdecl, void, (uint32_t, const char*, ...))
+namespace ClntObjMgr {
+    CLIENT_FUNCTION(GetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
+    CLIENT_FUNCTION(ObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
+}
 
-CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
-CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
+namespace FrameScript {
+    CLIENT_FUNCTION(GetText, 0x819D40, __cdecl, char*, (char*, int, int))
+    CLIENT_FUNCTION(SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
+}
 
-CLIENT_FUNCTION(FrameScript__GetText, 0x819D40, __cdecl, char*, (char*, int, int))
-CLIENT_FUNCTION(FrameScript__SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
+namespace SpellParser {
+    CLIENT_FUNCTION(ParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+}
 
-CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, ...))
-CLIENT_FUNCTION(SStrCopy, 0x76ED20, __stdcall, char*, (char*, char*, uint32_t))
-CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, char*, (char*, char*, uint32_t))
-CLIENT_FUNCTION(SStrLen, 0x76EE30, __stdcall, char*, (char*))
-CLIENT_FUNCTION(SStrChr, 0x76E6E0, __cdecl, char*, (char*, char))
+namespace SpellRec_C {
+    CLIENT_FUNCTION(GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
+    CLIENT_FUNCTION(GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t, uint32_t))
+}
 
-CLIENT_FUNCTION(ClientDB__GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
-CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+namespace SErr {
+    CLIENT_FUNCTION(PrepareAppFatal, 0x772A80, _cdecl, void, (uint32_t, const char*, ...))
+}
 
-CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+namespace SFile {
+    // Defs cherrypicked from StormLib: https://github.com/ladislav-zezula/StormLib
+    CLIENT_FUNCTION(OpenFileEx, 0x424B50, __stdcall, bool, (HANDLE, const char*, uint32_t, HANDLE*))
+    CLIENT_FUNCTION(ReadFile, 0x422530, __stdcall, bool, (HANDLE handle /*likely a handle*/, void* data, uint32_t bytesToRead, uint32_t* bytesRead, uint32_t* overlap /*just set to 0*/))
+    CLIENT_FUNCTION(CloseFile, 0x422910, __stdcall, void, (HANDLE a1))
 
-CLIENT_FUNCTION(SpellRec__GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
-CLIENT_FUNCTION(SpellRec__GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t, uint32_t))
+    //
+    CLIENT_FUNCTION(OpenFile, 0x424F80, __stdcall, int, (char const* filename, HANDLE* a2 /*file handle out*/))
+    CLIENT_FUNCTION(GetFileSize, 0x4218C0, __stdcall, DWORD /*lowest 32 bits in size*/, (HANDLE handle, DWORD* highSize /*highest 32 bits in size*/))
+}
 
-CLIENT_FUNCTION(CGPetInfo__GetPet, 0x5D3390, __cdecl, uint64_t, (uint32_t))
+namespace SMem {
+    CLIENT_FUNCTION(Alloc, 0x76E540, __stdcall, void*, (uint32_t, const char*, uint32_t, uint32_t))
+    CLIENT_FUNCTION(Free, 0x76E5A0, __stdcall, bool, (void*, const char*, uint32_t, uint32_t))
+}
 
-CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
-CLIENT_FUNCTION(CGUnit_C__HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
-CLIENT_FUNCTION(CGUnit_C__HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRec*))
+namespace SStr {
+    CLIENT_FUNCTION(Printf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, ...))
+    CLIENT_FUNCTION(Copy, 0x76ED20, __stdcall, char*, (char*, char*, uint32_t))
+    CLIENT_FUNCTION(Copy_0, 0x76EF70, __stdcall, char*, (char*, char*, uint32_t))
+    CLIENT_FUNCTION(Len, 0x76EE30, __stdcall, char*, (char*))
+    CLIENT_FUNCTION(Chr, 0x76E6E0, __cdecl, char*, (char*, char))
+}
 
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
 

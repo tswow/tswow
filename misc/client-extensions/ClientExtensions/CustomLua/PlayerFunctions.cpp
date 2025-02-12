@@ -34,11 +34,11 @@ LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
 }
 
 LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
-    uint64_t activePlayer = ClntObjMgrGetActivePlayer();
+    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
 
     if (activePlayer) {
-        void* activeObjectPtr = ClntObjMgrObjectPtr(activePlayer, TYPEMASK_UNIT);
-        ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(activeObjectPtr));
+        void* activeObjectPtr = ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT);
+        ClientLua::PushNumber(L, CGUnit_C::GetShapeshiftFormId(activeObjectPtr));
         return 1;
     }
 
@@ -47,7 +47,7 @@ LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
 }
 
 LUA_FUNCTION(FireTalentUpdateEvent, (lua_State* L)) {
-    FrameScript__SignalEvent(625, 0);
+    FrameScript::SignalEvent(625, 0);
 
     ClientLua::PushNil(L);
     return 1;

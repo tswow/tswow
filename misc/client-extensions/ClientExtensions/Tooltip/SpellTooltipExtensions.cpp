@@ -71,16 +71,17 @@ int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_
     uint32_t result = 0;
 
     if (spellVariable < SPELLVARIABLE_hp)
-        result = CFormula__GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
+        result = CFormula::GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
     else {
         float value = 0.f;
-        uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER));
+        uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgr::ObjectPtr(ClntObjMgr::GetActivePlayer(), TYPEMASK_PLAYER));
 
         if (ActivePlayer) {
             // Arrays for current and max power fields
             if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_POWER7) {//the <= check saves if you extend later
                 value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_AND_MAX_FIELDS[spellVariable - SPELLVARIABLE_power1]));
-            } else {
+            }
+            else {
                 switch (spellVariable) {
                     case SPELLVARIABLE_hp:
                         value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HP));
@@ -146,26 +147,26 @@ void TooltipExtensions::SetNewVariablePointers() {
 }
 
 void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer) {
-    char* sRuneCost = FrameScript__GetText(runeCostKey, -1, 0);
-    SStrPrintf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
-    SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);      
+    char* sRuneCost = FrameScript::GetText(runeCostKey, -1, 0);
+    SStr::Printf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
+    SStr::Copy_0(destBuffer, buff, 0x7FFFFFFF);      
 }
 
-void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
-    int32_t m_RuneBlood = *(row + 1);
-    int32_t m_RuneUnholy = *(row + 2);
-    int32_t m_RuneFrost = *(row + 3);
-    int32_t m_RunicPower = *(row + 4);
+void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, SpellRuneCostRec* row, uint32_t* spellFamily) {
+    int32_t m_RuneBlood = row->m_blood;
+    int32_t m_RuneUnholy = row->m_unholy;
+    int32_t m_RuneFrost = row->m_frost;
+    int32_t m_RunicPower = row->m_runicPower;
 
     if (*spellFamily == SPELLFAMILY_DEATHKNIGHT) {
         if (m_RuneBlood) {
             AppendRuneCost("RUNE_COST_DEATH", m_RuneBlood, buff, dest);
             if (m_RuneBlood != 1)
-                SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
+                SStr::Copy_0(dest, sPluralS, 0x7FFFFFFF);
 
             if (m_RunicPower < 0) {
                 int32_t m_Amount = -m_RunicPower / 10;
-                SStrCopy_0(dest, sConnectorPlus, 0x7FFFFFFF);
+                SStr::Copy_0(dest, sConnectorPlus, 0x7FFFFFFF);
                 AppendRuneCost("RUNIC_POWER_COST", m_Amount, buff, dest);
             }
         }
@@ -181,7 +182,7 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row
         for (const auto& rune : runes) {
             if (rune.count > 0) {
                 if (addSpace) {
-                    SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+                    SStr::Copy_0(dest, sSpace, 0x7FFFFFFF);
                 }
                 AppendRuneCost(rune.costKey, rune.count, buff, dest);
                 addSpace = true;
@@ -216,34 +217,34 @@ void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_
     if (!customAttributesRow || !(customAttributesRow->customAttr0 & SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST)) {
         if (powerCost && !powerCostPerSec) {
             if (powerDisplayRow) {
-                SStrCopy(buffer, FrameScript__GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
-                SStrPrintf(dest, 128, FrameScript__GetText("POWER_DISPLAY_COST", -1, 0), powerCost, buffer);
+                SStr::Copy(buffer, FrameScript::GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
+                SStr::Printf(dest, 128, FrameScript::GetText("POWER_DISPLAY_COST", -1, 0), powerCost, buffer);
             }
             else {
-                SStrCopy(buffer, FrameScript__GetText(powerString, -1, 0), 128);
-                SStrPrintf(dest, 128, buffer, powerCost);
+                SStr::Copy(buffer, FrameScript::GetText(powerString, -1, 0), 128);
+                SStr::Printf(dest, 128, buffer, powerCost);
             }
         }
         else if (powerCostPerSec > 0) {
             if (powerDisplayRow) {
-                SStrCopy(buffer, FrameScript__GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
-                SStrPrintf(dest, 128, FrameScript__GetText("POWER_DISPLAY_COST_PER_TIME", -1, 0), powerCost, buffer, powerCostPerSec);
+                SStr::Copy(buffer, FrameScript::GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
+                SStr::Printf(dest, 128, FrameScript::GetText("POWER_DISPLAY_COST_PER_TIME", -1, 0), powerCost, buffer, powerCostPerSec);
             }
             else {
-                SStrPrintf(buffer, 128, "%s_PER_TIME", powerString);
-                SStrPrintf(dest, 128, FrameScript__GetText(buffer, -1, 0), powerCost, powerCostPerSec);
+                SStr::Printf(buffer, 128, "%s_PER_TIME", powerString);
+                SStr::Printf(dest, 128, FrameScript::GetText(buffer, -1, 0), powerCost, powerCostPerSec);
             }
         }
 
         if (additionalCostRow && additionalCostRow->cost) {
             if (hasPowerCost)
-                SStrCopy_0(dest, " + ", 0x7FFFFFFF);
+                SStr::Copy_0(dest, " + ", 0x7FFFFFFF);
 
-            SStrPrintf(buffer, 128, "%d %s", additionalCostRow->cost, additionalCostRow->resourceName);
-            SStrCopy_0(dest, buffer, 0x7FFFFFFF);
+            SStr::Printf(buffer, 128, "%d %s", additionalCostRow->cost, additionalCostRow->resourceName);
+            SStr::Copy_0(dest, buffer, 0x7FFFFFFF);
 
             if (additionalCostRow->flag == 1 && additionalCostRow->cost != 1)
-                SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
+                SStr::Copy_0(dest, sPluralS, 0x7FFFFFFF);
         }
     }
 }
@@ -283,26 +284,29 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
     SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
     bool treatAsInstant = customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT);
 
-    double castTime = SpellRec__GetCastTime(spell, a6, a8, 1);    
+    double castTime = SpellRec_C::GetCastTime(spell, a6, a8, 1);    
     if (castTime && !treatAsInstant) {
         bool isLongCast = castTime >= MILLISECONDS_IN_MINUTE;
         char* castFlag = isLongCast ? "SPELL_CAST_TIME_MIN" : "SPELL_CAST_TIME_SEC";
         double divisor = isLongCast ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
 
-        SStrCopy(buffer, FrameScript__GetText(castFlag, -1, 0), 128);
-        SStrPrintf(dest, 128, buffer, castTime / divisor);
+        SStr::Copy(buffer, FrameScript::GetText(castFlag, -1, 0), 128);
+        SStr::Printf(dest, 128, buffer, castTime / divisor);
     } else {
         char* castFlag = "SPELL_CAST_TIME_INSTANT_NO_MANA";
         if ((spell->m_attributesEx & (SPELL_ATTR1_CHANNELED_1 | SPELL_ATTR1_CHANNELED_2)) != 0) {
             castFlag = "SPELL_CAST_CHANNELED";
-        } else if ((spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0) {
+        }
+        else if ((spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0) {
             castFlag = "SPELL_ON_NEXT_SWING";
-        } else if ((spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0) {
+        }
+        else if ((spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0) {
             castFlag = "SPELL_ON_NEXT_RANGED";
-        } else if (!spell->m_powerType && powerCost > 0) {
+        }
+        else if (!spell->m_powerType && powerCost > 0) {
             castFlag = "SPELL_CAST_TIME_INSTANT";
         }   
-        SStrCopy(dest, FrameScript__GetText(castFlag, -1, 0), 128);
+        SStr::Copy(dest, FrameScript::GetText(castFlag, -1, 0), 128);
     }
 
     double recoveryTime = 0;
@@ -319,8 +323,8 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
         bool isLongRecovery = recoveryTime >= MILLISECONDS_IN_MINUTE;
         char* str = isLongRecovery ? "SPELL_RECAST_TIME_MIN" : "SPELL_RECAST_TIME_SEC";
         double divider = isLongRecovery ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
-        SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
-        SStrPrintf(src, 128, buffer, recoveryTime / divider);
+        SStr::Copy(buffer, FrameScript::GetText(str, -1, 0), 128);
+        SStr::Printf(src, 128, buffer, recoveryTime / divider);
     }
     else {
         //Al really had src[0] = 0;
@@ -377,7 +381,7 @@ void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* s
         recoveryTime = currentCooldown;
 
     if (recoveryTime) {
-        CGTooltip__GetDurationString(dest, 128, recoveryTime, "ITEM_COOLDOWN_TIME", 0, 1, 0);
+        CGTooltip::GetDurationString(dest, 128, recoveryTime, "ITEM_COOLDOWN_TIME", 0, 1, 0);
         sub_61FEC0(_this, dest, 0, ptr, ptr, 0);
     }
 }
