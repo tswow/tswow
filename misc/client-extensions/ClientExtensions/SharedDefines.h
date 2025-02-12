@@ -52,6 +52,27 @@ enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_PET         = 17
 };
 
+enum SpellEffect : uint32_t {
+    SPELL_EFFECT_TRADE_SKILL                    = 47,
+    SPELL_EFFECT_ATTACK                         = 78,
+};
+
+enum SpellAttr0 : uint32_t {
+    SPELL_ATTR0_REQ_AMMO                        = 0x00000002,
+    SPELL_ATTR0_ON_NEXT_SWING                   = 0x00000004,
+    SPELL_ATTR0_PASSIVE                         = 0x00000040,
+    SPELL_ATTR0_ON_NEXT_SWING_2                 = 0x00000400,
+};
+
+enum SpellAttr1 : uint32_t {
+    SPELL_ATTR1_CHANNELED_1                     = 0x00000004,
+    SPELL_ATTR1_CHANNELED_2                     = 0x00000040,
+};
+
+enum SpellAttr2 : uint32_t {
+    SPELL_ATTR2_AUTOREPEAT_FLAG                 = 0x00000020,
+};
+
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
     SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, don't display castbar at all
@@ -184,6 +205,11 @@ struct SpellRec
     uint32_t m_difficulty;
 };
 
+struct SpellIconRec {
+    uint32_t m_ID;
+    char* m_textureFilename;
+};
+
 // client functions
 // Defs cherrypicked from StormLib: https://github.com/ladislav-zezula/StormLib
 CLIENT_FUNCTION(SFileOpenFileEx, 0x424B50, __stdcall, bool, (HANDLE, const char*, uint32_t, HANDLE*))
@@ -217,8 +243,17 @@ CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, ui
 CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
 
 CLIENT_FUNCTION(SpellRec__GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
+CLIENT_FUNCTION(SpellRec__GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t, uint32_t))
+
+CLIENT_FUNCTION(CGPetInfo__GetPet, 0x5D3390, __cdecl, uint64_t, (uint32_t))
 
 CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
+CLIENT_FUNCTION(CGUnit_C__HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
+CLIENT_FUNCTION(CGUnit_C__HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRec*))
+
+CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
+
+CLIENT_FUNCTION(sub_61FEC0, 0x61FEC0, __thiscall, void, (void*, char*, char*, void*, void*, uint32_t))
 
 // functions
 static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
@@ -238,7 +273,7 @@ static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
 
     VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
     memset(position, byte, size);
-    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
+    VirtualProtect((LPVOID)position, size, flOldProtect, &flOldProtect);
 }
 
 // Aleist3r: use bigger number as address1

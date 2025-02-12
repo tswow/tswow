@@ -5,19 +5,14 @@
 #include "CustomDBCMgr/DBCDefs/SpellCustomAttributes.h"
 #include "windows.h"
 #include "Logger.h"
-
-// Aleist3r: keeping it here as an example how to grab custom data
-// SpellAdditionalCostDataRow* row = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", 2);
-// if (row) {
-//     LOG_DEBUG << "Spell ID: " << row->spellID << " resourceName: " << row->resourceName<< " Cost: " << row->cost<< " flag: " << row->flag;
-// } else {
-//      LOG_DEBUG << "Row not found!";
-// }
+#include <algorithm>
 
 void TooltipExtensions::Apply() {
     SpellTooltipVariableExtension();
     SpellTooltipRuneCostExtension();
     SpellTooltipPowerCostExtension();
+    SpellTooltipCooldownExtension();
+    SpellTooltipRemainingCooldownExtension();
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
@@ -64,12 +59,14 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
     // Restore the original memory protection
     VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, oldProtect, &oldProtect); 
 }
+
 static uint32_t CURRENT_AND_MAX_FIELDS[] = {
     CURRENT_MANA, CURRENT_RAGE, CURRENT_FOCUS, CURRENT_ENERGY,
     CURRENT_HAPPINESS, CURRENT_RUNES, CURRENT_RUNIC_POWER,
     MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
     MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
 };
+
 int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
@@ -148,8 +145,7 @@ void TooltipExtensions::SetNewVariablePointers() {
         spellVariables[140 + i] = reinterpret_cast<uint32_t>(tooltipSpellVariablesExtensions[i]);
 }
 
-void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer)
-{
+void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer) {
     char* sRuneCost = FrameScript__GetText(runeCostKey, -1, 0);
     SStrPrintf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
     SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);      
@@ -199,8 +195,7 @@ constexpr uint8_t PATCH_BYTES2[31] = {
     0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0xFC, 0xFF, 0x00, 0x00, 0xE9, 0x3A, 0x01, 0x00, 0x00
 };
 
-void TooltipExtensions::SpellTooltipPowerCostExtension()
-{
+void TooltipExtensions::SpellTooltipPowerCostExtension() {
     DWORD oldProtect;
     // Change memory protection to allow writing
     VirtualProtect(reinterpret_cast<void*>(0x623D8A), 0x1F, PAGE_EXECUTE_READWRITE, &oldProtect);
@@ -250,5 +245,139 @@ void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_
             if (additionalCostRow->flag == 1 && additionalCostRow->cost != 1)
                 SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
         }
+    }
+}
+
+constexpr uint8_t PATCH_BYTES3[51] = {
+    0x8B, 0x4D, 0x2C, 0x8B, 0x45, 0xE4, 0x51, 0x50, 0x8D, 0x8D, 0x20, 0xFE, 0xFF, 0xFF, 0x51, 0x8B,
+    0x55, 0x1C, 0x8B, 0x45, 0x14, 0x52, 0x50, 0x8D, 0x4D, 0x18, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF,
+    0xFF, 0x8D, 0x8D, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0xD8,
+    0x01, 0x00, 0x00
+};
+
+void TooltipExtensions::SpellTooltipCooldownExtension() {
+    DWORD oldProtect;
+    // Change memory protection to allow writing
+    VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, PAGE_EXECUTE_READWRITE, &oldProtect);
+    // Apply the patch bytes
+    memcpy(reinterpret_cast<void*>(0x62443B), PATCH_BYTES3, sizeof(PATCH_BYTES3));
+    // Calculate and write the relative address for the function call
+    *reinterpret_cast<uint32_t*>(0x624465) = CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellCooldownTooltip), 0x624469);
+    // Restore the original memory protection
+    VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, oldProtect, &oldProtect);
+}
+
+void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uintptr_t* a7, uint32_t a6, uint32_t a8, char* src, void* _this, uint32_t powerCost) {
+    const uint32_t MILLISECONDS_IN_MINUTE = 60000;
+    const uint32_t MILLISECONDS_IN_SECOND = 1000;
+
+    if (spell->m_effect[0] == SPELL_EFFECT_TRADE_SKILL || (spell->m_attributes & SPELL_ATTR0_PASSIVE) != 0) {
+        *a7 = 1;
+        return;
+    }
+    if (spell->m_effect[0] == SPELL_EFFECT_ATTACK) {
+        return;
+    }
+
+    char buffer[128];
+    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
+    bool treatAsInstant = customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT);
+
+    double castTime = SpellRec__GetCastTime(spell, a6, a8, 1);    
+    if (castTime && !treatAsInstant) {
+        bool isLongCast = castTime >= MILLISECONDS_IN_MINUTE;
+        char* castFlag = isLongCast ? "SPELL_CAST_TIME_MIN" : "SPELL_CAST_TIME_SEC";
+        double divisor = isLongCast ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
+
+        SStrCopy(buffer, FrameScript__GetText(castFlag, -1, 0), 128);
+        SStrPrintf(dest, 128, buffer, castTime / divisor);
+    } else {
+        char* castFlag = "SPELL_CAST_TIME_INSTANT_NO_MANA";
+        if ((spell->m_attributesEx & (SPELL_ATTR1_CHANNELED_1 | SPELL_ATTR1_CHANNELED_2)) != 0) {
+            castFlag = "SPELL_CAST_CHANNELED";
+        } else if ((spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0) {
+            castFlag = "SPELL_ON_NEXT_SWING";
+        } else if ((spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0) {
+            castFlag = "SPELL_ON_NEXT_RANGED";
+        } else if (!spell->m_powerType && powerCost > 0) {
+            castFlag = "SPELL_CAST_TIME_INSTANT";
+        }   
+        SStrCopy(dest, FrameScript__GetText(castFlag, -1, 0), 128);
+    }
+
+    double recoveryTime = 0;
+    auto it = CharacterDefines::spellChargeMap.find(spell->m_ID);
+
+    if (it != CharacterDefines::spellChargeMap.end()) {
+        CharacterDefines::SpellCharge temp = it->second;
+        recoveryTime = temp.cooldown;
+    }
+    else
+        recoveryTime = spell->m_categoryRecoveryTime > spell->m_recoveryTime ? spell->m_categoryRecoveryTime : spell->m_recoveryTime;
+
+    if (recoveryTime > 0) {
+        bool isLongRecovery = recoveryTime >= MILLISECONDS_IN_MINUTE;
+        char* str = isLongRecovery ? "SPELL_RECAST_TIME_MIN" : "SPELL_RECAST_TIME_SEC";
+        double divider = isLongRecovery ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
+        SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
+        SStrPrintf(src, 128, buffer, recoveryTime / divider);
+    }
+    else {
+        //Al really had src[0] = 0;
+        //then tried to blame IDA for that.
+        *src = 0;
+    }
+
+    void* ptr = reinterpret_cast<void*>(0xAD2D30);
+    sub_61FEC0(_this, dest, src, ptr, ptr, 0);
+}
+
+constexpr uint8_t PATCH_BYTES4[35] = {
+    0x8B, 0x45, 0x10, 0x89, 0xF9, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x50, 0x51, 0x52, 0x8D, 0x95,
+    0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x31, 0xDB, 0xBB, 0x01, 0x00, 0x00,
+    0x00, 0xEB, 0x24
+};
+
+void TooltipExtensions::SpellTooltipRemainingCooldownExtension() {
+    DWORD oldProtect;
+    // Change memory protection to allow writing
+    VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, PAGE_EXECUTE_READWRITE, &oldProtect);
+    // Apply the patch bytes
+    memcpy(reinterpret_cast<void*>(0x624FF0), PATCH_BYTES4, sizeof(PATCH_BYTES4));
+    // Calculate and write the relative address for the function call
+    *reinterpret_cast<uint32_t*>(0x625006) = CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellRemainingCooldownTooltip), 0x62500A);
+    // Restore the original memory protection
+    VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, oldProtect, &oldProtect);
+}
+
+void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t currentCooldown) {
+    void* ptr = reinterpret_cast<void*>(0xAD2D30);
+    uint32_t recoveryTime = 0;
+    auto it = CharacterDefines::spellChargeMap.find(spell->m_ID);
+
+    if (it != CharacterDefines::spellChargeMap.end())
+    {
+        CharacterDefines::SpellCharge temp = it->second;
+        if (temp.remainingCooldown >= currentCooldown) {
+            uint32_t currAsync = OsGetAsyncTimeMs();
+
+            if (temp.remainingCooldown > (currAsync - temp.async))
+                recoveryTime = temp.remainingCooldown + (temp.async - currAsync);
+            else
+                recoveryTime = 0;
+
+            temp.remainingCooldown = recoveryTime;
+            temp.async = currAsync;
+            it->second = temp;
+        }
+        else
+            recoveryTime = currentCooldown;
+    }
+    else
+        recoveryTime = currentCooldown;
+
+    if (recoveryTime) {
+        CGTooltip__GetDurationString(dest, 128, recoveryTime, "ITEM_COOLDOWN_TIME", 0, 1, 0);
+        sub_61FEC0(_this, dest, 0, ptr, ptr, 0);
     }
 }

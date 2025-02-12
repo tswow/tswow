@@ -227,6 +227,14 @@ export function ClientPatches(
                 // Aleist3r: this needs some more testing, it probably breaks some spell visual thing but for now it's good enough
                 [0x32A36C, [0xEB]]
             ]),
+            patch('checksum', [
+                [0x168, [0x98, 0x96]],
+                [0x1A9, [0x00, 0x00, 0x00, 0x00, 0x00]],
+                [0x210, [0x00, 0xE0]],
+                [0x238, [0x00, 0x70]],
+                [0x260, [0x00, 0xB0]],
+                [0x2B0, [0x00, 0x10]]
+            ])
             /*patch('additional-sections', [
                 // Aleist3r: reworks basically unused certificate space to contain 3 additional sections being equivalent to .text, .rdata and .data
                 // also fixes some values that are apparently incorrectly calculated (according to CFF Explorer)

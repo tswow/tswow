@@ -27,6 +27,8 @@ namespace ClientLua {
 
     std::string GetString(lua_State* L, int32_t offset, std::string const& defValue = "");
     double GetNumber(lua_State* L, int32_t offset, double defValue = 0);
+    void allowOutOfBoundsPointer();
+    void customLua();
 }
 
 // do NOT refactor this name

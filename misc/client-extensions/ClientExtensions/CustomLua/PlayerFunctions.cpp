@@ -34,14 +34,47 @@ LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
 }
 
 LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
-    void* ActivePlayer = ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_UNIT);
+    uint64_t activePlayer = ClntObjMgrGetActivePlayer();
 
-    ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(ActivePlayer));
+    if (activePlayer) {
+        void* activeObjectPtr = ClntObjMgrObjectPtr(activePlayer, TYPEMASK_UNIT);
+        ClientLua::PushNumber(L, CGUnit_C__GetShapeshiftFormId(activeObjectPtr));
+        return 1;
+    }
+
+    ClientLua::PushNumber(L, 0);
     return 1;
 }
 
 LUA_FUNCTION(FireTalentUpdateEvent, (lua_State* L)) {
     FrameScript__SignalEvent(625, 0);
+
+    ClientLua::PushNil(L);
+    return 1;
+}
+
+LUA_FUNCTION(UpdateSpellChargeMap, (lua_State* L)) {
+    uint32_t spellID = ClientLua::GetNumber(L, 1);
+    CharacterDefines::SpellCharge temp;
+
+    temp.currentCharges = ClientLua::GetNumber(L, 2);
+    temp.maxCharges = ClientLua::GetNumber(L, 3);
+    temp.async = OsGetAsyncTimeMs();
+    temp.remainingCooldown = ClientLua::GetNumber(L, 4);
+    temp.cooldown = ClientLua::GetNumber(L, 4);
+
+    auto it = CharacterDefines::spellChargeMap.find(spellID);
+
+    if (it != CharacterDefines::spellChargeMap.end()) {
+        CharacterDefines::SpellCharge temp2 = it->second;
+
+        if (!temp.cooldown)
+            temp.cooldown = temp2.cooldown;
+
+        it->second = temp;
+    }
+    else
+        CharacterDefines::spellChargeMap.insert(std::make_pair(spellID, temp));
 
     ClientLua::PushNil(L);
     return 1;
