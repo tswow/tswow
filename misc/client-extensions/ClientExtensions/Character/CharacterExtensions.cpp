@@ -37,7 +37,7 @@ void CharacterExtensions::OnSpellLearnEx(SpellRow* spellRow, uint32_t* a5) {
         displayMsg = false;
     else
         displayMsg = (*a5 != 0);
-    LOG_DEBUG << "stack: " << spellRow << " | " << a5;
+
     if (displayMsg) {
         uint32_t message = GERR_LEARN_SPELL_S;
 
