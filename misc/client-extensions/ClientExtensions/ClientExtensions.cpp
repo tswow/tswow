@@ -8,6 +8,8 @@ void ClientExtensions::initialize() {
     LOG_INFO << "Custom DBCs loaded";
     CharacterFixes::CharacterCreationFixes();
     LOG_INFO << "Character creation fixes applied";
+    CharacterExtensions::Apply();
+    LOG_INFO << "Character extensions applied";
     TooltipExtensions::Apply();
     LOG_INFO << "Tooltip extensions applied";
 }

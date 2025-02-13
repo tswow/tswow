@@ -6,7 +6,7 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
 
     if (ClientLua::IsNumber(L, 1)) {
         uint32_t spellId = ClientLua::GetNumber(L, 1);
-        SpellRec buffer;
+        SpellRow buffer;
         char dest[1024];
 
         if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &buffer)) { // hex address is g_SpellRec struct

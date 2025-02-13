@@ -1,8 +1,7 @@
 #pragma once
-#include "Windows.h"
-#include "ClientMacros.h"
 
-#include <functional>
+#include "ClientMacros.h"
+#include "Util.h"
 
 enum ObjectTypeMask : uint32_t {
     TYPEMASK_OBJECT         = 0x0001,
@@ -34,6 +33,22 @@ enum Field : uint32_t {
     MAX_RUNIC_POWER         = 33,
 };
 
+enum GameError : uint32_t {
+    GERR_LEARN_SPELL_S      = 59,
+    GERR_LEARN_ABILITY_S    = 60,
+    GERR_SPELL_UNLEARNED_S  = 352,
+};
+
+enum Powers : int32_t {
+    POWER_MANA              = 0,
+    POWER_RAGE              = 1,
+    POWER_FOCUS             = 2,
+    POWER_ENERGY            = 3,
+    POWER_HAPPINESS         = 4,
+    POWER_RUNES             = 5,
+    POWER_RUNIC_POWER       = 7
+};
+
 enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
@@ -55,12 +70,16 @@ enum SpellFamilyNames : uint32_t {
 enum SpellEffect : uint32_t {
     SPELL_EFFECT_TRADE_SKILL                    = 47,
     SPELL_EFFECT_ATTACK                         = 78,
+    SPELL_EFFECT_TITAN_GRIP                     = 155,
 };
 
 enum SpellAttr0 : uint32_t {
     SPELL_ATTR0_REQ_AMMO                        = 0x00000002,
     SPELL_ATTR0_ON_NEXT_SWING                   = 0x00000004,
+    SPELL_ATTR0_ABILITY                         = 0x00000010,
+    SPELL_ATTR0_TRADESPELL                      = 0x00000020,
     SPELL_ATTR0_PASSIVE                         = 0x00000040,
+    SPELL_ATTR0_HIDDEN_CLIENTSIDE               = 0x00000080,
     SPELL_ATTR0_ON_NEXT_SWING_2                 = 0x00000400,
 };
 
@@ -75,8 +94,10 @@ enum SpellAttr2 : uint32_t {
 
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
-    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, don't display castbar at all
+    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // NYI; Self-descripting, don't display castbar at all
     SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST    = 0x00000004,   // Does not display power cost in tooltip
+    SPELL_ATTR0_CU_SUPPRESS_LEARN_MSG           = 0x00000008,   // Does not display "You have learned a new spell:" message
+    SPELL_ATTR0_CU_SUPPRESS_UNLEARN_MSG         = 0x00000010,   // Does not display "You have unlearned" message
 };
 
 static uint32_t dummy = 0;
@@ -86,7 +107,24 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
-struct PowerDisplayRec {
+struct UnitFields {
+    uint64_t padding[8];    // not defining those until we need them
+    uint32_t channelSpell;
+    uint8_t unitBytes0[4];
+    uint32_t unitCurrHealth;
+    uint32_t unitCurrPowers[7];
+    uint32_t unitMaxHealth;
+    uint32_t unitMaxPowers[7];
+    // TODO: add rest at some point, most likely when needed
+};
+
+struct CGUnit {
+    uint32_t objBase[52];
+    UnitFields* UnitData;
+    // TODO: add rest, currently not needed
+};
+
+struct PowerDisplayRow {
     uint32_t m_ID;
     uint32_t m_actualType;
     char* m_globalStringBaseTag;
@@ -95,7 +133,35 @@ struct PowerDisplayRec {
     uint8_t m_blue;
 };
 
-struct SpellRec {
+struct SkillLineAbilityRow {
+    uint32_t m_ID;
+    uint32_t m_skillLine;
+    uint32_t m_spell;
+    uint32_t m_raceMask;
+    uint32_t m_classMask;
+    uint32_t m_excludeRace;
+    uint32_t m_excludeClass;
+    uint32_t m_minSkillLineRank;
+    uint32_t m_supercededBySpell;
+    uint32_t m_acquireMethod;
+    uint32_t m_trivialSkillLineRankHigh;
+    uint32_t m_trivialSkillLineRankLow;
+    uint32_t m_characterPoints[2];
+    uint32_t m_numSkillUps;
+};
+
+struct SkillLineRow {
+    uint32_t m_ID;
+    uint32_t m_categoryID;
+    uint32_t m_skillCostsID;
+    char* m_displayName_lang;
+    char* m_description_lang;
+    uint32_t m_spellIconID;
+    char* m_alternateVerb_lang;
+    uint32_t m_canLink;
+};
+
+struct SpellRow {
     uint32_t m_ID;
     uint32_t m_category;
     uint32_t m_dispelType;
@@ -203,12 +269,12 @@ struct SpellRec {
     uint32_t m_difficulty;
 };
 
-struct SpellIconRec {
+struct SpellIconRow {
     uint32_t m_ID;
     char* m_textureFilename;
 };
 
-struct SpellRuneCostRec {
+struct SpellRuneCostRow {
     uint32_t m_ID;
     int32_t m_blood;
     int32_t m_unholy;
@@ -217,6 +283,10 @@ struct SpellRuneCostRec {
 };
 
 // client functions
+namespace CGGameUI {
+    CLIENT_FUNCTION(DisplayError, 0x5216F0, __cdecl, void, (uint32_t, ...))
+}
+
 namespace CGPetInfo_C {
     CLIENT_FUNCTION(GetPet, 0x5D3390, __cdecl, uint64_t, (uint32_t))
 }
@@ -224,7 +294,7 @@ namespace CGPetInfo_C {
 namespace CGUnit_C {
     CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
     CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
-    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRec*))
+    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRow*))
 }
 
 namespace ClientDB {
@@ -247,8 +317,8 @@ namespace SpellParser {
 }
 
 namespace SpellRec_C {
-    CLIENT_FUNCTION(GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
-    CLIENT_FUNCTION(GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t, uint32_t))
+    CLIENT_FUNCTION(GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t))
+    CLIENT_FUNCTION(GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t, uint32_t))
 }
 
 namespace SErr {
@@ -279,37 +349,12 @@ namespace SStr {
     CLIENT_FUNCTION(Chr, 0x76E6E0, __cdecl, char*, (char*, char))
 }
 
+namespace SysMsg {
+    CLIENT_FUNCTION(Printf, 0x4B5040, __cdecl, int, (uint32_t, uint32_t, char*, ...))
+}
+
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
 
 CLIENT_FUNCTION(sub_61FEC0, 0x61FEC0, __thiscall, void, (void*, char*, char*, void*, void*, uint32_t))
-
-// functions
-static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
-    return *reinterpret_cast<int32_t*>(*(ActivePlayer + 52) + 4 * field);
-};
-
-static void OverwriteUInt32AtAddress(uint32_t position, uint32_t newValue) {
-    DWORD flOldProtect = 0;
-
-    VirtualProtect((LPVOID)position, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *reinterpret_cast<uint32_t*>(position) = newValue;
-    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
-};
-
-static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
-    DWORD flOldProtect = 0;
-
-    VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    memset(position, byte, size);
-    VirtualProtect((LPVOID)position, size, flOldProtect, &flOldProtect);
-}
-
-// Aleist3r: use bigger number as address1
-// if the jump/call address is earlier in the memory (e.g. you're jumping from dll code back to wow.exe address), use backwards = true
-// TODO: investigate what I did wrong with code, math was off
-static uint32_t CalculateAddress(uint32_t address1, uint32_t address2, bool backwards = false) {
-    if (!backwards)
-        return address1 - address2;
-    else
-        return address2 - address1;
-}
+CLIENT_FUNCTION(sub_6E22C0, 0x6E22C0, __thiscall, uint32_t, (void*, uint32_t))
+CLIENT_FUNCTION(sub_812410, 0x812410, __cdecl, SkillLineAbilityRow*, (uint32_t, uint32_t, uint32_t))
