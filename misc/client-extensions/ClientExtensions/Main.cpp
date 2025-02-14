@@ -7,6 +7,7 @@
 #include "ClientNetwork.h"
 #include "ClientExtensions.h"
 #include "scripts.generated.h"
+#include "Clientlua.h"
 
 class Main
 {
@@ -26,6 +27,8 @@ public:
         LOG_INFO << "Client extensions initialized";
         ClientDetours::Apply();
         LOG_INFO << "Client detours applied";
+        ClientLua::allowOutOfBoundsPointer();
+        LOG_INFO << "Client pointer extension applied";
     }
 };
 

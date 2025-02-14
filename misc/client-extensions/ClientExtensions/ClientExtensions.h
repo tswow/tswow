@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Character/CharacterExtensions.h"
 #include "Character/CharacterFixes.h"
 #include "Tooltip/SpellTooltipExtensions.h"
 

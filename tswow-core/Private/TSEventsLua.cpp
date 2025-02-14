@@ -503,6 +503,14 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnReceive);
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnSend);
 
+    auto zone_events = state.new_usertype<TSEvents::ZoneEvents>("ZoneEvents");
+    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnUpdate);
+    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnPlayerEnter);
+    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnPlayerExit);
+    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnCreatureDied);
+    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnCreatureRespawn);
+    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnGOBUsed);
+
     lua_events["World"] = &TSEvents::World;
     lua_events["Unit"] = &TSEvents::Unit;
     lua_events["AuctionHouse"] = &TSEvents::AuctionHouse;

@@ -10,12 +10,12 @@ void CharacterFixes::CharacterCreationFixes() {
     std::vector<uint32_t> patchedAddresses = { 0x4E157D, 0x4E16A3, 0x4E15B5, 0x4E20EE, 0x4E222A, 0x4E2127, 0x4E1E94, 0x4E1C3A };
 
     for (uint8_t i = 0; i < patchedAddresses.size(); i++)
-        OverwriteUInt32AtAddress(patchedAddresses[i], reinterpret_cast<uint32_t>(&memoryTable));
+        Util::OverwriteUInt32AtAddress(patchedAddresses[i], reinterpret_cast<uint32_t>(&memoryTable));
 
     // Name table
     // 0x4CDA43 - address of table where pointers to race name strings are stored
     SetNewRaceNamePointerTable();
-    OverwriteUInt32AtAddress(0x4CDA43, reinterpret_cast<uint32_t>(&raceNameTable));
+    Util::OverwriteUInt32AtAddress(0x4CDA43, reinterpret_cast<uint32_t>(&raceNameTable));
 
     return;
 }

@@ -60,8 +60,13 @@ declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMu
 declare function GetSpellDescription(spellID:number): string;
 declare function GetActiveSpec(): number;
 declare function SetActiveSpec(specID: number): any;
+declare function FireTalentUpdateEvent(): any;
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
+declare function GetShapeshiftFormID(): number;
+declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
+declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
+declare function UnitCustomChannelData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
@@ -12526,6 +12531,8 @@ declare namespace WoWAPI {
         type OnDragStop = "OnDragStop";
         type OnKeyDown = "OnKeyDown";
         type OnKeyUp = "OnKeyUp";
+        type OnDisable = "OnDisable";
+        type OnEnable = "OnEnable";
 
         type PlayerLogin = "PLAYER_LOGIN";
         type PlayerLogout = "PLAYER_LOGOUT";
@@ -12543,7 +12550,7 @@ declare namespace WoWAPI {
 
         type OnAny = OnEvent | OnLoad | OnUpdate | OnClick | OnEnter |
             OnLeave | OnHide | OnShow | OnMouseDown | OnMouseUp | OnMouseWheel |
-            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop | OnKeyDown | OnKeyUp;
+            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop | OnKeyDown | OnKeyUp | OnDisable | OnEnable;
     }
 
     type UIDropdownInfo = {
@@ -12599,6 +12606,11 @@ declare namespace WoWAPI {
         funcOnLeave?: (self: any, arg1: any, arg2: any) => void,
         isNotRadio?: boolean,
         minWidth?: number,
+
+        AutoHideButton?: boolean,
+        AHBTex?: string,
+        AHBHoverText?: string,
+        AHBClick?: () => void,
     };
 
     type UIDropDownMenuDisplayMode = "" | "MENU";
@@ -13192,7 +13204,6 @@ declare namespace WoWAPI {
 		HookScript(event: "OnPause", handler: (self: T) => void): void;
 		HookScript(event: "OnPlay", handler: (self: T) => void): void;
 		HookScript(event: "OnStop", handler: (self: T, requested:boolean) => void): void;
-		
 	}
 	
 	interface AnimationSetScript extends ScriptObjectSetScript {

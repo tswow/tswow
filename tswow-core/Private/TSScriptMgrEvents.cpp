@@ -172,7 +172,7 @@ public:
 #if TRINITY
     void OnBindToInstance(Player* player,Difficulty difficulty,uint32 mapId,bool permanent,uint8 extendState) FIRE(Player,OnBindToInstance,TSPlayer(player),difficulty,mapId,permanent,extendState)
 #endif
-    void OnUpdateZone(Player* player,uint32 newZone,uint32 newArea) FIRE(Player,OnUpdateZone,TSPlayer(player),newZone,newArea)
+    // void OnUpdateZone(Player* player,Area* newZone,uint32 newArea) FIRE(Player,OnUpdateZone,TSPlayer(player),newZone,newArea)
     void OnMapChanged(Player* player) FIRE(Player,OnMapChanged,TSPlayer(player))
     void OnQuestObjectiveProgress(Player* player, Quest const* quest, uint32 objectiveIndex, uint16 progress) {
         FIRE(Player,OnQuestObjectiveProgress, TSPlayer(player), quest, objectiveIndex, progress)

@@ -1019,7 +1019,15 @@ struct TSEvents
 
     struct ZoneEvents : public TSMappedEventsDirect {
         EVENTS_HEADER(ZoneEvents)
-        ID_EVENT(OnUpdate, TSInstance, TSNumber<uint32> diff)
+        ID_EVENT(OnUpdate, TSNumber<uint32> diff)
+        ID_EVENT(OnPlayerEnter, TSPlayer)
+        ID_EVENT(OnPlayerExit, TSPlayer)
+
+        ID_EVENT(OnCreatureRespawn, TSCreature)
+        ID_EVENT(OnCreatureDied, TSCreature, TSPlayer)
+
+        ID_EVENT(OnGOBSpawn, TSUnit, TSUnit)
+        ID_EVENT(OnGOBUsed, TSGameObject, TSUnit)
     } Zone;
 #if TRINITY
     struct TestEvents {

@@ -12,21 +12,27 @@ namespace ClientLua {
     // Registers lua that will fire on reload
     void RegisterLua(std::string const& lua, std::string const& filename = "", size_t line = 0);
 
+    CLIENT_FUNCTION(DisplayError, 0x84F280, __cdecl, void, (lua_State* L, char*, char*))
+
     CLIENT_FUNCTION(DoString, 0x00819210, __cdecl, void, (char const* code, lua_State* L))
     CLIENT_FUNCTION(GetTop, 0x0084DBD0, __cdecl, int, (lua_State* L))
 
     CLIENT_FUNCTION(IsString, 0x0084DF60, __cdecl, uint32_t, (lua_State* L, int32_t))
     CLIENT_FUNCTION(IsNumber, 0x0084DF20, __cdecl, int32_t, (lua_State* L, int32_t))
 
+    CLIENT_FUNCTION(PushBoolean, 0x84E4D0, __cdecl, int, (lua_State* L, bool))
     CLIENT_FUNCTION(PushNumber, 0x0084E2A0, __cdecl, int, (lua_State* L, double value))
     CLIENT_FUNCTION(PushString, 0x0084E350, __cdecl, int, (lua_State* L, char const* value))
 
-    CLIENT_FUNCTION(ToNumber, 0x84E030, __cdecl, double, (lua_State * L, int32_t))
+    CLIENT_FUNCTION(ToNumber, 0x84E030, __cdecl, double, (lua_State* L, int32_t))
+    CLIENT_FUNCTION(ToLString, 0x84E0E0, __cdecl, char*, (lua_State * L, uint32_t, uint32_t*))
 
     CLIENT_FUNCTION(PushNil, 0x84E280, __cdecl, int, (lua_State* L))
 
     std::string GetString(lua_State* L, int32_t offset, std::string const& defValue = "");
     double GetNumber(lua_State* L, int32_t offset, double defValue = 0);
+    void allowOutOfBoundsPointer();
+    void customLua();
 }
 
 // do NOT refactor this name

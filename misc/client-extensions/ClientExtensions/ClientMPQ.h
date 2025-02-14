@@ -2,8 +2,7 @@
 
 #include <string>
 
-namespace ClientMPQ
-{
+namespace ClientMPQ {
     // If the file is not found, size 0 is returned and no error
     // message is logged.
     size_t readFile(std::string const& filename, char** buf);

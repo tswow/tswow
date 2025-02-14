@@ -22,7 +22,7 @@ public:
     const char* fileName = "DBFilesClient\\SpellAdditionalCostData.dbc";
     SpellAdditionalCostData() : CustomDBC() {
         this->numColumns = 4;
-        this->rowSize = 16;
+        this->rowSize = sizeof(SpellAdditionalCostDataRow);
     }
     
     SpellAdditionalCostData* LoadDB() { 
@@ -34,12 +34,12 @@ public:
     };
 
     void SpellAdditionalCostData::setupStringsAndTable() {
-        uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
+        SpellAdditionalCostDataRow* row = static_cast<SpellAdditionalCostDataRow*>(this->rows);
+        uintptr_t stringTable = reinterpret_cast<uintptr_t>(this->stringTable);
         for (uint32_t i = 0; i < this->numRows; i++) {
-            SpellAdditionalCostDataRow* row = (SpellAdditionalCostDataRow*)ptr;
-            row->resourceName = reinterpret_cast<char*>(reinterpret_cast<uintptr_t>(this->stringTable) + reinterpret_cast<uintptr_t>(row->resourceName));
+            row->resourceName = reinterpret_cast<char*>(stringTable + reinterpret_cast<uintptr_t>(row->resourceName));
             GlobalDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
-            ptr += this->numColumns;
+            ++row;
         }
     };
 
