@@ -23,7 +23,7 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
 
 LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     if (!ClientLua::IsString(L, 1))
-        ClientLua::DisplayError(L, "Usage: UnitCustomCastbarData(\"unit\")", "");
+        ClientLua::DisplayError(L, "Usage: UnitCustomCastingData(\"unit\")", "");
 
     CGUnit* unitFromName = ClntObjMgr::GetUnitFromName(ClientLua::ToLString(L, 1, 0));
 
@@ -34,7 +34,7 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
 
     if (!unitFromName)
         return 0;
-    LOG_DEBUG << unitFromName->currentCastId;
+
     if (!ClientDB::GetLocalizedRow((void*)0xAD49D0, unitFromName->currentCastId, &buffer))
         return 0;
 
@@ -48,19 +48,15 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_INVERT_CASTBAR))
         invertCastbar = true;
 
-    LOG_DEBUG << hideCastbar;
-    LOG_DEBUG << invertCastbar;
-
     ClientLua::PushNumber(L, spellId);
     ClientLua::PushBoolean(L, hideCastbar);
     ClientLua::PushBoolean(L, invertCastbar);
     return 3;
 }
 
-LUA_FUNCTION(UnitCustomChannelData, (lua_State * L))
-{
+LUA_FUNCTION(UnitCustomChannelData, (lua_State* L)) {
     if (!ClientLua::IsString(L, 1))
-        ClientLua::DisplayError(L, "Usage: UnitCustomCastbarData(\"unit\")", "");
+        ClientLua::DisplayError(L, "Usage: UnitCustomChannelData(\"unit\")", "");
 
     CGUnit* unitFromName = ClntObjMgr::GetUnitFromName(ClientLua::ToLString(L, 1, 0));
 
@@ -71,7 +67,7 @@ LUA_FUNCTION(UnitCustomChannelData, (lua_State * L))
 
     if (!unitFromName)
         return 0;
-    LOG_DEBUG << unitFromName->currentChannelId;
+
     if (!ClientDB::GetLocalizedRow((void*)0xAD49D0, unitFromName->currentChannelId, &buffer))
         return 0;
 
@@ -85,9 +81,6 @@ LUA_FUNCTION(UnitCustomChannelData, (lua_State * L))
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_INVERT_CASTBAR))
         invertCastbar = true;
-
-    LOG_DEBUG << hideCastbar;
-    LOG_DEBUG << invertCastbar;
 
     ClientLua::PushNumber(L, spellId);
     ClientLua::PushBoolean(L, hideCastbar);
