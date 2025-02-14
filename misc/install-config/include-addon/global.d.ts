@@ -58,6 +58,8 @@ declare function base64_encode(str: string): string;
 
 // dll additions
 declare function GetSpellDescription(spellID: number): string;
+declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number]>
+declare function UnitCustomChannelData(unit: string): LuaMultiReturn<[number, number]>
 
 /**
  * Returns the highest expansion id the current account has been flagged for.

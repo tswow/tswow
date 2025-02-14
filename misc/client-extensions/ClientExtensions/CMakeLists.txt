@@ -31,8 +31,13 @@ SET(CLIENT_EXTENSIONS_H
     lua.hpp
     ClientExtensions.h
     SharedDefines.h
+    Util.h
     Characters/CharacterDefines.h
+    Characters/CharacterExtensions.h
     Characters/CharacterFixes.h
+    CustomDBCMgr/CustomDBC.h
+    CustomDBCMgr/CustomDBCMgr.h
+    CustomDBCMgr/DBCDefs/SpellCustomAttributes.h
     Tooltip/TooltipDefines.h
     Tooltip/SpellTooltipExtensions.h
 )
@@ -48,7 +53,11 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
+    Util.cpp
+    Characters/CharacterExtensions.cpp
     Characters/CharacterFixes.cpp
+    CustomDBCMgr/CustomDBC.cpp
+    CustomDBCMgr/CustomDBCMgr.cpp
     CustomLua/SpellFunctions.cpp
     Tooltip/SpellTooltipExtensions.cpp
 )
