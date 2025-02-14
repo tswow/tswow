@@ -22,11 +22,10 @@ public:
     }
 
     void SpellCustomAttributes::setupTable() {
-        uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
+        SpellCustomAttributesRow* row = static_cast<SpellCustomAttributesRow*>(this->rows);
         for (uint32_t i = 0; i < this->numRows; i++) {
-            SpellCustomAttributesRow* row = (SpellCustomAttributesRow*)ptr;
             GlobalDBCMap.addRow("SpellCustomAttributes", row->spellID, *row);
-            ptr += this->numColumns;
+            ++row;
         }
     };
 };
