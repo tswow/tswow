@@ -58,6 +58,7 @@ SET(CLIENT_EXTENSIONS_CPP
     Characters/CharacterFixes.cpp
     CustomDBCMgr/CustomDBC.cpp
     CustomDBCMgr/CustomDBCMgr.cpp
+    CustomLua/CustomDBCFunctions.cpp
     CustomLua/SpellFunctions.cpp
     Tooltip/SpellTooltipExtensions.cpp
 )
