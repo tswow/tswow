@@ -63,6 +63,7 @@ SET(CLIENT_EXTENSIONS_CPP
     CustomDBCMgr/CustomDBCMgr.cpp
     CustomLua/PlayerFunctions.cpp
     CustomLua/SpellFunctions.cpp
+    CustomLua/CustomDBCFunctions.cpp
     Tooltip/SpellTooltipExtensions.cpp
 )
 
