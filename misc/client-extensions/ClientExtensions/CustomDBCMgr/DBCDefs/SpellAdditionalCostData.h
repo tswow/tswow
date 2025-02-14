@@ -14,7 +14,7 @@ public:
     const char* fileName = "DBFilesClient\\SpellAdditionalCostData.dbc";
     SpellAdditionalCostData() : CustomDBC() {
         this->numColumns = 4;
-        this->rowSize = 16;
+        this->rowSize = sizeof(SpellAdditionalCostDataRow);
     }
     
     SpellAdditionalCostData* LoadDB() { 

@@ -82,18 +82,3 @@ void CustomDBC::GetMinMaxIndices() {
     this->maxIndex = *lastRow;   // Last row is the maximum
 }
 
-void* CustomDBC::GetRow(uint32_t rowNum) {
-    if (rowNum < this->minIndex || rowNum > this->maxIndex)
-        return 0;
-
-    uintptr_t* ptr = reinterpret_cast<uintptr_t*>(this->rows);
-
-    for (uint32_t i = 0; i < this->numRows; i++) {
-        if (rowNum == *ptr)
-            break;
-
-        ptr += this->numColumns;
-    }
-
-    return ptr;
-}
