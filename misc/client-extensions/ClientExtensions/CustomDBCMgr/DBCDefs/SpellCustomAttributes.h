@@ -37,7 +37,7 @@ public:
     };
 
     static int handleLua(lua_State* L, int row) {
-        auto* r = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", row);
+        SpellCustomAttributesRow* r = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", row);
         if (r) return r->handleLuaPush(L);
         return 0;
     }

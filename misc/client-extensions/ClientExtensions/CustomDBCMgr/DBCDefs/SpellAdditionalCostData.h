@@ -44,7 +44,7 @@ public:
     };
 
     static int handleLua(lua_State* L, int row) {
-        auto* r = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", row);
+        SpellAdditionalCostDataRow* r = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", row);
         if (r) return r->handleLuaPush(L);
         return 0;
     }
