@@ -1,9 +1,10 @@
 #include "ClientLua.h"
 #include "SharedDefines.h"
+#include "CustomDBCMgr/CustomDBCMgr.h"
+#include "CustomDBCMgr/DBCDefs/SpellCustomAttributes.h"
 #include "Logger.h"
 
 LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
-
     if (ClientLua::IsNumber(L, 1)) {
         uint32_t spellId = ClientLua::GetNumber(L, 1);
         SpellRow buffer;
@@ -18,4 +19,78 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
 
     ClientLua::PushNil(L);
     return 1;
+}
+
+LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
+    if (!ClientLua::IsString(L, 1))
+        ClientLua::DisplayError(L, "Usage: UnitCustomCastbarData(\"unit\")", "");
+
+    CGUnit* unitFromName = ClntObjMgr::GetUnitFromName(ClientLua::ToLString(L, 1, 0));
+
+    SpellRow buffer;
+    float spellId = 0.f;
+    bool hideCastbar = false;
+    bool invertCastbar = false;
+
+    if (!unitFromName)
+        return 0;
+    LOG_DEBUG << unitFromName->currentCastId;
+    if (!ClientDB::GetLocalizedRow((void*)0xAD49D0, unitFromName->currentCastId, &buffer))
+        return 0;
+
+    spellId = static_cast<float>(buffer.m_ID);
+
+    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", buffer.m_ID);
+
+    if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
+        hideCastbar = true;
+
+    if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_INVERT_CASTBAR))
+        invertCastbar = true;
+
+    LOG_DEBUG << hideCastbar;
+    LOG_DEBUG << invertCastbar;
+
+    ClientLua::PushNumber(L, spellId);
+    ClientLua::PushBoolean(L, hideCastbar);
+    ClientLua::PushBoolean(L, invertCastbar);
+    return 3;
+}
+
+LUA_FUNCTION(UnitCustomChannelData, (lua_State * L))
+{
+    if (!ClientLua::IsString(L, 1))
+        ClientLua::DisplayError(L, "Usage: UnitCustomCastbarData(\"unit\")", "");
+
+    CGUnit* unitFromName = ClntObjMgr::GetUnitFromName(ClientLua::ToLString(L, 1, 0));
+
+    SpellRow buffer;
+    float spellId = 0.f;
+    bool hideCastbar = 0.f;
+    bool invertCastbar = 0.f;
+
+    if (!unitFromName)
+        return 0;
+    LOG_DEBUG << unitFromName->currentChannelId;
+    if (!ClientDB::GetLocalizedRow((void*)0xAD49D0, unitFromName->currentChannelId, &buffer))
+        return 0;
+
+    spellId = static_cast<float>(buffer.m_ID);
+
+    SpellCustomAttributesRow* customAttributesRow =
+        GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", buffer.m_ID);
+
+    if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
+        hideCastbar = true;
+
+    if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_INVERT_CASTBAR))
+        invertCastbar = true;
+
+    LOG_DEBUG << hideCastbar;
+    LOG_DEBUG << invertCastbar;
+
+    ClientLua::PushNumber(L, spellId);
+    ClientLua::PushBoolean(L, hideCastbar);
+    ClientLua::PushBoolean(L, invertCastbar);
+    return 3;
 }
