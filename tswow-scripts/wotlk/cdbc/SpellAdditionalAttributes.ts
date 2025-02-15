@@ -21,15 +21,13 @@ import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCKeyCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
-import fs from "fs";
-import { CDBCGenerator } from './CDBCGenerator'
 
  /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
   */
- export class SpellCustomAttributesRow extends DBCRow<SpellCustomAttributesCreator,SpellCustomAttributesQuery> {
+ export class SpellAdditionalAttributesRow extends DBCRow<SpellAdditionalAttributesCreator,SpellAdditionalAttributesQuery> {
     /**
      * Primary Key
      *
@@ -48,7 +46,7 @@ import { CDBCGenerator } from './CDBCGenerator'
      *
      * Cloned rows are automatically added at the end of the DBC file.
      */
-    clone(SpellID : int, c? : SpellCustomAttributesCreator) : this {
+    clone(SpellID : int, c? : SpellAdditionalAttributesCreator) : this {
         return this.cloneInternal([SpellID],c);
     }
  }
@@ -56,14 +54,14 @@ import { CDBCGenerator } from './CDBCGenerator'
  /**
  * Used for object creation (Don't comment these)
  */
-export type SpellCustomAttributesCreator = {
+export type SpellAdditionalAttributesCreator = {
     CustomAttribute0?: uint
 }
 
 /**
  * Used for queries (Don't comment these)
  */
-export type SpellCustomAttributesQuery = {
+export type SpellAdditionalAttributesQuery = {
     SpellID? : Relation<int>
     CustomAttribute0? : Relation<uint>
 }
@@ -73,20 +71,20 @@ export type SpellCustomAttributesQuery = {
  * - Add file comments to DBCFiles.ts
  */
 
-export class SpellCustomAttributesCDBCFile extends CDBCFile<
-    SpellCustomAttributesCreator,
-    SpellCustomAttributesQuery,
-    SpellCustomAttributesRow> {
+export class SpellAdditionalAttributesCDBCFile extends CDBCFile<
+    SpellAdditionalAttributesCreator,
+    SpellAdditionalAttributesQuery,
+    SpellAdditionalAttributesRow> {
     protected defaultRow = [0, 0];
 
     constructor() {
-        super('SpellCustomAttributes',(t,b,o)=> new SpellCustomAttributesRow(t,b,o))
+        super('SpellAdditionalAttributes',(t,b,o)=> new SpellAdditionalAttributesRow(t,b,o))
     }
-    /** Loads a new SpellCustomAttributes.dbc from a file. */
-    static read(path: string): SpellCustomAttributesCDBCFile {
-        return new SpellCustomAttributesCDBCFile().read(path)
+    /** Loads a new SpellAdditionalAttributes.dbc from a file. */
+    static read(path: string): SpellAdditionalAttributesCDBCFile {
+        return new SpellAdditionalAttributesCDBCFile().read(path)
     }
-    add(SpellID : int, c? : SpellCustomAttributesCreator) : SpellCustomAttributesRow {
+    add(SpellID : int, c? : SpellAdditionalAttributesCreator) : SpellAdditionalAttributesRow {
         return this.makeRow(0).clone(SpellID,c)
     }
     findByID(id : number) {

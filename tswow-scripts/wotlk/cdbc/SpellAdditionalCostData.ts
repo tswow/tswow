@@ -21,8 +21,6 @@ import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
-import fs from "fs";
-import { CDBCGenerator } from './CDBCGenerator'
 
  /**
   * Main row definition

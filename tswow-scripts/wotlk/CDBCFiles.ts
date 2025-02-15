@@ -17,17 +17,17 @@
 /* tslint:disable */
 import { CDBCFile } from "./cdbc/CDBCFile"
 import { SpellAdditionalCostDataCDBCFile } from "./cdbc/SpellAdditionalCostData";
-import { SpellCustomAttributesCDBCFile } from "./cdbc/SpellCustomAttributes";
+import { SpellAdditionalAttributesCDBCFile } from "./cdbc/SpellAdditionalAttributes";
 export const CDBC = {
     SpellAdditionalCostData : new SpellAdditionalCostDataCDBCFile(),
-    SpellCustomAttributes : new SpellCustomAttributesCDBCFile(),
+    SpellAdditionalAttributes : new SpellAdditionalAttributesCDBCFile(),
 }
 
 export const CDBCLoader = {
     SpellAdditionalCostData : (path: string) => SpellAdditionalCostDataCDBCFile.read(path),
-    SpellCustomAttributes : (path: string) => SpellCustomAttributesCDBCFile.read(path),
+    SpellAdditionalAttributes : (path: string) => SpellAdditionalAttributesCDBCFile.read(path),
 }
 
-export type CDBCNames = "SpellAdditionalCostData" | "SpellCustomAttributes"
+export type CDBCNames = "SpellAdditionalCostData" | "SpellAdditionalAttributes"
 
 export const CDBCFiles : CDBCFile<any,any,any>[] = Object.values(CDBC);
