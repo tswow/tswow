@@ -14,7 +14,7 @@ struct SpellCustomAttributesRow {
 
 class SpellCustomAttributes : public CustomDBC {
 public:
-    const char* fileName = "DBFilesClient\\SpellCustomAttributes.dbc";
+    const char* fileName = "DBFilesClient\\SpellCustomAttributes.cdbc";
     SpellCustomAttributes() {
         this->numColumns = 2;
         this->rowSize = sizeof(SpellCustomAttributesRow);

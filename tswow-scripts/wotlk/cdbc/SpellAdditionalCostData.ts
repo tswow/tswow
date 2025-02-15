@@ -18,16 +18,18 @@
 import { int, uint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
 import { PrimaryKey } from '../../data/table/PrimaryKey'
-import { DBCKeyCell, DBCUIntCell } from '../../data/dbc/DBCCell'
-import { DBCFile } from '../../data/dbc/DBCFile'
+import { DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
+import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import fs from "fs";
+import { CDBCGenerator } from './CDBCGenerator'
 
  /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
   */
- export class SpellCustomAttributesRow extends DBCRow<SpellCustomAttributesCreator,SpellCustomAttributesQuery> {
+export class SpellAdditionalCostDataRow extends DBCRow<SpellAdditionalCostDataCreator,SpellAdditionalCostDataQuery> {
     /**
      * Primary Key
      *
@@ -39,50 +41,65 @@ import { DBCRow } from '../../data/dbc/DBCRow'
     /**
      * Resource name, this is what's showing in spell tooltip in cost row
      */
-    get CustomAttribute0() { return new DBCUIntCell(this,this.buffer,this.offset+4) }
+    get ResourceName() { return new DBCStringCell(this,this.buffer,this.offset+4) }
+
+    /**
+     * Cost, uint, setting it to 0 causes it to not display in spell tooltip even if id is added to this dbc
+     */
+    get Cost() { return new DBCUIntCell(this,this.buffer,this.offset+8) }
+
+    /**
+     * Flags, 0 or 1, if 1, allows tooltip to display plural name if cost is != 1
+     */
+    get Flags() { return new DBCUIntCell(this,this.buffer,this.offset+12) }
 
     /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added at the end of the DBC file.
      */
-    clone(SpellID : int, c? : SpellCustomAttributesCreator) : this {
+    clone(SpellID : int, c? : SpellAdditionalCostDataCreator) : this {
         return this.cloneInternal([SpellID],c);
     }
- }
+}
 
- /**
+/**
  * Used for object creation (Don't comment these)
  */
-export type SpellCustomAttributesCreator = {
-    CustomAttribute0?: uint
+export type SpellAdditionalCostDataCreator = {
+    ResourceName?: string
+    Cost?: uint
+    Flags?: uint
 }
 
 /**
  * Used for queries (Don't comment these)
  */
-export type SpellCustomAttributesQuery = {
+export type SpellAdditionalCostDataQuery = {
     SpellID? : Relation<int>
-    CustomAttribute0? : Relation<uint>
+    ResourceName? : Relation<string>
+    Cost? : Relation<uint>
+    Flags? : Relation<uint>
 }
 
 /**
  * Table definition (specifies arguments to 'add' function)
  * - Add file comments to DBCFiles.ts
  */
+export class SpellAdditionalCostDataCDBCFile extends CDBCFile<
+    SpellAdditionalCostDataCreator,
+    SpellAdditionalCostDataQuery,
+    SpellAdditionalCostDataRow> {
+    protected defaultRow = [0, "Unused", 0, 0];
 
-export class SpellCustomAttributesDBCFile extends DBCFile<
-    SpellCustomAttributesCreator,
-    SpellCustomAttributesQuery,
-    SpellCustomAttributesRow> {
     constructor() {
-        super('SpellCustomAttributes',(t,b,o)=> new SpellCustomAttributesRow(t,b,o))
+        super('SpellAdditionalCostData',(t,b,o)=> new SpellAdditionalCostDataRow(t,b,o))
     }
     /** Loads a new SpellAdditionalCostData.dbc from a file. */
-    static read(path: string): SpellCustomAttributesDBCFile {
-        return new SpellCustomAttributesDBCFile().read(path)
+    static read(path: string): SpellAdditionalCostDataCDBCFile {
+        return new SpellAdditionalCostDataCDBCFile().read(path)
     }
-    add(SpellID : int, c? : SpellCustomAttributesCreator) : SpellCustomAttributesRow {
+    add(SpellID : int, c? : SpellAdditionalCostDataCreator) : SpellAdditionalCostDataRow {
         return this.makeRow(0).clone(SpellID,c)
     }
     findByID(id : number) {

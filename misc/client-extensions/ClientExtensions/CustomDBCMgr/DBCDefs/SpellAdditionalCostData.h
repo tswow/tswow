@@ -19,7 +19,7 @@ struct SpellAdditionalCostDataRow {
 
 class SpellAdditionalCostData : public CustomDBC {
 public:
-    const char* fileName = "DBFilesClient\\SpellAdditionalCostData.dbc";
+    const char* fileName = "DBFilesClient\\SpellAdditionalCostData.cdbc";
     SpellAdditionalCostData() : CustomDBC() {
         this->numColumns = 4;
         this->rowSize = sizeof(SpellAdditionalCostDataRow);
