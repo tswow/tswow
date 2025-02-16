@@ -315,7 +315,9 @@ export abstract class ConfigFile {
             if(!property) return; // if we put SECTION on a non-property
             Object.defineProperty(this,property.fieldName,{
                 get: ()=>this.findProperty(property.fieldName),
-                set: ()=>{}
+                set: ()=>{},
+                configurable: true,
+                enumerable: true
             })
             if(curSection === undefined) {
                 throw new Error(`Property ${x} is not in a section`)

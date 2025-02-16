@@ -135,7 +135,7 @@ async function main() {
                         if(profileScripts()) {
                             profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
                         }
-                        deasync((callback)=>applyStage(setups).then(callback))();
+                        syncApplyStage(setups);
                     }
 
                 })
@@ -146,33 +146,33 @@ async function main() {
     }
 
     cur_stage = 'READ'
-    deasync((callback)=>applyStage(reads).then(callback))();
+    syncApplyStage(reads);
     cur_stage = 'WRITE'
-    deasync((callback)=>applyStage(writes).then(callback))();
+    syncApplyStage(writes);
     cur_stage = 'PATCH'
-    deasync((callback)=>applyStage(patches).then(callback))();
+    syncApplyStage(patches);
     cur_stage = 'FINISH'
-    deasync((callback)=>applyStage(finishes).then(callback))();
+    syncApplyStage(finishes);
 
     if(BuildArgs.WRITE_CLIENT) {
         _writeLUAXML();
         time(`Wrote LUAXML`);
     }
     cur_stage = 'LUAXML'
-    deasync((callback)=>applyStage(luaxmls).then(callback))();
+    syncApplyStage(luaxmls);
     dataset.luaxml.copy(BuildArgs.CLIENT_PATCH_DIR,false);
 
     __internal_wotlk_applyDeletes();
 
     cur_stage = 'SORT'
     if(!BuildArgs.READ_ONLY) {
-        deasync((callback)=>applyStage(sorts).then(callback))();
+        syncApplyStage(sorts);
     }
     time(`Executed scripts`);
 
     deasync((callback)=>
     {
-        __internal_wotlk_save().then(callback);
+        __internal_wotlk_save().then(result => callback(null, result)) // Pass result properly
     })()
     SqlConnection.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
 
@@ -198,6 +198,14 @@ async function main() {
     }
 
     process.exit(0)
+}
+
+function syncApplyStage(setups: any) {
+    return deasync((callback: (err: any, result?: any) => void) => {
+        applyStage(setups)
+            .then(result => callback(null, result)) // Pass result properly
+            .catch(err => callback(err)); // Handle errors
+    })();
 }
 
 /**

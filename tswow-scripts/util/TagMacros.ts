@@ -158,7 +158,11 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
     if(checks.length > 0) {
         const settings = NodeConfig.DatabaseSettings('world',datasetName)
         const connection = mysql.createConnection(settings);
-        const syncQuery = deasync(connection.query.bind(connection))
+        const syncQuery = deasync((sql: string, callback: (err: any, result: any) => void) => {
+            connection.query(sql, (err, result) => {
+                callback(err, result);
+            });
+        });
         const errors: string[] = []
 
         checks.forEach(({table,cols})=>{
