@@ -33,6 +33,11 @@ enum Field : uint32_t {
     MAX_RUNIC_POWER         = 33,
 };
 
+enum FrameXMLEvent : uint32_t {
+    EVENT_ACTIONBAR_SLOT_CHANGED                = 176,
+    EVENT_PLAYER_TALENT_UPDATE                  = 625,
+};
+
 enum GameError : uint32_t {
     GERR_LEARN_SPELL_S      = 59,
     GERR_LEARN_ABILITY_S    = 60,
@@ -316,6 +321,10 @@ namespace ClntObjMgr {
 namespace FrameScript {
     CLIENT_FUNCTION(GetText, 0x819D40, __cdecl, char*, (char*, int, int))
     CLIENT_FUNCTION(SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
+}
+
+namespace ClientPacket {
+    CLIENT_FUNCTION(MSG_SET_ACTION_BUTTON, 0x5AA390, __cdecl, void, (uint32_t, bool, bool))
 }
 
 namespace SpellParser {
