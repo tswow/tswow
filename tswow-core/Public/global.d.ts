@@ -3390,10 +3390,13 @@ declare interface TSCreature extends TSUnit {
     LearnPetSpell(spell: uint32): void;
 }
 
-// declare interface TSArea extends TSEntityProvider {
-//     IsNull(): bool
-//     GetId(): TSNumber<uint32>
-// }
+declare interface TSArea extends TSEntityProvider {
+    IsNull(): bool
+    GetId(): TSNumber<uint32>
+    GetParent(): TSArea
+    GetPlayers(): TSArray<TSPlayer>
+    GetMap(): TSMap
+}
 
 declare interface TSAura extends TSEntityProvider {
     IsNull() : bool
@@ -9581,24 +9584,32 @@ declare namespace _hidden {
         OnSend(id: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
     }
 
-    export class Zone {
-        OnUpdate(callback: ( diff: TSNumber<uint32> )=>void);
-        OnUpdate(id: EventID, callback: ( diff: TSNumber<uint32>) =>void);
+    export class Area {
+        OnUpdate(callback: (area: TSArea, diff: TSNumber<uint32> )=>void);
+        OnUpdate(id: EventID, callback: (area: TSArea, diff: TSNumber<uint32>) =>void);
 
-        OnPlayerEnter(callback: (player: TSPlayer)=>void);
-        OnPlayerEnter(id: EventID, callback: (player: TSPlayer)=>void);
+        OnPlayerEnter(callback: (area: TSArea, player: TSPlayer)=>void);
+        OnPlayerEnter(id: EventID, callback: (area: TSArea, player: TSPlayer)=>void);
+        OnPlayerLeave(callback: (area: TSArea, player: TSPlayer)=>void);
+        OnPlayerLeave(id: EventID, callback: (area: TSArea, player: TSPlayer)=>void);
+        OnPlayerDied(callback: (area: TSArea, player: TSPlayer, TSUnit: killer)=>void);
+        OnPlayerDied(id: EventID, callback: (area: TSArea, player: TSPlayer, TSUnit: killer)=>void);
 
-        OnPlayerExit(callback: (player: TSPlayer)=>void);
-        OnPlayerExit(id: EventID, callback: (player: TSPlayer)=>void);
+        OnCreatureCreate(callback: (area: TSArea, cre: TSCreature)=>void);
+        OnCreatureCreate(id: EventID, callback: (area: TSArea, cre: TSCreature)=>void);
+        OnCreatureRemove(callback: (area: TSArea, cre: TSCreature)=>void);
+        OnCreatureRemove(id: EventID, callback: (area: TSArea, cre: TSCreature)=>void);
+        OnCreatureRespawn(callback: (area: TSArea, cre: TSCreature)=>void);
+        OnCreatureRespawn(id: EventID, callback: (area: TSArea, cre: TSCreature)=>void);
+        OnCreatureDied(callback: (area: TSArea, cre: TSCreature, killer: TSUnit)=>void);
+        OnCreatureDied(id: EventID, callback: (area: TSArea, cre: TSCreature, killer: TSUnit)=>void);
 
-        OnCreatureDied(callback: (victim: TSCreature, killer: TSPlayer)=>void);
-        OnCreatureDied(id: EventID, callback: (victim: TSCreature, killer: TSPlayer)=>void);
-
-        OnCreatureRespawn(callback: (unit: TSCreature)=>void);
-        OnCreatureRespawn(id: EventID, callback: (unit: TSCreature)=>void);
-
-        OnGOBUsed(callback: (what: TSGameObject, by: TSUnit)=>void);
-        OnGOBUsed(id: EventID, callback: (what: TSGameObject, by: TSUnit)=>void);
+        OnGameObjectCreate(callback: (area: TSArea, go: TSGameObject)=>void);
+        OnGameObjectCreate(id: EventID, callback: (area: TSArea, go: TSGameObject)=>void);
+        OnGameObjectRemove(callback: (area: TSArea, go: TSGameObject)=>void);
+        OnGameObjectRemove(id: EventID, callback: (area: TSArea, go: TSGameObject)=>void);
+        OnGameObjectUsed(callback: (area: TSArea, go: TSGameObject, by: TSUnit)=>void);
+        OnGameObjectUsed(id: EventID, callback: (area: TSArea, go: TSGameObject, by: TSUnit)=>void);
     }
 
     export class GameEvent<T> {
@@ -9886,7 +9897,7 @@ declare class TSEvents {
     Condition: _hidden.Condition<void>;
     Instance: _hidden.Instance<void>;
     CustomPacket: _hidden.CustomPacket;
-    Zone: _hidden.Zone;
+    Area: _hidden.Area;
     WorldPacket: _hidden.WorldPacket;
     Unit: _hidden.Unit;
     Quest: _hidden.Quest<void>;
@@ -9913,7 +9924,7 @@ declare class TSEvents {
     static Condition: _hidden.Condition<void>;
     static Instance: _hidden.Instance<void>;
     static CustomPacket: _hidden.CustomPacket;
-    static Zone: _hidden.Zone;
+    static Area: _hidden.Area;
     static WorldPacket: _hidden.WorldPacket;
     static Unit: _hidden.Unit;
     static Quest: _hidden.Quest<void>;

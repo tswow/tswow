@@ -503,13 +503,18 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnReceive);
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnSend);
 
-    auto zone_events = state.new_usertype<TSEvents::ZoneEvents>("ZoneEvents");
-    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnUpdate);
-    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnPlayerEnter);
-    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnPlayerExit);
-    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnCreatureDied);
-    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnCreatureRespawn);
-    LUA_MAPPED_HANDLE(zone_events, ZoneEvents, OnGOBUsed);
+    auto area_events = state.new_usertype<TSEvents::AreaEvents>("AreaEvents");
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnUpdate);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnPlayerEnter);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnPlayerLeave);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnPlayerDied);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnCreatureCreate);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnCreatureRemove);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnCreatureRespawn);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnCreatureDied);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnGameObjectCreate);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnGameObjectRemove);
+    LUA_MAPPED_HANDLE(area_events, AreaEvents, OnGameObjectUsed);
 
     lua_events["World"] = &TSEvents::World;
     lua_events["Unit"] = &TSEvents::Unit;

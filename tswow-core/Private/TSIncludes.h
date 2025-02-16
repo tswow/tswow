@@ -25,6 +25,7 @@
 #define eAccountMgr             (sAccountMgr)
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
+#define eAreaMgr                (sAreaMgr)
 #define eObjectAccessor()       ObjectAccessor::
 #define REGEN_TIME_FULL
 

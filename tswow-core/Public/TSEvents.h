@@ -42,6 +42,7 @@
 #include "TSDamageInfo.h"
 #include "TSSpell.h"
 #include "TSWeather.h"
+#include "TSArea.h"
 
 #include <cstdint>
 
@@ -1017,18 +1018,23 @@ struct TSEvents
         ID_EVENT(OnSend, TSWorldPacket, TSPlayer)
     } WorldPacket;
 
-    struct ZoneEvents : public TSMappedEventsDirect {
-        EVENTS_HEADER(ZoneEvents)
-        ID_EVENT(OnUpdate, TSNumber<uint32> diff)
-        ID_EVENT(OnPlayerEnter, TSPlayer)
-        ID_EVENT(OnPlayerExit, TSPlayer)
+    struct AreaEvents : public TSMappedEventsDirect {
+        EVENTS_HEADER(AreaEvents)
+        ID_EVENT(OnUpdate, TSArea, TSNumber<uint32> diff)
 
-        ID_EVENT(OnCreatureRespawn, TSCreature)
-        ID_EVENT(OnCreatureDied, TSCreature, TSPlayer)
+        ID_EVENT(OnPlayerEnter, TSArea, TSPlayer)
+        ID_EVENT(OnPlayerLeave, TSArea, TSPlayer)
+        ID_EVENT(OnPlayerDied, TSArea, TSPlayer, TSUnit)
 
-        ID_EVENT(OnGOBSpawn, TSUnit, TSUnit)
-        ID_EVENT(OnGOBUsed, TSGameObject, TSUnit)
-    } Zone;
+        ID_EVENT(OnCreatureCreate, TSArea, TSCreature)
+        ID_EVENT(OnCreatureRemove, TSArea, TSCreature)
+        ID_EVENT(OnCreatureRespawn, TSArea, TSCreature)
+        ID_EVENT(OnCreatureDied, TSArea, TSCreature, TSUnit)
+
+        ID_EVENT(OnGameObjectCreate, TSArea, TSGameObject)
+        ID_EVENT(OnGameObjectRemove, TSArea, TSGameObject)
+        ID_EVENT(OnGameObjectUsed, TSArea, TSGameObject, TSUnit)
+    } Area;
 #if TRINITY
     struct TestEvents {
         TestEvents* operator->() { return this; }
