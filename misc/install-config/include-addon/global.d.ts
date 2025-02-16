@@ -57,14 +57,24 @@ declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 //dll additions
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
-declare function GetSpellDescription(spellID:number): string;
+
+declare function FindSpellActionBarSlot(spellID: number): LuaMultiReturn<[...number]>;
+declare function FireActionBarSlotUpdateEvent(): any;
+declare function ReplaceActionBarSpell(oldSpellID: number, newSpellID: number): any;
+declare function SetSpellInActionBarSlot(spellID: number, slotID: number): any;
+
+declare function FireTalentUpdateEvent(): any;
 declare function GetActiveSpec(): number;
 declare function SetActiveSpec(specID: number): any;
-declare function FireTalentUpdateEvent(): any;
+
+declare function GetShapeshiftFormID(): number;
+
+declare function GetSpellDescription(spellID:number): string;
+declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
+
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
-declare function GetShapeshiftFormID(): number;
-declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
+
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
 declare function UnitCustomChannelData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
