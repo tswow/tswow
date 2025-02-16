@@ -1,8 +1,8 @@
 #include "SpellTooltipExtensions.h"
 #include "Character/CharacterDefines.h"
-#include "CustomDBCMgr/CustomDBCMgr.h"
-#include "CustomDBCMgr/DBCDefs/SpellAdditionalCostData.h"
-#include "CustomDBCMgr/DBCDefs/SpellAdditionalAttributes.h"
+#include "CDBCMgr/CDBCMgr.h"
+#include "CDBCMgr/CDBCDefs/SpellAdditionalCostData.h"
+#include "CDBCMgr/CDBCDefs/SpellAdditionalAttributes.h"
 #include "windows.h"
 #include "Logger.h"
 #include <algorithm>

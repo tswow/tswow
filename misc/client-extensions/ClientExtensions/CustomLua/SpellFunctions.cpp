@@ -1,7 +1,7 @@
 #include "ClientLua.h"
 #include "SharedDefines.h"
-#include "CustomDBCMgr/CustomDBCMgr.h"
-#include "CustomDBCMgr/DBCDefs/SpellAdditionalAttributes.h"
+#include "CDBCMgr/CDBCMgr.h"
+#include "CDBCMgr/CDBCDefs/SpellAdditionalAttributes.h"
 #include "Logger.h"
 
 LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {

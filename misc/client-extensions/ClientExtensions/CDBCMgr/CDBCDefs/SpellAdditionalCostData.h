@@ -1,6 +1,6 @@
 #pragma optimize("", off)
-#include "CustomDBCMgr/CustomDBC.h"
-#include "CustomDBCMgr/CustomDBCMgr.h"
+#include "CDBCMgr/CDBC.h"
+#include "CDBCMgr/CDBCMgr.h"
 
 struct SpellAdditionalCostDataRow {
     int spellID;
@@ -17,19 +17,19 @@ struct SpellAdditionalCostDataRow {
     }
 };
 
-class SpellAdditionalCostData : public CustomDBC {
+class SpellAdditionalCostData : public CDBC {
 public:
     const char* fileName = "DBFilesClient\\SpellAdditionalCostData.cdbc";
-    SpellAdditionalCostData() : CustomDBC() {
+    SpellAdditionalCostData() : CDBC() {
         this->numColumns = sizeof(SpellAdditionalCostDataRow)/4;
         this->rowSize = sizeof(SpellAdditionalCostDataRow);
     }
     
     SpellAdditionalCostData* LoadDB() { 
         GlobalDBCMap.addDBC("SpellAdditionalCostData");
-        CustomDBC::LoadDB(this->fileName);
+        CDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStringsAndTable();
-        CustomDBCMgr::addDBCLuaHandler("SpellAdditionalCostData",  SpellAdditionalCostData::handleLua);
+        CDBCMgr::addDBCLuaHandler("SpellAdditionalCostData",  SpellAdditionalCostData::handleLua);
         return this;
     };
 

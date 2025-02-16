@@ -1,5 +1,5 @@
 #pragma optimize("", off)
-#include "CustomDBCMgr/CustomDBC.h"
+#include "CDBCMgr/CDBC.h"
 
 struct SpellAdditionalAttributesRow {
     int spellID;
@@ -12,7 +12,7 @@ struct SpellAdditionalAttributesRow {
     }
 };
 
-class SpellAdditionalAttributes : public CustomDBC {
+class SpellAdditionalAttributes : public CDBC {
 public:
     const char* fileName = "DBFilesClient\\SpellAdditionalAttributes.cdbc";
     SpellAdditionalAttributes() {
@@ -22,9 +22,9 @@ public:
 
     SpellAdditionalAttributes* LoadDB() {
         GlobalDBCMap.addDBC("SpellAdditionalAttributes");
-        CustomDBC::LoadDB(this->fileName);
+        CDBC::LoadDB(this->fileName);
         SpellAdditionalAttributes::setupTable();
-        CustomDBCMgr::addDBCLuaHandler("SpellAdditionalAttributes",  SpellAdditionalAttributes::handleLua);
+        CDBCMgr::addDBCLuaHandler("SpellAdditionalAttributes",  SpellAdditionalAttributes::handleLua);
         return this;
     }
 
