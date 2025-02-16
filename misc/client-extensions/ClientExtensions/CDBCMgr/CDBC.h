@@ -4,9 +4,9 @@
 #include <string>
 #include "Logger.h"
 
-class CustomDBC {
+class CDBC {
 public:
-    CustomDBC() {
+    CDBC() {
         isLoaded    = false;
         numRows     = 0;
         minIndex    = 0;
@@ -19,10 +19,10 @@ public:
     void* rows;
     uint32_t numRows;
 
-    CustomDBC* LoadDB(const char* filename);
+    CDBC* LoadDB(const char* filename);
     void UnloadDB();
     void GetMinMaxIndices();
-    virtual ~CustomDBC() = default;
+    virtual ~CDBC() = default;
 private:
     bool isLoaded;
     uint32_t minIndex;

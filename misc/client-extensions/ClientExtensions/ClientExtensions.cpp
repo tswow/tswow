@@ -1,10 +1,10 @@
 #include "windows.h"
 #include "ClientExtensions.h"
-#include "CustomDBCMgr/CustomDBCMgr.h"
+#include "CDBCMgr/CDBCMgr.h"
 #include "Logger.h"
 
 void ClientExtensions::initialize() {
-    CustomDBCMgr::Load();
+    CDBCMgr::Load();
     LOG_INFO << "Custom DBCs loaded";
     CharacterFixes::CharacterCreationFixes();
     LOG_INFO << "Character creation fixes applied";

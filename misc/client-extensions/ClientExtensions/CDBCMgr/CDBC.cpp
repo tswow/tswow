@@ -1,7 +1,7 @@
-#include "CustomDBC.h"
+#include "CDBC.h"
 #include "Logger.h"
 
-CustomDBC* CustomDBC::LoadDB(const char* filename) {
+CDBC* CDBC::LoadDB(const char* filename) {
     uint32_t Buffer = 0;
     void* FileBlock = 0;
     int v26;
@@ -59,14 +59,14 @@ CustomDBC* CustomDBC::LoadDB(const char* filename) {
     return this;
 }
 
-void CustomDBC::UnloadDB() {
+void CDBC::UnloadDB() {
     if (this->rows)
         SMem::Free(this->rows, "delete[]", -1, 0);
 
     if (this->stringTable)
         SMem::Free(this->stringTable, "delete[]", -1, 0);
 
-    //TODO: expose the CustomDBC() constructor to wipe here?
+    //TODO: expose the CDBC() constructor to wipe here?
     this->rows = 0;
     this->stringTable = 0;
     this->numRows = 0;
@@ -75,7 +75,7 @@ void CustomDBC::UnloadDB() {
     this->isLoaded = false;
 };
 
-void CustomDBC::GetMinMaxIndices() {
+void CDBC::GetMinMaxIndices() {
     uintptr_t* firstRow = reinterpret_cast<uintptr_t*>(this->rows);
     uintptr_t* lastRow = firstRow + ((numRows - 1) * this->numColumns);
     this->minIndex = *firstRow;  // First row is the minimum

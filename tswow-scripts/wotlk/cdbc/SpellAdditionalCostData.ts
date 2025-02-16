@@ -19,7 +19,7 @@ import { int, uint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
 import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
-import { DBCFile } from '../../data/dbc/DBCFile'
+import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 
  /**
@@ -84,16 +84,18 @@ export type SpellAdditionalCostDataQuery = {
  * Table definition (specifies arguments to 'add' function)
  * - Add file comments to DBCFiles.ts
  */
-export class SpellAdditionalCostDataDBCFile extends DBCFile<
+export class SpellAdditionalCostDataCDBCFile extends CDBCFile<
     SpellAdditionalCostDataCreator,
     SpellAdditionalCostDataQuery,
     SpellAdditionalCostDataRow> {
+    protected defaultRow = [0, "Unused", 0, 0];
+
     constructor() {
         super('SpellAdditionalCostData',(t,b,o)=> new SpellAdditionalCostDataRow(t,b,o))
     }
     /** Loads a new SpellAdditionalCostData.dbc from a file. */
-    static read(path: string): SpellAdditionalCostDataDBCFile {
-        return new SpellAdditionalCostDataDBCFile().read(path)
+    static read(path: string): SpellAdditionalCostDataCDBCFile {
+        return new SpellAdditionalCostDataCDBCFile().read(path)
     }
     add(SpellID : int, c? : SpellAdditionalCostDataCreator) : SpellAdditionalCostDataRow {
         return this.makeRow(0).clone(SpellID,c)
