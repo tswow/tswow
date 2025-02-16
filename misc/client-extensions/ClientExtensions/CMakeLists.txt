@@ -31,8 +31,10 @@ SET(CLIENT_EXTENSIONS_H
     FSRoot.h
     lua.hpp
     ClientExtensions.h
-    Character/CharacterFixes.h
+    Util.h
     Character/CharacterDefines.h
+    Character/CharacterExtensions.h
+    Character/CharacterFixes.h
     CustomDBCMgr/CustomDBC.h
     CustomDBCMgr/CustomDBCMgr.h
     CustomDBCMgr/DBCDefs/SpellAdditionalCostData.h
@@ -52,14 +54,17 @@ SET(CLIENT_EXTENSIONS_CPP
     ClientNetwork.cpp
     ClientMPQ.cpp
     ClientExtensions.cpp
+    Util.cpp
+    Camera/CVar.cpp
+    Camera/WorldSpace.cpp
+    Character/CharacterExtensions.cpp
     Character/CharacterFixes.cpp
     CustomDBCMgr/CustomDBC.cpp
     CustomDBCMgr/CustomDBCMgr.cpp
-    Tooltip/SpellTooltipExtensions.cpp
-    Camera/CVar.cpp
-    Camera/WorldSpace.cpp
     CustomLua/PlayerFunctions.cpp
     CustomLua/SpellFunctions.cpp
+    CustomLua/CustomDBCFunctions.cpp
+    Tooltip/SpellTooltipExtensions.cpp
 )
 
 SET(CLIENT_EXTENSIONS_LUA

@@ -19,86 +19,65 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
     DWORD flOldProtect = 0;
 
     // change pointer to table with variables
-    OverwriteUInt32AtAddress(0x576B63, reinterpret_cast<uint32_t>(&spellVariables));
+    Util::OverwriteUInt32AtAddress(0x576B63, reinterpret_cast<uint32_t>(&spellVariables));
     // update number of entries value
-    OverwriteUInt32AtAddress(0x576B7C, (sizeof(spellVariables) / 4));
+    Util::OverwriteUInt32AtAddress(0x576B7C, (sizeof(spellVariables) / 4));
     // copy table of pointers from address to spellVariables vector and add new entries
     memcpy(&spellVariables, (const void*)0xACE8F8, sizeof(uint32_t) * 140);
     SetNewVariablePointers();
     // change pointer of GetVariableTableValue to pointer to extended function
-    OverwriteUInt32AtAddress(0x578E8B, CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8F));
+    Util::OverwriteUInt32AtAddress(0x578E8B, Util::CalculateAddress(reinterpret_cast<uint32_t>(&GetVariableValueEx), 0x578E8F));
 }
-
-// Assembly patch bytes
-constexpr uint8_t PATCH_BYTES[34] = {
-    0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
-    0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
-    0x00, 0x00
-};
-    // patch memory to skip existing code printing rune display and call dll function instead
-    // used code:               // some explainations may not be really correct but whatever
-    // lea ebx, [ebp - 0x248]   // ebp - 584 = address in memory of m_SpellClassSet of currently checked spell 
-    // push ebx                 // spellFamily
-    // lea eax, [esi];          // esi = address of used SpellRuneCost.dbc row
-    // push eax;                // row
-    // lea ecx, [ebp - 0x160];  // ebp - 352 = address where loaded string is stored
-    // push ecx;                // buff
-    // lea edx, [ebp - 0xE0];   // ebp - 224 = address where tooltip text is copied char by char
-    // push edx;                // dest
-    // call function;           // SetRuneCostTooltip(dest, buff, row, spellFamily)
-    // jmp loc_623CD9;          // skip remaining code to loc_623CD9
 
 void TooltipExtensions::SpellTooltipRuneCostExtension() {
-    DWORD oldProtect;
-    // Change memory protection to allow writing
-    VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, PAGE_EXECUTE_READWRITE, &oldProtect);
-    // Apply the patch bytes
-    memcpy(reinterpret_cast<void*>(0x623C71), PATCH_BYTES, sizeof(PATCH_BYTES));
-    // Calculate and write the relative address for the function call
-    *reinterpret_cast<uint32_t*>(0x623C8A) = CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8E);
-    // Restore the original memory protection
-    VirtualProtect(reinterpret_cast<void*>(0x623C71), 0x22, oldProtect, &oldProtect); 
+    uint8_t patchBytes[34] = {
+        0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
+        0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
+        0x00, 0x00
+    };
+
+    Util::OverwriteBytesAtAddress(0x623C71, patchBytes, sizeof(patchBytes));
+    Util::OverwriteUInt32AtAddress(0x623C8A, Util::CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8E));
 }
 
-static uint32_t CURRENT_AND_MAX_FIELDS[] = {
-    CURRENT_MANA, CURRENT_RAGE, CURRENT_FOCUS, CURRENT_ENERGY,
-    CURRENT_HAPPINESS, CURRENT_RUNES, CURRENT_RUNIC_POWER,
-    MAX_MANA, MAX_RAGE, MAX_FOCUS, MAX_ENERGY,
-    MAX_HAPPINESS, MAX_RUNES, MAX_RUNIC_POWER
-};
-
-int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, uint32_t spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
+int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, SpellRow* spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
     uint32_t result = 0;
 
     if (spellVariable < SPELLVARIABLE_hp)
-        result = CFormula__GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
+        result = CFormula::GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
     else {
         float value = 0.f;
-        uint32_t* ActivePlayer = reinterpret_cast<uint32_t*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER));
+        CGUnit* activePlayer = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(ClntObjMgr::GetActivePlayer(), TYPEMASK_PLAYER));
 
-        if (ActivePlayer) {
+        if (activePlayer) {
             // Arrays for current and max power fields
-            if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_POWER7) {//the <= check saves if you extend later
-                value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_AND_MAX_FIELDS[spellVariable - SPELLVARIABLE_power1]));
-            } else {
+            if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_power7) {
+                uint32_t var = spellVariable - SPELLVARIABLE_power1;
+                value = static_cast<float>(activePlayer->UnitData->unitCurrPowers[var]);
+            }
+            else if (spellVariable >= SPELLVARIABLE_POWER1 && spellVariable <= SPELLVARIABLE_POWER7) {
+                uint32_t var = spellVariable - SPELLVARIABLE_POWER1;
+                value = static_cast<float>(activePlayer->UnitData->unitMaxPowers[var]);
+            }
+            else {
                 switch (spellVariable) {
                     case SPELLVARIABLE_hp:
-                        value = static_cast<float>(GetPlayerField(ActivePlayer, CURRENT_HP));
+                        value = static_cast<float>(activePlayer->UnitData->unitCurrHealth);
                         break;
                     case SPELLVARIABLE_HP:
-                        value = static_cast<float>(GetPlayerField(ActivePlayer, MAX_HP));
+                        value = static_cast<float>(activePlayer->UnitData->unitMaxHealth);
                         break;
                     case SPELLVARIABLE_ppl1:
                     case SPELLVARIABLE_PPL1:
-                        value = *reinterpret_cast<float*>(spell + 308);
+                        value = spell->m_effectRealPointsPerLevel[0];
                         break;
                     case SPELLVARIABLE_ppl2:
                     case SPELLVARIABLE_PPL2:
-                        value = *reinterpret_cast<float*>(spell + 312);
+                        value = spell->m_effectRealPointsPerLevel[1];
                         break;
                     case SPELLVARIABLE_ppl3:
                     case SPELLVARIABLE_PPL3:
-                        value = *reinterpret_cast<float*>(spell + 316);
+                        value = spell->m_effectRealPointsPerLevel[2];
                         break;
                     case SPELLVARIABLE_mastery1:
                     case SPELLVARIABLE_MASTERY1:
@@ -117,7 +96,7 @@ int TooltipExtensions::GetVariableValueEx(uint32_t* _this, uint32_t edx, uint32_
                         value = CharacterDefines::getMasteryForSpec(3);
                         break;
                     default:
-                        *_this = 1;
+                        *reinterpret_cast<uint32_t*>(_this) = 1;
                         break;
                 }
             }
@@ -146,42 +125,37 @@ void TooltipExtensions::SetNewVariablePointers() {
 }
 
 void TooltipExtensions::AppendRuneCost(char* runeCostKey, int runeCount, char* buff, char* destBuffer) {
-    char* sRuneCost = FrameScript__GetText(runeCostKey, -1, 0);
-    SStrPrintf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
-    SStrCopy_0(destBuffer, buff, 0x7FFFFFFF);      
+    char* sRuneCost = FrameScript::GetText(runeCostKey, -1, 0);
+    SStr::Printf(buff, 128, sRuneCost, runeCount);//sizeof(buff)
+    SStr::Copy_0(destBuffer, buff, 0x7FFFFFFF);      
 }
 
-void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row, uint32_t* spellFamily) {
-    int32_t m_RuneBlood = *(row + 1);
-    int32_t m_RuneUnholy = *(row + 2);
-    int32_t m_RuneFrost = *(row + 3);
-    int32_t m_RunicPower = *(row + 4);
-
+void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, SpellRuneCostRow* row, uint32_t* spellFamily) {
     if (*spellFamily == SPELLFAMILY_DEATHKNIGHT) {
-        if (m_RuneBlood) {
-            AppendRuneCost("RUNE_COST_DEATH", m_RuneBlood, buff, dest);
-            if (m_RuneBlood != 1)
-                SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
+        if (row->m_blood) {
+            AppendRuneCost("RUNE_COST_DEATH", row->m_blood, buff, dest);
+            if (row->m_blood != 1)
+                SStr::Copy_0(dest, sPluralS, 0x7FFFFFFF);
 
-            if (m_RunicPower < 0) {
-                int32_t m_Amount = -m_RunicPower / 10;
-                SStrCopy_0(dest, sConnectorPlus, 0x7FFFFFFF);
+            if (row->m_runicPower < 0) {
+                int32_t m_Amount = -row->m_runicPower / 10;
+                SStr::Copy_0(dest, sConnectorPlus, 0x7FFFFFFF);
                 AppendRuneCost("RUNIC_POWER_COST", m_Amount, buff, dest);
             }
         }
     }
     else {
         RuneData runes[] = {
-            {"RUNE_COST_BLOOD", m_RuneBlood},
-            {"RUNE_COST_UNHOLY", m_RuneUnholy},
-            {"RUNE_COST_FROST", m_RuneFrost}
+            {"RUNE_COST_BLOOD", row->m_blood},
+            {"RUNE_COST_UNHOLY", row->m_unholy},
+            {"RUNE_COST_FROST", row->m_frost}
         };
 
         bool addSpace = false;
         for (const auto& rune : runes) {
             if (rune.count > 0) {
                 if (addSpace) {
-                    SStrCopy_0(dest, sSpace, 0x7FFFFFFF);
+                    SStr::Copy_0(dest, sSpace, 0x7FFFFFFF);
                 }
                 AppendRuneCost(rune.costKey, rune.count, buff, dest);
                 addSpace = true;
@@ -190,24 +164,17 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, uint32_t* row
     }
 }
 
-constexpr uint8_t PATCH_BYTES2[31] = {
-    0x57, 0x51, 0x56, 0x8B, 0x4D, 0x2C, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x8D, 0x8D, 0x20,
-    0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0xFC, 0xFF, 0x00, 0x00, 0xE9, 0x3A, 0x01, 0x00, 0x00
-};
-
 void TooltipExtensions::SpellTooltipPowerCostExtension() {
-    DWORD oldProtect;
-    // Change memory protection to allow writing
-    VirtualProtect(reinterpret_cast<void*>(0x623D8A), 0x1F, PAGE_EXECUTE_READWRITE, &oldProtect);
-    // Apply the patch bytes
-    memcpy(reinterpret_cast<void*>(0x623D8A), PATCH_BYTES2, sizeof(PATCH_BYTES2));
-    // Calculate and write the relative address for the function call
-    *reinterpret_cast<uint32_t*>(0x623DA0) = CalculateAddress(reinterpret_cast<uint32_t>(&SetPowerCostTooltip), 0x623DA4);
-    // Restore the original memory protection
-    VirtualProtect(reinterpret_cast<void*>(0x623D8A), 0x1F, oldProtect, &oldProtect);
+    uint8_t patchBytes[31] = {
+        0x57, 0x51, 0x56, 0x8B, 0x4D, 0x2C, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x8D, 0x8D, 0x20,
+        0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0xFC, 0xFF, 0x00, 0x00, 0xE9, 0x3A, 0x01, 0x00, 0x00
+    };
+
+    Util::OverwriteBytesAtAddress(0x623D8A, patchBytes, sizeof(patchBytes));
+    Util::OverwriteUInt32AtAddress(0x623DA0, Util::CalculateAddress(reinterpret_cast<uint32_t>(&SetPowerCostTooltip), 0x623DA4));
 }
 
-void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_t powerCost, uint32_t powerCostPerSec, char* powerString, PowerDisplayRec* powerDisplayRow) {
+void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRow* spell, uint32_t powerCost, uint32_t powerCostPerSec, char* powerString, PowerDisplayRow* powerDisplayRow) {
     SpellAdditionalCostDataRow* additionalCostRow = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", spell->m_ID);
     SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
     bool hasPowerCost = (powerCost != 0 || powerCostPerSec != 0);
@@ -216,58 +183,51 @@ void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRec* spell, uint32_
     if (!customAttributesRow || !(customAttributesRow->customAttr0 & SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST)) {
         if (powerCost && !powerCostPerSec) {
             if (powerDisplayRow) {
-                SStrCopy(buffer, FrameScript__GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
-                SStrPrintf(dest, 128, FrameScript__GetText("POWER_DISPLAY_COST", -1, 0), powerCost, buffer);
+                SStr::Copy(buffer, FrameScript::GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
+                SStr::Printf(dest, 128, FrameScript::GetText("POWER_DISPLAY_COST", -1, 0), powerCost, buffer);
             }
             else {
-                SStrCopy(buffer, FrameScript__GetText(powerString, -1, 0), 128);
-                SStrPrintf(dest, 128, buffer, powerCost);
+                SStr::Copy(buffer, FrameScript::GetText(powerString, -1, 0), 128);
+                SStr::Printf(dest, 128, buffer, powerCost);
             }
         }
         else if (powerCostPerSec > 0) {
             if (powerDisplayRow) {
-                SStrCopy(buffer, FrameScript__GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
-                SStrPrintf(dest, 128, FrameScript__GetText("POWER_DISPLAY_COST_PER_TIME", -1, 0), powerCost, buffer, powerCostPerSec);
+                SStr::Copy(buffer, FrameScript::GetText(powerDisplayRow->m_globalStringBaseTag, -1, 0), 128);
+                SStr::Printf(dest, 128, FrameScript::GetText("POWER_DISPLAY_COST_PER_TIME", -1, 0), powerCost, buffer, powerCostPerSec);
             }
             else {
-                SStrPrintf(buffer, 128, "%s_PER_TIME", powerString);
-                SStrPrintf(dest, 128, FrameScript__GetText(buffer, -1, 0), powerCost, powerCostPerSec);
+                SStr::Printf(buffer, 128, "%s_PER_TIME", powerString);
+                SStr::Printf(dest, 128, FrameScript::GetText(buffer, -1, 0), powerCost, powerCostPerSec);
             }
         }
 
         if (additionalCostRow && additionalCostRow->cost) {
             if (hasPowerCost)
-                SStrCopy_0(dest, " + ", 0x7FFFFFFF);
+                SStr::Copy_0(dest, " + ", 0x7FFFFFFF);
 
-            SStrPrintf(buffer, 128, "%d %s", additionalCostRow->cost, additionalCostRow->resourceName);
-            SStrCopy_0(dest, buffer, 0x7FFFFFFF);
+            SStr::Printf(buffer, 128, "%d %s", additionalCostRow->cost, additionalCostRow->resourceName);
+            SStr::Copy_0(dest, buffer, 0x7FFFFFFF);
 
             if (additionalCostRow->flag == 1 && additionalCostRow->cost != 1)
-                SStrCopy_0(dest, sPluralS, 0x7FFFFFFF);
+                SStr::Copy_0(dest, sPluralS, 0x7FFFFFFF);
         }
     }
 }
 
-constexpr uint8_t PATCH_BYTES3[51] = {
-    0x8B, 0x4D, 0x2C, 0x8B, 0x45, 0xE4, 0x51, 0x50, 0x8D, 0x8D, 0x20, 0xFE, 0xFF, 0xFF, 0x51, 0x8B,
-    0x55, 0x1C, 0x8B, 0x45, 0x14, 0x52, 0x50, 0x8D, 0x4D, 0x18, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF,
-    0xFF, 0x8D, 0x8D, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0xD8,
-    0x01, 0x00, 0x00
-};
-
 void TooltipExtensions::SpellTooltipCooldownExtension() {
-    DWORD oldProtect;
-    // Change memory protection to allow writing
-    VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, PAGE_EXECUTE_READWRITE, &oldProtect);
-    // Apply the patch bytes
-    memcpy(reinterpret_cast<void*>(0x62443B), PATCH_BYTES3, sizeof(PATCH_BYTES3));
-    // Calculate and write the relative address for the function call
-    *reinterpret_cast<uint32_t*>(0x624465) = CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellCooldownTooltip), 0x624469);
-    // Restore the original memory protection
-    VirtualProtect(reinterpret_cast<void*>(0x62443B), 0x33, oldProtect, &oldProtect);
+    uint8_t patchBytes[51] = {
+        0x8B, 0x4D, 0x2C, 0x8B, 0x45, 0xE4, 0x51, 0x50, 0x8D, 0x8D, 0x20, 0xFE, 0xFF, 0xFF, 0x51, 0x8B,
+        0x55, 0x1C, 0x8B, 0x45, 0x14, 0x52, 0x50, 0x8D, 0x4D, 0x18, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF,
+        0xFF, 0x8D, 0x8D, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0xD8,
+        0x01, 0x00, 0x00
+    };
+
+    Util::OverwriteBytesAtAddress(0x62443B, patchBytes, sizeof(patchBytes));
+    Util::OverwriteUInt32AtAddress(0x624465, Util::CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellCooldownTooltip), 0x624469));
 }
 
-void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uintptr_t* a7, uint32_t a6, uint32_t a8, char* src, void* _this, uint32_t powerCost) {
+void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRow* spell, uintptr_t* a7, uint32_t a6, uint32_t a8, char* src, void* _this, uint32_t powerCost) {
     const uint32_t MILLISECONDS_IN_MINUTE = 60000;
     const uint32_t MILLISECONDS_IN_SECOND = 1000;
 
@@ -283,26 +243,29 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
     SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", spell->m_ID);
     bool treatAsInstant = customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT);
 
-    double castTime = SpellRec__GetCastTime(spell, a6, a8, 1);    
+    double castTime = SpellRec_C::GetCastTime(spell, a6, a8, 1);    
     if (castTime && !treatAsInstant) {
         bool isLongCast = castTime >= MILLISECONDS_IN_MINUTE;
         char* castFlag = isLongCast ? "SPELL_CAST_TIME_MIN" : "SPELL_CAST_TIME_SEC";
         double divisor = isLongCast ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
 
-        SStrCopy(buffer, FrameScript__GetText(castFlag, -1, 0), 128);
-        SStrPrintf(dest, 128, buffer, castTime / divisor);
+        SStr::Copy(buffer, FrameScript::GetText(castFlag, -1, 0), 128);
+        SStr::Printf(dest, 128, buffer, castTime / divisor);
     } else {
         char* castFlag = "SPELL_CAST_TIME_INSTANT_NO_MANA";
         if ((spell->m_attributesEx & (SPELL_ATTR1_CHANNELED_1 | SPELL_ATTR1_CHANNELED_2)) != 0) {
             castFlag = "SPELL_CAST_CHANNELED";
-        } else if ((spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0) {
+        }
+        else if ((spell->m_attributes & (SPELL_ATTR0_ON_NEXT_SWING | SPELL_ATTR0_ON_NEXT_SWING_2)) != 0) {
             castFlag = "SPELL_ON_NEXT_SWING";
-        } else if ((spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0) {
+        }
+        else if ((spell->m_attributesEx & SPELL_ATTR0_REQ_AMMO) != 0) {
             castFlag = "SPELL_ON_NEXT_RANGED";
-        } else if (!spell->m_powerType && powerCost > 0) {
+        }
+        else if (!spell->m_powerType && powerCost > 0) {
             castFlag = "SPELL_CAST_TIME_INSTANT";
         }   
-        SStrCopy(dest, FrameScript__GetText(castFlag, -1, 0), 128);
+        SStr::Copy(dest, FrameScript::GetText(castFlag, -1, 0), 128);
     }
 
     double recoveryTime = 0;
@@ -319,8 +282,8 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
         bool isLongRecovery = recoveryTime >= MILLISECONDS_IN_MINUTE;
         char* str = isLongRecovery ? "SPELL_RECAST_TIME_MIN" : "SPELL_RECAST_TIME_SEC";
         double divider = isLongRecovery ? MILLISECONDS_IN_MINUTE : MILLISECONDS_IN_SECOND;
-        SStrCopy(buffer, FrameScript__GetText(str, -1, 0), 128);
-        SStrPrintf(src, 128, buffer, recoveryTime / divider);
+        SStr::Copy(buffer, FrameScript::GetText(str, -1, 0), 128);
+        SStr::Printf(src, 128, buffer, recoveryTime / divider);
     }
     else {
         //Al really had src[0] = 0;
@@ -332,25 +295,18 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRec* spell, uin
     sub_61FEC0(_this, dest, src, ptr, ptr, 0);
 }
 
-constexpr uint8_t PATCH_BYTES4[35] = {
-    0x8B, 0x45, 0x10, 0x89, 0xF9, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x50, 0x51, 0x52, 0x8D, 0x95,
-    0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x31, 0xDB, 0xBB, 0x01, 0x00, 0x00,
-    0x00, 0xEB, 0x24
-};
-
 void TooltipExtensions::SpellTooltipRemainingCooldownExtension() {
-    DWORD oldProtect;
-    // Change memory protection to allow writing
-    VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, PAGE_EXECUTE_READWRITE, &oldProtect);
-    // Apply the patch bytes
-    memcpy(reinterpret_cast<void*>(0x624FF0), PATCH_BYTES4, sizeof(PATCH_BYTES4));
-    // Calculate and write the relative address for the function call
-    *reinterpret_cast<uint32_t*>(0x625006) = CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellRemainingCooldownTooltip), 0x62500A);
-    // Restore the original memory protection
-    VirtualProtect(reinterpret_cast<void*>(0x624FF0), 0x23, oldProtect, &oldProtect);
+    uint8_t patchBytes[35] = {
+        0x8B, 0x45, 0x10, 0x89, 0xF9, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x50, 0x51, 0x52, 0x8D, 0x95,
+        0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x31, 0xDB, 0xBB, 0x01, 0x00, 0x00,
+        0x00, 0xEB, 0x24
+    };
+
+    Util::OverwriteBytesAtAddress(0x624FF0, patchBytes, sizeof(patchBytes));
+    Util::OverwriteUInt32AtAddress(0x625006, Util::CalculateAddress(reinterpret_cast<uint32_t>(&SetSpellRemainingCooldownTooltip), 0x62500A));
 }
 
-void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* spell, void* _this, uint32_t currentCooldown) {
+void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRow* spell, void* _this, uint32_t currentCooldown) {
     void* ptr = reinterpret_cast<void*>(0xAD2D30);
     uint32_t recoveryTime = 0;
     auto it = CharacterDefines::spellChargeMap.find(spell->m_ID);
@@ -377,7 +333,7 @@ void TooltipExtensions::SetSpellRemainingCooldownTooltip(char* dest, SpellRec* s
         recoveryTime = currentCooldown;
 
     if (recoveryTime) {
-        CGTooltip__GetDurationString(dest, 128, recoveryTime, "ITEM_COOLDOWN_TIME", 0, 1, 0);
+        CGTooltip::GetDurationString(dest, 128, recoveryTime, "ITEM_COOLDOWN_TIME", 0, 1, 0);
         sub_61FEC0(_this, dest, 0, ptr, ptr, 0);
     }
 }

@@ -1,8 +1,7 @@
 #pragma once
-#include "Windows.h"
-#include "ClientMacros.h"
 
-#include <functional>
+#include "ClientMacros.h"
+#include "Util.h"
 
 enum ObjectTypeMask : uint32_t {
     TYPEMASK_OBJECT         = 0x0001,
@@ -34,6 +33,22 @@ enum Field : uint32_t {
     MAX_RUNIC_POWER         = 33,
 };
 
+enum GameError : uint32_t {
+    GERR_LEARN_SPELL_S      = 59,
+    GERR_LEARN_ABILITY_S    = 60,
+    GERR_SPELL_UNLEARNED_S  = 352,
+};
+
+enum Powers : int32_t {
+    POWER_MANA              = 0,
+    POWER_RAGE              = 1,
+    POWER_FOCUS             = 2,
+    POWER_ENERGY            = 3,
+    POWER_HAPPINESS         = 4,
+    POWER_RUNES             = 5,
+    POWER_RUNIC_POWER       = 7
+};
+
 enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
@@ -55,12 +70,16 @@ enum SpellFamilyNames : uint32_t {
 enum SpellEffect : uint32_t {
     SPELL_EFFECT_TRADE_SKILL                    = 47,
     SPELL_EFFECT_ATTACK                         = 78,
+    SPELL_EFFECT_TITAN_GRIP                     = 155,
 };
 
 enum SpellAttr0 : uint32_t {
     SPELL_ATTR0_REQ_AMMO                        = 0x00000002,
     SPELL_ATTR0_ON_NEXT_SWING                   = 0x00000004,
+    SPELL_ATTR0_ABILITY                         = 0x00000010,
+    SPELL_ATTR0_TRADESPELL                      = 0x00000020,
     SPELL_ATTR0_PASSIVE                         = 0x00000040,
+    SPELL_ATTR0_HIDDEN_CLIENTSIDE               = 0x00000080,
     SPELL_ATTR0_ON_NEXT_SWING_2                 = 0x00000400,
 };
 
@@ -77,6 +96,9 @@ enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
     SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, don't display castbar at all
     SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST    = 0x00000004,   // Does not display power cost in tooltip
+    SPELL_ATTR0_CU_SUPPRESS_LEARN_MSG           = 0x00000008,   // Does not display "You have learned a new spell:" message
+    SPELL_ATTR0_CU_SUPPRESS_UNLEARN_MSG         = 0x00000010,   // Does not display "You have unlearned" message
+    SPELL_ATTR0_CU_INVERT_CASTBAR               = 0x00000020,   // NYI; will cost me some sanity it seems
 };
 
 static uint32_t dummy = 0;
@@ -86,8 +108,28 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
-struct PowerDisplayRec
-{
+struct UnitFields {
+    uint64_t padding[8];    // not defining those until we need them
+    uint32_t channelSpell;
+    uint8_t unitBytes0[4];
+    uint32_t unitCurrHealth;
+    uint32_t unitCurrPowers[7];
+    uint32_t unitMaxHealth;
+    uint32_t unitMaxPowers[7];
+    // TODO: add rest at some point, most likely when needed
+};
+
+struct CGUnit {
+    uint32_t objBase[52];
+    UnitFields* UnitData;
+    uint32_t padding34[614];
+    uint32_t currentCastId;
+    uint32_t padding[4];
+    uint32_t currentChannelId;
+    // TODO: add rest, currently not needed
+};
+
+struct PowerDisplayRow {
     uint32_t m_ID;
     uint32_t m_actualType;
     char* m_globalStringBaseTag;
@@ -96,8 +138,35 @@ struct PowerDisplayRec
     uint8_t m_blue;
 };
 
-struct SpellRec
-{
+struct SkillLineAbilityRow {
+    uint32_t m_ID;
+    uint32_t m_skillLine;
+    uint32_t m_spell;
+    uint32_t m_raceMask;
+    uint32_t m_classMask;
+    uint32_t m_excludeRace;
+    uint32_t m_excludeClass;
+    uint32_t m_minSkillLineRank;
+    uint32_t m_supercededBySpell;
+    uint32_t m_acquireMethod;
+    uint32_t m_trivialSkillLineRankHigh;
+    uint32_t m_trivialSkillLineRankLow;
+    uint32_t m_characterPoints[2];
+    uint32_t m_numSkillUps;
+};
+
+struct SkillLineRow {
+    uint32_t m_ID;
+    uint32_t m_categoryID;
+    uint32_t m_skillCostsID;
+    char* m_displayName_lang;
+    char* m_description_lang;
+    uint32_t m_spellIconID;
+    char* m_alternateVerb_lang;
+    uint32_t m_canLink;
+};
+
+struct SpellRow {
     uint32_t m_ID;
     uint32_t m_category;
     uint32_t m_dispelType;
@@ -205,83 +274,93 @@ struct SpellRec
     uint32_t m_difficulty;
 };
 
-struct SpellIconRec {
+struct SpellIconRow {
     uint32_t m_ID;
     char* m_textureFilename;
 };
 
+struct SpellRuneCostRow {
+    uint32_t m_ID;
+    int32_t m_blood;
+    int32_t m_unholy;
+    int32_t m_frost;
+    int32_t m_runicPower;
+};
+
 // client functions
-// Defs cherrypicked from StormLib: https://github.com/ladislav-zezula/StormLib
-CLIENT_FUNCTION(SFileOpenFileEx, 0x424B50, __stdcall, bool, (HANDLE, const char*, uint32_t, HANDLE*))
-CLIENT_FUNCTION(SFileReadFile, 0x422530, __stdcall, bool, (HANDLE handle /*likely a handle*/, void* data, uint32_t bytesToRead, uint32_t* bytesRead, uint32_t* overlap /*just set to 0*/))
-CLIENT_FUNCTION(SFileCloseFile, 0x422910, __stdcall, void, (HANDLE a1))
+namespace CGGameUI {
+    CLIENT_FUNCTION(DisplayError, 0x5216F0, __cdecl, void, (uint32_t, ...))
+}
 
-//
-CLIENT_FUNCTION(SFileOpenFile, 0x424F80, __stdcall, int, (char const* filename, HANDLE* a2 /*file handle out*/))
-CLIENT_FUNCTION(SFileGetFileSize, 0x4218C0, __stdcall, DWORD /*lowest 32 bits in size*/, (HANDLE handle, DWORD* highSize /*highest 32 bits in size*/))
+namespace CGPetInfo_C {
+    CLIENT_FUNCTION(GetPet, 0x5D3390, __cdecl, uint64_t, (uint32_t))
+}
 
-CLIENT_FUNCTION(SMemAlloc, 0x76E540, __stdcall, void*, (uint32_t, const char*, uint32_t, uint32_t))
-CLIENT_FUNCTION(SMemFree, 0x76E5A0, __stdcall, bool, (void*, const char*, uint32_t, uint32_t))
+namespace CGUnit_C {
+    CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
+    CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
+    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRow*))
+}
 
-CLIENT_FUNCTION(SErrPrepareAppFatal, 0x772A80, _cdecl, void, (uint32_t, const char*, ...))
+namespace ClientDB {
+    CLIENT_FUNCTION(GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
+    CLIENT_FUNCTION(GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+}
 
-CLIENT_FUNCTION(ClntObjMgrGetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
-CLIENT_FUNCTION(ClntObjMgrObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
+namespace ClntObjMgr {
+    CLIENT_FUNCTION(GetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
+    CLIENT_FUNCTION(GetUnitFromName, 0x60C1F0, __cdecl, CGUnit*, (char*))
+    CLIENT_FUNCTION(ObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
+}
 
-CLIENT_FUNCTION(FrameScript__GetText, 0x819D40, __cdecl, char*, (char*, int, int))
-CLIENT_FUNCTION(FrameScript__SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
+namespace FrameScript {
+    CLIENT_FUNCTION(GetText, 0x819D40, __cdecl, char*, (char*, int, int))
+    CLIENT_FUNCTION(SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
+}
 
-CLIENT_FUNCTION(SStrPrintf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, ...))
-CLIENT_FUNCTION(SStrCopy, 0x76ED20, __stdcall, char*, (char*, char*, uint32_t))
-CLIENT_FUNCTION(SStrCopy_0, 0x76EF70, __stdcall, char*, (char*, char*, uint32_t))
-CLIENT_FUNCTION(SStrLen, 0x76EE30, __stdcall, char*, (char*))
-CLIENT_FUNCTION(SStrChr, 0x76E6E0, __cdecl, char*, (char*, char))
+namespace SpellParser {
+    CLIENT_FUNCTION(ParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+}
 
-CLIENT_FUNCTION(ClientDB__GetRow, 0x65C290, __thiscall, void*, (void*, uint32_t))
-CLIENT_FUNCTION(ClientDB__GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
+namespace SpellRec_C {
+    CLIENT_FUNCTION(GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t))
+    CLIENT_FUNCTION(GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t, uint32_t))
+}
 
-CLIENT_FUNCTION(SpellParserParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+namespace SErr {
+    CLIENT_FUNCTION(PrepareAppFatal, 0x772A80, _cdecl, void, (uint32_t, const char*, ...))
+}
 
-CLIENT_FUNCTION(SpellRec__GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t))
-CLIENT_FUNCTION(SpellRec__GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRec*, uint32_t, uint32_t, uint32_t))
+namespace SFile {
+    // Defs cherrypicked from StormLib: https://github.com/ladislav-zezula/StormLib
+    CLIENT_FUNCTION(OpenFileEx, 0x424B50, __stdcall, bool, (HANDLE, const char*, uint32_t, HANDLE*))
+    CLIENT_FUNCTION(ReadFile, 0x422530, __stdcall, bool, (HANDLE handle /*likely a handle*/, void* data, uint32_t bytesToRead, uint32_t* bytesRead, uint32_t* overlap /*just set to 0*/))
+    CLIENT_FUNCTION(CloseFile, 0x422910, __stdcall, void, (HANDLE a1))
 
-CLIENT_FUNCTION(CGPetInfo__GetPet, 0x5D3390, __cdecl, uint64_t, (uint32_t))
+    //
+    CLIENT_FUNCTION(OpenFile, 0x424F80, __stdcall, int, (char const* filename, HANDLE* a2 /*file handle out*/))
+    CLIENT_FUNCTION(GetFileSize, 0x4218C0, __stdcall, DWORD /*lowest 32 bits in size*/, (HANDLE handle, DWORD* highSize /*highest 32 bits in size*/))
+}
 
-CLIENT_FUNCTION(CGUnit_C__GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
-CLIENT_FUNCTION(CGUnit_C__HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
-CLIENT_FUNCTION(CGUnit_C__HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRec*))
+namespace SMem {
+    CLIENT_FUNCTION(Alloc, 0x76E540, __stdcall, void*, (uint32_t, const char*, uint32_t, uint32_t))
+    CLIENT_FUNCTION(Free, 0x76E5A0, __stdcall, bool, (void*, const char*, uint32_t, uint32_t))
+}
+
+namespace SStr {
+    CLIENT_FUNCTION(Printf, 0x76F070, __cdecl, int, (char*, uint32_t, char*, ...))
+    CLIENT_FUNCTION(Copy, 0x76ED20, __stdcall, char*, (char*, char*, uint32_t))
+    CLIENT_FUNCTION(Copy_0, 0x76EF70, __stdcall, char*, (char*, char*, uint32_t))
+    CLIENT_FUNCTION(Len, 0x76EE30, __stdcall, char*, (char*))
+    CLIENT_FUNCTION(Chr, 0x76E6E0, __cdecl, char*, (char*, char))
+}
+
+namespace SysMsg {
+    CLIENT_FUNCTION(Printf, 0x4B5040, __cdecl, int, (uint32_t, uint32_t, char*, ...))
+}
 
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
 
 CLIENT_FUNCTION(sub_61FEC0, 0x61FEC0, __thiscall, void, (void*, char*, char*, void*, void*, uint32_t))
-
-// functions
-static int32_t GetPlayerField(uint32_t* ActivePlayer, uint32_t field) {
-    return *reinterpret_cast<int32_t*>(*(ActivePlayer + 52) + 4 * field);
-};
-
-static void OverwriteUInt32AtAddress(uint32_t position, uint32_t newValue) {
-    DWORD flOldProtect = 0;
-
-    VirtualProtect((LPVOID)position, 0x4, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    *reinterpret_cast<uint32_t*>(position) = newValue;
-    VirtualProtect((LPVOID)position, 0x4, flOldProtect, &flOldProtect);
-};
-
-static void WriteBytesAtAddress(void* position, uint8_t byte, size_t size) {
-    DWORD flOldProtect = 0;
-
-    VirtualProtect((LPVOID)position, size, PAGE_EXECUTE_READWRITE, &flOldProtect);
-    memset(position, byte, size);
-    VirtualProtect((LPVOID)position, size, flOldProtect, &flOldProtect);
-}
-
-// Aleist3r: use bigger number as address1
-// if the jump/call address is earlier in the memory (e.g. you're jumping from dll code back to wow.exe address), use backwards = true
-// TODO: investigate what I did wrong with code, math was off
-static uint32_t CalculateAddress(uint32_t address1, uint32_t address2, bool backwards = false) {
-    if (!backwards)
-        return address1 - address2;
-    else
-        return address2 - address1;
-}
+CLIENT_FUNCTION(sub_6E22C0, 0x6E22C0, __thiscall, uint32_t, (void*, uint32_t))
+CLIENT_FUNCTION(sub_812410, 0x812410, __cdecl, SkillLineAbilityRow*, (uint32_t, uint32_t, uint32_t))
