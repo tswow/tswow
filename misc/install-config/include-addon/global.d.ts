@@ -56,6 +56,7 @@ declare function __TS__New(target: any): any;
 declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 //dll additions
+declare function GetCDBCRow(dbcName: string, rowIndex: number): LuaMultiReturn<[...Unknown]>
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
 declare function GetSpellDescription(spellID:number): string;
 declare function GetActiveSpec(): number;
