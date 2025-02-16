@@ -1,13 +1,13 @@
 #include "CustomDBCMgr.h"
 #include "DBCDefs/SpellAdditionalCostData.h"
-#include "DBCDefs/SpellCustomAttributes.h"
+#include "DBCDefs/SpellAdditionalAttributes.h"
 
 CustomDBCMgr GlobalDBCMap;
 std::unordered_map<std::string, std::function<int(lua_State*,int)>> dbcLuaHandlers = {};
 
 void CustomDBCMgr::Load() {
     SpellAdditionalCostData().LoadDB();
-    SpellCustomAttributes().LoadDB();
+    SpellAdditionalAttributes().LoadDB();
 }
 
 void CustomDBCMgr::addDBC(std::string dbcName){

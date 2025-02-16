@@ -20,20 +20,30 @@ import { SqlConnection } from '../../data/sql/SQLConnection';
 import { SqlTable } from '../../data/sql/SQLTable';
 import { WFile } from '../../util/FileTree';
 import { DBCFiles } from '../DBCFiles';
+import { CDBCFiles } from '../CDBCFiles';
 import { SQLTables } from '../SQLFiles';
 
 function saveDbc() {
     for (const file of DBCFiles) {
-        const srcpath = dataset.dbc_source.join(file.name + '.dbc');
+        saveDBCFile(file, '.dbc')
+    }
+    for (const file of CDBCFiles) {
+        saveDBCFile(file, '.cdbc')
+    }
+}
+
+function saveDBCFile(file, ending)
+{
+    const srcpath = dataset.dbc_source.join(file.name + ending);
 
         // if we skip the server, we should write dbcs to client directly
         const outPaths: WFile[] = [];
         if(BuildArgs.WRITE_CLIENT) {
-            outPaths.push(BuildArgs.CLIENT_PATCH_DIR.join('DBFilesClient',file.name+'.dbc').toFile())
+            outPaths.push(BuildArgs.CLIENT_PATCH_DIR.join('DBFilesClient',file.name+ending).toFile())
         }
 
         if(BuildArgs.WRITE_SERVER) {
-            outPaths.push(dataset.dbc.join(file.name+'.dbc').toFile())
+            outPaths.push(dataset.dbc.join(file.name+ending).toFile())
         }
 
         if(file.isLoaded()) {
@@ -47,7 +57,6 @@ function saveDbc() {
                 outPaths[0].copy(outPaths[1])
             })
         }
-    }
 }
 
 async function saveSQL() {

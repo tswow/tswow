@@ -1,7 +1,7 @@
 #include "ClientLua.h"
 #include "SharedDefines.h"
 #include "CustomDBCMgr/CustomDBCMgr.h"
-#include "CustomDBCMgr/DBCDefs/SpellCustomAttributes.h"
+#include "CustomDBCMgr/DBCDefs/SpellAdditionalAttributes.h"
 #include "Logger.h"
 
 LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
@@ -40,7 +40,7 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
 
     spellId = static_cast<float>(buffer.m_ID);
 
-    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", buffer.m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
         hideCastbar = true;
@@ -73,8 +73,8 @@ LUA_FUNCTION(UnitCustomChannelData, (lua_State* L)) {
 
     spellId = static_cast<float>(buffer.m_ID);
 
-    SpellCustomAttributesRow* customAttributesRow =
-        GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", buffer.m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow =
+        GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
         hideCastbar = true;
