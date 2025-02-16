@@ -56,4 +56,3 @@ export class CDBCGenerator {
         console.log(`CDBC file "${filename}" generated successfully.`);
     }
 }
-//new CDBCGenerator([2, "string",0.0]).generate("output.cdbc");
