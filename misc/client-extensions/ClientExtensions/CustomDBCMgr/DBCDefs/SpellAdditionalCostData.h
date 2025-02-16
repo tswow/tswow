@@ -21,7 +21,7 @@ class SpellAdditionalCostData : public CustomDBC {
 public:
     const char* fileName = "DBFilesClient\\SpellAdditionalCostData.cdbc";
     SpellAdditionalCostData() : CustomDBC() {
-        this->numColumns = 4;
+        this->numColumns = sizeof(SpellAdditionalCostDataRow)/4;
         this->rowSize = sizeof(SpellAdditionalCostDataRow);
     }
     

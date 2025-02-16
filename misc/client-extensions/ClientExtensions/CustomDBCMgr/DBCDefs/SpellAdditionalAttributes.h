@@ -16,7 +16,7 @@ class SpellAdditionalAttributes : public CustomDBC {
 public:
     const char* fileName = "DBFilesClient\\SpellAdditionalAttributes.cdbc";
     SpellAdditionalAttributes() {
-        this->numColumns = 2;
+        this->numColumns = sizeof(SpellAdditionalAttributesRow)/4;
         this->rowSize = sizeof(SpellAdditionalAttributesRow);
     }
 
