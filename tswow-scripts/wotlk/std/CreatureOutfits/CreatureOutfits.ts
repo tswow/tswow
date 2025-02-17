@@ -181,17 +181,17 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
             .FacialHairID.set(this.FacialHair.get())
             .BakeName.set(`${this.texture}.blp`)
         
-        if(this.Head.get()) extraInfo.NPCItemDisplay.setIndex(0, std.Items.load(this.Head.get()).DisplayInfo.get())
-        if(this.Shoulders.get()) extraInfo.NPCItemDisplay.setIndex(1, std.Items.load(this.Shoulders.get()).DisplayInfo.get())
-        if(this.Shirt.get()) extraInfo.NPCItemDisplay.setIndex(2, std.Items.load(this.Shirt.get()).DisplayInfo.get())
-        if(this.Chest.get()) extraInfo.NPCItemDisplay.setIndex(3, std.Items.load(this.Chest.get()).DisplayInfo.get())
-        if(this.Waist.get()) extraInfo.NPCItemDisplay.setIndex(4, std.Items.load(this.Waist.get()).DisplayInfo.get())
-        if(this.Legs.get()) extraInfo.NPCItemDisplay.setIndex(5, std.Items.load(this.Legs.get()).DisplayInfo.get())
-        if(this.Feet.get()) extraInfo.NPCItemDisplay.setIndex(6, std.Items.load(this.Feet.get()).DisplayInfo.get())
-        if(this.Wrists.get()) extraInfo.NPCItemDisplay.setIndex(7, std.Items.load(this.Wrists.get()).DisplayInfo.get())
-        if(this.Hands.get()) extraInfo.NPCItemDisplay.setIndex(8, std.Items.load(this.Hands.get()).DisplayInfo.get())
-        if(this.Tabard.get()) extraInfo.NPCItemDisplay.setIndex(9, std.Items.load(this.Tabard.get()).DisplayInfo.get())
-        if(this.Back.get()) extraInfo.NPCItemDisplay.setIndex(10, std.Items.load(this.Back.get()).DisplayInfo.get())
+        let equipmentSlots = [
+            this.Head, this.Shoulders, this.Shirt, this.Chest, 
+            this.Waist, this.Legs, this.Feet, this.Wrists, 
+            this.Hands, this.Tabard, this.Back
+        ];
+
+        for (let i = 0; i < equipmentSlots.length; i++) {
+            if (equipmentSlots[i].get()) {
+                extraInfo.NPCItemDisplay.setIndex(i, std.Items.load(equipmentSlots[i].get()).DisplayInfo.get());
+            }
+        }
 
         switch(this.Race.get()) {
             case RaceIDs.HUMAN:
@@ -256,7 +256,7 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
      * @param texture file name of the .blp texture in Textures/BakedNpcTextures
      * @returns
      */
-    addTexture(
+    addBakedTexture(
         texture: string
     ) {
         this.texture = texture
@@ -267,7 +267,7 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
     /**
      * Returns the ID of the baked creature model
      */
-    getBaked() {
+    getBakedModelID() {
         return this.bakeModel().ID.get()
     }
 }
