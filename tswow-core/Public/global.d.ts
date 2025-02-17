@@ -7727,6 +7727,12 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
+    IsRanked(): boolean
+    GetRank(): uint8
+    GetFirstRankSpell(): TSSpellInfo
+    GetLastRankSpell(): TSSpellInfo
+    GetNextRankSpell(): TSSpellInfo
+    GetPrevRankSpell(): TSSpellInfo
 }
 
 declare class TSSpellEffectInfo {
