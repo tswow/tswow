@@ -77,7 +77,6 @@ declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, 
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
 
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
-declare function UnitCustomChannelData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
