@@ -99,11 +99,13 @@ enum SpellAttr2 : uint32_t {
 
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
-    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, dones't display castbar at all
+    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Does not display cast bar
     SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST    = 0x00000004,   // Does not display power cost in tooltip
     SPELL_ATTR0_CU_SUPPRESS_LEARN_MSG           = 0x00000008,   // Does not display "You have learned a new spell:" message
     SPELL_ATTR0_CU_SUPPRESS_UNLEARN_MSG         = 0x00000010,   // Does not display "You have unlearned" message
     SPELL_ATTR0_CU_INVERT_CASTBAR               = 0x00000020,   // NYI; will cost me some sanity it seems
+    SPELL_ATTR0_CU_LOW_TIME_TREAT_AS_INSTANT    = 0x00000040,   // If cast time <= 250ms, changes tooltip line responsible to "Instant"
+    SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR  = 0x00000080,   // If cast time <= 250ms, does not display cast bar
 };
 
 static uint32_t dummy = 0;
@@ -334,6 +336,7 @@ namespace SpellParser {
 namespace SpellRec_C {
     CLIENT_FUNCTION(GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t))
     CLIENT_FUNCTION(GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t, uint32_t))
+    CLIENT_FUNCTION(ModifySpellValueInt, 0x7FDB50, __cdecl, void, (SpellRow*, uint32_t*, uint32_t))
 }
 
 namespace SErr {

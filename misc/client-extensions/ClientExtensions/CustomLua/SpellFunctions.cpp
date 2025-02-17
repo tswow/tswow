@@ -21,6 +21,7 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
     return 1;
 }
 
+#pragma optimize("", off)
 LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     if (!ClientLua::IsString(L, 1))
         ClientLua::DisplayError(L, "Usage: UnitCustomCastingData(\"unit\")", "");
@@ -39,10 +40,13 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
         return 0;
 
     spellId = static_cast<float>(buffer.m_ID);
-
+    double castTime = SpellRec_C::GetCastTime(&buffer, 0, 0, 1);
     SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
+        hideCastbar = true;
+
+    if (castTime <= 250 && (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR)))
         hideCastbar = true;
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_INVERT_CASTBAR))
@@ -72,11 +76,13 @@ LUA_FUNCTION(UnitCustomChannelData, (lua_State* L)) {
         return 0;
 
     spellId = static_cast<float>(buffer.m_ID);
-
-    SpellAdditionalAttributesRow* customAttributesRow =
-        GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
+    double castTime = SpellRec_C::GetCastTime(&buffer, 0, 0, 1);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
+        hideCastbar = true;
+
+    if (castTime <= 250 && (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR)))
         hideCastbar = true;
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_INVERT_CASTBAR))
@@ -87,6 +93,7 @@ LUA_FUNCTION(UnitCustomChannelData, (lua_State* L)) {
     ClientLua::PushBoolean(L, invertCastbar);
     return 3;
 }
+#pragma optimize("", on)
 
 LUA_FUNCTION(FindSpellActionBarSlot, (lua_State* L)) {
     uint32_t spellID = ClientLua::GetNumber(L, 1);
