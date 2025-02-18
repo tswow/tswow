@@ -16,18 +16,22 @@
  */
 /* tslint:disable */
 import { CDBCFile } from "./cdbc/CDBCFile"
-import { SpellAdditionalCostDataCDBCFile } from "./cdbc/SpellAdditionalCostData";
+import { LFGRolesCDBCFile } from "./cdbc/LFGRoles";
 import { SpellAdditionalAttributesCDBCFile } from "./cdbc/SpellAdditionalAttributes";
+import { SpellAdditionalCostDataCDBCFile } from "./cdbc/SpellAdditionalCostData";
+
 export const CDBC = {
-    SpellAdditionalCostData : new SpellAdditionalCostDataCDBCFile(),
+    LFGRoles : new LFGRolesCDBCFile(),
     SpellAdditionalAttributes : new SpellAdditionalAttributesCDBCFile(),
+    SpellAdditionalCostData : new SpellAdditionalCostDataCDBCFile(),
 }
 
 export const CDBCLoader = {
-    SpellAdditionalCostData : (path: string) => SpellAdditionalCostDataCDBCFile.read(path),
+    LFGRoles : (path: string) => LFGRolesCDBCFile.read(path),
     SpellAdditionalAttributes : (path: string) => SpellAdditionalAttributesCDBCFile.read(path),
+    SpellAdditionalCostData : (path: string) => SpellAdditionalCostDataCDBCFile.read(path),
 }
 
-export type CDBCNames = "SpellAdditionalCostData" | "SpellAdditionalAttributes"
+export type CDBCNames = "LFGRoles" | "SpellAdditionalAttributes" | "SpellAdditionalCostData"
 
 export const CDBCFiles : CDBCFile<any,any,any>[] = Object.values(CDBC);

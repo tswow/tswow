@@ -47,7 +47,7 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
 
     spellId = static_cast<float>(buffer.m_ID);
     double castTime = SpellRec_C::GetCastTime(&buffer, 0, 0, 1);
-    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
         hideCastbar = true;

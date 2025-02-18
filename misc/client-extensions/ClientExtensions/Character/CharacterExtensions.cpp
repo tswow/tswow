@@ -31,7 +31,7 @@ void CharacterExtensions::SpellUnlearnExtension() {
 void CharacterExtensions::OnSpellLearnEx(SpellRow* spellRow, uint32_t* a5) {
     bool displayMsg;
     char buffer[512];
-    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spellRow->m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spellRow->m_ID);
 
     if (customAttributesRow && ((customAttributesRow->customAttr0 & SPELL_ATTR0_CU_SUPPRESS_LEARN_MSG) != 0))
         displayMsg = false;
@@ -56,7 +56,7 @@ void CharacterExtensions::OnSpellLearnEx(SpellRow* spellRow, uint32_t* a5) {
 void CharacterExtensions::OnSpellUnlearnEx(SpellRow* spellRow, uint32_t* a3) {
     bool displayMsg;
     char buffer[512];
-    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spellRow->m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spellRow->m_ID);
 
     if (customAttributesRow && ((customAttributesRow->customAttr0 & SPELL_ATTR0_CU_SUPPRESS_UNLEARN_MSG) != 0))
         displayMsg = false;

@@ -1,27 +1,29 @@
 #include "CDBCMgr.h"
+#include "CDBCDefs/LFGRoles.h"
 #include "CDBCDefs/SpellAdditionalAttributes.h"
 #include "CDBCDefs/SpellAdditionalCostData.h"
 
-CDBCMgr GlobalDBCMap;
-std::unordered_map<std::string, std::function<int(lua_State*,int)>> dbcLuaHandlers = {};
+CDBCMgr GlobalCDBCMap;
+std::unordered_map<std::string, std::function<int(lua_State*,int)>> cdbcLuaHandlers = {};
 
 void CDBCMgr::Load() {
+    LFGRoles().LoadDB();
     SpellAdditionalAttributes().LoadDB();
     SpellAdditionalCostData().LoadDB();
 }
 
-void CDBCMgr::addDBC(std::string dbcName){
-    allCDBCs[dbcName] = CDBC();
+void CDBCMgr::addCDBC(std::string cdbcName){
+    allCDBCs[cdbcName] = CDBC();
 }
 
-void CDBCMgr::addDBCLuaHandler(std::string dbcName,  std::function<int(lua_State*,int)> func){
-    dbcLuaHandlers[dbcName] = func;
+void CDBCMgr::addCDBCLuaHandler(std::string cdbcName, std::function<int(lua_State*,int)> func){
+    cdbcLuaHandlers[cdbcName] = func;
 }
 
-int CDBCMgr::handleLua(lua_State* L, std::string dbcName, int row) {
-    auto it = dbcLuaHandlers.find(dbcName);
-    if (it != dbcLuaHandlers.end()) {
-        return it->second(L,row);
+int CDBCMgr::handleLua(lua_State* L, std::string cdbcName, int row) {
+    auto it = cdbcLuaHandlers.find(cdbcName);
+    if (it != cdbcLuaHandlers.end()) {
+        return it->second(L, row);
     }
     return 0;
 }
