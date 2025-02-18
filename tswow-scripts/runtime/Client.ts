@@ -179,10 +179,7 @@ export class Client {
                 + ` database yet.`
             )
         }
-        return ClientPatches(
-              this.dataset.config.DatasetGameBuild
-            , values
-            )
+        return ClientPatches(this.dataset.config.DatasetGameBuild)
     }
 
     async applyExePatches() {

@@ -1,11 +1,21 @@
 #include "CharacterExtensions.h"
 #include "CDBCMgr/CDBCMgr.h"
+#include "CDBCMgr/CDBCDefs/LFGRoles.h"
 #include "CDBCMgr/CDBCDefs/SpellAdditionalAttributes.h"
 #include "Logger.h"
 
 void CharacterExtensions::Apply() {
+    ChangeLFGRoleFunctionPointers();
     SpellLearnExtension();
     SpellUnlearnExtension();
+}
+
+void CharacterExtensions::ChangeLFGRoleFunctionPointers() {
+    Util::OverwriteUInt32AtAddress(0x553E90, Util::CalculateAddress(reinterpret_cast<uint32_t>(&CheckLFGRoles), 0x553E94));
+    Util::OverwriteUInt32AtAddress(0x55736D, Util::CalculateAddress(reinterpret_cast<uint32_t>(&CheckLFGRoles), 0x557371));
+    Util::OverwriteUInt32AtAddress(0x4E0B12, Util::CalculateAddress(reinterpret_cast<uint32_t>(&GetClassRoles), 0x4E0B16));
+    // Lua_SetLFGRole pointer, we want direct address not offset in this case
+    Util::OverwriteUInt32AtAddress(0xACD72C, Util::CalculateAddress(reinterpret_cast<uint32_t>(&Lua_SetLFGRole), 0));
 }
 
 void CharacterExtensions::SpellLearnExtension() {
@@ -26,6 +36,47 @@ void CharacterExtensions::SpellUnlearnExtension() {
 
     Util::OverwriteBytesAtAddress(0x6E7304, patchBytes, sizeof(patchBytes));
     Util::OverwriteUInt32AtAddress(0x6E7310, Util::CalculateAddress(reinterpret_cast<uint32_t>(&OnSpellUnlearnEx), 0x6E7314));
+}
+
+uint32_t CharacterExtensions::CheckLFGRoles(uint32_t roles) {
+    uint32_t classId = sub_6B1080();
+
+    if (classId > *reinterpret_cast<uint32_t*>(0xAD3410) || classId < *reinterpret_cast<uint32_t*>(0xAD3414)) // ChrClasses.dbc max/min indexes
+        classId = 0;
+
+    LFGRolesRow* cdbcRoles = GlobalCDBCMap.getRow<LFGRolesRow>("LFGRoles", classId);
+
+    return roles & cdbcRoles->Roles;
+}
+
+uint32_t CharacterExtensions::GetClassRoles(uint32_t classId) {
+    LFGRolesRow* cdbcRoles = GlobalCDBCMap.getRow<LFGRolesRow>("LFGRoles", classId);
+
+    return cdbcRoles->Roles;
+}
+
+int CharacterExtensions::Lua_SetLFGRole(lua_State* L) {
+    ChrClassesRow* row = reinterpret_cast<ChrClassesRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD341C), sub_6B1080()));
+    LFGRolesRow* cdbcRole = 0;
+    uint32_t roles = FrameScript::GetParam(L, 1, 0) != 0;
+    uint32_t classId = 0;
+    uintptr_t ptr = *reinterpret_cast<uintptr_t*>(0xBD0A28);
+
+    if (FrameScript::GetParam(L, 2, 0))
+        roles |= 2;
+    if (FrameScript::GetParam(L, 3, 0))
+        roles |= 4;
+    if (FrameScript::GetParam(L, 4, 0))
+        roles |= 8;
+
+    if (row)
+        classId = row->m_ID;
+
+    cdbcRole = GlobalCDBCMap.getRow<LFGRolesRow>("LFGRoles", classId);
+
+    CVar_C::sub_766940(reinterpret_cast<void*>(ptr), roles & cdbcRole->Roles, 1, 0, 0, 1);
+    FrameScript::SignalEvent(EVENT_LFG_ROLE_UPDATE, 0);
+    return 0;
 }
 
 void CharacterExtensions::OnSpellLearnEx(SpellRow* spellRow, uint32_t* a5) {

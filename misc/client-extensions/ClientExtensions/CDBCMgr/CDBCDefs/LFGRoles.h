@@ -24,8 +24,17 @@ public:
     LFGRoles* LoadDB() {
         GlobalCDBCMap.addCDBC("LFGRoles");
         CDBC::LoadDB(this->fileName);
+        LFGRoles::setupTable();
         CDBCMgr::addCDBCLuaHandler("LFGRoles", LFGRoles::handleLua);
         return this;
+    };
+
+    void LFGRoles::setupTable() {
+        LFGRolesRow* row = static_cast<LFGRolesRow*>(this->rows);
+        for (uint32_t i = 0; i < this->numRows; i++) {
+            GlobalCDBCMap.addRow("LFGRoles", row->ClassID, *row);
+            ++row;
+        }
     };
 
     static int handleLua(lua_State* L, int row) {

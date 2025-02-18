@@ -98,6 +98,7 @@ export class LFGRolesCDBCFile extends CDBCFile<
             7: { tank: 0, healer: 1, damage: 1, leader: 1 },
             8: { tank: 0, healer: 0, damage: 1, leader: 1 },
             9: { tank: 0, healer: 0, damage: 1, leader: 1 },
+            10: { tank: 0, healer: 0, damage: 0, leader: 0 },
             11: { tank: 1, healer: 1, damage: 1, leader: 1 },
         };
     
