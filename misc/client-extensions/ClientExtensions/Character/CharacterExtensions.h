@@ -11,6 +11,7 @@ private:
 
     static uint32_t CheckLFGRoles(uint32_t roles);
     static uint32_t GetClassRoles(uint32_t classId);
+    static int Lua_GetAvailableRoles(lua_State* L);
     static int Lua_SetLFGRole(lua_State* L);
     static void OnSpellLearnEx(SpellRow* spellRow, uint32_t* a5);
     static void OnSpellUnlearnEx(SpellRow* spellRow, uint32_t* a3);
