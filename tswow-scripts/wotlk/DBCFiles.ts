@@ -198,7 +198,6 @@ import { SpellDBCFile } from "./dbc/Spell"
 import { SpellCastTimesDBCFile } from "./dbc/SpellCastTimes"
 import { SpellCategoryDBCFile } from "./dbc/SpellCategory"
 import { SpellChainEffectsDBCFile } from "./dbc/SpellChainEffects"
-import { SpellCustomAttributesDBCFile } from "./dbc/SpellCustomAttributes"
 import { SpellDescriptionVariablesDBCFile } from "./dbc/SpellDescriptionVariables"
 import { SpellDifficultyDBCFile } from "./dbc/SpellDifficulty"
 import { SpellDispelTypeDBCFile } from "./dbc/SpellDispelType"
@@ -1178,11 +1177,6 @@ export const DBC = {
     /**
      * No comment (yet!)
      */
-    SpellCustomAttributes : new SpellCustomAttributesDBCFile(),
-
-    /**
-     * No comment (yet!)
-     */
     SpellDescriptionVariables : new SpellDescriptionVariablesDBCFile(),
 
     /**
@@ -1845,8 +1839,6 @@ export const DBCLoader = {
     SpellCategory : (path: string) => SpellCategoryDBCFile.read(path),
 
     SpellChainEffects : (path: string) => SpellChainEffectsDBCFile.read(path),
-
-    SpellCustomAttributes : (path: string) => SpellCustomAttributesDBCFile.read(path),
 
     SpellDescriptionVariables : (path: string) => SpellDescriptionVariablesDBCFile.read(path),
 

@@ -1,7 +1,7 @@
 #include "ClientLua.h"
 #include "SharedDefines.h"
-#include "CustomDBCMgr/CustomDBCMgr.h"
-#include "CustomDBCMgr/DBCDefs/SpellCustomAttributes.h"
+#include "CDBCMgr/CDBCMgr.h"
+#include "CDBCMgr/CDBCDefs/SpellAdditionalAttributes.h"
 
 LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
 
@@ -30,48 +30,31 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     SpellRow buffer;
     float spellId = 0.f;
     bool hideCastbar = false;
+    bool invertCastbar = false;
+    uint32_t currentCast = 0;
 
     if (!unitFromName)
         return 0;
 
-    if (!ClientDB::GetLocalizedRow((void*)0xAD49D0, unitFromName->currentCastId, &buffer))
+    if (unitFromName->currentCastId)
+        currentCast = unitFromName->currentCastId;
+
+    if (!currentCast && unitFromName->currentChannelId)
+        currentCast = unitFromName->currentChannelId;
+
+    if (!currentCast || !ClientDB::GetLocalizedRow((void*)0xAD49D0, currentCast, &buffer))
         return 0;
 
     spellId = static_cast<float>(buffer.m_ID);
-
-    SpellCustomAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", buffer.m_ID);
+    double castTime = SpellRec::GetCastTime(&buffer, 0, 0, 1);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", buffer.m_ID);
 
     if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
         hideCastbar = true;
 
-    ClientLua::PushNumber(L, spellId);
-    ClientLua::PushBoolean(L, hideCastbar);
-    return 2;
-}
-
-LUA_FUNCTION(UnitCustomChannelData, (lua_State* L)) {
-    if (!ClientLua::IsString(L, 1))
-        ClientLua::DisplayError(L, "Usage: UnitCustomChannelData(\"unit\")", "");
-
-    CGUnit* unitFromName = ClntObjMgr::GetUnitFromName(ClientLua::ToLString(L, 1, 0));
-
-    SpellRow buffer;
-    float spellId = 0.f;
-    bool hideCastbar = 0.f;
-
-    if (!unitFromName)
-        return 0;
-
-    if (!ClientDB::GetLocalizedRow((void*)0xAD49D0, unitFromName->currentChannelId, &buffer))
-        return 0;
-
-    spellId = static_cast<float>(buffer.m_ID);
-
-    SpellCustomAttributesRow* customAttributesRow =
-        GlobalDBCMap.getRow<SpellCustomAttributesRow>("SpellCustomAttributes", buffer.m_ID);
-
-    if (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR))
+    if (castTime <= 250 && (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR)))
         hideCastbar = true;
+
 
     ClientLua::PushNumber(L, spellId);
     ClientLua::PushBoolean(L, hideCastbar);

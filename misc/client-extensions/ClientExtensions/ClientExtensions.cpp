@@ -1,8 +1,8 @@
 #include "ClientExtensions.h"
-#include "CustomDBCMgr/CustomDBCMgr.h"
+#include "CDBCMgr/CDBCMgr.h"
 
 void ClientExtensions::initialize() {
-    CustomDBCMgr::Load();
+    CDBCMgr::Load();
     CharacterFixes::CharacterCreationFixes();
     CharacterExtensions::Apply();
     SpellTooltipExtensions::Apply();
