@@ -32,6 +32,7 @@ function saveDbc() {
     for (const file of CDBCFiles) {
         if(!fs.existsSync(file.getPath()))
             new CDBCGenerator(file.getDefaultRow()).generate(file.getPath());
+        file.fileWork()
         saveDBCFile(file, '.cdbc')
     }
 }

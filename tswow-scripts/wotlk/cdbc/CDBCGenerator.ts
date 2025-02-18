@@ -38,7 +38,11 @@ export class CDBCGenerator {
             if (typeof value === 'string') {
                 buffer.writeInt32LE(this.addString(value), offset);
             } else if (Number.isInteger(value)) {
-                buffer.writeInt32LE(value, offset);
+                if (value >= 0) {
+                    buffer.writeUInt32LE(value, offset);
+                } else {
+                    buffer.writeInt32LE(value, offset);
+                }
             } else {
                 buffer.writeFloatLE(value, offset);
             }

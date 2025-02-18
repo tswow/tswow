@@ -36,10 +36,13 @@ export class CDBCFile<C, Q, R extends DBCRow<C, Q>> extends DBCFile<C, Q, R> {
             this.loaded = true;
         }
     }
+
+    fileWork(){}//override for any work required just before saving dbc
     
     getPath() {
         return this.defaultPath();
     }
+
     getDefaultRow() {
         return this.defaultRow;
     }

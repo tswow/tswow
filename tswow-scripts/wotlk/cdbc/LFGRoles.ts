@@ -21,6 +21,7 @@ import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCKeyCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { SQL } from '../SQLFiles'
 
 /**
  * Main row definition
@@ -85,4 +86,36 @@ export class LFGRolesCDBCFile extends CDBCFile<
     findByID(id : number) {
         return this.fastSearch(id);
     }
+    
+    override fileWork(): void {
+        const defaultClassRoles: Record<number, { tank: number, healer: number, damage: number, leader: number }> = {
+            1: { tank: 1, healer: 0, damage: 1, leader: 1 },
+            2: { tank: 1, healer: 1, damage: 1, leader: 1 },
+            3: { tank: 0, healer: 0, damage: 1, leader: 1 },
+            4: { tank: 0, healer: 0, damage: 1, leader: 1 },
+            5: { tank: 0, healer: 1, damage: 1, leader: 1 },
+            6: { tank: 1, healer: 0, damage: 1, leader: 1 },
+            7: { tank: 0, healer: 1, damage: 1, leader: 1 },
+            8: { tank: 0, healer: 0, damage: 1, leader: 1 },
+            9: { tank: 0, healer: 0, damage: 1, leader: 1 },
+            11: { tank: 1, healer: 1, damage: 1, leader: 1 },
+        };
+    
+        for (const v of SQL.player_class_roles.queryAll({})) {
+            defaultClassRoles[v.class.get()] = {
+                tank: v.tank.get(),
+                healer: v.healer.get(),
+                damage: v.damage.get(),
+                leader: v.leader.get(),
+            };
+        }
+    
+        for (const [classID, val] of Object.entries(defaultClassRoles)) {
+            const classIDNum = Number(classID);
+            const rolemask = (val.leader << 0) | (val.tank << 1) | (val.healer << 2) | (val.damage << 3);
+    
+            const row = this.findByID(classIDNum) ? this.getRow(classIDNum) : this.add(classIDNum);
+            row.Roles.set(rolemask);
+        }
+    }    
 }
