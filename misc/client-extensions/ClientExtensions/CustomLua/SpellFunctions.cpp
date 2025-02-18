@@ -30,7 +30,6 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     SpellRow buffer;
     float spellId = 0.f;
     bool hideCastbar = false;
-    bool invertCastbar = false;
     uint32_t currentCast = 0;
 
     if (!unitFromName)
@@ -54,7 +53,6 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
 
     if (castTime <= 250 && (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR)))
         hideCastbar = true;
-
 
     ClientLua::PushNumber(L, spellId);
     ClientLua::PushBoolean(L, hideCastbar);
