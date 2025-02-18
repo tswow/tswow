@@ -22,12 +22,16 @@ import { WFile } from '../../util/FileTree';
 import { DBCFiles } from '../DBCFiles';
 import { CDBCFiles } from '../CDBCFiles';
 import { SQLTables } from '../SQLFiles';
+import * as fs from 'fs';
+import { CDBCGenerator } from '../cdbc/CDBCGenerator';
 
 function saveDbc() {
     for (const file of DBCFiles) {
         saveDBCFile(file, '.dbc')
     }
     for (const file of CDBCFiles) {
+        if(!fs.existsSync(file.getPath()))
+            new CDBCGenerator(file.getDefaultRow()).generate(file.getPath());
         saveDBCFile(file, '.cdbc')
     }
 }
