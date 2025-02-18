@@ -75,7 +75,7 @@ export class LFGRolesCDBCFile extends CDBCFile<
     constructor() {
         super('LFGRoles',(t,b,o)=> new LFGRolesRow(t,b,o))
     }
-    /** Loads a new SpellAdditionalAttributes.dbc from a file. */
+    /** Loads a new LFGRoles.cdbc from a file. */
     static read(path: string): LFGRolesCDBCFile {
         return new LFGRolesCDBCFile().read(path)
     }
