@@ -91,6 +91,12 @@ void TSLua::load_spell_info_methods(sol::state& state)
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetEffect);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTotem);
     LUA_FIELD(ts_spellinfo, TSSpellInfo, GetTalentCost);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, IsRanked);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetRank);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetFirstRankSpell);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetLastRankSpell);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetNextRankSpell);
+    LUA_FIELD(ts_spellinfo, TSSpellInfo, GetPrevRankSpell);
     state.set_function("GetSpellInfo", &GetSpellInfo);
     state.set_function("GetTalentSpellCost", &GetTalentSpellCost);
 }

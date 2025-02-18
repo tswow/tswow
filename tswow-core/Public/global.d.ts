@@ -728,6 +728,20 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     CanParry() : bool
 
     /**
+     * Returns 'true' if the [Player] is in a contested or hostile zone, 'false' otherwise.
+     *
+     * @return bool isInHostileArea
+     */
+    IsInHostileArea() : bool
+
+    /**
+     * Returns 'true' if the [Player] is in a no-pvp area such as as sanctuary, 'false' otherwise.
+     *
+     * @return bool isInHostileArea
+     */
+    IsInNoPvPArea() : bool
+
+    /**
      * Returns the amount of available specs the [Player] currently has
      *
      * @return uint8 specCount
@@ -7727,6 +7741,12 @@ declare interface TSSpellInfo extends TSEntityProvider {
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
+    IsRanked(): boolean
+    GetRank(): uint8
+    GetFirstRankSpell(): TSSpellInfo
+    GetLastRankSpell(): TSSpellInfo
+    GetNextRankSpell(): TSSpellInfo
+    GetPrevRankSpell(): TSSpellInfo
 }
 
 declare class TSSpellEffectInfo {

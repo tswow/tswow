@@ -132,6 +132,12 @@ public:
     TSNumber<uint32> GetTalentCost();
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
+    bool IsRanked();
+    uint8 GetRank();
+    TSSpellInfo GetFirstRankSpell();
+    TSSpellInfo GetLastRankSpell();
+    TSSpellInfo GetNextRankSpell();
+    TSSpellInfo GetPrevRankSpell();
 };
 
 TC_GAME_API TSSpellInfo GetSpellInfo(uint32 entry);

@@ -483,3 +483,33 @@ TSNumber<uint32> GetTalentCost(uint32 entry)
 {
     return GetTalentSpellCost(entry);
 }
+
+bool TSSpellInfo::IsRanked()
+{
+    return info->IsRanked();
+}
+
+uint8 TSSpellInfo::GetRank()
+{
+    return info->GetRank();
+}
+
+TSSpellInfo TSSpellInfo::GetFirstRankSpell()
+{
+    return info->GetFirstRankSpell();
+}
+
+TSSpellInfo TSSpellInfo::GetLastRankSpell()
+{
+    return info->GetLastRankSpell();
+}
+
+TSSpellInfo TSSpellInfo::GetNextRankSpell()
+{
+    return info->GetNextRankSpell();
+}
+
+TSSpellInfo TSSpellInfo::GetPrevRankSpell()
+{
+    return info->GetPrevRankSpell();
+}
