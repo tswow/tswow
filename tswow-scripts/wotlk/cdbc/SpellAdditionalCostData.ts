@@ -22,11 +22,11 @@ import { DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 
- /**
-  * Main row definition
-  * - Add column comments to the commented getters below
-  * - Add file comments to DBCFiles.ts
-  */
+/**
+ * Main row definition
+ * - Add column comments to the commented getters below
+ * - Add file comments to DBCFiles.ts
+ */
 export class SpellAdditionalCostDataRow extends DBCRow<SpellAdditionalCostDataCreator,SpellAdditionalCostDataQuery> {
     /**
      * Primary Key
@@ -88,7 +88,7 @@ export class SpellAdditionalCostDataCDBCFile extends CDBCFile<
     SpellAdditionalCostDataCreator,
     SpellAdditionalCostDataQuery,
     SpellAdditionalCostDataRow> {
-    protected defaultRow = [0, "Unused", 0, 0];
+    protected defaultRow = [2, "Unused", 0, 0];
 
     constructor() {
         super('SpellAdditionalCostData',(t,b,o)=> new SpellAdditionalCostDataRow(t,b,o))

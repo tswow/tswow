@@ -9,10 +9,10 @@ struct SpellAdditionalCostDataRow {
     int flag;
 
     int handleLuaPush(lua_State* L) {
-        ClientLua::PushNumber(L,spellID);
-        ClientLua::PushString(L,resourceName);
-        ClientLua::PushNumber(L,cost);
-        ClientLua::PushNumber(L,flag);
+        ClientLua::PushNumber(L, spellID);
+        ClientLua::PushString(L, resourceName);
+        ClientLua::PushNumber(L, cost);
+        ClientLua::PushNumber(L, flag);
         return 4;
     }
 };
@@ -26,10 +26,10 @@ public:
     }
     
     SpellAdditionalCostData* LoadDB() { 
-        GlobalDBCMap.addDBC("SpellAdditionalCostData");
+        GlobalCDBCMap.addCDBC("SpellAdditionalCostData");
         CDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStringsAndTable();
-        CDBCMgr::addDBCLuaHandler("SpellAdditionalCostData",  SpellAdditionalCostData::handleLua);
+        CDBCMgr::addCDBCLuaHandler("SpellAdditionalCostData", SpellAdditionalCostData::handleLua);
         return this;
     };
 
@@ -38,13 +38,13 @@ public:
         uintptr_t stringTable = reinterpret_cast<uintptr_t>(this->stringTable);
         for (uint32_t i = 0; i < this->numRows; i++) {
             row->resourceName = reinterpret_cast<char*>(stringTable + reinterpret_cast<uintptr_t>(row->resourceName));
-            GlobalDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
+            GlobalCDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
             ++row;
         }
     };
 
     static int handleLua(lua_State* L, int row) {
-        SpellAdditionalCostDataRow* r = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", row);
+        SpellAdditionalCostDataRow* r = GlobalCDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", row);
         if (r) return r->handleLuaPush(L);
         return 0;
     }

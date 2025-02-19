@@ -27,7 +27,7 @@ import { DBCRow } from '../../data/dbc/DBCRow'
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
   */
- export class SpellAdditionalAttributesRow extends DBCRow<SpellAdditionalAttributesCreator,SpellAdditionalAttributesQuery> {
+export class SpellAdditionalAttributesRow extends DBCRow<SpellAdditionalAttributesCreator,SpellAdditionalAttributesQuery> {
     /**
      * Primary Key
      *
@@ -49,7 +49,7 @@ import { DBCRow } from '../../data/dbc/DBCRow'
     clone(SpellID : int, c? : SpellAdditionalAttributesCreator) : this {
         return this.cloneInternal([SpellID],c);
     }
- }
+}
 
  /**
  * Used for object creation (Don't comment these)
@@ -75,7 +75,7 @@ export class SpellAdditionalAttributesCDBCFile extends CDBCFile<
     SpellAdditionalAttributesCreator,
     SpellAdditionalAttributesQuery,
     SpellAdditionalAttributesRow> {
-    protected defaultRow = [0, 0];
+    protected defaultRow = [2, 4294967295];
 
     constructor() {
         super('SpellAdditionalAttributes',(t,b,o)=> new SpellAdditionalAttributesRow(t,b,o))

@@ -175,8 +175,8 @@ void TooltipExtensions::SpellTooltipPowerCostExtension() {
 }
 
 void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRow* spell, uint32_t powerCost, uint32_t powerCostPerSec, char* powerString, PowerDisplayRow* powerDisplayRow) {
-    SpellAdditionalCostDataRow* additionalCostRow = GlobalDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", spell->m_ID);
-    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spell->m_ID);
+    SpellAdditionalCostDataRow* additionalCostRow = GlobalCDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", spell->m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spell->m_ID);
     bool hasPowerCost = (powerCost != 0 || powerCostPerSec != 0);
     char buffer[128];
 
@@ -240,10 +240,14 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRow* spell, uin
     }
 
     char buffer[128];
-    SpellAdditionalAttributesRow* customAttributesRow = GlobalDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spell->m_ID);
+    SpellAdditionalAttributesRow* customAttributesRow = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", spell->m_ID);
     bool treatAsInstant = customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_TREAT_AS_INSTANT);
 
-    double castTime = SpellRec_C::GetCastTime(spell, a6, a8, 1);    
+    double castTime = SpellRec_C::GetCastTime(spell, a6, a8, 1);
+
+    if (castTime <= 250 && (customAttributesRow && (customAttributesRow->customAttr0 & SPELL_ATTR0_CU_LOW_TIME_TREAT_AS_INSTANT)))
+        treatAsInstant = true;
+
     if (castTime && !treatAsInstant) {
         bool isLongCast = castTime >= MILLISECONDS_IN_MINUTE;
         char* castFlag = isLongCast ? "SPELL_CAST_TIME_MIN" : "SPELL_CAST_TIME_SEC";

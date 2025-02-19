@@ -77,7 +77,6 @@ declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, 
 declare function UpdateMasteryAmount(percentage: number, flat: number): any;
 
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
-declare function UnitCustomChannelData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
 declare const CharacterModelFrame: WoWAPI.Frame
@@ -103,6 +102,8 @@ declare function GetItemGem(link:string, index:number):string[];
 declare function GetNumQuestLeaderBoards(): number;
 declare function GetQuestLogSelection(): number;
 declare function GetQuestLink(index: number): string;
+declare function DrawLine(texture: WoWAPI.Texture, canvasFrame: WoWAPI.Frame, startX: number, startY: number, endX: number, endY: number, lineWidth: number, lineFactor: number, relPoint: Point)
+declare function StringContainsString(Name: string, Lookup: string): string
 //
 
 /**
@@ -14351,7 +14352,7 @@ declare function UnitFactionGroup(unitId: WoWAPI.UnitId): LuaMultiReturn<[string
  * @see https://wow.gamepedia.com/API_UnitClass
  */
 declare function UnitClass(unitId: WoWAPI.UnitId): LuaMultiReturn<[string, string]>;
-
+declare function UnitRace(unitId: WoWAPI.UnitId): string;
 /**
  */
 declare function UnitPowerType(unitId: WoWAPI.UnitId): LuaMultiReturn<[number, string]>;

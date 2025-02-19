@@ -27,7 +27,7 @@ export class CDBCFile<C, Q, R extends DBCRow<C, Q>> extends DBCFile<C, Q, R> {
     protected override defaultPath() {
         return path.join(dataset.dbc_source.get(), this.name + '.cdbc');
     }
-    
+
     protected override load(filePath: string = this.defaultPath()) {
         if (!this.loaded) {
             if(!fs.existsSync(filePath))
@@ -35,5 +35,15 @@ export class CDBCFile<C, Q, R extends DBCRow<C, Q>> extends DBCFile<C, Q, R> {
             this.buffer.read(filePath);            
             this.loaded = true;
         }
+    }
+
+    fileWork(){}//override for any work required just before saving dbc
+    
+    getPath() {
+        return this.defaultPath();
+    }
+
+    getDefaultRow() {
+        return this.defaultRow;
     }
 }

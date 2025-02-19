@@ -3,6 +3,8 @@
 #include "ClientMacros.h"
 #include "Util.h"
 
+struct lua_State;
+
 enum ObjectTypeMask : uint32_t {
     TYPEMASK_OBJECT         = 0x0001,
     TYPEMASK_ITEM           = 0x0002,
@@ -35,6 +37,7 @@ enum Field : uint32_t {
 
 enum FrameXMLEvent : uint32_t {
     EVENT_ACTIONBAR_SLOT_CHANGED                = 176,
+    EVENT_LFG_ROLE_UPDATE                       = 506,
     EVENT_PLAYER_TALENT_UPDATE                  = 625,
 };
 
@@ -99,11 +102,13 @@ enum SpellAttr2 : uint32_t {
 
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
-    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Self-descripting, dones't display castbar at all
+    SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Does not display cast bar
     SPELL_ATTR0_CU_DO_NOT_DISPLAY_POWER_COST    = 0x00000004,   // Does not display power cost in tooltip
     SPELL_ATTR0_CU_SUPPRESS_LEARN_MSG           = 0x00000008,   // Does not display "You have learned a new spell:" message
     SPELL_ATTR0_CU_SUPPRESS_UNLEARN_MSG         = 0x00000010,   // Does not display "You have unlearned" message
     SPELL_ATTR0_CU_INVERT_CASTBAR               = 0x00000020,   // NYI; will cost me some sanity it seems
+    SPELL_ATTR0_CU_LOW_TIME_TREAT_AS_INSTANT    = 0x00000040,   // If cast time <= 250ms, changes tooltip line responsible to "Instant"
+    SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR  = 0x00000080,   // If cast time <= 250ms, does not display cast bar
 };
 
 static uint32_t dummy = 0;
@@ -132,6 +137,23 @@ struct CGUnit {
     uint32_t padding[4];
     uint32_t currentChannelId;
     // TODO: add rest, currently not needed
+};
+
+struct ChrClassesRow {
+    uint32_t m_ID;
+    uint32_t m_DisplayPower;
+    char* m_petNameToken;
+    char* m_name_lang;
+    char* m_name_female_lang;
+    char* m_name_male_lang;
+    char* m_filename;
+    uint32_t m_spellClassSet;
+    uint32_t m_flags;
+    uint32_t m_cinematicSequenceID;
+    uint32_t m_required_expansion;
+    uint32_t m_attackPowerPerStrength;
+    uint32_t m_attackPowerPerAgility;
+    uint32_t m_rangedAttackPowerPerAgility;
 };
 
 struct PowerDisplayRow {
@@ -318,7 +340,12 @@ namespace ClntObjMgr {
     CLIENT_FUNCTION(ObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
 }
 
+namespace CVar_C {
+    CLIENT_FUNCTION(sub_766940, 0x766940, __thiscall, void, (void*, int, char, char, char, char))
+}
+
 namespace FrameScript {
+    CLIENT_FUNCTION(GetParam, 0x815500, __cdecl, bool, (lua_State*, int, int))
     CLIENT_FUNCTION(GetText, 0x819D40, __cdecl, char*, (char*, int, int))
     CLIENT_FUNCTION(SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
 }
@@ -334,6 +361,7 @@ namespace SpellParser {
 namespace SpellRec_C {
     CLIENT_FUNCTION(GetLevel, 0x7FF070, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t))
     CLIENT_FUNCTION(GetCastTime, 0x7FF180, __cdecl, uint32_t, (SpellRow*, uint32_t, uint32_t, uint32_t))
+    CLIENT_FUNCTION(ModifySpellValueInt, 0x7FDB50, __cdecl, void, (SpellRow*, uint32_t*, uint32_t))
 }
 
 namespace SErr {
@@ -371,5 +399,6 @@ namespace SysMsg {
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
 
 CLIENT_FUNCTION(sub_61FEC0, 0x61FEC0, __thiscall, void, (void*, char*, char*, void*, void*, uint32_t))
+CLIENT_FUNCTION(sub_6B1080, 0x6B1080, __cdecl, uint8_t, ())
 CLIENT_FUNCTION(sub_6E22C0, 0x6E22C0, __thiscall, uint32_t, (void*, uint32_t))
 CLIENT_FUNCTION(sub_812410, 0x812410, __cdecl, SkillLineAbilityRow*, (uint32_t, uint32_t, uint32_t))
