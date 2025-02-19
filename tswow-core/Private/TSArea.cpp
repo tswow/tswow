@@ -43,3 +43,21 @@ TSArray<TSPlayer> TSArea::GetPlayers() {
 
     return out;
 }
+
+TSArray<TSCreature> TSArea::GetCreatures() {
+    TSArray<TSCreature> out;
+    auto creatures = area->GetCreatures();
+
+    out.vec->reserve(creatures.size());
+    for (auto C : creatures) {
+        if (!C)
+            continue;
+
+        out.push(TSCreature(C));
+    }
+    return out;
+}
+
+TSArea GetArea(uint32 area) {
+    return TSArea(eAreaMgr->GetArea(area));
+}

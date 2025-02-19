@@ -3395,6 +3395,7 @@ declare interface TSArea extends TSEntityProvider {
     GetId(): TSNumber<uint32>
     GetParent(): TSArea
     GetPlayers(): TSArray<TSPlayer>
+    GetCreatures(): TSArray<TSCreature>
     GetMap(): TSMap
 }
 
@@ -5422,6 +5423,8 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetUnitsInRange(range : float,hostile : uint32,dead : uint32) : TSArray<TSUnit>
     GetPlayersInRange(range : float,hostile : uint32,dead : uint32) : TSArray<TSPlayer>
     GetGameObjectsInRange(range : float,entry : uint32,hostile : uint32) : TSArray<TSGameObject>
+
+    GetAreaIdFromPosition(): TSNumber<uint32>
 
     IsBehind(obj: TSWorldObject): bool
 
@@ -10697,3 +10700,5 @@ declare function TS_ZONE_SCOPED_N(cat: ZoneCategory): void
 declare function now() : uint64
 declare function GetGameTime() : uint64
 declare function GetNextResetTime() : uint64
+
+declare function GetArea(area: uint32): TSArea

@@ -173,6 +173,8 @@ public:
     void RemovedByGroup(TSWorldObjectGroup* group);
 
     void DoDelayed(std::function<void(TSWorldObject, TSMainThreadContext)> callback);
+
+    TSNumber<uint32> GetAreaIdFromPosition();
 private:
     friend class TSLua;
     void LDoDelayed(sol::protected_function callback);
