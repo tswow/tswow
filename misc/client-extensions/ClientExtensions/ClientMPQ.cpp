@@ -12,13 +12,13 @@ namespace ClientMPQ {
     size_t readFile(std::string const& filename, char** buf)
     {
         HANDLE handle = nullptr;
-        bool res = SFileOpenFile(filename.c_str(), &handle);
+        bool res = SFile::OpenFile(filename.c_str(), &handle);
         if (!res)
         {
             return 0;
         }
         DWORD high = 0;
-        DWORD low = SFileGetFileSize(handle, &high);
+        DWORD low = SFile::GetFileSize(handle, &high);
         if (high > 0)
         {
             // such large files cannot be read into memory in one go
@@ -26,15 +26,15 @@ namespace ClientMPQ {
             return 0;
         }
         char* data = new char[low];
-        DWORD read = 0;
-        int readRes = SFileReadFile(handle, data, low, &read, 0, 0);
+        uint32_t read = 0;
+        int readRes = SFile::ReadFile(handle, data, low, &read, 0);
         if (!readRes)
         {
             LOG_ERROR << "Unknown read error: " << filename;
             delete[] data;
             return 0;
         }
-        SFileCloseFile(handle);
+        SFile::CloseFile(handle);
         *buf = data;
         return read;
     }
