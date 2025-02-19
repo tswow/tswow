@@ -1,10 +1,12 @@
 #include "CDBCMgr.h"
+#include "CDBCDefs/LFGRoles.h"
 #include "CDBCDefs/SpellAdditionalAttributes.h"
 
 CDBCMgr GlobalCDBCMap;
 std::unordered_map<std::string, std::function<int(lua_State*, int)>> cdbcLuaHandlers = {};
 
 void CDBCMgr::Load() {
+    LFGRoles().LoadDB();
     SpellAdditionalAttributes().LoadDB();
 }
 

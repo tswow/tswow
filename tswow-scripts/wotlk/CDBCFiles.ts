@@ -16,15 +16,18 @@
  */
 /* tslint:disable */
 import { CDBCFile } from "./cdbc/CDBCFile"
+import { LFGRolesCDBCFile } from "./cdbc/LFGRoles";
 import { SpellAdditionalAttributesCDBCFile } from "./cdbc/SpellAdditionalAttributes";
 export const CDBC = {
+    LFGRoles : new LFGRolesCDBCFile(),
     SpellAdditionalAttributes : new SpellAdditionalAttributesCDBCFile(),
 }
 
 export const CDBCLoader = {
+    LFGRoles : (path: string) => LFGRolesCDBCFile.read(path),
     SpellAdditionalAttributes : (path: string) => SpellAdditionalAttributesCDBCFile.read(path),
 }
 
-export type CDBCNames = "SpellAdditionalAttributes"
+export type CDBCNames = "LFGRoles" | "SpellAdditionalAttributes"
 
 export const CDBCFiles : CDBCFile<any,any,any>[] = Object.values(CDBC);

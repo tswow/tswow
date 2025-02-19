@@ -22,12 +22,12 @@ import { DBCKeyCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 
- /**
-  * Main row definition
-  * - Add column comments to the commented getters below
-  * - Add file comments to DBCFiles.ts
-  */
- export class SpellAdditionalAttributesRow extends DBCRow<SpellAdditionalAttributesCreator,SpellAdditionalAttributesQuery> {
+/**
+ * Main row definition
+ * - Add column comments to the commented getters below
+ * - Add file comments to DBCFiles.ts
+ */
+export class SpellAdditionalAttributesRow extends DBCRow<SpellAdditionalAttributesCreator,SpellAdditionalAttributesQuery> {
     /**
      * Primary Key
      *
@@ -49,7 +49,7 @@ import { DBCRow } from '../../data/dbc/DBCRow'
     clone(SpellID : int, c? : SpellAdditionalAttributesCreator) : this {
         return this.cloneInternal([SpellID],c);
     }
- }
+}
 
  /**
  * Used for object creation (Don't comment these)

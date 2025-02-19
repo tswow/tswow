@@ -5,13 +5,18 @@ export class CDBCGenerator {
     private recordCount = 1; // Single base row
     private fieldCount: number;
     private recordSize: number;
-    private stringBlockSize = 1; // String block starts with null byte
+    private stringBlockSize = 0;
     private stringTable: Map<string, number> = new Map();
     private stringBuffer: Buffer = Buffer.alloc(1, 0); // Start with null byte
 
     constructor(private values: (number | string)[]) {
         this.fieldCount = values.length;
         this.recordSize = this.fieldCount * 4; // Each field is 4 bytes
+        for (const value of this.values) {
+            if (typeof value === 'string') {
+                this.stringBlockSize = 1 // String block starts with null byte
+            }
+        } 
     }
 
     private addString(value: string): number {
@@ -33,7 +38,11 @@ export class CDBCGenerator {
             if (typeof value === 'string') {
                 buffer.writeInt32LE(this.addString(value), offset);
             } else if (Number.isInteger(value)) {
-                buffer.writeInt32LE(value, offset);
+                if (value >= 0) {
+                    buffer.writeUInt32LE(value, offset);
+                } else {
+                    buffer.writeInt32LE(value, offset);
+                }
             } else {
                 buffer.writeFloatLE(value, offset);
             }

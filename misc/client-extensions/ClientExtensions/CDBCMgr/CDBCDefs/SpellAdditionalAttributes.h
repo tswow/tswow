@@ -15,7 +15,7 @@ struct SpellAdditionalAttributesRow {
 class SpellAdditionalAttributes : public CDBC {
 public:
     const char* fileName = "DBFilesClient\\SpellAdditionalAttributes.cdbc";
-    SpellAdditionalAttributes() {
+    SpellAdditionalAttributes() : CDBC() {
         this->numColumns = sizeof(SpellAdditionalAttributesRow)/4;
         this->rowSize = sizeof(SpellAdditionalAttributesRow);
     }
