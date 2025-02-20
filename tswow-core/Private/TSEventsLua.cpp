@@ -190,6 +190,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnOutdoorsChanged);
     LUA_HANDLE(unit_events, UnitEvents, OnLiquidStatusChanged);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcMissChance);
+    LUA_HANDLE(unit_events, UnitEvents, OnCalcMissChanceAgainst);
     LUA_HANDLE(unit_events, UnitEvents, OnCalcHeal);
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageEarly);
     LUA_HANDLE(unit_events, UnitEvents, OnMeleeDamageLate);

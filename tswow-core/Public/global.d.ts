@@ -9280,6 +9280,7 @@ declare namespace _hidden {
         OnOutdoorsChanged(callback: (unit: TSUnit, newStatus: TSMutable<boolean,boolean>) => void);
 
         OnCalcMissChance(callback: (unit: TSUnit, chance: TSMutableNumber<float>)=>void)
+        OnCalcMissChanceAgainst(callback: (attacker: TSUnit, victim: TSUnit, missChance: TSMutableNumber<float>)=>void)
         OnCalcHeal(callback: (healer: TSUnit, target: TSUnit, heal: TSMutableNumber<uint32>)=>void)
         OnMeleeDamageEarly(callback: (
               info: TSMeleeDamageInfo

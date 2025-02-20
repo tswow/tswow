@@ -469,6 +469,11 @@ struct TSEvents
             , TSUnit
             , TSMutableNumber<float>
         )
+        EVENT(OnCalcMissChanceAgainst
+            , TSUnit
+            , TSUnit
+            , TSMutableNumber<float>
+        )
         EVENT(OnCalcHeal
             , TSUnit
             , TSUnit
