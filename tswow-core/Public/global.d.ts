@@ -434,7 +434,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param cod
      * @param items
      */
-	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, delay? : uint32, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
+    SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, delay? : uint32, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
 
     SendShopMail(subject: string, body: string, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
 
@@ -5140,8 +5140,8 @@ declare interface TSGameObject extends TSWorldObject {
 }
 
 declare interface TSSpell extends TSEntityProvider {
-	//soonTM
-	GetSpellInfo() : TSSpellInfo
+    //soonTM
+    GetSpellInfo() : TSSpellInfo
 
     IsNull() : bool
 
@@ -6122,8 +6122,10 @@ declare interface TSUnit extends TSWorldObject {
     IsNull() : bool
     GetResistance(school: uint32): TSNumber<uint32>
     GetArmor(): TSNumber<uint32>
-    SetResistance(school: uint32, val: int32): TSNumber<uint32>
-    SetArmor(val: int32): TSNumber<uint32>
+    SetResistance(school: uint32, val: int32): void
+    SetArmor(val: int32): void
+    UpdateResistance(school: uint32): void
+    UpdateAllResistances(): void
 
     HasAuraType(type: AuraType): bool
     HasAuraState(auraState : uint8, spellInfo? : TSSpellInfo, caster? : TSUnit) : bool
@@ -7865,71 +7867,71 @@ declare interface TSItemTemplate extends TSEntityProvider {
 }
 
 declare interface TSSpellInfo extends TSEntityProvider {
-	IsNull() : bool
+    IsNull() : bool
     GetEntry() : TSNumber<uint32>
-	GetSchool() : TSNumber<uint32>
-	GetBaseLevel() : TSNumber<uint32>
-	GetDmgClass() : TSNumber<uint32>
-	GetActiveIconID() : TSNumber<uint32>
-	GetAreaGroupID() : TSNumber<uint32>
-	GetAttributes() : TSNumber<uint32>
-	GetAttributesCu() : TSNumber<uint32>
-	GetAttributesEx() : TSNumber<uint32>
-	GetAttributesEx2() : TSNumber<uint32>
-	GetAttributesEx3() : TSNumber<uint32>
-	GetAttributesEx4() : TSNumber<uint32>
-	GetAttributesEx5() : TSNumber<uint32>
-	GetAttributesEx6() : TSNumber<uint32>
-	GetAttributesEx7() : TSNumber<uint32>
-	GetAuraInterruptFlags() : TSNumber<uint32>
-	GetCasterAuraSpell() : TSNumber<uint32>
-	GetCasterAuraState() : TSNumber<uint32>
-	GetCasterAuraStateNot() : TSNumber<uint32>
-	GetCategoryRecoveryTime() : TSNumber<uint32>
-	GetChannelInterruptFlags() : TSNumber<uint32>
-	GetDispel() : TSNumber<uint32>
-	GetEquippedItemClass() : TSNumber<uint32>
-	GetEquippedItemInventoryTypeMask() : TSNumber<uint32>
-	GetEquippedItemSubClassMask() : TSNumber<uint32>
-	GetExcludeCasterAuraSpell() : TSNumber<uint32>
-	GetExcludeTargetAuraSpell() : TSNumber<uint32>
-	GetExplicitTargetMask() : TSNumber<uint32>
-	GetFacingCasterFlags() : TSNumber<uint32>
-	GetInterruptFlags() : TSNumber<uint32>
-	GetManaCost() : TSNumber<uint32>
-	GetManaCostPercentage() : TSNumber<uint32>
-	GetManaCostPerlevel() : TSNumber<uint32>
-	GetManaPerSecond() : TSNumber<uint32>
-	GetManaPerSecondPerLevel() : TSNumber<uint32>
-	GetMaxAffectedTargets() : TSNumber<uint32>
-	GetMaxLevel() : TSNumber<uint32>
-	GetMaxTargetLevel() : TSNumber<uint32>
-	GetMechanic() : TSNumber<uint32>
-	GetPowerType() : TSNumber<uint32>
-	GetPreventionType() : TSNumber<uint32>
-	GetPriority() : TSNumber<uint32>
-	GetProcChance() : TSNumber<uint32>
-	GetProcCharges() : TSNumber<uint32>
-	GetProcFlags() : TSNumber<uint32>
-	GetRecoveryTime() : TSNumber<uint32>
-	GetRequiresSpellFocus() : TSNumber<uint32>
-	GetRuneCostID() : TSNumber<uint32>
-	GetSchoolMask() : TSNumber<uint32>
-	GetSpeed() : TSNumber<uint32>
-	GetSpellFamilyFlags(index: uint8) : TSNumber<uint32>
-	GetSpellFamilyName() : TSNumber<uint32>
-	GetSpellIconID() : TSNumber<uint32>
-	GetSpellLevel() : TSNumber<uint32>
-	GetStackAmount() : TSNumber<uint32>
-	GetStances() : TSNumber<uint32>
-	GetStancesNot() : TSNumber<uint32>
-	GetStartRecoveryCategory() : TSNumber<uint32>
-	GetStartRecoveryTime() : TSNumber<uint32>
-	GetTargetAuraSpell() : TSNumber<uint32>
-	GetTargetAuraState() : TSNumber<uint32>
-	GetTargetAuraStateNot() : TSNumber<uint32>
-	GetTargetCreatureType() : TSNumber<uint32>
-	GetTargets() : TSNumber<uint32>
+    GetSchool() : TSNumber<uint32>
+    GetBaseLevel() : TSNumber<uint32>
+    GetDmgClass() : TSNumber<uint32>
+    GetActiveIconID() : TSNumber<uint32>
+    GetAreaGroupID() : TSNumber<uint32>
+    GetAttributes() : TSNumber<uint32>
+    GetAttributesCu() : TSNumber<uint32>
+    GetAttributesEx() : TSNumber<uint32>
+    GetAttributesEx2() : TSNumber<uint32>
+    GetAttributesEx3() : TSNumber<uint32>
+    GetAttributesEx4() : TSNumber<uint32>
+    GetAttributesEx5() : TSNumber<uint32>
+    GetAttributesEx6() : TSNumber<uint32>
+    GetAttributesEx7() : TSNumber<uint32>
+    GetAuraInterruptFlags() : TSNumber<uint32>
+    GetCasterAuraSpell() : TSNumber<uint32>
+    GetCasterAuraState() : TSNumber<uint32>
+    GetCasterAuraStateNot() : TSNumber<uint32>
+    GetCategoryRecoveryTime() : TSNumber<uint32>
+    GetChannelInterruptFlags() : TSNumber<uint32>
+    GetDispel() : TSNumber<uint32>
+    GetEquippedItemClass() : TSNumber<uint32>
+    GetEquippedItemInventoryTypeMask() : TSNumber<uint32>
+    GetEquippedItemSubClassMask() : TSNumber<uint32>
+    GetExcludeCasterAuraSpell() : TSNumber<uint32>
+    GetExcludeTargetAuraSpell() : TSNumber<uint32>
+    GetExplicitTargetMask() : TSNumber<uint32>
+    GetFacingCasterFlags() : TSNumber<uint32>
+    GetInterruptFlags() : TSNumber<uint32>
+    GetManaCost() : TSNumber<uint32>
+    GetManaCostPercentage() : TSNumber<uint32>
+    GetManaCostPerlevel() : TSNumber<uint32>
+    GetManaPerSecond() : TSNumber<uint32>
+    GetManaPerSecondPerLevel() : TSNumber<uint32>
+    GetMaxAffectedTargets() : TSNumber<uint32>
+    GetMaxLevel() : TSNumber<uint32>
+    GetMaxTargetLevel() : TSNumber<uint32>
+    GetMechanic() : TSNumber<uint32>
+    GetPowerType() : TSNumber<uint32>
+    GetPreventionType() : TSNumber<uint32>
+    GetPriority() : TSNumber<uint32>
+    GetProcChance() : TSNumber<uint32>
+    GetProcCharges() : TSNumber<uint32>
+    GetProcFlags() : TSNumber<uint32>
+    GetRecoveryTime() : TSNumber<uint32>
+    GetRequiresSpellFocus() : TSNumber<uint32>
+    GetRuneCostID() : TSNumber<uint32>
+    GetSchoolMask() : TSNumber<uint32>
+    GetSpeed() : TSNumber<uint32>
+    GetSpellFamilyFlags(index: uint8) : TSNumber<uint32>
+    GetSpellFamilyName() : TSNumber<uint32>
+    GetSpellIconID() : TSNumber<uint32>
+    GetSpellLevel() : TSNumber<uint32>
+    GetStackAmount() : TSNumber<uint32>
+    GetStances() : TSNumber<uint32>
+    GetStancesNot() : TSNumber<uint32>
+    GetStartRecoveryCategory() : TSNumber<uint32>
+    GetStartRecoveryTime() : TSNumber<uint32>
+    GetTargetAuraSpell() : TSNumber<uint32>
+    GetTargetAuraState() : TSNumber<uint32>
+    GetTargetAuraStateNot() : TSNumber<uint32>
+    GetTargetCreatureType() : TSNumber<uint32>
+    GetTargets() : TSNumber<uint32>
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
     GetTotem(index: uint32): TSNumber<uint32>
     GetTalentCost(): TSNumber<uint32>
@@ -9596,8 +9598,8 @@ declare namespace _hidden {
         OnPlayerEnter(id: EventID, callback: (area: TSArea, player: TSPlayer)=>void);
         OnPlayerLeave(callback: (area: TSArea, player: TSPlayer)=>void);
         OnPlayerLeave(id: EventID, callback: (area: TSArea, player: TSPlayer)=>void);
-        OnPlayerDied(callback: (area: TSArea, player: TSPlayer, TSUnit: killer)=>void);
-        OnPlayerDied(id: EventID, callback: (area: TSArea, player: TSPlayer, TSUnit: killer)=>void);
+        OnPlayerDied(callback: (area: TSArea, player: TSPlayer, killer: TSUnit)=>void);
+        OnPlayerDied(id: EventID, callback: (area: TSArea, player: TSPlayer, killer: TSUnit)=>void);
 
         OnCreatureCreate(callback: (area: TSArea, cre: TSCreature)=>void);
         OnCreatureCreate(id: EventID, callback: (area: TSArea, cre: TSCreature)=>void);

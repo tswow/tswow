@@ -206,6 +206,8 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, GetArmor);
     LUA_FIELD(ts_unit, TSUnit, SetResistance);
     LUA_FIELD(ts_unit, TSUnit, SetArmor);
+    LUA_FIELD(ts_unit, TSUnit, UpdateResistance);
+    LUA_FIELD(ts_unit, TSUnit, UpdateAllResistances);
     LUA_FIELD(ts_unit, TSUnit, RemoveAllControlled);
     LUA_FIELD(ts_unit, TSUnit, GetFirstControlled);
     LUA_FIELD(ts_unit, TSUnit, RemoveAllMinionsByEntry);

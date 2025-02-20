@@ -233,6 +233,8 @@ public:
     TSNumber<uint32> GetArmor();
     void SetResistance(uint32 school, int32 val);
     void SetArmor(int32 val);
+    void UpdateResistance(uint32 school);
+    void UpdateAllResistances();
 
     TSNumber<float> GetTotalAttackPowerValue(uint8) const;
     TSNumber<uint32> GetAttackTime(uint8) const;

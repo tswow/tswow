@@ -2461,6 +2461,17 @@ void TSUnit::SetArmor(int32 val)
     unit->SetArmor(val);
 }
 
+void TSUnit::UpdateResistance(uint32 school)
+{
+    unit->UpdateResistances(school);
+}
+
+void TSUnit::UpdateAllResistances()
+{
+    for (uint8 i = 0; i < MAX_SPELL_SCHOOL; i++)
+        unit->UpdateResistances(i);
+}
+
 bool TSUnit::HasAuraType(uint32 type)
 {
     return unit->HasAuraType(static_cast<AuraType>(type));
