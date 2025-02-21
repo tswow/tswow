@@ -135,6 +135,22 @@ struct MovementInfo {
     // TODO: add rest, probably when needed
 };
 
+struct PlayerFields {
+    uint32_t padding[876];
+    float blockPct;
+    float dodgePct;
+    float parryPct;
+    uint32_t expertise;
+    uint32_t offhandExperise;
+    float critPct;
+    float rangedCritPct;
+    float offhandCritPct;
+    float spellCritPct;
+    float shieldBlock;
+    float shieldBlockCritPct;
+    // TODO: add rest when needed
+};
+
 struct UnitFields {
     uint64_t padding[8];    // not defining those until we need them
     uint32_t channelSpell;
@@ -148,14 +164,21 @@ struct UnitFields {
 
 struct CGUnit {
     uint32_t objBase[52];
-    UnitFields* UnitData;
+    UnitFields* unitData;
     uint32_t paddingD4;
     MovementInfo* movementInfo;
     uint32_t padding34[612];
     uint32_t currentCastId;
     uint32_t padding[4];
     uint32_t currentChannelId;
+    uint32_t padding2[353];
     // TODO: add rest, currently not needed
+};
+
+struct CGPlayer {
+    CGUnit unitBase;
+    PlayerFields* PlayerData;
+    uint32_t playerClass[1024];
 };
 
 struct ChrClassesRow {

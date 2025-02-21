@@ -31,8 +31,8 @@ enum SpellVariable : uint32_t {
     SPELLVARIABLE_mastery2  = 185,
     SPELLVARIABLE_mastery3  = 186,
     SPELLVARIABLE_mastery4  = 187,
-    SPELLVARIABLE_MASTERY1  = 188,
-    SPELLVARIABLE_MASTERY2  = 189,
-    SPELLVARIABLE_MASTERY3  = 190,
-    SPELLVARIABLE_MASTERY4  = 191,
+    SPELLVARIABLE_bpct      = 188,
+    SPELLVARIABLE_dpct      = 189,
+    SPELLVARIABLE_ppct      = 190,
+    SPELLVARIABLE_sbl       = 191,
 };

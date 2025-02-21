@@ -47,25 +47,25 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
         result = CFormula::GetVariableValue(_this, spellVariable, a3, spell, a5, a6, a7, a8, a9);
     else {
         float value = 0.f;
-        CGUnit* activePlayer = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(ClntObjMgr::GetActivePlayer(), TYPEMASK_PLAYER));
+        CGPlayer* activePlayer = reinterpret_cast<CGPlayer*>(ClntObjMgr::ObjectPtr(ClntObjMgr::GetActivePlayer(), TYPEMASK_PLAYER));
 
         if (activePlayer) {
             // Arrays for current and max power fields
             if (spellVariable >= SPELLVARIABLE_power1 && spellVariable <= SPELLVARIABLE_power7) {
                 uint32_t var = spellVariable - SPELLVARIABLE_power1;
-                value = static_cast<float>(activePlayer->UnitData->unitCurrPowers[var]);
+                value = static_cast<float>(activePlayer->unitBase.unitData->unitCurrPowers[var]);
             }
             else if (spellVariable >= SPELLVARIABLE_POWER1 && spellVariable <= SPELLVARIABLE_POWER7) {
                 uint32_t var = spellVariable - SPELLVARIABLE_POWER1;
-                value = static_cast<float>(activePlayer->UnitData->unitMaxPowers[var]);
+                value = static_cast<float>(activePlayer->unitBase.unitData->unitMaxPowers[var]);
             }
             else {
                 switch (spellVariable) {
                     case SPELLVARIABLE_hp:
-                        value = static_cast<float>(activePlayer->UnitData->unitCurrHealth);
+                        value = static_cast<float>(activePlayer->unitBase.unitData->unitCurrHealth);
                         break;
                     case SPELLVARIABLE_HP:
-                        value = static_cast<float>(activePlayer->UnitData->unitMaxHealth);
+                        value = static_cast<float>(activePlayer->unitBase.unitData->unitMaxHealth);
                         break;
                     case SPELLVARIABLE_ppl1:
                     case SPELLVARIABLE_PPL1:
@@ -80,20 +80,28 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         value = spell->m_effectRealPointsPerLevel[2];
                         break;
                     case SPELLVARIABLE_mastery1:
-                    case SPELLVARIABLE_MASTERY1:
                         value = CharacterDefines::getMasteryForSpec(0);
                         break;
                     case SPELLVARIABLE_mastery2:
-                    case SPELLVARIABLE_MASTERY2:
                         value = CharacterDefines::getMasteryForSpec(1);
                         break;
                     case SPELLVARIABLE_mastery3:
-                    case SPELLVARIABLE_MASTERY3:
                         value = CharacterDefines::getMasteryForSpec(2);
                         break;
                     case SPELLVARIABLE_mastery4:
-                    case SPELLVARIABLE_MASTERY4:
                         value = CharacterDefines::getMasteryForSpec(3);
+                        break;
+                    case SPELLVARIABLE_bpct:
+                        value = activePlayer->PlayerData->blockPct;
+                        break;
+                    case SPELLVARIABLE_dpct:
+                        value = activePlayer->PlayerData->dodgePct;
+                        break;
+                    case SPELLVARIABLE_ppct:
+                        value = activePlayer->PlayerData->parryPct;
+                        break;
+                    case SPELLVARIABLE_sbl:
+                        value = activePlayer->PlayerData->shieldBlock;
                         break;
                     default:
                         *reinterpret_cast<uint32_t*>(_this) = 1;
@@ -117,7 +125,7 @@ void TooltipExtensions::SetNewVariablePointers() {
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
         "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
         "mastery1", "mastery2", "mastery3", "mastery4",
-        "MASTERY1", "MASTERY2", "MASTERY3", "MASTERY4",
+        "bpct", "dpct", "ppct", "sbl"
     };
 
     for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)
