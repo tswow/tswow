@@ -118,6 +118,23 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
+struct C3Vector {
+    float x;
+    float y;
+    float z;
+};
+
+struct MovementInfo {
+    uint32_t padding[2];
+    uint64_t moverGUID;
+    C3Vector position;
+    float padding1C;
+    float orientation;
+    float pitch;
+    uint32_t padding28[74];
+    // TODO: add rest, probably when needed
+};
+
 struct UnitFields {
     uint64_t padding[8];    // not defining those until we need them
     uint32_t channelSpell;
@@ -132,7 +149,9 @@ struct UnitFields {
 struct CGUnit {
     uint32_t objBase[52];
     UnitFields* UnitData;
-    uint32_t padding34[614];
+    uint32_t paddingD4;
+    MovementInfo* movementInfo;
+    uint32_t padding34[612];
     uint32_t currentCastId;
     uint32_t padding[4];
     uint32_t currentChannelId;
@@ -154,6 +173,28 @@ struct ChrClassesRow {
     uint32_t m_attackPowerPerStrength;
     uint32_t m_attackPowerPerAgility;
     uint32_t m_rangedAttackPowerPerAgility;
+};
+
+struct MapRow {
+    uint32_t m_ID;
+    char* m_Directory;
+    uint32_t m_InstanceType;
+    uint32_t m_Flags;
+    uint32_t m_PVP;
+    char* m_MapName_lang;
+    uint32_t m_areaTableID;
+    char* m_MapDescription0_lang;
+    char* m_MapDescription1_lang;
+    uint32_t m_LoadingScreenID;
+    float m_minimapIconScale;
+    uint32_t m_corpseMapID;
+    float m_corpseX;
+    float m_corpseY;
+    uint32_t m_timeOfDayOverride;
+    uint32_t m_expansionID;
+    uint32_t m_raidOffset;
+    uint32_t m_maxPlayers;
+    uint32_t m_parentMapID;
 };
 
 struct PowerDisplayRow {
@@ -394,6 +435,11 @@ namespace SStr {
 
 namespace SysMsg {
     CLIENT_FUNCTION(Printf, 0x4B5040, __cdecl, int, (uint32_t, uint32_t, char*, ...))
+}
+
+namespace World {
+    CLIENT_FUNCTION(LoadMap, 0x781430, __cdecl, void, (char*, C3Vector*, uint32_t))
+    CLIENT_FUNCTION(UnloadMap, 0x783180, __cdecl, void, ())
 }
 
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())

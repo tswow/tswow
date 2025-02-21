@@ -1,5 +1,5 @@
 #include "ClientLua.h"
-#include "ClientDetours.h"
+#include "SharedDefines.h"
 #include "Logger.h"
 #include "CVar.cpp"
 #include <string>
@@ -41,4 +41,33 @@ LUA_FUNCTION(ConvertCoordsToScreenSpace, (lua_State* L)) {
     ClientLua::PushNumber(L, y);
     ClientLua::PushNumber(L, pos2d.z);
     return 3;
+}
+
+LUA_FUNCTION(ReloadMap, (lua_State* L)) {
+    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
+
+    if (activePlayer) {
+        MapRow* row = 0;
+        int32_t mapId = *reinterpret_cast<uint32_t*>(0xBD088C);
+        CGUnit* activeObjectPtr = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
+        MovementInfo* moveInfo = activeObjectPtr->movementInfo;
+
+        if (mapId > -1) {
+            row = reinterpret_cast<MapRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD4178), mapId));
+            
+            if (row) {
+                char buffer[512];
+               
+                World::UnloadMap();
+                World::LoadMap(row->m_Directory, &moveInfo->position, mapId);
+
+                SStr::Printf(buffer, 512, "Map ID: %d (Directory: \"%s\", x: %f, y: %f, z: %f) reloaded.", mapId, row->m_Directory, moveInfo->position.x, moveInfo->position.y, moveInfo->position.z);
+                ClientLua::PushString(L, buffer);
+                return 1;
+            }
+        }
+    }
+
+    ClientLua::PushNil(L);
+    return 1;
 }

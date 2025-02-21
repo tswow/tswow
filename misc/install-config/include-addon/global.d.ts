@@ -57,7 +57,9 @@ declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 //dll additions
 declare function GetCDBCRow(dbcName: string, rowIndex: number): LuaMultiReturn<[...Unknown]>
+
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
+declare function ReloadMap(): any;
 
 declare function FindSpellActionBarSlot(spellID: number): LuaMultiReturn<[...number]>;
 declare function FireActionBarSlotUpdateEvent(): any;
