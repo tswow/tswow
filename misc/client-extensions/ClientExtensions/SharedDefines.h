@@ -135,6 +135,14 @@ struct MovementInfo {
     // TODO: add rest, probably when needed
 };
 
+struct ObjectFields {
+    uint64_t OBJECT_FIELD_GUID;
+    uint32_t OBJECT_FIELD_TYPE;
+    uint32_t OBJECT_FIELD_ENTRY;
+    float OBJECT_FIELD_SCALE_X;
+    uint32_t OBJECT_FIELD_PADDING;
+};
+
 struct PlayerFields {
     uint32_t padding[876];
     float blockPct;
@@ -162,8 +170,15 @@ struct UnitFields {
     // TODO: add rest at some point, most likely when needed
 };
 
+struct CGObject {
+    void* vtable;
+    uint32_t padding;
+    ObjectFields* ObjectData;
+    DWORD objectClass[49];
+};
+
 struct CGUnit {
-    uint32_t objBase[52];
+    CGObject objectBase;
     UnitFields* unitData;
     uint32_t paddingD4;
     MovementInfo* movementInfo;
@@ -388,9 +403,10 @@ namespace CGPetInfo_C {
 }
 
 namespace CGUnit_C {
-    CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
-    CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
-    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRow*))
+    CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (CGUnit*))
+    CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (CGUnit*, uint32_t))
+    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (CGUnit*, uint32_t, SpellRow*))
+    CLIENT_FUNCTION(ShouldFadeIn, 0x716650, __thiscall, bool, (CGUnit*))
 }
 
 namespace ClientDB {

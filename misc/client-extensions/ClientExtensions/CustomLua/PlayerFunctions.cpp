@@ -6,7 +6,7 @@ LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
     uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
 
     if (activePlayer) {
-        void* activeObjectPtr = ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT);
+        CGUnit* activeObjectPtr = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
         ClientLua::PushNumber(L, CGUnit_C::GetShapeshiftFormId(activeObjectPtr));
         return 1;
     }
