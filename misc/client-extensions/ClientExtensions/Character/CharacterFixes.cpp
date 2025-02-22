@@ -16,8 +16,6 @@ void CharacterFixes::CharacterCreationFixes() {
     // 0x4CDA43 - address of table where pointers to race name strings are stored
     SetNewRaceNamePointerTable();
     Util::OverwriteUInt32AtAddress(0x4CDA43, reinterpret_cast<uint32_t>(&raceNameTable));
-
-    return;
 }
 
 void CharacterFixes::SetNewRaceNamePointerTable() {
@@ -35,5 +33,4 @@ void CharacterFixes::SetNewRaceNamePointerTable() {
 
     for (uint8_t i = 26; i < 32; i++)
         raceNameTable[i] = reinterpret_cast<uint32_t>(&dummy);
-    return;
 }
