@@ -1,6 +1,7 @@
 #include "ClientLua.h"
 #include "Logger.h"
 #include "ClientDetours.h"
+#include "SharedDefines.h"
 #include "FSRoot.h"
 
 #include <vector>
@@ -10,20 +11,11 @@
 
 #include "luafiles.generated.h"
 
-// new custom range
-CLIENT_ADDRESS(void, CAVE_START, 0x7743d2)
-constexpr int CAVE_SIZE = 0x26; // space for 7 functions
-
-#define JMP_SIZE 5
-#define NOP 0x90
-#define JMP 0xe9
-
 namespace
 {
     struct LuaFunction {
         std::string const name;
         lua_CFunction func;
-
         std::string const file;
         size_t line;
     };
@@ -34,29 +26,17 @@ namespace
         return _luaRegistry;
     }
 
-    size_t lastCave = 0;
-
     CLIENT_ADDRESS(lua_State*, _state, 0x00d3f78c);
-    bool isInitialized = false;
-
     CLIENT_FUNCTION(UnregisterGlobal,0x00817FD0, __cdecl,void,(char const* name))
-    CLIENT_FUNCTION(FrameScriptRegisterFunction
-        , 0x00817F90
-        , __cdecl
-        , void
-        , (char const* name, lua_CFunction fn)
-    )
+    CLIENT_FUNCTION(FrameScriptRegisterFunction, 0x00817F90, __cdecl, void, (char const* name, lua_CFunction fn))
 }
 
 namespace ClientLua {
-    lua_State* State()
-    {
-        return *_state;
-    }
+    lua_State* State(){ return *_state; }
 
     void RegisterLua(std::string const& lua, std::string const& filename, size_t line)
     {
-        LUA_FILES.push_back({filename+":"+std::to_string(line),lua});
+        LUA_FILES.push_back({filename+":"+std::to_string(line), lua});
     }
 
     int AddFunction(char const* name, lua_CFunction fn, std::string const& file, size_t line)
@@ -77,21 +57,24 @@ namespace ClientLua {
     {
         return IsNumber(L, offset) ? _GetNumber(L, offset) : defValue;
     }
+
+    void allowOutOfBoundsPointer()
+    {
+        *(uint32_t*)0x00D415B8 = 1;
+        *(uint32_t*)0x00D415BC = 0x7FFFFFFF;
+    }
 }
 
-CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
-    LOG_DEBUG << "Loading script functions";
-    DWORD old;
-    VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), PAGE_EXECUTE_READWRITE, &old);
-    memset(CAVE_START, NOP, JMP_SIZE * luaRegistry().size());
+#define LUA_GLOBALSINDEX (-10002)
+CLIENT_FUNCTION(GetLuaState, 0x00817DB0, __cdecl, lua_State*, ())
+CLIENT_FUNCTION(lua_pushcclosure_s, 0x0084E400, __cdecl, void, (lua_State*, lua_CFunction, int))
+CLIENT_FUNCTION(lua_setfield_s, 0x0084E900, __cdecl, void, (lua_State*, int, const char*))
 
-    // write a jmp
-    *((unsigned char*)CAVE_START    ) = 0xed;
-    *((unsigned char*)CAVE_START + 1) = 0x26;
-
+void customLua()
+{
+    lua_State* L = GetLuaState();
     for (size_t i = 0; i < luaRegistry().size(); ++i)
     {
-        size_t cur_cave = uint32_t(CAVE_START) + 2 + i * JMP_SIZE;
         LuaFunction& fn = luaRegistry()[i];
         LOG_DEBUG
             << "Registering Lua function: "
@@ -102,35 +85,25 @@ CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
             << relProjectPath(fn.file)
             << ":"
             << fn.line;
-        // write jmp
-        *(uint8_t*)cur_cave = JMP;
-        *(uint32_t*)(cur_cave + 1) = int32_t(fn.func) - ((int32_t)cur_cave) - JMP_SIZE;
-        FrameScriptRegisterFunction(fn.name.c_str(), (lua_CFunction)cur_cave);
+        lua_pushcclosure_s(L, fn.func, 0);
+        lua_setfield_s(L, LUA_GLOBALSINDEX, fn.name.c_str());
     }
-    DWORD dummy;
-    VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), old, &dummy);
-    lastCave = luaRegistry().size();
+}
 
-    // so we have them available in the scripts below
+CLIENT_DETOUR(LoadScriptFunctionsEarly, 0x004D95C0, __cdecl, int, ()) {
+    LOG_DEBUG << "Loading early script functions";
+    customLua();
+    return LoadScriptFunctionsEarly();
+}
+
+CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
+    LOG_DEBUG << "Loading script functions";
+    customLua();
     int funcs = LoadScriptFunctions();
-
     for (auto const& pair : LUA_FILES)
     {
         LOG_DEBUG << "Running lua file " << pair.first;
         ClientLua::DoString(pair.second.c_str(), *_state);
     }
-
     return funcs;
-}
-
-CLIENT_DETOUR(UnloadScriptFunctions, 0x00512280, __cdecl, int, ()) {
-    if (lastCave > 0)
-    {
-        DWORD old;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, PAGE_EXECUTE_READWRITE, &old);
-        memset(CAVE_START, NOP, JMP_SIZE * lastCave);
-        DWORD dummy;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, old, &dummy);
-    }
-    return UnloadScriptFunctions();
 }
