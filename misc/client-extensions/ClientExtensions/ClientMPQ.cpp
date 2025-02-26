@@ -23,7 +23,7 @@ namespace ClientMPQ {
         }
         char* data = new char[low];
         uint32_t read = 0;
-        int readRes = SFile::ReadFile(handle, data, low, &read, 0);
+        int readRes = SFile::ReadFile(handle, data, low, &read, 0, 0);
         if (!readRes) {
             LOG_ERROR << "Unknown read error: " << filename;
             delete[] data;
