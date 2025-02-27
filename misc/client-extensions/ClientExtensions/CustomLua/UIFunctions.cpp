@@ -19,6 +19,25 @@ LUA_FUNCTION(FireTalentUpdateEvent, (lua_State* L)) {
     return 1;
 }
 
+LUA_FUNCTION(FlashGameWindow, (lua_State* L)) {
+    HWND activeWindow = *(HWND*)0x00D41620;
+
+    if (activeWindow && GetForegroundWindow() != activeWindow) {
+        FLASHWINFO flashInfo;
+
+        flashInfo.cbSize = sizeof(flashInfo);
+        flashInfo.hwnd = activeWindow;
+        flashInfo.dwFlags = FLASHW_TIMERNOFG | FLASHW_TRAY;
+        flashInfo.uCount = -1;
+        flashInfo.dwTimeout = 500;
+
+        FlashWindowEx(&flashInfo);
+    }
+        
+    ClientLua::PushNil(L);
+    return 1;
+}
+
 LUA_FUNCTION(FindSpellActionBarSlot, (lua_State* L)) {
     uint32_t spellID = ClientLua::GetNumber(L, 1);
     uintptr_t* actionBarSpellIDs = reinterpret_cast<uintptr_t*>(0xC1E358);

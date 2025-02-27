@@ -70,6 +70,8 @@ declare function FireTalentUpdateEvent(): any;
 declare function GetActiveSpec(): number;
 declare function SetActiveSpec(specID: number): any;
 
+declare function FlashGameWindow(): any;
+
 declare function GetShapeshiftFormID(): number;
 
 declare function GetSpellDescription(spellID:number): string;
