@@ -28,7 +28,7 @@ LUA_FUNCTION(FlashGameWindow, (lua_State* L)) {
         flashInfo.cbSize = sizeof(flashInfo);
         flashInfo.hwnd = activeWindow;
         flashInfo.dwFlags = FLASHW_TIMERNOFG | FLASHW_TRAY;
-        flashInfo.uCount = 10;
+        flashInfo.uCount = -1;
         flashInfo.dwTimeout = 500;
 
         FlashWindowEx(&flashInfo);
