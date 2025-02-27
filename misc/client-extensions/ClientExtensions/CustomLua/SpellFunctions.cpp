@@ -7,11 +7,11 @@
 LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
     if (ClientLua::IsNumber(L, 1)) {
         uint32_t spellId = ClientLua::GetNumber(L, 1);
-        SpellRow buffer;
+        SpellRow row;
         char dest[1024];
 
-        if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &buffer)) { // hex address is g_SpellRec struct
-            SpellParser::ParseText(&buffer, &dest, 1024, 0, 0, 0, 0, 1, 0);
+        if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &row)) { // hex address is g_SpellRec struct
+            SpellParser::ParseText(&row, &dest, 1024, 0, 0, 0, 0, 1, 0);
             ClientLua::PushString(L, dest);
             return 1;
         }
@@ -19,6 +19,23 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
 
     ClientLua::PushNil(L);
     return 1;
+}
+
+LUA_FUNCTION(GetSpellNameById, (lua_State* L)) {
+    if (ClientLua::IsNumber(L, 1)) {
+        uint32_t spellId = ClientLua::GetNumber(L, 1);
+        SpellRow row;
+
+        if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &row)) {
+            ClientLua::PushString(L, row.m_name_lang);
+            ClientLua::PushString(L, row.m_nameSubtext_lang);
+            return 2;
+        }
+    }
+
+    ClientLua::PushNil(L);
+    ClientLua::PushNil(L);
+    return 2;
 }
 
 LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {

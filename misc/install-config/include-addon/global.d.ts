@@ -74,7 +74,8 @@ declare function FlashGameWindow(): any;
 
 declare function GetShapeshiftFormID(): number;
 
-declare function GetSpellDescription(spellID:number): string;
+declare function GetSpellDescription(spellID: number): string;
+declare function GetSpellNameById(spellID: number): LuaMultiReturn<[string, string]>
 declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
 
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
