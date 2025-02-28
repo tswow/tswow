@@ -393,6 +393,16 @@ struct SpellRuneCostRow {
     int32_t m_runicPower;
 };
 
+struct WoWTime {
+    uint32_t minute;
+    uint32_t hour;
+    uint32_t weekDay;
+    uint32_t monthDay;
+    uint32_t month;
+    uint32_t year;
+    uint32_t flags;
+};
+
 // client functions
 namespace CGGameUI {
     CLIENT_FUNCTION(DisplayError, 0x5216F0, __cdecl, void, (uint32_t, ...))
