@@ -14113,6 +14113,8 @@ declare const CharacterAmmoSlot: WoWAPI.Button
 
 declare const TradeSkillFrame: WoWAPI.Frame
 
+declare const WorldMapButton: WoWAPI.Button
+
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
 declare function type(thing: any): string;
