@@ -2,6 +2,19 @@
 #include "Character/CharacterDefines.h"
 #include "Logger.h"
 
+LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
+    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
+
+    if (activePlayer) {
+        CGUnit* activeObjectPtr = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
+        ClientLua::PushNumber(L, CGUnit_C::GetShapeshiftFormId(activeObjectPtr));
+        return 1;
+    }
+
+    ClientLua::PushNumber(L, 0);
+    return 1;
+}
+
 LUA_FUNCTION(GetActiveSpec, (lua_State* L)) {
     ClientLua::PushNumber(L, CharacterDefines::getCharActiveSpec());
     return 1;
@@ -28,26 +41,6 @@ LUA_FUNCTION(SetMasteryRatings, (lua_State* L)) {
 LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
     CharacterDefines::setMasteryPct(ClientLua::GetNumber(L, 1));
     CharacterDefines::setMasteryAmount(ClientLua::GetNumber(L, 2));
-
-    ClientLua::PushNil(L);
-    return 1;
-}
-
-LUA_FUNCTION(GetShapeshiftFormID, (lua_State* L)) {
-    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
-
-    if (activePlayer) {
-        void* activeObjectPtr = ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT);
-        ClientLua::PushNumber(L, CGUnit_C::GetShapeshiftFormId(activeObjectPtr));
-        return 1;
-    }
-
-    ClientLua::PushNumber(L, 0);
-    return 1;
-}
-
-LUA_FUNCTION(FireTalentUpdateEvent, (lua_State* L)) {
-    FrameScript::SignalEvent(EVENT_PLAYER_TALENT_UPDATE, 0);
 
     ClientLua::PushNil(L);
     return 1;

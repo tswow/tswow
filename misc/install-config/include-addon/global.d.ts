@@ -57,7 +57,9 @@ declare function base64_decode(str: string): string;
 declare function base64_encode(str: string): string;
 //dll additions
 declare function GetCDBCRow(dbcName: string, rowIndex: number): LuaMultiReturn<[...Unknown]>
+
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
+declare function ReloadMap(): any;
 
 declare function FindSpellActionBarSlot(spellID: number): LuaMultiReturn<[...number]>;
 declare function FireActionBarSlotUpdateEvent(): any;
@@ -68,9 +70,12 @@ declare function FireTalentUpdateEvent(): any;
 declare function GetActiveSpec(): number;
 declare function SetActiveSpec(specID: number): any;
 
+declare function FlashGameWindow(): any;
+
 declare function GetShapeshiftFormID(): number;
 
-declare function GetSpellDescription(spellID:number): string;
+declare function GetSpellDescription(spellID: number): string;
+declare function GetSpellNameById(spellID: number): LuaMultiReturn<[string, string]>
 declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
 
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;

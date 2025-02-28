@@ -118,6 +118,47 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
+struct C3Vector {
+    float x;
+    float y;
+    float z;
+};
+
+struct MovementInfo {
+    uint32_t padding[2];
+    uint64_t moverGUID;
+    C3Vector position;
+    float padding1C;
+    float orientation;
+    float pitch;
+    uint32_t padding28[74];
+    // TODO: add rest, probably when needed
+};
+
+struct ObjectFields {
+    uint64_t OBJECT_FIELD_GUID;
+    uint32_t OBJECT_FIELD_TYPE;
+    uint32_t OBJECT_FIELD_ENTRY;
+    float OBJECT_FIELD_SCALE_X;
+    uint32_t OBJECT_FIELD_PADDING;
+};
+
+struct PlayerFields {
+    uint32_t padding[876];
+    float blockPct;
+    float dodgePct;
+    float parryPct;
+    uint32_t expertise;
+    uint32_t offhandExperise;
+    float critPct;
+    float rangedCritPct;
+    float offhandCritPct;
+    float spellCritPct;
+    float shieldBlock;
+    float shieldBlockCritPct;
+    // TODO: add rest when needed
+};
+
 struct UnitFields {
     uint64_t padding[8];    // not defining those until we need them
     uint32_t channelSpell;
@@ -129,14 +170,30 @@ struct UnitFields {
     // TODO: add rest at some point, most likely when needed
 };
 
+struct CGObject {
+    void* vtable;
+    uint32_t padding;
+    ObjectFields* ObjectData;
+    DWORD objectClass[49];
+};
+
 struct CGUnit {
-    uint32_t objBase[52];
-    UnitFields* UnitData;
-    uint32_t padding34[614];
+    CGObject objectBase;
+    UnitFields* unitData;
+    uint32_t paddingD4;
+    MovementInfo* movementInfo;
+    uint32_t padding34[612];
     uint32_t currentCastId;
     uint32_t padding[4];
     uint32_t currentChannelId;
+    uint32_t padding2[353];
     // TODO: add rest, currently not needed
+};
+
+struct CGPlayer {
+    CGUnit unitBase;
+    PlayerFields* PlayerData;
+    uint32_t playerClass[1024];
 };
 
 struct ChrClassesRow {
@@ -154,6 +211,28 @@ struct ChrClassesRow {
     uint32_t m_attackPowerPerStrength;
     uint32_t m_attackPowerPerAgility;
     uint32_t m_rangedAttackPowerPerAgility;
+};
+
+struct MapRow {
+    uint32_t m_ID;
+    char* m_Directory;
+    uint32_t m_InstanceType;
+    uint32_t m_Flags;
+    uint32_t m_PVP;
+    char* m_MapName_lang;
+    uint32_t m_areaTableID;
+    char* m_MapDescription0_lang;
+    char* m_MapDescription1_lang;
+    uint32_t m_LoadingScreenID;
+    float m_minimapIconScale;
+    uint32_t m_corpseMapID;
+    float m_corpseX;
+    float m_corpseY;
+    uint32_t m_timeOfDayOverride;
+    uint32_t m_expansionID;
+    uint32_t m_raidOffset;
+    uint32_t m_maxPlayers;
+    uint32_t m_parentMapID;
 };
 
 struct PowerDisplayRow {
@@ -324,9 +403,10 @@ namespace CGPetInfo_C {
 }
 
 namespace CGUnit_C {
-    CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (void*))
-    CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (void*, uint32_t))
-    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (void*, uint32_t, SpellRow*))
+    CLIENT_FUNCTION(GetShapeshiftFormId, 0x71AF70, __thiscall, uint32_t, (CGUnit*))
+    CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (CGUnit*, uint32_t))
+    CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (CGUnit*, uint32_t, SpellRow*))
+    CLIENT_FUNCTION(ShouldFadeIn, 0x716650, __thiscall, bool, (CGUnit*))
 }
 
 namespace ClientDB {
@@ -371,7 +451,7 @@ namespace SErr {
 namespace SFile {
     // Defs cherrypicked from StormLib: https://github.com/ladislav-zezula/StormLib
     CLIENT_FUNCTION(OpenFileEx, 0x424B50, __stdcall, bool, (HANDLE, const char*, uint32_t, HANDLE*))
-    CLIENT_FUNCTION(ReadFile, 0x422530, __stdcall, bool, (HANDLE handle /*likely a handle*/, void* data, uint32_t bytesToRead, uint32_t* bytesRead, uint32_t* overlap /*just set to 0*/))
+    CLIENT_FUNCTION(ReadFile, 0x422530, __stdcall, bool, (HANDLE handle /*likely a handle*/, void* data, uint32_t bytesToRead, uint32_t* bytesRead, uint32_t* overlap /*just set to 0*/, uint32_t unk))
     CLIENT_FUNCTION(CloseFile, 0x422910, __stdcall, void, (HANDLE a1))
 
     //
@@ -394,6 +474,11 @@ namespace SStr {
 
 namespace SysMsg {
     CLIENT_FUNCTION(Printf, 0x4B5040, __cdecl, int, (uint32_t, uint32_t, char*, ...))
+}
+
+namespace World {
+    CLIENT_FUNCTION(LoadMap, 0x781430, __cdecl, void, (char*, C3Vector*, uint32_t))
+    CLIENT_FUNCTION(UnloadMap, 0x783180, __cdecl, void, ())
 }
 
 CLIENT_FUNCTION(OsGetAsyncTimeMs, 0x86AE20, __cdecl, uint64_t, ())
