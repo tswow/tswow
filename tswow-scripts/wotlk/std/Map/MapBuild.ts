@@ -113,6 +113,11 @@ function storeAreaMappings(mod: string, mapsDir: string) {
             , [])
         .forEach(file=>{
             const adt = fs.readFileSync(file);
+            if(adt.length == 0)
+            {
+                console.log("WARNING: ADT File Empty: " + file + " Skipped.")//added line, below breaks
+                return
+            }  
             const mcin = adt.readUInt32LE(0x10)+0x14;
             let anyFileChanges = false;
             for(let i=0;i<256;++i) {
