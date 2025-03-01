@@ -44,47 +44,61 @@ LUA_FUNCTION(ConvertCoordsToScreenSpace, (lua_State* L)) {
 }
 
 LUA_FUNCTION(ReloadMap, (lua_State* L)) {
-    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
+    char buffer[512];
 
-    if (activePlayer) {
-        MapRow* row = 0;
-        int32_t mapId = *reinterpret_cast<uint32_t*>(0xBD088C);
-        CGUnit* activeObjectPtr = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
-        MovementInfo* moveInfo = activeObjectPtr->movementInfo;
+    if (ClientLua::isInDevMode) {
+        uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
 
-        if (mapId > -1) {
-            row = reinterpret_cast<MapRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD4178), mapId));
-            
-            if (row) {
-                char buffer[512];
-               
-                World::UnloadMap();
-                World::LoadMap(row->m_Directory, &moveInfo->position, mapId);
+        if (activePlayer) {
+            MapRow* row = 0;
+            int32_t mapId = *reinterpret_cast<uint32_t*>(0xBD088C);
+            CGUnit* activeObjectPtr = reinterpret_cast<CGUnit*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
+            MovementInfo* moveInfo = activeObjectPtr->movementInfo;
 
-                SStr::Printf(buffer, 512, "Map ID: %d (Directory: \"%s\", x: %f, y: %f, z: %f) reloaded.", mapId, row->m_Directory, moveInfo->position.x, moveInfo->position.y, moveInfo->position.z);
-                ClientLua::PushString(L, buffer);
-                return 1;
+            if (mapId > -1) {
+                row = reinterpret_cast<MapRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD4178), mapId));
+
+                if (row) {
+                    World::UnloadMap();
+                    World::LoadMap(row->m_Directory, &moveInfo->position, mapId);
+
+                    SStr::Printf(buffer, 512, "Map ID: %d (Directory: \"%s\", x: %f, y: %f, z: %f) reloaded.", mapId, row->m_Directory, moveInfo->position.x, moveInfo->position.y, moveInfo->position.z);
+                    ClientLua::PushString(L, buffer);
+                    return 1;
+                }
             }
         }
-    }
 
-    ClientLua::PushNil(L);
-    return 1;
+        ClientLua::PushNil(L);
+        return 1;
+    }
+    else {
+        SStr::Printf(buffer, 512, "This function is not available in live client.");
+        ClientLua::PushString(L, buffer);
+        return 1;
+    }
 }
 
 LUA_FUNCTION(ToggleWireframeMode, (lua_State* L)) {
     char buffer[512];
-    uint8_t renderFlags = *reinterpret_cast<uint8_t*>(0xCD774F);
-    bool isWireframeModeOn = renderFlags & 0x20;
 
-    if (isWireframeModeOn) {
-        *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags - 0x20;
-        SStr::Printf(buffer, 512, "Wireframe mode off.");
+    if (ClientLua::isInDevMode) {
+        uint8_t renderFlags = *reinterpret_cast<uint8_t*>(0xCD774F);
+        bool isWireframeModeOn = renderFlags & 0x20;
+
+        if (isWireframeModeOn)
+        {
+            *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags - 0x20;
+            SStr::Printf(buffer, 512, "Wireframe mode off.");
+        }
+        else
+        {
+            *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags + 0x20;
+            SStr::Printf(buffer, 512, "Wireframe mode on.");
+        }
     }
-    else {
-        *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags + 0x20;
-        SStr::Printf(buffer, 512, "Wireframe mode on.");
-    }
+    else
+        SStr::Printf(buffer, 512, "This function is not available in live client.");
 
     ClientLua::PushString(L, buffer);
     return 1;

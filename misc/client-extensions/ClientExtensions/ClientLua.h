@@ -33,6 +33,8 @@ namespace ClientLua {
     double GetNumber(lua_State* L, int32_t offset, double defValue = 0);
     void allowOutOfBoundsPointer();
     void customLua();
+
+    static bool isInDevMode = true;
 }
 
 // do NOT refactor this name
