@@ -300,7 +300,6 @@ struct TSEvents
              , TSPlayer
              , TSMutableNumber<float>
              , TSNumber<float>
-             , TSNumber<float>
          );
         EVENT(OnCalcIntellectManaBonus
              , TSPlayer

@@ -109,6 +109,9 @@ declare function GetQuestLogSelection(): number;
 declare function GetQuestLink(index: number): string;
 declare function DrawLine(texture: WoWAPI.Texture, canvasFrame: WoWAPI.Frame, startX: number, startY: number, endX: number, endY: number, lineWidth: number, lineFactor: number, relPoint: Point)
 declare function StringContainsString(Name: string, Lookup: string): string
+
+declare function GetCurrentMapContinent(): number;
+declare function GetCurrentMapZone(): number;
 //
 
 /**

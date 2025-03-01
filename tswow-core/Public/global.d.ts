@@ -8282,8 +8282,7 @@ declare namespace _hidden {
         OnCalcStaminaHealthBonus(callback: (
               player: TSPlayer
             , bonus: TSMutableNumber<float>
-            , baseStam: TSNumber<float>
-            , bonusStam: TSNumber<float>
+            , Stam: TSNumber<float>
         )=>void)
         OnCalcIntellectManaBonus(
             callback: (
