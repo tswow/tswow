@@ -71,3 +71,21 @@ LUA_FUNCTION(ReloadMap, (lua_State* L)) {
     ClientLua::PushNil(L);
     return 1;
 }
+
+LUA_FUNCTION(ToggleWireframeMode, (lua_State* L)) {
+    char buffer[512];
+    uint8_t renderFlags = *reinterpret_cast<uint8_t*>(0xCD774F);
+    bool isWireframeModeOn = renderFlags & 0x20;
+
+    if (isWireframeModeOn) {
+        *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags - 0x20;
+        SStr::Printf(buffer, 512, "Wireframe mode off.");
+    }
+    else {
+        *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags + 0x20;
+        SStr::Printf(buffer, 512, "Wireframe mode on.");
+    }
+
+    ClientLua::PushString(L, buffer);
+    return 1;
+}
