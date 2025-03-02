@@ -59,7 +59,10 @@ declare function base64_encode(str: string): string;
 declare function GetCDBCRow(dbcName: string, rowIndex: number): LuaMultiReturn<[...Unknown]>
 
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
-declare function ReloadMap(): any;
+declare function ReloadMap(): string;
+declare function ToggleDisplayNormals(): string;
+declare function ToggleWireframeMode(): string;
+declare function TranslateToMapCoords(continentID: number, x: number, y: number, z: number): LuaMultiReturn<[number, number]>
 
 declare function FindSpellActionBarSlot(spellID: number): LuaMultiReturn<[...number]>;
 declare function FireActionBarSlotUpdateEvent(): any;

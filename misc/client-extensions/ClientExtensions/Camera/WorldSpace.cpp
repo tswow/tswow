@@ -79,6 +79,29 @@ LUA_FUNCTION(ReloadMap, (lua_State* L)) {
     }
 }
 
+LUA_FUNCTION(ToggleDisplayNormals, (lua_State* L)) {
+    char buffer[512];
+
+    if (ClientLua::isInDevMode) {
+        uint8_t renderFlags = *reinterpret_cast<uint8_t*>(0xCD774F);
+        bool areNormalsDisplayed = renderFlags & 0x40;
+
+        if (areNormalsDisplayed) {
+            *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags - 0x40;
+            SStr::Printf(buffer, 512, "Normal display turned off.");
+        }
+        else {
+            *reinterpret_cast<uint8_t*>(0xCD774F) = renderFlags + 0x40;
+            SStr::Printf(buffer, 512, "Normal display turned on.");
+        }
+    }
+    else
+        SStr::Printf(buffer, 512, "This function is not available in live client.");
+
+    ClientLua::PushString(L, buffer);
+    return 1;
+}
+
 LUA_FUNCTION(ToggleWireframeMode, (lua_State* L)) {
     char buffer[512];
 
@@ -102,4 +125,21 @@ LUA_FUNCTION(ToggleWireframeMode, (lua_State* L)) {
 
     ClientLua::PushString(L, buffer);
     return 1;
+}
+
+LUA_FUNCTION(TranslateToMapCoords, (lua_State* L)) {
+    C3Vector worldPos = { 0, 0, 0 };
+    uint32_t continentID = (uint32_t)ClientLua::GetNumber(L, 1);
+    float mapX = 0;
+    float mapY = 0;
+
+    worldPos.x = ClientLua::GetNumber(L, 2);
+    worldPos.y = ClientLua::GetNumber(L, 3);
+    worldPos.z = ClientLua::GetNumber(L, 4);
+
+    CGWorldFrame::TranslateToMapCoords(&worldPos, continentID, &mapX, &mapY, 0, 0, 0);
+
+    ClientLua::PushNumber(L, mapX);
+    ClientLua::PushNumber(L, mapY);
+    return 2;
 }
