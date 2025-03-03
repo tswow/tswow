@@ -8,6 +8,7 @@
 #include "ClientExtensions.h"
 #include "Clientlua.h"
 #include "scripts.generated.h"
+#include "Clientlua.h"
 
 class Main
 {
