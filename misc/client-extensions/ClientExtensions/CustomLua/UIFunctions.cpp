@@ -20,7 +20,7 @@ LUA_FUNCTION(FireTalentUpdateEvent, (lua_State* L)) {
 }
 
 LUA_FUNCTION(FlashGameWindow, (lua_State* L)) {
-    HWND activeWindow = *(HWND*)0x00D41620;
+    HWND activeWindow = *(HWND*)0xD41620;
 
     if (activeWindow && GetForegroundWindow() != activeWindow) {
         FLASHWINFO flashInfo;

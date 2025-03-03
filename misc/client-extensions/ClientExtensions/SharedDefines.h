@@ -394,6 +394,10 @@ struct SpellRuneCostRow {
 };
 
 // client functions
+namespace CGChat {
+    CLIENT_FUNCTION(AddChatMessage, 0x509DD0, __cdecl, bool, (char*, uint32_t, uint32_t, uint32_t, uint32_t*, uint32_t, char*, uint64_t, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t*))
+}
+
 namespace CGGameUI {
     CLIENT_FUNCTION(DisplayError, 0x5216F0, __cdecl, void, (uint32_t, ...))
 }

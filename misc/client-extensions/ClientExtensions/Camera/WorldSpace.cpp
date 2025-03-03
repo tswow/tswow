@@ -63,20 +63,15 @@ LUA_FUNCTION(ReloadMap, (lua_State* L)) {
                     World::LoadMap(row->m_Directory, &moveInfo->position, mapId);
 
                     SStr::Printf(buffer, 512, "Map ID: %d (Directory: \"%s\", x: %f, y: %f, z: %f) reloaded.", mapId, row->m_Directory, moveInfo->position.x, moveInfo->position.y, moveInfo->position.z);
-                    ClientLua::PushString(L, buffer);
-                    return 1;
                 }
             }
         }
-
-        ClientLua::PushNil(L);
-        return 1;
     }
-    else {
+    else
         SStr::Printf(buffer, 512, "This function is not available in live client.");
-        ClientLua::PushString(L, buffer);
-        return 1;
-    }
+
+    CGChat::AddChatMessage(buffer, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    return 1;
 }
 
 LUA_FUNCTION(ToggleDisplayNormals, (lua_State* L)) {
@@ -98,7 +93,7 @@ LUA_FUNCTION(ToggleDisplayNormals, (lua_State* L)) {
     else
         SStr::Printf(buffer, 512, "This function is not available in live client.");
 
-    ClientLua::PushString(L, buffer);
+    CGChat::AddChatMessage(buffer, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     return 1;
 }
 
@@ -123,7 +118,7 @@ LUA_FUNCTION(ToggleWireframeMode, (lua_State* L)) {
     else
         SStr::Printf(buffer, 512, "This function is not available in live client.");
 
-    ClientLua::PushString(L, buffer);
+    CGChat::AddChatMessage(buffer, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     return 1;
 }
 
