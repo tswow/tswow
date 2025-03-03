@@ -20,33 +20,46 @@ import { SqlConnection } from '../../data/sql/SQLConnection';
 import { SqlTable } from '../../data/sql/SQLTable';
 import { WFile } from '../../util/FileTree';
 import { DBCFiles } from '../DBCFiles';
+import { CDBCFiles } from '../CDBCFiles';
 import { SQLTables } from '../SQLFiles';
+import * as fs from 'fs';
+import { CDBCGenerator } from '../cdbc/CDBCGenerator';
 
 function saveDbc() {
     for (const file of DBCFiles) {
-        const srcpath = dataset.dbc_source.join(file.name + '.dbc');
+        saveDBCFile(file, '.dbc')
+    }
+    for (const file of CDBCFiles) {
+        if(!fs.existsSync(file.getPath()))
+            new CDBCGenerator(file.getDefaultRow()).generate(file.getPath());
+        file.fileWork()
+        saveDBCFile(file, '.cdbc')
+    }
+}
 
-        // if we skip the server, we should write dbcs to client directly
-        const outPaths: WFile[] = [];
-        if(BuildArgs.WRITE_CLIENT) {
-            outPaths.push(BuildArgs.CLIENT_PATCH_DIR.join('DBFilesClient',file.name+'.dbc').toFile())
-        }
+function saveDBCFile(file, ending) {
+    const srcpath = dataset.dbc_source.join(file.name + ending);
 
-        if(BuildArgs.WRITE_SERVER) {
-            outPaths.push(dataset.dbc.join(file.name+'.dbc').toFile())
-        }
+    // if we skip the server, we should write dbcs to client directly
+    const outPaths: WFile[] = [];
+    if(BuildArgs.WRITE_CLIENT) {
+        outPaths.push(BuildArgs.CLIENT_PATCH_DIR.join('DBFilesClient', file.name+ending).toFile())
+    }
 
-        if(file.isLoaded()) {
-            outPaths[0].writeBuffer(DBCFile.getBuffer(file).write());
-        } else {
-            srcpath.copy(outPaths[0]);
-        }
+    if(BuildArgs.WRITE_SERVER) {
+        outPaths.push(dataset.dbc.join(file.name+ending).toFile())
+    }
 
-        if(outPaths.length > 1) {
-            outPaths.slice(1).forEach(x=>{
-                outPaths[0].copy(outPaths[1])
-            })
-        }
+    if(file.isLoaded()) {
+        outPaths[0].writeBuffer(DBCFile.getBuffer(file).write());
+    } else {
+        srcpath.copy(outPaths[0]);
+    }
+
+    if(outPaths.length > 1) {
+        outPaths.slice(1).forEach(x=>{
+            outPaths[0].copy(outPaths[1])
+        })
     }
 }
 
