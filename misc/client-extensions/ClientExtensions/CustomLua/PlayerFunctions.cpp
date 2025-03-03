@@ -24,8 +24,7 @@ LUA_FUNCTION(SetActiveSpec, (lua_State* L)) {
     if (ClientLua::IsNumber(L, 1))
         CharacterDefines::setCharActiveSpec(ClientLua::GetNumber(L, 1));
 
-    ClientLua::PushNil(L);
-    return 1;
+    return 0;
 }
 
 LUA_FUNCTION(SetMasteryRatings, (lua_State* L)) {
@@ -34,16 +33,14 @@ LUA_FUNCTION(SetMasteryRatings, (lua_State* L)) {
     CharacterDefines::setMasteryRatingSpec(2, ClientLua::GetNumber(L, 3));
     CharacterDefines::setMasteryRatingSpec(3, ClientLua::GetNumber(L, 4));
 
-    ClientLua::PushNil(L);
-    return 1;
+    return 0;
 }
 
 LUA_FUNCTION(UpdateMasteryAmount, (lua_State* L)) {
     CharacterDefines::setMasteryPct(ClientLua::GetNumber(L, 1));
     CharacterDefines::setMasteryAmount(ClientLua::GetNumber(L, 2));
 
-    ClientLua::PushNil(L);
-    return 1;
+    return 0;
 }
 
 LUA_FUNCTION(UpdateSpellChargeMap, (lua_State* L)) {
@@ -69,6 +66,5 @@ LUA_FUNCTION(UpdateSpellChargeMap, (lua_State* L)) {
     else
         CharacterDefines::spellChargeMap.insert(std::make_pair(spellID, temp));
 
-    ClientLua::PushNil(L);
-    return 1;
+    return 0;
 }
