@@ -12,7 +12,7 @@ namespace ClientLua {
     // Registers lua that will fire on reload
     void RegisterLua(std::string const& lua, std::string const& filename = "", size_t line = 0);
 
-    CLIENT_FUNCTION(DisplayError, 0x84F280, __cdecl, void, (lua_State* L, char*, char*))
+    CLIENT_FUNCTION(DisplayError, 0x84F280, __cdecl, void, (lua_State* L, char*, ...))
 
     CLIENT_FUNCTION(DoString, 0x00819210, __cdecl, void, (char const* code, lua_State* L))
     CLIENT_FUNCTION(GetTop, 0x0084DBD0, __cdecl, int, (lua_State* L))
