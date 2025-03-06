@@ -34,7 +34,7 @@ namespace ClientLua {
     void allowOutOfBoundsPointer();
     void customLua();
 
-    static bool isInDevMode = true;
+    static bool isInDevMode = false;
 }
 
 // do NOT refactor this name
