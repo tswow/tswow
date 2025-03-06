@@ -393,14 +393,16 @@ struct SpellRuneCostRow {
     int32_t m_runicPower;
 };
 
+// Aleist3r: this is not a full struct afaik but that's what's needed in dll
+// will update if more fields are required
 struct WoWTime {
-    uint32_t minute;
-    uint32_t hour;
-    uint32_t weekDay;
-    uint32_t monthDay;
-    uint32_t month;
-    uint32_t year;
-    uint32_t flags;
+    int32_t minute;
+    int32_t hour;
+    int32_t weekDay;
+    int32_t monthDay;
+    int32_t month;
+    int32_t year;
+    int32_t flags;
 };
 
 // client functions
