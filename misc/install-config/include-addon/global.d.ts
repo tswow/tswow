@@ -59,27 +59,36 @@ declare function base64_encode(str: string): string;
 declare function GetCDBCRow(dbcName: string, rowIndex: number): LuaMultiReturn<[...Unknown]>
 
 declare function ConvertCoordsToScreenSpace(x:number, y:number, z:number): LuaMultiReturn<[number, number, number]>
-declare function ReloadMap(): any;
+declare function ReloadMap(): void;
+declare function ToggleDisplayNormals(): void;
+declare function ToggleGroundEffects(): void;
+declare function ToggleLiquids(): void;
+declare function ToggleM2(): void;
+declare function ToggleTerrain(): void;
+declare function ToggleTerrainCulling(): void;
+declare function ToggleWireframeMode(): void;
+declare function ToggleWMO(): void;
+declare function TranslateToMapCoords(continentID: number, x: number, y: number, z: number): LuaMultiReturn<[number, number]>
 
 declare function FindSpellActionBarSlot(spellID: number): LuaMultiReturn<[...number]>;
-declare function FireActionBarSlotUpdateEvent(): any;
-declare function ReplaceActionBarSpell(oldSpellID: number, newSpellID: number): any;
-declare function SetSpellInActionBarSlot(spellID: number, slotID: number): any;
+declare function FireActionBarSlotUpdateEvent(): void;
+declare function ReplaceActionBarSpell(oldSpellID: number, newSpellID: number): void;
+declare function SetSpellInActionBarSlot(spellID: number, slotID: number): void;
 
-declare function FireTalentUpdateEvent(): any;
+declare function FireTalentUpdateEvent(): void;
 declare function GetActiveSpec(): number;
-declare function SetActiveSpec(specID: number): any;
+declare function SetActiveSpec(specID: number): void;
 
-declare function FlashGameWindow(): any;
+declare function FlashGameWindow(): void;
 
 declare function GetShapeshiftFormID(): number;
 
 declare function GetSpellDescription(spellID: number): string;
 declare function GetSpellNameById(spellID: number): LuaMultiReturn<[string, string]>
-declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): any;
+declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): void;
 
-declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): any;
-declare function UpdateMasteryAmount(percentage: number, flat: number): any;
+declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): void;
+declare function UpdateMasteryAmount(percentage: number, flat: number): void;
 
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
@@ -109,6 +118,9 @@ declare function GetQuestLogSelection(): number;
 declare function GetQuestLink(index: number): string;
 declare function DrawLine(texture: WoWAPI.Texture, canvasFrame: WoWAPI.Frame, startX: number, startY: number, endX: number, endY: number, lineWidth: number, lineFactor: number, relPoint: Point)
 declare function StringContainsString(Name: string, Lookup: string): string
+
+declare function GetCurrentMapContinent(): number;
+declare function GetCurrentMapZone(): number;
 //
 
 /**
@@ -14117,6 +14129,8 @@ declare const CharacterRangedSlot: WoWAPI.Button
 declare const CharacterAmmoSlot: WoWAPI.Button
 
 declare const TradeSkillFrame: WoWAPI.Frame
+
+declare const WorldMapButton: WoWAPI.Button
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;

@@ -404,6 +404,10 @@ struct WoWTime {
 };
 
 // client functions
+namespace CGChat {
+    CLIENT_FUNCTION(AddChatMessage, 0x509DD0, __cdecl, bool, (char*, uint32_t, uint32_t, uint32_t, uint32_t*, uint32_t, char*, uint64_t, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t*))
+}
+
 namespace CGGameUI {
     CLIENT_FUNCTION(DisplayError, 0x5216F0, __cdecl, void, (uint32_t, ...))
 }
@@ -417,6 +421,10 @@ namespace CGUnit_C {
     CLIENT_FUNCTION(HasAuraBySpellId, 0x7282A0, __thiscall, bool, (CGUnit*, uint32_t))
     CLIENT_FUNCTION(HasAuraMatchingSpellClass, 0x7283A0, __thiscall, bool, (CGUnit*, uint32_t, SpellRow*))
     CLIENT_FUNCTION(ShouldFadeIn, 0x716650, __thiscall, bool, (CGUnit*))
+}
+
+namespace CGWorldFrame {
+    CLIENT_FUNCTION(TranslateToMapCoords, 0x544140, __cdecl, bool, (C3Vector*, uint32_t, float*, float*, uint32_t, bool, uint32_t))
 }
 
 namespace ClientDB {
