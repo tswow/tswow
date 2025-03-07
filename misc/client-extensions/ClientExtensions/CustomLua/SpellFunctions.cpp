@@ -37,7 +37,7 @@ LUA_FUNCTION(GetSpellNameById, (lua_State* L)) {
     ClientLua::PushNil(L);
     return 2;
 }
-
+#pragma optimize("", off)
 LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     if (!ClientLua::IsString(L, 1))
         ClientLua::DisplayError(L, "Usage: UnitCustomCastingData(\"unit\")", "");
@@ -80,3 +80,4 @@ LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     ClientLua::PushBoolean(L, invertCastbar);
     return 3;
 }
+#pragma optimize("", on)
