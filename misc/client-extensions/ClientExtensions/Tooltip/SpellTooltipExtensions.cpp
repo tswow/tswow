@@ -68,16 +68,22 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         value = static_cast<float>(activePlayer->unitBase.unitData->unitMaxHealth);
                         break;
                     case SPELLVARIABLE_ppl1:
-                    case SPELLVARIABLE_PPL1:
                         value = spell->m_effectRealPointsPerLevel[0];
                         break;
                     case SPELLVARIABLE_ppl2:
-                    case SPELLVARIABLE_PPL2:
                         value = spell->m_effectRealPointsPerLevel[1];
                         break;
                     case SPELLVARIABLE_ppl3:
-                    case SPELLVARIABLE_PPL3:
                         value = spell->m_effectRealPointsPerLevel[2];
+                        break;
+                    case SPELLVARIABLE_PPL1:
+                        value = spell->m_effectRealPointsPerLevel[0] * activePlayer->unitBase.unitData->level;
+                        break;
+                    case SPELLVARIABLE_PPL2:
+                        value = spell->m_effectRealPointsPerLevel[1] * activePlayer->unitBase.unitData->level;
+                        break;
+                    case SPELLVARIABLE_PPL3:
+                        value = spell->m_effectRealPointsPerLevel[2] * activePlayer->unitBase.unitData->level;
                         break;
                     case SPELLVARIABLE_mastery1:
                         value = CharacterDefines::getMasteryForSpec(0);

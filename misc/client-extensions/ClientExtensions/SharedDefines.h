@@ -159,14 +159,23 @@ struct PlayerFields {
     // TODO: add rest when needed
 };
 
+struct UnitBytes0 {
+    uint8_t raceID;
+    uint8_t classID;
+    uint8_t genderID;
+    uint8_t powerTypeID;
+};
+
 struct UnitFields {
-    uint64_t padding[8];    // not defining those until we need them
+    uint64_t padding0x00[8];    // not defining those until we need them
     uint32_t channelSpell;
-    uint8_t unitBytes0[4];
+    UnitBytes0 unitBytes0;
     uint32_t unitCurrHealth;
     uint32_t unitCurrPowers[7];
     uint32_t unitMaxHealth;
     uint32_t unitMaxPowers[7];
+    float padding0x88[14];
+    uint32_t level;
     // TODO: add rest at some point, most likely when needed
 };
 
