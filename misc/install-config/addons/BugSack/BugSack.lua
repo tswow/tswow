@@ -148,10 +148,10 @@ do
 		window:SetScript("OnDragStart", window.StartMoving)
 		window:SetScript("OnDragStop", window.StopMovingOrSizing)
 		window:SetScript("OnShow", function()
-			PlaySound("igQuestLogOpen")
+			--PlaySound("igQuestLogOpen")
 		end)
 		window:SetScript("OnHide", function()
-			PlaySound("igQuestLogClose")
+			--PlaySound("igQuestLogClose")
 		end)
 
 		local titlebg = window:CreateTexture(nil, "BORDER")
@@ -472,9 +472,9 @@ do
 			if not media then media = LibStub("LibSharedMedia-3.0", true) end
 			if media then
 				local sound = media:Fetch("sound", self.db.soundMedia) or "Interface\\AddOns\\BugSack\\Media\\error.wav"
-				PlaySoundFile(sound)
+				--PlaySoundFile(sound)
 			elseif not self.db.mute then
-				PlaySoundFile("Interface\\AddOns\\BugSack\\Media\\error.wav")
+				--PlaySoundFile("Interface\\AddOns\\BugSack\\Media\\error.wav")
 			end
 			if self.db.auto then
 				self:OpenSack()
