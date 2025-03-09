@@ -36,7 +36,7 @@ LUA_FUNCTION(GetMasteryRating, (lua_State* L)) {
     CGPlayer* activeObjectPtr = reinterpret_cast<CGPlayer*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
     uint32_t activeSpecIndex = CharacterExtensions::SpecToIndex(CharacterDefines::getCharActiveSpec());
     uint32_t masteryAmount = CharacterDefines::getMasteryAmount() + activeObjectPtr->PlayerData->crMastery;
-    float Pct = CharacterDefines::getMasteryForSpec(activeSpecIndex);
+    float Pct = CharacterDefines::getMasteryForSpec(activeSpecIndex) + (activeObjectPtr->PlayerData->crMastery / CharacterDefines::getMasteryRatingSpec(activeSpecIndex));
 
     ClientLua::PushNumber(L, masteryAmount ? masteryAmount : 0);
     ClientLua::PushNumber(L, Pct ? Pct : 0);
