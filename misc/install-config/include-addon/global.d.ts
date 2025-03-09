@@ -13275,7 +13275,7 @@ declare namespace WoWAPI {
          * @param name the name of the attribute to get
          * @param value the value of the attribute
          */
-        GetAttribute(name: string, value: any): void;
+        GetAttribute(name: string): void;
 
         /**
          * Unregisters the widget from receiving OnEvent notifications for a particular event.
