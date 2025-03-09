@@ -86,6 +86,6 @@ export enum RaceMask {
 
   ALLIANCE = 0x0000044D,
   HORDE = 0x000002B6,
-  ALL = 0x000007FF
+  ALL = 0x000006FF
 
 }
