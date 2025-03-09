@@ -107,7 +107,7 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         value = activePlayer->PlayerData->parryPct;
                         break;
                     case SPELLVARIABLE_sbl:
-                        value = activePlayer->PlayerData->shieldBlock;
+                        value = static_cast<float>(activePlayer->PlayerData->shieldBlock);
                         break;
                     default:
                         *reinterpret_cast<uint32_t*>(_this) = 1;

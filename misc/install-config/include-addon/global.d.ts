@@ -87,8 +87,9 @@ declare function GetSpellDescription(spellID: number): string;
 declare function GetSpellNameById(spellID: number): LuaMultiReturn<[string, string]>
 declare function UpdateSpellChargeMap(spellID: number, charges: number, maxCharges: number, cooldown: number): void;
 
+declare function GetMasteryRating(): LuaMultiReturn<[number, number]>
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): void;
-declare function UpdateMasteryAmount(percentage: number, flat: number): void;
+declare function UpdateMasteryAmount(flat: number, percentage: number): void;
 
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
