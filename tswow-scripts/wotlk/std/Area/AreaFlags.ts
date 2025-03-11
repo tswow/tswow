@@ -47,4 +47,5 @@ export enum AreaFlags {
     AREA_FLAG_CANNOT_FLY                                    = 0x20000000, // not allowed to fly, only used in Dalaran areas. TBC Classic : "No Local Defense Channel"
     // AREA_FLAG_USE_PARENT_FOR_WORLD_DEFENSE_VISIBILITY_CHECK = 0x40000000, // TBC Classic : Only Evaluate Ghost Bind Once
     AREA_FLAG_SUB_ZONE                                      = 0x40000000,
+    AREA_FLAG_FATIGUE                                       = 0x80000000,
 }
