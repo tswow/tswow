@@ -7,7 +7,7 @@ namespace CharacterDefines {
     inline uint32_t activeCharSpec = 0;
     inline uint32_t masteryAmount = 0;
     inline float masteryPct = 0;
-    inline float masteryRatingSpec[4] = { 1, 1, 1, 1 };
+    inline float masteryRatingSpec[4] = { 1.f, 1.f, 1.f, 1.f };
 
     inline void setMasteryRatingSpec(int index, float newValue) { masteryRatingSpec[index] = newValue; }
     inline float getMasteryRatingSpec(int index) { return masteryRatingSpec[index]; }
