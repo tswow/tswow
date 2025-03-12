@@ -57,6 +57,10 @@ enum Powers : int32_t {
     POWER_RUNIC_POWER       = 7
 };
 
+enum SpellCastResult : uint32_t {
+    SPELL_FAILED_MOVING     = 51,
+};
+
 enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
@@ -109,6 +113,7 @@ enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_INVERT_CASTBAR               = 0x00000020,   // NYI; will cost me some sanity it seems
     SPELL_ATTR0_CU_LOW_TIME_TREAT_AS_INSTANT    = 0x00000040,   // If cast time <= 250ms, changes tooltip line responsible to "Instant"
     SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR  = 0x00000080,   // If cast time <= 250ms, does not display cast bar
+    SPELL_ATTR0_CU_LOW_CAST_TIME_DONT_INTERRUPT = 0x00000100,   // If cast time <= 250ms, does not interrupt
 };
 
 static uint32_t dummy = 0;
@@ -131,7 +136,10 @@ struct MovementInfo {
     float padding1C;
     float orientation;
     float pitch;
-    uint32_t padding28[74];
+    uint32_t padding28[7];
+    uint32_t movementFlags;
+    uint32_t movementFlags2;
+    uint32_t padding4C[65];
     // TODO: add rest, probably when needed
 };
 
@@ -203,6 +211,8 @@ struct UnitFields {
     uint32_t unitMaxPowers[7];
     float padding0x88[14];
     uint32_t level;
+    uint32_t padding0xC4[20];
+    uint32_t petNumber;
     // TODO: add rest at some point, most likely when needed
 };
 
@@ -480,6 +490,10 @@ namespace ClientPacket {
 
 namespace SpellParser {
     CLIENT_FUNCTION(ParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+}
+
+namespace Spell_C {
+    CLIENT_FUNCTION(SpellFailed, 0x808200, __cdecl, void, (void*, SpellRow*, uint32_t, int32_t, int32_t, uint32_t))
 }
 
 namespace SpellRec_C {
