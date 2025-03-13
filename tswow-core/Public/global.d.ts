@@ -4914,6 +4914,13 @@ declare interface TSGameObject extends TSWorldObject {
     GetDisplayID() : TSNumber<uint32>
 
     /**
+     * Returns the [GameObject]'s owner's GUID.
+     *
+     * @return uint64 ownerGUID
+     */
+    GetOwnerGUID() : TSGUID
+
+    /**
      * Returns the state of a [GameObject]
      * Below are client side [GOState]s off of 3.3.5a
      *
