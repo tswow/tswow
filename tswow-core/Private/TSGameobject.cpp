@@ -101,6 +101,16 @@ TSNumber<uint32> TSGameObject::GetDisplayID()
 }
 
 /**
+ * Returns the [GameObject]'s owner's GUID.
+ *
+ * @return uint64 ownerGUID
+ */
+TSGUID TSGameObject::GetOwnerGUID()
+{
+    return TSGUID(go->GetOwnerGUID());
+}
+
+/**
  * Returns the state of a [GameObject]
  * Below are client side [GOState]s off of 3.3.5a
  *

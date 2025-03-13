@@ -20,6 +20,7 @@ void TSLua::load_gameobject_methods(sol::state& state)
     LUA_FIELD(ts_gameobject, TSGameObject, IsTransport);
     LUA_FIELD(ts_gameobject, TSGameObject, IsActive);
     LUA_FIELD(ts_gameobject, TSGameObject, GetDisplayID);
+    LUA_FIELD(ts_gameobject, TSGameObject, GetOwnerGUID);
     LUA_FIELD(ts_gameobject, TSGameObject, GetGoState);
     LUA_FIELD(ts_gameobject, TSGameObject, GetLootState);
     LUA_FIELD(ts_gameobject, TSGameObject, GetLootRecipient);
