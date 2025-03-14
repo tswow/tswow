@@ -439,6 +439,18 @@ struct SpellRuneCostRow {
     int32_t m_runicPower;
 };
 
+// Aleist3r: this is not a full struct afaik but that's what's needed in dll
+// will update if more fields are required
+struct WoWTime {
+    int32_t minute;
+    int32_t hour;
+    int32_t weekDay;
+    int32_t monthDay;
+    int32_t month;
+    int32_t year;
+    int32_t flags;
+};
+
 // client functions
 namespace CGChat {
     CLIENT_FUNCTION(AddChatMessage, 0x509DD0, __cdecl, bool, (char*, uint32_t, uint32_t, uint32_t, uint32_t*, uint32_t, char*, uint64_t, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t*))
