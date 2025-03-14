@@ -1,8 +1,6 @@
 #include "MiscFixes.h"
 #include "Logger.h"
 
-#include <ctime>
-
 void MiscFixes::Apply() {
     UpdateObjectVtable();
     UpdateWoWTimeFunctions();
@@ -84,9 +82,6 @@ void MiscFixes::PackWoWTimeToDword(uint32_t* dword, WoWTime* time) {
 }
 
 void MiscFixes::UnpackWoWTime(uint32_t packedTime, int32_t* minute, int32_t* hour, int32_t* weekDay, int32_t* monthDay, int32_t* month, int32_t* year, int32_t* flags) {
-    time_t now = time(0);
-    tm* ltm = localtime(&now);
-
     if (minute) {
         if ((packedTime & 63) == 63)
             *minute = -1;
