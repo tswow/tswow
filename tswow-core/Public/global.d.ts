@@ -4953,6 +4953,9 @@ declare interface TSInstance extends TSMap {
     SetInstanceData64(id: uint32, data: uint64): void;
     GetInstanceGUIDData(id: uint32): TSGUID;
     SetInstanceGUIDData(id: uint32, data: TSGUID): void;
+
+    GetSpawnLoc(): TSNumber<uint8>;
+    SetSpawnLoc(loc: uint8): void;
 }
 
 declare interface TSGameObject extends TSWorldObject {

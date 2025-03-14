@@ -30,7 +30,7 @@ void TooltipExtensions::SpellTooltipVariableExtension() {
 }
 
 void TooltipExtensions::SpellTooltipRuneCostExtension() {
-    uint8_t patchBytes[34] = {
+    uint8_t patchBytes[] = {
         0x8D, 0x9D, 0xB8, 0xFD, 0xFF, 0xFF, 0x53, 0x8D, 0x06, 0x50, 0x8D, 0x8D, 0xA0, 0xFE, 0xFF, 0xFF,
         0x51, 0x8D, 0x95, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0x4B, 0x02,
         0x00, 0x00
@@ -68,16 +68,22 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         value = static_cast<float>(activePlayer->unitBase.unitData->unitMaxHealth);
                         break;
                     case SPELLVARIABLE_ppl1:
-                    case SPELLVARIABLE_PPL1:
                         value = spell->m_effectRealPointsPerLevel[0];
                         break;
                     case SPELLVARIABLE_ppl2:
-                    case SPELLVARIABLE_PPL2:
                         value = spell->m_effectRealPointsPerLevel[1];
                         break;
                     case SPELLVARIABLE_ppl3:
-                    case SPELLVARIABLE_PPL3:
                         value = spell->m_effectRealPointsPerLevel[2];
+                        break;
+                    case SPELLVARIABLE_PPL1:
+                        value = spell->m_effectRealPointsPerLevel[0] * activePlayer->unitBase.unitData->level;
+                        break;
+                    case SPELLVARIABLE_PPL2:
+                        value = spell->m_effectRealPointsPerLevel[1] * activePlayer->unitBase.unitData->level;
+                        break;
+                    case SPELLVARIABLE_PPL3:
+                        value = spell->m_effectRealPointsPerLevel[2] * activePlayer->unitBase.unitData->level;
                         break;
                     case SPELLVARIABLE_mastery1:
                         value = CharacterDefines::getMasteryForSpec(0);
@@ -101,7 +107,7 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         value = activePlayer->PlayerData->parryPct;
                         break;
                     case SPELLVARIABLE_sbl:
-                        value = activePlayer->PlayerData->shieldBlock;
+                        value = static_cast<float>(activePlayer->PlayerData->shieldBlock);
                         break;
                     default:
                         *reinterpret_cast<uint32_t*>(_this) = 1;
@@ -173,7 +179,7 @@ void TooltipExtensions::SetRuneCostTooltip(char* dest, char* buff, SpellRuneCost
 }
 
 void TooltipExtensions::SpellTooltipPowerCostExtension() {
-    uint8_t patchBytes[31] = {
+    uint8_t patchBytes[] = {
         0x57, 0x51, 0x56, 0x8B, 0x4D, 0x2C, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x8D, 0x8D, 0x20,
         0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0xFC, 0xFF, 0x00, 0x00, 0xE9, 0x3A, 0x01, 0x00, 0x00
     };
@@ -224,7 +230,7 @@ void TooltipExtensions::SetPowerCostTooltip(char* dest, SpellRow* spell, uint32_
 }
 
 void TooltipExtensions::SpellTooltipCooldownExtension() {
-    uint8_t patchBytes[51] = {
+    uint8_t patchBytes[] = {
         0x8B, 0x4D, 0x2C, 0x8B, 0x45, 0xE4, 0x51, 0x50, 0x8D, 0x8D, 0x20, 0xFE, 0xFF, 0xFF, 0x51, 0x8B,
         0x55, 0x1C, 0x8B, 0x45, 0x14, 0x52, 0x50, 0x8D, 0x4D, 0x18, 0x51, 0x8D, 0x95, 0x78, 0xFB, 0xFF,
         0xFF, 0x8D, 0x8D, 0x20, 0xFF, 0xFF, 0xFF, 0x52, 0x51, 0xE8, 0x00, 0x00, 0x00, 0x00, 0xE9, 0xD8,
@@ -308,7 +314,7 @@ void TooltipExtensions::SetSpellCooldownTooltip(char* dest, SpellRow* spell, uin
 }
 
 void TooltipExtensions::SpellTooltipRemainingCooldownExtension() {
-    uint8_t patchBytes[35] = {
+    uint8_t patchBytes[] = {
         0x8B, 0x45, 0x10, 0x89, 0xF9, 0x8D, 0x95, 0x78, 0xFB, 0xFF, 0xFF, 0x50, 0x51, 0x52, 0x8D, 0x95,
         0x20, 0xFF, 0xFF, 0xFF, 0x52, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x31, 0xDB, 0xBB, 0x01, 0x00, 0x00,
         0x00, 0xEB, 0x24

@@ -9,14 +9,6 @@ import { RaceMask } from "../Race/RaceType";
 import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
 
-if(isTrinityCore()) {
-    SQL.Databases.world_dest.read(`DELETE FROM \`spell_autolearn\`;`);
-    SQL.spell_autolearn.queryAll({})
-        .forEach(x=>{
-            SqlRow.markDirty(x);
-        })
-}
-
 export class SpellAutoLearn extends ClassRaceMaskEntry<spell_autolearnRow> {
     get Spell() { return SpellRegistry.readOnlyRef(this, this.row.spell); }
     get Level() { return this.wrap(this.row.level); }

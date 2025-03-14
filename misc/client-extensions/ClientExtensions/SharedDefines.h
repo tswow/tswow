@@ -57,6 +57,10 @@ enum Powers : int32_t {
     POWER_RUNIC_POWER       = 7
 };
 
+enum SpellCastResult : uint32_t {
+    SPELL_FAILED_MOVING     = 51,
+};
+
 enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
@@ -109,6 +113,7 @@ enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_INVERT_CASTBAR               = 0x00000020,   // NYI; will cost me some sanity it seems
     SPELL_ATTR0_CU_LOW_TIME_TREAT_AS_INSTANT    = 0x00000040,   // If cast time <= 250ms, changes tooltip line responsible to "Instant"
     SPELL_ATTR0_CU_LOW_TIME_FORCE_HIDE_CASTBAR  = 0x00000080,   // If cast time <= 250ms, does not display cast bar
+    SPELL_ATTR0_CU_LOW_CAST_TIME_DONT_INTERRUPT = 0x00000100,   // If cast time <= 250ms, does not interrupt
 };
 
 static uint32_t dummy = 0;
@@ -131,7 +136,10 @@ struct MovementInfo {
     float padding1C;
     float orientation;
     float pitch;
-    uint32_t padding28[74];
+    uint32_t padding28[7];
+    uint32_t movementFlags;
+    uint32_t movementFlags2;
+    uint32_t padding4C[65];
     // TODO: add rest, probably when needed
 };
 
@@ -144,7 +152,7 @@ struct ObjectFields {
 };
 
 struct PlayerFields {
-    uint32_t padding[876];
+    uint32_t padding0x00[876];
     float blockPct;
     float dodgePct;
     float parryPct;
@@ -153,20 +161,58 @@ struct PlayerFields {
     float critPct;
     float rangedCritPct;
     float offhandCritPct;
-    float spellCritPct;
+    float spellCritPct[7];
     float shieldBlock;
     float shieldBlockCritPct;
+    uint32_t padding0x0DEC[190];
+    int32_t crWeaponSkill;
+    int32_t crDefenseSkill;
+    int32_t crDodge;
+    int32_t crParry;
+    int32_t crBlock;
+    int32_t crSpeed;        // crHitMelee
+    int32_t crLifesteal;    // crHitRanged
+    int32_t crAvoidance;    // crHitSpell
+    int32_t crCrit;         // crCritMelee
+    int32_t crCritRanged;
+    int32_t crCritSpell;
+    int32_t crHitTakenMelee;
+    int32_t crHitTakenRanged;
+    int32_t crHitTakenSpell;
+    int32_t crCritTakenMelee;
+    int32_t crCritTakenRanged;
+    int32_t crCritTakenSpell;
+    int32_t crHaste;        // crHasteMelee
+    int32_t crHasteRanged;
+    int32_t crHasteSpell;
+    int32_t crWeaponSkillMainhand;
+    int32_t crWeaponSkillOffhand;
+    int32_t crWeaponSkillRanged;
+    int32_t crMastery;      // crExpertise
+    int32_t crThorns;       // crArmorPenetration
+    uint32_t padding0x1120[70];
     // TODO: add rest when needed
 };
 
+struct UnitBytes0 {
+    uint8_t raceID;
+    uint8_t classID;
+    uint8_t genderID;
+    uint8_t powerTypeID;
+};
+
 struct UnitFields {
-    uint64_t padding[8];    // not defining those until we need them
+    uint64_t padding0x00[8];    // not defining those until we need them
     uint32_t channelSpell;
-    uint8_t unitBytes0[4];
+    UnitBytes0 unitBytes0;
     uint32_t unitCurrHealth;
     uint32_t unitCurrPowers[7];
     uint32_t unitMaxHealth;
     uint32_t unitMaxPowers[7];
+    float padding0x88[14];
+    uint32_t level;
+    uint32_t padding0xC4[20];
+    uint32_t petNumber;
     // TODO: add rest at some point, most likely when needed
 };
 
@@ -456,6 +502,10 @@ namespace ClientPacket {
 
 namespace SpellParser {
     CLIENT_FUNCTION(ParseText, 0x57ABC0, __cdecl, void, (void*, void*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))
+}
+
+namespace Spell_C {
+    CLIENT_FUNCTION(SpellFailed, 0x808200, __cdecl, void, (void*, SpellRow*, uint32_t, int32_t, int32_t, uint32_t))
 }
 
 namespace SpellRec_C {

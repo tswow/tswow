@@ -21,7 +21,7 @@ void CharacterExtensions::ChangeLFGRoleFunctionPointers() {
 }
 
 void CharacterExtensions::SpellLearnExtension() {
-    uint8_t patchBytes[18] = {
+    uint8_t patchBytes[] = {
         0x8D, 0x4D, 0x0C, 0x8D, 0x85, 0x28, 0xFD, 0xFF, 0xFF, 0x51, 0x50, 0xE8, 0x00, 0x00, 0x00, 0x00,
         0xEB, 0x5B
     };
@@ -31,7 +31,7 @@ void CharacterExtensions::SpellLearnExtension() {
 }
 
 void CharacterExtensions::SpellUnlearnExtension() {
-    uint8_t patchBytes[18] = {
+    uint8_t patchBytes[] = {
         0x8D, 0x4D, 0x0C, 0x8D, 0x85, 0x58, 0xFD, 0xFF, 0xFF, 0x51, 0x50, 0xE8, 0x00, 0x00, 0x00, 0x00,
         0xEB, 0x48
     };
@@ -140,4 +140,29 @@ void CharacterExtensions::OnSpellUnlearnEx(SpellRow* spellRow, uint32_t* a3) {
         else
             CGGameUI::DisplayError(GERR_SPELL_UNLEARNED_S, spellRow->m_name_lang);
     }
+}
+
+int CharacterExtensions::SpecToIndex(uint32_t specID) {
+    uint32_t spec1[] = { 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 34 };
+    uint32_t spec2[] = { 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 35 };
+    uint32_t spec3[] = { 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 36 };
+    uint32_t spec4[] = { 31, 32, 33 };
+
+    for (uint8_t i = 0; i < sizeof(spec1) / 4; i++)
+        if (spec1[i] == CharacterDefines::getCharActiveSpec())
+            return 0;
+
+    for (uint8_t i = 0; i < sizeof(spec2) / 4; i++)
+        if (spec2[i] == CharacterDefines::getCharActiveSpec())
+            return 1;
+
+    for (uint8_t i = 0; i < sizeof(spec3) / 4; i++)
+        if (spec3[i] == CharacterDefines::getCharActiveSpec())
+            return 2;
+
+    for (uint8_t i = 0; i < sizeof(spec4) / 4; i++)
+        if (spec4[i] == CharacterDefines::getCharActiveSpec())
+            return 3;
+
+    return 0xFFFFFFFF;
 }

@@ -3,6 +3,8 @@
 #include "CharacterDefines.h"
 
 class CharacterExtensions {
+public:
+    static int SpecToIndex(uint32_t specID);
 private:
     static void Apply();
     static void ChangeLFGRoleFunctionPointers();

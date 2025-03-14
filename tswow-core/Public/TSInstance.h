@@ -87,6 +87,9 @@ public:
     void SetInstanceData64(uint32 id, uint64 data);
     TSGUID GetInstanceGUIDData(uint32 id);
     void SetInstanceGUIDData(uint32 id, TSGUID data);
+
+    TSNumber<uint8> GetSpawnLoc();
+    void SetSpawnLoc(uint8 Loc);
 };
 
 LUA_PTR_TYPE(TSGUIDSet)

@@ -298,3 +298,13 @@ void TSInstance::SetInstanceGUIDData(uint32 id, TSGUID data)
 {
     m_script->SetGuidData(id, data->asGUID());
 }
+
+TSNumber<uint8> TSInstance::GetSpawnLoc()
+{
+    return m_script->GetSpawnLoc();
+}
+
+void TSInstance::SetSpawnLoc(uint8 loc)
+{
+    m_script->SetSpawnLoc(loc);
+}

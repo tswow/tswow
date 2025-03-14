@@ -211,6 +211,13 @@ export function ClientPatches(gamebuild: number) {
                 [0x238, [0x00, 0x70]],
                 [0x260, [0x00, 0xB0]],
                 [0x2B0, [0x00, 0x10]]
+            ]),
+            patch('sw-occluder', [
+                 // Occulder Issue for Open Azeroth Stormwind
+                [0x6EE040, [0x9f]],
+                [0x6EE041, [0x86]],
+                [0x6EE042, [0x01]],
+                [0x6EE043, [0x00]]
             ])
         ]
 }

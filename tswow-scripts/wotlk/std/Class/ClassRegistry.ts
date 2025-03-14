@@ -36,7 +36,11 @@ export enum ClassMask {
     , MAGE         = 0x80
     , WARLOCK      = 0x100
     , DRUID        = 0x400
-    , ALL          = 0x7FFF
+    , MONK         = 0x800
+    , BARD         = 0x1000
+    , TINKER       = 0x2000
+    , DEMONHUNTER  = 0x4000
+    , ALL          = WARRIOR + PALADIN + HUNTER + ROGUE + PRIEST + DEATH_KNIGHT + SHAMAN + MAGE + WARLOCK + DRUID + TINKER
 }
 
 export class ClassRegistryClass

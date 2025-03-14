@@ -116,23 +116,24 @@ export class SpellCustomAttr extends MaskCell<Spell> {
     get SCHOOL_MASK_NORMAL_WITH_MAGIC() { return this.bit(21); }
     get LIQUID_AURA()                   { return this.bit(22); }
     get IS_TALENT()                     { return this.bit(23); }
-    get DONT_RESTART_P_TIMER()          {return this.bit(25)}
-    get USE_RANGED_NO_AMMO()            {return this.bit(26)}
+    get DONT_RESTART_P_TIMER()          { return this.bit(25); }
+    get USE_RANGED_NO_AMMO()            { return this.bit(26); }
 
     get CANNOT_BE_SAVED()               { return this.bit(31); }
-    get REQUIRES_COMBAT() {return this.bit(32);}
-    get NO_ATTACK_BLOCK() {return this.bit(33);}
-    get SCALE_DAMAGE_EFFECTS_ONLY() {return this.bit(34);}
-    get SCALE_HEALING_EFFECTS_ONLY() {return this.bit(35);}
-    get USE_TARGETS_LEVEL_FOR_SPELL_SCALING() {return this.bit(36);}
-    get REMOVE_OUTSIDE_DUNGEONS_AND_RAIDS() {return this.bit(37);}
-    get NOT_USABLE_IN_INSTANCES() {return this.bit(38);}
-    get USABLE_IN_INSTANCES_ONLY() {return this.bit(39);}
-    get PERIODIC_CAN_CRIT() {return this.bit(40);}
-    get IGNORES_CASTER_LEVEL() {return this.bit(41);}
-    get ONLY_PROC_FROM_CLASS_ABILITIES() {return this.bit(42);}
-    get ACTIVATES_REQUIRED_SHAPESHIFT() {return this.bit(43);}
-    get REAPPLY_NO_REFRESH_DURATION() {return this.bit(44);}
-    get SPECIAL_DELAY_CALCULATION() {return this.bit(45);}
-    get CAST_TIME_UNAFFECTED_BY_HASTE() {return this.bit(46);}
+    get REQUIRES_COMBAT()               { return this.bit(32); }
+    get NO_ATTACK_BLOCK()               { return this.bit(33); }
+    get SCALE_DAMAGE_EFFECTS_ONLY()     { return this.bit(34); }
+    get SCALE_HEALING_EFFECTS_ONLY()    { return this.bit(35); }
+    get USE_TARGETS_LEVEL_FOR_SPELL_SCALING() { return this.bit(36); }
+    get REMOVE_OUTSIDE_DUNGEONS_AND_RAIDS() { return this.bit(37); }
+    get NOT_USABLE_IN_INSTANCES()       { return this.bit(38); }
+    get USABLE_IN_INSTANCES_ONLY()      { return this.bit(39); }
+    get PERIODIC_CAN_CRIT()             { return this.bit(40); }
+    get IGNORES_CASTER_LEVEL()          { return this.bit(41); }
+    get ONLY_PROC_FROM_CLASS_ABILITIES(){ return this.bit(42); }
+    get ACTIVATES_REQUIRED_SHAPESHIFT() { return this.bit(43); }
+    get REAPPLY_NO_REFRESH_DURATION()   { return this.bit(44); }
+    get SPECIAL_DELAY_CALCULATION()     { return this.bit(45); }
+    get CAST_TIME_UNAFFECTED_BY_HASTE() { return this.bit(46); }
+    get LOW_CAST_TIME_DONT_INTERRUPT()  { return this.bit(47); }
 }
