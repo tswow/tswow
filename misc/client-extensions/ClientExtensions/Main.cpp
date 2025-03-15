@@ -16,6 +16,8 @@ public:
     {
         LOG_INFO << "Client starting up";
         // gets this from scripts.generated.ih
+        MiscFixes::SetYearOffsetMultiplier();
+        LOG_INFO << "Time offset set.";
         __init_scripts();
         LOG_INFO << "Client init scripts";
         ClientNetwork::initialize();
