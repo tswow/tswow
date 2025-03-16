@@ -9361,7 +9361,7 @@ declare namespace _hidden {
         OnDamageTaken(callback: (who: TSUnit, from: TSUnit, damage: int32) => void)
         OnLossOfControl(callback: (who: TSUnit, state: uint32) => void)
 
-        OnRageGainedViaAttack(callback: (To: TSUnit, Victim: TSUnit, RageDamage: TSMutableNumber<uint32>) => void)
+        OnRageGainedViaAttack(callback: (To: TSUnit, Victim: TSUnit, aType: TSNumber<uint8>, RageDamage: TSMutableNumber<uint32>) => void)
 
         OnCustomDamageTaken(callback: (who: TSUnit, Victim: TSUnit, damage: TSMutableNumber<uint32>) => void)
 
