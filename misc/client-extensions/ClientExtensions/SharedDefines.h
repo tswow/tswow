@@ -123,6 +123,11 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
+struct C2Vector {
+    float x;
+    float y;
+};
+
 struct C3Vector {
     float x;
     float y;
@@ -449,6 +454,17 @@ struct WoWTime {
     int32_t month;
     int32_t year;
     int32_t flags;
+};
+
+struct ZoneLightData {
+    int32_t mapID;          // 0
+    int32_t lightID;        // 2
+    void* pointData;        // 3
+    int32_t pointNum;       // 4
+    float minX;            // 8
+    float minY;            // 9
+    float maxX;            // 10
+    float maxY;            // 11
 };
 
 // client functions

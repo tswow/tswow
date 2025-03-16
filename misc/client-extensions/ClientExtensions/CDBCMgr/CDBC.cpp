@@ -81,4 +81,3 @@ void CDBC::GetMinMaxIndices() {
     this->minIndex = *firstRow;  // First row is the minimum
     this->maxIndex = *lastRow;   // Last row is the maximum
 }
-
