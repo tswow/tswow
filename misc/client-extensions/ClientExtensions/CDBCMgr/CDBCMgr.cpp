@@ -2,6 +2,8 @@
 #include "CDBCDefs/LFGRoles.h"
 #include "CDBCDefs/SpellAdditionalAttributes.h"
 #include "CDBCDefs/SpellAdditionalCostData.h"
+#include "CDBCDefs/ZoneLight.h"
+#include "CDBCDefs/ZoneLightPoint.h"
 
 CDBCMgr GlobalCDBCMap;
 std::unordered_map<std::string, std::function<int(lua_State*,int)>> cdbcLuaHandlers = {};
@@ -10,6 +12,8 @@ void CDBCMgr::Load() {
     LFGRoles().LoadDB();
     SpellAdditionalAttributes().LoadDB();
     SpellAdditionalCostData().LoadDB();
+    ZoneLight().LoadDB();
+    ZoneLightPoint().LoadDB();
 }
 
 void CDBCMgr::addCDBC(std::string cdbcName){

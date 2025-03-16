@@ -1,5 +1,6 @@
 #pragma optimize("", off)
 #include "CDBCMgr/CDBC.h"
+#include "CDBCMgr/CDBCMgr.h"
 
 struct SpellAdditionalAttributesRow {
     int spellID;
