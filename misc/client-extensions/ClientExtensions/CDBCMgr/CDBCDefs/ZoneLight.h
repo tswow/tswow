@@ -19,18 +19,18 @@ struct ZoneLightRow {
 
 class ZoneLight : public CDBC {
 public:
-    const char* fileName = "DBFilesClient\\ZoneLight.cdbc";
+    const char* fileName = "ZoneLight";
     ZoneLight() : CDBC() {
         this->numColumns = sizeof(ZoneLightRow) / 4;
         this->rowSize = sizeof(ZoneLightRow);
     }
 
     ZoneLight* LoadDB() { 
-        GlobalCDBCMap.addCDBC("ZoneLight");
+        GlobalCDBCMap.addCDBC(this->fileName);
         CDBC::LoadDB(this->fileName);
         ZoneLight::setupStringsAndTable();
-        CDBCMgr::addCDBCLuaHandler("ZoneLight", ZoneLight::handleLua);
-        GlobalCDBCMap.setIndexRange("ZoneLight", this->minIndex, this->maxIndex);
+        CDBCMgr::addCDBCLuaHandler(this->fileName, [this](lua_State* L, int row) {return this->handleLua(L, row); });
+        GlobalCDBCMap.setIndexRange(this->fileName, this->minIndex, this->maxIndex);
         return this;
     };
 
@@ -39,13 +39,13 @@ public:
         uintptr_t stringTable = reinterpret_cast<uintptr_t>(this->stringTable);
         for (uint32_t i = 0; i < this->numRows; i++) {
             row->name = reinterpret_cast<char*>(stringTable + reinterpret_cast<uintptr_t>(row->name));
-            GlobalCDBCMap.addRow("ZoneLight", row->ID, *row);
+            GlobalCDBCMap.addRow(this->fileName, row->ID, *row);
             ++row;
         }
     };
 
-    static int handleLua(lua_State* L, int row) {
-        ZoneLightRow* r = GlobalCDBCMap.getRow<ZoneLightRow>("ZoneLight", row);
+    int handleLua(lua_State* L, int row) {
+        ZoneLightRow* r = GlobalCDBCMap.getRow<ZoneLightRow>(this->fileName, row);
         if (r) return r->handleLuaPush(L);
         return 0;
     }

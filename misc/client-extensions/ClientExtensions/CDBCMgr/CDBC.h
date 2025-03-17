@@ -21,6 +21,9 @@ public:
     uint32_t minIndex;
     uint32_t maxIndex;
 
+    std::string folder = "DBFilesClient\\\\";
+    std::string extension = ".cdbc";
+
     CDBC* LoadDB(const char* filename);
     void UnloadDB();
     void GetMinMaxIndices();
