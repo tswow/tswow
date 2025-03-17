@@ -5,18 +5,32 @@
 #include <unordered_map>
 #include <string>
 #include <any>
+#include <limits>
 
 class CDBCMgr {
     using CDBC = std::unordered_map<int, std::any>;
 public:
-    std::unordered_map<std::string, CDBC> allCDBCs;
+    std::unordered_map<std::string, CDBC> allCDBCs; // {cdbcName -> [rowData]}
+    std::unordered_map<std::string, std::pair<int, int>> cdbcIndexRanges; // {cdbcName -> (minIndex, maxIndex)}
     static void CDBCMgr::Load();
     void addCDBC(std::string cdbcName);
     static void CDBCMgr::addCDBCLuaHandler(std::string cdbcName,  std::function<int(lua_State*,int)> func);
     static int CDBCMgr::handleLua(lua_State* L, std::string cdbcName, int row);
     //these stay in .h because haha template
     template <typename T>
-    void addRow(std::string cdbcName, int rowIndex, T row) {allCDBCs[cdbcName][rowIndex] = row;}
+    void addRow(std::string cdbcName, int rowIndex, T row) {
+        allCDBCs[cdbcName][rowIndex] = row;
+
+        // Update min/max index
+        auto& range = cdbcIndexRanges[cdbcName];
+        if (range.first == 0 && range.second == 0) {
+            range.first = rowIndex;
+            range.second = rowIndex;
+        } else {
+            if (rowIndex < range.first) range.first = rowIndex;
+            if (rowIndex > range.second) range.second = rowIndex;
+        }
+    }
     template <typename T>
     T* getRow(std::string cdbcName, int rowIndex) {
         auto it = allCDBCs.find(cdbcName);
@@ -27,6 +41,14 @@ public:
             }
         }
         return nullptr;
+    }
+
+    std::pair<int, int> getIndexRange(std::string cdbcName) {
+        auto it = cdbcIndexRanges.find(cdbcName);
+        if (it != cdbcIndexRanges.end()) {
+            return it->second;
+        }
+        return {0, 0};
     }
 };
 

@@ -20,7 +20,7 @@ void WorldDataExtensions::FillZoneLightData() {
         ZoneLightData data = { 0 };
         ZoneLightRow* row = GlobalCDBCMap.getRow<ZoneLightRow>("ZoneLight", i);
         std::vector<C2Vector> points = {};
-
+        LOG_DEBUG << GlobalCDBCMap.getIndexRange("ZoneLight").first << " " << GlobalCDBCMap.getIndexRange("ZoneLight").second;
         if (!row)
             continue;
 
