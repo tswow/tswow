@@ -2,7 +2,14 @@
 #include "CDBCMgr/CDBCDefs/ZoneLight.h"
 #include "CDBCMgr/CDBCDefs/ZoneLightPoint.h"
 
-void WorldDataExtension::FillZoneLightData() {
+void WorldDataExtensions::Apply() {
+    Util::OverwriteUInt32AtAddress(0x781730, 0xFFFFFFFF);
+    Util::OverwriteUInt32AtAddress(0x781751, reinterpret_cast<uint32_t>(&FindAndAddZoneLightEx) - 0x781755);
+
+    FillZoneLightData();
+}
+
+void WorldDataExtensions::FillZoneLightData() {
     for (uint32_t i = ZoneLight().GetMinIndex(); i <= ZoneLight().GetMaxIndex(); i++) {
         ZoneLightData data = { 0 };
         ZoneLightRow* row = GlobalCDBCMap.getRow<ZoneLightRow>("ZoneLight", i);
@@ -67,6 +74,42 @@ void WorldDataExtension::FillZoneLightData() {
     }
 }
 
-void WorldDataExtension::ParseLightDataForZone(C3Vector* vec) {
+void WorldDataExtensions::FindAndAddZoneLightEx(C3Vector* vec) {
+    ZoneLightData data = { 0 };
+    void* g_dnInfo = DNInfo::GetDNInfoPtr();
+    int32_t currentMap = *reinterpret_cast<int32_t*>(0xADFBC4);
+    C2Vector vec2d = { 0 };
 
+    if (!GlobalZoneLightData.size())
+        return;
+
+    vec2d.x = -(vec->y - 17066.666);
+    vec2d.y = -(vec->x - 17066.666);
+
+    for (uint32_t i = 0; i < GlobalZoneLightData.size(); i++) {
+        data = GlobalZoneLightData[i];
+
+        if (!data.mapID)
+            break;
+
+        if (data.mapID == currentMap && data.minX <= vec2d.x && data.minY <= vec2d.y && data.maxX >= vec2d.x && data.maxY >= vec2d.y)
+        {
+            float temp = 0.f;
+            bool isWithin = NTempest::DistanceSquaredFromEdge(data.pointNum, data.pointData, &vec2d, &temp);
+
+            if (isWithin)
+                temp = -temp;
+
+            temp -= 50.f;
+            isWithin = temp < 0.f;
+
+            if (temp < 0.f)
+                temp = -temp;
+
+            if (isWithin) {
+                DNInfo::AddZoneLight(g_dnInfo, data.lightID, temp);
+                break;
+            }
+        }
+    }
 }

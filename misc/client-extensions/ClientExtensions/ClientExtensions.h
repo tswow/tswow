@@ -4,6 +4,7 @@
 #include "Character/CharacterFixes.h"
 #include "Misc/MiscFixes.h"
 #include "Tooltip/SpellTooltipExtensions.h"
+#include "World/WorldData.h"
 
 class ClientExtensions {
 private:
