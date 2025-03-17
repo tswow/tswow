@@ -16,7 +16,13 @@ void WorldDataExtensions::Apply() {
 }
 
 void WorldDataExtensions::FillZoneLightData() {
-    for (uint32_t i = 1; i <= 11; i++) {
+    int32_t zoneLightMin = GlobalCDBCMap.getIndexRange("ZoneLight").first;
+    int32_t zoneLightMax = GlobalCDBCMap.getIndexRange("ZoneLight").second;
+    int32_t zoneLightPointMin = GlobalCDBCMap.getIndexRange("ZoneLightPoint").first;
+    int32_t zoneLightPointMax = GlobalCDBCMap.getIndexRange("ZoneLightPoint").second;
+    uint32_t counter = 1;
+
+    for (uint32_t i = zoneLightMin; i <= zoneLightMax; i++) {
         ZoneLightData data = { 0 };
         ZoneLightRow* row = GlobalCDBCMap.getRow<ZoneLightRow>("ZoneLight", i);
         std::vector<C2Vector> points = {};
@@ -27,14 +33,13 @@ void WorldDataExtensions::FillZoneLightData() {
         data.mapID = row->mapID;
         data.lightID = row->lightID;
 
-        for (uint32_t j = 1; ; j++) {
+        for (uint32_t j = counter; j <= zoneLightPointMax; j++) {
             ZoneLightPointRow* tempRow = GlobalCDBCMap.getRow<ZoneLightPointRow>("ZoneLightPoint", j);
             C2Vector tempVec = { 0 };
 
-            if (!tempRow)
-                break;
+            counter++;
 
-            if (tempRow->zoneLightID < row->ID)
+            if (!tempRow || tempRow->zoneLightID < row->ID)
                 continue;
 
             if (tempRow->zoneLightID > row->ID)
@@ -45,7 +50,7 @@ void WorldDataExtensions::FillZoneLightData() {
 
             points.push_back(tempVec);
 
-            if (!j) {
+            if (j == zoneLightPointMin) {
                 data.minX, data.maxX = tempVec.x;
                 data.maxY, data.maxY = tempVec.y;
             }
