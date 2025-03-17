@@ -18,6 +18,7 @@ void CDBCMgr::Load() {
 
 void CDBCMgr::addCDBC(std::string cdbcName) {
     allCDBCs[cdbcName] = CDBC();
+    cdbcIndexRanges[cdbcName] = { 0, 0 };
 }
 
 void CDBCMgr::addCDBCLuaHandler(std::string cdbcName, std::function<int(lua_State*,int)> func) {

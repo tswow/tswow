@@ -30,6 +30,7 @@ public:
         CDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStringsAndTable();
         CDBCMgr::addCDBCLuaHandler("SpellAdditionalCostData", SpellAdditionalCostData::handleLua);
+        GlobalCDBCMap.setIndexRange("SpellAdditionalCostData", this->minIndex, this->maxIndex);
         return this;
     };
 

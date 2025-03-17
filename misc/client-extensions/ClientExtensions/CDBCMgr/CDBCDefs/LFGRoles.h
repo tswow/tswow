@@ -26,6 +26,7 @@ public:
         CDBC::LoadDB(this->fileName);
         LFGRoles::setupTable();
         CDBCMgr::addCDBCLuaHandler("LFGRoles", LFGRoles::handleLua);
+        GlobalCDBCMap.setIndexRange("LFGRoles", this->minIndex, this->maxIndex);
         return this;
     };
 

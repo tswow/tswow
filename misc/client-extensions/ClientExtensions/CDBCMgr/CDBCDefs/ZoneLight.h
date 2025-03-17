@@ -30,6 +30,7 @@ public:
         CDBC::LoadDB(this->fileName);
         ZoneLight::setupStringsAndTable();
         CDBCMgr::addCDBCLuaHandler("ZoneLight", ZoneLight::handleLua);
+        GlobalCDBCMap.setIndexRange("ZoneLight", this->minIndex, this->maxIndex);
         return this;
     };
 

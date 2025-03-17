@@ -26,6 +26,7 @@ public:
         CDBC::LoadDB(this->fileName);
         SpellAdditionalAttributes::setupTable();
         CDBCMgr::addCDBCLuaHandler("SpellAdditionalAttributes", SpellAdditionalAttributes::handleLua);
+        GlobalCDBCMap.setIndexRange("SpellAdditionalAttributes", this->minIndex, this->maxIndex);
         return this;
     }
 

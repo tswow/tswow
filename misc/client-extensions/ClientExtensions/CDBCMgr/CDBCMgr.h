@@ -18,19 +18,7 @@ public:
     static int CDBCMgr::handleLua(lua_State* L, std::string cdbcName, int row);
     //these stay in .h because haha template
     template <typename T>
-    void addRow(std::string cdbcName, int rowIndex, T row) {
-        allCDBCs[cdbcName][rowIndex] = row;
-
-        // Update min/max index
-        auto& range = cdbcIndexRanges[cdbcName];
-        if (range.first == 0 && range.second == 0) {
-            range.first = rowIndex;
-            range.second = rowIndex;
-        } else {
-            if (rowIndex < range.first) range.first = rowIndex;
-            if (rowIndex > range.second) range.second = rowIndex;
-        }
-    }
+    void addRow(std::string cdbcName, int rowIndex, T row) { allCDBCs[cdbcName][rowIndex] = row; }
     template <typename T>
     T* getRow(std::string cdbcName, int rowIndex) {
         auto it = allCDBCs.find(cdbcName);
@@ -49,6 +37,15 @@ public:
             return it->second;
         }
         return {0, 0};
+    }
+
+    void setIndexRange(std::string cdbcName, uint32_t minIndex, uint32_t maxIndex) {
+        auto it = cdbcIndexRanges.find(cdbcName);
+        if (it != cdbcIndexRanges.end()) {
+            it->second = { minIndex, maxIndex };
+        }else{
+            it->second = { 0, 0 };
+        }
     }
 };
 

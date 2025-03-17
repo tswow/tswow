@@ -32,6 +32,7 @@ public:
         CDBC::LoadDB(this->fileName);
         ZoneLightPoint::setupTable();
         CDBCMgr::addCDBCLuaHandler("ZoneLightPoint", ZoneLightPoint::handleLua);
+        GlobalCDBCMap.setIndexRange("ZoneLightPoint", this->minIndex, this->maxIndex);
         return this;
     }
 
