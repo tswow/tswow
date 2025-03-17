@@ -16,11 +16,11 @@ void CDBCMgr::Load() {
     ZoneLightPoint().LoadDB();
 }
 
-void CDBCMgr::addCDBC(std::string cdbcName){
+void CDBCMgr::addCDBC(std::string cdbcName) {
     allCDBCs[cdbcName] = CDBC();
 }
 
-void CDBCMgr::addCDBCLuaHandler(std::string cdbcName, std::function<int(lua_State*,int)> func){
+void CDBCMgr::addCDBCLuaHandler(std::string cdbcName, std::function<int(lua_State*,int)> func) {
     cdbcLuaHandlers[cdbcName] = func;
 }
 

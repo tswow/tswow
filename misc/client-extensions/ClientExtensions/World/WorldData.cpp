@@ -4,9 +4,14 @@
 #include "Logger.h"
 
 void WorldDataExtensions::Apply() {
+    // calls nullsub_3 instead of original function
+    Util::OverwriteUInt32AtAddress(0x781426, 0xFFE6D746);
+    // sets the check for map id to > -1 so it's always true unless no map is loaded
     Util::OverwriteUInt32AtAddress(0x781730, 0xFFFFFFFF);
     Util::OverwriteUInt32AtAddress(0x781751, reinterpret_cast<uint32_t>(&FindAndAddZoneLightEx) - 0x781755);
-
+    // calls nullsub_3 instead of original function
+    Util::OverwriteUInt32AtAddress(0x9E0360, 0x5EEB70);
+    
     FillZoneLightData();
 }
 
@@ -21,16 +26,14 @@ void WorldDataExtensions::FillZoneLightData() {
 
         data.mapID = row->mapID;
         data.lightID = row->lightID;
-        LOG_DEBUG << "mapID: " << row->mapID;
-        LOG_DEBUG << "lightID: " << row->lightID;
+
         for (uint32_t j = 1; ; j++) {
             ZoneLightPointRow* tempRow = GlobalCDBCMap.getRow<ZoneLightPointRow>("ZoneLightPoint", j);
             C2Vector tempVec = { 0 };
-            
+
             if (!tempRow)
                 break;
-            LOG_DEBUG << "ID: " << tempRow->ID;
-            LOG_DEBUG << "zoneLightID: " << tempRow->zoneLightID;
+
             if (tempRow->zoneLightID < row->ID)
                 continue;
 
@@ -39,8 +42,7 @@ void WorldDataExtensions::FillZoneLightData() {
 
             tempVec.x = tempRow->positionX;
             tempVec.y = tempRow->positionY;
-            LOG_DEBUG << "positionx: " << tempRow->positionX;
-            LOG_DEBUG << "positionY: " << tempRow->positionY;
+
             points.push_back(tempVec);
 
             if (!j) {

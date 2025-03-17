@@ -20,8 +20,6 @@ public:
     uint32_t numRows;
 
     CDBC* LoadDB(const char* filename);
-    uint32_t GetMinIndex() { return this -> minIndex; }
-    uint32_t GetMaxIndex() { return this -> maxIndex; }
     void UnloadDB();
     void GetMinMaxIndices();
     virtual ~CDBC() = default;
