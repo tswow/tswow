@@ -1,6 +1,7 @@
 #include "WorldData.h"
 #include "CDBCMgr/CDBCDefs/ZoneLight.h"
 #include "CDBCMgr/CDBCDefs/ZoneLightPoint.h"
+#include "Logger.h"
 
 void WorldDataExtensions::Apply() {
     Util::OverwriteUInt32AtAddress(0x781730, 0xFFFFFFFF);
@@ -10,7 +11,7 @@ void WorldDataExtensions::Apply() {
 }
 
 void WorldDataExtensions::FillZoneLightData() {
-    for (uint32_t i = ZoneLight().GetMinIndex(); i <= ZoneLight().GetMaxIndex(); i++) {
+    for (uint32_t i = 1; i <= 11; i++) {
         ZoneLightData data = { 0 };
         ZoneLightRow* row = GlobalCDBCMap.getRow<ZoneLightRow>("ZoneLight", i);
         std::vector<C2Vector> points = {};
@@ -20,14 +21,16 @@ void WorldDataExtensions::FillZoneLightData() {
 
         data.mapID = row->mapID;
         data.lightID = row->lightID;
-
-        for (uint32_t j = 0; ; j++) {
+        LOG_DEBUG << "mapID: " << row->mapID;
+        LOG_DEBUG << "lightID: " << row->lightID;
+        for (uint32_t j = 1; ; j++) {
             ZoneLightPointRow* tempRow = GlobalCDBCMap.getRow<ZoneLightPointRow>("ZoneLightPoint", j);
             C2Vector tempVec = { 0 };
-
+            
             if (!tempRow)
                 break;
-
+            LOG_DEBUG << "ID: " << tempRow->ID;
+            LOG_DEBUG << "zoneLightID: " << tempRow->zoneLightID;
             if (tempRow->zoneLightID < row->ID)
                 continue;
 
@@ -36,7 +39,8 @@ void WorldDataExtensions::FillZoneLightData() {
 
             tempVec.x = tempRow->positionX;
             tempVec.y = tempRow->positionY;
-
+            LOG_DEBUG << "positionx: " << tempRow->positionX;
+            LOG_DEBUG << "positionY: " << tempRow->positionY;
             points.push_back(tempVec);
 
             if (!j) {
