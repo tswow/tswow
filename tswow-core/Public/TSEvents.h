@@ -635,6 +635,8 @@ struct TSEvents
         ID_EVENT(OnSpellCastFinished, TSSpell, TSUnit, TSNumber<uint32>)
 
         ID_EVENT(CanMoveWhileChanneling, TSSpell, TSUnit, TSMutable<bool, bool>)
+
+        ID_EVENT(OnCheckGCDCategory, TSSpell, TSMutableNumber<uint32>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

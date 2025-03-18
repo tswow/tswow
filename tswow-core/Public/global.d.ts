@@ -8757,6 +8757,9 @@ declare namespace _hidden {
 
         CanMoveWhileChanneling(callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>)=>void): T;
         CanMoveWhileChanneling(id: EventID, callback: (Spell: TSSpell, Caster: TSUnit, IsAble: TSMutable<bool, bool>) => void): T;
+    
+        OnCheckGCDCategory(callback: (info: TSSpell, category: TSMutableNumber<uint32>)=>void): T;
+        OnCheckGCDCategory(id: EventID, callback: (info: TSSpell, category: TSMutableNumber<uint32>) => void): T;
     }
 
     export class Creature<T> {
