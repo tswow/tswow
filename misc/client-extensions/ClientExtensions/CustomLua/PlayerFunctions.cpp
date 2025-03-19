@@ -89,3 +89,35 @@ LUA_FUNCTION(UpdateSpellChargeMap, (lua_State* L)) {
 
     return 0;
 }
+
+LUA_FUNCTION(GetCombatRatingMult, (lua_State* L)) {
+    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
+    uint32_t rating = ClientLua::GetNumber(L, 1);
+    float value = 0.f;
+
+    if (activePlayer) {
+        CGPlayer* activeObjectPtr = reinterpret_cast<CGPlayer*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
+        uint32_t level = activeObjectPtr->unitBase.unitData->level;
+        gtCombatRatingsRow* row = reinterpret_cast<gtCombatRatingsRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD3B48), (rating - 1) * 100 + level));
+        value = row->data;
+    }
+
+    ClientLua::PushNumber(L, value);
+    return 1;
+}
+
+LUA_FUNCTION(GetCombatRatingScalar, (lua_State* L)) {
+    uint64_t activePlayer = ClntObjMgr::GetActivePlayer();
+    uint32_t rating = ClientLua::GetNumber(L, 1);
+    float value = 0.f;
+
+    if (activePlayer) {
+        CGPlayer* activeObjectPtr = reinterpret_cast<CGPlayer*>(ClntObjMgr::ObjectPtr(activePlayer, TYPEMASK_UNIT));
+        uint32_t classID = activeObjectPtr->unitBase.unitData->unitBytes0.classID;
+        gtOCTClassCombatRatingScalarRow* row = reinterpret_cast<gtOCTClassCombatRatingScalarRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD3C20), (classID - 1) * 32 + rating));
+        value = row->data;
+    }
+
+    ClientLua::PushNumber(L, value);
+    return 1;
+}
