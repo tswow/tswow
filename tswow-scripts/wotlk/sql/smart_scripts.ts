@@ -292,4 +292,4 @@ export class smart_scriptsTable extends SqlTable<
  */
 export const SQL_smart_scripts = new smart_scriptsTable(
     'smart_scripts',
-    (table, obj)=>new smart_scriptsRow(table, obj))
+    (table, obj)=>new smart_scriptsRow(table, obj),1000)

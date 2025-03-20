@@ -1045,4 +1045,4 @@ export class item_templateTable extends SqlTable<
  */
 export const SQL_item_template = new item_templateTable(
     'item_template',
-    (table, obj)=>new item_templateRow(table, obj))
+    (table, obj)=>new item_templateRow(table, obj),250)
