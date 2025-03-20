@@ -14111,6 +14111,7 @@ declare const ChatFrame1: WoWAPI.Frame;
 declare const UISpecialFrames: string[];
 
 declare const TalentMicroButton: WoWAPI.Button
+declare const CharacterMicroButton: WoWAPI.Button
 declare const CharacterHeadSlot: WoWAPI.Button
 declare const CharacterNeckSlot: WoWAPI.Button
 declare const CharacterShoulderSlot: WoWAPI.Button
