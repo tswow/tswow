@@ -448,7 +448,7 @@ export enum SpellModOp {
     EFFECT2                   = 12,
     IGNORE_ARMOR              = 13,
     COST                      = 14,
-    CRIT_DAMAGE_BONUS         = 15,
+    CRIT_SEVERITY             = 15,
     RESIST_MISS_CHANCE        = 16,
     JUMP_TARGETS              = 17,
     CHANCE_OF_SUCCESS         = 18,
