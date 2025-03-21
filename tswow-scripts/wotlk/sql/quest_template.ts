@@ -813,4 +813,4 @@ export class quest_templateTable extends SqlTable<
  */
 export const SQL_quest_template = new quest_templateTable(
     'quest_template',
-    (table, obj)=>new quest_templateRow(table, obj))
+    (table, obj)=>new quest_templateRow(table, obj),500)
