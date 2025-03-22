@@ -5454,6 +5454,15 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      CastSpell(target : TSWorldObject | TSItem,spell : uint32,triggered?: bool) : SpellCastResult
 
     /**
+     * Makes the [Unit] cast the spell on the target with triggered flags.
+     *
+     * @param [Unit] target = nil : can be self or another unit
+     * @param uint32 spell : entry of a spell
+     * @param bool flags : the triggered flags to use
+     */
+     CastSpellWithTriggeredFlags(target : TSWorldObject | TSItem,spell : uint32,flags?: uint32) : SpellCastResult
+
+    /**
      * Makes the [Unit] cast the spell on the target but attributes the cast
      * to the supplied origin.
      *

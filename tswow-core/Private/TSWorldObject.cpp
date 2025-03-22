@@ -1099,6 +1099,15 @@ TSNumber<uint32> TSWorldObject::CastSpell(TSItem _target, uint32 spell, bool tri
     return obj->CastSpell(_target.item, spell, triggered);
 }
 
+TSNumber<uint32> TSWorldObject::CastSpellWithTriggeredFlags(TSWorldObject _target, uint32 spell, uint32 flags)
+{
+    CastSpellExtraArgs args;
+
+    args.TriggerFlags = static_cast<TriggerCastFlags>(flags);
+
+    return obj->CastSpell(_target.obj, spell, args);
+}
+
 TSNumber<uint32> TSWorldObject::CastSpellWithOrigin(TSWorldObject _target, TSWorldObject origin, uint32 spell, bool triggered)
 {
     CastSpellExtraArgs args;
