@@ -448,7 +448,7 @@ export enum SpellModOp {
     EFFECT2                   = 12,
     IGNORE_ARMOR              = 13,
     COST                      = 14,
-    CRIT_DAMAGE_BONUS         = 15,
+    CRIT_SEVERITY             = 15,
     RESIST_MISS_CHANCE        = 16,
     JUMP_TARGETS              = 17,
     CHANCE_OF_SUCCESS         = 18,
@@ -765,28 +765,33 @@ export class ModAttackerMeleeCritChance extends PercentBase {}
 // 188
 export class ModAttackerRangedCritChance extends PercentBase {}
 // 189
-export enum CombatRating {
-    WEAPON_SKILL      = 0,
-    DEFENSE_SKILL     = 1,
-    DODGE             = 2,
-    PARRY             = 3,
-    BLOCK             = 4,
-    HIT_MELEE         = 5,
-    HIT_RANGED        = 6,
-    HIT_SPELL         = 7,
-    CRIT_MELEE        = 8,
-    CRIT_RANGED       = 9,
-    CRIT_SPELL        = 10,
-    HIT_TAKEN_MELEE   = 11,
-    HIT_TAKEN_RANGED  = 12,
-    HIT_TAKEN_SPELL   = 13,
-    CRIT_TAKEN_MELEE  = 14,
-    CRIT_TAKEN_RANGED = 15,
-    CRIT_TAKEN_SPELL  = 16,
-    HASTE_MELEE       = 17,
-    HASTE_RANGED      = 18,
-    HASTE_SPELL       = 19,
-}
+export enum CombatRating{
+    CR_WEAPON_SKILL             = 0,
+    CR_DEFENSE_SKILL            = 1,
+    CR_DODGE                    = 2,
+    CR_PARRY                    = 3,
+    CR_BLOCK                    = 4,
+    CR_SPEED                    = 5,
+    CR_LIFESTEAL                = 6,
+    CR_AVOIDANCE                = 7,
+    CR_CRIT                     = 8,
+    CR_CRIT_RANGED              = 9,
+    CR_CRIT_SPELL               = 10,
+    CR_HIT_TAKEN_MELEE          = 11,
+    CR_HIT_TAKEN_RANGED         = 12,
+    CR_HIT_TAKEN_SPELL          = 13,
+    CR_CRIT_TAKEN_MELEE         = 14,
+    CR_CRIT_TAKEN_RANGED        = 15,
+    CR_CRIT_TAKEN_SPELL         = 16,
+    CR_HASTE                    = 17,
+    CR_HASTE_RANGED             = 18,
+    CR_HASTE_SPELL              = 19,
+    CR_WEAPON_SKILL_MAINHAND    = 20,
+    CR_WEAPON_SKILL_OFFHAND     = 21,
+    CR_WEAPON_SKILL_RANGED      = 22,
+    CR_MASTERY                  = 23,   // old exp
+    CR_THORNS                   = 24    // old arp
+};
 export class ModRating extends PercentBase {
     get Rating() {
         return makeEnumCell(CombatRating,this, this.owner.MiscValueA);

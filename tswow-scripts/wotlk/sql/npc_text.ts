@@ -703,4 +703,4 @@ export class npc_textTable extends SqlTable<
  */
 export const SQL_npc_text = new npc_textTable(
     'npc_text',
-    (table, obj)=>new npc_textRow(table, obj))
+    (table, obj)=>new npc_textRow(table, obj),500)

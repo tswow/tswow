@@ -104,12 +104,57 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
         return text;
     }
 
+    protected _generatePreparedDeleteStatementBulk(rows: number): string {
+        const pkFields: string[] = Row.primaryKeyFields(this);
+    
+        if (pkFields.length === 0) {
+            throw new Error("No primary key fields found for bulk delete.");
+        }
+    
+        if (pkFields.length === 1) {
+            // Single-column primary key case: Use `IN`
+            const placeholders = new Array(rows).fill('?').join(',');
+            return `DELETE FROM ${this.table.name} WHERE \`${pkFields[0]}\` IN (${placeholders});`;
+        } else {
+            // Multi-column primary key case: Use multiple `WHERE` conditions
+            const whereClause = pkFields.map((x) => `\`${x}\` = ?`).join(' AND ');
+            const bulkWhereClauses = new Array(rows).fill(`(${whereClause})`).join(' OR ');
+    
+            return `DELETE FROM ${this.table.name} WHERE ${bulkWhereClauses};`;
+        }
+    }
+
+    protected _generateSQLStatementFields() {
+        const obj = this.objectify();
+
+        return `REPLACE INTO ${this.table.name} ` +
+            `(${Object.keys(obj).map(x=>`\`${x}\``).join(',')}) ` +
+            `VALUES `;
+    }
+
     protected _generatePreparedStatement() {
         const obj = this.objectify();
         return `REPLACE INTO ${this.table.name} ` +
             `(${Object.keys(obj).map(x=>`\`${x}\``).join(',')}) ` +
             `VALUES (${Object.values(obj).map(() => '?')})`
     }
+
+    protected _generatePreparedStatementBulk(rows: number): string {
+        const obj = this.objectify();
+        const columns = Object.keys(obj).map(x => `\`${x}\``).join(',');
+        const valuesPlaceholders = Object.values(obj)
+            .map(() => '?')
+            .join(',');
+    
+        // Create a single placeholder group for each insert
+        const insertPlaceholders = `(${valuesPlaceholders})`;
+    
+        // Repeat the placeholders for the number of inserts
+        const bulkPlaceholders = new Array(rows).fill(insertPlaceholders).join(',');
+    
+        return `REPLACE INTO ${this.table.name} (${columns}) VALUES ${bulkPlaceholders}`;
+    }
+    
 
     protected _getPreparedStatements() {
         return Object.values(this.objectify())
@@ -123,12 +168,28 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
         return row._generatePreparedStatement();
     }
 
+    static generatePreparedStatementBulk(row: SqlRow<any,any>, rows: number) {
+        return row._generatePreparedStatementBulk(rows);
+    }
+
     static generatePreparedDeleteStatement(row: SqlRow<any,any>) {
         return row._generatePreparedDeleteStatement();
     }
 
+    static generatePreparedDeleteStatementBulk(row: SqlRow<any,any>, chunk_size: number) {
+        return row._generatePreparedDeleteStatementBulk(chunk_size);
+    }
+
     static getPreparedStatement(row: SqlRow<any,any>) {
         return row._getPreparedStatements();
+    }
+
+    static getPreparedStatementRaw(row: SqlRow<any,any>) {
+        return row._generatePreparedStatement();
+    }
+
+    static getSQLStatementFields(row: SqlRow<any,any>) {
+        return row._generateSQLStatementFields();
     }
 
     static getPreparedDeleteStatement(row: SqlRow<any,any>) {

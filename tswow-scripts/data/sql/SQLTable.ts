@@ -25,6 +25,7 @@ export type SqlRowCreator<C, Q, R extends SqlRow<C, Q>> = (table: SqlTable<C, Q,
 export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
     private cachedRows: {[key: string]: R} = {};
     private cachedFirst: R | undefined;
+    private chunk_size: number;
     protected rowCreator: SqlRowCreator<C, Q, R>;
 
     private get cachedValues() {
@@ -47,8 +48,9 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
         table.cachedRows[Row.fullKey(row)] = row;
     }
 
-    constructor(name: string, rowCreator: SqlRowCreator<C, Q, R>) {
+    constructor(name: string, rowCreator: SqlRowCreator<C, Q, R>, chunk_size: number = 2500) {
         super(name);
+        this.chunk_size = chunk_size;
         this.rowCreator = rowCreator;
     }
 
@@ -120,34 +122,76 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
     }
 
     static writeSQL(table: SqlTable<any,any,any>) {
-        // Very stupid
-        let dummyRow: SqlRow<any,any>
-        for(let row in table.cachedRows) {
+        let dummyRow: SqlRow<any, any>;
+        for (let row in table.cachedRows) {
             dummyRow = table.cachedRows[row];
             break;
         }
-        if(!dummyRow) {
+        if (!dummyRow) {
             return;
         }
+    
+        SqlConnection.world_dst.prepare(table.rowCreator(table, {}));
+    
+        const values = table.cachedValues.filter(SqlRow.isDirty);
+        if (values.length === 0)
+            return;
+    
+        /** Chunking */
+        let totalInserts = 0;
+        let insertChunks: any[][] = [];
+        let currentInsertChunk: any[] = [];
 
-        const normalQuery = SqlRow.generatePreparedStatement(dummyRow);
-        const deleteQuery = SqlRow.generatePreparedDeleteStatement(dummyRow);
-
-        let normalStatement = SqlConnection.world_dst.prepare(normalQuery)
-        let deleteStatement = SqlConnection.world_dst.prepare(deleteQuery)
-
-        SqlConnection.world_dst.prepare(table.rowCreator(table,{}))
-
-        let values = table.cachedValues.filter(SqlRow.isDirty)
-
-        values.forEach((x: SqlRow<any,any>)=>{
-                if(x.isDeleted()) {
-                    deleteStatement.writeNormal(SqlRow.getPreparedDeleteStatement(x))
-                } else {
-                    normalStatement.writeNormal(SqlRow.getPreparedStatement(x))
+        let totalDeletes = 0;
+        let deleteChunks: any[][] = [];
+        let currentDeleteChunk: any[] = [];
+    
+        values.forEach((x: SqlRow<any, any>) => {
+            if (x.isDeleted()) {
+                totalDeletes++;
+                currentDeleteChunk.push(SqlRow.getPreparedDeleteStatement(x));
+    
+                if (currentDeleteChunk.length >= table.chunk_size) {
+                    deleteChunks.push(currentDeleteChunk);
+                    currentDeleteChunk = [];
                 }
-                //SqlConnection.world_dst.write(SqlRow.getSql(x))
-            });
+            } else {
+                totalInserts++;
+                currentInsertChunk.push(SqlRow.getPreparedStatement(x));
+    
+                if (currentInsertChunk.length >= table.chunk_size) {
+                    insertChunks.push(currentInsertChunk);
+                    currentInsertChunk = [];
+                }
+            }
+        });
+    
+        // Push remaining values
+        if (currentInsertChunk.length > 0) {
+            insertChunks.push(currentInsertChunk);
+        }
+
+        if (currentDeleteChunk.length > 0) {
+            deleteChunks.push(currentDeleteChunk);
+        }
+    
+        // Execute in chunks
+        insertChunks.forEach(chunk => {
+            const insertStmt = SqlConnection.world_dst.prepare(SqlRow.generatePreparedStatementBulk(dummyRow, chunk.length));
+
+            insertStmt.writeNormal([].concat.apply([], chunk));
+        });
+
+        deleteChunks.forEach(chunk => {
+            const deleteStmt = SqlConnection.world_dst.prepare(SqlRow.generatePreparedDeleteStatementBulk(dummyRow, chunk.length));
+
+            deleteStmt.writeNormal([].concat.apply([], chunk));
+        });
+
+        // console.log(`\n=== ${table.name} ===`);
+        // console.log(`Original Writes: ${totalInserts} - Final Writes: ${insertChunks.length} of chunk size ${table.chunk_size}`);
+        // console.log(`Original Deletes: ${totalDeletes} - Final Deletes: ${deleteChunks.length} of chunk size ${table.chunk_size}`);
+    
         table.cachedRows = {};
     }
 }

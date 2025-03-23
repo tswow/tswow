@@ -91,6 +91,9 @@ declare function GetMasteryRating(): LuaMultiReturn<[number, number]>
 declare function SetMasteryRatings(spec1: number, spec2: number, spec3: number, spec4: number): void;
 declare function UpdateMasteryAmount(flat: number, percentage: number): void;
 
+declare function GetCombatRatingMult(rating: number): number;
+declare function GetCombatRatingScalar(rating: number): number;
+
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
@@ -14108,6 +14111,7 @@ declare const ChatFrame1: WoWAPI.Frame;
 declare const UISpecialFrames: string[];
 
 declare const TalentMicroButton: WoWAPI.Button
+declare const CharacterMicroButton: WoWAPI.Button
 declare const CharacterHeadSlot: WoWAPI.Button
 declare const CharacterNeckSlot: WoWAPI.Button
 declare const CharacterShoulderSlot: WoWAPI.Button

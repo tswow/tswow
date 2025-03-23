@@ -479,4 +479,4 @@ export class creature_templateTable extends SqlTable<
  */
 export const SQL_creature_template = new creature_templateTable(
     'creature_template',
-    (table, obj)=>new creature_templateRow(table, obj))
+    (table, obj)=>new creature_templateRow(table, obj),1000)

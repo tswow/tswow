@@ -539,7 +539,7 @@ struct TSEvents
         EVENT(OnDamageDealt, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnLossOfControl, TSUnit, TSNumber<uint32>)
-        EVENT(OnRageGainedViaAttack, TSUnit, TSUnit, TSMutableNumber<uint32> rage_damage)
+        EVENT(OnRageGainedViaAttack, TSUnit, TSUnit, TSNumber<uint8>, TSMutableNumber<uint32> rage_damage)
         EVENT(OnCustomDamageTaken, TSUnit, TSUnit, TSMutableNumber<uint32>)
         EVENT(OnUpdateDisplayPower, TSUnit, TSMutableNumber<int8>)
         EVENT(OnHandleShapeshiftPower, TSUnit, TSNumber<int32>, TSMutableNumber<int8>)
@@ -635,6 +635,8 @@ struct TSEvents
         ID_EVENT(OnSpellCastFinished, TSSpell, TSUnit, TSNumber<uint32>)
 
         ID_EVENT(CanMoveWhileChanneling, TSSpell, TSUnit, TSMutable<bool, bool>)
+
+        ID_EVENT(OnCheckGCDCategory, TSSpell, TSMutableNumber<uint32>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

@@ -522,47 +522,48 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         const Roll = Math.random() * 100
         if (this.IsWeapon()) {
             switch (Class) {
-                case 0:
-                case 16:
-                case 1:
-                case 5:
+                case 0: // ITEM_SUBCLASS_WEAPON_AXE
+                case 16: // ITEM_SUBCLASS_WEAPON_THROWN
+                case 1: // ITEM_SUBCLASS_WEAPON_AXE2
+                case 5: // ITEM_SUBCLASS_WEAPON_MACE2
                     this.MainStat = Roll > 50 ? Stat.STRENGTH : Stat.AGILITY
                     break
-                case 15:
-                case 7:
-                case 4:
-                case 13:
-                    this.MainStat = Roll > 50 ? Stat.INTELLECT : Stat.AGILITY
+                case 7: // ITEM_SUBCLASS_WEAPON_SWORD
+                case 4: // ITEM_SUBCLASS_WEAPON_MACE
+                    let Any = [Stat.AGILITY, Stat.STRENGTH, Stat.INTELLECT]
+                    this.MainStat = Any[Math.floor(Math.random() * Any.length)]
                     break
-                case 8:
-                    this.MainStat = Stat.STRENGTH
-                    break
-                case 6:
-                    this.MainStat = Stat.AGILITY
-                    break;
-                case 10:
+                case 10: // ITEM_SUBCLASS_WEAPON_STAFF
                     this.MainStat = Roll > 80 ? Stat.AGILITY : Stat.INTELLECT
                     break;
-                case 2:
-                case 18:
-                case 3:
-                    this.MainStat = Roll > 80 ? Stat.STRENGTH : Stat.AGILITY
-                    break;
-                case 19:
+                case 15: // ITEM_SUBCLASS_WEAPON_DAGGER
+                    this.MainStat = Roll > 80 ? Stat.INTELLECT : Stat.AGILITY
+                    break
+                case 2: // ITEM_SUBCLASS_WEAPON_BOW
+                case 18: // ITEM_SUBCLASS_WEAPON_CROSSBOW
+                case 3: // ITEM_SUBCLASS_WEAPON_GUN
+                case 6: // ITEM_SUBCLASS_WEAPON_POLEARM
+                case 13: // ITEM_SUBCLASS_WEAPON_FIST
+                    this.MainStat = Stat.AGILITY
+                    break
+                case 19: // ITEM_SUBCLASS_WEAPON_WAND
                     this.MainStat = Stat.INTELLECT
+                    break
+                case 8: // ITEM_SUBCLASS_WEAPON_SWORD2
+                    this.MainStat = Stat.STRENGTH
                     break
             }
         } else {
             switch (Class) {
                 case 0: // Jewelry
-                    let Any = [Stat.AGILITY, Stat.STRENGTH, Stat.INTELLECT, Stat.STAMINA]
+                    let Any = [Stat.AGILITY, Stat.STRENGTH, Stat.INTELLECT]
                     this.MainStat = Any[Math.floor(Math.random() * Any.length)]
                     break
                 case 1: // Cloth
                     this.MainStat = Stat.INTELLECT
                     break
                 case 2: // leather
-                    this.MainStat = Roll > 75 ? Stat.INTELLECT : Stat.AGILITY
+                    this.MainStat = Roll > 80 ? Stat.INTELLECT : Stat.AGILITY
                     break
                 case 3: // mail
                     this.MainStat = Roll > 60 ? Stat.INTELLECT : Stat.AGILITY
@@ -571,7 +572,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                     this.MainStat = Roll > 70 ? Stat.INTELLECT : Stat.STRENGTH
                     break
                 case 6: // shield
-                    this.MainStat = Roll > 50 ? Stat.STRENGTH : Stat.AGILITY
+                    this.MainStat = Roll > 50 ? Stat.STAMINA : Stat.INTELLECT
                     break
             }
         }
@@ -582,28 +583,27 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         if (this.IsWeapon()) {
             const Class = this.Class.getSubclass()
             switch (Class) {
-                case 0:
-                case 16:
-                case 1:
-                case 5:
+                case 0: // ITEM_SUBCLASS_WEAPON_AXE
+                case 16: // ITEM_SUBCLASS_WEAPON_THROWN
+                case 1: // ITEM_SUBCLASS_WEAPON_AXE2
+                case 5: // ITEM_SUBCLASS_WEAPON_MACE2
                     return Suggestion == Stat.STRENGTH || Suggestion == Stat.AGILITY
-                case 15:
-                case 7:
-                case 4:
-                case 13:
-                    return Suggestion == Stat.INTELLECT || Suggestion == Stat.AGILITY
-                case 8:
-                    return Suggestion == Stat.STRENGTH
-                case 6:
-                    return Suggestion == Stat.AGILITY
-                case 10:
+                case 7: // ITEM_SUBCLASS_WEAPON_SWORD
+                case 4: // ITEM_SUBCLASS_WEAPON_MACE
+                    return Suggestion == Stat.INTELLECT || Suggestion == Stat.AGILITY || Suggestion == Stat.STRENGTH
+                case 10: // ITEM_SUBCLASS_WEAPON_STAFF
+                case 15: // ITEM_SUBCLASS_WEAPON_DAGGER
                     return Suggestion == Stat.AGILITY || Suggestion == Stat.INTELLECT
-                case 2:
-                case 18:
-                case 3:
-                    return Suggestion == Stat.STRENGTH || Suggestion == Stat.AGILITY
-                case 19:
+                case 2: // ITEM_SUBCLASS_WEAPON_BOW
+                case 18: // ITEM_SUBCLASS_WEAPON_CROSSBOW
+                case 3: // ITEM_SUBCLASS_WEAPON_GUN
+                case 6: // ITEM_SUBCLASS_WEAPON_POLEARM
+                case 13: // ITEM_SUBCLASS_WEAPON_FIST
+                    return Suggestion == Stat.AGILITY
+                case 19: // ITEM_SUBCLASS_WEAPON_WAND
                     return Suggestion == Stat.INTELLECT
+                case 8: // ITEM_SUBCLASS_WEAPON_SWORD2
+                    return Suggestion == Stat.STRENGTH
                 default:
                     return false
             }

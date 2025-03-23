@@ -264,6 +264,16 @@ struct ChrClassesRow {
     uint32_t m_rangedAttackPowerPerAgility;
 };
 
+struct gtCombatRatingsRow {
+    uint32_t ID;
+    float data;
+};
+
+struct gtOCTClassCombatRatingScalarRow {
+    uint32_t ID;
+    float data;
+};
+
 struct MapRow {
     uint32_t m_ID;
     char* m_Directory;
