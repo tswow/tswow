@@ -7,8 +7,10 @@ CDBC* CDBC::LoadDB(const char* name) {
     int v26;
     int v27;
     int len;
-    const char* filePath = (this->folder + name + this->extension).c_str();
-    LOG_DEBUG << filePath;
+
+    char filePath[512];
+    SStr::Printf(filePath, 512, "DBFilesClient\\%s.cdbc", name);
+
     if (this->isLoaded)
         return this;
 
