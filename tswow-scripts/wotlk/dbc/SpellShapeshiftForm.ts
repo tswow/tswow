@@ -136,3 +136,18 @@ export class SpellShapeshiftFormDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
+
+// Duskhaven Shapeshift Form Definitions
+export enum ShapeshiftForm { 
+    CAT = 0,
+    TREE = 1,
+    TRAVEL = 2,
+    AQUATIC = 3,
+    BEAR = 4,
+    GHOSTWOLF = 15,
+    ZEALOTSKIN = 19,
+    MEKKASHREDDER = 22,
+    STEALTH = 29,
+    MOONKIN = 30,
+    SPIRITOFREDEMPTION = 31,
+}

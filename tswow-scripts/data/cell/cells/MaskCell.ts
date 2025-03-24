@@ -1,3 +1,4 @@
+import { ShapeshiftForm } from "../../../wotlk/dbc/SpellShapeshiftForm";
 import { Objects } from "../serialization/ObjectIteration";
 import { Transient } from "../serialization/Transient";
 import { Cell } from "./Cell";
@@ -194,8 +195,8 @@ export class MaskCell64<T> extends MaskCell<T> {
 
     get() { return this.cell.get(); }
 
-    setBit(no: number, value: boolean) {
-        if(value) {
+    setBit(no: number | ShapeshiftForm, value: boolean) {
+        if (value) {
             this.cell.set(this.cell.get() | (BigInt(1) << BigInt(no)));
         } else {
             this.cell.set(this.cell.get() & (~((BigInt(1) << BigInt(no)))));
