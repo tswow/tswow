@@ -1,5 +1,5 @@
 #include "SpellTooltipExtensions.h"
-#include "Character/CharacterDefines.h"
+#include "Character/CharacterExtensions.h"
 #include "CDBCMgr/CDBCMgr.h"
 #include "CDBCMgr/CDBCDefs/SpellAdditionalCostData.h"
 #include "CDBCMgr/CDBCDefs/SpellAdditionalAttributes.h"
@@ -97,6 +97,9 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                     case SPELLVARIABLE_mastery4:
                         value = CharacterDefines::getMasteryForSpec(3);
                         break;
+                    case SPELLVARIABLE_MASTERY:
+                        value = CharacterDefines::getMasteryForSpec(CharacterExtensions::SpecToIndex(CharacterDefines::getCharActiveSpec()));
+                        break;
                     case SPELLVARIABLE_bpct:
                         value = activePlayer->PlayerData->blockPct;
                         break;
@@ -126,11 +129,11 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
 }
 
 void TooltipExtensions::SetNewVariablePointers() {
-    const char* tooltipSpellVariablesExtensions[30] = {
+    const char* tooltipSpellVariablesExtensions[] = {
         "hp", "HP", "ppl1", "ppl2", "ppl3", "PPL1", "PPL2", "PPL3",
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
         "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
-        "mastery1", "mastery2", "mastery3", "mastery4",
+        "mastery1", "mastery2", "mastery3", "mastery4", "MASTERY",
         "bpct", "dpct", "ppct", "sbl"
     };
 
