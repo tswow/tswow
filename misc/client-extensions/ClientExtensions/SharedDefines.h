@@ -123,6 +123,11 @@ static char* sPluralS = "s";
 static char* sSpace = " ";
 
 // structs
+struct C2Vector {
+    float x;
+    float y;
+};
+
 struct C3Vector {
     float x;
     float y;
@@ -461,6 +466,17 @@ struct WoWTime {
     int32_t flags;
 };
 
+struct ZoneLightData {
+    int32_t mapID;
+    int32_t lightID;
+    void* pointData;
+    int32_t pointNum;
+    float minX;
+    float minY;
+    float maxX;
+    float maxY;
+};
+
 // client functions
 namespace CGChat {
     CLIENT_FUNCTION(AddChatMessage, 0x509DD0, __cdecl, bool, (char*, uint32_t, uint32_t, uint32_t, uint32_t*, uint32_t, char*, uint64_t, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t*))
@@ -490,6 +506,10 @@ namespace ClientDB {
     CLIENT_FUNCTION(GetLocalizedRow, 0x4CFD20, __thiscall, int, (void*, uint32_t, void*))
 }
 
+namespace ClientPacket {
+    CLIENT_FUNCTION(MSG_SET_ACTION_BUTTON, 0x5AA390, __cdecl, void, (uint32_t, bool, bool))
+}
+
 namespace ClntObjMgr {
     CLIENT_FUNCTION(GetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
     CLIENT_FUNCTION(GetUnitFromName, 0x60C1F0, __cdecl, CGUnit*, (char*))
@@ -500,14 +520,19 @@ namespace CVar_C {
     CLIENT_FUNCTION(sub_766940, 0x766940, __thiscall, void, (void*, int, char, char, char, char))
 }
 
+namespace DNInfo {
+    CLIENT_FUNCTION(AddZoneLight, 0x7ED150, __thiscall, void, (void*, int32_t, float))
+    CLIENT_FUNCTION(GetDNInfoPtr, 0x7ECEF0, __stdcall, void*, ())
+}
+
 namespace FrameScript {
     CLIENT_FUNCTION(GetParam, 0x815500, __cdecl, bool, (lua_State*, int, int))
     CLIENT_FUNCTION(GetText, 0x819D40, __cdecl, char*, (char*, int, int))
     CLIENT_FUNCTION(SignalEvent, 0x81B530, __cdecl, int, (uint32_t, char*, ...))
 }
 
-namespace ClientPacket {
-    CLIENT_FUNCTION(MSG_SET_ACTION_BUTTON, 0x5AA390, __cdecl, void, (uint32_t, bool, bool))
+namespace NTempest {
+    CLIENT_FUNCTION(DistanceSquaredFromEdge, 0x7F9C90, __cdecl, bool, (int32_t, void*, C2Vector*, float*))
 }
 
 namespace SpellParser {

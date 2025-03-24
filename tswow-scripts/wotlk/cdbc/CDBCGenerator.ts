@@ -5,18 +5,13 @@ export class CDBCGenerator {
     private recordCount = 1; // Single base row
     private fieldCount: number;
     private recordSize: number;
-    private stringBlockSize = 0; 
+    private stringBlockSize = 1; 
     private stringTable: Map<string, number> = new Map();
     private stringBuffer: Buffer = Buffer.alloc(1, 0); // Start with null byte
     
     constructor(private values: (number | string)[]) {
         this.fieldCount = values.length;
         this.recordSize = this.fieldCount * 4; // Each field is 4 bytes
-        for (const value of this.values) {
-            if (typeof value === 'string') {
-                this.stringBlockSize = 1 // String block starts with null byte
-            }
-        }  
     }
 
     private addString(value: string): number {
@@ -26,8 +21,9 @@ export class CDBCGenerator {
         let strBuffer = Buffer.from(value + '\0', 'utf8');
         this.stringTable.set(value, this.stringBlockSize);
         this.stringBuffer = Buffer.concat([this.stringBuffer, strBuffer]);
+        let oldSize = this.stringBlockSize;
         this.stringBlockSize += strBuffer.length;
-        return this.stringBlockSize;
+        return oldSize;
     }
 
     private createRecord(): Buffer {
@@ -58,8 +54,9 @@ export class CDBCGenerator {
         header.writeUInt32LE(this.recordCount, 4);
         header.writeUInt32LE(this.fieldCount, 8);
         header.writeUInt32LE(this.recordSize, 12);
+        let record = this.createRecord()
         header.writeUInt32LE(this.stringBlockSize, 16);
-        let output = Buffer.concat([header, this.createRecord(), this.stringBuffer]);
+        let output = Buffer.concat([header, record, this.stringBuffer]);
 
         fs.writeFileSync(filename, output);
         console.log(`CDBC file "${filename}" generated successfully.`);

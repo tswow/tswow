@@ -19,17 +19,18 @@ struct SpellAdditionalCostDataRow {
 
 class SpellAdditionalCostData : public CDBC {
 public:
-    const char* fileName = "DBFilesClient\\SpellAdditionalCostData.cdbc";
+    const char* fileName = "SpellAdditionalCostData";
     SpellAdditionalCostData() : CDBC() {
         this->numColumns = sizeof(SpellAdditionalCostDataRow)/4;
         this->rowSize = sizeof(SpellAdditionalCostDataRow);
     }
     
     SpellAdditionalCostData* LoadDB() { 
-        GlobalCDBCMap.addCDBC("SpellAdditionalCostData");
+        GlobalCDBCMap.addCDBC(this->fileName);
         CDBC::LoadDB(this->fileName);
         SpellAdditionalCostData::setupStringsAndTable();
-        CDBCMgr::addCDBCLuaHandler("SpellAdditionalCostData", SpellAdditionalCostData::handleLua);
+        CDBCMgr::addCDBCLuaHandler(this->fileName, [this](lua_State* L, int row) {return this->handleLua(L, row); });
+        GlobalCDBCMap.setIndexRange(this->fileName, this->minIndex, this->maxIndex);
         return this;
     };
 
@@ -38,13 +39,13 @@ public:
         uintptr_t stringTable = reinterpret_cast<uintptr_t>(this->stringTable);
         for (uint32_t i = 0; i < this->numRows; i++) {
             row->resourceName = reinterpret_cast<char*>(stringTable + reinterpret_cast<uintptr_t>(row->resourceName));
-            GlobalCDBCMap.addRow("SpellAdditionalCostData", row->spellID, *row);
+            GlobalCDBCMap.addRow(this->fileName, row->spellID, *row);
             ++row;
         }
     };
 
-    static int handleLua(lua_State* L, int row) {
-        SpellAdditionalCostDataRow* r = GlobalCDBCMap.getRow<SpellAdditionalCostDataRow>("SpellAdditionalCostData", row);
+    int handleLua(lua_State* L, int row) {
+        SpellAdditionalCostDataRow* r = GlobalCDBCMap.getRow<SpellAdditionalCostDataRow>(this->fileName, row);
         if (r) return r->handleLuaPush(L);
         return 0;
     }

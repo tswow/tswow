@@ -1,5 +1,6 @@
 #pragma optimize("", off)
 #include "CDBCMgr/CDBC.h"
+#include "CDBCMgr/CDBCMgr.h"
 
 struct SpellAdditionalAttributesRow {
     int spellID;
@@ -14,30 +15,31 @@ struct SpellAdditionalAttributesRow {
 
 class SpellAdditionalAttributes : public CDBC {
 public:
-    const char* fileName = "DBFilesClient\\SpellAdditionalAttributes.cdbc";
+    const char* fileName = "SpellAdditionalAttributes";
     SpellAdditionalAttributes() : CDBC() {
         this->numColumns = sizeof(SpellAdditionalAttributesRow)/4;
         this->rowSize = sizeof(SpellAdditionalAttributesRow);
     }
 
     SpellAdditionalAttributes* LoadDB() {
-        GlobalCDBCMap.addCDBC("SpellAdditionalAttributes");
+        GlobalCDBCMap.addCDBC(this->fileName);
         CDBC::LoadDB(this->fileName);
         SpellAdditionalAttributes::setupTable();
-        CDBCMgr::addCDBCLuaHandler("SpellAdditionalAttributes", SpellAdditionalAttributes::handleLua);
+        CDBCMgr::addCDBCLuaHandler(this->fileName, [this](lua_State* L, int row) {return this->handleLua(L, row); });
+        GlobalCDBCMap.setIndexRange(this->fileName, this->minIndex, this->maxIndex);
         return this;
     }
 
     void SpellAdditionalAttributes::setupTable() {
         SpellAdditionalAttributesRow* row = static_cast<SpellAdditionalAttributesRow*>(this->rows);
         for (uint32_t i = 0; i < this->numRows; i++) {
-            GlobalCDBCMap.addRow("SpellAdditionalAttributes", row->spellID, *row);
+            GlobalCDBCMap.addRow(this->fileName, row->spellID, *row);
             ++row;
         }
     };
 
-    static int handleLua(lua_State* L, int row) {
-        SpellAdditionalAttributesRow* r = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>("SpellAdditionalAttributes", row);
+    int handleLua(lua_State* L, int row) {
+        SpellAdditionalAttributesRow* r = GlobalCDBCMap.getRow<SpellAdditionalAttributesRow>(this->fileName, row);
         if (r) return r->handleLuaPush(L);
         return 0;
     }
