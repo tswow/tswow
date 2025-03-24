@@ -19,19 +19,25 @@ import { CDBCFile } from "./cdbc/CDBCFile"
 import { LFGRolesCDBCFile } from "./cdbc/LFGRoles";
 import { SpellAdditionalAttributesCDBCFile } from "./cdbc/SpellAdditionalAttributes";
 import { SpellAdditionalCostDataCDBCFile } from "./cdbc/SpellAdditionalCostData";
+import { ZoneLightCDBCFile } from "./cdbc/ZoneLight";
+import { ZoneLightPointCDBCFile } from "./cdbc/ZoneLightPoint";
 
 export const CDBC = {
     LFGRoles : new LFGRolesCDBCFile(),
     SpellAdditionalAttributes : new SpellAdditionalAttributesCDBCFile(),
     SpellAdditionalCostData : new SpellAdditionalCostDataCDBCFile(),
+    ZoneLight : new ZoneLightCDBCFile(),
+    ZoneLightPoint : new ZoneLightPointCDBCFile()
 }
 
 export const CDBCLoader = {
     LFGRoles : (path: string) => LFGRolesCDBCFile.read(path),
     SpellAdditionalAttributes : (path: string) => SpellAdditionalAttributesCDBCFile.read(path),
     SpellAdditionalCostData : (path: string) => SpellAdditionalCostDataCDBCFile.read(path),
+    ZoneLight : (path: string) => ZoneLightCDBCFile.read(path),
+    ZoneLightPoint : (path: string) => ZoneLightCDBCFile.read(path),
 }
 
-export type CDBCNames = "LFGRoles" | "SpellAdditionalAttributes" | "SpellAdditionalCostData"
+export type CDBCNames = "LFGRoles" | "SpellAdditionalAttributes" | "SpellAdditionalCostData" | "ZoneLight" | "ZoneLightPoint"
 
 export const CDBCFiles : CDBCFile<any,any,any>[] = Object.values(CDBC);
