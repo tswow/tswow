@@ -98,7 +98,7 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         value = CharacterDefines::getMasteryForSpec(3);
                         break;
                     case SPELLVARIABLE_MASTERY:
-                        value = CharacterDefines::getMasteryForSpec(CharacterExtensions::SpecToIndex(CharacterDefines::getCharActiveSpec()));
+                        value = CharacterDefines::getMasteryRatingSpec(CharacterExtensions::SpecToIndex(CharacterDefines::getCharActiveSpec()));
                         break;
                     case SPELLVARIABLE_bpct:
                         value = activePlayer->PlayerData->blockPct;
