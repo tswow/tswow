@@ -34,26 +34,18 @@ export class spell_bonus_dataRow extends SqlRow<spell_bonus_dataCreator,spell_bo
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
+    @PrimaryKey()
+    get effect() {return new SQLCell<int, this>(this, 'effect')}
 
     /**
      * No comment (yet!)
      */
-    get direct_bonus() {return new SQLCell<float, this>(this, 'direct_bonus')}
+    get sp() {return new SQLCell<float, this>(this, 'sp')}
 
     /**
      * No comment (yet!)
      */
-    get dot_bonus() {return new SQLCell<float, this>(this, 'dot_bonus')}
-
-    /**
-     * No comment (yet!)
-     */
-    get ap_bonus() {return new SQLCell<float, this>(this, 'ap_bonus')}
-
-    /**
-     * No comment (yet!)
-     */
-    get ap_dot_bonus() {return new SQLCell<float, this>(this, 'ap_dot_bonus')}
+    get ap() {return new SQLCell<float, this>(this, 'ap')}
 
     /**
      * No comment (yet!)
@@ -65,8 +57,8 @@ export class spell_bonus_dataRow extends SqlRow<spell_bonus_dataCreator,spell_bo
      *
      * Cloned rows are automatically added to the SQL table.
      */
-    clone(entry : mediumint, c? : spell_bonus_dataCreator) : this {
-        return this.cloneInternal([entry],c)
+    clone(entry : mediumint, effect: int, c? : spell_bonus_dataCreator) : this {
+        return this.cloneInternal([entry, effect],c)
     }
 }
 
@@ -75,10 +67,9 @@ export class spell_bonus_dataRow extends SqlRow<spell_bonus_dataCreator,spell_bo
  */
 export type spell_bonus_dataCreator = {
     entry? : mediumint,
-    direct_bonus? : float,
-    dot_bonus? : float,
-    ap_bonus? : float,
-    ap_dot_bonus? : float,
+    effect?: int,
+    sp? : float,
+    ap? : float,
     comments? : varchar,
 }
 
@@ -86,12 +77,11 @@ export type spell_bonus_dataCreator = {
  * Used for object queries (Don't comment these)
  */
 export type spell_bonus_dataQuery = {
-    entry? : Relation<mediumint>,
-    direct_bonus? : Relation<float>,
-    dot_bonus? : Relation<float>,
-    ap_bonus? : Relation<float>,
-    ap_dot_bonus? : Relation<float>,
-    comments? : Relation<varchar>,
+    entry? : mediumint,
+    effect?: int,
+    sp? : float,
+    ap? : float,
+    comments? : varchar,
 }
 
 /**
@@ -102,10 +92,11 @@ export class spell_bonus_dataTable extends SqlTable<
     spell_bonus_dataCreator,
     spell_bonus_dataQuery,
     spell_bonus_dataRow> {
-    add(entry : mediumint, c? : spell_bonus_dataCreator) : spell_bonus_dataRow {
+    add(entry : mediumint, effect: int, c? : spell_bonus_dataCreator) : spell_bonus_dataRow {
+        console.log(`Create add bonus row ${entry}, ${c}\n`)
         const first = this.first();
-        if(first) return first.clone(entry,c)
-        else return this.rowCreator(this, {}).clone(entry,c)
+        if(first) return first.clone(entry, effect, c)
+        else return this.rowCreator(this, {}).clone(entry,effect,c)
     }
 }
 

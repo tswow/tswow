@@ -29,9 +29,13 @@ export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery
         // it's on by default, so be nice
         if(parent > this.nullID() && cloneServerData) {
             let parentEntity = this.load(parent);
-            if(parentEntity.BonusData.exists()) {
-                parentEntity.BonusData.getSQL().clone(v.ID)
-            }
+            v.Effects.forEach((E, I) => {
+                let Effect = parentEntity.Effects.get(I)
+                if (Effect) {
+                    if (Effect.BonusData.exists())
+                        Effect.BonusData.getSQL().clone(v.ID, I, {})
+                }
+            })
 
             if(parentEntity.Proc.exists())
             {

@@ -1,26 +1,23 @@
 import { spell_bonus_dataRow } from "../../sql/spell_bonus_data";
 import { SQL } from "../../SQLFiles";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
-import { Spell } from "./Spell";
+import { SpellEffect } from "./SpellEffect";
 
-export class SpellBonusData extends MaybeSQLEntity<Spell,spell_bonus_dataRow> {
+export class SpellBonusData extends MaybeSQLEntity<SpellEffect,spell_bonus_dataRow> {
     protected createSQL(): spell_bonus_dataRow {
-        return SQL.spell_bonus_data.add(this.owner.ID)
-            .ap_bonus.set(0)
-            .ap_dot_bonus.set(0)
-            .direct_bonus.set(0)
-            .dot_bonus.set(0)
-            .comments.set('tswow')
+        return SQL.spell_bonus_data.add(this.owner.row.ID.get(), this.owner.index, {})
+            .effect.set(this.owner.index)
+            .ap.set(0)
+            .sp.set(0)
+            .comments.set(`${this.owner.row.Name.enGB.get()}`)
     }
     protected findSQL(): spell_bonus_dataRow {
-        return SQL.spell_bonus_data.query({entry:this.owner.ID});
+        return SQL.spell_bonus_data.query({entry: this.owner.row.ID.get(), effect: this.owner.index});
     }
     protected isValidSQL(sql: spell_bonus_dataRow): boolean {
-        return sql.entry.get() === this.owner.ID;
+        return sql.entry.get() === this.owner.row.ID.get() && sql.effect.get() === this.owner.index;
     }
 
-    get DirectBonus() { return this.wrapSQL(0, sql=>sql.direct_bonus); }
-    get DotBonus()    { return this.wrapSQL(0, sql=>sql.dot_bonus); }
-    get APBonus()     { return this.wrapSQL(0, sql=>sql.ap_bonus); }
-    get APDotBonus()  { return this.wrapSQL(0, sql=>sql.ap_dot_bonus); }
+    get SPBonus() { return this.wrapSQL(0, sql=>sql.sp); }
+    get APBonus() { return this.wrapSQL(0, sql=>sql.ap); }
 }

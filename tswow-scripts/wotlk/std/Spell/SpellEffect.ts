@@ -32,6 +32,7 @@ import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { SpellRadiusRegistry } from "./SpellRadius";
 import { SpellRegistry } from "./Spells";
 import { SpellTargetPosition } from "./SpellTargetPosition";
+import { SpellBonusData } from "./SpellBonusData";
 
 export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     get length() {
@@ -284,6 +285,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get TargetPosition() {
         return new SpellTargetPosition(this, this.row.ID.get(), this.index);
     }
+    /** Custom server core damage bonuses */
+    readonly BonusData = new SpellBonusData(this);
 
     objectifyPlain(){
         return Objects.objectifyObj(this);

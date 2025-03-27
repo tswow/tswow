@@ -132,6 +132,7 @@ export class DamageBase extends PointsRoot {
     get DamageDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
+    get BonusData() {return this.owner.BonusData; }
 }
 
 export class DamageBasePct extends PointsRoot {
@@ -183,6 +184,7 @@ export class HealBase extends PointsRoot {
     get HealDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get HealPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get HealPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
+    get BonusData() {return this.owner.BonusData; }
 }
 
 export class HealBasePct extends PointsRoot {

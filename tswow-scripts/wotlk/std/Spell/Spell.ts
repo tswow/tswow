@@ -34,7 +34,6 @@ import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
 import { AuraStateType } from "./SpellAuraState";
 import { SpellAutoLearns } from "./SpellAutoLearn";
-import { SpellBonusData } from "./SpellBonusData";
 import { SpellCastTimeRegistry } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
 import { SpellCustomAttr } from "./SpellCustomAttr";
@@ -204,8 +203,6 @@ export class Spell extends MainEntityID<SpellRow> {
 
     /** Custom server core attributes for this spell */
     get CustomAttributes() { return new SpellCustomAttr(this) };
-    /** Custom server core damage bonuses */
-    readonly BonusData = new SpellBonusData(this);
     /** Custom server core spell threat bonuses */
     readonly Threat = new SpellThreat(this);
 
