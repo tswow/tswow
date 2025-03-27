@@ -147,6 +147,7 @@ export enum ShapeshiftForm {
     GHOSTWOLF = 15,
     ZEALOTSKIN = 19,
     MEKKASHREDDER = 22,
+    SHADOW = 27,
     STEALTH = 29,
     MOONKIN = 30,
     SPIRITOFREDEMPTION = 31,
