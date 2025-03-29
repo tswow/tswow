@@ -218,6 +218,8 @@ struct UnitFields {
     uint32_t level;
     uint32_t padding0xC4[20];
     uint32_t petNumber;
+    uint32_t padding0x011C[4];
+    float modCastSpell;
     // TODO: add rest at some point, most likely when needed
 };
 

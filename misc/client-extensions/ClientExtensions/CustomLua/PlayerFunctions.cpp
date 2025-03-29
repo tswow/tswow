@@ -122,18 +122,13 @@ LUA_FUNCTION(GetCombatRatingScalar, (lua_State* L)) {
     return 1;
 }
 
-LUA_FUNCTION(GetHastePercent, (lua_State* L)) {
-    CGPlayer* player = reinterpret_cast<CGPlayer*>(ClntObjMgr::ObjectPtr(ClntObjMgr::GetActivePlayer(), TYPEMASK_PLAYER));
+LUA_FUNCTION(GetModCastSpeed, (lua_State* L)) {
+    CGPlayer* activeObjectPtr = reinterpret_cast<CGPlayer*>(ClntObjMgr::ObjectPtr(ClntObjMgr::GetActivePlayer(), TYPEMASK_UNIT));
 
-    if (player)
-        ClientLua::PushNumber(L, CharacterDefines::getHastePct());
+    if (activeObjectPtr)
+        ClientLua::PushNumber(L, activeObjectPtr->unitBase.unitData->modCastSpell);
     else
-        ClientLua::PushNumber(L, 0.0);
+        ClientLua::PushNumber(L, 0.f);
 
     return 1;
-}
-
-LUA_FUNCTION(SetHastePercent, (lua_State* L)) {
-    CharacterDefines::setHastePct(static_cast<float>(ClientLua::GetNumber(L, 1)));
-    return 0;
 }
