@@ -6,7 +6,7 @@
 namespace CharacterDefines {
     inline uint32_t activeCharSpec = 0;
     inline uint32_t masteryAmount = 0;
-    inline float masteryPct = 0;
+    inline float masteryPct = 0.f;
     inline float masteryRatingSpec[4] = { 1.f, 1.f, 1.f, 1.f };
 
     inline void setMasteryRatingSpec(int index, float newValue) { masteryRatingSpec[index] = newValue; }
@@ -32,4 +32,8 @@ namespace CharacterDefines {
     };
 
     inline std::unordered_map<uint32_t, SpellCharge> spellChargeMap;
+
+    inline float hastePct = 0.f;
+    inline float setHastePct(float val) { hastePct = val; }
+    inline float getHastePct() { return hastePct; }
 };

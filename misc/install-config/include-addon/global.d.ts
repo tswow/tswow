@@ -94,6 +94,9 @@ declare function UpdateMasteryAmount(flat: number, percentage: number): void;
 declare function GetCombatRatingMult(rating: number): number;
 declare function GetCombatRatingScalar(rating: number): number;
 
+declare function GetHastePercent(): number;
+declare function SetHastePercent(amount: number): void;
+
 declare function UnitCustomCastingData(unit: string): LuaMultiReturn<[number, number, number]>
 //duskhaven additions
 declare const CharacterAttributesFrame: WoWAPI.Frame
