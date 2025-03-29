@@ -34,6 +34,6 @@ namespace CharacterDefines {
     inline std::unordered_map<uint32_t, SpellCharge> spellChargeMap;
 
     inline float hastePct = 0.f;
-    inline float setHastePct(float val) { hastePct = val; }
+    inline void setHastePct(float val) { hastePct = val; }
     inline float getHastePct() { return hastePct; }
 };
