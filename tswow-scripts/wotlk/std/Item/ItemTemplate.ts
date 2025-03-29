@@ -499,26 +499,25 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         this.clearStats()
         const WithStam : bool = !this.IsWeapon() || !(Main.length > 1)
         let SplitVal : float = this.ItemValue
-        let RawForMain = Main[1] * (SplitVal)
+        let AmountForMain = SplitVal * .5259
         let ProposedMain = Main[0]
-        let AmountForMain = RawForMain
         this.MainStat = ProposedMain
 
         if (this.MainStat == 0 || (this.IsWeapon() && !this.WeaponHasAllowableMainStat())) {
             this.GenMainStat()
         }
 
-        SplitVal -= RawForMain
         if (WithStam) {
-            let ForStam = (AmountForMain)/(2/3)
+            let ForStam = SplitVal * .7889
             this.Stats.addStamina(ForStam)
         }
 
         this.Stats.add(this.MainStat, AmountForMain)
 
         if (Secondary.length > 0) {
+            let ForSecondaries = .7 * SplitVal
             Secondary.forEach(([Sec, Pct]) => {
-                this.Stats.add(Sec, Pct*SplitVal)
+                this.Stats.add(Sec, Pct*ForSecondaries)
             })
         }
 
