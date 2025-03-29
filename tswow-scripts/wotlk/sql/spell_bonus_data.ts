@@ -93,7 +93,6 @@ export class spell_bonus_dataTable extends SqlTable<
     spell_bonus_dataQuery,
     spell_bonus_dataRow> {
     add(entry : mediumint, effect: int, c? : spell_bonus_dataCreator) : spell_bonus_dataRow {
-        console.log(`Create add bonus row ${entry}, ${c}\n`)
         const first = this.first();
         if(first) return first.clone(entry, effect, c)
         else return this.rowCreator(this, {}).clone(entry,effect,c)

@@ -466,11 +466,20 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 
     fixDPS() : ItemTemplate {
         if (this.IsWeapon()) {
+            let X = this.ItemLevel.get()
             let DPS = this.Is2hWeapon() ? this.ItemLevel.get()*.95 : this.Class.getSubclass() == 19 ? this.ItemLevel.get() * 1.3 : this.ItemLevel.get() * .7
+            if (X > 55 ) {
+                DPS = 46.2*(1.01)**X
+                if (this.Quality.get() < 2)
+                    DPS /= 2
+            }
+
+
             if (this.MainStat == Stat.INTELLECT && this.Class.getSubclass() != 19) {
                 DPS /= 2
-                let SP = 5*DPS
+                let SP = 6*DPS
                 this.Stats.addSpellPower(SP)
+                this.FlagsExtra.CASTER_WEAPON.set(true)
             }
 
             let Avg = DPS*this.Delay.getAsSeconds()
@@ -492,7 +501,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         let SplitVal : float = this.ItemValue
         let RawForMain = Main[1] * (SplitVal)
         let ProposedMain = Main[0]
-        let AmountForMain = (RawForMain)**(1/1.5)
+        let AmountForMain = RawForMain
         this.MainStat = ProposedMain
 
         if (this.MainStat == 0 || (this.IsWeapon() && !this.WeaponHasAllowableMainStat())) {
@@ -501,8 +510,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 
         SplitVal -= RawForMain
         if (WithStam) {
-            let ForStam = (AmountForMain/2)/(2/3)
-            AmountForMain /= 2
+            let ForStam = (AmountForMain)/(2/3)
             this.Stats.addStamina(ForStam)
         }
 
@@ -510,7 +518,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 
         if (Secondary.length > 0) {
             Secondary.forEach(([Sec, Pct]) => {
-                this.Stats.add(Sec, (Pct*SplitVal)**(1/1.5))
+                this.Stats.add(Sec, Pct*SplitVal)
             })
         }
 
@@ -624,12 +632,12 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         if (this.InventoryType.TWOHAND.is())
             SlotWeight = 1.0
         else if (this.InventoryType.WEAPON.is())
-            SlotWeight = .42
+            SlotWeight = 1/2.44
         else {
             let Slot = this.InventoryType.get()
             switch(Slot) {
                 case ItemInventoryType.MAINHAND:
-                    SlotWeight = .42
+                    SlotWeight = 1/2.44
                     break
                 case (ItemInventoryType.HEAD):
                 case (ItemInventoryType.ROBE):
@@ -641,36 +649,45 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                 case (ItemInventoryType.HANDS): 
                 case (ItemInventoryType.FEET): 
                 case (ItemInventoryType.WAIST): 
-                    SlotWeight = .77
+                    SlotWeight = 1/1.35
                     break
                 case (ItemInventoryType.WRISTS): 
                 case (ItemInventoryType.NECK): 
                 case (ItemInventoryType.FINGER): 
-                case (ItemInventoryType.BACK): 
+                case (ItemInventoryType.BACK):  
+                    SlotWeight = 1/1.85
+                    break
                 case (ItemInventoryType.OFFHAND):
-                case (ItemInventoryType.SHIELD): 
-                    SlotWeight = .55
+                case (ItemInventoryType.SHIELD):
+                    SlotWeight = 1/1.92
                     break
                 case (ItemInventoryType.RANGED): 
                 case (ItemInventoryType.THROWN): 
                 case (ItemInventoryType.WAND_GUN):
-                    SlotWeight = .30
+                    SlotWeight = 1/3.33
+                    break
+                case (ItemInventoryType.TRINKET):
+                    SlotWeight = 1/1.47
                     break
             }
         }
 
+        let x = this.ItemLevel.get()
+        const Value = x > 50 ? (42*1.2**((x-58)/30))/.6 : 8*(8.75)**((x-1)/57)
+
         const Q = this.Quality.get()
+        let QualMod = 1.0
         switch(Q) {
-            case ItemQuality.GREEN:
-                return SlotWeight*(.45*this.ItemLevel.get()-2)**1.5
             case ItemQuality.BLUE:
-                return SlotWeight*(.53*this.ItemLevel.get()-1.15)**1.5
             case ItemQuality.PURPLE:
             case ItemQuality.ORANGE:
-                return SlotWeight*((.67*this.ItemLevel.get()-1)**1.5)
+                break
             default:
-                return 0.0
+                QualMod = .7
+                break
         }
+
+        return Value * QualMod * SlotWeight
     }
 }
 

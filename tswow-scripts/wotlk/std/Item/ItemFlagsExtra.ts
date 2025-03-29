@@ -20,6 +20,6 @@ export enum ItemFlagsExtra {
     ALLIANCE_ONLY           = 0x2,
     GOLD_WITH_EXTENDED_COST = 0x4,
     NO_NEED_ROLLS           = 0x100,
-    NEED_ROLLS_DISABLED     = 0x200,
+    CASTER_WEAPON           = 0x200,
     HAS_NORMAL_PRICE        = 0x4000,
 }

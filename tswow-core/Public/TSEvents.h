@@ -401,6 +401,8 @@ struct TSEvents
         EVENT(OnUpdateThornsRating, TSPlayer, TSNumber<float>)
         EVENT(OnCustomStatAura, TSPlayer, bool, TSSpellInfo, TSNumber<uint8>, TSNumber<uint8>, TSNumber<float>)
 
+        EVENT(GetRatingDiminishing, TSPlayer, TSNumber<uint8>, TSMutableNumber<float>)
+
         EVENT(OnCalcFallDamage, TSPlayer, TSMutableNumber<uint32>)
         EVENT(GainComboPoint, TSPlayer, TSNumber<int8>)
         EVENT(ClearComboPoints, TSPlayer)

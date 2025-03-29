@@ -8402,6 +8402,8 @@ declare namespace _hidden {
         OnUpdateThornsRating(callback: ( Player: TSPlayer, Value: TSNumber<float>) => void)
         OnCustomStatAura(callback: ( Player: TSPlayer, apply: bool, Spell: TSSpellInfo, Stat: TSNumber<uint8>, Mode: TSNumber<uint8>, Amount: TSNumber<float>) => void)
 
+        GetRatingDiminishing(callback: (Player: TSPlayer, CR: TSNumber<uint8>, Value: TSMutableNumber<float>) => void)
+
         OnCalcFallDamage(callback: (player: TSPlayer, value: TSMutableNumber<uint32>) => void)
         GainComboPoint(callback: (player: TSPlayer, amount: TSNumber<int8>) => void)
         ClearComboPoints(callback: (player: TSPlayer) => void)
