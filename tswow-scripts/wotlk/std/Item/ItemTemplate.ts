@@ -499,7 +499,10 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         this.clearStats()
         const WithStam : bool = !this.IsWeapon() || !(Main.length > 1)
         let SplitVal : float = this.ItemValue
-        let AmountForMain = SplitVal * .5259
+
+        let MainMod = this.InventoryType.TRINKET.is() ? .6666 : (this.InventoryType.NECK.is() || this.InventoryType.FINGER.is()) ? 0 : 1
+        let AmountForMain = SplitVal * MainMod
+
         let ProposedMain = Main[0]
         this.MainStat = ProposedMain
 
@@ -508,14 +511,16 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         }
 
         if (WithStam) {
-            let ForStam = SplitVal * .7889
+            let ForStam = this.InventoryType.TRINKET.is() ? SplitVal * MainMod : SplitVal * .7889
             this.Stats.addStamina(ForStam)
         }
 
         this.Stats.add(this.MainStat, AmountForMain)
 
         if (Secondary.length > 0) {
-            let ForSecondaries = .7 * SplitVal
+            let SecMod = this.InventoryType.TRINKET.is() ? .6666 : (this.InventoryType.NECK.is() || this.InventoryType.FINGER.is()) ? 1.75 : .70
+
+            let ForSecondaries = SplitVal * SecMod
             Secondary.forEach(([Sec, Pct]) => {
                 this.Stats.add(Sec, Pct*ForSecondaries)
             })
@@ -631,13 +636,10 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         if (this.InventoryType.TWOHAND.is())
             SlotWeight = 1.0
         else if (this.InventoryType.WEAPON.is())
-            SlotWeight = 1/2.44
+            SlotWeight = 1/2
         else {
             let Slot = this.InventoryType.get()
             switch(Slot) {
-                case ItemInventoryType.MAINHAND:
-                    SlotWeight = 1/2.44
-                    break
                 case (ItemInventoryType.HEAD):
                 case (ItemInventoryType.ROBE):
                 case (ItemInventoryType.CHEST):
@@ -648,31 +650,30 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                 case (ItemInventoryType.HANDS): 
                 case (ItemInventoryType.FEET): 
                 case (ItemInventoryType.WAIST): 
-                    SlotWeight = 1/1.35
+                case (ItemInventoryType.TRINKET):
+                    SlotWeight = 12/16
                     break
                 case (ItemInventoryType.WRISTS): 
                 case (ItemInventoryType.NECK): 
                 case (ItemInventoryType.FINGER): 
                 case (ItemInventoryType.BACK):  
-                    SlotWeight = 1/1.85
+                    SlotWeight = 9/16
                     break
                 case (ItemInventoryType.OFFHAND):
                 case (ItemInventoryType.SHIELD):
-                    SlotWeight = 1/1.92
+                case ItemInventoryType.MAINHAND:
+                case (ItemInventoryType.THROWN): 
+                    SlotWeight = 1/2
                     break
                 case (ItemInventoryType.RANGED): 
-                case (ItemInventoryType.THROWN): 
                 case (ItemInventoryType.WAND_GUN):
-                    SlotWeight = 1/3.33
-                    break
-                case (ItemInventoryType.TRINKET):
-                    SlotWeight = 1/1.47
+                    SlotWeight = 1
                     break
             }
         }
 
         let x = this.ItemLevel.get()
-        const Value = x > 50 ? (42*1.2**((x-58)/30))/.6 : 8*(8.75)**((x-1)/57)
+        const Value = x > 51 ? (38*1.30**((x-52)/30)) : 130*(1.24**(x/30)-1)
 
         const Q = this.Quality.get()
         let QualMod = 1.0

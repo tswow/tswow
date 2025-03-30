@@ -387,7 +387,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               180 */
     get MOD_FLAT_SPELL_DAMAGE_VERSUS()        { return this.value(180, x=>new ModFlatSpellDamageVersus(x)) }
     /** Enum Value:                                               181 */
-    get SPELL_AURA181()                       { return this.value(181, x=>x) }
+    get MOD_COOLDOWN_BY_HASTE_REGEN()         { return this.value(181, x=>x) }
     /** Enum Value:                                               182 */
     get MOD_RESISTANCE_OF_STAT_PERCENT()      { return this.value(182, x=>new ModResistanceOfStatPercent(x)) }
     /** Enum Value:                                               183 */
@@ -421,7 +421,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               197 */
     get MOD_ATTACKER_SPELL_AND_WEAPON_CRIT_CHANCE() { return this.value(197, x=>new ModAttackerSpellAndWeaponCritChance(x)) }
     /** Enum Value:                                               198 */
-    get SPELL_AURA198()                       { return this.value(198, x=>x) }
+    get GLOBAL_COOLDOWN_BY_HASTE_REGEN()      { return this.value(198, x=>x) }
     /** Enum Value:                                               199 */
     get MOD_INCREASES_SPELL_PCT_TO_HIT()      { return this.value(199, x=>new ModIncreasesSpellPctToHit(x)) }
     /** Enum Value:                                               200 */
@@ -473,7 +473,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               223 */
     get RAID_PROC_FROM_CHARGE()               { return this.value(223, x=>new RaidProcFromCharge(x)) }
     /** Enum Value:                                               224 */
-    get SPELL_AURA224()                       { return this.value(224, x=>x) }
+    get MOD_SPELL_COOLDOWN_BY_HASTE()         { return this.value(224, x=>x) }
     /** Enum Value:                                               225 */
     get RAID_PROC_FROM_CHARGE_WITH_VALUE()    { return this.value(225, x=>new RaidProcFromChargeWithValue(x)) }
     /** Enum Value:                                               226 */
