@@ -673,7 +673,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         }
 
         let x = this.ItemLevel.get()
-        const Value = x > 51 ? (38*1.30**((x-52)/30)) : 130*(1.24**(x/30)-1)
+        const Value = x > 51 ? (105.71*1.30**((x-52)/30)) : 130*(1.24**(x/30)-1)
 
         const Q = this.Quality.get()
         let QualMod = 1.0
