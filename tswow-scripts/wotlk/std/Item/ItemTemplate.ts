@@ -435,6 +435,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
 
     ItemValue: float = 0
+    SecondaryValue: float = 0
     MainStat: Stat = 0
 
     clearStats() : ItemTemplate {
@@ -495,38 +496,75 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
 
     setStats(Main: [number, float], ...Secondary: [number, float][]): ItemTemplate {
-        this.InitItemValue()
         this.clearStats()
-        const WithStam : bool = !this.IsWeapon() || !(Main.length > 1)
-        let SplitVal : float = this.ItemValue
 
-        let MainMod = this.InventoryType.TRINKET.is() ? .6666 : (this.InventoryType.NECK.is() || this.InventoryType.FINGER.is()) ? 0 : 1
-        let AmountForMain = SplitVal * MainMod
+        const iLvl = this.ItemLevel.get()
+        const SlotMod = this.GetSlotMod()
+        const isJewelry = this.InventoryType.FINGER.is() || this.InventoryType.NECK.is()
+        const isTrinket = this.InventoryType.TRINKET.is()
 
-        let ProposedMain = Main[0]
-        this.MainStat = ProposedMain
+        const MainStatMod = isJewelry ? 0 : (isTrinket ? .9 : .5259)
+        const StaminaMod = isTrinket ? (Secondary.length < 0) ? .666 : 0 : this.IsWeapon() ? 0 : isJewelry ? .5259 : .7889
+        const SecondaryMod = isJewelry ? 1.75 : isTrinket ? .666 : .7
+        
+        // What the item should look like at ilvl 52
+        const BudgetForIlvl = SlotMod * (iLvl > 51 ? 69*(1.3**((iLvl-52)/30))/.7 : 130*(1.24**(iLvl/30)-1));
+        
+        const MainStat = Main[0]
+        const MainOverride = Main[1]
 
-        if (this.MainStat == 0 || (this.IsWeapon() && !this.WeaponHasAllowableMainStat())) {
-            this.GenMainStat()
+        if (MainStatMod) {
+            let Amount = MainOverride * BudgetForIlvl * MainStatMod
+            this.Stats.add(MainStat, Amount)
         }
 
-        if (WithStam) {
-            let ForStam = this.InventoryType.TRINKET.is() ? SplitVal * MainMod : SplitVal * .7889
-            this.Stats.addStamina(ForStam)
+        if (StaminaMod) {
+            let Amount = BudgetForIlvl * StaminaMod
+            this.Stats.addStamina(Amount)
         }
 
-        this.Stats.add(this.MainStat, AmountForMain)
-
-        if (Secondary.length > 0) {
-            let SecMod = this.InventoryType.TRINKET.is() ? .6666 : (this.InventoryType.NECK.is() || this.InventoryType.FINGER.is()) ? 1.75 : .70
-
-            let ForSecondaries = SplitVal * SecMod
-            Secondary.forEach(([Sec, Pct]) => {
-                this.Stats.add(Sec, Pct*ForSecondaries)
-            })
-        }
+        const AmountForSecondary = BudgetForIlvl * SecondaryMod
+        Secondary.forEach(([Sec, Pct]) =>[
+            this.Stats.add(Sec, Pct*AmountForSecondary)
+        ])
 
         return this
+    }
+
+    GetSlotMod() : float {
+        if (this.InventoryType.TWOHAND.is())
+            return 1.0
+        else if (this.InventoryType.WEAPON.is())
+            return 1/2
+        else {
+            let Slot = this.InventoryType.get()
+            switch(Slot) {
+                case (ItemInventoryType.HEAD):
+                case (ItemInventoryType.ROBE):
+                case (ItemInventoryType.CHEST):
+                case (ItemInventoryType.LEGS):
+                    return 1.0
+                case (ItemInventoryType.SHOULDER):
+                case (ItemInventoryType.HANDS): 
+                case (ItemInventoryType.FEET): 
+                case (ItemInventoryType.WAIST): 
+                case (ItemInventoryType.TRINKET):
+                    return 12/16
+                case (ItemInventoryType.WRISTS): 
+                case (ItemInventoryType.NECK): 
+                case (ItemInventoryType.FINGER): 
+                case (ItemInventoryType.BACK):  
+                    return 9/16
+                case (ItemInventoryType.OFFHAND):
+                case (ItemInventoryType.SHIELD):
+                case ItemInventoryType.MAINHAND:
+                case (ItemInventoryType.THROWN): 
+                    return 1/2
+                case (ItemInventoryType.RANGED): 
+                case (ItemInventoryType.WAND_GUN):
+                    return 1
+            }
+        }
     }
 
     GenMainStat() {
@@ -624,71 +662,35 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
     }
 
 
-    InitItemValue() : ItemTemplate {
-        if (this.ItemValue < 1)
-            this.ItemValue = this.getItemValue()
-        return this
-    }
+    // InitItemValue() : ItemTemplate {
+    //     if (this.ItemValue < 1)
+    //         this.getItemValue()
+        
+    //     return this
+    // }
 
-    getItemValue() : float {
-        let SlotWeight = 0
+    // getItemValue() {
+    //     let SlotWeight = 0
 
-        if (this.InventoryType.TWOHAND.is())
-            SlotWeight = 1.0
-        else if (this.InventoryType.WEAPON.is())
-            SlotWeight = 1/2
-        else {
-            let Slot = this.InventoryType.get()
-            switch(Slot) {
-                case (ItemInventoryType.HEAD):
-                case (ItemInventoryType.ROBE):
-                case (ItemInventoryType.CHEST):
-                case (ItemInventoryType.LEGS):
-                    SlotWeight = 1.0
-                    break
-                case (ItemInventoryType.SHOULDER):
-                case (ItemInventoryType.HANDS): 
-                case (ItemInventoryType.FEET): 
-                case (ItemInventoryType.WAIST): 
-                case (ItemInventoryType.TRINKET):
-                    SlotWeight = 12/16
-                    break
-                case (ItemInventoryType.WRISTS): 
-                case (ItemInventoryType.NECK): 
-                case (ItemInventoryType.FINGER): 
-                case (ItemInventoryType.BACK):  
-                    SlotWeight = 9/16
-                    break
-                case (ItemInventoryType.OFFHAND):
-                case (ItemInventoryType.SHIELD):
-                case ItemInventoryType.MAINHAND:
-                case (ItemInventoryType.THROWN): 
-                    SlotWeight = 1/2
-                    break
-                case (ItemInventoryType.RANGED): 
-                case (ItemInventoryType.WAND_GUN):
-                    SlotWeight = 1
-                    break
-            }
-        }
+    //     let x = this.ItemLevel.get()
+    //     const Value = x > 51 ? (42*1.30**((x-52)/30)) : 60*(1.30**(x/30)-1)
+    //     const SecValue = x > 51 ? (69*1.15**((x-52)/30)) : x * 1.15
 
-        let x = this.ItemLevel.get()
-        const Value = x > 51 ? (105.71*1.30**((x-52)/30)) : 130*(1.24**(x/30)-1)
+    //     const Q = this.Quality.get()
+    //     let QualMod = 1.0
+    //     switch(Q) {
+    //         case ItemQuality.BLUE:
+    //         case ItemQuality.PURPLE:
+    //         case ItemQuality.ORANGE:
+    //             break
+    //         default:
+    //             QualMod = .7
+    //             break
+    //     }
 
-        const Q = this.Quality.get()
-        let QualMod = 1.0
-        switch(Q) {
-            case ItemQuality.BLUE:
-            case ItemQuality.PURPLE:
-            case ItemQuality.ORANGE:
-                break
-            default:
-                QualMod = .7
-                break
-        }
-
-        return Value * QualMod * SlotWeight
-    }
+    //     this.ItemValue = Value * QualMod * SlotWeight
+    //     this.SecondaryValue = SecValue * QualMod * SlotWeight
+    // }
 }
 
 export class ItemTemplateRegistryClass

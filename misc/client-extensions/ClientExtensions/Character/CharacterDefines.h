@@ -32,4 +32,11 @@ namespace CharacterDefines {
     };
 
     inline std::unordered_map<uint32_t, SpellCharge> spellChargeMap;
+
+    inline float ModHaste = 0;
+    inline float ModHasteRegen = 0;
+
+    inline float MainHandWeaponAttackPower = 0;
+    inline float OffHandWeaponAttackPower = 0;
+    inline float RangedWeaponAttackPower = 0;
 };
