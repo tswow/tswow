@@ -509,6 +509,20 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         
         // What the item should look like at ilvl 52
         const BudgetForIlvl = SlotMod * (iLvl > 51 ? 69*(1.3**((iLvl-52)/30))/.7 : 130*(1.24**(iLvl/30)-1));
+
+        const Q = this.Quality.get()
+        let QualMod = 1.0
+        switch(Q) {
+            case ItemQuality.PURPLE:
+            case ItemQuality.ORANGE:
+                break
+            case ItemQuality.BLUE:
+                QualMod = .85
+                break
+            default:
+                QualMod = .7
+                break
+        }
         
         const MainStat = Main[0]
         const MainOverride = Main[1]
@@ -660,37 +674,6 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         }
         return false;
     }
-
-
-    // InitItemValue() : ItemTemplate {
-    //     if (this.ItemValue < 1)
-    //         this.getItemValue()
-        
-    //     return this
-    // }
-
-    // getItemValue() {
-    //     let SlotWeight = 0
-
-    //     let x = this.ItemLevel.get()
-    //     const Value = x > 51 ? (42*1.30**((x-52)/30)) : 60*(1.30**(x/30)-1)
-    //     const SecValue = x > 51 ? (69*1.15**((x-52)/30)) : x * 1.15
-
-    //     const Q = this.Quality.get()
-    //     let QualMod = 1.0
-    //     switch(Q) {
-    //         case ItemQuality.BLUE:
-    //         case ItemQuality.PURPLE:
-    //         case ItemQuality.ORANGE:
-    //             break
-    //         default:
-    //             QualMod = .7
-    //             break
-    //     }
-
-    //     this.ItemValue = Value * QualMod * SlotWeight
-    //     this.SecondaryValue = SecValue * QualMod * SlotWeight
-    // }
 }
 
 export class ItemTemplateRegistryClass
