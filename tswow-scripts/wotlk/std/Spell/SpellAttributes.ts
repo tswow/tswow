@@ -474,7 +474,7 @@ export class SpellAttributes<T> extends MaskCell<T> {
     /**
      * No comment (yet!)
      */
-    get UNK18() { return this.bit(76); }
+    get CHAIN_FROM_CASTER() { return this.bit(76); }
 
     /**
      * No comment (yet!)

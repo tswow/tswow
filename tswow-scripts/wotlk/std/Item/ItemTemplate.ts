@@ -508,7 +508,8 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         const SecondaryMod = isJewelry ? 1.75 : isTrinket ? .666 : .7
         
         // What the item should look like at ilvl 52
-        const BudgetForIlvl = SlotMod * (iLvl > 51 ? 69*(1.3**((iLvl-52)/30))/.7 : 130*(1.24**(iLvl/30)-1));
+        const BudgetForIlvl = SlotMod * (iLvl > 51 ? 32*(1.30**((iLvl-52)/30))/.7 : 130*(1.30**(iLvl/30)-1));
+        const SecondaryBudget = SlotMod * (iLvl > 51 ? 59*(1.15**((iLvl-52)/30))/.7 : 130*(1.15**(iLvl/30)-1));
 
         const Q = this.Quality.get()
         let QualMod = 1.0
@@ -537,7 +538,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             this.Stats.addStamina(Amount)
         }
 
-        const AmountForSecondary = BudgetForIlvl * SecondaryMod
+        const AmountForSecondary = SecondaryBudget * SecondaryMod
         Secondary.forEach(([Sec, Pct]) =>[
             this.Stats.add(Sec, Pct*AmountForSecondary)
         ])

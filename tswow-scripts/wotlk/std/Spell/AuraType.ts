@@ -469,7 +469,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               221 */
     get MOD_DETAUNT()                         { return this.value(221, x=>new ModDetaunt(x)) }
     /** Enum Value:                                               222 */
-    get SPELL_AURA222()                       { return this.value(222, x=>x) }
+    get MOD_DAMAGE_FROM_CASTER()              { return this.value(222, x=>x) }
     /** Enum Value:                                               223 */
     get RAID_PROC_FROM_CHARGE()               { return this.value(223, x=>new RaidProcFromCharge(x)) }
     /** Enum Value:                                               224 */
@@ -567,7 +567,7 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                               270 */
     get MOD_ABILITY_IGNORE_TARGET_RESIST()    { return this.value(270, x=>x) }
     /** Enum Value:                                               271 */
-    get MOD_DAMAGE_FROM_CASTER()              { return this.value(271, x=>new ModDamageFromCaster(x)) }
+    get MOD_DAMAGE_FROM_CASTER_SPELL()        { return this.value(271, x=>new ModDamageFromCaster(x)) }
     /** Enum Value:                                               272 */
     get IGNORE_MELEE_RESET()                  { return this.value(272, x=>new IgnoreMeleeReset(x)) }
     /** Enum Value:                                               273 */
