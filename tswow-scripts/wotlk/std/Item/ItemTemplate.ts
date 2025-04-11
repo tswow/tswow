@@ -467,10 +467,10 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
 
     fixDPS() : ItemTemplate {
         if (this.IsWeapon()) {
-            let X = this.ItemLevel.get()
-            let DPS = this.Is2hWeapon() ? this.ItemLevel.get()*.95 : this.Class.getSubclass() == 19 ? this.ItemLevel.get() * 1.3 : this.ItemLevel.get() * .7
-            if (X > 55 ) {
-                DPS = 46.2*(1.01)**X
+            let iLvl = this.ItemLevel.get()
+            let DPS = this.Is2hWeapon() ? iLvl*.85 : this.Class.getSubclass() == 19 ? iLvl * 1.3 : iLvl * .66
+            if (iLvl > 51 ) {
+                DPS = 44.85*(1.30**((iLvl-52)/30))
                 if (this.Quality.get() < 2)
                     DPS /= 2
             }
@@ -508,7 +508,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
         const SecondaryMod = isJewelry ? 1.75 : isTrinket ? .666 : .7
         
         // What the item should look like at ilvl 52
-        const BudgetForIlvl = SlotMod * (iLvl > 51 ? 32*(1.30**((iLvl-52)/30))/.7 : 130*(1.30**(iLvl/30)-1));
+        const BudgetForIlvl = SlotMod * (iLvl > 51 ? 32*(1.24**((iLvl-52)/30))/.7 : 130*(1.24**(iLvl/30)-1));
         const SecondaryBudget = SlotMod * (iLvl > 51 ? 59*(1.15**((iLvl-52)/30))/.7 : 130*(1.15**(iLvl/30)-1));
 
         const Q = this.Quality.get()
