@@ -1460,4 +1460,9 @@ void TSCreature::ResetCannotReachTimer()
 {
     creature->ResetCannotReachTimer();
 }
+
+TSNumber<uint32> TSCreature::GetModelID()
+{
+    return creature->GetModelID();
+}
 /** @epoch-end */

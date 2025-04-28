@@ -157,6 +157,7 @@ public:
     void SetInterruptImmune(bool apply);
     void Talk(uint8 id, TSUnit target);
     void ResetCannotReachTimer();
+    TSNumber<uint32> GetModelID();
     /** @epoch-end */
 
 private:

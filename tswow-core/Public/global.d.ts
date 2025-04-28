@@ -3366,6 +3366,7 @@ declare interface TSCreature extends TSUnit {
     SetInterruptImmune(apply: boolean): void;
     Talk(id: uint8, target?: TSUnit): void;
     ResetCannotReachTimer(): void;
+    GetModelID(): TSNumber<uint32>;
     /** @epoch-end */
 }
 
