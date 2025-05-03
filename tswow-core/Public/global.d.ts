@@ -7657,6 +7657,7 @@ declare interface TSUnit extends TSWorldObject {
     GetControllingPlayer(): TSPlayer;
     GetLastExtraAttackSpell(): uint32;
     ModifyAuraState(flag: uint8, apply: boolean): void;
+    RemoveAllDynObjects(): void;
     /** @epoch-end */
 }
 

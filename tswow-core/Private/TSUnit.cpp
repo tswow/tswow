@@ -2720,4 +2720,9 @@ void TSUnit::ModifyAuraState(uint8 flag, bool apply)
 {
     unit->ModifyAuraState(static_cast<AuraStateType>(flag), apply);
 }
+
+void TSUnit::RemoveAllDynObjects()
+{
+    unit->RemoveAllDynObjects();
+}
 /** @epoch-end */

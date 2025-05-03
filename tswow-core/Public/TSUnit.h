@@ -256,6 +256,7 @@ public:
     TSPlayer GetControllingPlayer();
     TSNumber<uint32> GetLastExtraAttackSpell();
     void ModifyAuraState(uint8 flag, bool apply);
+    void RemoveAllDynObjects();
     /** @epoch-end*/
 private:
     TSLua::Array<TSUnit> LGetControlled();
