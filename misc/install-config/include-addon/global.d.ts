@@ -13865,8 +13865,23 @@ declare namespace WoWAPI {
     }
 
     interface DressUpModel extends PlayerModel {
+        /**
+         * Updates the model to reflect the character’s currently equipped items.
+         */
         Dress(): void;
-        TryOn(item: string): void;
+
+        /**
+         * Updates the model to reflect the character’s appearance after equipping a specific item.
+         *
+         * @param item The item to try on. Can be:
+         *   - `number`: Item ID (e.g., 12345)
+         *   - `string`: Item name (e.g., "Stormbreaker") or item link (e.g., "item:12345:0:0:0:0:0:0")
+         */
+        TryOn(item: number | string): void;
+    
+        /**
+         * Updates the model to reflect the character’s appearance without any equipped items.
+         */
         Undress(): void;
     }
 

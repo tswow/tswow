@@ -36,6 +36,7 @@ public:
     bool IsTransport();
     bool IsActive();
     TSNumber<uint32> GetDisplayID();
+    TSGUID GetOwnerGUID();
     TSNumber<uint32> GetGoState();
     TSNumber<uint32> GetLootState();
     TSPlayer GetLootRecipient();
