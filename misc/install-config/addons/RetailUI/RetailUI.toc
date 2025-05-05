@@ -1,0 +1,22 @@
+## Interface: 30300
+## Title: RetailUI
+## Notes: Changes your UI to look like Retail
+## Author: delayy + testerfix
+## Version: 1.4.0
+## SavedVariables: RetailUIDB
+
+Libs.xml
+
+Core.lua
+Config.lua
+Atlas.lua
+NineSlice.lua
+
+Modules\ActionBar.lua
+Modules\UnitFrame.lua
+Modules\EditorMode.lua
+Modules\CastingBar.lua
+Modules\Minimap.lua
+Modules\QuestTracker.lua
+Modules\BuffFrame.lua
+Options.lua
