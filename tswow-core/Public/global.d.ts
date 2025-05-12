@@ -7658,6 +7658,7 @@ declare interface TSUnit extends TSWorldObject {
     GetLastExtraAttackSpell(): uint32;
     ModifyAuraState(flag: uint8, apply: boolean): void;
     RemoveAllDynObjects(): void;
+    GetSummonerUnit(): TSUnit | undefined;
     /** @epoch-end */
 }
 

@@ -255,8 +255,9 @@ public:
     void AddThreatAllAssist(TSUnit victim, TSNumber<float> threat, uint32 spell, bool ignoreModifiers);
     TSPlayer GetControllingPlayer();
     TSNumber<uint32> GetLastExtraAttackSpell();
-    void ModifyAuraState(uint8 flag, bool apply);
+    void ModifyAuraState(uint8 flag, bool apply);Updated upstream
     void RemoveAllDynObjects();
+    TSUnit GetSummonerUnit();
     /** @epoch-end*/
 private:
     TSLua::Array<TSUnit> LGetControlled();

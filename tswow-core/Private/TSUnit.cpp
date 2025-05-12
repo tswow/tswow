@@ -39,6 +39,7 @@
 #include "SpellHistory.h"
 #include "SpellMgr.h"
 #include "SharedDefines.h"
+#include "TemporarySummon.h"
 
 #include <memory.h>
 
@@ -2724,5 +2725,10 @@ void TSUnit::ModifyAuraState(uint8 flag, bool apply)
 void TSUnit::RemoveAllDynObjects()
 {
     unit->RemoveAllDynObjects();
+}
+
+TSUnit TSUnit::GetSummonerUnit()
+{
+    return TSUnit(unit->ToTempSummon()->GetSummonerUnit());
 }
 /** @epoch-end */
