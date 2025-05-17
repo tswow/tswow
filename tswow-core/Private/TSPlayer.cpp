@@ -727,6 +727,11 @@ void TSPlayer::UnsummonPet() {
         ((Minion*)*itr)->UnSummon();
 }
 
+void TSPlayer::StartPetAttack(TSUnit target) {
+    if (player->GetPet())
+        player->GetPet()->BeginAttacking(target.unit);
+}
+
 /*int TSPlayer::HasReceivedQuestReward(lua_State* L, Player* player)
 {
     return player->IsQuestRewarded(entry);

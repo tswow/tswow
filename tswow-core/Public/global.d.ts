@@ -8762,6 +8762,9 @@ declare namespace _hidden {
     
         OnCheckGCDCategory(callback: (info: TSSpell, category: TSMutableNumber<uint32>)=>void): T;
         OnCheckGCDCategory(id: EventID, callback: (info: TSSpell, category: TSMutableNumber<uint32>) => void): T;
+
+        OnEnergize(callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
+        OnEnergize(id: EventID, callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
     }
 
     export class Creature<T> {
