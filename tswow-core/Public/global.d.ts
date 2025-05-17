@@ -781,6 +781,8 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
 
     UnsummonPet() : void
 
+    StartPetAttack(target: TSUnit) : void
+
     /**
      * Returns the amount of available specs the [Player] currently has
      *
