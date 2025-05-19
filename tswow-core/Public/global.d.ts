@@ -7659,6 +7659,7 @@ declare interface TSUnit extends TSWorldObject {
     ModifyAuraState(flag: uint8, apply: boolean): void;
     RemoveAllDynObjects(): void;
     GetSummonerUnit(): TSUnit | undefined;
+    RemoveAurasWithInterruptFlags(flags: uint32): void;
     /** @epoch-end */
 }
 

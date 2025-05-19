@@ -2731,4 +2731,9 @@ TSUnit TSUnit::GetSummonerUnit()
 {
     return TSUnit(unit->ToTempSummon()->GetSummonerUnit());
 }
+
+void TSUnit::RemoveAurasWithInterruptFlags(uint32 flags)
+{
+    unit->RemoveAurasWithInterruptFlags(flags);
+}
 /** @epoch-end */

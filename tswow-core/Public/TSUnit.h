@@ -258,6 +258,7 @@ public:
     void ModifyAuraState(uint8 flag, bool apply);
     void RemoveAllDynObjects();
     TSUnit GetSummonerUnit();
+    void RemoveAurasWithInterruptFlags(uint32 flags);
     /** @epoch-end*/
 private:
     TSLua::Array<TSUnit> LGetControlled();
