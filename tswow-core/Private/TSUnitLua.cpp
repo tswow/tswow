@@ -56,6 +56,7 @@ void TSLua::load_unit_methods(sol::state& state)
     LUA_FIELD(ts_unit, TSUnit, HasAuraType);
     LUA_FIELD(ts_unit, TSUnit, IsCasting);
     LUA_FIELD(ts_unit, TSUnit, HasUnitState);
+    LUA_FIELD(ts_unit, TSUnit, HasUnitMovementFlag);
     LUA_FIELD(ts_unit, TSUnit, GetOwner);
     LUA_FIELD(ts_unit, TSUnit, GetOwnerGUID);
     LUA_FIELD(ts_unit, TSUnit, GetMountID);
