@@ -75,6 +75,7 @@ public:
     bool HasAuraType(uint32 auraType);
     bool IsCasting();
     bool HasUnitState(uint32 state);
+    bool HasUnitMovementFlag(uint32 flag);
     TSUnit  GetOwner();
     TSGUID GetOwnerGUID();
     TSNumber<uint32> GetMountID();

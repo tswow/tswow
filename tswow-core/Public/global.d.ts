@@ -7480,6 +7480,44 @@ declare interface TSUnit extends TSWorldObject {
      */
     AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : SpellSchoolMask | uint32, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
+
+    /**
+    * Checks if the [Unit] has the specified [MovementFlags] set.
+    *
+    *     enum MovementFlags
+    *     {
+    *         MOVEFLAG_NONE               = 0x00000000,
+    *         MOVEFLAG_FORWARD            = 0x00000001,
+    *         MOVEFLAG_BACKWARD           = 0x00000002,
+    *         MOVEFLAG_STRAFE_LEFT        = 0x00000004,
+    *         MOVEFLAG_STRAFE_RIGHT       = 0x00000008,
+    *         MOVEFLAG_TURN_LEFT          = 0x00000010,
+    *         MOVEFLAG_TURN_RIGHT         = 0x00000020,
+    *         MOVEFLAG_PITCH_UP           = 0x00000040,
+    *         MOVEFLAG_PITCH_DOWN         = 0x00000080,
+    *         MOVEFLAG_WALK_MODE          = 0x00000100,
+    *         MOVEFLAG_LEVITATING         = 0x00000400,
+    *         MOVEFLAG_FLYING             = 0x00000800,
+    *         MOVEFLAG_FALLING            = 0x00002000,
+    *         MOVEFLAG_FALLINGFAR         = 0x00004000,
+    *         MOVEFLAG_SWIMMING           = 0x00200000,
+    *         MOVEFLAG_SPLINE_ENABLED     = 0x00400000,
+    *         MOVEFLAG_CAN_FLY            = 0x00800000,
+    *         MOVEFLAG_FLYING_OLD         = 0x01000000,
+    *         MOVEFLAG_ONTRANSPORT        = 0x02000000,
+    *         MOVEFLAG_SPLINE_ELEVATION   = 0x04000000,
+    *         MOVEFLAG_ROOT               = 0x08000000,
+    *         MOVEFLAG_WATERWALKING       = 0x10000000,
+    *         MOVEFLAG_SAFE_FALL          = 0x20000000,
+    *         MOVEFLAG_HOVER              = 0x40000000,
+    *
+    *         MOVEFLAG_MASK_MOVING_FORWARD = MOVEFLAG_FORWARD | MOVEFLAG_STRAFE_LEFT | MOVEFLAG_STRAFE_RIGHT | MOVEFLAG_FALLING,
+    *     }
+    *
+    * @param uint32 flag The movement flag(s) to check (bitmask)
+    * @return bool True if any of the specified flags are set on the unit
+    */
+    HasUnitMovementFlag(flag: uint32) : bool
 }
 
 declare interface TSItemTemplate extends TSEntityProvider {
