@@ -139,4 +139,5 @@ export class SpellCustomAttr extends MaskCell<Spell> {
     get STACKS_DONT_ADDUP()             { return this.bit(48); }
     get PANDEMIC_TIMER()                { return this.bit(49); }
     get MISSILE_SPEED_IS_DELAY_IN_SEC() { return this.bit(50); }
+    get ALLOW_DEFENSE_WHILE_CASTING()   { return this.bit(51); }
 }
