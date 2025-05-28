@@ -158,6 +158,13 @@ export class Spell extends MainEntityID<SpellRow> {
     get Cooldown() { return new SpellRecovery(this, this); }
     get MaxTargetLevel() { return this.wrap(this.row.MaxTargetLevel); }
     get MaxTargets() { return this.wrap(this.row.MaxTargets); }
+    /**
+     * 1 = Magic
+     * 
+     * 2 = Melee
+     * 
+     * 3 = Ranged
+     */
     get DefenseType() { return this.wrap(this.row.DefenseType); }
     get PreventionType() { return makeEnumCell(SpellPreventionType, this, this.row.PreventionType)}
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
