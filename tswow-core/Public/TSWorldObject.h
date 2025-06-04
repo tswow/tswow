@@ -134,6 +134,17 @@ public:
         , uint64 originalCaster = 0
     );
 
+    TSNumber<uint32> CastCustomSpellWithTriggeredFlags(
+        TSWorldObject target
+      , uint32 spell
+      , uint32 flags = 0
+      , int32 bp0 = 0
+      , int32 bp1 = 0
+      , int32 bp2 = 0
+      , TSItem castItem = TSItem()
+      , uint64 originalCaster = 0
+  );
+
     TSNumber<uint32> CastCustomSpell(
           TSItem target
         , uint32 spell

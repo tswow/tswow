@@ -1196,6 +1196,39 @@ TSNumber<uint32> TSWorldObject::CastCustomSpell(
     return obj->CastSpell(target, spell, args);
 }
 
+/** TODO - Actually formalize all of these because this is nonsense but gotta go fast. */
+TSNumber<uint32> TSWorldObject::CastCustomSpellWithTriggeredFlags(
+    TSWorldObject _target
+  , uint32 spell
+  , uint32 flags
+  , int32 bp0
+  , int32 bp1
+  , int32 bp2
+  , TSItem _castItem
+  , uint64 originalCaster
+) {
+  auto target = _target.obj;
+  auto castItem = _castItem.item;
+  bool has_bp0 = bp0 != 0;
+  bool has_bp1 = bp1 != 0;
+  bool has_bp2 = bp2 != 0;
+
+  CastSpellExtraArgs args;
+  if (has_bp0)
+      args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
+  if (has_bp1)
+      args.AddSpellMod(SPELLVALUE_BASE_POINT1, bp1);
+  if (has_bp2)
+      args.AddSpellMod(SPELLVALUE_BASE_POINT2, bp2);
+  if (flags)
+      args.TriggerFlags = static_cast<TriggerCastFlags>(flags);
+  if (castItem)
+      args.SetCastItem(castItem);
+  if (originalCaster)
+      args.SetOriginalCaster(ObjectGuid(originalCaster));
+  return obj->CastSpell(target, spell, args);
+}
+
 TSNumber<uint32> TSWorldObject::CastCustomSpell(
       TSItem _target
     , uint32 spell
