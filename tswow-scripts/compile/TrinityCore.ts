@@ -262,8 +262,8 @@ export namespace TrinityCore {
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
                 setupCommand = `cmake ${relSource}`
                 +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
-                +` -DCMAKE_C_COMPILER=/usr/bin/clang`
-                +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+                +` -DCMAKE_C_COMPILER=clang`
+                +` -DCMAKE_CXX_COMPILER=clang++`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DBUILD_TESTING="OFF"`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
