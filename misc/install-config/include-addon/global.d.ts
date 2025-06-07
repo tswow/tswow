@@ -13393,6 +13393,12 @@ declare namespace WoWAPI {
          */
         StopMovingOrSizing(): void;
 
+         /**
+          * Returns the frame level of the frame
+          * @see https://wowpedia.fandom.com/wiki/API_Frame_GetFrameLevel
+          */
+         GetFrameLevel(): number;
+
         /**
          * Sets the Frame Level of the frame, within its Frame Strata
          * @param level the new strata level
