@@ -167,7 +167,7 @@ struct TSEvents
          EVENT(OnLogin, TSPlayer, bool)
          EVENT_FN(OnReload, ReloadPlayer, TSPlayer, bool)
          EVENT(OnLogout, TSPlayer)
-         EVENT(OnCreateEarly, TSPlayer)
+         EVENT(OnCreateEarly, TSPlayer, TSMutable<bool, bool>, TSMutableNumber<uint32>)
          EVENT(OnCreate, TSPlayer)
          EVENT(OnDelete, TSNumber<uint64>, TSNumber<uint32>)
          EVENT(OnFailedDelete, TSNumber<uint64>, TSNumber<uint32>)

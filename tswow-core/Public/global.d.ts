@@ -78,6 +78,7 @@ declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
 declare const enum TimerLoops {} /** TSTimer.h:TimerLoops */
 declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
+declare const enum ResponseCodes {} /** SharedDefines.h:ResponseCodes */
 declare const enum AuraStateType {} /** SharedDefines.h:AuraStateType */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
 declare const enum DuelState {} /** Player.h:DuelState */
@@ -8181,7 +8182,7 @@ declare namespace _hidden {
         OnReload(callback: (player : TSPlayer,firstLogin : bool)=>void);
         OnLogout(callback: (player : TSPlayer)=>void);
         OnCreate(callback: (player : TSPlayer)=>void);
-        OnCreateEarly(callback: (player : TSPlayer)=>void);
+        OnCreateEarly(callback: (player : TSPlayer, cancel: TSMutable<boolean, boolean>, result: TSMutableNumber<uint32>)=>void);
         OnDelete(callback: (guid : uint64,accountId : uint32)=>void);
         OnFailedDelete(callback: (guid : uint64,accountId : uint32)=>void);
         OnSave(callback: (player : TSPlayer)=>void);
