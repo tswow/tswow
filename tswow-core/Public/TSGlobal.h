@@ -31,6 +31,7 @@ TSNumber<uint64> TC_GAME_API GetUnixTime();
 
 std::string TC_GAME_API SyncHttpGet(std::string const& url);
 
+bool TC_GAME_API NameReservationActive();
 bool TC_GAME_API IsGameEventActive(uint16_t event_id);
 bool TC_GAME_API IsHolidayActive(uint16_t holiday_id);
 TSArray<TSNumber<uint16>> TC_GAME_API GetActiveGameEvents();

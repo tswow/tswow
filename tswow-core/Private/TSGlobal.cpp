@@ -72,6 +72,11 @@ bool TC_GAME_API IsHolidayActive(uint16_t holiday_id)
     return IsHolidayActive(HolidayIds(holiday_id));
 }
 
+bool TC_GAME_API NameReservationActive()
+{
+    return sWorld->getBoolConfig(CONFIG_NAME_RESERVATION);
+}
+
 TSArray<TSNumber<uint16> > TC_GAME_API GetActiveGameEvents()
 {
     TSArray<TSNumber<uint16> > arr;
