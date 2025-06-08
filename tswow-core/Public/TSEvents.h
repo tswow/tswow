@@ -523,6 +523,7 @@ struct TSEvents
         ID_EVENT(OnDamageEarly, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
         // @epoch-start
         ID_EVENT(OnDamage, TSSpell, TSMutableNumber<int32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
+        ID_EVENT(OnCalcDamage, TSSpell, TSMutableNumber<int32>, TSSpellInfo, TSSpellEffectInfo)
         // @epoch-end
         ID_EVENT(OnDamageLate, TSSpell, TSMutableNumber<uint32>, TSSpellDamageInfo, TSNumber<uint32>, bool, TSNumber<uint32> effectMask)
         ID_EVENT(OnPeriodicDamage, TSAuraEffect, TSMutableNumber<uint32>)

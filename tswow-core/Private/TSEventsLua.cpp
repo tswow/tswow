@@ -194,6 +194,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDamageEarly);
     // @epoch-start
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDamage);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCalcDamage);
     // @epoch-end
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnDamageLate);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnPeriodicDamage);

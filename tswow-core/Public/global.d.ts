@@ -8479,6 +8479,20 @@ declare namespace _hidden {
         ) => void): T
 
         // @epoch-start
+        OnCalcDamage(callback: (
+            spell: TSSpell,
+            damage: TSMutableNumber<int32>,
+            info: TSSpellInfo,
+            eff: TSSpellEffectInfo
+        ) => void): T
+
+        OnCalcDamage(id: EventID, callback: (
+            spell: TSSpell,
+            damage: TSMutableNumber<int32>,
+            info: TSSpellInfo,
+            eff: TSSpellEffectInfo
+        ) => void): T
+
         OnDamage(callback: (
             spell: TSSpell
             , damage: TSMutableNumber<int32>
