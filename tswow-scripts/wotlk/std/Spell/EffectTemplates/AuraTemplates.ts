@@ -458,11 +458,13 @@ export enum SpellModOp {
     DOT                       = 22,
     EFFECT3                   = 23,
     BONUS_MULTIPLIER          = 24,
+    HOT                       = 25,
     PROC_PER_MINUTE           = 26,
     VALUE_MULTIPLIER          = 27,
     RESIST_DISPEL_CHANGE      = 28,
-    CRIT_DAMAGE_BONUS2        = 29,
+    HEAL                      = 29,
     SPELL_COST_REFUND_ON_FAIL = 30,
+    STACK_AMOUNT              = 31,
 }
 
 export class AddFlatModifier extends PointsBase {

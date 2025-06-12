@@ -8767,6 +8767,9 @@ declare namespace _hidden {
 
         OnEnergize(callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
         OnEnergize(id: EventID, callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
+    
+        OnCooldownFinished(callback: (who: TSUnit, spell: TSSpellInfo, categoryID: TSNumber<uint32>, itemID: TSNumber<uint32>) => void) : T;
+        OnCooldownFinished(id: EventID, callback: (who: TSUnit, spell: TSSpellInfo, categoryID: TSNumber<uint32>, itemID: TSNumber<uint32>) => void) : T;
     }
 
     export class Creature<T> {
@@ -9378,8 +9381,6 @@ declare namespace _hidden {
         OnUpdateDisplayPower(callback: (who: TSUnit, displayPower: TSMutableNumber<int8>) => void)
 
         OnHandleShapeshiftPower(callback: (who: TSUnit, shapeshiftForm: TSNumber<int32>, power: TSMutableNumber<int8>) => void)
-
-        OnCooldownReset(callback: (who: TSUnit, spellId: TSNumber<uint32>, categoryID: TSNumber<uint32>, itemID: TSNumber<uint32>) => void)
     }
 
     export class Battleground<T> {

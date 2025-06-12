@@ -545,7 +545,6 @@ struct TSEvents
         EVENT(OnCustomDamageTaken, TSUnit, TSUnit, TSMutableNumber<uint32>)
         EVENT(OnUpdateDisplayPower, TSUnit, TSMutableNumber<int8>)
         EVENT(OnHandleShapeshiftPower, TSUnit, TSNumber<int32>, TSMutableNumber<int8>)
-        EVENT(OnCooldownReset, TSUnit, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint32>)
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry
@@ -620,27 +619,21 @@ struct TSEvents
         ID_EVENT(OnObjectAreaTargetSelect, TSSpell, TSWorldObjectCollection, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnObjectTargetSelect, TSSpell, TSMutableWorldObject, TSNumber<uint32> index, TSSpellImplicitTargetInfo, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnOnResistAbsorbCalculate, TSSpell, TSDamageInfo, TSMutableNumber<uint32> resistAmount, TSMutableNumber<int32> absorbAmount, TSMutable<bool,bool> cancelDefault)
-        
         ID_EVENT(OnAuraApplied, TSUnit, TSAura, TSUnit)
         ID_EVENT(OnAuraRemoved, TSAura, TSUnit, TSNumber<uint32>)
-
         ID_EVENT(OnHeal, TSUnit, TSUnit, TSMutableNumber<uint32>)
         ID_EVENT(CanAuraBeBrokenBySpell, TSUnit, TSUnit, TSAura, TSSpellInfo, TSNumber<uint8>, TSMutable<bool, bool>)
         ID_EVENT(OnCustomMechanicMaskDamage, TSUnit, TSSpellInfo, TSMutableNumber<uint32>)
         ID_EVENT(OnSuccessfulInterrupt, TSUnit caster, TSUnit who, TSSpell spell)
         ID_EVENT(OnCalcSpellDuration, TSSpellInfo Info, TSPlayer Player, TSMutableNumber<int32> Dur)
-
         ID_EVENT(OnJumpStart, TSSpellInfo, TSUnit, TSMutableNumber<float>, TSMutableNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>, TSNumber<float>)
         ID_EVENT(OnPersistentAARemoved, TSUnit, TSSpellDestination)
-
         ID_EVENT(OnCastCancelled, TSUnit, TSUnit, TSSpell, TSNumber<int32>, TSNumber<int32>)
         ID_EVENT(OnSpellCastFinished, TSSpell, TSUnit, TSNumber<uint32>)
-
         ID_EVENT(CanMoveWhileChanneling, TSSpell, TSUnit, TSMutable<bool, bool>)
-
         ID_EVENT(OnCheckGCDCategory, TSSpell, TSMutableNumber<uint32>)
-
         ID_EVENT(OnEnergize, TSUnit, TSSpellInfo, TSNumber<uint8>, TSMutableNumber<int32>)
+        ID_EVENT(OnCooldownFinished, TSUnit, TSSpellInfo, TSNumber<uint32>, TSNumber<uint32>)
     } Spell;
 
     struct CreatureEvents : public TSMappedEventsRegistry

@@ -215,7 +215,6 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnCustomDamageTaken);
     LUA_HANDLE(unit_events, UnitEvents, OnUpdateDisplayPower);
     LUA_HANDLE(unit_events, UnitEvents, OnHandleShapeshiftPower);
-    LUA_HANDLE(unit_events, UnitEvents, OnCooldownReset);
 
     auto spell_events = state.new_usertype<TSEvents::SpellEvents>("SpellEvents");
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCast);
@@ -290,6 +289,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(spell_events, SpellEvents, OnUnlearn);
     LUA_HANDLE(spell_events, SpellEvents, OnAuraRemoved);
     LUA_HANDLE(spell_events, SpellEvents, OnSuccessfulDispel);
+    LUA_HANDLE(spell_events, SpellEvents, OnCooldownFinished);
 
     auto creature_events = state.new_usertype<TSEvents::CreatureEvents>("CreatureEvents");
     LUA_MAPPED_HANDLE(creature_events, CreatureEvents, OnMoveInLOS);
