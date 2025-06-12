@@ -2657,6 +2657,10 @@ TSNumber<float> TSUnit::GetTotalAttackPowerValue(uint8 AttackType) const {
     return unit->GetTotalAttackPowerValue(WeaponAttackType(AttackType));
 }
 
+TSNumber<float> TSUnit::SpellBaseDamageBonusDone(uint32 SchoolMask) const {
+    return unit->SpellBaseDamageBonusDone(SpellSchoolMask(SchoolMask));
+}
+
 TSNumber<uint32> TSUnit::GetAttackTime(uint8 AttackType) const {
     return unit->GetAttackTime(WeaponAttackType(AttackType));
 }

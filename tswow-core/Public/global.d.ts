@@ -7645,6 +7645,8 @@ declare interface TSUnit extends TSWorldObject {
     GetWeaponDamageRange(attackType: uint8, damageRange: uint8, index: uint8) : TSNumber<float>
     ApplyEffectModifiers(spellInfo: TSSpellInfo, index: uint8, value: float) : TSNumber<float>
 
+    SpellBaseDamageBonusDone(school: SpellSchoolMask) : TSNumber<float>
+
     RollChance(chance: uint8) : bool
     RollChanceF(chance: float) : bool
 

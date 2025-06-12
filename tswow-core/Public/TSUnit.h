@@ -241,6 +241,8 @@ public:
     TSNumber<float> GetWeaponDamageRange(uint8, uint8, uint8) const;
     TSNumber<float> ApplyEffectModifiers(TSSpellInfo, uint8, float) const;
 
+    TSNumber<int32> SpellBaseDamageBonusDone(uint32) const;
+
     bool RollChance(uint8);
     bool RollChanceF(float);
 
