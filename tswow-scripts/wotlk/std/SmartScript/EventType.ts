@@ -31,13 +31,10 @@ const EVENT_TYPES : {[key:string]:string} = {
     '9': 'Range',
     '10': 'OocLos',
     '11': 'Respawn',
-    '12': 'TargetHealthPct',
     '13': 'VictimCasting',
-    '14': 'FriendlyHealth',
     '15': 'FriendlyIsCc',
     '16': 'FriendlyMissingBuff',
     '17': 'SummonedUnit',
-    '18': 'TargetManaPct',
     '19': 'AcceptedQuest',
     '20': 'RewardQuest',
     '21': 'ReachedHome',
@@ -49,7 +46,6 @@ const EVENT_TYPES : {[key:string]:string} = {
     '27': 'PassengerBoarded',
     '28': 'PassengerRemoved',
     '29': 'Charmed',
-    '30': 'CharmedTarget',
     '31': 'SpellhitTarget',
     '32': 'Damaged',
     '33': 'DamagedTarget',
@@ -58,7 +54,6 @@ const EVENT_TYPES : {[key:string]:string} = {
     '36': 'CorpseRemoved',
     '37': 'AiInit',
     '38': 'DataSet',
-    '39': 'WaypointStart',
     '40': 'WaypointReached',
     '41': 'TransportAddplayer',
     '42': 'TransportAddcreature',
@@ -85,8 +80,6 @@ const EVENT_TYPES : {[key:string]:string} = {
     '63': 'JustCreated',
     '64': 'GossipHello',
     '65': 'FollowCompleted',
-    '66': 'EventPhaseChange',
-    '67': 'IsBehindTarget',
     '68': 'GameEventStart',
     '69': 'GameEventEnd',
     '70': 'GoLootStateChanged',
@@ -97,11 +90,11 @@ const EVENT_TYPES : {[key:string]:string} = {
     '75': 'DistanceCreature',
     '76': 'DistanceGameobject',
     '77': 'CounterSet',
-    '78': 'SceneStart',
-    '79': 'SceneTrigger',
-    '80': 'SceneCancel',
-    '81': 'SceneComplete',
-    '82': 'SummonedUnitDies'
+    '82': 'SummonedUnitDies',
+    '83': 'SpellCast',
+    '84': 'SpellFailed',
+    '85': 'SpellStart',
+    '86': 'Despawn',
 }
 
 export const EVENT_ARGS : {[key:string]:string[]} = {
@@ -117,13 +110,10 @@ export const EVENT_ARGS : {[key:string]:string[]} = {
     '9': ['MinDist','MaxDist','RepeatMin','RepeatMax',''],
     '10': ['NoHostile','MaxRange','CooldownMin','CooldownMax','isPlayerOnly'],
     '11': ['type','MapId','ZoneId','',''],
-    '12': ['HPMin','HPMax','RepeatMin','RepeatMax',''],
     '13': ['RepeatMin','RepeatMax','SpellId','',''],
-    '14': ['HPDeficit','Radius','RepeatMin','RepeatMax',''],
     '15': ['Radius','RepeatMin','RepeatMax','',''],
     '16': ['SpellId','Radius','RepeatMin','RepeatMax',''],
     '17': ['CretureId','CooldownMin','CooldownMax','',''],
-    '18': ['ManaMin','ManaMax','RepeatMin','RepeatMax',''],
     '19': ['QuestID','RepeatMin','RepeatMax','',''],
     '20': ['QuestID','RepeatMin','RepeatMax','',''],
     '21': ['','','','',''],
@@ -135,7 +125,6 @@ export const EVENT_ARGS : {[key:string]:string[]} = {
     '27': ['CooldownMin','CooldownMax','','',''],
     '28': ['CooldownMin','CooldownMax','','',''],
     '29': ['0','','','',''],
-    '30': ['','','','',''],
     '31': ['SpellId','School','RepeatMin','RepeatMax',''],
     '32': ['MinDmg','MaxDmg','RepeatMin','RepeatMax',''],
     '33': ['MinDmg','MaxDmg','RepeatMin','RepeatMax',''],
@@ -144,7 +133,6 @@ export const EVENT_ARGS : {[key:string]:string[]} = {
     '36': ['','','','',''],
     '37': ['','','','',''],
     '38': ['Field','Value','CooldownMin','CooldownMax',''],
-    '39': ['pointId','pathId','','',''],
     '40': ['pointId','pathId','','',''],
     '41': ['','','','',''],
     '42': ['entry','','','',''],
@@ -171,8 +159,6 @@ export const EVENT_ARGS : {[key:string]:string[]} = {
     '63': ['','','','',''],
     '64': ['arg0','','','',''],
     '65': ['','','','',''],
-    '66': ['phasemask','','','',''],
-    '67': ['CooldownMin','CooldownMax','','',''],
     '68': ['eventEntry','','','',''],
     '69': ['eventEntry','','','',''],
     '70': ['state','','','',''],
@@ -187,7 +173,11 @@ export const EVENT_ARGS : {[key:string]:string[]} = {
     '79': ['triggerName','','','',''],
     '80': ['none','','','',''],
     '81': ['none','','','',''],
-    '82': ['none','','','','']
+    '82': ['none','','','',''],
+    '83': ['SpellID','CooldownMin','CooldownMax','',''],
+    '84': ['SpellID','CooldownMin','CooldownMax','',''],
+    '85': ['SpellID','CooldownMin','CooldownMax','',''],
+    '86': ['','','','',''],
 }
 
 export class EventType<T> {
@@ -387,22 +377,6 @@ export class EventType<T> {
     }
 
     /**
-     *  On Target Health Percentage
-     *  @param HPMin%
-     *  @param HPMax%
-     *  @param RepeatMin
-     *  @param RepeatMax
-     */
-    setTargetHealthPct(HPMin : number, HPMax : number, RepeatMin : number, RepeatMax : number) {
-        this.row.event_type.set(12)
-        this.row.event_param1.set(HPMin)
-        this.row.event_param2.set(HPMax)
-        this.row.event_param3.set(RepeatMin)
-        this.row.event_param4.set(RepeatMax)
-        return this.main
-    }
-
-    /**
      *  On Target Casting Spell
      *  @param RepeatMin
      *  @param RepeatMax
@@ -413,22 +387,6 @@ export class EventType<T> {
         this.row.event_param1.set(RepeatMin)
         this.row.event_param2.set(RepeatMax)
         this.row.event_param3.set(Spell)
-        return this.main
-    }
-
-    /**
-     *  On Friendly Health Deficit
-     *  @param HPDeficit
-     *  @param Radius
-     *  @param RepeatMin
-     *  @param RepeatMax
-     */
-    setFriendlyHealth(HPDeficit : number, Radius : number, RepeatMin : number, RepeatMax : number) {
-        this.row.event_type.set(14)
-        this.row.event_param1.set(HPDeficit)
-        this.row.event_param2.set(Radius)
-        this.row.event_param3.set(RepeatMin)
-        this.row.event_param4.set(RepeatMax)
         return this.main
     }
 
@@ -473,22 +431,6 @@ export class EventType<T> {
         this.row.event_param1.set(CretureId)
         this.row.event_param2.set(CooldownMin)
         this.row.event_param3.set(CooldownMax)
-        return this.main
-    }
-
-    /**
-     *  On Target Mana Percentage
-     *  @param ManaMin%
-     *  @param ManaMax%
-     *  @param RepeatMin
-     *  @param RepeatMax
-     */
-    setTargetManaPct(ManaMin : number, ManaMax : number, RepeatMin : number, RepeatMax : number) {
-        this.row.event_type.set(18)
-        this.row.event_param1.set(ManaMin)
-        this.row.event_param2.set(ManaMax)
-        this.row.event_param3.set(RepeatMin)
-        this.row.event_param4.set(RepeatMax)
         return this.main
     }
 
@@ -633,14 +575,6 @@ export class EventType<T> {
     }
 
     /**
-     *  On Target Charmed
-     */
-    setCharmedTarget() {
-        this.row.event_type.set(30)
-        return this.main
-    }
-
-    /**
      *  On Target Spell Hit
      *  @param SpellId
      *  @param School
@@ -743,18 +677,6 @@ export class EventType<T> {
         this.row.event_param2.set(Value)
         this.row.event_param3.set(CooldownMin)
         this.row.event_param4.set(CooldownMax)
-        return this.main
-    }
-
-    /**
-     *  On Creature Waypoint ID Started
-     *  @param PointId (0 any)
-     *  @param pathId (0 any)
-     */
-    setWaypointStart(PointId : number, pathId : number) {
-        this.row.event_type.set(39)
-        this.row.event_param1.set(PointId)
-        this.row.event_param2.set(pathId)
         return this.main
     }
 
@@ -1028,28 +950,6 @@ export class EventType<T> {
     }
 
     /**
-     *  On event phase mask set
-     *  @param event phase mask
-     */
-    setEventPhaseChange(event : number) {
-        this.row.event_type.set(66)
-        this.row.event_param1.set(event)
-        return this.main
-    }
-
-    /**
-     *  On Creature is behind target.
-     *  @param CooldownMin
-     *  @param CooldownMax
-     */
-    setIsBehindTarget(CooldownMin : number, CooldownMax : number) {
-        this.row.event_type.set(67)
-        this.row.event_param1.set(CooldownMin)
-        this.row.event_param2.set(CooldownMax)
-        return this.main
-    }
-
-    /**
      *  On game_event started.
      *  @param game_event.eventEntry
      */
@@ -1172,44 +1072,34 @@ export class EventType<T> {
     }
 
     /**
-     *  Master only
-     */
-    setSceneStart() {
-        this.row.event_type.set(78)
-        return this.main
-    }
-
-    /**
-     *  Master only
-     *  @param param_string : triggerName
-     */
-    setSceneTrigger(param_string : number) {
-        this.row.event_type.set(79)
-        this.row.event_param1.set(param_string)
-        return this.main
-    }
-
-    /**
-     *  Master only
-     */
-    setSceneCancel() {
-        this.row.event_type.set(80)
-        return this.main
-    }
-
-    /**
-     *  Master only
-     */
-    setSceneComplete() {
-        this.row.event_type.set(81)
-        return this.main
-    }
-
-    /**
      *
      */
     setSummonedUnitDies() {
         this.row.event_type.set(82)
+        return this.main
+    }
+
+    setSpellCast(SpellID : number, CooldownMin : number, CooldownMax : number) {
+        this.row.event_type.set(83)
+        this.row.event_param1.set(SpellID)
+        this.row.event_param2.set(CooldownMin)
+        this.row.event_param3.set(CooldownMax)
+        return this.main
+    }
+
+    setSpellFailed(SpellID : number, CooldownMin : number, CooldownMax : number) {
+        this.row.event_type.set(84)
+        this.row.event_param1.set(SpellID)
+        this.row.event_param2.set(CooldownMin)
+        this.row.event_param3.set(CooldownMax)
+        return this.main
+    }
+
+    setSpellStart(SpellID : number, CooldownMin : number, CooldownMax : number) {
+        this.row.event_type.set(85)
+        this.row.event_param1.set(SpellID)
+        this.row.event_param2.set(CooldownMin)
+        this.row.event_param3.set(CooldownMax)
         return this.main
     }
 
