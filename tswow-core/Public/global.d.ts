@@ -9670,6 +9670,8 @@ declare namespace _hidden {
         OnGossipSelectCode(callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, text: string, cancel: TSMutable<boolean,boolean>)=>void)
         OnGossipSelectCode(id: EventID, callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, text: string, cancel: TSMutable<boolean,boolean>)=>void)
 
+        OnCreateEarly(callback: (swap: TSMutableNumber<uint32>)=>void)
+
         OnCreate(callback: (obj: TSGameObject, cancel: TSMutable<boolean,boolean>)=>void)
         OnCreate(id: EventID, callback: (obj: TSGameObject, cancel: TSMutable<boolean,boolean>)=>void)
 
