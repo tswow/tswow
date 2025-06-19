@@ -49,6 +49,7 @@ import { SpellMissileRegistry } from "./SpellMissile";
 import { SpellPower } from "./SpellPower";
 import { SpellPowerDisplay } from "./SpellPowerDisplay";
 import { SpellPreventionType } from "./SpellPreventionType";
+import { SpellDefenseType } from "./SpellDefenseType";
 import { SpellProc } from "./SpellProc";
 import { SpellRangeRegistry } from "./SpellRange";
 import { SpellRank } from "./SpellRank";
@@ -165,7 +166,7 @@ export class Spell extends MainEntityID<SpellRow> {
      * 
      * 3 = Ranged
      */
-    get DefenseType() { return this.wrap(this.row.DefenseType); }
+    get DefenseType() { return makeEnumCell(SpellDefenseType, this, this.row.DefenseType); }
     get PreventionType() { return makeEnumCell(SpellPreventionType, this, this.row.PreventionType)}
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
     get CastTime() { return SpellCastTimeRegistry.ref(this,this.row.CastingTimeIndex); }
