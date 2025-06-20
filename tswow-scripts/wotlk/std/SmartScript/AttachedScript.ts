@@ -182,20 +182,6 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  On Target Health Percentage
-     *  @param HPMin%
-     *  @param HPMax%
-     *  @param RepeatMin
-     *  @param RepeatMax
-     */
-    onTargetHealthPct(HPMin : number, HPMax : number, RepeatMin : number, RepeatMax : number, callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setTargetHealthPct(HPMin,HPMax,RepeatMin,RepeatMax)
-        callback(row);
-        return this.owner;
-    }
-
-    /**
      *  On Target Casting Spell
      *  @param RepeatMin
      *  @param RepeatMax
@@ -204,20 +190,6 @@ export class AttachedScript<T> extends CellSystem<T> {
     onVictimCasting(RepeatMin : number, RepeatMax : number, Spell : number, callback: (script: SmartScript)=>void) {
         const row = this.create();
         row.Event.setVictimCasting(RepeatMin,RepeatMax,Spell)
-        callback(row);
-        return this.owner;
-    }
-
-    /**
-     *  On Friendly Health Deficit
-     *  @param HPDeficit
-     *  @param Radius
-     *  @param RepeatMin
-     *  @param RepeatMax
-     */
-    onFriendlyHealth(HPDeficit : number, Radius : number, RepeatMin : number, RepeatMax : number, callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setFriendlyHealth(HPDeficit,Radius,RepeatMin,RepeatMax)
         callback(row);
         return this.owner;
     }
@@ -258,20 +230,6 @@ export class AttachedScript<T> extends CellSystem<T> {
     onSummonedUnit(CretureId : number, CooldownMin : number, CooldownMax : number, callback: (script: SmartScript)=>void) {
         const row = this.create();
         row.Event.setSummonedUnit(CretureId,CooldownMin,CooldownMax)
-        callback(row);
-        return this.owner;
-    }
-
-    /**
-     *  On Target Mana Percentage
-     *  @param ManaMin%
-     *  @param ManaMax%
-     *  @param RepeatMin
-     *  @param RepeatMax
-     */
-    onTargetManaPct(ManaMin : number, ManaMax : number, RepeatMin : number, RepeatMax : number, callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setTargetManaPct(ManaMin,ManaMax,RepeatMin,RepeatMax)
         callback(row);
         return this.owner;
     }
@@ -414,16 +372,6 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  On Target Charmed
-     */
-    onCharmedTarget(callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setCharmedTarget()
-        callback(row);
-        return this.owner;
-    }
-
-    /**
      *  On Target Spell Hit
      *  @param SpellId
      *  @param School
@@ -520,18 +468,6 @@ export class AttachedScript<T> extends CellSystem<T> {
     onDataSet(Field : number, Value : number, CooldownMin : number, CooldownMax : number, callback: (script: SmartScript)=>void) {
         const row = this.create();
         row.Event.setDataSet(Field,Value,CooldownMin,CooldownMax)
-        callback(row);
-        return this.owner;
-    }
-
-    /**
-     *  On Creature Waypoint ID Started
-     *  @param PointId (0 any)
-     *  @param pathId (0 any)
-     */
-    onWaypointStart(PointId : number, pathId : number, callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setWaypointStart(PointId,pathId)
         callback(row);
         return this.owner;
     }
@@ -817,29 +753,6 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  On event phase mask set
-     *  @param event phase mask
-     */
-    onEventPhaseChange(event : number, callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setEventPhaseChange(event)
-        callback(row);
-        return this.owner;
-    }
-
-    /**
-     *  On Creature is behind target.
-     *  @param CooldownMin
-     *  @param CooldownMax
-     */
-    onIsBehindTarget(CooldownMin : number, CooldownMax : number, callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setIsBehindTarget(CooldownMin,CooldownMax)
-        callback(row);
-        return this.owner;
-    }
-
-    /**
      *  On game_event started.
      *  @param game_event.eventEntry
      */
@@ -960,43 +873,23 @@ export class AttachedScript<T> extends CellSystem<T> {
         return this.owner;
     }
 
-    /**
-     *  Master only
-     */
-    onSceneStart(callback: (script: SmartScript)=>void) {
+    onSpellCast(spellID: number, cooldownMin: number, cooldownMax: number, callback: (script: SmartScript)=>void) {
         const row = this.create();
-        row.Event.setSceneStart()
+        row.Event.setSpellCast(spellID,cooldownMin,cooldownMax)
         callback(row);
         return this.owner;
     }
 
-    /**
-     *  Master only
-     *  @param param_string : triggerName
-     */
-    onSceneTrigger(param_string : number, callback: (script: SmartScript)=>void) {
+    onSpellFailed(spellID: number, cooldownMin: number, cooldownMax: number, callback: (script: SmartScript)=>void) {
         const row = this.create();
-        row.Event.setSceneTrigger(param_string)
+        row.Event.setSpellFailed(spellID,cooldownMin,cooldownMax)
         callback(row);
         return this.owner;
     }
 
-    /**
-     *  Master only
-     */
-    onSceneCancel(callback: (script: SmartScript)=>void) {
+    onSpellStart(spellID: number, cooldownMin: number, cooldownMax: number, callback: (script: SmartScript)=>void) {
         const row = this.create();
-        row.Event.setSceneCancel()
-        callback(row);
-        return this.owner;
-    }
-
-    /**
-     *  Master only
-     */
-    onSceneComplete(callback: (script: SmartScript)=>void) {
-        const row = this.create();
-        row.Event.setSceneComplete()
+        row.Event.setSpellStart(spellID,cooldownMin,cooldownMax)
         callback(row);
         return this.owner;
     }

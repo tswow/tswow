@@ -42,10 +42,7 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '13': 'ThreatSinglePct',
     '14': 'ThreatAllPct',
     '15': 'CallAreaexploredoreventhappens',
-    '16': 'SetIngamePhaseId',
     '17': 'SetEmoteState',
-    '18': 'SetUnitFlag',
-    '19': 'RemoveUnitFlag',
     '20': 'AutoAttack',
     '21': 'AllowCombatMovement',
     '22': 'SetEventPhase',
@@ -84,10 +81,8 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '55': 'WpStop',
     '56': 'AddItem',
     '57': 'RemoveItem',
-    '58': 'InstallAiTemplate',
     '59': 'SetRun',
     '60': 'SetDisableGravity',
-    '61': 'SetSwim',
     '62': 'Teleport',
     '63': 'SetCounter',
     '64': 'StoreTargetList',
@@ -101,9 +96,6 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '72': 'CloseGossip',
     '73': 'TriggerTimedEvent',
     '74': 'RemoveTimedEvent',
-    '75': 'AddAura',
-    '76': 'OverrideScriptBaseObject',
-    '77': 'ResetScriptBaseObject',
     '78': 'CallScriptReset',
     '79': 'SetRangedMovement',
     '80': 'CallTimedActionlist',
@@ -119,10 +111,6 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '90': 'SetUnitFieldBytes1',
     '91': 'RemoveUnitFieldBytes1',
     '92': 'InterruptSpell',
-    '93': 'SendGoCustomAnim',
-    '94': 'SetDynamicFlag',
-    '95': 'AddDynamicFlag',
-    '96': 'RemoveDynamicFlag',
     '97': 'JumpToPos',
     '98': 'SendGossipMenu',
     '99': 'GoSetLootState',
@@ -130,9 +118,6 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '101': 'SetHomePos',
     '102': 'SetHealthRegen',
     '103': 'SetRoot',
-    '104': 'SetGoFlag',
-    '105': 'AddGoFlag',
-    '106': 'RemoveGoFlag',
     '107': 'SummonCreatureGroup',
     '108': 'SetPower',
     '109': 'AddPower',
@@ -145,18 +130,10 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '116': 'SetCorpseDelay',
     '117': 'DisableEvade',
     '118': 'GoSetGoState',
-    '119': 'SetCanFly',
-    '120': 'RemoveAurasByType',
-    '121': 'SetSightDist',
-    '122': 'Flee',
     '123': 'AddThreat',
     '124': 'LoadEquipment',
     '125': 'TriggerRandomTimedEvent',
-    '126': 'RemoveAllGameobjects',
     '127': 'PauseMovement',
-    '128': 'PlayAnimkit',
-    '129': 'ScenePlay',
-    '130': 'SceneCancel',
     '131': 'SpawnSpawngroup',
     '132': 'DespawnSpawngroup',
     '133': 'RespawnBySpawnid',
@@ -165,7 +142,14 @@ export const ACTION_TYPES : {[key:string]:string} = {
     '136': 'SetMovementSpeed',
     '137': 'PlaySpellVisualKit',
     '138': 'OverrideLight',
-    '139': 'OverrideWeather'
+    '139': 'OverrideWeather',
+    '141': 'SetHover',
+    '142': 'SetHealthPercent',
+    '144': 'SetImmunePC',
+    '145': 'SetImmuneNPC',
+    '146': 'SetUninteractible',
+    '147': 'ActivateGameObject',
+    '148': 'AddToStoredTargetList',
 }
 
 export const ACTION_ARGS : {[key:string]:string[]} = {
@@ -185,10 +169,7 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '13': ['threatInc','threatDec','','','',''],
     '14': ['threatInc','threatDec','','','',''],
     '15': ['QuestID','','','','',''],
-    '16': ['phaseId','apply','','','',''],
     '17': ['EmoteId','','','','',''],
-    '18': ['fields','flagNo','','','',''],
-    '19': ['fields','flagNo','','','',''],
     '20': ['AllowAttackState','','','','',''],
     '21': ['AllowCombatMovement','','','','',''],
     '22': ['phaseMask','','','','',''],
@@ -227,10 +208,8 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '55': ['despawnTime','questId','shouldFail','','',''],
     '56': ['item','count','','','',''],
     '57': ['item','count','','','',''],
-    '58': ['TemplateID','','','','',''],
     '59': ['isOn','','','','',''],
     '60': ['gravityEnabled','','','','',''],
-    '61': ['isOn','','','','',''],
     '62': ['MapID','','','','',''],
     '63': ['counterID','value','reset','','',''],
     '64': ['varID','','','','',''],
@@ -244,9 +223,6 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '72': ['','','','','',''],
     '73': ['id','','','','',''],
     '74': ['id','','','','',''],
-    '75': ['spell','','','','',''],
-    '76': ['','','','','',''],
-    '77': ['','','','','',''],
     '78': ['','','','','',''],
     '79': ['attackDistance','attackAngle','','','',''],
     '80': ['EntryOrGuid','timerType','overrideActionList','','',''],
@@ -262,10 +238,6 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '90': ['Value','Type','','','',''],
     '91': ['Value','Type','','','',''],
     '92': ['With delay','SpellId','Instant','','',''],
-    '93': ['animprogress','','','','',''],
-    '94': ['dynamicflags','','','','',''],
-    '95': ['dynamicflags','','','','',''],
-    '96': ['dynamicflags','','','','',''],
     '97': ['SpeedXY','SpeedZ','','','',''],
     '98': ['menu','text_id','','','',''],
     '99': ['LootState','','','','',''],
@@ -273,9 +245,6 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '101': ['','','','','',''],
     '102': ['isTrue','','','','',''],
     '103': ['isTrue','','','','',''],
-    '104': ['flags','','','','',''],
-    '105': ['flags','','','','',''],
-    '106': ['flags','','','','',''],
     '107': ['groupId','invoker','','','',''],
     '108': ['powerType','newPower','','','',''],
     '109': ['powerType','addedPower','','','',''],
@@ -288,18 +257,10 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '116': ['timer','','','','',''],
     '117': ['shouldDisable','','','','',''],
     '118': ['state','','','','',''],
-    '119': ['isTrue','','','','',''],
-    '120': ['type','','','','',''],
-    '121': ['sightDistance','','','','',''],
-    '122': ['fleeTime','','','','',''],
     '123': ['name','threat','','','',''],
     '124': ['id','','','','',''],
     '125': ['idMinRange','idMaxRange','','','',''],
-    '126': ['','','','','',''],
     '127': ['MovementSlot','PauseTime','Forced','','',''],
-    '128': ['AnimKitID','type','','','',''],
-    '129': ['SceneId','','','','',''],
-    '130': ['SceneId','','','','',''],
     '131': ['groupId','minDelay','maxDelay','spawnflags','',''],
     '132': ['groupId','minDelay','maxDelay','spawnflags','',''],
     '133': ['spawnType','spawnId','','','',''],
@@ -308,7 +269,14 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '136': ['movementType','speedInteger','speedFraction','','',''],
     '137': ['spellVisualKitId','','','','',''],
     '138': ['zoneId','areaLightId','lightId','fadeInTime','',''],
-    '139': ['zoneId','weatherId','weatherGrade','','','']
+    '139': ['zoneId','weatherId','weatherGrade','','',''],
+    '141': ['hover','','','','',''],
+    '142': ['percent','','','','',''],
+    '144': ['toggle','','','','',''],
+    '145': ['toggle','','','','',''],
+    '146': ['toggle','','','','',''],
+    '147': ['action','','','','',''],
+    '148': ['list','','','','',''],
 }
 
 export class ActionType {
@@ -580,48 +548,12 @@ export class ActionType {
     }
 
     /**
-     *  For 4.3.4 + only
-     *  @param phaseId
-     *  @param apply/remove (1/0)
-     */
-    setSetIngamePhaseId(phaseId : number, applyremove : number) {
-        this.row.action_type.set(16)
-        this.row.action_param1.set(phaseId)
-        this.row.action_param2.set(applyremove)
-        return this.main
-    }
-
-    /**
      *  Play Emote Continuously
      *  @param EmoteId
      */
     setSetEmoteState(EmoteId : number) {
         this.row.action_type.set(17)
         this.row.action_param1.set(EmoteId)
-        return this.main
-    }
-
-    /**
-     *  Can set Multi-able flags at once
-     *  @param (may be more than one field OR'd together)
-     *  @param type If false set creature_template.unit_flags If true set creature_template.unit_flags2
-     */
-    setSetUnitFlag(may : number, type : number) {
-        this.row.action_type.set(18)
-        this.row.action_param1.set(may)
-        this.row.action_param2.set(type)
-        return this.main
-    }
-
-    /**
-     *  Can Remove Multi-able flags at once
-     *  @param (may be more than one field OR'd together)
-     *  @param type If false set  creature_template.unit_flags If true set creature_template.unit_flags2
-     */
-    setRemoveUnitFlag(may : number, type : number) {
-        this.row.action_type.set(19)
-        this.row.action_param1.set(may)
-        this.row.action_param2.set(type)
         return this.main
     }
 
@@ -1118,16 +1050,6 @@ export class ActionType {
 
     /**
      *
-     *  @param TemplateID (see Predefined SAI templates below)
-     */
-    setInstallAiTemplate(TemplateID : number) {
-        this.row.action_type.set(58)
-        this.row.action_param1.set(TemplateID)
-        return this.main
-    }
-
-    /**
-     *
      *  @param 0 = Off / 1 = On
      */
     setSetRun(ZERO : number) {
@@ -1142,16 +1064,6 @@ export class ActionType {
      */
     setSetDisableGravity(ZERO : number) {
         this.row.action_type.set(60)
-        this.row.action_param1.set(ZERO)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param 0 = Off / 1 = On
-     */
-    setSetSwim(ZERO : number) {
-        this.row.action_type.set(61)
         this.row.action_param1.set(ZERO)
         return this.main
     }
@@ -1306,32 +1218,6 @@ export class ActionType {
     setRemoveTimedEvent(id : number) {
         this.row.action_type.set(74)
         this.row.action_param1.set(id)
-        return this.main
-    }
-
-    /**
-     *  Adds aura to player(s). Use target_type 17 to make AoE aura.
-     *  @param SpellId
-     */
-    setAddAura(SpellId : number) {
-        this.row.action_type.set(75)
-        this.row.action_param1.set(SpellId)
-        return this.main
-    }
-
-    /**
-     *  WARNING: CAN CRASH CORE, do not use if you dont know what you are doing
-     */
-    setOverrideScriptBaseObject() {
-        this.row.action_type.set(76)
-        return this.main
-    }
-
-    /**
-     *
-     */
-    setResetScriptBaseObject() {
-        this.row.action_type.set(77)
         return this.main
     }
 
@@ -1525,46 +1411,6 @@ export class ActionType {
 
     /**
      *
-     *  @param animprogress (0-255)
-     */
-    setSendGoCustomAnim(animprogress : number) {
-        this.row.action_type.set(93)
-        this.row.action_param1.set(animprogress)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param creature.dynamicflags
-     */
-    setSetDynamicFlag(creaturedynamicflags : number) {
-        this.row.action_type.set(94)
-        this.row.action_param1.set(creaturedynamicflags)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param creature.dynamicflags
-     */
-    setAddDynamicFlag(creaturedynamicflags : number) {
-        this.row.action_type.set(95)
-        this.row.action_param1.set(creaturedynamicflags)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param creature.dynamicflags
-     */
-    setRemoveDynamicFlag(creaturedynamicflags : number) {
-        this.row.action_type.set(96)
-        this.row.action_param1.set(creaturedynamicflags)
-        return this.main
-    }
-
-    /**
-     *
      *  @param Speed XY
      *  @param Speed Z
      */
@@ -1632,36 +1478,6 @@ export class ActionType {
     setSetRoot(zo : number) {
         this.row.action_type.set(103)
         this.row.action_param1.set(zo)
-        return this.main
-    }
-
-    /**
-     *  oldFlag = newFlag
-     *  @param gameobject_template_addon.flags
-     */
-    setSetGoFlag(gameobject_template_addonflags : number) {
-        this.row.action_type.set(104)
-        this.row.action_param1.set(gameobject_template_addonflags)
-        return this.main
-    }
-
-    /**
-     *  oldFlag |= newFlag
-     *  @param gameobject_template_addon.flags
-     */
-    setAddGoFlag(gameobject_template_addonflags : number) {
-        this.row.action_type.set(105)
-        this.row.action_param1.set(gameobject_template_addonflags)
-        return this.main
-    }
-
-    /**
-     *  oldFlag &= ~newFlag
-     *  @param gameobject_template_addon.flags
-     */
-    setRemoveGoFlag(gameobject_template_addonflags : number) {
-        this.row.action_type.set(106)
-        this.row.action_param1.set(gameobject_template_addonflags)
         return this.main
     }
 
@@ -1813,46 +1629,6 @@ export class ActionType {
 
     /**
      *
-     *  @param 0/1
-     */
-    setSetCanFly(zo : number) {
-        this.row.action_type.set(119)
-        this.row.action_param1.set(zo)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param Type
-     */
-    setRemoveAurasByType(Type : number) {
-        this.row.action_type.set(120)
-        this.row.action_param1.set(Type)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param SightDistance
-     */
-    setSetSightDist(SightDistance : number) {
-        this.row.action_type.set(121)
-        this.row.action_param1.set(SightDistance)
-        return this.main
-    }
-
-    /**
-     *
-     *  @param FleeTime
-     */
-    setFlee(FleeTime : number) {
-        this.row.action_type.set(122)
-        this.row.action_param1.set(FleeTime)
-        return this.main
-    }
-
-    /**
-     *
      *  @param #NAME?
      *  @param -threat
      */
@@ -1886,14 +1662,6 @@ export class ActionType {
     }
 
     /**
-     *
-     */
-    setRemoveAllGameobjects() {
-        this.row.action_type.set(126)
-        return this.main
-    }
-
-    /**
      *  default --> waypoint, random etc active --> point movement controlled --> mindcontrol etc
      *  @param MovementSlot (default = 0, active = 1, controlled = 2)
      *  @param PauseTime (ms)
@@ -1904,38 +1672,6 @@ export class ActionType {
         this.row.action_param1.set(MovementSlot)
         this.row.action_param2.set(PauseTime)
         this.row.action_param3.set(Forced ? 1 : 0)
-        return this.main
-    }
-
-    /**
-     *  // don't use on 3.3.5a
-     *  @param AnimKit ID
-     *  @param type: 1- PlayOneShotAnimKitId 2- SetAIAnimKitId 3- SetMeleeAnimKitId 4- SetMovementAnimKitId
-     */
-    setPlayAnimkit(AnimKit : number, type : number) {
-        this.row.action_type.set(128)
-        this.row.action_param1.set(AnimKit)
-        this.row.action_param2.set(type)
-        return this.main
-    }
-
-    /**
-     *  // don't use on 3.3.5a
-     *  @param SceneId
-     */
-    setScenePlay(SceneId : number) {
-        this.row.action_type.set(129)
-        this.row.action_param1.set(SceneId)
-        return this.main
-    }
-
-    /**
-     *  // don't use on 3.3.5a
-     *  @param SceneId
-     */
-    setSceneCancel(SceneId : number) {
-        this.row.action_type.set(130)
-        this.row.action_param1.set(SceneId)
         return this.main
     }
 
@@ -2063,6 +1799,47 @@ export class ActionType {
         return this.main
     }
 
+    setHover(hover: number) {
+        this.row.action_type.set(141);
+        this.row.action_param1.set(hover);
+        return this.main
+    }
+
+    setHealthPCT(pct: number) {
+        this.row.action_type.set(142);
+        this.row.action_param1.set(pct);
+        return this.main
+    }
+
+    setImmunePC(toggle: number) {
+        this.row.action_type.set(144);
+        this.row.action_param1.set(toggle);
+        return this.main
+    }
+
+    setImmuneNPC(toggle: number) {
+        this.row.action_type.set(145);
+        this.row.action_param1.set(toggle);
+        return this.main
+    }
+
+    setUninteractible(toggle: number) {
+        this.row.action_type.set(146);
+        this.row.action_param1.set(toggle);
+        return this.main
+    }
+
+    setActivateGameObject(action: number) {
+        this.row.action_type.set(147);
+        this.row.action_param1.set(action);
+        return this.main
+    }
+
+    setAddToStoredTargetList(list: number) {
+        this.row.action_type.set(148);
+        this.row.action_param1.set(list);
+        return this.main
+    }
 
     // CUSTOM TSWOW EVENTS BELOW
 

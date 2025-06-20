@@ -325,6 +325,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnGossipSelect);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnGossipSelectCode);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnCreate);
+    LUA_HANDLE(gameobject_events, GameObjectEvents, OnCreateEarly);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnReload);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnRemove);
     LUA_MAPPED_HANDLE(gameobject_events, GameObjectEvents, OnUse);

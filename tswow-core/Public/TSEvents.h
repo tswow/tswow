@@ -764,6 +764,7 @@ struct TSEvents
         ID_EVENT(OnGossipSelect, TSGameObject, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)
         ID_EVENT(OnGossipSelectCode, TSGameObject, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, std::string const&, TSMutable<bool,bool>)
         ID_EVENT(OnCreate, TSGameObject, TSMutable<bool,bool>)
+        EVENT(OnCreateEarly, TSMutableNumber<uint32>)
         ID_EVENT_FN(OnReload, ReloadGameObject, TSGameObject)
         ID_EVENT(OnRemove, TSGameObject)
         ID_EVENT(OnUse, TSGameObject, TSUnit, TSMutable<bool,bool>)
