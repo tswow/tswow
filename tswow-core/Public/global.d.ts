@@ -4066,6 +4066,7 @@ declare interface TSMainThreadContext {
     GetPlayer(guid: uint64): TSPlayer | undefined
     GetPlayer(name: string): TSPlayer | undefined
     GetMap(mapid: uint32, instanceId?: uint32): TSMap | undefined
+    GetContinent(mapid: uint32): TSMap | undefined
     SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>): void;
 }
 

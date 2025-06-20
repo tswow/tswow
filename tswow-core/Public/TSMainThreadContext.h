@@ -14,6 +14,7 @@ public:
     TSPlayer GetPlayer(uint64_t guid);
     TSPlayer GetPlayer(std::string const& name);
     TSMap GetMap(uint32_t mapId, uint32_t instanceId = 0);
+    TSMap GetContinent(uint32_t mapId);
     void SendMail(uint8 senderType, uint64 from, uint64 to, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items);
 private:
     TSLua::Array<TSPlayer> LGetAllPlayers();
