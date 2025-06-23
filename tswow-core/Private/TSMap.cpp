@@ -558,6 +558,11 @@ void TSMap::SpawnGroupDespawn(uint32 group, bool deleteRespawnTimes)
     map->SpawnGroupDespawn(group, deleteRespawnTimes);
 }
 
+TSNumber<uint32> TSMap::GetPartitionID()
+{
+    return map->GetPartitionId();
+}
+
 TC_GAME_API TSInstance ToInstance(TSMap map)
 {
     if (map.map && map->IsInstance())

@@ -4311,6 +4311,8 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * Deactivate a Spawn Group.
      */
     SpawnGroupDespawn(group: uint32, deleteRespawnTimes: boolean): void;
+
+    GetPartitionID(): TSNumber<uint32>;
 }
 
 declare class TSItemEntry
