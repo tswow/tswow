@@ -433,6 +433,11 @@ export class CompleteEncounter extends CriteriaBase {
     }
 }
 
+export class CastSkillSpell extends CriteriaBase {
+    get Skill() { return this.wrap(this.row.Asset_Id); }
+    get SpellCount() { return this.wrap(this.row.Quantity); }
+}
+
 export class CriteriaTypeCell<T extends CriteriaBase> extends EnumCellTransform<T> {
     get  KILL_CREATURE()              { return this.value(0, x=>new KillCreature(x.row)) }
     get  WIN_BG()                     { return this.value(1, x=>new WinBG(x.row)) }
@@ -501,4 +506,5 @@ export class CriteriaTypeCell<T extends CriteriaBase> extends EnumCellTransform<
     get  ACHIEVEMENT_POINTS_REACHED() { return this.value(115, x=>new AchievementPointsReached(x.row)) }
     get  RANDOM_DUNGEON_PLAYER_COUNT(){ return this.value(119, x=>new RandomDungeonPlayerCount(x.row)) }
     get  COMPLETE_ENCOUNTER()         { return this.value(120, x=>new CompleteEncounter(x.row))}
+    get  CAST_SKILL_SPELL()           { return this.value(121, x=>new CastSkillSpell(x.row))}
 }
