@@ -102,6 +102,7 @@ public:
     uint32 account_id = 0;
 	virtual void OnPacket(CustomPacketRead* value);
 	virtual void OnError(CustomPacketResult error) override final;
+    opcode_t GetOpcode();
 };
 
 TC_GAME_API TSPacketWrite CreateCustomPacket(

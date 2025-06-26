@@ -87,7 +87,12 @@ void customLua() {
 CLIENT_DETOUR(LoadScriptFunctionsEarly, 0x004D95C0, __cdecl, int, ()) {
     LOG_DEBUG << "Loading early script functions";
     customLua();
-    return LoadScriptFunctionsEarly();
+    int funcs = LoadScriptFunctionsEarly();
+    for (auto const& pair : LUA_FILES) {
+        LOG_DEBUG << "Running lua file " << pair.first;
+        ClientLua::DoString(pair.second.c_str(), *_state);
+    }
+    return funcs;
 }
 
 CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {

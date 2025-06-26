@@ -21,6 +21,9 @@
 #include "TSBase.h"
 #include "TSLua.h"
 
+extern std::unordered_map<opcode_t, bool> notInWorldCustomOpcodeMap;
+void TC_GAME_API RegisterPacketForNotInWorld(opcode_t opcode, bool isActive);
+
 TSItemTemplate TC_GAME_API CreateItemTemplate(uint32 entry,uint32 copyItemID = 38);
 
 std::string TC_GAME_API santizeForDB(std::string const& input);
