@@ -13393,12 +13393,35 @@ declare namespace WoWAPI {
          */
         StopMovingOrSizing(): void;
 
+         /**
+          * Returns the frame level of the frame
+          * @see https://wowpedia.fandom.com/wiki/API_Frame_GetFrameLevel
+          */
+         GetFrameLevel(): number;
+
         /**
          * Sets the Frame Level of the frame, within its Frame Strata
          * @param level the new strata level
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
+
+         /**
+          * Prevents the frame from moving off-screen.
+          * @param clampedToScreen True to enable clamping, false to permit moving off-screen
+          * @see https://wowpedia.fandom.com/wiki/API_Frame_SetClampedToScreen
+          */
+         SetClampedToScreen(clampedToScreen: boolean): void;
+
+         /**
+          * Controls how much of the frame may be moved off-screen
+          * @param left Left clamp region offset. Controls collision with the left edge of the screen, positive values allow the frame to be moved off-screen, negative values enforce minimum distance to the edge
+          * @param right Right clamp region offset. Controls collision with the right edge of the screen, negative values allow the frame to be moved off-screen, positive values enforce minimum distance to the edge
+          * @param top Top clamp region offset. Controls collision with the top edge of the screen, negative values allow the frame to be moved off-screen, positive values enforce minimum distance to the edge
+          * @param bottom Bottom clamp region offset. Controls collision with the bottom edge of the screen, positive values allow the frame to be moved off-screen, negative values enforce minimum distance to the edge
+          * @see https://wowpedia.fandom.com/wiki/API_Frame_SetClampRectInsets
+          */
+         SetClampRectInsets(left: number, right: number, top: number, bottom: number): void;
 
         /**
          * Modifies the size of the frame's hit rectangle - the area in which clicks are sent to the frame in question
