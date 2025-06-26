@@ -320,6 +320,10 @@ export class SpellProc<T> extends MaybeSQLEntity<T, spell_procRow> {
         return this.wrapSQL(0,sql=>sql.ProcsPerMinute);
     }
 
+    get Cooldown() {
+        return this.wrapSQL(0,sql=>sql.Cooldown);
+    }
+
     mod(callback: (proc: SpellProcCB)=>void)
     {
         callback(new SpellProcCB(this.realOwner));
