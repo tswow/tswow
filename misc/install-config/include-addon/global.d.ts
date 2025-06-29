@@ -2416,6 +2416,18 @@ declare function GetMouseFocus(): WoWAPI.Frame;
  */
 declare function GetCurrentMapAreaID(): LuaMultiReturn<[number, boolean]>;
 
+/** Gets the current map continent index.
+ * 
+ * @see https://wowpedia.fandom.com/wiki/API_GetCurrentMapContinent
+ */
+declare function GetCurrentMapContinent(): number;
+
+/** Gets the current map zone index.
+ * 
+ * @see https://wowpedia.fandom.com/wiki/API_GetCurrentMapZone
+ */
+declare function GetCurrentMapZone(): number;
+
 /**
  * Returns the WorldMapAreaID of the currently displayed area map, and whether quest objectives should be shown.
  * @returns posX,posY
@@ -11306,6 +11318,17 @@ declare function GetInventoryItemTexture(unit: WoWAPI.UnitId, slotId: number): W
  */
 declare function GetInventorySlotInfo(slotName: string): LuaMultiReturn<[number, WoWAPI.TexturePath]>;
 
+/** Gets the item link for an inventory slot.
+ * @see https://wowpedia.fandom.com/wiki/API_GetInventoryItemLink
+ */
+declare function GetInventoryItemLink(unit: UnitId, index: number): string;
+
+/** Returns gem information from an item link.
+ * @see https://wowpedia.fandom.com/wiki/API_GetItemGem
+ */
+declare function GetItemGem(link: string, index: number): string[];
+
+
 
 /// <reference path="auction.d.ts" />
 
@@ -11586,6 +11609,24 @@ declare function GetQuestItemLink(type: WoWAPI.QuestType, index: number): WoWAPI
  * @see https://wow.gamepedia.com/API_GetQuestLogWoWAPI.ItemLink
  */
 declare function GetQuestLogItemLink(type: WoWAPI.QuestType, index: number): WoWAPI.ItemLink;
+
+/** Returns the number of quest leaderboards.
+ * 
+ * @see https://wowpedia.fandom.com/wiki/API_GetNumQuestLeaderBoards
+ */
+declare function GetNumQuestLeaderBoards(): number;
+
+/** Gets the currently selected quest in the quest log.
+ * 
+ *  @see https://wowpedia.fandom.com/wiki/API_GetQuestLogSelection
+ */
+declare function GetQuestLogSelection(): number;
+
+/** Returns the item link of a quest in the quest log.
+ * 
+ * @see https://wowpedia.fandom.com/wiki/API_GetQuestLink
+ */
+declare function GetQuestLink(index: number): string;
 
 /**
  * Returns a single value: chat-ready item link
@@ -12076,7 +12117,7 @@ declare namespace WoWAPI {
         SetPoint(point: Point): void;
         SetPoint(point: Point, offsetX: number, offsetY: number): void;
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
-
+        SetPoint(point: Point, relativeTo: Region | string, offsetX: number, offsetY: number): void;
 
         /**
          * Append text to the end of the first line of the tooltip
@@ -12455,6 +12496,14 @@ declare namespace WoWAPI {
 }
 
 declare const GameTooltip: WoWAPI.GameTooltip;
+declare const ItemRefTooltip: WoWAPI.GameTooltip;
+declare const ItemRefShoppingTooltip1: WoWAPI.GameTooltip;
+declare const ItemRefShoppingTooltip2: WoWAPI.GameTooltip;
+declare const ShoppingTooltip1: WoWAPI.GameTooltip;
+declare const ShoppingTooltip2: WoWAPI.GameTooltip;
+
+declare const QuestInfoRequiredMoneyText: WoWAPI.fontString;
+declare const QuestInfoGroupSize: WoWAPI.fontString;
 
 
 /// <reference path="../global.d.ts" />
@@ -12832,6 +12881,7 @@ declare namespace WoWAPI {
         SetPoint(point: Point): void;
         SetPoint(point: Point, offsetX: number, offsetY: number): void;
         SetPoint(point: Point, relativeTo: Region | string, relativePoint: Point): void;
+        SetPoint(point: Point, relativeTo: Region | string, offsetX: number, offsetY: number): void;
 
         /**
          * Sets an object to be positioned and sized exactly the same as another object.
@@ -13825,14 +13875,14 @@ declare namespace WoWAPI {
         SetFormattedText(formatstring: string): void;
         SetHighlightAtlas(atlasName: string): void;
         SetHighlightFontObject(fontObject: FontObject): void;
-        SetHighlightTexture(texture: string): void;
+        SetHighlightTexture(texture: string | Texture): void;
         SetMotionScriptsWhileDisabled(shouldFire: bool): void;
         SetNormalAtlas(atlasName: string): void;
         SetNormalFontObject(fontObject: FontObject): void;
         SetNormalTexture(texture: string): void;
         SetPushedAtlas(atlasName: string): void;
         SetPushedTextOffset(x: number, y: number): void;
-        SetPushedTexture(texture: string): void;
+        SetPushedTexture(texture: string | Texture): void;
         SetText(textLabel:string): void;
         UnlockHighlight(): void;
     }
@@ -14050,12 +14100,19 @@ declare const WorldFrame: WoWAPI.Frame;
 declare const WorldMapFrame: WoWAPI.Frame;
 declare const ChatFrame1: WoWAPI.Frame;
 declare const UISpecialFrames: string[];
+declare const CharacterAttributesFrame: WoWAPI.Frame;
+declare const CharacterModelFrame: WoWAPI.Frame;
+declare const QuestLogDetailScrollChildFrame: WoWAPI.Frame;
+declare const QuestInfoDescriptionHeader: WoWAPI.Frame;
 
 declare function loadstring(code: string, name?: string): ()=>void;
 declare function assert(code: ()=>void):() => string;
 declare function type(thing: any): string;
 declare function tonumber(value: string|number, radix?:number): number;
 declare function format(pattern: string, ...any:any): string;
+declare function strfind(searched:String, regex:String):string[];
+declare function select(index:number,link:any):string;
+declare function StringContainsString(Name: string, Lookup: string): string
 
 interface String {
     format(...any:any): string;
@@ -23082,6 +23139,13 @@ interface String {
 declare function UIDropDownMenu_SetWidth(dropdown: WoWAPI.Frame, width: number): void;
 
 /**
+ * Hides a specific UI panel.
+ *
+ * @param frame The frame to hide
+ */
+declare function HideUIPanel(frame: WoWAPI.Frame): void;
+
+/**
  * set the text for the given dropdown frame
  *
  * @param dropdown the dropdown frame
@@ -23129,7 +23193,12 @@ declare function ToggleDropDownMenu(level: number, value: any, dropDownFrame: Wo
 declare type SoundChannel = "Master" | "SFX" | "Ambience" | "Music";
 
 declare function PlaySoundFile(path:string): void;
-declare function PlaySound(soundName: string, channel?: SoundChannel): void;
+/**
+ * Plays a sound by name or ID on the specified audio channel.
+ * @param sound Name of the sound (e.g. "igMainMenuOptionCheckBoxOn") or numeric sound ID.
+ * @param channel Optional sound channel (e.g. "SFX", "Music").
+ */
+declare function PlaySound(sound: string | number, channel?: SoundChannel): void;
 
 /**
  * comma separated list of enabled flags
@@ -23184,6 +23253,9 @@ declare function CreateFrame(frameType: "ColorSelect", frameName?: string, paren
  * @param relPoint Relative point on canvas to interpret coords (Default BOTTOMLEFT)
  */
 declare function DrawRouteLine(texture:WoWAPI.Texture, canvasFrame:WoWAPI.Frame, sx:number, sy:number, ex:number, ey:number, width:number, relPoint?:WoWAPI.Point);
+
+/** Draws a line on a canvas. */
+declare function DrawLine(texture: WoWAPI.Texture, canvasFrame: WoWAPI.Frame, startX: number, startY: number, endX: number, endY: number, lineWidth: number, lineFactor: number, relPoint: Point): void;
 
 /**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.
