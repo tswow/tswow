@@ -3806,6 +3806,28 @@ void TSPlayer::SendMail(uint8 senderType, uint64 from, std::string const& subjec
     CharacterDatabase.CommitTransaction(trans);
 }
 
+void TSPlayer::SendGMMailWithItems(std::string const& subject, std::string const& body, TSArray<TSItem> items, TSArray<TSItemEntry> itemEntries) {
+    MailSender sender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM);
+    MailDraft draft(subject,body);
+    CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+
+    for(int i=0;i<items.get_length();++i)
+    {
+        auto item = items.get(i);
+        item->item->SaveToDB(trans);
+        draft.AddItem(item.item);
+    }
+
+    for(int i=0;i<itemEntries.get_length();++i)
+    {
+        auto item = Item::CreateItem(itemEntries[i].GetEntry(),itemEntries[i].GetCount(),nullptr);
+        item->SaveToDB(trans);
+        draft.AddItem(item);
+    }
+    draft.SendMailTo(trans,MailReceiver(player,player->GetGUID().GetCounter()),sender);
+    CharacterDatabase.CommitTransaction(trans);
+}
+
 TSArray<TSMail> TSPlayer::GetMails()
 {
     TSArray<TSMail> arr;

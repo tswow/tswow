@@ -390,6 +390,20 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param items
      */
 	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, delay? : uint32, items? : TSArray<TSItem>, itemEntries? : TSArray<TSItemEntry>);
+    
+    /**
+     * Sends a GM mail with items to this player
+     * 
+     * This function creates mail from a GM/administrative sender and handles
+     * the special sender object creation required for GM mail with items.
+     * Similar to SendMail but for administrative purposes.
+     * 
+     * @param subject The subject line of the mail
+     * @param body The main body text of the mail message
+     * @param items Optional array of TSItem objects to attach to the mail
+     * @param itemEntries Optional array of TSItemEntry objects to create and attach as items
+     */
+    SendGMMailWithItems(subject: string, body: string, items?: TSArray<TSItem>, itemEntries?: TSArray<TSItemEntry>);
 
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
