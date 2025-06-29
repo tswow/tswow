@@ -403,7 +403,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param items Optional array of TSItem objects to attach to the mail
      * @param itemEntries Optional array of TSItemEntry objects to create and attach as items
      */
-    SendGMMailWithItems(subject: string, body: string, items?: TSArray<TSItem>, itemEntries?: TSArray<TSItemEntry>);
+    SendGMMail(subject: string, body: string, items?: TSArray<TSItem>, itemEntries?: TSArray<TSItemEntry>);
 
     /**
      * Returns 'true' if the [Player] can Titan Grip, 'false' otherwise.
