@@ -122,4 +122,7 @@ export enum SpellImplicitTarget {
     GAMEOBJECT_CONE             = 108,
     UNIT_NEARBY_ENEMY_WO_AURA   = 109,
     UNIT_CONE_ENTRY110          = 110,
+    UNIT_CASTER_AREA_SUMMONS    = 111,
+    DEST_PET                    = 112,
+    UNIT_TARGET_ALLY_OR_RAID    = 113,
 }
