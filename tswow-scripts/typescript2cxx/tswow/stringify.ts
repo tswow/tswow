@@ -3,6 +3,9 @@ import { CodeWriter } from "../codewriter";
 
 export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter) {
     const name = node.name.getText(node.getSourceFile());
+
+    console.log(`Stringify: ${name}\n`)
+
     writer.writeStringNewLine()
     writer.writeString('std::string stringify(int indention = 0) override ')
     writer.BeginBlock();

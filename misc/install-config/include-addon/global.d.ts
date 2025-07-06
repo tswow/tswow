@@ -4407,6 +4407,12 @@ declare function GetCursorInfo(): LuaMultiReturn<["item", number, WoWAPI.ItemLin
  */
 declare function GetCursorInfo(): LuaMultiReturn<["spell", number, string, number]>;
 
+declare function GetSpellTabInfo(Tab): LuaMultiReturn<[string, string, number, number]>;
+declare function GetCVarBool(Name): boolean;
+declare function GetSpellName(spell, booktype): LuaMultiReturn<[string, string]>;
+declare function GetNumSpellTabs(): number;
+declare function LuaStringMatch(string, matchText): string;
+
 /**
  * @returns **macro**
  * - **index**: The index of the macro on the cursor
@@ -4577,6 +4583,9 @@ declare function PickupPlayerMoney(copper: number): void;
  * @see https://wow.gamepedia.com/API_PickupSpell
  */
 declare function PickupSpell(spellId: number): void;
+declare function PickupSpell(spellIndex: number, bookType: WoWAPI.BookType): void;
+
+declare function ToggleSpellAutocast(spellIndex: number, bookType: WoWAPI.BookType): void;
 
 /**
  * Attaches a pet in your stable to your cursor. 1 for the pet in the slot on the left, and 2 for the pet in the slot on the right
@@ -12564,10 +12573,12 @@ declare namespace WoWAPI {
         type OnTextChanged = "OnTextChanged";
         type OnDragStart = "OnDragStart";
         type OnDragStop = "OnDragStop";
+        type OnReceiveDrag = "OnReceiveDrag";
         type OnKeyDown = "OnKeyDown";
         type OnKeyUp = "OnKeyUp";
         type OnDisable = "OnDisable";
         type OnEnable = "OnEnable";
+        type PreClick = "PreClick";
 
         type PlayerLogin = "PLAYER_LOGIN";
         type PlayerLogout = "PLAYER_LOGOUT";
@@ -12583,7 +12594,7 @@ declare namespace WoWAPI {
         type UnitEnteredVehicle = "UNIT_ENTERED_VEHICLE";
         type UnitExitedVehicle = "UNIT_EXITED_VEHICLE";
 
-        type OnAny = OnEvent | OnLoad | OnUpdate | OnClick | OnEnter |
+        type OnAny = OnEvent | OnLoad | OnUpdate | OnClick | OnEnter | PreClick | OnReceiveDrag |
             OnLeave | OnHide | OnShow | OnMouseDown | OnMouseUp | OnMouseWheel |
             OnValueChanged | OnTextChanged | OnDragStart | OnDragStop | OnKeyDown | OnKeyUp | OnDisable | OnEnable;
     }
