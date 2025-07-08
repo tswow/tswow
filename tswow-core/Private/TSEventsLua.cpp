@@ -438,6 +438,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnStatusChanged);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSpellFinish);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSendQuestGiverDetails);
+    LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnSendQuestGiverOfferReward);
     LUA_MAPPED_HANDLE(quest_events, QuestEvents, OnQuery);
 
     auto area_trigger_events = state.new_usertype<TSEvents::AreaTriggerEvents>("AreaTriggerEvents");
