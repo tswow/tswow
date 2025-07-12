@@ -29,11 +29,18 @@
 #include <algorithm>
 #include <unordered_map>
 
+std::unordered_map<opcode_t, bool> notInWorldCustomOpcodeMap;
+
 TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 {
 #if TRINITY
     return sObjectMgr->CreateItemTemplate(entry,copyItemID);
 #endif
+}
+
+void RegisterPacketForNotInWorld(opcode_t opcode, bool isActive)
+{
+     notInWorldCustomOpcodeMap[opcode] = isActive;
 }
 
 void SendWorldMessage(std::string const& string)

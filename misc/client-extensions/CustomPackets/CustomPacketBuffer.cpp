@@ -17,7 +17,27 @@ CustomPacketBuffer::~CustomPacketBuffer()
     m_cur.Destroy();
 }
 
-CustomPacketResult CustomPacketBuffer::ReceivePacket(chunkSize_t size, char* data)
+CustomPacketResult CustomPacketBuffer::callOnSuccess()
+{
+    return _onSuccess();
+}
+
+CustomPacketRead* CustomPacketBuffer::getCur()
+{
+    return &m_cur;
+}
+
+void CustomPacketBuffer::clearPacket()
+{
+    // destroy all but the last fragment, since it's not a copy
+    for (chunkCount_t i = 0; i < m_cur.m_chunks.size() - 1; ++i)
+    {
+        m_cur.m_chunks[i].Destroy();
+    }
+    m_cur.Clear();
+}
+
+CustomPacketResult CustomPacketBuffer::ReceivePacket(chunkSize_t size, char* data, bool skipSuccess)
 {
     // Check sizes
 
@@ -46,7 +66,10 @@ CustomPacketResult CustomPacketBuffer::ReceivePacket(chunkSize_t size, char* dat
         return _onError(CustomPacketResult::INVALID_FRAG_COUNT, data);
     case 1:
         AppendFragment(chnk, true);
-        return _onSuccess();
+        if (skipSuccess)
+             return CustomPacketResult::HANDLED_MESSAGE;
+        else
+            return _onSuccess();
     default:
         if (m_cur.ChunkCount() == 0)
         {
