@@ -8481,8 +8481,8 @@ declare namespace _hidden {
         OnCheckCast(callback: (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>, customError: TSMutable<SpellCustomErrors,SpellCustomErrors>)=>void): T;
         OnCheckCast(id: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult,SpellCastResult>, customError: TSMutable<SpellCustomErrors,SpellCustomErrors>)=>void): T;
 
-        OnSuccessfulDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
-        OnSuccessfulDispel(id: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void): T;
+        OnSuccessfulDispel(callback: (dispeller: TSPlayer, dispell: TSSpellInfo, target: TSUnit, aura: TSAura, dispelType: uint32)=>void): T;
+        OnSuccessfulDispel(id: EventID, callback: (dispeller: TSPlayer, dispell: TSSpellInfo, target: TSUnit, aura: TSAura, dispelType: uint32)=>void): T;
 
         OnCancel(callback: (spell: TSSpell, oldState: SpellState)=>void): T;
         OnCancel(id: EventID, callback: (spell: TSSpell, oldState: SpellState)=>void): T;
