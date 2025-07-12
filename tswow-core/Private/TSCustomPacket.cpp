@@ -107,7 +107,6 @@ opcode_t TSServerBuffer::GetOpcode()
     CustomPacketRead* value = getCur();
     TSPacketRead read(value);
     opcode_t opcode =  value->Opcode();
-    clearPacket();
     return opcode;
 }
 
