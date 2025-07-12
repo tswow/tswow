@@ -50,7 +50,6 @@ Logger& log(const char* type, const char* file, size_t line)
     << ":"
     << line
     << "] ";
-#endif
   return logger;
 }
 
