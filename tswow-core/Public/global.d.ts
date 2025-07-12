@@ -9215,6 +9215,13 @@ declare namespace _hidden {
             quest: TSQuest
         )=>void)
 
+        OnSendQuestGiverOfferReward(callback: (
+            quest: TSQuest
+        )=>void)
+        OnSendQuestGiverOfferReward(event: EventID, callback: (
+            quest: TSQuest
+        )=>void)
+
         OnQuery(callback: (
             quest: TSQuest
           , cancel: TSMutable<bool, bool>
