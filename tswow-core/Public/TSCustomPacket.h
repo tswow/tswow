@@ -103,6 +103,7 @@ public:
 	virtual void OnPacket(CustomPacketRead* value);
 	virtual void OnError(CustomPacketResult error) override final;
     opcode_t GetOpcode();
+    void ClearPacket();
 };
 
 TC_GAME_API TSPacketWrite CreateCustomPacket(

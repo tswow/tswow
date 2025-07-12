@@ -110,6 +110,11 @@ opcode_t TSServerBuffer::GetOpcode()
     return opcode;
 }
 
+void TSServerBuffer::ClearPacket()
+{
+    clearPacket();
+}
+
 void TSServerBuffer::OnPacket(CustomPacketRead* value)
 {
 	// Expanded FIRE_ID macro because we need to reset the packet

@@ -39,6 +39,7 @@ public:
     CustomPacketResult ReceivePacket(chunkSize_t size, char* data, bool skipSuccess = false);
     CustomPacketResult callOnSuccess();
     CustomPacketRead * getCur();
+    void clearPacket();
     totalSize_t Size();
 protected:
     virtual void OnPacket(CustomPacketRead * value) {}
