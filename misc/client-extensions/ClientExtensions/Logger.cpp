@@ -5,9 +5,11 @@
 
 #include <fstream>
 #include <ctime>
+#include <chrono>
 #include <iomanip>
 #include <windows.h>
 #include <filesystem>
+#include <sstream>
 
 namespace {
   Logger logger;
@@ -15,19 +17,20 @@ namespace {
 
 Logger::Logger()
 {
-#if LOG_LEVEL > 0
-  m_file.open("log",std::ios::out);
-#endif
+  m_file.open("log", std::ios::out);
 }
 
 static bool isFirst = true;
 Logger& log(const char* type, const char* file, size_t line)
 {
-#if LOG_LEVEL > 0
   auto t = std::time(nullptr);
   auto tm = *std::localtime(&t);
 
-  std::string filename = relProjectPath(file);
+#ifdef WIN32
+    localtime_s(&tm, &t);
+#else
+    localtime_r(&t, &tm);
+#endif
 
   if (isFirst)
   {
@@ -47,7 +50,6 @@ Logger& log(const char* type, const char* file, size_t line)
     << ":"
     << line
     << "] ";
-#endif
   return logger;
 }
 
