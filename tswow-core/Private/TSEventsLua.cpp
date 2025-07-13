@@ -136,6 +136,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpellDamage);
     LUA_HANDLE(player_events, PlayerEvents, OnRunesSpent);
     LUA_HANDLE(player_events, PlayerEvents, OnPowerChanged);
+    LUA_HANDLE(player_events, PlayerEvents, BeforeModifyPower);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateSpeedRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateLeechRating);
     LUA_HANDLE(player_events, PlayerEvents, OnUpdateAvoidanceRating);
