@@ -749,7 +749,7 @@ TSArray<TSCreature> TSWorldObject::GetCreaturesInRange(float range, uint32 entry
     std::list<Creature*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
     Trinity::CreatureListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_CREATURE, range, searcher);
     for (std::list<Creature*>::const_iterator it = list.begin(); it != list.end(); ++it)
     {
         arr.push(TSCreature(*it));
@@ -765,7 +765,7 @@ TSArray<TSUnit> TSWorldObject::GetUnitsInRange(float range, uint32 hostile, uint
     std::list<Unit*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, 0, hostile, dead);
     Trinity::UnitListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_PLAYER | MAPQT_CREATURE, range, searcher);
     for (std::list<Unit*>::const_iterator it = list.begin(); it != list.end(); ++it)
     {
         arr.push(TSUnit(*it));
@@ -781,7 +781,7 @@ TSArray<TSPlayer> TSWorldObject::GetPlayersInRange(float range, uint32 hostile, 
     std::list<Player*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
     Trinity::PlayerListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_PLAYER, range, searcher);
     for (std::list<Player*>::const_iterator it = list.begin(); it != list.end(); ++it)
     {
         arr.push(TSPlayer(*it));
@@ -797,7 +797,7 @@ TSArray<TSGameObject> TSWorldObject::GetGameObjectsInRange(float range, uint32 e
     std::list<GameObject*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
     Trinity::GameObjectListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_GAMEOBJECT, range, searcher);
     for (std::list<GameObject*>::const_iterator it = list.begin(); it != list.end(); ++it)
     {
         arr.push(TSGameObject(*it));
@@ -812,7 +812,7 @@ TSPlayer TSWorldObject::GetNearestPlayer(float range, uint32 hostile, uint32 dea
     Unit* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_PLAYER, range, searcher);
     return target ? TSPlayer(target->ToPlayer()) : TSPlayer(nullptr);
 #endif
 }
@@ -823,7 +823,7 @@ TSGameObject TSWorldObject::GetNearestGameObject(float range, uint32 entry, uint
     GameObject* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
     Trinity::GameObjectLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_GAMEOBJECT, range, searcher);
     return target ? TSGameObject(target->ToGameObject()) : TSGameObject(nullptr);
 #endif
 }
@@ -834,7 +834,7 @@ TSCreature TSWorldObject::GetNearestCreature(float range, uint32 entry, uint32 h
     Unit* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry, hostile);
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
-    Cell::VisitAllObjects(obj, searcher, range);
+    obj->QueryMap(MAPQT_PLAYER | MAPQT_CREATURE, range, searcher);
     return target ? TSCreature(target->ToCreature()) : TSCreature(nullptr);
 #endif
 }
