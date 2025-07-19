@@ -20,38 +20,6 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
     ClientLua::PushNil(L);
     return 1;
 }
-
-LUA_FUNCTION(GetSpellIconById, (lua_State* L)) {
-    if (ClientLua::IsNumber(L, 1)) {
-        uint32_t spellId = ClientLua::GetNumber(L, 1);
-        SpellRow row;
-
-        if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &row)) {
-            uint32_t icon = row.m_spellIconID;
-            if (icon) {
-                SpellIconRow iconRow;
-                if (ClientDB::GetLocalizedRow((void*) 0xAD488C, icon, &iconRow)) {
-                    LOG_INFO << icon;
-                    LOG_INFO << "Try Get Reg 1";
-                    LOG_INFO << iconRow.m_textureFilename;
-                    LOG_INFO << "Try Get Reg 2";
-                    ClientLua::PushString(L, iconRow.m_textureFilename);
-                    LOG_INFO << "Try Get Reg 3";
-                    return 1;
-                } else
-                    ClientLua::PushNil(L);
-            } else
-                ClientLua::PushNil(L);
-
-            LOG_INFO << "Try Get Reg 3";
-            return 1;
-        }
-    }
-
-    ClientLua::PushNil(L);
-    return 1;
-}
-
 LUA_FUNCTION(GetSpellNameById, (lua_State* L)) {
     if (ClientLua::IsNumber(L, 1)) {
         uint32_t spellId = ClientLua::GetNumber(L, 1);
@@ -76,7 +44,7 @@ LUA_FUNCTION(GetSpellIconById, (lua_State* L)) {
         if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &row)) {
             SpellIconRow* iconRow = reinterpret_cast<SpellIconRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD48A4), row.m_spellIconID));
             if (iconRow) {
-                ClientLua::PushString(L,row->m_textureFilename);
+                ClientLua::PushString(L,iconRow->m_textureFilename);
             }else{
                 ClientLua::PushNil(L);
             }
