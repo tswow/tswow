@@ -8398,6 +8398,7 @@ declare namespace _hidden {
 
         OnRunesSpent(callback: (Caster: TSPlayer, Runes: TSNumber<uint8>) => void);
         OnPowerChanged(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, CurPower: TSNumber<uint32>, MaxPower: TSNumber<uint32>) => void);
+        BeforeModifyPower(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void);
     
         OnUpdateSpeedRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)
         OnUpdateLeechRating(callback: (Player: TSPlayer, Value: TSNumber<float>) => void)

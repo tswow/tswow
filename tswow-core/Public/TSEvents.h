@@ -393,6 +393,7 @@ struct TSEvents
         EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)
         EVENT(OnRunesSpent, TSPlayer, TSNumber<uint8>)
         EVENT(OnPowerChanged, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint32>)
+        EVENT(BeforeModifyPower, TSPlayer, TSNumber<uint8>, TSMutableNumber<int32>)
 
         EVENT(OnUpdateSpeedRating, TSPlayer, TSNumber<float>)
         EVENT(OnUpdateLeechRating, TSPlayer, TSNumber<float>)
