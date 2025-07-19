@@ -38,6 +38,25 @@ LUA_FUNCTION(GetSpellNameById, (lua_State* L)) {
     return 2;
 }
 #pragma optimize("", off)
+LUA_FUNCTION(GetSpellIconById, (lua_State* L)) {
+    if (ClientLua::IsNumber(L, 1)) {
+        uint32_t spellId = ClientLua::GetNumber(L, 1);
+        SpellRow row;
+        if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &row)) {
+            SpellIconRow* iconRow = reinterpret_cast<SpellIconRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD48A4), row.m_spellIconID));
+            if (iconRow) {
+                ClientLua::PushString(L,row->m_textureFilename);
+            }else{
+                ClientLua::PushNil(L);
+            }
+            return 1;
+        }
+    }
+
+    ClientLua::PushNil(L);
+    return 1;
+}
+
 LUA_FUNCTION(UnitCustomCastingData, (lua_State* L)) {
     if (!ClientLua::IsString(L, 1))
         ClientLua::DisplayError(L, "Usage: UnitCustomCastingData(\"unit\")", "");
