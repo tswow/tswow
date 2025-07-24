@@ -10196,6 +10196,7 @@ declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 declare function NameReservationActive(): boolean
+declare function IsPvPRealm(): boolean
 declare function GetLuaGarbageCur(): TSNumber<uint64>
 declare function GetLuaGarbageTotal(): TSNumber<uint64>
 

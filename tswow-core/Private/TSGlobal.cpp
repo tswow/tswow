@@ -77,6 +77,11 @@ bool TC_GAME_API NameReservationActive()
     return sWorld->getBoolConfig(CONFIG_NAME_RESERVATION);
 }
 
+bool TC_GAME_API IsPvPRealm()
+{
+    return sWorld->IsPvPRealm();
+}
+
 TSArray<TSNumber<uint16> > TC_GAME_API GetActiveGameEvents()
 {
     TSArray<TSNumber<uint16> > arr;
