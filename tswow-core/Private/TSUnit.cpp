@@ -2741,6 +2741,22 @@ TSArray<TSUnit> TSUnit::SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, 
     return out;
 }
 
+TSArray<TSUnit> TSUnit::SelectTargetsNearTarget(TSUnit target, TSArray<TSUnit> exclude, float dist, uint32 amount) {
+    std::list<Unit*> ExcludedUnits = {};
+    for (auto tsUnit : exclude) {
+        ExcludedUnits.push_back(tsUnit.unit);
+    }
+
+    auto units = unit->SelectTargetsNearTarget(target.unit, ExcludedUnits, dist, amount);
+    TSArray<TSUnit> out;
+    out.reserve(units.size());
+    for (Unit* u : units) {
+        out.push(TSUnit(u));
+    }
+
+    return out;
+}
+
 bool TSUnit::HasUnitMovementFlag(uint32 flag)
 {
     return unit->HasUnitMovementFlag(flag);

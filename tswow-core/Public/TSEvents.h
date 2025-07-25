@@ -392,6 +392,8 @@ struct TSEvents
         EVENT(OnUpdateSpellHealing, TSPlayer, TSMutableNumber<int32>)
         EVENT(OnUpdateSpellDamage, TSPlayer, TSMutableNumber<int32>, TSNumber<uint8>)
         EVENT(OnRunesSpent, TSPlayer, TSNumber<uint8>)
+        EVENT(OnRunicGainedFromSpell, TSSpell, TSPlayer, TSUnit, TSMutableNumber<int32>)
+
         EVENT(OnPowerChanged, TSPlayer, TSNumber<uint8>, TSNumber<uint32>, TSNumber<uint32>)
         EVENT(BeforeModifyPower, TSPlayer, TSNumber<uint8>, TSMutableNumber<int32>)
 
@@ -429,6 +431,10 @@ struct TSEvents
         
         EVENT(CheckValidRace, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
         EVENT(CheckValidClass, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
+
+
+        EVENT(OnLossOfControl, TSPlayer)
+        EVENT(OnControlRegained, TSPlayer)
     } Player;
 
     struct AccountEvents
@@ -544,7 +550,6 @@ struct TSEvents
 
         EVENT(OnDamageDealt, TSUnit, TSUnit, TSNumber<uint32>)
         EVENT(OnDamageTaken, TSUnit, TSUnit, TSNumber<uint32>)
-        EVENT(OnLossOfControl, TSUnit, TSNumber<uint32>)
         EVENT(OnRageGainedViaAttack, TSUnit, TSUnit, TSNumber<uint8>, TSMutableNumber<uint32> rage_damage)
         EVENT(OnCustomDamageTaken, TSUnit, TSUnit, TSMutableNumber<uint32>)
         EVENT(OnUpdateDisplayPower, TSUnit, TSMutableNumber<int8>)
@@ -636,7 +641,7 @@ struct TSEvents
         ID_EVENT(OnSpellCastFinished, TSSpell, TSUnit, TSNumber<uint32>)
         ID_EVENT(CanMoveWhileChanneling, TSSpell, TSUnit, TSMutable<bool, bool>)
         ID_EVENT(OnCheckGCDCategory, TSSpell, TSMutableNumber<uint32>)
-        ID_EVENT(OnEnergize, TSUnit, TSSpellInfo, TSNumber<uint8>, TSMutableNumber<int32>)
+        ID_EVENT(OnEnergizeBySpell, TSUnit, TSSpellInfo, TSNumber<uint8>, TSMutableNumber<int32>)
         ID_EVENT(OnCooldownFinished, TSUnit, TSSpellInfo, TSNumber<uint32>, TSNumber<uint32>)
     } Spell;
 

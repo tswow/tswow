@@ -162,6 +162,9 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, CheckLoadoutString);
     LUA_HANDLE(player_events, PlayerEvents, CheckValidRace);
     LUA_HANDLE(player_events, PlayerEvents, CheckValidClass);
+    LUA_HANDLE(player_events, PlayerEvents, OnRunicGainedFromSpell);
+    LUA_HANDLE(player_events, PlayerEvents, OnLossOfControl);
+    LUA_HANDLE(player_events, PlayerEvents, OnControlRegained);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);
@@ -213,7 +216,6 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(unit_events, UnitEvents, OnSetTarget);
     LUA_HANDLE(unit_events, UnitEvents, OnDamageDealt);
     LUA_HANDLE(unit_events, UnitEvents, OnDamageTaken);
-    LUA_HANDLE(unit_events, UnitEvents, OnLossOfControl);
     LUA_HANDLE(unit_events, UnitEvents, OnRageGainedViaAttack);
     LUA_HANDLE(unit_events, UnitEvents, OnCustomDamageTaken);
     LUA_HANDLE(unit_events, UnitEvents, OnUpdateDisplayPower);
@@ -286,7 +288,7 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnSpellCastFinished);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, CanMoveWhileChanneling);
     LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnCheckGCDCategory);
-    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEnergize);
+    LUA_MAPPED_HANDLE(spell_events, SpellEvents, OnEnergizeBySpell);
 
     LUA_HANDLE(spell_events, SpellEvents, OnLearn);
     LUA_HANDLE(spell_events, SpellEvents, OnUnlearn);

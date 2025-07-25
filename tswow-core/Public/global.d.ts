@@ -6502,6 +6502,7 @@ declare interface TSUnit extends TSWorldObject {
     SelectNearbyTargets(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
     SelectNearbyTargetWithoutAura(exclude: TSUnit, dist: float, Aura: uint32) : TSUnit
     SelectNearbyAllies(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
+    SelectTargetsNearTarget(target: TSUnit, exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
 
     RemoveAllControlled(): void;
 
@@ -8397,6 +8398,8 @@ declare namespace _hidden {
         OnUpdateSpellDamage(callback: (player: TSPlayer, SpellPower: TSMutableNumber<int32>, School: TSNumber<uint8>) => void)
 
         OnRunesSpent(callback: (Caster: TSPlayer, Runes: TSNumber<uint8>) => void);
+        OnRunicGainedFromSpell(callback: (Spell: TSSPell, Caster: TSPlayer, Target: TSUnit, Amount: TSMutableNumber<int32>) => void);
+
         OnPowerChanged(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, CurPower: TSNumber<uint32>, MaxPower: TSNumber<uint32>) => void);
         BeforeModifyPower(callback: (Caster: TSPlayer, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void);
     
@@ -8434,6 +8437,9 @@ declare namespace _hidden {
     
         CheckValidRace(callback: (acct : TSNumber<uint32>, r: TSNumber<uint32>, y: TSMutable<boolean, boolean>)=>void);
         CheckValidClass(callback: (acct : TSNumber<uint32>, c: TSNumber<uint32>, y: TSMutable<boolean, boolean>)=>void);
+    
+        OnLossOfControl(callback: (who: TSPLayer) => void)
+        OnControlRegained(callback: (who: TSPLayer) => void)
     }
 
     export class Account<T> {
@@ -8771,8 +8777,8 @@ declare namespace _hidden {
         OnCheckGCDCategory(callback: (info: TSSpell, category: TSMutableNumber<uint32>)=>void): T;
         OnCheckGCDCategory(id: EventID, callback: (info: TSSpell, category: TSMutableNumber<uint32>) => void): T;
 
-        OnEnergize(callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
-        OnEnergize(id: EventID, callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
+        OnEnergizeBySpell(callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
+        OnEnergizeBySpell(id: EventID, callback: (Who: TSUnit, SpellInfo: TSSpellInfo, PowerType: TSNumber<uint8>, Amount: TSMutableNumber<int32>) => void) : T;
     
         OnCooldownFinished(callback: (who: TSUnit, spell: TSSpellInfo, categoryID: TSNumber<uint32>, itemID: TSNumber<uint32>) => void) : T;
         OnCooldownFinished(id: EventID, callback: (who: TSUnit, spell: TSSpellInfo, categoryID: TSNumber<uint32>, itemID: TSNumber<uint32>) => void) : T;
@@ -9378,7 +9384,6 @@ declare namespace _hidden {
 
         OnDamageDealt(callback: (from: TSUnit, To: TSUnit, damage) => void)
         OnDamageTaken(callback: (who: TSUnit, from: TSUnit, damage: int32) => void)
-        OnLossOfControl(callback: (who: TSUnit, state: uint32) => void)
 
         OnRageGainedViaAttack(callback: (To: TSUnit, Victim: TSUnit, aType: TSNumber<uint8>, RageDamage: TSMutableNumber<uint32>) => void)
 

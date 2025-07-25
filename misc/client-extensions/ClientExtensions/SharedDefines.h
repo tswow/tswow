@@ -64,6 +64,7 @@ enum SpellCastResult : uint32_t {
 enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_GENERIC     = 0,
     SPELLFAMILY_UNK1        = 1,
+    SPELLFAMILY_CRAFTING    = 2,
     SPELLFAMILY_MAGE        = 3,
     SPELLFAMILY_WARRIOR     = 4,
     SPELLFAMILY_WARLOCK     = 5,
@@ -77,7 +78,6 @@ enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_POTION      = 13,
     SPELLFAMILY_DEATHKNIGHT = 15,
     SPELLFAMILY_PET         = 17,
-    SPELLFAMILY_CRAFTING    = 18,
 };
 
 enum SpellEffect : uint32_t {
