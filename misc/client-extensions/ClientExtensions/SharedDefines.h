@@ -76,7 +76,8 @@ enum SpellFamilyNames : uint32_t {
     SPELLFAMILY_UNK2        = 12,
     SPELLFAMILY_POTION      = 13,
     SPELLFAMILY_DEATHKNIGHT = 15,
-    SPELLFAMILY_PET         = 17
+    SPELLFAMILY_PET         = 17,
+    SPELLFAMILY_CRAFTING    = 18,
 };
 
 enum SpellEffect : uint32_t {

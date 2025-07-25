@@ -30,8 +30,6 @@ export function resolveProfession(type: DefaultProfession|number) {
         case 'SKINNING': return 393
         case 'HERBALISM': return 182
         case 'MINING': return 186
-        case 'FISHING': return 356
-        case 'SKINNING': return 393
         case 'JEWELCRAFTING': return 755
         case 'COOKING': return 185
         case 'ALCHEMY': return 171

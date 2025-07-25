@@ -8431,6 +8431,9 @@ declare namespace _hidden {
 
         OnTempEnchant(callback: (Player: TSPlayer, EnchantId: TSNumber<uint32>) => void)
         CheckLoadoutString(callback: (Player: TSPlayer, loadout: string, Valid: TSMutable<boolean,boolean>) => void)
+    
+        CheckValidRace(callback: (acct : TSNumber<uint32>, r: TSNumber<uint32>, y: TSMutable<boolean, boolean>)=>void);
+        CheckValidClass(callback: (acct : TSNumber<uint32>, c: TSNumber<uint32>, y: TSMutable<boolean, boolean>)=>void);
     }
 
     export class Account<T> {

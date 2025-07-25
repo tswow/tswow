@@ -48,3 +48,28 @@ export class SpellItemEquips<T> extends CellSystem<T> {
         return this.owner;
     }
 }
+
+export const enum ItemSubclassWeapon
+{
+    AXE            = 0x1,
+    AXE2           = 0x2,
+    BOW            = 0x4,
+    GUN            = 0x8,
+    MACE           = 0x10,
+    MACE2          = 0x20,
+    POLEARM        = 0x40,
+    SWORD          = 0x80,
+    SWORD2         = 0x100,
+    WARGLAIVE      = 0x200,
+    STAFF          = 0x400,
+    EXOTIC         = 0x800,
+    EXOTIC2        = 0x1000,
+    FIST           = 0x2000,
+    MISC           = 0x4000,
+    DAGGER         = 0x8000,
+    THROWN         = 0x10000,
+    SPEAR          = 0x20000,
+    CROSSBOW       = 0x40000,
+    WAND           = 0x80000,
+    FISHING_POLE   = 0x100000,
+};

@@ -20,7 +20,6 @@ LUA_FUNCTION(GetSpellDescription, (lua_State* L)) {
     ClientLua::PushNil(L);
     return 1;
 }
-
 LUA_FUNCTION(GetSpellNameById, (lua_State* L)) {
     if (ClientLua::IsNumber(L, 1)) {
         uint32_t spellId = ClientLua::GetNumber(L, 1);
@@ -45,7 +44,7 @@ LUA_FUNCTION(GetSpellIconById, (lua_State* L)) {
         if (ClientDB::GetLocalizedRow((void*)0xAD49D0, spellId, &row)) {
             SpellIconRow* iconRow = reinterpret_cast<SpellIconRow*>(ClientDB::GetRow(reinterpret_cast<void*>(0xAD48A4), row.m_spellIconID));
             if (iconRow) {
-                ClientLua::PushString(L,row->m_textureFilename);
+                ClientLua::PushString(L,iconRow->m_textureFilename);
             }else{
                 ClientLua::PushNil(L);
             }
