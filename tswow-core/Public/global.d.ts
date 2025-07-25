@@ -7735,6 +7735,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
 
 declare interface TSSpellInfo extends TSEntityProvider {
 	IsNull() : bool
+    GetName(locale: uint32) : string
     GetEntry() : TSNumber<uint32>
 	GetSchool() : TSNumber<uint32>
 	GetBaseLevel() : TSNumber<uint32>

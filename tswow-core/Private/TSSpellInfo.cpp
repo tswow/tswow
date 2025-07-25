@@ -30,7 +30,13 @@ TSSpellInfo::TSSpellInfo()
     , info(nullptr)
 {}
 
-TSNumber<uint32> TSSpellInfo::GetEntry()  {
+std::string TSSpellInfo::GetName(uint32 locale)
+{
+    return info->SpellName[locale];
+}
+
+TSNumber<uint32> TSSpellInfo::GetEntry()
+{
     return info->Id;
 }
 
