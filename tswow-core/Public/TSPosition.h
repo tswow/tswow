@@ -10,6 +10,7 @@ public:
     TSNumber<float> z;
     TSNumber<float> o;
     TSPosition* operator->() { return this;}
+	std::string stringify(int indention = 0) { return "TSPosition"; };
     TSPosition(uint32 map,float x, float y, float z, float o);
 };
 
