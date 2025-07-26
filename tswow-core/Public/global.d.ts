@@ -8440,6 +8440,8 @@ declare namespace _hidden {
     
         OnLossOfControl(callback: (who: TSPLayer) => void)
         OnControlRegained(callback: (who: TSPLayer) => void)
+
+        IsCriticalBlock(callback: (Player: TSPlayer, IsCritical: TSMutable<boolean,boolean>, IsSpell: boolean) => void)
     }
 
     export class Account<T> {

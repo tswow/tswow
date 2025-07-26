@@ -47,6 +47,12 @@ export class spell_bonus_dataRow extends SqlRow<spell_bonus_dataCreator,spell_bo
      */
     get ap() {return new SQLCell<float, this>(this, 'ap')}
 
+
+    /**
+     * No comment (yet!)
+     */
+    get bv() {return new SQLCell<float, this>(this, 'bv')}
+
     /**
      * No comment (yet!)
      */
@@ -70,6 +76,7 @@ export type spell_bonus_dataCreator = {
     effect?: int,
     sp? : float,
     ap? : float,
+    bv? : float,
     comments? : varchar,
 }
 
@@ -81,6 +88,7 @@ export type spell_bonus_dataQuery = {
     effect?: int,
     sp? : float,
     ap? : float,
+    bv? : float,
     comments? : varchar,
 }
 

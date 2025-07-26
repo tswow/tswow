@@ -432,9 +432,10 @@ struct TSEvents
         EVENT(CheckValidRace, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
         EVENT(CheckValidClass, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
 
-
         EVENT(OnLossOfControl, TSPlayer)
         EVENT(OnControlRegained, TSPlayer)
+
+        EVENT(IsCriticalBlock, TSPlayer, TSMutable<bool,bool>, bool)
     } Player;
 
     struct AccountEvents

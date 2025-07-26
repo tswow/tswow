@@ -165,6 +165,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnRunicGainedFromSpell);
     LUA_HANDLE(player_events, PlayerEvents, OnLossOfControl);
     LUA_HANDLE(player_events, PlayerEvents, OnControlRegained);
+    LUA_HANDLE(player_events, PlayerEvents, IsCriticalBlock);
 
     auto account_events = state.new_usertype<TSEvents::AccountEvents>("AccountEvents");
     LUA_HANDLE(account_events, AccountEvents, OnAccountLogin);

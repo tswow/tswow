@@ -9,6 +9,7 @@ export class SpellBonusData extends MaybeSQLEntity<SpellEffect,spell_bonus_dataR
             .effect.set(this.owner.index)
             .ap.set(0)
             .sp.set(0)
+            .bv.set(0)
             .comments.set(`${this.owner.row.Name.enGB.get()}`)
     }
     protected findSQL(): spell_bonus_dataRow {
@@ -20,4 +21,5 @@ export class SpellBonusData extends MaybeSQLEntity<SpellEffect,spell_bonus_dataR
 
     get SPBonus() { return this.wrapSQL(0, sql=>sql.sp); }
     get APBonus() { return this.wrapSQL(0, sql=>sql.ap); }
+    get BVBonus() { return this.wrapSQL(0, sql=>sql.bv); }
 }
