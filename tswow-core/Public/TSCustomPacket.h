@@ -7,6 +7,8 @@
 #include "CustomPacketWrite.h"
 #include "CustomPacketBuffer.h"
 
+#include <memory>
+
 class TSWorldObject;
 class TSPlayer;
 class TSMap;
@@ -14,9 +16,9 @@ class TSBattleground;
 
 class TC_GAME_API TSPacketWrite
 {
-	CustomPacketWrite* write;
+	std::shared_ptr<CustomPacketWrite> write;
 public:
-	TSPacketWrite(CustomPacketWrite* write);
+	TSPacketWrite(std::shared_ptr<CustomPacketWrite>&& write);
 	TSPacketWrite* operator->() { return this; };
 	operator bool() const { return write != nullptr; }
 	bool operator==(TSPacketWrite const& rhs) { return write == rhs.write; }

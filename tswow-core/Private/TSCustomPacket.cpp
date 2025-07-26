@@ -9,9 +9,9 @@
 #include "Map.h"
 #include "TSBattleground.h"
 
-TSPacketWrite::TSPacketWrite(CustomPacketWrite* write)
-	: write(write)
-{}
+TSPacketWrite::TSPacketWrite(std::shared_ptr<CustomPacketWrite>&& write)
+	: write(std::move(write))
+ {}
 
 TSPacketRead::TSPacketRead(CustomPacketRead* read)
 	: read(read)
@@ -126,11 +126,5 @@ TSPacketWrite CreateCustomPacket(
 	, totalSize_t size
 )
 {
-	// can we avoid heap allocation here?
-	CustomPacketWrite* write = new CustomPacketWrite(
-			opcode
-		, MAX_FRAGMENT_SIZE
-		, size
-	);
-	return TSPacketWrite(write);
+	return TSPacketWrite(std::make_shared<CustomPacketWrite>(opcode, MAX_FRAGMENT_SIZE, size));
 }
