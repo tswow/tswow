@@ -554,8 +554,8 @@ export class AuraType extends EnumCellTransform<SpellEffect> {
     get ALLOW_ONLY_ABILITY()                  { return this.value(263, x=>new AllowOnlyAbility(x)) }
     /** Enum Value:                                               264 */
     get SPELL_AURA264()                       { return this.value(264, x=>x) }
-    /** Enum Value:                                               265 */
-    get SPELL_AURA265()                       { return this.value(265, x=>x) }
+    /** Enum Value:                                               265 A = Stat, B = Res */
+    get MOD_STAT_FROM_RESISTANCE_PERCENT()    { return this.value(265, x=>x) }
     /** Enum Value:                                               266 */
     get SPELL_AURA266()                       { return this.value(266, x=>x) }
     /** Enum Value:                                               267 */
