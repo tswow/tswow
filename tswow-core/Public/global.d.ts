@@ -8382,11 +8382,11 @@ declare namespace _hidden {
         
         ScriptedArmorPenMod(callback: (player: TSPlayer, against: TSUnit, arpPct: TSMutableNumber<float>) => void);
         
-        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
-        OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, TakenTotalMod: TSMutableNumber<float>, IsPet: bool) => void);
+        OnCustomScriptedDamageDoneMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, AttackType: uint8, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
+        OnCustomScriptedDamageTakenMod(callback: (player: TSPlayer, against: TSUnit, spellInfo: TSSpellInfo, damageType: TSNumber<uint8>, AttackType: uint8, TakenTotalMod: TSMutableNumber<float>, IsPet: bool) => void);
         OnCustomScriptedCritMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritChance: TSMutableNumber<float>) => void);
         OnCustomScriptedHealMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, DoneTotalMod: TSMutableNumber<float>) => void);
-        OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, IsPet: bool) => void);
+        OnCustomScriptedAutoattackMod(callback: (player: TSPlayer, against: TSUnit, DoneTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>, AttackType: uint8, IsPet: bool) => void);
         OnCustomScriptedAutoattackDamageTakenMod(callback: (player: TSPlayer, Attacker: TSUnit, TakenTotalMod: TSMutableNumber<float>, Damage: TSMutableNumber<uint32>) => void);
         OnCustomScriptedCritDamageMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);
         OnCustomScriptedCritHealingMod(callback: (Caster: TSPlayer, Against: TSUnit, SpellInfo: TSSpellInfo, CritDamageMod: TSMutableNumber<float>) => void);

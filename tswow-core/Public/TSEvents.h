@@ -375,8 +375,8 @@ struct TSEvents
          )
 
         EVENT(OnSuccessfulInterrupt, TSPlayer player, TSUnit who, TSSpell spell)
-        EVENT(OnCustomScriptedDamageDoneMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, bool IsPet)
-        EVENT(OnCustomScriptedDamageTakenMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSMutableNumber<float> TakenTotalMod, TSNumber<uint8> SpellType)
+        EVENT(OnCustomScriptedDamageDoneMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSNumber<uint8> AttackType, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, bool IsPet)
+        EVENT(OnCustomScriptedDamageTakenMod, TSPlayer player, TSUnit against, TSSpellInfo spellInfo, TSNumber<uint8> DamageType, TSNumber<uint8> AttackType, TSMutableNumber<float> TakenTotalMod, TSNumber<uint8> SpellType)
         EVENT(OnCustomScriptedCritMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritChance)
         EVENT(OnCustomScriptedHealMod, TSPlayer caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> DoneTotalMod)
         EVENT(OnPowerSpent, TSPlayer Caster, TSNumber<uint8> PowerType, TSNumber<int32> PowerCost)
@@ -384,7 +384,7 @@ struct TSEvents
         EVENT(OnCustomScriptedCritDamageMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritDamMod)
         EVENT(OnCustomScriptedCritHealingMod, TSPlayer Caster, TSUnit Against, TSSpellInfo SpellInfo, TSMutableNumber<float> CritDamMod)
         
-        EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, bool IsPet)
+        EVENT(OnCustomScriptedAutoattackMod, TSPlayer player, TSUnit against, TSMutableNumber<float> DoneTotalMod, TSMutableNumber<uint32> Damage, TSNumber<uint8> attackType, bool IsPet)
         EVENT(OnCustomScriptedAutoattackDamageTakenMod, TSPlayer player, TSUnit attacker, TSMutableNumber<float> TakenTotalMod, TSMutableNumber<uint32> Damage)
 
         EVENT(ScriptedArmorPenMod, TSPlayer player, TSUnit against, TSMutableNumber<float> arpPct)
