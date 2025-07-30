@@ -19,7 +19,12 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
     "GetObject": (emt,node)=>{
         let type = emt.typeChecker.typeToString(
             emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
-        emt.processExpression(node.expression);
+
+        const propAccess = node.expression as ts.PropertyAccessExpression;
+        emt.processExpression(propAccess.expression);
+        // Direct fix: always add '->template' for these specific functions
+        emt.writer.writeString(`->template ${propAccess.name.getText()}`);
+
         emt.writer.writeString(`<${type}>(`);
         // key
         emt.processExpression(node.arguments[0]);
@@ -62,7 +67,12 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
     "SetObject": (emt,node)=>{
         let type = emt.typeChecker.typeToString(
             emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
-        emt.processExpression(node.expression);
+
+        const propAccess = node.expression as ts.PropertyAccessExpression;
+        emt.processExpression(propAccess.expression);
+        // Direct fix: always add '->template' for these specific functions
+        emt.writer.writeString(`->template ${propAccess.name.getText()}`);
+
         emt.writer.writeString(`<${type}>(`);
         // field
         emt.processExpression(node.arguments[0]);
@@ -71,10 +81,6 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         emt.processExpression(node.arguments[1]);
         emt.writer.writeString(`)`);
     },
-
-    //"AddTimer": simpleModid,
-    //"AddNamedTimer": simpleModid,
-    //"AddCollision": simpleModid,
 
     "CreateTSMutable": (emt,node)=>{
         emt.writer.writeString(`TSMutable<${node.typeArguments[0].getText()}>(&`)

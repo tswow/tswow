@@ -49,17 +49,20 @@ const scripts_tsconfig_json =
 
 const temp_config = (dataset: Dataset) => ({
     'compilerOptions': {
-    'target': 'es5',
-    'module': 'commonjs',
-    'outDir': `./livescripts/build/${dataset.fullName}/cpp`,
-    'rootDir': './livescripts',
-    'strict': true,
-    'esModuleInterop': true,
-    'skipLibCheck': true,
-    'forceConsistentCasingInFileNames': true
-},
+        'target': 'es5',
+        'module': 'commonjs',
+        'outDir': `./livescripts/build/${dataset.fullName}/cpp`,
+        'rootDir': './livescripts',
+        'strict': true,
+        'esModuleInterop': true,
+        'skipLibCheck': true,
+        'forceConsistentCasingInFileNames': true
+    },
     'include': ['./shared','./livescripts'],
-    'exclude': ['./livescripts/build/lib']
+    'exclude': [
+        './livescripts/build/*/cpp/**',
+        './livescripts/build/*/lib/**'
+    ]
 });
 
 export class LiveScriptsConfig extends ConfigFile {

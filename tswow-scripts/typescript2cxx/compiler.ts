@@ -242,6 +242,8 @@ export class Run {
         }
 
         sourceFiles.filter(s => !s.fileName.endsWith('.d.ts') && sources.some(sf => s.fileName.endsWith(sf))).forEach(s => {
+            console.log(ForegroundColorEscapeSequences.Yellow + `[DEBUG] Processing file: ${s.fileName}` + resetEscapeSequence);
+            
             // track version
             const paths = sources.filter(sf => s.fileName.endsWith(sf));
             (<any>s).__path = paths[0];

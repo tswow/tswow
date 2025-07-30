@@ -1,0 +1,2 @@
+BuildDirectory = "../build"
+InstallDirectory = "../release"

@@ -202,7 +202,7 @@ export class Emitter {
                 break;
             default:
                 // TODO: finish it
-                throw new Error('Method not implemented.');
+            this.error(`processNode not implemented for node kind: ${ts.SyntaxKind[node.kind]}`, node);
         }
     }
 
@@ -623,7 +623,7 @@ export class Emitter {
         }
 
         // TODO: finish it
-        throw new Error('Method not implemented.');
+        this.error(`processStatementInternal not implemented for node kind: ${ts.SyntaxKind[node.kind]}`, node);
     }
 
     processExpression(nodeIn: ts.Expression): void {
@@ -680,8 +680,7 @@ export class Emitter {
             case ts.SyntaxKind.ComputedPropertyName: this.processComputedPropertyName(<ts.ComputedPropertyName><any>node); return;
         }
 
-        // TODO: finish it
-        throw new Error('Method not implemented.');
+        this.error(`processExpression not implemented for node kind: ${ts.SyntaxKind[node.kind]}`, node);
     }
 
     processDeclaration(node: ts.Declaration): void {
@@ -701,7 +700,7 @@ export class Emitter {
         }
 
         // TODO: finish it
-        throw new Error('Method not implemented.');
+        this.error(`processDeclaration not implemented for node kind: ${ts.SyntaxKind[node.kind]}`, node);
     }
 
     processInclude(nodeIn: ts.Declaration | ts.Statement): void {
@@ -4040,6 +4039,17 @@ export class Emitter {
             } else {
                 this.writer.writeString('->');
             }
+
+            // =================================================================
+            // ADDED LOGIC: Insert 'template' keyword for dependent template names
+            const parentCallExpression = node.parent;
+            if (parentCallExpression.kind === ts.SyntaxKind.CallExpression && (<ts.CallExpression>parentCallExpression).typeArguments) {
+                const baseType = this.resolver.getOrResolveTypeOf(node.expression);
+                if (this.resolver.isTypeFromSymbol(baseType, ts.SyntaxKind.TypeParameter)) {
+                    this.writer.writeString('template ');
+                }
+            }
+            // =================================================================
 
             if (getAccess) {
                 if ((<any>node).__set === true) {
