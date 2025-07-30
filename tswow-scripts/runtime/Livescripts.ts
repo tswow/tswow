@@ -59,7 +59,10 @@ const temp_config = (dataset: Dataset) => ({
     'forceConsistentCasingInFileNames': true
 },
     'include': ['./shared','./livescripts'],
-    'exclude': ['./livescripts/build/lib']
+    'exclude': [
+        './livescripts/build/*/cpp/**',
+        './livescripts/build/*/lib/**'
+    ]
 });
 
 export class LiveScriptsConfig extends ConfigFile {

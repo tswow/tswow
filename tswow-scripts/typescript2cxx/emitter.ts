@@ -4041,6 +4041,15 @@ export class Emitter {
                 this.writer.writeString('->');
             }
 
+            // ADDED LOGIC: Insert 'template' keyword for dependent template names
+            const parentCallExpression = node.parent;
+            if (parentCallExpression.kind === ts.SyntaxKind.CallExpression && (<ts.CallExpression>parentCallExpression).typeArguments) {
+                const baseType = this.resolver.getOrResolveTypeOf(node.expression);
+                if (this.resolver.isTypeFromSymbol(baseType, ts.SyntaxKind.TypeParameter)) {
+                    this.writer.writeString('template ');
+                }
+            }
+
             if (getAccess) {
                 if ((<any>node).__set === true) {
                     this.writer.writeString('set_');
