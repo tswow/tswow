@@ -160,8 +160,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, LoadPresetAmmo);
     LUA_HANDLE(player_events, PlayerEvents, OnTempEnchant);
     LUA_HANDLE(player_events, PlayerEvents, CheckLoadoutString);
-    LUA_HANDLE(player_events, PlayerEvents, CheckValidRace);
-    LUA_HANDLE(player_events, PlayerEvents, CheckValidClass);
+    LUA_HANDLE(player_events, PlayerEvents, CheckValidRaceClass);
     LUA_HANDLE(player_events, PlayerEvents, OnRunicGainedFromSpell);
     LUA_HANDLE(player_events, PlayerEvents, OnLossOfControl);
     LUA_HANDLE(player_events, PlayerEvents, OnControlRegained);

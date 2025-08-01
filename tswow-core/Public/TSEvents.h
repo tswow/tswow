@@ -429,8 +429,7 @@ struct TSEvents
         EVENT(OnTempEnchant, TSPlayer, TSNumber<uint32>)
         EVENT(CheckLoadoutString, TSPlayer, std::string, TSMutable<bool, bool>)
         
-        EVENT(CheckValidRace, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
-        EVENT(CheckValidClass, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
+        EVENT(CheckValidRaceClass, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool, bool>)
 
         EVENT(OnLossOfControl, TSPlayer)
         EVENT(OnControlRegained, TSPlayer)
