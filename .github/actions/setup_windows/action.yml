@@ -10,9 +10,9 @@ runs:
         Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\LLVM";
         Clear-Recyclebin -Force;
     - name: Select node version
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18.12.1
+        node-version: 22
     - name: Setup Build Directory
       uses: DamianReeves/write-file-action@v1.0
       with:

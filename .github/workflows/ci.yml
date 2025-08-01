@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 jobs:
   ubuntu-clang-trinitycore:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
       - uses: ./.github/actions/setup_ubuntu
@@ -19,7 +19,7 @@ jobs:
     runs-on: windows-2022
     steps:
       # Build
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
       - uses: ./.github/actions/setup_windows
