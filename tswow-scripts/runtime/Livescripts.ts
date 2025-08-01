@@ -130,7 +130,7 @@ const lua_tsconfig_json = {
       "luaTarget": "5.4",
       "noImplicitSelf": true,
       "luaPlugins": [
-            {     "name": ipaths.bin.scripts.addons.addons.lua_orm.abs().get()
+            {     "name": ipaths.bin.scripts.addons.lua_orm.abs().get()
                 , 'import':'LuaORM'
             }
         ]
@@ -441,7 +441,7 @@ export class Livescripts {
             const flagArgs = args.filter(arg => arg.startsWith('-'));
 
             const tsxCommand = `PATH="${filteredPath}" ${NodeExecutable} --enable-source-maps --stack-trace-limit=1000`
-                + ` ${ipaths.bin.scripts.typescript2cxx.typescript2cxx.main_js.abs()} livescript_tsconfig_temp.json`
+                + ` ${ipaths.bin.scripts.typescript2cxx.main_js.abs()} livescript_tsconfig_temp.json`
                 + ` ${(flagArgs.join(' '))}`
                 + ` --ipaths=${ipaths.abs()}`
                 + ` --datasetName=${dataset.fullName}`

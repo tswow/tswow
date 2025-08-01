@@ -19,7 +19,7 @@ import path from 'path';
 import { WDirectory } from '../util/FileTree';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { ipaths } from '../util/Paths';
-import { __internal_wotlk_applyDeletes, __internal_wotlk_save } from '../wotlk/internal/__wotlkEvents';
+import { __internal_wotlk_applyDeletes, __internal_wotlk_save } from '../wow/wotlk/internal/__wotlkEvents';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
 import { _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
@@ -111,7 +111,7 @@ async function main() {
     }
 
     // Read in all wotlk subdirectories (needed for all events to fire)
-    new WDirectory(path.join(__dirname,'..','wotlk','std')).abs()
+    new WDirectory(path.join(__dirname,'..','wow','wotlk','std')).abs()
         .iterate('RECURSE','FILES','FULL',node=>{
             if(node.endsWith('.js') && ! node.endsWith('.map.js')) {
                 require(node.relativeTo(__dirname).get());

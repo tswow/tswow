@@ -2,8 +2,8 @@
   "name": "wow",
   "version": "1.0.0",
   "description": "",
-  "main": "data/index.js",
-  "types": "data/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "dependencies": {
     "@types/crypto-js": "^3.1.47",
     "@types/deasync": "^0.1.5",

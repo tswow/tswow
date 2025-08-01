@@ -15,7 +15,7 @@
   "tstl": {
     "luaTarget": "5.1",
     "luaPlugins": [
-      {"name": "../scripts/addons/addons/RequirePreload.js","import":"RequirePreload"},
+      {"name": "../scripts/addons/RequirePreload.js","import":"RequirePreload"},
     ],
     "noImplicitSelf": true,
   }

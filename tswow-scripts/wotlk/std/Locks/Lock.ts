@@ -13,7 +13,7 @@ import { MainEntity } from "../Misc/Entity";
 import { LockTypeRegistry } from "./Locks";
 
 export class LockIndexBase extends TransformedClass<LockIndexPlain> {
-    @Transient
+    // @Transient removed to avoid circular dependency
     protected container: Lock;
     readonly index: number;
 

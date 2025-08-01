@@ -21,6 +21,7 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { bpaths, spaths } from './CompilePaths';
 import { TrinityCore } from './TrinityCore';
+import { wfs, mpath } from '../util/FileSystem';
 
 export namespace Config {
 
@@ -175,7 +176,7 @@ export namespace Config {
               "luaTarget": "5.1",
               "luaPlugins": [
                 {"name":
-                      ipaths.bin.scripts.addons.addons.require_preload.relativeTo(
+                      ipaths.bin.scripts.addons.require_preload.relativeTo(
                           ipaths.bin.include_addon
                       )
                     , "import":"RequirePreload"
@@ -211,12 +212,20 @@ export namespace Config {
 
         ipaths.startBat.write(`./bin/node/npm run start %*`)
 
+        // Create the wrapper script that sets --ipaths
+        const wrapperScript = `#!/usr/bin/env node
+// This wrapper ensures --ipaths is set before any modules are loaded
+process.argv.push('--ipaths=./');
+require('./bin/scripts/runtime/TSWoW.js');`;
+
+        wfs.write(mpath(ipaths.get(), 'start-tswow.js'), wrapperScript);
+
         // For the start.js, we need to ensure mise environment is loaded on Linux
         if (isWindows()) {
-            ipaths.startJs.write(`require('child_process').execSync(\`\${process.execPath} --enable-source-maps bin/scripts/runtime/runtime/TSWoW.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
+            ipaths.startJs.write(`require('child_process').execSync(\`\${process.execPath} --enable-source-maps start-tswow.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
         } else {
             // On Linux/Mac, use a shell to ensure mise and other configurations are loaded
-            ipaths.startJs.write(`require('child_process').execSync('bash -l -c "node --enable-source-maps bin/scripts/runtime/runtime/TSWoW.js ' + process.argv.slice(1).join(' ') + '"', { stdio: 'inherit' })`)
+            ipaths.startJs.write(`require('child_process').execSync('bash -l -c "node --enable-source-maps start-tswow.js ' + process.argv.slice(1).join(' ') + '"', { stdio: 'inherit' })`)
         }
 
         // Copy mise.toml for Node.js version management

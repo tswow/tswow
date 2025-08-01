@@ -50,7 +50,7 @@ const defaultTsConfig = (addon: Addon) => ({
     "tstl": {
       "luaTarget": "5.1",
       "luaPlugins": [
-        {     "name": ipaths.bin.scripts.addons.addons.require_preload
+        {     "name": ipaths.bin.scripts.addons.require_preload
                         .relativeTo(addon.path).get()
             , 'import':'RequirePreload'
         },

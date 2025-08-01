@@ -312,22 +312,16 @@ export function InstallPath(pathIn: string, tdb: string) {
             }),
             scripts: dir({
                 addons: dir({
-                    addons: dir({
-                        require_preload: file('RequirePreload.js'),
-                        lua_orm: file('LuaORM.js')
-                    })
+                    require_preload: file('RequirePreload.js'),
+                    lua_orm: file('LuaORM.js')
                 }),
                 tests: dir({}),
                 runtime: dir({
-                    runtime: dir({
-                        TSWoW_js : file('TSWoW.js')
-                    })
+                    TSWoW_js : file('TSWoW.js')
                 }),
                 typescript2cxx: dir({
-                    typescript2cxx: dir({
-                        wowts_js: file('wowts.js'),
-                        main_js: file('main.js'),
-                    })
+                    wowts_js: file('wowts.js'),
+                    main_js: file('main.js'),
                 }),
                 wow: dir({
                     package_json: file('package.json'),
@@ -738,7 +732,7 @@ export function SourcePaths(pathIn: string) {
                 })
             }),
         }),
-        tswow_scripts: dirn('tswow-scripts', {
+        tswow_scripts: dirn('bin/scripts', {
             sql: dir({}),
             data: dir({
                 package_json: file('package.json')

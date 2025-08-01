@@ -1,6 +1,10 @@
 {
   "module": {
-    "type": "commonjs"
+    "type": "commonjs",
+    "lazy": false,
+    "strict": false,
+    "strictMode": false,
+    "noInterop": false
   },
   "jsc": {
     "parser": {
@@ -11,11 +15,13 @@
     },
     "transform": {
       "legacyDecorator": true,
-      "decoratorMetadata": true,
+      "decoratorMetadata": false,
       "useDefineForClassFields": false
     },
     "target": "es2021",
-    "loose": false
+    "loose": false,
+    "preserveAllComments": true,
+    "keepClassNames": true
   },
   "sourceMaps": true
 }
