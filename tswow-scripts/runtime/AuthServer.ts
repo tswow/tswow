@@ -48,6 +48,39 @@ export namespace AuthServer {
             .copyOnNoTarget(ipaths.coredata.authserver.authserver_conf)
 
         term.debug('authserver', 'Setting up realmlist table for authserver')
+
+        // Check for port conflicts
+        const portMap: {[port: number]: string[]} = {};
+        for (const realm of Realm.all()) {
+            const port = realm.getPort();
+            if (!portMap[port]) {
+                portMap[port] = [];
+            }
+            portMap[port].push(realm.fullName);
+        }
+
+        // Warn about port conflicts
+        const portConflicts = Object.entries(portMap)
+            .filter(([port, realms]) => realms.length > 1);
+
+        if (portConflicts.length > 0) {
+            term.warn('authserver', '='.repeat(60));
+            term.warn('authserver', 'WARNING: Port conflicts detected!');
+            term.warn('authserver', '='.repeat(60));
+            for (const [port, realms] of portConflicts) {
+                term.warn('authserver', `Port ${port} is used by multiple realms:`);
+                for (const realmName of realms) {
+                    term.warn('authserver', `  - ${realmName}`);
+                }
+            }
+            term.warn('authserver', '');
+            term.warn('authserver', 'Multiple realms cannot run on the same port.');
+            term.warn('authserver', 'Only one realm per port can be started at a time.');
+            term.warn('authserver', 'Consider changing WorldServerPort in worldserver.conf');
+            term.warn('authserver', 'for one or more conflicting realms.');
+            term.warn('authserver', '='.repeat(60));
+        }
+
         await query('DELETE FROM realmlist;');
         await Promise.all(Realm.all().map(x=>query(x.realmlistSQL())));
         await Promise.all(Dataset.all().map(x=>query(x.gamebuildSQL())));

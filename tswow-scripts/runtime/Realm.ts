@@ -221,6 +221,19 @@ export class Realm {
         return i;
     }
 
+    getPort(): number {
+        if(!this.path.worldserver_conf.exists()) {
+            return 8085;
+        } else {
+            let portMatch = this.path.worldserver_conf.readString()
+                .match(/WorldServerPort *= *(\d+)/)
+            if(portMatch) {
+                return parseInt(portMatch[1]);
+            }
+            return 8085;
+        }
+    }
+
     realmlistSQL() {
         let flag = 0;
         if(this.config.Offline) flag |=0x2
@@ -228,16 +241,7 @@ export class Realm {
         if(this.config.Recommended) flag |= 0x20;
         if(this.config.Full) flag |= 0x40
 
-        let port: number;
-        if(!this.path.worldserver_conf.exists()) {
-            port = 8085;
-        } else {
-            let portMatch = this.path.worldserver_conf.readString()
-                .match(/WorldServerPort *= *(\d+)/)
-            if(portMatch) {
-                port = parseInt(portMatch[1]);
-            }
-        }
+        let port = this.getPort();
 
         let values = [
             ['id',this.getID()],
