@@ -732,7 +732,7 @@ export function SourcePaths(pathIn: string) {
                 })
             }),
         }),
-        tswow_scripts: dirn('bin/scripts', {
+        tswow_scripts: dirn('tswow-scripts', {
             sql: dir({}),
             data: dir({
                 package_json: file('package.json')
