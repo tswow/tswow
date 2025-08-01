@@ -232,7 +232,7 @@ export class LockReferences extends CellSystem<Lock> {
     get Traps() { return new LockTraps(this.owner); }
 }
 
-// @ts-ignore - hack, it's valid
+// @ts-expect-error - ArraySystem generic constraint mismatch, but works at runtime
 export class LockRequirements extends ArraySystem<LockIndexBase,Lock> {
     addEmpty() {
         const index = this.addGet().index;

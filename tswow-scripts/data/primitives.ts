@@ -83,7 +83,7 @@ export class loc {
     }
 
     get presentLanguages(): Language[] {
-        // @ts-ignore: Promise languages() only point at valid fields in this class
+        // @ts-expect-error - Dynamic property access using language names as keys
         return this.languages.filter(x => this[x].length > 0);
     }
 

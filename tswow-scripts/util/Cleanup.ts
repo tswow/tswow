@@ -11,7 +11,7 @@ exports.Cleanup = function Cleanup(callback: ()=>void) {
 
   // do app specific cleaning before exiting
   process.on('exit', function () {
-    // @ts-ignore
+    // @ts-expect-error - Custom cleanup event not in Node.js types
     process.emit('cleanup');
   });
 

@@ -315,7 +315,7 @@ export class Client {
         StartCommand.addCommand(
               'client'
             , ''
-            , ''
+            , 'Starts the WoW client'
             , args => {
                 return Promise.all(Identifier.getDatasets(
                       args

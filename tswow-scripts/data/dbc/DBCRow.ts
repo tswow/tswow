@@ -102,7 +102,7 @@ export abstract class DBCStackRow<C, Q> extends DBCRow<C, Q> {
     protected abstract stackSize(): number;
     protected abstract startId(): number;
 
-    protected isStack() {
+    protected isStack(): this is DBCStackRow<C, Q> {
         return true;
     }
 }

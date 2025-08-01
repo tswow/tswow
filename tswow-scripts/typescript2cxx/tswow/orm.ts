@@ -260,6 +260,14 @@ export function writeTableCreationFile(outDir: string) {
     const imports: string[] = []
     const classes: string[] = []
     let outdir = new WDirectory(outDir);
+
+    // Safety check: ensure we're not traversing outside the expected directory
+    const absolutePath = outdir.abs().get();
+    if (!absolutePath || absolutePath === '/' || absolutePath === '') {
+        console.error(`[ERROR] writeTableCreationFile: Invalid outDir: "${outDir}" resolved to "${absolutePath}"`);
+        return;
+    }
+
     outdir.iterate('RECURSE','FILES','FULL',node=>{
         if(!node.isFile() || !node.endsWith('.h')) return;
         let matches = node.toFile().readString()

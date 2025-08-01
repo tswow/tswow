@@ -243,7 +243,7 @@ export class Dataset {
         CreateCommand.addCommand(
             'dataset'
           , 'module dataset clientPatch=12340'
-          , ''
+          , 'Creates a new dataset with specified module and client patch version'
           , args => {
               const module = Identifier.getModule(args[0])
               const dataset = Identifier.assertUnused(args[1],'dataset');

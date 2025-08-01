@@ -396,14 +396,15 @@ export class Realm {
                !process.argv.includes('noac')
             && !process.argv.includes('norealm')
         ) {
-            await Promise.all(NodeConfig.AutoStartRealms
+            const autoStartRealms = NodeConfig.AutoStartRealms;
+            await Promise.all(autoStartRealms
                 .map(x=>Identifier.getRealm(x)
                     .start(NodeConfig.DefaultBuildType)))
         }
 
         StopCommand.addCommand(
               'realm'
-            , 'relamnames time --force'
+            , 'realmnames time --force'
             , 'Shuts down the specified realms. If the --force flag is supplied, time is ignored.'
             , args => {
                 let delay = args.map(x=>parseInt(x)).find(x=>!isNaN(x)) || 0
@@ -432,7 +433,7 @@ export class Realm {
         CreateCommand.addCommand(
               'realm'
             , 'module realmname displayname?'
-            , ''
+            , 'Creates a new realm configuration in the specified module'
             , args => {
                 const module = Identifier.getModule(args[0])
                 const realmname = Identifier.assertUnused(args[1],'realmname');
@@ -444,7 +445,7 @@ export class Realm {
         StartCommand.addCommand(
               'realm'
             , ''
-            , ''
+            , 'Starts the specified realm servers'
             , async args => {
                 await Promise.all(Identifier.getRealms(args,'MATCH_ANY',NodeConfig.DefaultRealm)
                     .map(x=>{
@@ -453,7 +454,7 @@ export class Realm {
             }
         ).addAlias('realms')
 
-        commands.addCommand('realm')
+        commands.addCommand('realm', '', 'Realm server management and configuration commands')
             .addCommand('send','','',args=>{
                 let realm = Identifier.getRealm(args[0]);
                 let message = args.slice(1);
@@ -463,7 +464,7 @@ export class Realm {
         ListCommand.addCommand(
               'realm'
             , ''
-            , ''
+            , 'Lists all available realms'
             , args => {
                 let isModule = Identifier.isModule(args[0])
                 Realm.all()

@@ -23,6 +23,5 @@ export const BLP_EXE = process.platform === 'win32'
     : 'bin/BLPConverter/blpconverter.exe'
 
 export function generateBLP(png: FilePath) {
-    console.log(`Generating BLP for ${resfp(png)}`)
     wsys.exec(`${BLP_EXE} "${png}"`,'ignore')
 }

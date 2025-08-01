@@ -66,12 +66,13 @@ export namespace AuthServer {
             );
     }
 
-    export const command = commands.addCommand('authserver');
+    export const command = commands.addCommand('authserver', '', 'Authentication server management commands');
 
     export async function initializeDatabase() {
         term.debug('authserver', `Initializing authserver database`)
         if(NodeConfig.AutoStartAuthServer) {
-            connection = new Connection(NodeConfig.DatabaseSettings('auth'),'auth');
+            const dbSettings = NodeConfig.DatabaseSettings('auth');
+            connection = new Connection(dbSettings,'auth');
             await connection.connect();
             await mysql.installAuth(connection);
         }

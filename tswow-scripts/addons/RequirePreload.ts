@@ -43,7 +43,7 @@ import {
 
 export const RequirePreload: Plugin = {
   visitors: {
-    // @ts-ignore
+    // @ts-expect-error - Dynamic SyntaxKind as object key
     [ts.SyntaxKind.SourceFile]: (node, context) => {
       const [fileContent] = context.superTransformNode(node) as Block[];
       if (context.isModule) {
@@ -106,9 +106,9 @@ export const RequirePreload: Plugin = {
         const block = createBlock([es]);
         const s = new Set<number>();
         s.add(100);
-        // @ts-ignore
+        // @ts-expect-error - Adding typescript-to-lua specific properties to AST node
         block.luaLibFeatures = fileContent.luaLibFeatures;
-        // @ts-ignore
+        // @ts-expect-error - Adding typescript-to-lua specific properties to AST node
         block.trivia = fileContent.trivia;
         return block;
       }

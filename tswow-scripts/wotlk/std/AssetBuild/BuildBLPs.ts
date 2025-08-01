@@ -35,13 +35,67 @@ finish('blps', () => {
                 return;
             }
             mod.assets.iterate('RECURSE','BOTH','FULL',node=>{
+                // Skip the root assets directory itself
+                if(node.get() === mod.assets.get()) {
+                    return;
+                }
+
                 if(node.isDirectory()) {
                     if(node.toDirectory().containsFile('noconvert')) {
                         return 'ENDPOINT'
-                    } else {
+                    }
+                    return;
+                }
+
+                // Skip non-file nodes
+                if(!node.isFile()) {
+                    return;
+                }
+
+                // Skip git-related files and other non-image files
+                const basename = node.basename().toLowerCase();
+                const skipPatterns = [
+                    '.git',
+                    '.gitignore',
+                    '.gitattributes',
+                    '.gitmodules',
+                    'readme',
+                    'license',
+                    'changelog',
+                    '.md',
+                    '.txt',
+                    '.yml',
+                    '.yaml',
+                    '.json',
+                    '.xml',
+                    '.cfg',
+                    '.conf',
+                    '.ini',
+                    '.toml',
+                    '.lock',
+                    '.log'
+                ];
+
+                if (skipPatterns.some(pattern => basename.includes(pattern))) {
+                    return;
+                }
+
+                // Only process files with image extensions
+                const imageExtensions = ['.png', '.psd', '.xcf', '.jpg', '.jpeg', '.bmp', '.tga'];
+                const hasImageExtension = imageExtensions.some(ext => basename.endsWith(ext));
+
+                if (!hasImageExtension) {
+                    // Check if there's a file with the same name but with an image extension
+                    const baseNameNoExt = node.toFile().abs().withExtension('').get();
+                    const hasRelatedImageFile = imageExtensions.some(ext =>
+                        wfs.exists(baseNameNoExt + ext)
+                    );
+
+                    if (!hasRelatedImageFile) {
                         return;
                     }
                 }
+
                 if(node.basename(2).toLowerCase().get() === 'worldmap') {
                     // worldmap file
                     if(node.basename().toFile().withExtension('').toLowerCase() === node.basename(1).toLowerCase()) {
@@ -60,9 +114,27 @@ finish('blps', () => {
                     return;
                 }
 
-                if(!node.isFile()) return;
+                // Extra safety check before processing
+                if(!node.isFile()) {
+                    return;
+                }
+
+                // Check if the path ends with a directory separator
+                const nodePath = node.get();
+                if (nodePath.endsWith('/') || nodePath.endsWith('\\')) {
+                    return;
+                }
+
                 let noext = node.toFile().abs().withExtension('')
+
+                // Another safety check on the processed path
+                const noextPath = noext.get();
+                if (!noextPath || noextPath.endsWith('/') || noextPath.endsWith('\\')) {
+                    return;
+                }
+
                 if(files[noext.get()]) return;
+
                 onDirtyPNG(noext,blpChanges,!wfs.exists(noext.withExtension('.blp')),png=>{
                     generateBLP(png);
                     if(!wfs.exists(png.withExtension('.blp'))) {

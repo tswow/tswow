@@ -23,6 +23,7 @@ export type TerminalCategory =
     | 'modules'
     | 'datascripts'
     | 'livescripts'
+    | 'tests'
     | 'build'
     | 'process'
     | 'commands'

@@ -161,7 +161,7 @@ export class Package {
         }
     }
 
-    static Command = commands.addCommand('package')
+    static Command = commands.addCommand('package', '', 'Packages client and server data for distribution')
 
     static initialize() {
         term.debug('misc', `Initializing packages`)

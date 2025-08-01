@@ -235,6 +235,7 @@ export namespace TrinityCore {
 
         if(!Args.hasFlag('no-compile',[process.argv,args1])) {
             if (isWindows()) {
+                const winInstallPrefix = bpaths.TrinityCore.join('install','trinitycore').abs().get();
                 setupCommand = `${cmake} -G "Visual Studio 17 2022" -DTOOLS=${tools}`
                 +` -DCMAKE_GENERATOR="Visual Studio 17 2022"`
                 +` -DSCRIPTS=${scripts}`
@@ -247,8 +248,13 @@ export namespace TrinityCore {
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-better-timer',[process.argv,args1])?'ON':'OFF'}"`
                 +` -DBUILD_TESTING="OFF"`
+                +` -DWITH_WARNINGS=0`
+                +` -DCMAKE_INSTALL_PREFIX="${winInstallPrefix}"`
+                +` -DCONF_DIR="${winInstallPrefix}/etc"`
                 +` -S "${spaths.cores.TrinityCore.get()}"`
-                +` -B "${bpaths.TrinityCore.get()}"`;
+                +` -B "${bpaths.TrinityCore.get()}"`
+                + (process.env.CC ? ` -DCMAKE_C_COMPILER="${process.env.CC}"` : '')
+                + (process.env.CXX ? ` -DCMAKE_CXX_COMPILER="${process.env.CXX}"` : '');
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
                 wsys.exec(setupCommand, 'inherit', {env: {BOOST_ROOT:`${bpaths.boost.boost_1_82_0.abs().get()}`,...process.env}});
                 if(generateOnly) return;
@@ -257,19 +263,20 @@ export namespace TrinityCore {
                 bpaths.TrinityCore.mkdir();
                 const relSource = bpaths.TrinityCore
                     .relativeFrom(spaths.cores.TrinityCore)
-                const relInstall = bpaths.TrinityCore
-                    .relativeFrom(bpaths.TrinityCore.join('install','trinitycore'))
+                const installPrefix = bpaths.TrinityCore.join('install','trinitycore').abs().get();
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
                 setupCommand = `cmake ${relSource}`
-                +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
-                +` -DCMAKE_C_COMPILER=/usr/bin/clang`
-                +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+                +` -DCMAKE_INSTALL_PREFIX="${installPrefix}"`
+                +` -DCONF_DIR="${installPrefix}/etc"`
+                +` -DCMAKE_BUILD_TYPE=${type}`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DBUILD_TESTING="OFF"`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
-                +` -DWITH_WARNINGS=1`
-                +` -DSCRIPTS=${scripts}`;
+                +` -DWITH_WARNINGS=0`
+                +` -DSCRIPTS=${scripts}`
+                + (process.env.CC ? ` -DCMAKE_C_COMPILER="${process.env.CC}"` : '')
+                + (process.env.CXX ? ` -DCMAKE_CXX_COMPILER="${process.env.CXX}"` : '');
                 buildCommand = 'make -j 4';
                 await bpaths.TrinityCore.doIn(() => {
                     wsys.exec(setupCommand, 'inherit');
@@ -285,48 +292,73 @@ export namespace TrinityCore {
 
         term.log('build','Copying libraries')
         if(isWindows()) {
+            term.log('build','  - Copying script libraries...')
             bpaths.TrinityCore.bin(type).scripts
                 .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).scripts)
 
+            term.log('build','  - Copying configuration files and binaries...')
+            let fileCount = 0;
             bpaths.TrinityCore.configs(type).iterate('FLAT','FILES','FULL',node=>{
                 if(node.endsWith('.dll') || node.endsWith('.conf.dist') || node.endsWith('.pdb') || node.endsWith('.exe')) {
                     node.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).configs.join(node.basename()))
+                    fileCount++;
                 }
             })
+            if(fileCount > 0) {
+                term.log('build',`    Copied ${fileCount} files`)
+            }
+
+            term.log('build','  - Copying Tracy profiler library...')
             bpaths.TrinityCore.tracy_dll(type)
                 .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).tracy_client);
         } else {
-            [
-                  bpaths.TrinityCore.lib_linux
-                , bpaths.TrinityCore.bin_linux
-                , bpaths.TrinityCore.etc_linux
-            ].forEach(x=>x.copy(ipaths.bin.core.pick('trinitycore').build.pick(type)))
+            term.log('build','  - Copying Linux binaries and libraries...')
+            const linuxDirs = [
+                  { path: bpaths.TrinityCore.lib_linux, name: 'libraries' }
+                , { path: bpaths.TrinityCore.bin_linux, name: 'binaries' }
+                , { path: bpaths.TrinityCore.etc_linux, name: 'configurations' }
+            ];
+            linuxDirs.forEach(({path, name}) => {
+                term.log('build',`    - ${name}`)
+                path.copy(ipaths.bin.core.pick('trinitycore').build.pick(type))
+            });
         }
 
-        bpaths.TrinityCore.libraries(type).forEach(x=>{
+        term.log('build','  - Copying core libraries...')
+        const libs = bpaths.TrinityCore.libraries(type);
+        libs.forEach((x, i) => {
+            if(i === 0) {
+                term.log('build',`    Copying ${libs.length} library files...`)
+            }
             x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))
         });
 
         if(isWindows()) {
-            [bpaths.boost.boost_1_82_0.lib64_msvc_14_3.fslib]
-                .forEach(x=>{
-                    x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))
-                })
+            term.log('build','  - Copying Boost libraries...')
+            bpaths.boost.boost_1_82_0.lib64_msvc_14_3.fslib
+                .copy(ipaths.bin.libraries.build.pick(type).join(
+                    bpaths.boost.boost_1_82_0.lib64_msvc_14_3.fslib.basename()
+                ))
         }
 
         // Copy mysql/ssl/cmake libraries
+        term.log('build','  - Copying external libraries (MySQL, OpenSSL, CMake)...')
         copyExtLibs('trinitycore', type)
 
         // Move ts-module header files
+        term.log('build','  - Installing TypeScript module headers...')
         headers(false);
 
+        term.log('build','  - Recording TrinityCore revision...')
         const rev = wsys.execIn(
               spaths.cores.TrinityCore.get()
             , 'git rev-parse HEAD','pipe').split('\n').join('');
         ipaths.bin.revisions.trinitycore.write(rev)
 
-        term.log('build','Copying sql patches')
+        term.log('build','Copying SQL patches')
+        term.log('build','  - Updates...')
         spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
+        term.log('build','  - Custom patches...')
         spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
         await DownloadFile(TDB_URL,bpaths.tdbArchive.get());

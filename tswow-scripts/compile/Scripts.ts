@@ -28,13 +28,15 @@ export namespace Scripts {
         const makeTsConfig = (outdir: FilePath, buildDir: FilePath, include: FilePath[]) => {
             const tsconfig = {
                 compilerOptions: {
-                    target: 'es2018',
+                    target: 'es2021',
+                    lib: ['es2021'],
                     module: 'commonjs',
                     esModuleInterop: true,
                     declaration: true,
                     sourceMap: true,
                     skipLibCheck: true,
                     experimentalDecorators: true,
+                    useDefineForClassFields: false,
                     allowJs: true,
                     outDir: resfp(outdir),
                     rootDir: spaths.tswow_scripts.abs().get()
@@ -80,6 +82,12 @@ export namespace Scripts {
             ipaths.bin.scripts.addons.abs()
           , bpaths.scripts_config.addons.abs()
           , [spaths.tswow_scripts.addons.abs(),spaths.tswow_scripts.util.abs()]
+        )
+
+        makeTsConfig(
+            ipaths.bin.scripts.tests.abs()
+          , bpaths.scripts_config.tests.abs()
+          , [spaths.tswow_scripts.test.abs(), spaths.tswow_scripts.util.abs(), spaths.tswow_scripts.data.abs(), spaths.tswow_scripts.wotlk.abs()]
         )
 
         spaths.tswow_scripts.data.package_json

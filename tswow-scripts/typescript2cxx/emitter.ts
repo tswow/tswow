@@ -8,7 +8,33 @@ import { handleClass, handleClassImpl } from './tswow/orm';
 import { handleTSWoWOverride } from './tswow/override';
 import { generateStringify } from './tswow/stringify';
 
+const factory = ts.factory;
 let mainFile: string = undefined;
+
+// @tswow-begin: lambda capture modes
+enum CaptureMode {
+    None = 0,
+    Value = 1,
+    Reference = 2
+}
+
+interface CapturedVariable {
+    name: string;
+    symbol: ts.Symbol;
+    type: ts.Type;
+    isModified: boolean;
+    isConst: boolean;
+    isLargeType: boolean;
+    scopeLevel: number;
+    captureMode?: CaptureMode;
+}
+
+interface LambdaCaptureContext {
+    node: ts.ArrowFunction | ts.FunctionExpression;
+    capturedVariables: Map<string, CapturedVariable>;
+    parentContext?: LambdaCaptureContext;
+}
+// @tswow-end
 export class Emitter {
     public writer: CodeWriter;
     preprocessor: Preprocessor;
@@ -23,7 +49,12 @@ export class Emitter {
     didStrongThis: boolean = false;
     curClassName: string = "";
     didConstructor: boolean = false;
+    private tempVarCounter = 0;
     asyncScopes: boolean[] = []
+    // @tswow-begin: lambda capture tracking
+    lambdaCaptureStack: LambdaCaptureContext[] = [];
+    currentLambdaContext: LambdaCaptureContext | null = null;
+    // @tswow-end
     // @tswow-begin: hack: const enums
     enumTypes: {[key:string]: string}
     // @tswow-end
@@ -157,6 +188,12 @@ export class Emitter {
 
     public HeaderMode: boolean;
     public SourceMode: boolean;
+    // @tswow-begin
+    public needsExceptionInclude: boolean = false;
+    public needsFutureInclude: boolean = false;
+    public needsRegexInclude: boolean = false;
+    public needsVariantInclude: boolean = false;
+    // @tswow-end
 
     public isHeader() {
         return this.HeaderMode;
@@ -176,7 +213,7 @@ export class Emitter {
 
     public printNode(node: ts.Statement): string {
         const sourceFile = ts.createSourceFile(
-            'noname', '', ts.ScriptTarget.ES2018, /*setParentNodes */ true, ts.ScriptKind.TS);
+            'noname', '', ts.ScriptTarget.ES2021, /*setParentNodes */ true, ts.ScriptKind.TS);
 
         (<any>sourceFile.statements) = [node];
 
@@ -197,14 +234,65 @@ export class Emitter {
             case ts.SyntaxKind.Bundle:
                 this.processBundle(<ts.Bundle>node);
                 break;
-            case ts.SyntaxKind.UnparsedSource:
-                this.processUnparsedSource(<ts.UnparsedSource>node);
-                break;
             default:
                 // TODO: finish it
                 throw new Error('Method not implemented.');
         }
     }
+
+    // @tswow-begin: Pre-scan for async functions and regex to set flags before header generation
+    public prescanForAsyncFunctions(sourceFile: ts.SourceFile): void {
+        const scan = (node: ts.Node): void => {
+            if (ts.isFunctionDeclaration(node) || ts.isMethodDeclaration(node) ||
+                ts.isArrowFunction(node) || ts.isFunctionExpression(node)) {
+                const funcNode = node as ts.FunctionDeclaration | ts.MethodDeclaration | ts.ArrowFunction | ts.FunctionExpression;
+                if (funcNode.modifiers && funcNode.modifiers.some(m => m.kind === ts.SyntaxKind.AsyncKeyword)) {
+                    this.needsFutureInclude = true;
+                }
+            }
+
+            // Check for Promise types
+            if (ts.isTypeReferenceNode(node)) {
+                const typeRef = node as ts.TypeReferenceNode;
+                if (typeRef.typeName && ts.isIdentifier(typeRef.typeName) && typeRef.typeName.text === 'Promise') {
+                    this.needsFutureInclude = true;
+                }
+            }
+
+            // Check for catch clauses with 'any' type
+            if (ts.isCatchClause(node)) {
+                const catchClause = node as ts.CatchClause;
+                if (catchClause.variableDeclaration && catchClause.variableDeclaration.type) {
+                    const typeNode = catchClause.variableDeclaration.type;
+                    if (ts.isToken(typeNode) && typeNode.kind === ts.SyntaxKind.AnyKeyword) {
+                        this.needsExceptionInclude = true;
+                    }
+                }
+            }
+
+            // Check for regex literals
+            if (ts.isRegularExpressionLiteral(node)) {
+                this.needsRegexInclude = true;
+            }
+
+            // Check for union types
+            if (ts.isTypeNode(node) && node.kind === ts.SyntaxKind.UnionType) {
+                const unionType = node as ts.UnionTypeNode;
+                // Only need variant if we have more than one non-null type
+                const nonNullTypes = unionType.types.filter(
+                    t => t.kind !== ts.SyntaxKind.NullKeyword && t.kind !== ts.SyntaxKind.UndefinedKeyword
+                );
+                if (nonNullTypes.length > 1) {
+                    this.needsVariantInclude = true;
+                }
+            }
+
+            ts.forEachChild(node, scan);
+        };
+
+        scan(sourceFile);
+    }
+    // @tswow-end
 
     isImportStatement(f: ts.Statement | ts.Declaration): boolean {
         if (f.kind === ts.SyntaxKind.ImportDeclaration
@@ -350,6 +438,7 @@ export class Emitter {
         let requireCaptureResult = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.Identifier
+                && node.parent
                 && node.parent.kind !== ts.SyntaxKind.FunctionDeclaration
                 && node.parent.kind !== ts.SyntaxKind.ClassDeclaration
                 && node.parent.kind !== ts.SyntaxKind.MethodDeclaration
@@ -373,6 +462,7 @@ export class Emitter {
     markRequiredCapture(location: ts.Node): void {
         this.childrenVisitorNoScope(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.Identifier
+                && node.parent
                 && node.parent.kind !== ts.SyntaxKind.FunctionDeclaration
                 && node.parent.kind !== ts.SyntaxKind.ClassDeclaration
                 && node.parent.kind !== ts.SyntaxKind.MethodDeclaration
@@ -420,6 +510,11 @@ export class Emitter {
     }
 
     processFile(sourceFile: ts.SourceFile): void {
+        // @tswow-begin: Prescan before processing to detect async functions
+        if (this.isHeader()) {
+            this.prescanForAsyncFunctions(sourceFile);
+        }
+        // @tswow-end
         this.scope.push(sourceFile);
         this.processFileInternal(sourceFile);
         this.scope.pop();
@@ -564,14 +659,25 @@ export class Emitter {
             this.writer.writeStringNewLine(`#ifndef ${headerName}`);
             this.writer.writeStringNewLine(`#define ${headerName}`);
             this.writer.writeStringNewLine(`#include "TSAll.h"`);
+            // @tswow-begin
+            if (this.needsExceptionInclude) {
+                this.writer.writeStringNewLine(`#include <exception>`);
+            }
+            if (this.needsFutureInclude) {
+                this.writer.writeStringNewLine(`#include <future>`);
+                this.writer.writeStringNewLine(`#include <memory>`);
+            }
+            if (this.needsRegexInclude) {
+                this.writer.writeStringNewLine(`#include <regex>`);
+            }
+            if (this.needsVariantInclude) {
+                this.writer.writeStringNewLine(`#include <variant>`);
+            }
+            // @tswow-end
         }
     }
 
     processBundle(bundle: ts.Bundle): void {
-        throw new Error('Method not implemented.');
-    }
-
-    processUnparsedSource(unparsedSource: ts.UnparsedSource): void {
         throw new Error('Method not implemented.');
     }
 
@@ -662,6 +768,7 @@ export class Emitter {
             case ts.SyntaxKind.TrueKeyword:
             case ts.SyntaxKind.FalseKeyword: this.processBooleanLiteral(<ts.BooleanLiteral>node); return;
             case ts.SyntaxKind.NumericLiteral: this.processNumericLiteral(<ts.NumericLiteral>node); return;
+            case ts.SyntaxKind.BigIntLiteral: this.processBigIntLiteral(<any>node); return;
             case ts.SyntaxKind.StringLiteral: this.processStringLiteral(<ts.StringLiteral>node); return;
             case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
                 this.processNoSubstitutionTemplateLiteral(<ts.NoSubstitutionTemplateLiteral>node); return;
@@ -677,11 +784,35 @@ export class Emitter {
             case ts.SyntaxKind.SpreadElement: this.processSpreadElement(<ts.SpreadElement>node); return;
             case ts.SyntaxKind.AwaitExpression: this.processAwaitExpression(<ts.AwaitExpression>node); return;
             case ts.SyntaxKind.Identifier: this.processIdentifier(<ts.Identifier>node); return;
+            case ts.SyntaxKind.PrivateIdentifier: this.processPrivateIdentifier(<any>node); return;
             case ts.SyntaxKind.ComputedPropertyName: this.processComputedPropertyName(<ts.ComputedPropertyName><any>node); return;
+            // TypeScript 5.x new expression types
+            case ts.SyntaxKind.SatisfiesExpression: this.processSatisfiesExpression(<any>node); return;
+            case ts.SyntaxKind.MetaProperty: this.processMetaProperty(<ts.MetaProperty>node); return;
+            case ts.SyntaxKind.YieldExpression: this.processYieldExpression(<ts.YieldExpression>node); return;
+            case ts.SyntaxKind.TaggedTemplateExpression: this.processTaggedTemplateExpression(<ts.TaggedTemplateExpression>node); return;
+            case ts.SyntaxKind.ClassExpression: this.processClassExpression(<ts.ClassExpression>node); return;
+            case ts.SyntaxKind.OmittedExpression: this.processOmittedExpression(<ts.OmittedExpression>node); return;
+            case ts.SyntaxKind.ExpressionWithTypeArguments: this.processExpressionWithTypeArguments(<ts.ExpressionWithTypeArguments>node); return;
+            case ts.SyntaxKind.JsxElement:
+            case ts.SyntaxKind.JsxSelfClosingElement:
+            case ts.SyntaxKind.JsxFragment:
+            case ts.SyntaxKind.JsxOpeningElement:
+            case ts.SyntaxKind.JsxText:
+            case ts.SyntaxKind.JsxClosingElement:
+            case ts.SyntaxKind.JsxExpression:
+            case ts.SyntaxKind.JsxAttributes:
+            case ts.SyntaxKind.JsxSpreadAttribute:
+            case ts.SyntaxKind.JsxAttribute:
+                // JSX is not supported in this context
+                throw new Error(`JSX expressions are not supported in typescript2cxx`);
         }
 
         // TODO: finish it
-        throw new Error('Method not implemented.');
+        console.error(`Unhandled expression kind: ${ts.SyntaxKind[node.kind]} (${node.kind})`);
+        console.error(`Expression text: ${node.getText()}`);
+        console.error(`Parent kind: ${node.parent ? ts.SyntaxKind[node.parent.kind] : 'none'}`);
+        throw new Error(`Method not implemented for expression kind: ${ts.SyntaxKind[node.kind]} (${node.kind})`);
     }
 
     processDeclaration(node: ts.Declaration): void {
@@ -1054,7 +1185,7 @@ export class Emitter {
             this.writer.writeString(`utils::finally ${finallyName}(`);
 
             const newArrowFunctions =
-                ts.createArrowFunction(
+                factory.createArrowFunction(
                     undefined,
                     undefined,
                     undefined,
@@ -1080,8 +1211,17 @@ export class Emitter {
 
         if (node.catchClause) {
             this.writer.writeString('catch (const ');
-            if (node.catchClause.variableDeclaration.type) {
-                this.processType(node.catchClause.variableDeclaration.type);
+            const variableDeclaration = (node.catchClause as any).variableDeclaration;
+            if (variableDeclaration && variableDeclaration.type) {
+                // @tswow-begin
+                // Special handling for 'any' type in catch clauses
+                if (variableDeclaration.type.kind === ts.SyntaxKind.AnyKeyword) {
+                    this.needsExceptionInclude = true;
+                    this.writer.writeString('std::exception');
+                } else {
+                    this.processType(variableDeclaration.type);
+                }
+                // @tswow-end
             } else {
                 this.error(
                       `Unable to resolve type of catch value, `
@@ -1091,11 +1231,11 @@ export class Emitter {
 
             this.writer.writeString('& ');
 
-            if (node.catchClause.variableDeclaration.name.kind === ts.SyntaxKind.Identifier) {
+            if (variableDeclaration && variableDeclaration.name.kind === ts.SyntaxKind.Identifier) {
                 this.processVariableDeclarationOne(
-                    <ts.Identifier>(node.catchClause.variableDeclaration.name),
-                    node.catchClause.variableDeclaration.initializer,
-                    node.catchClause.variableDeclaration.type);
+                    <ts.Identifier>(variableDeclaration.name),
+                    variableDeclaration.initializer,
+                    variableDeclaration.type);
             } else {
                 throw new Error('Method not implemented.');
             }
@@ -1185,21 +1325,21 @@ export class Emitter {
                 value++;
             }
 
-            const namedProperty = ts.createPropertyAssignment(
+            const namedProperty = factory.createPropertyAssignment(
                 member.name,
-                ts.createNumericLiteral(value.toString()));
+                factory.createNumericLiteral(value.toString()));
 
-            const valueProperty = ts.createPropertyAssignment(
-                ts.createNumericLiteral(value.toString()),
-                ts.createStringLiteral((<ts.Identifier>member.name).text));
+            const valueProperty = factory.createPropertyAssignment(
+                factory.createNumericLiteral(value.toString()),
+                factory.createStringLiteral((<ts.Identifier>member.name).text));
 
             properties.push(namedProperty);
             properties.push(valueProperty);
         }
 
-        const enumLiteralObject = ts.createObjectLiteral(properties);
-        const varDecl = ts.createVariableDeclaration(node.name, undefined, enumLiteralObject);
-        const enumDeclare = ts.createVariableStatement([], [varDecl]);
+        const enumLiteralObject = factory.createObjectLiteralExpression(properties);
+        const varDecl = factory.createVariableDeclaration(node.name, undefined, enumLiteralObject);
+        const enumDeclare = factory.createVariableStatement([], [varDecl]);
 
         this.processStatement(this.fixupParentReferences(enumDeclare, node));
         */
@@ -1233,7 +1373,7 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    hasAccessModifier(modifiers: ts.ModifiersArray) {
+    hasAccessModifier(modifiers: readonly ts.ModifierLike[] | undefined) {
         if (!modifiers) {
             return false;
         }
@@ -1380,7 +1520,7 @@ export class Emitter {
         // declare all private parameters of constructors
         for (const constructor of <ts.ConstructorDeclaration[]>(<ts.ClassDeclaration>node)
             .members.filter(m => m.kind === ts.SyntaxKind.Constructor)) {
-            for (const fieldAsParam of constructor.parameters.filter(p => this.hasAccessModifier(p.modifiers))) {
+            for (const fieldAsParam of constructor.parameters.filter(p => this.hasAccessModifier(ts.getModifiers(p)))) {
                 this.processDeclaration(fieldAsParam);
             }
         }
@@ -1417,7 +1557,8 @@ export class Emitter {
 
         this.writer.writeStringNewLine();
 
-        if (node.modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.DefaultKeyword)) {
+        const modifiers = ts.getModifiers(node);
+        if (modifiers && modifiers.some(m => m.kind === ts.SyntaxKind.DefaultKeyword)) {
             this.writer.writeString('using _default = ');
             this.processIdentifier(node.name);
             this.processTemplateParameters(<ts.ClassDeclaration>node);
@@ -1428,11 +1569,11 @@ export class Emitter {
     processPropertyDeclaration(node: ts.PropertyDeclaration | ts.PropertySignature | ts.ParameterDeclaration,
         implementationMode?: boolean): void {
         if (!implementationMode) {
-            this.processModifiers(node.modifiers);
+            this.processModifiers(ts.getModifiers(node));
         }
 
         const effectiveType = node.type
-            || this.resolver.getOrResolveTypeOfAsTypeNode(node.initializer);
+            || ('initializer' in node && node.initializer ? this.resolver.getOrResolveTypeOfAsTypeNode(node.initializer) : undefined);
         this.processPredefineType(effectiveType);
         this.processType(effectiveType);
         this.writer.writeString(' ');
@@ -1455,7 +1596,7 @@ export class Emitter {
         }
 
         const isStatic = this.isStatic(node);
-        if (node.initializer && (implementationMode && isStatic || !isStatic)) {
+        if ('initializer' in node && node.initializer && (implementationMode && isStatic || !isStatic)) {
             this.writer.writeString(' = ');
             this.processExpression(node.initializer);
         }
@@ -1478,7 +1619,7 @@ export class Emitter {
         this.didStrongThis = false;
     }
 
-    processModifiers(modifiers: ts.NodeArray<ts.Modifier>) {
+    processModifiers(modifiers: readonly ts.ModifierLike[] | undefined) {
         if (!modifiers) {
             return;
         }
@@ -1530,7 +1671,7 @@ export class Emitter {
             type = conditionType.checkType;
         } else if (node.type.kind === ts.SyntaxKind.MappedType) {
             if (node.typeParameters && node.typeParameters[0]) {
-                type = <any>{ kind: ts.SyntaxKind.TypeParameter, name: ts.createIdentifier((<any>(node.typeParameters[0])).symbol.name) };
+                type = <any>{ kind: ts.SyntaxKind.TypeParameter, name: factory.createIdentifier((<any>(node.typeParameters[0])).symbol.name) };
             }
         }
 
@@ -1697,14 +1838,23 @@ export class Emitter {
         let charStr = "<unknown>";
 
         try {
-            const file = node.getSourceFile().fileName;
-            fileStr = file;
-            const { line, character} = node
-                .getSourceFile()
-                .getLineAndCharacterOfPosition(node.pos);
-            lineStr = `${line}`;
-            charStr = `${character}`;
-        } catch( err ) {}
+            const sourceFile = node.getSourceFile();
+            if (sourceFile) {
+                const file = sourceFile.fileName;
+                fileStr = file;
+                const { line, character} = sourceFile.getLineAndCharacterOfPosition(node.getStart());
+                lineStr = `${line + 1}`;
+                charStr = `${character + 1}`;
+            }
+        } catch( err ) {
+            console.error("Error getting source location:", err);
+        }
+
+        // Also log the problematic code if possible
+        try {
+            console.error("Problematic code:", node.getText());
+        } catch (e) {}
+
         throw new Error(
               `TypeScript Error:`
             + ` ${message}\n    `
@@ -1792,18 +1942,30 @@ export class Emitter {
             this.writer.writeString(', ');
         }
 
-        if (name.kind === ts.SyntaxKind.ArrayBindingPattern) {
-            this.writer.writeString('[');
-            let hasNext = false;
-            name.elements.forEach(element => {
-                if (hasNext) {
-                    this.writer.writeString(', ');
-                }
+        // Handle destructuring patterns
+        if (name.kind === ts.SyntaxKind.ArrayBindingPattern || name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+            if (!initializer) {
+                this.error('Destructuring declaration must have an initializer', name);
+                return false;
+            }
 
-                hasNext = true;
-                this.writer.writeString((<ts.Identifier>(<ts.BindingElement>element).name).text);
-            });
-            this.writer.writeString(']');
+            // Generate a temporary variable for the initializer
+            const tempVar = this.generateTempVariable();
+            this.writer.writeString('auto ');
+            this.writer.writeString(tempVar);
+            this.writer.writeString(' = ');
+            this.processExpression(initializer);
+            this.writer.EndOfStatement();
+
+            // Process the destructuring pattern
+            if (name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+                this.processArrayDestructuring(name, tempVar);
+            } else {
+                this.processObjectDestructuring(name as ts.ObjectBindingPattern, tempVar);
+            }
+
+            // Return false to indicate we've already written the declarations
+            return false;
         } else if (name.kind === ts.SyntaxKind.Identifier) {
             this.writer.writeString(name.text);
         } else {
@@ -1863,6 +2025,218 @@ export class Emitter {
         }
     }
 
+    private generateTempVariable(): string {
+        return `__temp${++this.tempVarCounter}`;
+    }
+
+    private processArrayDestructuring(pattern: ts.ArrayBindingPattern, tempVar: string): void {
+        let elementIndex = 0;
+        let hasRestElement = false;
+
+        pattern.elements.forEach((element, index) => {
+            if (element.kind === ts.SyntaxKind.OmittedExpression) {
+                // Skip omitted elements (e.g., [, , third])
+                elementIndex++;
+                return;
+            }
+
+            const bindingElement = element as ts.BindingElement;
+
+            // Check if this is a rest element
+            if (bindingElement.dotDotDotToken) {
+                hasRestElement = true;
+                // Handle rest element - create array from remaining elements
+                this.writer.writeString('auto ');
+                if (bindingElement.name.kind === ts.SyntaxKind.Identifier) {
+                    this.writer.writeString(bindingElement.name.text);
+                } else {
+                    this.error('Nested destructuring in rest element not supported yet', bindingElement.name);
+                    return;
+                }
+                this.writer.writeString(' = TSArray<');
+                // TODO: Get proper element type
+                this.writer.writeString('any');
+                this.writer.writeString('>(');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.begin() + ');
+                this.writer.writeString(elementIndex.toString());
+                this.writer.writeString(', ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.end())');
+                this.writer.EndOfStatement();
+                return;
+            }
+
+            // Regular element
+            this.writer.writeString('auto ');
+
+            if (bindingElement.name.kind === ts.SyntaxKind.Identifier) {
+                this.writer.writeString(bindingElement.name.text);
+            } else if (bindingElement.name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+                // Nested array destructuring
+                const nestedTemp = this.generateTempVariable();
+                this.writer.writeString(nestedTemp);
+                this.writer.writeString(' = ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('[');
+                this.writer.writeString(elementIndex.toString());
+                this.writer.writeString(']');
+                this.writer.EndOfStatement();
+                this.processArrayDestructuring(bindingElement.name, nestedTemp);
+                elementIndex++;
+                return;
+            } else if (bindingElement.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+                // Nested object destructuring
+                const nestedTemp = this.generateTempVariable();
+                this.writer.writeString(nestedTemp);
+                this.writer.writeString(' = ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('[');
+                this.writer.writeString(elementIndex.toString());
+                this.writer.writeString(']');
+                this.writer.EndOfStatement();
+                this.processObjectDestructuring(bindingElement.name, nestedTemp);
+                elementIndex++;
+                return;
+            }
+
+            this.writer.writeString(' = ');
+
+            // Check if default value is provided
+            if (bindingElement.initializer) {
+                this.writer.writeString('(');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.size() > ');
+                this.writer.writeString(elementIndex.toString());
+                this.writer.writeString(') ? ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('[');
+                this.writer.writeString(elementIndex.toString());
+                this.writer.writeString('] : ');
+                this.processExpression(bindingElement.initializer);
+            } else {
+                this.writer.writeString(tempVar);
+                this.writer.writeString('[');
+                this.writer.writeString(elementIndex.toString());
+                this.writer.writeString(']');
+            }
+
+            this.writer.EndOfStatement();
+            elementIndex++;
+        });
+    }
+
+    private processObjectDestructuring(pattern: ts.ObjectBindingPattern, tempVar: string): void {
+        let processedProperties = new Set<string>();
+        let hasRestElement = false;
+
+        pattern.elements.forEach((bindingElement) => {
+            if (bindingElement.dotDotDotToken) {
+                hasRestElement = true;
+                // Handle rest element - copy all unprocessed properties
+                this.writer.writeString('auto ');
+                if (bindingElement.name && bindingElement.name.kind === ts.SyntaxKind.Identifier) {
+                    this.writer.writeString(bindingElement.name.text);
+                } else {
+                    this.error('Rest element must have an identifier', bindingElement);
+                    return;
+                }
+                this.writer.writeString(' = TSDictionary<std::string, any>()');
+                this.writer.EndOfStatement();
+
+                // Add loop to copy remaining properties
+                this.writer.writeString('for (const auto& [key, value] : ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString(') {');
+                this.writer.IncreaseIntent();
+                this.writer.writeStringNewLine('');
+
+                // Check if property was already processed
+                if (processedProperties.size > 0) {
+                    this.writer.writeString('if (');
+                    let first = true;
+                    processedProperties.forEach(prop => {
+                        if (!first) this.writer.writeString(' && ');
+                        first = false;
+                        this.writer.writeString('key != "');
+                        this.writer.writeString(prop);
+                        this.writer.writeString('"');
+                    });
+                    this.writer.writeString(') {');
+                    this.writer.IncreaseIntent();
+                    this.writer.writeStringNewLine('');
+                }
+
+                if (bindingElement.name && bindingElement.name.kind === ts.SyntaxKind.Identifier) {
+                    this.writer.writeString(bindingElement.name.text);
+                    this.writer.writeString('[key] = value');
+                    this.writer.EndOfStatement();
+                }
+
+                if (processedProperties.size > 0) {
+                    this.writer.DecreaseIntent();
+                    this.writer.writeStringNewLine('}');
+                }
+
+                this.writer.DecreaseIntent();
+                this.writer.writeStringNewLine('}');
+                return;
+            }
+
+            const propertyName = bindingElement.propertyName
+                ? (bindingElement.propertyName as ts.Identifier).text
+                : (bindingElement.name as ts.Identifier).text;
+
+            processedProperties.add(propertyName);
+
+            this.writer.writeString('auto ');
+
+            if (bindingElement.name.kind === ts.SyntaxKind.Identifier) {
+                this.writer.writeString(bindingElement.name.text);
+            } else if (bindingElement.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+                // Nested object destructuring
+                const nestedTemp = this.generateTempVariable();
+                this.writer.writeString(nestedTemp);
+                this.writer.writeString(' = ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.');
+                this.writer.writeString(propertyName);
+                this.writer.EndOfStatement();
+                this.processObjectDestructuring(bindingElement.name, nestedTemp);
+                return;
+            } else if (bindingElement.name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+                // Nested array destructuring
+                const nestedTemp = this.generateTempVariable();
+                this.writer.writeString(nestedTemp);
+                this.writer.writeString(' = ');
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.');
+                this.writer.writeString(propertyName);
+                this.writer.EndOfStatement();
+                this.processArrayDestructuring(bindingElement.name, nestedTemp);
+                return;
+            }
+
+            this.writer.writeString(' = ');
+
+            // Check if default value is provided
+            if (bindingElement.initializer) {
+                // TODO: Implement proper has() method checking
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.');
+                this.writer.writeString(propertyName);
+                // For now, just use the property directly
+                // In a complete implementation, we'd check if property exists
+            } else {
+                this.writer.writeString(tempVar);
+                this.writer.writeString('.');
+                this.writer.writeString(propertyName);
+            }
+
+            this.writer.EndOfStatement();
+        });
+    }
+
     processPredefineType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
         auto: boolean = false): void {
 
@@ -1884,9 +2258,11 @@ export class Emitter {
             case ts.SyntaxKind.TupleType:
                 const tupleType = <ts.TupleTypeNode>type;
 
-                (tupleType as any).elementTypes.forEach(element => {
-                    this.processPredefineType(element, false);
-                });
+                if (tupleType.elements) {
+                    tupleType.elements.forEach(element => {
+                        this.processPredefineType(element, false);
+                    });
+                }
 
                 break;
             case ts.SyntaxKind.TypeReference:
@@ -2072,6 +2448,19 @@ export class Emitter {
                 ];
                 const isPrimitive = primitives.includes(typeText);
 
+                // @tswow-begin: async/await support - check for Promise in async context early
+                const isPromiseInAsyncContext = typeReference.typeName &&
+                    typeReference.typeName.kind === ts.SyntaxKind.Identifier &&
+                    (typeReference.typeName as ts.Identifier).text === 'Promise' &&
+                    this.scope.some((s: any) =>
+                        (s.kind === ts.SyntaxKind.FunctionDeclaration ||
+                         s.kind === ts.SyntaxKind.MethodDeclaration ||
+                         s.kind === ts.SyntaxKind.ArrowFunction ||
+                         s.kind === ts.SyntaxKind.FunctionExpression) &&
+                        this.hasAsyncModifier(s)
+                    );
+                // @tswow-end
+
                 const skipPointerIf =
                     (typeInfo && (<any>typeInfo).symbol && (<any>typeInfo).symbol.name === '__type')
                     || (typeInfo && (<any>typeInfo).primitiveTypesOnly)
@@ -2090,6 +2479,7 @@ export class Emitter {
                     || onMessageIdPre == 'OnMessageID'
                     || DBContainerPre == 'DBContainer'
                     || (typeText.startsWith('TS') && (typeText !== 'TSDatabaseResult'))
+                    || isPromiseInAsyncContext // Skip pointer for Promise in async context
 
                 if(!skipPointerIf) {
                     this.writer.writeString('std::shared_ptr<');
@@ -2130,7 +2520,16 @@ export class Emitter {
                 if (isArray) {
                     this.writer.writeString('TSArray');
                 } else {
-                    this.writeTypeName(typeReference);
+                    // @tswow-begin: async/await support - special handling for Promise in async context
+                    if (isPromiseInAsyncContext && typeReference.typeArguments && typeReference.typeArguments.length > 0) {
+                        // In async context, unwrap Promise<T> to just T
+                        // The std::future wrapper will be added by the async function declaration
+                        this.processType(typeReference.typeArguments[0], false);
+                        return; // Skip the rest of the processing
+                    } else {
+                        this.writeTypeName(typeReference);
+                    }
+                    // @tswow-end
                 }
 
                 if (typeReference.typeArguments) {
@@ -2211,52 +2610,47 @@ export class Emitter {
                 this.writer.writeString('TSNull')
                 break;
             case ts.SyntaxKind.UnionType:
-
-                /*
                 const unionType = <ts.UnionTypeNode>type;
                 const unionTypes = unionType.types
                     .filter(f => f.kind !== ts.SyntaxKind.NullKeyword && f.kind !== ts.SyntaxKind.UndefinedKeyword);
 
-                if (this.typesAreNotSame(unionTypes)) {
-                    const pos = type.pos >= 0 ? type.pos : 0;
-                    const end = type.end >= 0 ? type.end : 0;
-                    const unionName = `__union${pos}_${end}`;
-                    if (implementingUnionType) {
-                        this.writer.writeString('union ');
-                        this.writer.writeString(unionName);
-                        this.writer.writeString(' ');
-                        this.writer.BeginBlock();
+                if (unionTypes.length === 0) {
+                    // Only null/undefined union
+                    this.writer.writeString('TSNull');
+                    return;
+                }
 
-                        this.writer.writeStringNewLine(`${unionName}(std::nullptr_t v_) {}`);
+                if (unionTypes.length === 1) {
+                    // Single type after filtering nulls
+                    this.processType(unionTypes[0], auto, skipPointerInType, noTypeName, implementingUnionType, node);
+                    return;
+                }
 
-                        unionTypes.forEach((element, i) => {
-                            this.processType(element);
-                            this.writer.writeString(` v${i}`);
-                            this.writer.EndOfStatement();
-                            this.writer.cancelNewLine();
-                            this.writer.writeString(` ${unionName}(`);
-                            this.processType(element);
-                            this.writer.writeStringNewLine(` v_) : v${i}(v_) {}`);
-                        });
+                // Check if all types in the union are the same
+                if (!this.typesAreNotSame(unionTypes)) {
+                    // All types are the same, just use the first one
+                    this.processType(unionTypes[0], auto, skipPointerInType, noTypeName, implementingUnionType, node);
+                    return;
+                }
 
-                        this.writer.EndBlock();
-                        this.writer.cancelNewLine();
-                    } else {
-                        this.writer.writeString(unionName);
-                    }
+                // For true union types, we need std::variant
+                if (!auto) {
+                    // Mark that we need the variant header
+                    this.needsVariantInclude = true;
+
+                    this.writer.writeString('std::variant<');
+                    unionTypes.forEach((element, i) => {
+                        if (i > 0) {
+                            this.writer.writeString(', ');
+                        }
+                        this.processType(element, false, skipPointerInType, noTypeName, false, node);
+                    });
+                    this.writer.writeString('>');
                 } else {
-                    this.processType(unionTypes[0]);
+                    // When auto is allowed, we still need to handle it properly
+                    // For now, use auto and let C++ type deduction handle it
+                    this.writer.writeString('auto');
                 }
-                */
-
-                if(!auto) {
-                    this.error(
-                        `Failed to write union type `
-                      + `because 'auto' keyword is forbidden here.`
-                    , type);
-                }
-                this.writer.writeString('auto');
-
                 break;
             case ts.SyntaxKind.ModuleDeclaration:
                 if ((<any>type).symbol
@@ -2282,11 +2676,50 @@ export class Emitter {
                 this.writer.writeString(exprName.text);
                 break;
             default:
-                if(!auto) {
-                    this.error(
-                        `Failed to write union type `
-                      + `because 'auto' keyword is forbidden here.`
-                    , type);
+                // Check if this is actually a union type
+                if (type && (type as any).types && (type as any).types.length > 0) {
+                    // This is a union type that wasn't caught by the UnionType case
+                    const unionTypes = (type as any).types
+                        .filter((f: any) => f.kind !== ts.SyntaxKind.NullKeyword && f.kind !== ts.SyntaxKind.UndefinedKeyword);
+
+                    if (unionTypes.length === 0) {
+                        // Only null/undefined union
+                        this.writer.writeString('TSNull');
+                        return;
+                    }
+
+                    if (unionTypes.length === 1) {
+                        // Single type after filtering nulls
+                        this.processType(unionTypes[0], auto, skipPointerInType, noTypeName, implementingUnionType, node);
+                        return;
+                    }
+
+                    // Check if all types in the union are the same
+                    if (!this.typesAreNotSame(unionTypes)) {
+                        // All types are the same, just use the first one
+                        this.processType(unionTypes[0], auto, skipPointerInType, noTypeName, implementingUnionType, node);
+                        return;
+                    }
+
+                    // For true union types, we need std::variant
+                    if (!auto) {
+                        // Mark that we need the variant header
+                        this.needsVariantInclude = true;
+
+                        this.writer.writeString('std::variant<');
+                        unionTypes.forEach((element: any, i: number) => {
+                            if (i > 0) {
+                                this.writer.writeString(', ');
+                            }
+                            this.processType(element, false, skipPointerInType, noTypeName, false, node);
+                        });
+                        this.writer.writeString('>');
+                    } else {
+                        // When auto is allowed, we still need to handle it properly
+                        // For now, use auto and let C++ type deduction handle it
+                        this.writer.writeString('auto');
+                    }
+                    return;
                 }
                 break;
         }
@@ -2300,7 +2733,20 @@ export class Emitter {
                 if(val !== undefined) {
                     this.writer.writeString(val);
                 } else {
-                    this.writer.writeString(entity.text);
+                    // @tswow-begin: async/await support - Promise needs special handling
+                    if (entity.text === 'Promise') {
+                        // For non-async contexts, treat Promise as shared_ptr
+                        this.needsFutureInclude = true;
+                        this.writer.writeString('std::shared_ptr');
+                    // @tswow-begin: regex support - RegExp is TSRegExp value type
+                    } else if (entity.text === 'RegExp') {
+                        this.needsRegexInclude = true;
+                        this.writer.writeString('TSRegExp');
+                    // @tswow-end
+                    } else {
+                        this.writer.writeString(entity.text);
+                    }
+                    // @tswow-end
                 }
                 // @tswow-end
             } else if (entity.kind === ts.SyntaxKind.QualifiedName) {
@@ -2419,6 +2865,344 @@ export class Emitter {
         return this.isEvent(exp) || this.isTimer(exp)
     }
 
+    // @tswow-begin: async/await support
+    hasAsyncModifier(node: ts.FunctionLikeDeclaration): boolean {
+        const modifiers = ts.getModifiers(node);
+        if (!modifiers) return false;
+        return modifiers.some(m => m.kind === ts.SyntaxKind.AsyncKeyword);
+    }
+    // @tswow-end
+
+    // @tswow-begin: lambda capture analysis methods
+    private isLargeType(type: ts.Type): boolean {
+        // Consider types large if they're objects, arrays, or custom classes
+        // Primitives (number, string, boolean) are small
+        const typeString = this.typeChecker.typeToString(type);
+        const smallTypes = ['number', 'boolean', 'string', 'undefined', 'null', 'void'];
+
+        if (smallTypes.includes(typeString)) {
+            return false;
+        }
+
+        // Check for primitive types with different representations
+        if (type.flags & ts.TypeFlags.NumberLike ||
+            type.flags & ts.TypeFlags.BooleanLike ||
+            type.flags & ts.TypeFlags.StringLike) {
+            return false;
+        }
+
+        // Everything else is considered large (objects, arrays, classes, etc.)
+        return true;
+    }
+
+    private isVariableModified(symbol: ts.Symbol, withinNode: ts.Node): boolean {
+        let isModified = false;
+
+        const checkNode = (node: ts.Node): void => {
+            if (ts.isBinaryExpression(node) &&
+                node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
+                // Check if left side is our variable
+                if (ts.isIdentifier(node.left)) {
+                    const leftSymbol = this.typeChecker.getSymbolAtLocation(node.left);
+                    if (leftSymbol === symbol) {
+                        isModified = true;
+                    }
+                }
+            } else if (ts.isPrefixUnaryExpression(node) || ts.isPostfixUnaryExpression(node)) {
+                // Check for ++ or --
+                if (node.operator === ts.SyntaxKind.PlusPlusToken ||
+                    node.operator === ts.SyntaxKind.MinusMinusToken) {
+                    if (ts.isIdentifier(node.operand)) {
+                        const operandSymbol = this.typeChecker.getSymbolAtLocation(node.operand);
+                        if (operandSymbol === symbol) {
+                            isModified = true;
+                        }
+                    }
+                }
+            }
+
+            if (!isModified) {
+                ts.forEachChild(node, checkNode);
+            }
+        };
+
+        checkNode(withinNode);
+        return isModified;
+    }
+
+    private analyzeCapturedVariables(lambdaNode: ts.ArrowFunction | ts.FunctionExpression): Map<string, CapturedVariable> {
+        const capturedVars = new Map<string, CapturedVariable>();
+        const lambdaScope = this.scope.length;
+
+        // Check if we need to capture 'this'
+        let needsThisCapture = false;
+
+        // Find all identifier references within the lambda
+        const checkIdentifier = (node: ts.Node): void => {
+            // Check for 'this' usage
+            if (node.kind === ts.SyntaxKind.ThisKeyword) {
+                needsThisCapture = true;
+                return;
+            }
+
+            if (ts.isIdentifier(node)) {
+                // Skip if this identifier is part of a property access expression
+                // (e.g., skip 'MaxItems' in 'listToAdd.MaxItems')
+                if (node.parent && ts.isPropertyAccessExpression(node.parent) && node.parent.name === node) {
+                    return;
+                }
+
+                // Skip if this identifier is part of a method call
+                // (e.g., skip 'push' in 'array.push()')
+                if (node.parent && ts.isPropertyAccessExpression(node.parent) && node.parent.name === node &&
+                    node.parent.parent && ts.isCallExpression(node.parent.parent) && node.parent.parent.expression === node.parent) {
+                    return;
+                }
+
+                const symbol = this.typeChecker.getSymbolAtLocation(node);
+                if (!symbol || !symbol.valueDeclaration) return;
+
+                // Skip if this is a class, enum, namespace, or type alias
+                const flags = symbol.flags;
+                if (flags & ts.SymbolFlags.Class ||
+                    flags & ts.SymbolFlags.Enum ||
+                    flags & ts.SymbolFlags.ValueModule ||
+                    flags & ts.SymbolFlags.Namespace ||
+                    flags & ts.SymbolFlags.TypeAlias ||
+                    flags & ts.SymbolFlags.Interface) {
+                    return;
+                }
+
+                // Check if this is a parameter of the current lambda
+                const isParameter = lambdaNode.parameters.some(param => {
+                    if (ts.isIdentifier(param.name)) {
+                        const paramSymbol = this.typeChecker.getSymbolAtLocation(param.name);
+                        return paramSymbol === symbol;
+                    }
+                    return false;
+                });
+
+                if (isParameter) return;
+
+                // Check if this is a local variable declared within the lambda
+                const isLocal = this.isVariableDeclaredWithin(symbol, lambdaNode);
+                if (isLocal) return;
+
+                // This is a captured variable
+                const varName = symbol.name;
+                if (!capturedVars.has(varName)) {
+                    const type = this.typeChecker.getTypeOfSymbolAtLocation(symbol, node);
+                    const declaration = symbol.valueDeclaration;
+
+                    let isConst = false;
+                    let isGlobal = false;
+                    if (ts.isVariableDeclaration(declaration)) {
+                        const varStmt = declaration.parent.parent;
+                        if (ts.isVariableStatement(varStmt)) {
+                            isConst = (varStmt.declarationList.flags & ts.NodeFlags.Const) !== 0;
+                            // Check if this is a global variable (declared at source file level)
+                            isGlobal = varStmt.parent && ts.isSourceFile(varStmt.parent);
+                        }
+                    }
+
+                    // Skip global variables as they don't need to be captured
+                    if (isGlobal) return;
+
+                    capturedVars.set(varName, {
+                        name: varName,
+                        symbol: symbol,
+                        type: type,
+                        isModified: this.isVariableModified(symbol, lambdaNode),
+                        isConst: isConst,
+                        isLargeType: this.isLargeType(type),
+                        scopeLevel: this.getVariableScopeLevel(symbol)
+                    });
+                }
+            }
+
+            ts.forEachChild(node, checkIdentifier);
+        };
+
+        if (lambdaNode.body) {
+            checkIdentifier(lambdaNode.body);
+        }
+
+        // Add special 'this' capture if needed
+        if (needsThisCapture && this.isInClass) {
+            // Create a special entry for 'this'
+            capturedVars.set('this', {
+                name: 'this',
+                symbol: null as any, // 'this' doesn't have a symbol
+                type: null as any,
+                isModified: false,
+                isConst: true,
+                isLargeType: false, // 'this' is a pointer
+                scopeLevel: 0,
+                captureMode: CaptureMode.Value // Capture 'this' by value
+            });
+        }
+
+        return capturedVars;
+    }
+
+    private isVariableDeclaredWithin(symbol: ts.Symbol, withinNode: ts.Node): boolean {
+        const declaration = symbol.valueDeclaration;
+        if (!declaration) return false;
+
+        let current: ts.Node | undefined = declaration;
+        while (current) {
+            if (current === withinNode) return true;
+            current = current.parent;
+        }
+
+        return false;
+    }
+
+    private getVariableScopeLevel(symbol: ts.Symbol): number {
+        const declaration = symbol.valueDeclaration;
+        if (!declaration) return 0;
+
+        let level = 0;
+        let current: ts.Node | undefined = declaration.parent;
+
+        while (current) {
+            if (ts.isFunctionDeclaration(current) ||
+                ts.isMethodDeclaration(current) ||
+                ts.isArrowFunction(current) ||
+                ts.isFunctionExpression(current) ||
+                ts.isSourceFile(current)) {
+                level++;
+            }
+            current = current.parent;
+        }
+
+        return level;
+    }
+
+    private determineCaptureMode(variable: CapturedVariable, isAsync: boolean): CaptureMode {
+        // For async contexts, prefer value capture to avoid lifetime issues
+        if (isAsync) {
+            // But if the variable is modified, we must use reference
+            if (variable.isModified) {
+                // This is potentially unsafe - log a warning
+                console.warn(`Warning: Variable '${variable.name}' is modified in async lambda - potential lifetime issue`);
+                return CaptureMode.Reference;
+            }
+            // Large types in async contexts still use reference for performance
+            return variable.isLargeType ? CaptureMode.Reference : CaptureMode.Value;
+        }
+
+        // For sync contexts
+        if (variable.isModified) {
+            return CaptureMode.Reference;
+        }
+
+        // Const primitives can be captured by value
+        if (variable.isConst && !variable.isLargeType) {
+            return CaptureMode.Value;
+        }
+
+        // Large types should be captured by reference for performance
+        if (variable.isLargeType) {
+            return CaptureMode.Reference;
+        }
+
+        // Default to value for small types
+        return CaptureMode.Value;
+    }
+
+    private generateOptimizedCaptureList(
+        capturedVars: Map<string, CapturedVariable>,
+        isAsync: boolean
+    ): string {
+        if (capturedVars.size === 0) {
+            return "[]";
+        }
+
+        const captures: string[] = [];
+        let allByValue = true;
+        let allByReference = true;
+
+        // Determine capture mode for each variable
+        capturedVars.forEach(variable => {
+            // Special handling for 'this'
+            if (variable.name === 'this') {
+                allByReference = false;
+                captures.push('this');
+                return;
+            }
+
+            const mode = this.determineCaptureMode(variable, isAsync);
+            variable.captureMode = mode;
+
+            if (mode === CaptureMode.Reference) {
+                allByValue = false;
+                captures.push(`&${variable.name}`);
+            } else {
+                allByReference = false;
+                captures.push(variable.name);
+            }
+        });
+
+        // Optimize capture list
+        if (allByValue) {
+            return "[=]";  // Capture all by value
+        } else if (allByReference) {
+            return "[&]";  // Capture all by reference
+        } else {
+            // Mixed capture - list specific variables
+            return `[${captures.join(", ")}]`;
+        }
+    }
+    // @tswow-end
+
+    needsCapture(node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
+        | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration): boolean
+    {
+        // For top-level named function declarations (not nested), don't use captures
+        if (ts.isFunctionDeclaration(node)) {
+            // Check if this is a nested function declaration
+            let parent = node.parent;
+            while (parent) {
+                if (ts.isFunctionExpression(parent) || ts.isArrowFunction(parent) ||
+                    ts.isFunctionDeclaration(parent) || ts.isMethodDeclaration(parent)) {
+                    // This is a nested function - it may need captures
+                    return true;
+                }
+                parent = parent.parent;
+            }
+            return false;
+        }
+
+        // Methods, constructors, getters/setters don't use lambda captures
+        if (ts.isMethodDeclaration(node) || ts.isConstructorDeclaration(node) ||
+            ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) {
+            return false;
+        }
+
+        // Special case: Check if this is specifically a global array initialization
+        // This pattern matches: let arr = [ (x) => ... ]
+        if (ts.isArrowFunction(node) && node.parent && ts.isArrayLiteralExpression(node.parent)) {
+            let arrayParent = node.parent.parent;
+            if (arrayParent && ts.isVariableDeclaration(arrayParent)) {
+                let varDeclList = arrayParent.parent;
+                if (varDeclList && ts.isVariableDeclarationList(varDeclList)) {
+                    let varStatement = varDeclList.parent;
+                    if (varStatement && ts.isVariableStatement(varStatement)) {
+                        let sourceFile = varStatement.parent;
+                        if (sourceFile && ts.isSourceFile(sourceFile)) {
+                            // This is a global array initialization - no captures needed
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        // For all other arrow functions, lambdas, and function expressions, we need captures
+        return true;
+    }
+
     processFunctionExpressionInternal(
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
@@ -2441,7 +3225,24 @@ export class Emitter {
         }
 
         // @tswow-begin
+        // in case of nested function - moved up to fix reference error
+        const isNestedFunction = node.parent && node.parent.kind === ts.SyntaxKind.Block;
+
         let isAsync = this.isAsync(node.parent as ts.ExpressionStatement);
+
+        // For nested functions, check if any parent is an async context
+        if (!isAsync && isNestedFunction) {
+            let parent = node.parent;
+            while (parent && !isAsync) {
+                if (ts.isArrowFunction(parent) || ts.isFunctionExpression(parent)) {
+                    // Check if this parent function is in an async context
+                    if (parent.parent && ts.isExpressionStatement(parent.parent)) {
+                        isAsync = this.isAsync(parent.parent);
+                    }
+                }
+                parent = parent.parent;
+            }
+        }
         // @tswow-end
 
         // skip function declaration as union
@@ -2473,7 +3274,6 @@ export class Emitter {
         // const noCapture = !this.requireCapture(node);
 
         // in case of nested function
-        const isNestedFunction = node.parent && node.parent.kind === ts.SyntaxKind.Block;
         if (isNestedFunction) {
             implementationMode = true;
         }
@@ -2495,10 +3295,21 @@ export class Emitter {
         this.processTemplateParams(node);
 
         if (implementationMode !== true) {
-            this.processModifiers(node.modifiers);
+            this.processModifiers(ts.getModifiers(node));
         }
 
+        // @tswow-begin: async/await support
+        const isAsyncFunction = this.hasAsyncModifier(node);
+        // @tswow-end
+
         const writeReturnType = () => {
+            // @tswow-begin: async/await support
+            if (isAsyncFunction) {
+                this.needsFutureInclude = true;
+                this.writer.writeString('std::future<');
+            }
+            // @tswow-end
+
             if (node.type) {
                 if (this.isTemplateType(node.type)) {
                     this.writer.writeString('RET');
@@ -2530,6 +3341,12 @@ export class Emitter {
                     }
                 }
             }
+
+            // @tswow-begin: async/await support
+            if (isAsyncFunction) {
+                this.writer.writeString('>');
+            }
+            // @tswow-end
         };
 
         let extraArgs = 0;
@@ -2632,9 +3449,24 @@ export class Emitter {
                 }
 
                 // lambda or noname function
-                // @tswow-begin
-                this.writer.writeString(`[${isAsync ? '=' : '&'}]`);
-                // @tswow-begin
+                // @tswow-begin: optimized lambda capture
+                // Analyze which variables need to be captured
+                const capturedVars = (isArrowFunction || isFunctionExpression)
+                    ? this.analyzeCapturedVariables(node as ts.ArrowFunction | ts.FunctionExpression)
+                    : new Map<string, CapturedVariable>();
+                const captureList = this.generateOptimizedCaptureList(capturedVars, isAsync);
+
+                // Log capture information for debugging
+                if (capturedVars.size > 0) {
+                    const captures = Array.from(capturedVars.values()).map(v => {
+                        const mode = v.captureMode === CaptureMode.Reference ? "&" : "";
+                        return `${mode}${v.name}`;
+                    });
+                    // Debug: Lambda capture: ${captureList} // Captured: ${captures.join(", ")}
+                }
+
+                this.writer.writeString(captureList);
+                // @tswow-end
             }
         }
 
@@ -2642,9 +3474,33 @@ export class Emitter {
 
         let defaultParams = false;
         let next = false;
+        // Track parameters that need destructuring
+        const destructuringParams: Array<{ param: ts.ParameterDeclaration, tempName: string }> = [];
+
         node.parameters.forEach((element, index) => {
             if (element.name.kind !== ts.SyntaxKind.Identifier) {
-                throw new Error('Not implemented');
+                // Handle destructuring parameters
+                if (element.name.kind === ts.SyntaxKind.ObjectBindingPattern ||
+                    element.name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+                    // Generate a unique parameter name
+                    const tempParamName = `__param${index}`;
+                    destructuringParams.push({ param: element, tempName: tempParamName });
+
+                    // Write the parameter with temp name
+                    if (next) {
+                        this.writer.writeString(', ');
+                    }
+
+                    const effectiveType = element.type || this.resolver.getOrResolveTypeOfAsTypeNode(element);
+                    this.processType(effectiveType, isArrowFunction);
+                    this.writer.writeString(' ');
+                    this.writer.writeString(tempParamName);
+
+                    next = true;
+                    return; // Continue to next parameter
+                }
+                // Other non-identifier parameter name kinds are not supported
+                throw new Error(`Unsupported parameter name kind: ${ts.SyntaxKind[(element.name as any).kind]}`);
             }
 
             if (next) {
@@ -2662,11 +3518,13 @@ export class Emitter {
             }
 
             this.writer.writeString(' ');
-            this.processExpression(element.name);
+            if (element.name.kind === ts.SyntaxKind.Identifier) {
+                this.processExpression(element.name);
+            }
 
             // extra symbol to change parameter name
             if (node.kind === ts.SyntaxKind.Constructor
-                && this.hasAccessModifier(element.modifiers)
+                && this.hasAccessModifier(ts.getModifiers(element))
                 || element.dotDotDotToken) {
                 this.writer.writeString('_');
             }
@@ -2717,7 +3575,7 @@ export class Emitter {
 
             next = false;
             node.parameters
-                .filter(e => this.hasAccessModifier(e.modifiers))
+                .filter(e => this.hasAccessModifier(ts.getModifiers(e)))
                 .forEach(element => {
                     if (next) {
                         this.writer.writeString(', ');
@@ -2757,6 +3615,15 @@ export class Emitter {
         if (!noBody && (isArrowFunction || isFunctionExpression || implementationMode)) {
             this.writer.BeginBlock();
 
+            // Process destructuring parameters at the beginning of the function body
+            destructuringParams.forEach(({ param, tempName }) => {
+                if (param.name.kind === ts.SyntaxKind.ArrayBindingPattern) {
+                    this.processArrayDestructuring(param.name, tempName);
+                } else if (param.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+                    this.processObjectDestructuring(param.name, tempName);
+                }
+            });
+
             node.parameters
                 .filter(e => e.dotDotDotToken)
                 .forEach(element => {
@@ -2783,9 +3650,19 @@ export class Emitter {
 
             // add default return if no body
             if (noReturnStatement && node && node.type && node.type.kind !== ts.SyntaxKind.VoidKeyword) {
-                this.writer.writeString('return ');
-                writeReturnType();
-                this.writer.writeString('()');
+                // @tswow-begin: async/await support
+                if (isAsyncFunction) {
+                    this.writer.writeString('return std::async(std::launch::deferred, [=]() { return ');
+                    writeReturnType();
+                    this.writer.writeString('(); })');
+                } else {
+                // @tswow-end
+                    this.writer.writeString('return ');
+                    writeReturnType();
+                    this.writer.writeString('()');
+                // @tswow-begin: async/await support
+                }
+                // @tswow-end
                 this.writer.EndOfStatement();
             }
 
@@ -2911,9 +3788,46 @@ export class Emitter {
     }
 
     processArrowFunction(node: ts.ArrowFunction): void {
+        // Check if this is an empty arrow function being assigned to a typed property
+        if (node.parameters.length === 0 && node.parent && ts.isPropertyDeclaration(node.parent) && node.parent.type) {
+            // Get the expected function type from the property declaration
+            const propertyType = this.typeChecker.getTypeFromTypeNode(node.parent.type);
+
+            // Check if it's a function type
+            const signatures = this.typeChecker.getSignaturesOfType(propertyType, ts.SignatureKind.Call);
+            if (signatures.length > 0) {
+                const signature = signatures[0];
+                const params = signature.getParameters();
+
+                // Create synthetic parameters based on the expected signature
+                const syntheticParams: ts.ParameterDeclaration[] = [];
+                params.forEach((param, index) => {
+                    const paramType = this.typeChecker.getTypeOfSymbolAtLocation(param, node);
+                    const paramTypeNode = this.typeChecker.typeToTypeNode(paramType, node, ts.NodeBuilderFlags.InTypeAlias);
+
+                    const paramName = factory.createIdentifier(`__param${index}`);
+                    const paramDecl = factory.createParameterDeclaration(
+                        undefined, // modifiers
+                        undefined, // dotDotDotToken
+                        paramName, // name
+                        undefined, // questionToken
+                        paramTypeNode, // type
+                        undefined // initializer
+                    );
+                    // Set parent references to avoid undefined parent errors
+                    (paramName as any).parent = paramDecl;
+                    (paramDecl as any).parent = node;
+                    syntheticParams.push(paramDecl);
+                });
+
+                // Replace the empty parameter list with synthetic parameters
+                (node as any).parameters = factory.createNodeArray(syntheticParams);
+            }
+        }
+
         if (node.body.kind !== ts.SyntaxKind.Block) {
             // create body
-            (node as any).body = ts.createBlock([ts.createReturn(<ts.Expression>node.body)]);
+            (node as any).body = factory.createBlock([factory.createReturnStatement(<ts.Expression>node.body)]);
         }
 
         this.processFunctionExpression(<any>node);
@@ -2941,19 +3855,24 @@ export class Emitter {
     }
 
     isStatic(node: ts.Node) {
-        return node.modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.StaticKeyword);
+        const modifiers = ts.getModifiers(node as any);
+        return modifiers && modifiers.some(m => m.kind === ts.SyntaxKind.StaticKeyword);
     }
 
     isAbstract(node: ts.Node) {
-        return node.modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.AbstractKeyword);
+        const modifiers = ts.getModifiers(node as any);
+        return modifiers && modifiers.some(m => m.kind === ts.SyntaxKind.AbstractKeyword);
     }
 
     processFunctionDeclaration(node: ts.FunctionDeclaration | ts.MethodDeclaration, implementationMode?: boolean): boolean {
-        // @ts-ignore
         if (!implementationMode) {
-            this.processPredefineType(node.type);
+            if (node.type) {
+                this.processPredefineType(node.type);
+            }
             node.parameters.forEach((element) => {
-                this.processPredefineType(element.type);
+                if (element.type) {
+                    this.processPredefineType(element.type);
+                }
             });
         }
 
@@ -2990,7 +3909,32 @@ export class Emitter {
             functionReturn = null;
         }
 
+        // @tswow-begin: async/await support
+        const isAsyncFunction = functionDeclaration && this.hasAsyncModifier(functionDeclaration as ts.FunctionLikeDeclaration);
+        // @tswow-end
+
         this.writer.writeString('return');
+
+        // @tswow-begin: async/await support
+        if (isAsyncFunction) {
+            if (node.expression) {
+                // For async functions returning a value
+                this.writer.writeString(' std::async(std::launch::deferred, [=]() -> ');
+                // Write the inner return type
+                if (functionReturn && functionReturn.kind !== ts.SyntaxKind.VoidKeyword) {
+                    this.processType(functionReturn);
+                } else {
+                    this.writer.writeString('auto');
+                }
+                this.writer.writeString(' { return ');
+            } else {
+                // For async void functions with no return expression
+                this.writer.writeString(' std::async(std::launch::deferred, [=]() -> void { })');
+                this.writer.EndOfStatement();
+                return;
+            }
+        }
+        // @tswow-end
         if (node.expression) {
             this.writer.writeString(' ');
 
@@ -3024,7 +3968,21 @@ export class Emitter {
                 this.writer.writeString(')');
             }
             */
+
+            // @tswow-begin: async/await support
+            if (isAsyncFunction) {
+                this.writer.writeString('; })');
+            }
+            // @tswow-end
         } else {
+            // @tswow-begin: async/await support - handle void async functions
+            if (isAsyncFunction) {
+                // This is a void async function with no explicit return
+                this.writer.writeString(' std::async(std::launch::deferred, [=]() -> void { })');
+                this.writer.EndOfStatement();
+                return;
+            }
+            // @tswow-end
             if (functionReturn && functionReturn.kind !== ts.SyntaxKind.VoidKeyword) {
                 this.writer.writeString(' ');
                 this.processType(functionReturn);
@@ -3354,24 +4312,90 @@ export class Emitter {
     }
 
     processTemplateExpression(node: ts.TemplateExpression): void {
+        // Wrap the entire template expression in parentheses for proper precedence
+        const needsParens = node.parent && (
+            ts.isBinaryExpression(node.parent) ||
+            ts.isConditionalExpression(node.parent) ||
+            ts.isCallExpression(node.parent) ||
+            ts.isPropertyAccessExpression(node.parent)
+        );
+
+        if (needsParens) {
+            this.writer.writeString('(');
+        }
+
+        // Process the head (first part before any ${})
         this.processStringLiteral(node.head);
-        node.templateSpans.forEach(element => {
+
+        // Process each template span (${expression} followed by literal text)
+        node.templateSpans.forEach((span, index) => {
             this.writer.writeString(' + ');
-            this.writer.writeString(' ToStr(');
 
-            this.processExpression(element.expression);
+            // Handle different expression types properly
+            const expr = span.expression;
+            const exprType = this.typeChecker.getTypeAtLocation(expr);
+            const isStringType = this.typeChecker.typeToString(exprType) === 'string';
 
-            this.writer.writeString(')');
+            // Wrap binary expressions in parentheses for proper precedence
+            const needsExprParens = ts.isBinaryExpression(expr) ||
+                                   ts.isConditionalExpression(expr);
 
-            this.writer.writeString(' + ');
-            this.processStringLiteral(element.literal);
+            if (needsExprParens) {
+                this.writer.writeString('(');
+            }
+
+            // Only use ToStr for non-string types
+            if (!isStringType) {
+                this.writer.writeString('::ToStr(');
+            }
+
+            this.processExpression(expr);
+
+            if (!isStringType) {
+                this.writer.writeString(')');
+            }
+
+            if (needsExprParens) {
+                this.writer.writeString(')');
+            }
+
+            // Process the literal part after the expression
+            if (span.literal.text.length > 0) {
+                this.writer.writeString(' + ');
+                this.processStringLiteral(span.literal);
+            }
         });
+
+        if (needsParens) {
+            this.writer.writeString(')');
+        }
     }
 
     processRegularExpressionLiteral(node: ts.RegularExpressionLiteral): void {
-        this.writer.writeString('(new RegExp(');
-        this.processStringLiteral(<ts.LiteralLikeNode>{ text: node.text.substring(1, node.text.length - 1) });
-        this.writer.writeString('))');
+        // @tswow-begin: regex support
+        // Extract pattern and flags from regex literal
+        const text = node.text;
+        const lastSlashIndex = text.lastIndexOf('/');
+        const pattern = text.substring(1, lastSlashIndex);
+        const flags = text.substring(lastSlashIndex + 1);
+
+        // Mark that we need regex include
+        this.needsRegexInclude = true;
+
+        if (flags) {
+            // Constructor with flags - TSRegExp is a value type in TSWoW
+            this.writer.writeString('TSRegExp(');
+            this.processStringLiteral(<ts.LiteralLikeNode>{ text: pattern });
+            this.writer.writeString(', ');
+            this.processStringLiteral(<ts.LiteralLikeNode>{ text: flags });
+            this.writer.writeString(')');
+        } else {
+            // Constructor without flags - TSRegExp is a value type in TSWoW
+            this.writer.writeString('TSRegExp(');
+            this.processStringLiteral(<ts.LiteralLikeNode>{ text: pattern });
+            this.writer.writeString(')');
+        }
+        // @tswow-end
     }
 
     processObjectLiteralExpression(node: ts.ObjectLiteralExpression): void {
@@ -3399,7 +4423,7 @@ export class Emitter {
                     if (property.name
                         && (property.name.kind === ts.SyntaxKind.Identifier
                             /*|| property.name.kind === ts.SyntaxKind.NumericLiteral*/)) {
-                        this.processExpression(ts.createStringLiteral(property.name.text));
+                        this.processExpression(factory.createStringLiteral(property.name.text));
                     } else {
                         this.processExpression(<ts.Expression>property.name);
                     }
@@ -3415,7 +4439,7 @@ export class Emitter {
                     if (property.name
                         && (property.name.kind === ts.SyntaxKind.Identifier
                             || property.name.kind === ts.SyntaxKind.NumericLiteral)) {
-                        this.processExpression(ts.createStringLiteral(property.name.text));
+                        this.processExpression(factory.createStringLiteral(property.name.text));
                     } else {
                         this.processExpression(<ts.Expression>property.name);
                     }
@@ -3424,7 +4448,7 @@ export class Emitter {
                     if (property.name
                         && (property.name.kind === ts.SyntaxKind.Identifier
                             || property.name.kind === ts.SyntaxKind.NumericLiteral)) {
-                        this.processExpression(ts.createStringLiteral(property.name.text));
+                        this.processExpression(factory.createStringLiteral(property.name.text));
                     } else {
                         this.processExpression(<ts.Expression>property.name);
                     }
@@ -3467,7 +4491,7 @@ export class Emitter {
             isTuple = true;
         }
 
-        let elementsType = node.parent ? (<any>node).parent.type : undefined;
+        let elementsType = node.parent ? (<any>node.parent).type : undefined;
         if (!elementsType) {
             if (node.elements.length !== 0) {
                 elementsType = this.resolver.typeToTypeNode(this.resolver.getTypeAtLocation(node.elements[0]));
@@ -3502,8 +4526,17 @@ export class Emitter {
                 this.writer.writeString('TSArray<');
                 if (elementsType) {
                     this.processType(elementsType, false, false, false, false, node);
+                } else if (type && type.kind === ts.SyntaxKind.ArrayType) {
+                    // Try to get element type from array type
+                    const arrayType = type as ts.ArrayTypeNode;
+                    if (arrayType.elementType) {
+                        this.processType(arrayType.elementType, false, false, false, false, node);
+                    } else {
+                        this.error(`Cannot infer TSArray element type. Please specify the type explicitly, e.g., 'const arr: string[] = []'`, node);
+                    }
                 } else {
-                    this.attemptResolveBrokenArrayType(elementsType,node)
+                    // Provide helpful error message
+                    this.error(`Cannot infer TSArray element type. Please specify the type explicitly, e.g., 'const arr: string[] = []'`, node);
                 }
                 this.writer.writeString('>');
             }
@@ -3647,6 +4680,41 @@ export class Emitter {
 
     processBinaryExpression(node: ts.BinaryExpression): void {
         const opCode = node.operatorToken.kind;
+
+        // Handle destructuring assignment
+        if (opCode === ts.SyntaxKind.EqualsToken &&
+            (node.left.kind === ts.SyntaxKind.ArrayLiteralExpression ||
+             node.left.kind === ts.SyntaxKind.ObjectLiteralExpression)) {
+            // This is a destructuring assignment
+            const tempVar = this.generateTempVariable();
+            this.writer.writeString('([&]() { auto ');
+            this.writer.writeString(tempVar);
+            this.writer.writeString(' = ');
+            this.processExpression(node.right);
+            this.writer.writeString('; ');
+
+            if (node.left.kind === ts.SyntaxKind.ArrayLiteralExpression) {
+                // Convert array literal to array binding pattern for processing
+                const arrayLiteral = node.left as ts.ArrayLiteralExpression;
+                const elements = arrayLiteral.elements.map((elem, index) => {
+                    this.writer.writeString(elem.getText());
+                    this.writer.writeString(' = ');
+                    this.writer.writeString(tempVar);
+                    this.writer.writeString('[');
+                    this.writer.writeString(index.toString());
+                    this.writer.writeString(']; ');
+                });
+            } else {
+                // Object destructuring assignment - not fully supported yet
+                this.error('Object destructuring assignment is not yet supported', node);
+            }
+
+            this.writer.writeString('return ');
+            this.writer.writeString(tempVar);
+            this.writer.writeString('; }())');
+            return;
+        }
+
         if (opCode === ts.SyntaxKind.InstanceOfKeyword) {
             this.writer.writeString('is<');
 
@@ -3803,20 +4871,28 @@ export class Emitter {
         const isNew = node.kind === ts.SyntaxKind.NewExpression;
         const typeOfExpression = isNew && this.resolver.getOrResolveTypeOf(node.expression);
         const isArray = isNew && typeOfExpression && typeOfExpression.symbol && typeOfExpression.symbol.name === 'ArrayConstructor';
+        // @tswow-begin: regex support - RegExp is a value type
+        const isRegExp = isNew && typeOfExpression && typeOfExpression.symbol && typeOfExpression.symbol.name === 'RegExp';
+        // @tswow-end
 
-        if (node.kind === ts.SyntaxKind.NewExpression && !isArray) {
+        if (node.kind === ts.SyntaxKind.NewExpression && !isArray && !isRegExp) {
             this.writer.writeString('ts_make_shared<');
         }
 
         if (isArray) {
             this.writer.writeString('TSArray');
+        // @tswow-begin: regex support
+        } else if (isRegExp) {
+            this.needsRegexInclude = true;
+            this.writer.writeString('TSRegExp');
+        // @tswow-end
         } else {
 
             this.processExpression(node.expression);
             this.processTemplateArguments(node);
         }
 
-        if (node.kind === ts.SyntaxKind.NewExpression && !isArray) {
+        if (node.kind === ts.SyntaxKind.NewExpression && !isArray && !isRegExp) {
             // closing template
             this.writer.writeString('>');
         }
@@ -3867,21 +4943,26 @@ export class Emitter {
     }
 
     processSuperExpression(node: ts.SuperExpression): void {
-        if (node.parent.kind === ts.SyntaxKind.CallExpression) {
-            const classNode = <ts.ClassDeclaration>this.scope[this.scope.length - 2];
-            if (classNode) {
-                const heritageClause = classNode.heritageClauses[0];
-                if (heritageClause) {
-                    const firstType = heritageClause.types[0];
-                    if (firstType.expression.kind === ts.SyntaxKind.Identifier) {
-                        const identifier = <ts.Identifier>firstType.expression;
+        const classNode = <ts.ClassDeclaration>this.scope[this.scope.length - 2];
+        if (classNode) {
+            const heritageClause = classNode.heritageClauses[0];
+            if (heritageClause) {
+                const firstType = heritageClause.types[0];
+                if (firstType.expression.kind === ts.SyntaxKind.Identifier) {
+                    const identifier = <ts.Identifier>firstType.expression;
+                    if (node.parent.kind === ts.SyntaxKind.CallExpression) {
                         this.writer.writeString(`${identifier.text}::ts_constructor`);
+                        return;
+                    } else {
+                        // For method calls like super.method(), use base class name
+                        this.writer.writeString(`${identifier.text}`);
                         return;
                     }
                 }
             }
         }
 
+        // Fallback - this should rarely be reached
         this.writer.writeString('__super');
     }
 
@@ -3914,7 +4995,7 @@ export class Emitter {
                         this.writer.writeString(', ');
                     }
 
-                    const elementAccess = ts.createElementAccess(node.expression, index);
+                    const elementAccess = factory.createElementAccessExpression(node.expression, index);
                     this.processExpression(this.fixupParentReferences(elementAccess, node.parent));
                     next = true;
                 });
@@ -3925,9 +5006,12 @@ export class Emitter {
     }
 
     processAwaitExpression(node: ts.AwaitExpression): void {
-        this.writer.writeString('std::async([=]() { ');
+        // @tswow-begin: improved async/await support
+        // For now, we'll implement a basic await that calls .get() on futures
+        // In the future, this could be enhanced to support coroutines
         this.processExpression(node.expression);
-        this.writer.writeString('; })');
+        this.writer.writeString('.get()');
+        // @tswow-end
     }
 
     processIdentifier(node: ts.Identifier): void {
@@ -4038,7 +5122,16 @@ export class Emitter {
                 && typeInfo.symbol.valueDeclaration.kind === ts.SyntaxKind.ModuleDeclaration) {
                 this.writer.writeString('::');
             } else {
-                this.writer.writeString('->');
+                // @tswow-begin: regex support - TSRegExp is a value type
+                // Check if this is a value type that should use . instead of ->
+                const isValueType = typeInfo && typeInfo.symbol &&
+                    (typeInfo.symbol.name === 'TSRegExp' || typeInfo.symbol.name === 'RegExp');
+                if (isValueType) {
+                    this.writer.writeString('.');
+                } else {
+                    this.writer.writeString('->');
+                }
+                // @tswow-end
             }
 
             if (getAccess) {
@@ -4055,6 +5148,73 @@ export class Emitter {
                 this.writer.writeString('()');
             }
         }
+    }
+
+    // TypeScript 5.x expression handlers
+    processSatisfiesExpression(node: any): void {
+        // 'satisfies' is a type-only operator, process the expression part
+        this.processExpression(node.expression);
+    }
+
+    processMetaProperty(node: ts.MetaProperty): void {
+        // Handle meta properties like 'new.target'
+        if (node.keywordToken === ts.SyntaxKind.NewKeyword && node.name.text === 'target') {
+            // This is 'new.target', which doesn't have a direct C++ equivalent
+            // For now, we'll emit a placeholder
+            this.writer.writeString('/* new.target */nullptr');
+        } else {
+            throw new Error(`Unsupported meta property: ${node.getText()}`);
+        }
+    }
+
+    processYieldExpression(node: ts.YieldExpression): void {
+        // Yield expressions are not supported in C++ context
+        throw new Error('Yield expressions are not supported in typescript2cxx');
+    }
+
+    processTaggedTemplateExpression(node: ts.TaggedTemplateExpression): void {
+        // Tagged template expressions would need special handling
+        // For now, process as a regular function call with template string
+        this.processExpression(node.tag);
+        this.writer.writeString('(');
+        if (ts.isNoSubstitutionTemplateLiteral(node.template)) {
+            this.processNoSubstitutionTemplateLiteral(node.template);
+        } else {
+            this.processTemplateExpression(node.template);
+        }
+        this.writer.writeString(')');
+    }
+
+    processClassExpression(node: ts.ClassExpression): void {
+        // Class expressions are not supported in C++ context
+        throw new Error('Class expressions are not supported in typescript2cxx');
+    }
+
+    processOmittedExpression(node: ts.OmittedExpression): void {
+        // Omitted expressions appear in array destructuring like [a, , c]
+        // In C++ context, we can emit a placeholder
+        this.writer.writeString('/* omitted */');
+    }
+
+    processExpressionWithTypeArguments(node: ts.ExpressionWithTypeArguments): void {
+        // Process the expression part, ignore type arguments
+        this.processExpression(node.expression);
+    }
+
+    processBigIntLiteral(node: any): void {
+        // BigInt literals end with 'n', e.g., 123n
+        // C++ doesn't have built-in bigint, so we'll emit as a string comment
+        const text = node.text || node.getText();
+        this.writer.writeString(`/* BigInt: ${text} */TSNumber::of(${text.replace(/n$/, '')})`);
+    }
+
+    processPrivateIdentifier(node: any): void {
+        // Private identifiers start with #
+        // In C++, convert to regular private member with underscore prefix
+        const text = node.text || node.getText();
+        // Remove the # and prefix with underscore
+        const cppName = '_' + text.substring(1);
+        this.writer.writeString(cppName);
     }
 }
 

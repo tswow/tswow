@@ -28,8 +28,10 @@ import { CleanCommand } from "./CommandActions";
 import { Crashes } from "./Crashes";
 import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
+import { Identifier } from "./Identifiers";
 import { Launcher } from "./Launcher";
 import { Livescripts } from "./Livescripts";
+import { Tests } from "./Tests";
 import { MapData } from "./MapData";
 import { MiscCommands } from "./MiscCommands";
 import { Module } from "./Modules";
@@ -55,9 +57,25 @@ async function initTerminal()
         NodeConfig.TerminalNames,
     )
     term.log('mysql',`TSWoW started up in ${timer.timeSec()}s`)
-    CleanCommand.addCommand('filecache','','',args=>{
+    CleanCommand.addCommand('filecache','','Removes TSWoW file change cache',args=>{
         ipaths.bin.changes.remove();
         term.log('mysql',`Removed ${ipaths.bin.changes.abs().get()}`)
+    });
+
+    CleanCommand.addCommand(
+          'all'
+        , '(see arguments to clean datascripts/addon/livescripts)'
+        , 'Cleans all build artifacts: datascripts, addons, livescripts, and filecache'
+    , async args=>{
+        let modules = Identifier.getModulesOrAll(args);
+
+        // Clean all component types
+        await commands.sendCommand(`clean datascripts ${modules.map(m => m.fullName).join(' ')}`);
+        await commands.sendCommand(`clean addon ${modules.map(m => m.fullName).join(' ')}`);
+        await commands.sendCommand(`clean livescripts ${modules.map(m => m.fullName).join(' ')}`);
+        await commands.sendCommand(`clean filecache`);
+
+        term.success('misc', 'Cleaned all build artifacts successfully');
     });
     await commands.enterLoop((input: string)=>{
         Module.cacheEndpoints(true);
@@ -71,6 +89,7 @@ export async function main() {
 
     if(process.argv.includes('terminal-only'))
     {
+        console.log('[DEBUG] Terminal only mode');
         return initTerminal();
     }
 
@@ -87,7 +106,7 @@ export async function main() {
     }
 
     const isServerMode = process.argv.includes('server-mode');
-    
+
     if (isWindows() && path.resolve(NodeConfig.DefaultClient).charAt(0) != path.resolve(process.cwd()).charAt(0) && !isServerMode)
     {
         term.error(
@@ -121,7 +140,13 @@ export async function main() {
 
     applyTSTLHack();
     Module.cacheEndpoints(true);
-    await mysql.initialize();
+    try {
+        await mysql.initialize();
+    } catch (err) {
+        term.error('mysql', `Failed to initialize MySQL: ${err.message}`);
+        term.error('mysql', `Please ensure MySQL is running and accessible.`);
+        process.exit(1);
+    }
     if(process.argv.includes('mysql-only'))
     {
         return initTerminal();
@@ -136,7 +161,15 @@ export async function main() {
     await Client.initialize();
     await Module.initialize();
     await Snippets.initialize();
-    await AuthServer.initializeDatabase()
+    try {
+        await AuthServer.initializeDatabase()
+    } catch (err) {
+        term.error('authserver', `Failed to initialize AuthServer database: ${err.message}`);
+        if (err.code === 'ECONNREFUSED') {
+            term.error('authserver', `MySQL server is not running. Please start MySQL and try again.`);
+        }
+        process.exit(1);
+    }
     await Realm.initialize()
     await AuthServer.initializeServer()
     if (process.argv.includes('realm-only'))
@@ -148,6 +181,7 @@ export async function main() {
     {
         return initTerminal();
     }
+    await Tests.initialize();
     await Livescripts.initialize();
     if (process.argv.includes('scripts-only'))
     {

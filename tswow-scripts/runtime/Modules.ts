@@ -28,6 +28,7 @@ import { Assets } from './Assets';
 import { CreateCommand, ListCommand } from './CommandActions';
 import { Datascripts } from './Datascripts';
 import { Dataset, Datasets } from './Dataset';
+import { Tests } from './Tests';
 import { Identifier } from './Identifiers';
 import { Livescripts } from './Livescripts';
 import { Realm, Realms } from './Realm';
@@ -122,6 +123,10 @@ export class ModuleEndpoint {
 
     get assets() {
         return new Assets(this);
+    }
+
+    get tests() {
+        return new Tests(this);
     }
 
     // never hack: typescript doesn't allow us to infer
@@ -266,11 +271,11 @@ export class Module {
         this.id = id;
     }
 
-    static command = commands.addCommand('module')
+    static command = commands.addCommand('module', '', 'Module management and configuration commands')
 
     static initialize() {
         term.debug('misc', `Initializing modules`)
-        ListCommand.addCommand('module','','',_=>{
+        ListCommand.addCommand('module','','Lists all available modules',_=>{
             this.endpoints()
                 .filter(x=>term.log('modules',`${x.fullName}: ${x.path.get()}`))
         })
@@ -279,7 +284,7 @@ export class Module {
         CreateCommand.addCommand(
               'module'
             , 'name --livescripts? --datascripts? --addons? --shared?'
-            , ''
+            , 'Creates a new module with optional components (livescripts, datascripts, addons, shared)'
             , args => {
                 Identifier.assertUnused(args[0],'name');
                 let types: EndpointType[] = []

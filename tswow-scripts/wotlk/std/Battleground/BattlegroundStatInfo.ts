@@ -51,13 +51,12 @@ export class BattlegroundStatInfoBase<T> {
         {
             BattlegroundStatInfoBase.setOwner(info,owner);
         }
-        // @ts-ignore
         info.owner = owner;
     }
 
     protected get_override(name: string): BattlegroundStatInfoField
     {
-        // @ts-ignore
+        // @ts-expect-error - BattlegroundStatInfoField constructor expects no arguments but receives owner
         return this.overrides[name] || (this.overrides[name] = new BattlegroundStatInfoField(this.owner));
     }
 
@@ -107,7 +106,7 @@ finish('stat-info-overrides', ()=>{
     if(entries.length == 0) {
         return;
     }
-    let str = 
+    let str =
 `
 local cur_map_id = "0"
 

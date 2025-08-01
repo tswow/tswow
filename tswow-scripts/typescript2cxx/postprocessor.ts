@@ -34,7 +34,7 @@ function match(first, second)
     return false;
 }
 
-export function postprocess(contents: string): string {
+export async function postprocess(contents: string): Promise<string> {
     // ======================================
     //  Tracy
     // ======================================
@@ -77,6 +77,6 @@ export function postprocess(contents: string): string {
     // ======================================
     //  ID Tags
     // ======================================
-    contents = ApplyTagMacros(contents, process.argv.find(x=>x.startsWith('--datasetName=')).substring('--datasetName='.length), 'LIVESCRIPT')
+    contents = await ApplyTagMacros(contents, process.argv.find(x=>x.startsWith('--datasetName=')).substring('--datasetName='.length), 'LIVESCRIPT')
     return contents;
 }

@@ -137,6 +137,42 @@ export namespace wsys {
     }
 
     /**
+     * Executes a Node.js script using the current Node.js executable
+     * @param scriptPath Path to the JavaScript file to execute
+     * @param args Array of arguments to pass to the script
+     * @param stdio How to handle output from the child process
+     * @param options Additional spawn options
+     * @returns Command output if stdio is 'pipe', undefined otherwise
+     */
+    export function execNode(scriptPath: string, args: string[] = [], stdio: 'ignore'|'inherit'|'pipe' = 'inherit', options: child_process.SpawnSyncOptions = {}) {
+        term.debug('misc', `Executing Node script ${scriptPath} with args ${args.join(' ')}`);
+
+        // Use the current Node.js executable
+        const nodeExe = process.execPath;
+
+        const result = child_process.spawnSync(nodeExe, [scriptPath, ...args], {
+            stdio: stdio,
+            ...options
+        });
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        if (result.status !== 0) {
+            throw new Error(`Node process exited with code ${result.status}`);
+        }
+
+        term.debug('misc', `Finished executing Node script`);
+
+        if (stdio === 'pipe' && result.stdout) {
+            return result.stdout.toString();
+        }
+
+        return '';
+    }
+
+    /**
      * Sleeps for a specified time
      * @param timeout Milliseconds to sleep for.
      * @returns Promise that resolves after `timeout` milliseconds.

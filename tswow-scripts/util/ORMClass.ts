@@ -1,5 +1,19 @@
 import * as ts from 'typescript';
 
+// Helper function to get decorators from both old and new TypeScript versions
+function getDecorators(node: ts.Node): readonly ts.Decorator[] | undefined {
+    // TypeScript 5.0+ moved decorators to modifiers
+    const modifiers = (node as any).modifiers;
+    if (modifiers) {
+        const decorators = modifiers.filter((m: any) => m.kind === ts.SyntaxKind.Decorator);
+        if (decorators.length > 0) {
+            return decorators;
+        }
+    }
+    // Fallback to old decorator property for TypeScript < 5.0
+    return (node as any).decorators;
+}
+
 export type DBType = 'world'|'auth'|'characters'
 
 export class DBFieldType {
@@ -281,8 +295,8 @@ export class ORMClass {
 }
 
 export function parseORMClass(node: ts.ClassDeclaration): ORMClass | undefined {
-    let decorators = node.decorators || []
-    const className = node.name.getText(node.getSourceFile());    
+    let decorators = getDecorators(node) || []
+    const className = node.name.getText(node.getSourceFile());
     let entry: ORMClass|undefined = undefined;
     decorators.forEach((x)=>{
         const ft = x.getText(x.getSourceFile());
@@ -333,22 +347,22 @@ export function parseORMClass(node: ts.ClassDeclaration): ORMClass | undefined {
     node.members.forEach((memberRaw)=>{
         if(
             memberRaw.kind!==ts.SyntaxKind.PropertyDeclaration
-            || !memberRaw.decorators
+            || !getDecorators(memberRaw)
         ) {
             return;
         }
         const member = memberRaw as ts.PropertyDeclaration;
 
-        let varCharField = member.decorators
+        let varCharField = getDecorators(member)
             .map(x=>x.getText().match(/\@(DBFieldVarChar|DBPrimaryKeyVarChar)\((\d+)\)/))
             .find(x=>x)
 
         let isVarChar = varCharField !== undefined;
         let isPKString = varCharField && varCharField[1] == 'DBPrimaryKeyVarChar'
 
-        let isField = member.decorators
+        let isField = getDecorators(member)
             .find(x=>x.getText()=='@DBField') !== undefined;
-        let isPK = isPKString || member.decorators
+        let isPK = isPKString || getDecorators(member)
             .find(x=>x.getText()=='@DBPrimaryKey') !== undefined;
 
         if(!isField && !isPK && !isVarChar) {

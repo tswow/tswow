@@ -45,7 +45,6 @@ function SimpleID(name: string, startid: number = 10000) {
 }
 
 function SimpleRange(name: string, range: number, startid: number = 10000) {
-    // @ts-ignore : Ignore valid table check
     return GetIdRange('item_template', 'a', name, range, startid);
 }
 

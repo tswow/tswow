@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as assert from 'assert';
-import { SqlConnection } from '../../wotlkdata/sql/SQLConnection';
-import { SQL } from '../../wotlkdata/sql/SQLFiles';
-import { SqlTable } from '../../wotlkdata/sql/SQLTable';
+import { SqlConnection } from '../../data/sql/SQLConnection';
+import { SQL } from '../../wotlk/SQLFiles';
+import { SqlTable } from '../../data/sql/SQLTable';
 
 describe('Table', function() {
     this.beforeAll(function() {
@@ -25,7 +25,7 @@ describe('Table', function() {
     });
 
     this.afterAll(async function() {
-        await SqlConnection.finish();
+        // SQL changes are auto-persisted, no finish() needed
     });
 
     describe('add', function() {
@@ -33,7 +33,7 @@ describe('Table', function() {
             assert.strictEqual(SqlTable.cachedRowCount(SQL.playercreateinfo_spell_custom), 0);
             SQL.playercreateinfo_spell_custom.add(0, 0, 0, {Note: 'Test'});
             assert.strictEqual(SqlTable.cachedRowCount(SQL.playercreateinfo_spell_custom), 2);
-            assert.strictEqual(SQL.playercreateinfo_spell_custom.find({racemask: 0, Spell: 0, classmask: 0}).Note.get(), 'Test');
+            assert.strictEqual(SQL.playercreateinfo_spell_custom.query({racemask: 0, Spell: 0, classmask: 0}).Note.get(), 'Test');
         });
     });
 });

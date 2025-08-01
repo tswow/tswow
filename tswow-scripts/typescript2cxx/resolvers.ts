@@ -259,7 +259,7 @@ export class IdentifierResolver {
     }
 
     public typeToTypeNode(type: ts.Type): ts.TypeNode {
-        // @ts-ignore (??)
+        // @ts-expect-error - Using internal TypeScript compiler API
         return this.typeChecker.typeToTypeNode(type);
     }
 

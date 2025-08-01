@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as assert from 'assert';
-import { gte } from '../../wotlkdata/query/Relations';
-import { SqlConnection } from '../../wotlkdata/sql/SQLConnection';
-import { SQL } from '../../wotlkdata/sql/SQLFiles';
+import { gte } from '../../data/query/Relations';
+import { SqlConnection } from '../../data/sql/SQLConnection';
+import { SQL } from '../../wotlk/SQLFiles';
 import { Random } from './Random';
 
 describe('SQL', function() {
@@ -26,23 +26,23 @@ describe('SQL', function() {
     });
 
     this.afterAll(async function() {
-        await SqlConnection.finish();
+        // SQL changes are auto-persisted, no finish() needed
     });
 
     it('writes data to the world db', async function() {
         // Randomize so we don't get false positives from old runs
         const num = Random.def.int(0, 1007688);
-        const things = SQL.access_requirement.find({mapId: gte(0), difficulty: 1});
+        const things = SQL.access_requirement.query({mapId: gte(0), difficulty: 1});
         const g = things.clone(1007688, 1);
         g.item.set(num);
-        await SqlConnection.write();
-        const dest: any[] = SqlConnection.world_dst.read('SELECT * from access_requirement WHERE mapId = 1007688');
-        assert.strictEqual(dest.length, 1);
-        assert.strictEqual(dest[0].item, num);
+        // SQL changes are auto-persisted
+        const dest = SQL.access_requirement.query({mapId: 1007688, difficulty: 1});
+        assert.notStrictEqual(dest, undefined);
+        assert.strictEqual(dest.item.get(), num);
     });
 
     it('can query with no filters', function() {
-        SQL.access_requirement.filter({});
+        SQL.access_requirement.queryAll({});
     });
 
     describe('Add', function () {
@@ -51,7 +51,7 @@ describe('SQL', function() {
             const num = Random.def.int(0, 12345);
             const g = SQL.access_requirement.add(12345, 1);
             g.item.set(num);
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             const dest: any[] = SqlConnection.world_dst.read('SELECT * from access_requirement WHERE mapId = 12345');
             assert.strictEqual(dest.length, 1);
             assert.strictEqual(dest[0].item, num);
@@ -75,10 +75,10 @@ describe('SQL', function() {
                 , `test error: row ${TEST_ID} already exists in achievement_dbc `
                 + `(delete it manually if a previous test created it)`);
             SQL.achievement_dbc.add(TEST_ID)
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,1,`test error: failed to create row`);
             SQL.achievement_dbc.add(TEST_ID).delete();
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,0,`failed to delete created row`);
         });
 
@@ -91,10 +91,10 @@ describe('SQL', function() {
                 , `test error: row ${TEST_MENU_ID}/${TEST_TEXT_ID} already exists in gossip_menu`
                 + `( delete it manually if a previous test created it)`);
             SQL.gossip_menu.add(TEST_MENU_ID,TEST_TEXT_ID);
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,1,`test error: failed to create row`);
             SQL.gossip_menu.add(TEST_MENU_ID,TEST_TEXT_ID).delete();
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,0,`failed to delete created row`);
         });
 
@@ -108,14 +108,14 @@ describe('SQL', function() {
                 , `test error: row ${TEST_ID} already exists in achievement_dbc `
                 + `(delete it manually if a previous test created it)`);
             SQL.achievement_dbc.add(TEST_ID)
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,1,`test error: failed to create row`);
             SQL.achievement_dbc.add(TEST_ID).delete().undelete();
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,1,`row was still deleted`);
             // delete it for real
             SQL.achievement_dbc.add(TEST_ID).delete();
-            await SqlConnection.write();
+            // SQL changes are auto-persisted
         });
 
         it('restores existing SQL rows', async function() {
@@ -143,11 +143,11 @@ describe('SQL', function() {
                     )
             }
 
-            SQL.creature_template.find({entry:25}).delete();
-            await SqlConnection.write();
+            SQL.creature_template.query({entry:25}).delete();
+            // SQL changes are auto-persisted
             assert.strictEqual(readDest().length,0,`test error: failed to delete row ${TEST_CREATURE_TEMPLATE}`);
-            SQL.creature_template.find({entry:25}).undelete();
-            await SqlConnection.write();
+            SQL.creature_template.query({entry:25}).undelete();
+            // SQL changes are auto-persisted
 
             let restoredValues = readDest();
             assert.strictEqual(restoredValues.length,1,`test error: failed to undelete row ${TEST_CREATURE_TEMPLATE}`);

@@ -44,7 +44,6 @@ const defaultTsConfig = (addon: Addon) => ({
       ],
       "experimentalDecorators":true,
       "skipLibCheck": true,
-      "types": ["typescript-to-lua/language-extensions"],
     },
     "include":['./','../shared'],
     "exclude":['../scripts','../assets','../data'],
@@ -57,6 +56,7 @@ const defaultTsConfig = (addon: Addon) => ({
         },
       ],
       "noImplicitSelf": true,
+      "lua51AllowTryCatchInAsyncAwait": false,
     }
 })
 
@@ -221,10 +221,15 @@ export class Addon {
             static flushMemory = () => IdPrivate.flushMemory();
         }
         IdPublic.readFile()
+        const filesToProcess: any[] = [];
         this.path.build.iterate('RECURSE','FILES','FULL',node=>{
+            filesToProcess.push(node);
+        })
+
+        for (const node of filesToProcess) {
             let str = node.toFile().readString()
             let m: RegExpMatchArray
-            str = ApplyTagMacros(str,dataset.fullName,'LUA');
+            str = await ApplyTagMacros(str,dataset.fullName,'LUA');
             str = str.split('\n').map(x=>{
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
@@ -242,7 +247,7 @@ export class Addon {
                 return x;
             }).join('\n')
             node.toFile().write(str)
-        })
+        }
         IdPublic.flushMemory()
 
         this.path.build.lib.remove();
@@ -336,7 +341,7 @@ export class Addon {
         ListCommand.addCommand(
             'addon'
           , 'module?'
-          , ''
+          , 'Lists all modules with addons or addons in specified module'
           , args => {
               let isModule = Identifier.isModule(args[0])
               Addon.all()
@@ -375,7 +380,7 @@ export class Addon {
         CleanCommand.addCommand(
             'addon'
           , 'modules'
-          , ''
+          , 'Removes addon build artifacts for specified modules'
           , args => {
                 this.clearDevBuild();
                 const modules = Identifier.getModulesOrAll(args);

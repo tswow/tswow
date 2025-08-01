@@ -16,9 +16,10 @@
  */
 import * as assert from 'assert';
 import * as fs from 'fs';
-import { LUAXML, _clearLUAXML, _writeLUAXML } from '../../wotlkdata/luaxml/LUAXML';
-import { TextFile } from '../../wotlkdata/luaxml/TextFile';
-import { Settings } from '../../wotlkdata/Settings';
+import { LUAXML } from '../../wotlk/luaxml/LUAXML';
+import { _clearLUAXML, _writeLUAXML } from '../../data/luaxml/LUAXML';
+import { TextFile } from '../../data/luaxml/TextFile';
+import { dataset } from '../../data/Settings';
 
 function luatest() {
     return LUAXML.anyfile('Interface/GlueXML/AddonList.lua');
@@ -63,7 +64,7 @@ describe('LUAXML', function() {
         it('creates the root dir', function() {
             assert.strictEqual(fs.existsSync('./tmp/'), false);
             luatest().replace(1, 'TextEdit');
-            _writeLUAXML(Settings.LUAXML_SOURCE, './tmp/');
+            _writeLUAXML();
             assert.strictEqual(fs.existsSync('./tmp/'), true);
         });
 
@@ -75,7 +76,7 @@ describe('LUAXML', function() {
             assert.strictEqual(fs.existsSync(dstLuaB), false);
             assert.strictEqual(fs.existsSync(dstXML), false);
             luatest().replace(1, 'TextEdit');
-            _writeLUAXML(Settings.LUAXML_SOURCE, './tmp/');
+            _writeLUAXML();
             assert.strictEqual(fs.existsSync(dstLuaA), true);
             assert.strictEqual(fs.existsSync(dstLuaB), true);
             assert.strictEqual(fs.existsSync(dstXML), true);

@@ -109,10 +109,10 @@ export namespace util {
             if (Object(cur) !== cur) {
                 result[prop] = cur;
             } else if (Array.isArray(cur)) {
-                 for (let i = 0, l = cur.length; i < l; i++) {
+                 const l = cur.length;
+                 for (let i = 0; i < l; i++) {
                      recurse(cur[i], prop ? prop + '.' + i : '' + i);
                  }
-                // @ts-ignore - ???
                 if (l === 0) {
                     result[prop] = [];
                 }

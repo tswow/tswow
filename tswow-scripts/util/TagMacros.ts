@@ -2,7 +2,7 @@ import * as mysql from 'mysql2';
 import { NodeConfig } from "../runtime/NodeConfig";
 import { GetExistingId } from './ids/Ids';
 import { ipaths } from "./Paths";
-import deasync = require('deasync');
+// deasync removed - using async/await instead
 
 /**
  * TODO: relies on terrible regex patterns, they can't even handle newlines or anything.
@@ -11,7 +11,7 @@ import deasync = require('deasync');
  *
  * @note This function assumes you already called IdPrivate#readFile
  */
-export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIVESCRIPT'|'LUA') {
+export async function ApplyTagMacros(contents: string, datasetName: string, type: 'LIVESCRIPT'|'LUA') {
     // ======================================
     //  GetID
     // ======================================
@@ -157,12 +157,28 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
 
     if(checks.length > 0) {
         const settings = NodeConfig.DatabaseSettings('world',datasetName)
-        const connection = mysql.createConnection(settings);
-        const syncQuery = deasync(connection.query.bind(connection))
+        // Create connection with only the necessary settings to avoid pool-specific options
+        const connectionSettings = {
+            host: settings.host,
+            port: settings.port,
+            user: settings.user,
+            password: settings.password,
+            database: settings.database,
+            multipleStatements: true
+        };
+        const connection = mysql.createConnection(connectionSettings);
+        const queryAsync = (query: string): Promise<any[]> => {
+            return new Promise((resolve, reject) => {
+                connection.query(query, (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results as any[]);
+                });
+            });
+        };
         const errors: string[] = []
 
-        checks.forEach(({table,cols})=>{
-            const tableRes = syncQuery(`
+        for (const {table, cols} of checks) {
+            const tableRes = await queryAsync(`
                 SELECT * from \`information_schema\`.\`TABLES\`
                     WHERE \`TABLE_SCHEMA\` = "${settings.database}"
                         AND \`TABLE_NAME\` = "${table}";
@@ -176,7 +192,7 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
                 return;
             }
 
-            const colRes = syncQuery(`
+            const colRes = await queryAsync(`
                 SELECT * FROM \`information_schema\`.\`COLUMNS\`
                     WHERE \`TABLE_SCHEMA\` = "${settings.database}"
                         AND \`TABLE_NAME\` = "${table}";
@@ -212,7 +228,7 @@ export function ApplyTagMacros(contents: string, datasetName: string, type: 'LIV
                     errors.push(`Column type mismatch ${i} in "${table}" (expected ${argName}, but is ${datatype})`)
                 }
             })
-        })
+        }
         if(errors.length > 0) {
             throw new Error(
                 `Database Assert Errors:\n    ${errors.join('\n    ')}\n`)

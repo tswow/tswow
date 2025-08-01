@@ -47,7 +47,6 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
             , this.sourceTarget
             , elseGroup
             )
-        // @ts-ignore hack
         condition.owner = condition;
         callback(condition as any);
         return this.owner;

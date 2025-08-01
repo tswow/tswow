@@ -1,4 +1,19 @@
 {
-    "search.useIgnoreFiles": false,
-    "C_Cpp.clang_format_fallbackStyle": "none"
+    "C_Cpp.clang_format_fallbackStyle": "none",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.configureSettings": {
+        "CMAKE_INSTALL_PREFIX": "/usr/local",
+        "BUILD_SHARED_LIBS": true,
+        "OpenGL_GL_PREFERENCE": "GLVND"
+    },
+    "cmake.environment": {
+        "CC": "/usr/bin/clang",
+        "CXX": "/usr/bin/clang++"
+    },
+    "cmake.generator": "Unix Makefiles",
+    "cmake.parallelJobs": 1,
+    "cmake.clearOutputBeforeBuild": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "search.useIgnoreFiles": false
 }
