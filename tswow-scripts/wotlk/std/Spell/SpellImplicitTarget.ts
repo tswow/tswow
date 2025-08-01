@@ -125,4 +125,5 @@ export enum SpellImplicitTarget {
     UNIT_CASTER_AREA_SUMMONS    = 111,
     DEST_PET                    = 112,
     UNIT_TARGET_ALLY_OR_RAID    = 113,
+    UNIT_SRC_OWNER_ALLY         = 114,
 }

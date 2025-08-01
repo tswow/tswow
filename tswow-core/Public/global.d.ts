@@ -3390,6 +3390,8 @@ declare interface TSCreature extends TSUnit {
     UpdateLevelDependantStats(): void;
 
     LearnPetSpell(spell: uint32): void;
+
+    ExtendDurationIfAble(amount: uint32): void;
 }
 
 declare interface TSArea extends TSEntityProvider {

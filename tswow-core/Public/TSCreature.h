@@ -149,6 +149,8 @@ public:
 
     void LearnPetSpell(uint32_t spell);
 
+    void ExtendDurationIfAble(uint32_t amount);
+
 private:
     TSLua::Array<TSUnit> LGetThreatList();
     friend class TSLua;

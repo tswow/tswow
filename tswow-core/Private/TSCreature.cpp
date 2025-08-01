@@ -1394,3 +1394,8 @@ void TSCreature::LearnPetSpell(uint32_t spell) {
             asPet->learnSpell(spell);
     }
 }
+
+void TSCreature::ExtendDurationIfAble(uint32_t amount) {
+    if (auto temp = creature->ToTempSummon())
+        temp->ExtendDuration(amount);
+}
