@@ -55,7 +55,7 @@ export function watchTsc(nodeExecutable: string, tscEntry: string, dir: FilePath
                     }
                 })
         })
-        .startIn(dir,nodeExecutable,[tscEntry,'--w'])
+        .startIn(dir,nodeExecutable,['--enable-source-maps',tscEntry,'--w'])
 }
 
 export async function destroyTSWatcher(dir: string) {

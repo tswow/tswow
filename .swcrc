@@ -1,8 +1,7 @@
 {
   "module": {
-  	"type":"commonjs"
+    "type": "commonjs"
   },
-  "exclude":[".*.js$","typescript2cxx","wotlkdata","addons"],
   "jsc": {
     "parser": {
       "syntax": "typescript",
@@ -15,8 +14,8 @@
       "decoratorMetadata": true,
       "useDefineForClassFields": false
     },
-    "target":"es2021",
-    "loose":false
+    "target": "es2021",
+    "loose": false
   },
   "sourceMaps": true
 }
