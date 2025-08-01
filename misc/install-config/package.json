@@ -40,7 +40,7 @@
     "xml2js": "^0.6.2"
   },
   "scripts": {
-    "start": "node --enable-source-maps ./start-tswow.js",
+    "start": "node --enable-source-maps ./start.js",
     "test": "mocha --recursive bin/scripts/tswow/test",
     "otest": "mocha --recursive bin/scripts/tswow/test --grep "
   },

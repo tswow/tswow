@@ -218,15 +218,8 @@ export namespace Config {
 process.argv.push('--ipaths=./');
 require('./bin/scripts/runtime/TSWoW.js');`;
 
-        wfs.write(mpath(ipaths.get(), 'start-tswow.js'), wrapperScript);
+        ipaths.startJs.write(wrapperScript);
 
-        // For the start.js, we need to ensure mise environment is loaded on Linux
-        if (isWindows()) {
-            ipaths.startJs.write(`require('child_process').execSync(\`\${process.execPath} --enable-source-maps start-tswow.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
-        } else {
-            // On Linux/Mac, use a shell to ensure mise and other configurations are loaded
-            ipaths.startJs.write(`require('child_process').execSync('bash -l -c "node --enable-source-maps start-tswow.js ' + process.argv.slice(1).join(' ') + '"', { stdio: 'inherit' })`)
-        }
 
         // Copy mise.toml for Node.js version management
         spaths.misc.install_config.mise_toml.copy(ipaths.mise_toml)
