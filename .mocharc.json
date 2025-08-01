@@ -1,0 +1,10 @@
+{
+  "extension": ["js"],
+  "spec": ["build/bootstrap/test/TestUtils.js", "build/bootstrap/test/FileSystem/*.js"],
+  "require": [],
+  "recursive": true,
+  "reporter": "spec",
+  "timeout": 5000,
+  "exit": true,
+  "colors": true
+}

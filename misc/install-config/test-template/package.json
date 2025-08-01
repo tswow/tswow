@@ -1,0 +1,12 @@
+{
+  "name": "{{module_name}}-tests",
+  "version": "1.0.0",
+  "description": "Test suite for {{module_name}}",
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "mocha --watch"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.1"
+  }
+}
