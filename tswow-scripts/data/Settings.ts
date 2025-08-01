@@ -49,4 +49,5 @@ export const BuildArgs = new class BuildArgsClass {
         .substring('--clientPatch='.length))
     LOG_SQL = Args.hasFlag('log-sql',process.argv)
     NO_LUAXML = Args.hasFlag('no-luaxml',process.argv)
+    DEBUG = Args.hasFlag('debug',process.argv)
 }();

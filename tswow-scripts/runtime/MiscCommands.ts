@@ -1,9 +1,11 @@
 import { commands } from "../util/Commands";
 import { ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
-import { BuildCommand } from "./CommandActions";
+import { BuildCommand, CleanCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { NodeConfig } from "./NodeConfig";
+import { AuthServer } from "./AuthServer";
+import { Realm } from "./Realm";
 
 export class MiscCommands {
     static initialize() {
@@ -22,7 +24,8 @@ export class MiscCommands {
                 await commands.sendCommand(`build addon ${dataset.name} ${args}`)
                 // we've already built inlinescripts, skip them
                 await commands.sendCommand(`build scripts ${dataset.name} ${args} --no-inline`)
-                await commands.sendCommand(`build lua ${dataset.name} ${args} --no-inline`)
+                // Don't force lua backend - respect the module's livescripts.conf setting
+                await commands.sendCommand(`build livescripts ${dataset.name} ${args} --no-inline`)
 
                 await Promise.all(runningClients.map(x=>x.startup(NodeConfig.AutoStartClient)))
                 let autorealms = NodeConfig.AutoStartRealms
@@ -33,15 +36,36 @@ export class MiscCommands {
             }
         })
 
-        commands.addCommand('check','','',(args)=>{
+
+        commands.addCommand('check','','Checks TSWoW installation and configuration',(args)=>{
             return commands.sendCommand(`build data ${args} --readonly`)
         });
 
-        commands.addCommand('revision','','',()=>{
+        commands.addCommand('revision','','Shows TSWoW and TrinityCore revision information',()=>{
             console.log(
                   `TSWoW Revision: ${ipaths.bin.revisions.tswow.readString().slice(0,7)}\n`
                 + `TrinityCore Revision: ${ipaths.bin.revisions.trinitycore.readString().slice(0,7)}`
             )
         }).addAlias('version')
+
+        commands.addCommand('exit','','Stops all running services and exits TSWoW', async ()=>{
+            term.log('misc', 'Shutting down all services...');
+
+            // Stop all running realms
+            const runningRealms = Realm.all().filter(x => x.worldserver.isRunning());
+            if(runningRealms.length > 0) {
+                term.log('misc', `Stopping ${runningRealms.length} running realm(s)...`);
+                await Promise.all(runningRealms.map(x => x.worldserver.stop()));
+            }
+
+            // Stop authserver if running
+            if(AuthServer.isStarted()) {
+                term.log('misc', 'Stopping authserver...');
+                await AuthServer.stop();
+            }
+
+            term.success('misc', 'All services stopped. Goodbye!');
+            process.exit(0);
+        }).addAlias('quit')
     }
 }

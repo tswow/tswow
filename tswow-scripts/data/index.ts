@@ -25,7 +25,7 @@ import { _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
 import { Connection, SqlConnection } from './sql/SQLConnection';
-import deasync = require('deasync')
+// deasync removed - using async/await instead
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
@@ -54,8 +54,14 @@ function profileScripts() {
 let profiling: {[key: string]: number} = {}
 
 async function applyStage(collection: PatchCollection) {
+    if (BuildArgs.DEBUG) {
+        console.log(`[DATASCRIPTS] Applying stage with ${collection.length} callbacks`);
+    }
     for (const {name, callback} of collection) {
         try {
+            if (BuildArgs.DEBUG) {
+                console.log(`[DATASCRIPTS] Running callback: ${name}`);
+            }
             await callback();
         } catch (error) {
             console.error(`Error in patch ${name}:`, error);
@@ -115,65 +121,99 @@ async function main() {
     // Find all patch subdirectories
     for (let dir of DatascriptModules) {
         try {
+            const nodesToProcess: any[] = [];
+            if (BuildArgs.DEBUG) {
+                console.log(`[DATASCRIPTS] Checking directory: ${dir.datascripts.build.get()}`);
+                console.log(`[DATASCRIPTS] Directory exists: ${dir.datascripts.build.exists()}`);
+            }
+
             dir.datascripts.build.toDirectory()
                 .iterate('RECURSE','FILES','FULL',node=>{
+                    if (BuildArgs.DEBUG) {
+                        console.log(`[DATASCRIPTS] Found file: ${node.get()}`);
+                    }
                     if(!node.endsWith('.js') || !node.isFile()) {
+                        if (BuildArgs.DEBUG) {
+                            console.log(`[DATASCRIPTS]   - Skipping (not .js or not file)`);
+                        }
                         return;
                     }
                     let ts = dir.datascripts.join(node.relativeTo(dir.datascripts.build))
                         .toFile().withExtension('.ts')
+                    if (BuildArgs.DEBUG) {
+                        console.log(`[DATASCRIPTS]   - Checking for TS file: ${ts.get()}`);
+                    }
                     if(!ts.exists()) {
+                        if (BuildArgs.DEBUG) {
+                            console.log(`[DATASCRIPTS]   - Skipping (no .ts file found)`);
+                        }
                         return;
                     }
-                    let v = Date.now();
                     if(
                            (!BuildArgs.INLINE_ONLY)
                         || node.toFile().readString().includes('InlineScripts')
                         || node.toFile().readString().includes('InlineTSLua')
                     ) {
-                        require(node.relativeTo(__dirname).get());
-                        if(profileScripts()) {
-                            profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
+                        if (BuildArgs.DEBUG) {
+                            console.log(`[DATASCRIPTS]   - Adding to process list`);
                         }
-                        deasync((callback)=>applyStage(setups).then(callback))();
+                        nodesToProcess.push({node, ts});
+                    } else {
+                        if (BuildArgs.DEBUG) {
+                            console.log(`[DATASCRIPTS]   - Skipping (INLINE_ONLY mode and no inline scripts)`);
+                        }
                     }
-
                 })
+
+            console.log(`[DATASCRIPTS] Found ${nodesToProcess.length} files to load in ${dir.get()}`);
+
+            for (const {node, ts} of nodesToProcess) {
+                let v = Date.now();
+                const modulePath = node.relativeTo(__dirname).get();
+                if (BuildArgs.DEBUG) {
+                    console.log(`[DATASCRIPTS] Loading module: ${modulePath}`);
+                }
+                require(modulePath);
+                if(profileScripts()) {
+                    profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
+                }
+            }
         } catch (error) {
             console.error(`Error in patch ${dir.get()}:`, error);
             process.exit(3);
         }
     }
 
+    // Apply setup stage after all modules are loaded
+    cur_stage = 'SETUP'
+    await applyStage(setups);
+
     cur_stage = 'READ'
-    deasync((callback)=>applyStage(reads).then(callback))();
+    await applyStage(reads);
     cur_stage = 'WRITE'
-    deasync((callback)=>applyStage(writes).then(callback))();
+    await applyStage(writes);
     cur_stage = 'PATCH'
-    deasync((callback)=>applyStage(patches).then(callback))();
+    await applyStage(patches);
     cur_stage = 'FINISH'
-    deasync((callback)=>applyStage(finishes).then(callback))();
+    await applyStage(finishes);
 
     if(BuildArgs.WRITE_CLIENT) {
         _writeLUAXML();
         time(`Wrote LUAXML`);
     }
     cur_stage = 'LUAXML'
-    deasync((callback)=>applyStage(luaxmls).then(callback))();
+    await applyStage(luaxmls);
     dataset.luaxml.copy(BuildArgs.CLIENT_PATCH_DIR,false);
 
     __internal_wotlk_applyDeletes();
 
     cur_stage = 'SORT'
     if(!BuildArgs.READ_ONLY) {
-        deasync((callback)=>applyStage(sorts).then(callback))();
+        await applyStage(sorts);
     }
     time(`Executed scripts`);
 
-    deasync((callback)=>
-    {
-        __internal_wotlk_save().then(callback);
-    })()
+    await __internal_wotlk_save();
     SqlConnection.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
 
     if(!BuildArgs.READ_ONLY) {
@@ -213,6 +253,9 @@ async function main() {
  * @param callback
  */
 export function setup(name: string, callback: () => any) {
+    if (BuildArgs.DEBUG) {
+        console.log(`[DATASCRIPTS] Registering setup callback: ${name}`);
+    }
     setups.push({name, callback});
 }
 
@@ -279,6 +322,9 @@ export function patch(name: string, callback: () => any) {
  * @param callback
  */
 export function finish(name: string, callback: () => any) {
+    if (BuildArgs.DEBUG) {
+        console.log(`[DATASCRIPTS] Registering finish callback: ${name}`);
+    }
     finishes.push({name, callback});
 }
 
@@ -334,4 +380,12 @@ export type uint32 = number;
  */
 export const Objects = _Objects;
 
-mainWrap();
+// Execute main function and handle errors
+(async () => {
+    try {
+        await mainWrap();
+    } catch (error) {
+        console.error('Fatal error in datascripts:', error);
+        process.exit(1);
+    }
+})();

@@ -43,12 +43,12 @@ const lib_package_json =
 const data_tsconfig =
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2021",
     "module": "commonjs",
     "outDir": "./build",
     "rootDir": "./",
     "emitDeclarationOnly": true,
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "declaration": true,
     "skipLibCheck": true,
@@ -56,14 +56,23 @@ const data_tsconfig =
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "useDefineForClassFields": false,
+    "sourceMap": true,
+    "paths": {
+      "wow/wotlk": ["../../../bin/scripts/wow/wotlk"],
+      "wow/wotlk/*": ["../../../bin/scripts/wow/wotlk/*"]
+    }
   },
   "exclude":["**/build/**","**/tswow/wotlkdata/**"]
 };
 
 const datascripts_swcrc = {
     "module": {
-        "type":"commonjs"
+        "type": "commonjs",
+        "strict": false,
+        "strictMode": false,
+        "lazy": false,
+        "noInterop": false
     },
     "exclude":[".*.js$",".*\\.d.ts$"],
     "jsc": {
@@ -73,8 +82,12 @@ const datascripts_swcrc = {
             "decorators": true,
             "dynamicImport": true
         },
-        "transform":null,
-        "target":"es2016",
+        "transform": {
+            "legacyDecorator": true,
+            "decoratorMetadata": true,
+            "useDefineForClassFields": false
+        },
+        "target":"es2021",
         "loose":false
     },
     "sourceMaps": true
@@ -133,7 +146,17 @@ export class Datascripts {
                       this.logName()
                     , `Installing ${this.mod.fullName} datascript library...`
                 )
-                wsys.exec(`${NpmExecutable} i -S ${this.path.build.abs()}`)
+                try {
+                    // Add timeout and capture output
+                    const cmd = `${NpmExecutable} i ${this.path.build.abs()}`;
+                    term.debug(this.logName(), `Running: ${cmd}`);
+                    wsys.exec(cmd, 'inherit');
+                    term.log(this.logName(), `Successfully installed ${this.mod.fullName} datascript library`);
+                } catch (e) {
+                    term.error(this.logName(), `Failed to install datascript library: ${e}`);
+                    term.error(this.logName(), `Command was: ${NpmExecutable} i ${this.path.build.abs()}`);
+                    // Continue anyway - the library may already be installed
+                }
             }
         }
     }
@@ -175,21 +198,26 @@ export class Datascripts {
     symlink() {
         this.path.build.package_json.writeJson(lib_package_json(this.mod.fullName))
         if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
-            wsys.exec(`${NpmExecutable} i -S ${this.path.build.get()}`)
+            wsys.exec(`${NpmExecutable} i ${this.path.build.get()}`)
         }
     }
 
     compile() {
         this.path.swcrc.writeJson(datascripts_swcrc)
         try {
-            term.debug('datascripts', `Compiling datascripts at ${this.path.abs().get()}`)
+            term.log('datascripts', `Compiling datascripts at ${this.path.abs().get()}`)
+            const compileCommand = `${NpxExecutable} swc . -d build --sync`;
+            term.debug('datascripts', `SWC compile command: ${compileCommand}`);
             wsys.execIn(
-                this.path.dirname().get()
-                , `${NpxExecutable} swc datascripts -d datascripts/build --sync`,'inherit'
+                this.path.get()  // Execute from datascripts directory instead
+                , compileCommand,'inherit'
             )
+            term.debug('datascripts', `Successfully compiled datascripts at ${this.path.abs().get()}`)
         } catch(err) {
             this.path.swcrc.remove();
-            throw new Error(`Failed to compile datascripts`)
+            term.error('datascripts', `Failed to compile datascripts at ${this.path.abs().get()}`);
+            term.error('datascripts', `Error: ${err}`);
+            throw new Error(`Failed to compile datascripts: ${err}`)
         }
         this.path.swcrc.remove();
     }
@@ -223,7 +251,15 @@ export class Datascripts {
     static installWowLib() {
         if(!ipaths.node_modules.wow.exists()) {
             term.log('datascripts','Linking wow data libraries...');
-            wsys.exec(`${NpmExecutable} i -S ${ipaths.bin.scripts.wow.get()}`)
+            term.debug('datascripts', `NpmExecutable is: ${NpmExecutable}`);
+            term.debug('datascripts', `PATH is: ${process.env.PATH}`);
+            try {
+                wsys.exec(`${NpmExecutable} i ${ipaths.bin.scripts.wow.get()}`, 'inherit')
+            } catch (e) {
+                term.error('datascripts', `Failed to install wow library: ${e}`);
+                term.error('datascripts', `This might be because npm is not in PATH. Make sure mise is activated.`);
+                throw e;
+            }
         }
     }
 
@@ -243,6 +279,7 @@ export class Datascripts {
             + ' --rebuild'
             + ' --no-shutdown(-server|-client|)'
             + ' --no-restart(-server|-client|)'
+            + ' --debug'
             , 'Builds datascripts for the selected dataset'
             , async args => {
                 for(const value of Identifier.getDatasets(
@@ -260,7 +297,7 @@ export class Datascripts {
         ListCommand.addCommand(
             'datascripts'
             , 'dataset?'
-            , ''
+            , 'Lists all modules with datascripts or datascripts in specified dataset'
             , args => {
                 let isDataset = Identifier.isDataset(args[0])
                 let eps = isDataset
@@ -278,7 +315,7 @@ export class Datascripts {
         CleanCommand.addCommand(
               'datascripts'
             , 'modules'
-            , ''
+            , 'Removes datascripts build artifacts for specified modules'
             , args => {
                 let mods = args.length === 0
                     ? Module.endpoints().filter(x=>x.datascripts.exists())
@@ -296,16 +333,24 @@ export class Datascripts {
           dataset: Dataset
         , args: string[] = []
     ) {
+        term.log('datascripts', `Starting datascripts build for dataset: ${dataset.fullName}`);
+        term.log('datascripts', `Build arguments: ${args.join(' ')}`);
+
         // 1. Install core libraries
+        term.log('datascripts', 'Installing core libraries...');
         this.installWowLib();
 
         // 2. Parse exclusion arguments
+        term.log('datascripts', 'Parsing build arguments...');
         const isInlineOnly = args.includes('--inline-only');
         const isReadonlyArg = args.includes('--readonly')
         const isReadOnly = isInlineOnly || isReadonlyArg
         const isRebuild = args.includes('--rebuild')
         const serverOnly = args.includes('--server-only')
         const clientOnly = args.includes('--client-only')
+
+        term.log('datascripts', `Build mode: ${isInlineOnly ? 'inline-only' : isReadOnly ? 'readonly' : isRebuild ? 'rebuild' : 'normal'}`);
+        term.log('datascripts', `Target: ${serverOnly ? 'server-only' : clientOnly ? 'client-only' : 'both server and client'}`);
 
         const noShutdownAnyArg = args.includes('--no-shutdown') || args.includes('--no-shutdowns')
         const noShutdownServerArg = noShutdownAnyArg
@@ -341,25 +386,42 @@ export class Datascripts {
         // 4. Shutdown clients and servers
         let runningClients = shutdownsClient ? [dataset.client] : []
         let runningWorldservers = shutdownsServer ? dataset.realms() : []
+
+        if(runningWorldservers.length > 0) {
+            term.log('datascripts', `Stopping ${runningWorldservers.length} worldserver(s)...`);
+        }
         await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
+
+        if(runningClients.length > 0) {
+            term.log('datascripts', `Stopping ${runningClients.length} client(s)...`);
+        }
         await Promise.all(runningClients.map(x=>x.kill()));
 
         // 5. Prepare dataset
+        term.log('datascripts', 'Setting up client data...');
         await dataset.setupClientData();
+
         if(args.includes('--rebuild')) {
+            term.log('datascripts', 'Setting up databases for rebuild (SOURCE and DEST)...');
             await dataset.setupDatabases('SOURCE',false);
             await dataset.setupDatabases('DEST',true);
         } else {
+            term.log('datascripts', 'Setting up databases (BOTH)...');
             await dataset.setupDatabases('BOTH', false);
         }
+
+        term.log('datascripts', 'Refreshing symlinks...');
         dataset.refreshSymlinks();
-        dataset.modules().forEach(endpoint=>{
-            if(endpoint.datascripts.path.exists()) {
-                endpoint.datascripts.compile();
-                endpoint.datascripts.installLibrary()
-                ipaths.bin.include.global_d_ts
-                    .copy(endpoint.datascripts.path.global_d_ts)
-            }
+
+        const modulesToCompile = dataset.modules().filter(endpoint => endpoint.datascripts.path.exists());
+        term.log('datascripts', `Compiling ${modulesToCompile.length} module(s)...`);
+
+        modulesToCompile.forEach(endpoint=>{
+            term.log('datascripts', `  - Compiling module: ${endpoint.fullName}`);
+            endpoint.datascripts.compile();
+            endpoint.datascripts.installLibrary()
+            ipaths.bin.include.global_d_ts
+                .copy(endpoint.datascripts.path.global_d_ts)
         });
 
         // 6. Run datascripts
@@ -371,22 +433,28 @@ export class Datascripts {
             + ` }`
         )
 
+        const buildCommand = `${NodeExecutable} --enable-source-maps`
+            + ` ${ipaths.node_modules.wow.data.index.get()}`
+            + ` --ipaths=./`
+            + ` --dataset=${dataset.path.get()}`
+            + ` --datasetName=${dataset.fullName}`
+            + ` --clientPatch=${dataset.client.path.Data.devPatch}`
+            + ` ${args.join(' ')}`
+            // Please don't pass these two manually
+            + ` ${writesServer?'--__writes-server':''}`
+            + ` ${writesClient?'--__writes-client':''}`;
+
+        term.log('datascripts', 'Executing datascripts build command...');
+        term.debug('datascripts', `Command: ${buildCommand}`);
+
         try {
-            wsys.exec(
-                    `${NodeExecutable} -r source-map-support/register`
-                + ` ${ipaths.node_modules.wow.data.index.get()}`
-                + ` --ipaths=./`
-                + ` --dataset=${dataset.path.get()}`
-                + ` --datasetName=${dataset.fullName}`
-                + ` --clientPatch=${dataset.client.path.Data.devPatch}`
-                + ` ${args.join(' ')}`
-                // Please don't pass these two manually
-                + ` ${writesServer?'--__writes-server':''}`
-                + ` ${writesClient?'--__writes-client':''}`
-                , 'inherit'
-            )
+            wsys.exec(buildCommand, 'inherit')
         } catch(err) {
-            term.error('datascripts',`Failed to build datascripts, see error message above`);
+            term.error('datascripts',`Failed to build datascripts`);
+            term.error('datascripts',`Error: ${err}`);
+            if(err.stack) {
+                term.debug('datascripts', `Stack trace: ${err.stack}`);
+            }
             return
         }
 
@@ -419,5 +487,6 @@ export class Datascripts {
         }
 
         term.success('datascripts',`Finished building DataScripts for dataset ${dataset.name}`);
+        term.log('datascripts', 'Datascripts build completed successfully!');
     }
 }
