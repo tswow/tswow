@@ -23,6 +23,7 @@ import { SqlTable } from './SQLTable';
 import { translate } from './SQLTranslate';
 import deasync = require('deasync');
 
+
 export class PreparedStatement {
     private asyncStatement: any;
 
@@ -81,8 +82,33 @@ export class Connection {
             connection.async = mysql.createPool(Object.assign({}, connection.settings, { enableKeepAlive: true}));
             connection.sync = mysql.createPool(Object.assign({}, connection.settings, { enableKeepAlive: true}));
         } else {
-            connection.async = mysql.createConnection(connection.settings);
-            connection.sync = mysql.createConnection(connection.settings);
+            // Create a clean settings object without pool-specific options
+            const connectionSettings: any = {
+                host: connection.settings.host,
+                port: connection.settings.port,
+                user: connection.settings.user,
+                password: connection.settings.password,
+                database: connection.settings.database
+            };
+
+            // Only add optional properties if they exist and are not pool-specific
+            if (connection.settings.dateStrings !== undefined) {
+                connectionSettings.dateStrings = connection.settings.dateStrings;
+            }
+            if (connection.settings.multipleStatements !== undefined) {
+                connectionSettings.multipleStatements = connection.settings.multipleStatements;
+            }
+
+            // Explicitly ensure no pool-specific options are included
+            const poolSpecificOptions = ['acquireTimeout', 'waitForConnections', 'connectionLimit', 'queueLimit', 'enableKeepAlive'];
+            for (const option of poolSpecificOptions) {
+                if (option in connectionSettings) {
+                    delete connectionSettings[option];
+                }
+            }
+
+            connection.async = mysql.createConnection(connectionSettings);
+            connection.sync = mysql.createConnection(connectionSettings);
             connection.async.connect((err)=>{
                 if(!err) return;
                 console.error(`Failed to connect with settings`,connection.settings,err)
@@ -105,9 +131,20 @@ export class Connection {
     protected syncQuery: any;
 
     constructor(obj: any) {
-        this.settings = obj;
-        this.settings.dateStrings = true;
-        this.settings.multipleStatements = true;
+
+        // Create a clean copy of settings
+        const cleanSettings: any = {
+            host: obj.host,
+            port: obj.port,
+            user: obj.user,
+            password: obj.password,
+            database: obj.database,
+            dateStrings: true,
+            multipleStatements: true
+        };
+
+
+        this.settings = cleanSettings;
     }
 
     protected statements: PreparedStatement[] = []
@@ -222,10 +259,16 @@ export class SqlConnection {
         }
     }
 
-    static auth = new Connection(NodeConfig.DatabaseSettings('auth'));
+    static auth = (() => {
+        return new Connection(NodeConfig.DatabaseSettings('auth'));
+    })();
     //static characters = new Connection(getDefaultSettings('characters'));
-    static world_dst = new Connection(NodeConfig.DatabaseSettings('world',datasetName));
-    static world_src = new Connection(NodeConfig.DatabaseSettings('world_source',datasetName))
+    static world_dst = (() => {
+        return new Connection(NodeConfig.DatabaseSettings('world',datasetName));
+    })();
+    static world_src = (() => {
+        return new Connection(NodeConfig.DatabaseSettings('world_source',datasetName));
+    })();
 
     private static query_cache: {[table: string]: {[query: string]: boolean}} = {}
 
@@ -241,7 +284,9 @@ export class SqlConnection {
     static connect() {
         this.endConnection();
         [this.auth,this.world_dst,this.world_src]
-            .forEach((x)=>Connection.connect(x));
+            .forEach((x)=>{
+                Connection.connect(x);
+            });
     }
 
     static getRows<C, Q, T extends SqlRow<C, Q>>(table: SqlTable<C, Q, T>, where: Q, first: boolean) {
