@@ -375,7 +375,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             include_lua: dirn('include-lua',{
             }),
             BLPConverter: dir({
-                blpconverter: file('blpconverter.exe')
+                blpconverter: file(isWindows() ? 'blpconverter.exe' : 'blpconverter')
             }),
             tmp: dir({
                 file_changes_txt: file('file_changes.txt'),
