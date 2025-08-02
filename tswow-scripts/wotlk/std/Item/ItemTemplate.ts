@@ -476,7 +476,7 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
             }
 
 
-            if (this.MainStat == Stat.INTELLECT && this.Class.getSubclass() != 19) {
+            if (this.MainStat == Stat.INTELLECT) {
                 DPS /= 2
                 let SP = 6*DPS
                 this.Stats.addSpellPower(SP)
@@ -525,12 +525,12 @@ export class ItemTemplate extends MainEntityID<item_templateRow> {
                 break
         }
         
-        const MainStat = Main[0]
+        this.MainStat = Main[0]
         const MainOverride = Main[1]
 
         if (MainStatMod) {
             let Amount = MainOverride * BudgetForIlvl * MainStatMod
-            this.Stats.add(MainStat, Amount)
+            this.Stats.add(this.MainStat, Amount)
         }
 
         if (StaminaMod) {
