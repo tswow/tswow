@@ -118,19 +118,9 @@ export namespace Scripts {
         // Generate TypeScript declarations after everything is in place
         termCustom('build','scripts','Generating TypeScript declarations...');
 
-        // Create temporary wow symlink for declaration generation
-        const tempWowDir = mpath(spaths.tswow_scripts.abs().get(), 'wow');
-        const wotlkSymlink = mpath(tempWowDir, 'wotlk');
-
         try {
-            // Create temporary wow/wotlk structure for imports to work during declaration generation
-            wfs.mkDirs(tempWowDir);
-            if (!wfs.exists(wotlkSymlink)) {
-                wsys.exec(`ln -sf ${spaths.tswow_scripts.wotlk.abs().get()} ${wotlkSymlink}`, 'inherit');
-            }
 
-            // Create unified declaration generation for all modules to handle cross-dependencies
-            // Use declarationDir instead of outDir to avoid rootDir issues
+            // Generate declarations for all modules
             const unifiedDeclTsConfig = {
                 compilerOptions: {
                     target: "es2021",
@@ -143,7 +133,8 @@ export namespace Scripts {
                     skipLibCheck: true,
                     forceConsistentCasingInFileNames: true,
                     experimentalDecorators: true,
-                    useDefineForClassFields: false
+                    useDefineForClassFields: false,
+                    rootDir: spaths.tswow_scripts.abs().get(),
                 },
                 include: [
                     spaths.tswow_scripts.data.abs().get() + "/**/*.ts",
@@ -159,14 +150,11 @@ export namespace Scripts {
             };
 
             const unifiedDeclPath = mpath(bpaths.get(), 'tsconfig.unified-decl.json');
-
-            // Generate all declarations in one pass to handle cross-dependencies
             wfs.write(unifiedDeclPath, JSON.stringify(unifiedDeclTsConfig, null, 2));
+            
             try {
-                // Use 'pipe' to suppress the rootDir warnings while still capturing real errors
                 wsys.exec(`npx tsc --project ${unifiedDeclPath}`, 'pipe');
             } catch (e) {
-                // Only log actual compilation errors, not rootDir warnings
                 const errorStr = e.toString();
                 if (!errorStr.includes('rootDir') && !errorStr.includes('is expected to contain all source files')) {
                     termCustom('build','scripts',`TypeScript declaration error: ${errorStr}`);
@@ -174,18 +162,32 @@ export namespace Scripts {
             }
             wfs.remove(unifiedDeclPath);
 
+            // Move wotlk declarations to the correct location
+            const wotlkDeclSrc = mpath(scriptsDest, 'wotlk');
+            const wotlkDeclDest = mpath(scriptsDest, 'wow', 'wotlk');
+            
+            if (wfs.exists(wotlkDeclSrc)) {
+                // Ensure destination exists
+                wfs.mkDirs(wotlkDeclDest);
+                
+                // Move all .d.ts files
+                wfs.iterate(wotlkDeclSrc, (filePath) => {
+                    if (filePath.endsWith('.d.ts')) {
+                        const relativePath = filePath.substring(wotlkDeclSrc.length + 1);
+                        const destPath = mpath(wotlkDeclDest, relativePath);
+                        wfs.mkDirs(wfs.dirname(destPath));
+                        wfs.move(filePath, destPath);
+                    }
+                });
+                
+                // Remove the now-empty directory structure
+                wfs.remove(wotlkDeclSrc);
+            }
+
             termCustom('build','scripts','TypeScript declarations generated successfully');
         } catch (e) {
             termCustom('build','scripts','Warning: Failed to generate TypeScript declarations');
             termCustom('build','scripts',`Error: ${e}`);
-        } finally {
-            // Clean up temporary symlink
-            if (wfs.exists(wotlkSymlink)) {
-                wfs.remove(wotlkSymlink);
-            }
-            if (wfs.exists(tempWowDir) && wfs.isDirectory(tempWowDir)) {
-                try { wfs.remove(tempWowDir); } catch (e) { /* ignore cleanup errors */ }
-            }
         }
     }
 }
