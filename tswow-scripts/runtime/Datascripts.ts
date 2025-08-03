@@ -254,21 +254,35 @@ export class Datascripts {
             term.debug('datascripts', `NpmExecutable is: ${NpmExecutable}`);
             term.debug('datascripts', `PATH is: ${process.env.PATH}`);
             try {
-                wsys.exec(`${NpmExecutable} i ${ipaths.bin.scripts.wow.get()}`, 'inherit')
+                // Use 'pipe' instead of 'inherit' to avoid interfering with authserver's IO
+                const output = wsys.exec(`${NpmExecutable} i ${ipaths.bin.scripts.wow.get()}`, 'pipe')
+                if (output) {
+                    term.debug('datascripts', `npm install output: ${output.trim()}`);
+                }
+                term.log('datascripts', 'Successfully linked wow data libraries');
             } catch (e) {
                 term.error('datascripts', `Failed to install wow library: ${e}`);
                 term.error('datascripts', `This might be because npm is not in PATH. Make sure mise is activated.`);
-                throw e;
+                // Don't throw - let TSWoW continue without the wow module
+                return;
             }
         }
     }
 
     static initialize() {
         term.debug('misc', `Initializing datascripts`)
-        this.installWowLib();
+        try {
+            this.installWowLib();
+        } catch (err) {
+            term.error('datascripts', `Error during installWowLib: ${err}`);
+            throw err;
+        }
+        
         if(!ipaths.node_modules.wow.exists()) {
-            term.log('datascripts', `Running 'npm i' because ${ipaths.node_modules.wow.abs().get()} does not exist.`)
-            wsys.exec(`${NpmExecutable} i`);
+            term.error('datascripts', `CRITICAL: wow module not found at ${ipaths.node_modules.wow.abs().get()} after installation!`);
+            term.error('datascripts', `This suggests the npm install did not create the expected symlink.`);
+            // Don't run npm i here - it could cause issues with the authserver
+            // The installWowLib() should have already handled the installation
         }
 
         BuildCommand.addCommand(
