@@ -251,21 +251,34 @@ export class Datascripts {
     static installWowLib() {
         if(!ipaths.node_modules.wow.exists()) {
             term.log('datascripts','Linking wow data libraries...');
+            const wowPackagePath = ipaths.bin.scripts.wow.get();
+            term.debug('datascripts', `Checking if wow package exists at: ${wowPackagePath}`);
+            
+            if (!wfs.exists(wowPackagePath)) {
+                term.error('datascripts', `ERROR: wow package not found at ${wowPackagePath}`);
+                term.error('datascripts', `This is likely a build issue. The wow package should be at bin/scripts/wow`);
+                return; // Don't throw, just skip the install
+            }
+            
             term.debug('datascripts', `NpmExecutable is: ${NpmExecutable}`);
-            term.debug('datascripts', `PATH is: ${process.env.PATH}`);
+            term.debug('datascripts', `Installing from path: ${wowPackagePath}`);
+            
             try {
                 // Use 'pipe' instead of 'inherit' to avoid interfering with authserver's IO
-                const output = wsys.exec(`${NpmExecutable} i ${ipaths.bin.scripts.wow.get()}`, 'pipe')
+                const output = wsys.exec(`${NpmExecutable} i ${wowPackagePath}`, 'pipe')
                 if (output) {
                     term.debug('datascripts', `npm install output: ${output.trim()}`);
                 }
                 term.log('datascripts', 'Successfully linked wow data libraries');
             } catch (e) {
                 term.error('datascripts', `Failed to install wow library: ${e}`);
-                term.error('datascripts', `This might be because npm is not in PATH. Make sure mise is activated.`);
+                term.error('datascripts', `Command was: ${NpmExecutable} i ${wowPackagePath}`);
+                term.error('datascripts', `This might be because npm is not in PATH or the path is incorrect.`);
                 // Don't throw - let TSWoW continue without the wow module
                 return;
             }
+        } else {
+            term.debug('datascripts', 'wow module already exists, skipping install');
         }
     }
 

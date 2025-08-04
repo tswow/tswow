@@ -86,6 +86,7 @@ async function initTerminal()
 
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
+    term.debug('tswow', `Process arguments: ${process.argv.join(' ')}`)
 
     if(process.argv.includes('terminal-only'))
     {
@@ -172,17 +173,24 @@ export async function main() {
     }
     await Realm.initialize()
     await AuthServer.initializeServer()
+    term.log('tswow', 'AuthServer initialized');
     if (process.argv.includes('realm-only'))
     {
         return initTerminal();
     }
+    term.log('tswow', 'Initializing Datascripts...');
     await Datascripts.initialize();
+    term.debug('tswow', 'Datascripts.initialize() completed');
     if (process.argv.includes('data-only'))
     {
+        term.debug('tswow', 'data-only mode detected, calling initTerminal()');
         return initTerminal();
     }
+    term.debug('tswow', 'Datascripts initialized, now initializing Tests...');
     await Tests.initialize();
+    term.debug('tswow', 'Tests initialized, now initializing Livescripts...');
     await Livescripts.initialize();
+    term.debug('tswow', 'Livescripts initialized');
     if (process.argv.includes('scripts-only'))
     {
         return initTerminal();
@@ -199,6 +207,7 @@ export async function main() {
     await MiscCommands.initialize();
     await Launcher.initialize();
     Module.cacheEndpoints(false);
+    term.debug('tswow', 'All initializations complete, calling initTerminal()');
     return initTerminal();
 }
 main().catch(err => {

@@ -90,6 +90,10 @@ export namespace AuthServer {
             ,'LoginDatabaseInfo',NodeConfig.DatabaseString('auth')
         )
 
+        // Add debug to check if process management is affected
+        term.debug('authserver', `Starting authserver with executable: ${ipaths.bin.core.pick('trinitycore').build.pick(type).authserver.get()}`);
+        term.debug('authserver', `Config file: ${ipaths.coredata.authserver.authserver_conf.get()}`);
+        
         authserver.startIn(ipaths.coredata.authserver.get(),
             wfs.absPath(
                   ipaths.bin.core.pick('trinitycore').build.pick(type).authserver.get())
@@ -97,6 +101,13 @@ export namespace AuthServer {
                     ipaths.coredata.authserver.authserver_conf.get()
                 )}`]
             );
+        term.log('authserver', 'Authserver process started');
+        
+        // Wait a moment to see if it stays running
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (!authserver.isRunning()) {
+            term.error('authserver', 'Authserver process exited immediately after starting!');
+        }
     }
 
     export const command = commands.addCommand('authserver', '', 'Authentication server management commands');
