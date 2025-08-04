@@ -351,9 +351,11 @@ struct TSEvents
          EVENT(OnUpdateAttackPower
              , TSPlayer
              , TSMutableNumber<float>
+             , TSMutableNumber<float>
          )
          EVENT(OnUpdateRangedAttackPower
              , TSPlayer
+             , TSMutableNumber<float>
              , TSMutableNumber<float>
          )
 
@@ -952,6 +954,8 @@ struct TSEvents
         ID_EVENT(OnDungeonCompleted, TSInstance)
         ID_EVENT(OnUpdateCriteria, TSInstance, TSUnit victim)
         ID_EVENT(ResetInstance, TSInstance)
+
+        ID_EVENT(HandleRelease, TSInstance, TSPlayer player, TSMutable<bool,bool> handled)
 
     } Instance;
 

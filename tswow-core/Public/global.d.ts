@@ -8318,11 +8318,13 @@ declare namespace _hidden {
         )=>void)
         OnUpdateAttackPower(callback: (
               player: TSPlayer
-            , attackPower: TSMutableNumber<float>
+            , base: TSMutableNumber<float>
+            , bonus: TSMutableNumber<float>
         )=>void)
         OnUpdateRangedAttackPower(callback: (
               player: TSPlayer
-            , attackPower: TSMutableNumber<float>
+            , base: TSMutableNumber<float>
+            , bonus: TSMutableNumber<float>
         ) => void)
 
         OnCalcIntellectCritBonus(
@@ -9879,6 +9881,10 @@ declare namespace _hidden {
 
         ResetInstance(callback: (instance: TSInstance)=>void): T
         ResetInstance(id: EventID, callback: (instance: TSInstance)=>void): T
+
+        HandleRelease(callback: (instance: TSInstance, player: TSPlayer, handled: TSMutable<boolean,boolean>)=>void) : T
+        HandleRelease(id: EventID, callback: (instance: TSInstance, player: TSPlayer, handled: TSMutable<boolean,boolean>)=>void) : T
+
     }
 
     export class AuctionHouse<T> {
