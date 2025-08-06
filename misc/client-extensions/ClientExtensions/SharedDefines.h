@@ -105,6 +105,11 @@ enum SpellAttr2 : uint32_t {
     SPELL_ATTR2_AUTOREPEAT_FLAG                 = 0x00000020,
 };
 
+enum SpellAttr3 : uint32_t {
+    SPELL_ATTR3_MAIN_HAND                       = 0x00000400,
+    SPELL_ATTR3_REQ_OFFHAND                     = 0x01000000,
+};
+
 enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_TREAT_AS_INSTANT             = 0x00000001,   // Changes tooltip line responsible for cast time to "Instant"
     SPELL_ATTR0_CU_FORCE_HIDE_CASTBAR           = 0x00000002,   // Does not display cast bar
@@ -196,7 +201,12 @@ struct PlayerFields {
     int32_t crWeaponSkillRanged;
     int32_t crMastery;      // crExpertise
     int32_t crThorns;       // crArmorPenetration
-    uint32_t padding0x1120[70];
+    uint32_t padding0x1120[56];
+    uint32_t glyphslots[6];
+    uint32_t glyphs[3];
+    int32_t weaponBonusAP[3];
+    uint32_t glyphsEnabled; // can reuse, glyphs are disabled
+    int32_t petSpellPower;
     // TODO: add rest when needed
 };
 
@@ -205,6 +215,20 @@ struct UnitBytes0 {
     uint8_t classID;
     uint8_t genderID;
     uint8_t powerTypeID;
+};
+
+struct UnitBytes1 {
+    uint8_t standState;
+    uint8_t petTalents;
+    uint8_t visFlags;
+    uint8_t animTier;
+};
+
+struct UnitBytes2 {
+    uint8_t sheathState;
+    uint8_t pvpFlag;
+    uint8_t petFlags;
+    uint8_t shapeshift;
 };
 
 struct UnitFields {
@@ -217,10 +241,43 @@ struct UnitFields {
     uint32_t unitMaxPowers[7];
     float padding0x88[14];
     uint32_t level;
-    uint32_t padding0xC4[20];
+    uint32_t factionTemplate;
+    uint32_t virtualItemSlotID[3];
+    uint32_t unitFlags;
+    uint32_t unitFlags2;
+    uint32_t auraState;
+    uint32_t baseAttackTime[3];
+    float boundingRadius;
+    float combatReach;
+    uint32_t displayId;
+    uint32_t nativeDisplayId;
+    uint32_t mountDisplayId;
+    float mainHandMinDamage;
+    float mainHandMaxDamage;
+    float offHandMinDamage;
+    float offHandMaxDamage;
+    UnitBytes1 unitBytes1;
     uint32_t petNumber;
     uint32_t padding0x011C[4];
     float modCastSpell;
+    uint32_t createdBySpell;
+    uint32_t npcFlags;
+    uint32_t emoteState;
+    uint32_t attributes[5];
+    uint32_t attributesPos[5];
+    uint32_t attributesNeg[5];
+    uint32_t resistances[7];
+    uint32_t resistancesPos[7];
+    uint32_t resistancesNeg[7];
+    uint32_t baseMana;
+    uint32_t basehealth;
+    UnitBytes2 unitBytes2;
+    uint32_t AP;
+    uint16_t APMods[2];
+    float APMult;
+    uint32_t RAP;
+    uint16_t RAPMods[2];
+    float RAPMult;
     // TODO: add rest at some point, most likely when needed
 };
 

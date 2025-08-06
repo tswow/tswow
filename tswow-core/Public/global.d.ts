@@ -2340,7 +2340,6 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
     ConvertRune(index: uint8, runeType: uint8): void;
     SetRuneCooldown(index: uint8, cooldown: uint32, casted: bool): void;
     ResyncRunes(): void;
-
 }
 
 declare interface TSCorpse extends TSWorldObject {

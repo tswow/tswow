@@ -111,6 +111,23 @@ declare const QuestInfoRequiredMoneyText: WoWAPI.fontString
 declare const QuestInfoGroupSize: WoWAPI.fontString
 declare const QuestInfoDescriptionHeader: WoWAPI.Frame
 
+declare class ChargeData {
+    SpellId: uint32
+    Charges: uint8
+    Max: uint8
+    Timer: uint32
+
+    constructor(SpellId: uint32, Charges: uint8, Max: uint8, Timer: uint32) {
+        this.SpellId = SpellId
+        this.Charges = Charges
+        this.Max = Max
+        this.Timer = Timer
+    }
+}
+
+declare const SpellChargeData: ChargeData[]
+declare const SpellsWithCharges: uint32[]
+
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
 declare function format(formatString: String, input:String):String;
 declare function format(formatString: String, input:number):String;

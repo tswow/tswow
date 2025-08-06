@@ -112,6 +112,26 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                     case SPELLVARIABLE_sbl:
                         value = static_cast<float>(activePlayer->PlayerData->shieldBlock);
                         break;
+                    case SPELLVARIABLE_wbon: {
+                        uint8_t attType = (spell->m_equippedItemClass == 2 && spell->m_equippedItemSubclass & 262156 && spell->m_defenseType != 2) ? 2 : spell->m_attributesExC & SPELL_ATTR3_MAIN_HAND ? 0 : 1;
+                        if (attType == 2) {
+                            float ap = std::max<float>(activePlayer->PlayerData->weaponBonusAP[attType], activePlayer->PlayerData->weaponBonusAP[0]) + activePlayer->unitBase.unitData->RAP + activePlayer->unitBase.unitData->RAPMods[0] + activePlayer->unitBase.unitData->RAPMods[1];
+                            if (ap < 0)
+                                ap = 0;
+                            value = ap * (1.0f + activePlayer->unitBase.unitData->RAPMult);
+                        } else {
+                            float ap = activePlayer->unitBase.unitData->AP + activePlayer->unitBase.unitData->APMods[0] + activePlayer->unitBase.unitData->APMods[1];
+                            if (attType == 0)
+                                ap += std::max<float>(activePlayer->PlayerData->weaponBonusAP[attType], activePlayer->PlayerData->weaponBonusAP[2]);
+                            else {
+                                ap += activePlayer->PlayerData->weaponBonusAP[attType];
+                                ap /= 2;
+                            }
+                            if (ap < 0)
+                                ap = 0;
+                            value = ap * (1.0f + activePlayer->unitBase.unitData->APMult);
+                        }
+                    } break;
                     default:
                         *reinterpret_cast<uint32_t*>(_this) = 1;
                         break;
@@ -134,7 +154,7 @@ void TooltipExtensions::SetNewVariablePointers() {
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
         "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
         "mastery1", "mastery2", "mastery3", "mastery4", "MASTERY",
-        "bpct", "dpct", "ppct", "sbl"
+        "bpct", "dpct", "ppct", "sbl", "wbon"
     };
 
     for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)

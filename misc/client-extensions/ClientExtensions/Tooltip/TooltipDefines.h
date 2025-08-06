@@ -2,7 +2,7 @@
 #include "SharedDefines.h"
 #include <iostream>
 
-static uint32_t spellVariables[171] = { 0 };
+static uint32_t spellVariables[172] = { 0 };
 
 enum SpellVariable : uint32_t {
     SPELLVARIABLE_hp        = 162,
@@ -36,4 +36,5 @@ enum SpellVariable : uint32_t {
     SPELLVARIABLE_dpct      = 190,
     SPELLVARIABLE_ppct      = 191,
     SPELLVARIABLE_sbl       = 192,
+    SPELLVARIABLE_wbon      = 193,
 };
