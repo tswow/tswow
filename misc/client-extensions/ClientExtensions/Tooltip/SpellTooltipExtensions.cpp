@@ -114,23 +114,8 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         break;
                     case SPELLVARIABLE_wbon: {
                         uint8_t attType = (spell->m_equippedItemClass == 2 && spell->m_equippedItemSubclass & 262156 && spell->m_defenseType != 2) ? 2 : spell->m_attributesExC & SPELL_ATTR3_MAIN_HAND ? 0 : 1;
-                        if (attType == 2) {
-                            float ap = std::max<float>(activePlayer->PlayerData->weaponBonusAP[attType], activePlayer->PlayerData->weaponBonusAP[0]) + activePlayer->unitBase.unitData->RAP + activePlayer->unitBase.unitData->RAPMods[0] + activePlayer->unitBase.unitData->RAPMods[1];
-                            if (ap < 0)
-                                ap = 0;
-                            value = ap * (1.0f + activePlayer->unitBase.unitData->RAPMult);
-                        } else {
-                            float ap = activePlayer->unitBase.unitData->AP + activePlayer->unitBase.unitData->APMods[0] + activePlayer->unitBase.unitData->APMods[1];
-                            if (attType == 0)
-                                ap += std::max<float>(activePlayer->PlayerData->weaponBonusAP[attType], activePlayer->PlayerData->weaponBonusAP[2]);
-                            else {
-                                ap += activePlayer->PlayerData->weaponBonusAP[attType];
-                                ap /= 2;
-                            }
-                            if (ap < 0)
-                                ap = 0;
-                            value = ap * (1.0f + activePlayer->unitBase.unitData->APMult);
-                        }
+                        float ap = CharacterDefines::GetTotalAttackPowerValue(attType, activePlayer);
+                        value = ap;
                     } break;
                     default:
                         *reinterpret_cast<uint32_t*>(_this) = 1;

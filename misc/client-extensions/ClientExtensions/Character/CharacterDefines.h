@@ -35,4 +35,26 @@ namespace CharacterDefines {
 
     inline float ModHaste = 0;
     inline float ModHasteRegen = 0;
+
+    inline float GetTotalAttackPowerValue(uint8_t attType, CGPlayer* activePlayer) {
+        float value = 0.0f;
+        if (attType == 2) {
+            float ap = std::max<float>(activePlayer->PlayerData->weaponBonusAP[attType], activePlayer->PlayerData->weaponBonusAP[0]) + activePlayer->unitBase.unitData->RAP + activePlayer->unitBase.unitData->RAPMods[0] + activePlayer->unitBase.unitData->RAPMods[1];
+            if (ap < 0)
+                ap = 0;
+            value = ap * (1.0f + activePlayer->unitBase.unitData->RAPMult);
+        } else {
+            float ap = activePlayer->unitBase.unitData->AP + activePlayer->unitBase.unitData->APMods[0] + activePlayer->unitBase.unitData->APMods[1];
+            if (attType == 0)
+                ap += std::max<float>(activePlayer->PlayerData->weaponBonusAP[attType], activePlayer->PlayerData->weaponBonusAP[2]);
+            else {
+                ap += activePlayer->PlayerData->weaponBonusAP[attType];
+                ap /= 2;
+            }
+            if (ap < 0)
+                ap = 0;
+            value = ap * (1.0f + activePlayer->unitBase.unitData->APMult);
+        }
+        return value;
+    }
 };
