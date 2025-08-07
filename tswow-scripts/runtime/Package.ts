@@ -87,7 +87,7 @@ export class Package {
                         }
                     }
                 }
-                appendListfile('luaxml',`${node.abs().get()}\t${rel.replace(/\//g, '\\')}\n`)
+                appendListfile('luaxml',`${node.abs().get()}\t${rel.get().replace(/\//g, '\\')}\n`)
             });
         }
 
@@ -103,7 +103,7 @@ export class Package {
                         || lower.endsWith('.json')
                         || lower.endsWith('.dbc')
                     ) return;
-                    appendListfile(x.fullName, `${node.abs()}\t${node.relativeTo(x.assets.path).replace(/\//g, '\\')}\n`)
+                    appendListfile(x.fullName, `${node.abs()}\t${node.relativeTo(x.assets.path).get().replace(/\//g, '\\')}\n`)
                 });
             })
 
