@@ -168,6 +168,7 @@ export class Livescripts {
             }
         })
 
+        buildDir.remove();
         if(foundTs) {
             term.log(this.logName(),`Compiling ts->lua`)
             wsys.execIn(
@@ -194,20 +195,9 @@ export class Livescripts {
             return;
         }
 
-        buildDir.iterate('RECURSE','FILES','FULL', node => {
-            let rel = node.relativeTo(buildDir)
-            let file = this.mod.path.join(rel)
-            if(!node.basename().startsWith('__') && node.endsWith('.lua') && !file.withExtension('.ts',true).exists() && !file.withExtension('.lua',true).exists()) {
-                if(rel.basename().get() !== 'lualib_bundle.lua') {
-                    term.log(this.logName(),`Cleaning up removed lua file ${rel.get()}`)
-                }
-                node.remove();
-            }
-        })
-
         buildDir.copy(this.luaInstallPath(dataset))
 
-        // todo: please fix this singleton hell already.
+        // todo: please fix this singleton already.
         //       this is fine because we're not multithreading.
         class IdPublic extends IdPrivate {
             static readFile = () => IdPrivate.readFile(dataset.path.ids_txt.get());
