@@ -3410,28 +3410,33 @@ export class Emitter {
                     let arrowNode = node as ts.ArrowFunction;
                     let argsLength = arrowNode.parameters.length;
                     let index = -1;
-                    (node.parent as ts.CallExpression).arguments.forEach((x,i)=>{
-                        if(x === node) {
-                            index = i;
-                        }
-                    });
-                    if(index != -1) {
-                        let paramLength: number;
-                        let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
-                        if(type && type.symbol && type.symbol.declarations) {
-                            // hack: naively try all declarations until we find one.
-                            // we can't really support overloaded callbacks this way, but it's better than nothing
-                            for(let declaration of type.symbol.declarations) {
-                                let tt = this.resolver.getTypeAtLocation((declaration as any as ts.CallSignatureDeclaration).parameters[index]);
-                                let fnType = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
-                                if(fnType == undefined) {
-                                    continue;
-                                }
-                                paramLength = fnType.parameters.length;
-                                break;
+                    
+                    // Check if parent is actually a CallExpression before trying to access arguments
+                    if (node.parent && ts.isCallExpression(node.parent) && node.parent.arguments) {
+                        node.parent.arguments.forEach((x,i)=>{
+                            if(x === node) {
+                                index = i;
                             }
+                        });
+                        
+                        if(index != -1) {
+                            let paramLength: number;
+                            let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
+                            if(type && type.symbol && type.symbol.declarations) {
+                                // hack: naively try all declarations until we find one.
+                                // we can't really support overloaded callbacks this way, but it's better than nothing
+                                for(let declaration of type.symbol.declarations) {
+                                    let tt = this.resolver.getTypeAtLocation((declaration as any as ts.CallSignatureDeclaration).parameters[index]);
+                                    let fnType = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
+                                    if(fnType == undefined) {
+                                        continue;
+                                    }
+                                    paramLength = fnType.parameters.length;
+                                    break;
+                                }
+                            }
+                            if(paramLength > argsLength) extraArgs = paramLength - argsLength;
                         }
-                        if(paramLength > argsLength) extraArgs = paramLength - argsLength;
                     }
                 } catch(error) {
                     extraArgs = 0;
