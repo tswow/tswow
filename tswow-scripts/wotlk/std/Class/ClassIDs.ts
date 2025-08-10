@@ -1,4 +1,3 @@
-
 export enum ClassIDs {
     WARRIOR = 1,
     PALADIN = 2,
@@ -9,5 +8,9 @@ export enum ClassIDs {
     SHAMAN = 7,
     MAGE = 8,
     WARLOCK = 9,
-    DRUID = 11
+    DRUID = 11,
+    MONK = 12,
+    BARD = 13,
+    TINKER = 14,
+    DEMON_HUNTER = 15,
 }
