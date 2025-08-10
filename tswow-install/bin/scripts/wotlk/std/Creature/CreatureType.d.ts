@@ -1,0 +1,36 @@
+export declare enum CreatureType {
+    NONE = 0,
+    BEAST = 1,
+    DRAGONKIN = 2,
+    DEMON = 3,
+    ELEMENTAL = 4,
+    GIANT = 5,
+    UNDEAD = 6,
+    HUMANOID = 7,
+    CRITTER = 8,
+    MECHANICAL = 9,
+    NOT_SPECIFIED = 10,
+    TOTEM = 11,
+    NON_COMBAT_PET = 12,
+    GAS_CLOUD = 13,
+    WILD_PET = 14,
+    ABERRATION = 15
+}
+export declare enum CreatureTypeMask {
+    NONE = 1,
+    BEAST = 2,
+    DRAGONKIN = 4,
+    DEMON = 8,
+    ELEMENTAL = 16,
+    GIANT = 32,
+    UNDEAD = 64,
+    HUMANOID = 128,
+    CRITTER = 256,
+    MECHANICAL = 512,
+    NOT_SPECIFIED = 1024,
+    TOTEM = 2048,
+    NON_COMBAT_PET = 4096,
+    GAS_CLOUD = 8192,
+    WILD_PET = 16384,
+    ABERRATION = 32768
+}

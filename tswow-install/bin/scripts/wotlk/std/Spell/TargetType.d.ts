@@ -1,0 +1,23 @@
+export declare enum SpellTargetType {
+    UNUSED1 = 1,
+    UNIT = 2,
+    UNIT_RAID = 4,
+    UNIT_PARTY = 8,
+    ITEM = 16,
+    SOURCE_LOCATION = 32,
+    DEST_LOCATION = 64,
+    UNIT_ENEMY = 128,
+    UNIT_ALLY = 256,
+    CORPSE_ENEMY = 512,
+    UNIT_DEAD = 1024,
+    GAME_OBJECT = 2048,
+    TRADE_ITEM = 4096,
+    STRING = 8192,
+    GAME_OBJECT_ITEM = 16384,
+    CORPSE_ALLY = 32768,
+    UNIT_MINIPET = 65536,
+    GLYPH_SLOT = 131072,
+    DEST_TARGET = 262144,
+    UNUSED20 = 524288,
+    UNIT_PASSENGER = 1048576
+}

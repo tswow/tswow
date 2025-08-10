@@ -1,0 +1,10 @@
+import { Spell } from "../Spell/Spell";
+export type DefaultProfession = 'SKINNING' | 'HERBALISM' | 'MINING' | 'FISHING' | 'JEWELCRAFTING' | 'COOKING' | 'ALCHEMY' | 'LEATHERWORKING' | 'INSCRIPTION' | 'ENGINEERING' | 'TAILORING' | 'BLACKSMITHING' | 'ENCHANTING' | 'FISHING' | 'FIRSTAID';
+export declare const DefaultProfessions: DefaultProfession[];
+export type ProfessionType = 'PROFESSION' | 'SECONDARY';
+export declare function resolveProfessionType(type: ProfessionType | number): number;
+export declare function resolveProfession(type: DefaultProfession | number): number;
+export type ProfessionTier = 'Apprentice' | 'Journeyman' | 'Expert' | 'Artisan' | 'Master' | 'Grand Master' | number;
+export declare function resolveProfessionRank(tier: ProfessionTier | number): number;
+export declare function getProfessionRank(rank: number): "Apprentice" | "Journeyman" | "Expert" | "Artisan" | "Master" | "Grand Master";
+export declare function isTradeskillSpell(spell: Spell): boolean;

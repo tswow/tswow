@@ -24,7 +24,7 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { isInteractive } from './BuildConfig';
 import { bpaths, spaths } from './CompilePaths';
-import { NpxExecutable } from '../runtime/Node';
+import { NodeExecutable } from '../runtime/Node';
 
 export namespace Scripts {
     export async function build() {
@@ -185,12 +185,12 @@ export namespace Scripts {
             wfs.write(unifiedDeclPath, JSON.stringify(unifiedDeclTsConfig, null, 2));
             
             try {
-                wsys.exec(`"${NpxExecutable}" tsc --project "${unifiedDeclPath}"`, 'pipe');
+                wsys.exec(`"${NodeExecutable}" "${mpath(bpaths.get(), 'node_modules', 'typescript', 'lib', 'tsc.js')}" --project "${unifiedDeclPath}"`, 'pipe');
             } catch (e) {
                 const errorStr = e.toString();
-                if (!errorStr.includes('rootDir') && !errorStr.includes('is expected to contain all source files')) {
-                    term.error('build', `TypeScript declaration error: ${errorStr}`);
-                }
+                term.error('build', `TypeScript declaration error: ${errorStr}`);
+                // Previously filtered out 'rootDir' and 'is expected to contain all source files' errors
+                // but hiding errors is bad practice - we should fix them instead
             }
             wfs.remove(unifiedDeclPath);
 
