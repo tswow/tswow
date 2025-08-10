@@ -19,7 +19,7 @@ import path from 'path';
 import { WDirectory } from '../util/FileTree';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { ipaths } from '../util/Paths';
-import { __internal_wotlk_applyDeletes, __internal_wotlk_save } from '../wotlk/internal/__wotlkEvents';
+import { __internal_wotlk_applyDeletes, __internal_wotlk_save } from '../wow/wotlk/internal/__wotlkEvents';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
 import { _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
