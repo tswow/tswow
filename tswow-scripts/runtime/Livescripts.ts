@@ -344,7 +344,7 @@ export class Livescripts {
             term.log(this.logName(),`Compiling ts->lua`)
             wsys.execIn(
                 this.mod.path.get()
-            , `${NodeExecutable} ${ipaths.node_modules.tstl_js.abs()} --project livescript_tsconfig_temp.json`
+            , `${NodeExecutable} "${ipaths.node_modules.tstl_js.abs()}" --project livescript_tsconfig_temp.json`
             )
         }
 
@@ -441,11 +441,11 @@ export class Livescripts {
             const flagArgs = args.filter(arg => arg.startsWith('-'));
 
             const tsxCommand = `PATH="${filteredPath}" ${NodeExecutable} --enable-source-maps --stack-trace-limit=1000`
-                + ` ${ipaths.bin.scripts.typescript2cxx.main_js.abs()} livescript_tsconfig_temp.json`
+                + ` "${ipaths.bin.scripts.typescript2cxx.main_js.abs()}" livescript_tsconfig_temp.json`
                 + ` ${(flagArgs.join(' '))}`
-                + ` --ipaths=${ipaths.abs()}`
+                + ` --ipaths="${ipaths.abs()}"`
                 + ` --datasetName=${dataset.fullName}`
-                + ` --datasetPath=${dataset.path.abs().get()}`
+                + ` --datasetPath="${dataset.path.abs().get()}"`
                 + ` ${tracyArg ? tracyArg : ''}`;
 
 

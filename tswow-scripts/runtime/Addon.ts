@@ -197,7 +197,7 @@ export class Addon {
         // 3. Run tstl
         wsys.execIn(
               this.path.get()
-            , `${NodeExecutable} ${ipaths.node_modules.tstl_js.abs()}`
+            , `${NodeExecutable} "${ipaths.node_modules.tstl_js.abs()}"`
         )
 
         // 4. Copy all lua files

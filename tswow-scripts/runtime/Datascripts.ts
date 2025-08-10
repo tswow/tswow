@@ -148,13 +148,13 @@ export class Datascripts {
                 )
                 try {
                     // Add timeout and capture output
-                    const cmd = `${NpmExecutable} i ${this.path.build.abs()}`;
+                    const cmd = `${NpmExecutable} i "${this.path.build.abs()}"`;
                     term.debug(this.logName(), `Running: ${cmd}`);
                     wsys.exec(cmd, 'inherit');
                     term.log(this.logName(), `Successfully installed ${this.mod.fullName} datascript library`);
                 } catch (e) {
                     term.error(this.logName(), `Failed to install datascript library: ${e}`);
-                    term.error(this.logName(), `Command was: ${NpmExecutable} i ${this.path.build.abs()}`);
+                    term.error(this.logName(), `Command was: ${NpmExecutable} i "${this.path.build.abs()}"`);
                     // Continue anyway - the library may already be installed
                 }
             }
@@ -198,7 +198,7 @@ export class Datascripts {
     symlink() {
         this.path.build.package_json.writeJson(lib_package_json(this.mod.fullName))
         if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
-            wsys.exec(`${NpmExecutable} i ${this.path.build.get()}`)
+            wsys.exec(`${NpmExecutable} i "${this.path.build.get()}"`)
         }
     }
 
@@ -265,14 +265,14 @@ export class Datascripts {
             
             try {
                 // Use 'pipe' instead of 'inherit' to avoid interfering with authserver's IO
-                const output = wsys.exec(`${NpmExecutable} i ${wowPackagePath}`, 'pipe')
+                const output = wsys.exec(`${NpmExecutable} i "${wowPackagePath}"`, 'pipe')
                 if (output) {
                     term.debug('datascripts', `npm install output: ${output.trim()}`);
                 }
                 term.log('datascripts', 'Successfully linked wow data libraries');
             } catch (e) {
                 term.error('datascripts', `Failed to install wow library: ${e}`);
-                term.error('datascripts', `Command was: ${NpmExecutable} i ${wowPackagePath}`);
+                term.error('datascripts', `Command was: ${NpmExecutable} i "${wowPackagePath}"`);
                 term.error('datascripts', `This might be because npm is not in PATH or the path is incorrect.`);
                 // Don't throw - let TSWoW continue without the wow module
                 return;
@@ -461,11 +461,11 @@ export class Datascripts {
         )
 
         const buildCommand = `${NodeExecutable} --enable-source-maps`
-            + ` ${ipaths.node_modules.wow.data.index.get()}`
+            + ` "${ipaths.node_modules.wow.data.index.get()}"`
             + ` --ipaths=./`
-            + ` --dataset=${dataset.path.get()}`
+            + ` --dataset="${dataset.path.get()}"`
             + ` --datasetName=${dataset.fullName}`
-            + ` --clientPatch=${dataset.client.path.Data.devPatch}`
+            + ` --clientPatch="${dataset.client.path.Data.devPatch}"`
             + ` ${args.join(' ')}`
             // Please don't pass these two manually
             + ` ${writesServer?'--__writes-server':''}`
@@ -492,7 +492,7 @@ export class Datascripts {
                 && x.endsWith('-v8.log'))
             .forEach((x,i)=>{
                 wsys.exec(
-                      `${NodeExecutable} --prof-process ${x}`
+                      `${NodeExecutable} --prof-process "${x}"`
                     + ` > node-profiling${i==0?'':`-${i}`}.txt`
                 )
                 wfs.remove(x)
