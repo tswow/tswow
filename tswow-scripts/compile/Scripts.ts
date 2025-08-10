@@ -75,13 +75,19 @@ export namespace Scripts {
 
         // Package.json files are already copied by SWC with --copy-files
 
-        // Create the wow directory in node_modules (where it's expected by the runtime)
-        const wowDir = ipaths.node_modules.wow.abs().get();
-        wfs.mkDirs(wowDir);
+        // Create the wow directory in both locations:
+        // 1. node_modules/wow (where module resolution expects it)
+        const wowNodeModulesDir = ipaths.node_modules.wow.abs().get();
+        wfs.mkDirs(wowNodeModulesDir);
+        
+        // 2. bin/scripts/wow (where npm install expects to find it as a local package)
+        const wowBinDir = mpath(scriptsDest, 'wow');
+        wfs.mkDirs(wowBinDir);
 
-        // Copy wotlk into wow directory
+        // Copy wotlk into both wow directories
         if (wfs.exists(mpath(tempScripts, 'wotlk'))) {
-            wfs.copy(mpath(tempScripts, 'wotlk'), mpath(wowDir, 'wotlk'));
+            wfs.copy(mpath(tempScripts, 'wotlk'), mpath(wowNodeModulesDir, 'wotlk'));
+            wfs.copy(mpath(tempScripts, 'wotlk'), mpath(wowBinDir, 'wotlk'));
         }
 
         // Create symlinks for data and util directories so module resolution works correctly
@@ -116,35 +122,54 @@ export namespace Scripts {
             }
         };
 
-        // Create relative symlinks that will work from the install directory
-        // The wow directory is in node_modules/wow, and we need to link to ../../bin/scripts/data and ../../bin/scripts/util
-        const dataTarget = '../../bin/scripts/data';
-        const dataSymlink = mpath(wowDir, 'data');
-        createSymlink(dataTarget, dataSymlink, 'data');
+        // Create symlinks for both wow directories
+        
+        // For node_modules/wow (relative paths from node_modules/wow to bin/scripts)
+        const nodeModulesDataTarget = '../../bin/scripts/data';
+        const nodeModulesDataSymlink = mpath(wowNodeModulesDir, 'data');
+        createSymlink(nodeModulesDataTarget, nodeModulesDataSymlink, 'node_modules data');
 
-        const utilTarget = '../../bin/scripts/util';
-        const utilSymlink = mpath(wowDir, 'util');
-        createSymlink(utilTarget, utilSymlink, 'util');
+        const nodeModulesUtilTarget = '../../bin/scripts/util';
+        const nodeModulesUtilSymlink = mpath(wowNodeModulesDir, 'util');
+        createSymlink(nodeModulesUtilTarget, nodeModulesUtilSymlink, 'node_modules util');
+        
+        // For bin/scripts/wow (relative paths from bin/scripts/wow to bin/scripts)
+        const binDataTarget = '../data';
+        const binDataSymlink = mpath(wowBinDir, 'data');
+        createSymlink(binDataTarget, binDataSymlink, 'bin data');
+
+        const binUtilTarget = '../util';
+        const binUtilSymlink = mpath(wowBinDir, 'util');
+        createSymlink(binUtilTarget, binUtilSymlink, 'bin util');
 
         // Package.json files are already copied by SWC with --copy-files
 
-        // Create wow package.json
+        // Create wow package.json for both directories
+        const wowPackageJson = {
+            name: "wow",
+            version: "1.0.0",
+            description: "",
+            main: "./data/index.js",
+            types: "./data/index.d.ts",
+            dependencies: JSON.parse(wfs.read(mpath(tempScripts, 'data', 'package.json'))).dependencies,
+            devDependencies: {},
+            scripts: {},
+            repository: { type: "git" },
+            author: "tswow",
+            license: "GPL-3.0-only"
+        };
+
+        // Create package.json for node_modules/wow
         wfs.write(
-            mpath(wowDir, 'package.json'),
-            JSON.stringify({
-                name: "wow",
-                version: "1.0.0",
-                description: "",
-                main: "./data/index.js",
-                types: "./data/index.d.ts",
-                dependencies: JSON.parse(wfs.read(mpath(tempScripts, 'data', 'package.json'))).dependencies,
-                devDependencies: {},
-                scripts: {},
-                repository: { type: "git" },
-                author: "tswow",
-                license: "GPL-3.0-only"
-            }, null, 2)
-        )
+            mpath(wowNodeModulesDir, 'package.json'),
+            JSON.stringify(wowPackageJson, null, 2)
+        );
+
+        // Create package.json for bin/scripts/wow
+        wfs.write(
+            mpath(wowBinDir, 'package.json'),
+            JSON.stringify(wowPackageJson, null, 2)
+        );
 
         // Clean up temp directory
         wfs.remove(tempDir);
