@@ -18,6 +18,7 @@ import { watchTsc } from '../util/CompileTS';
 import { mpath, wfs } from '../util/FileSystem';
 import { FilePath, resfp } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
+import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { termCustom } from '../util/TerminalCategories';
 import { isInteractive } from './BuildConfig';
@@ -83,13 +84,37 @@ export namespace Scripts {
 
         // Create symlinks for data and util directories so module resolution works correctly
         const dataSymlink = mpath(wowDir, 'data');
+        const dataTarget = mpath(bpaths.abs().get(), 'bootstrap', 'data');
+        
         if (!wfs.exists(dataSymlink)) {
-            wsys.exec(`ln -sf ../data ${dataSymlink}`, 'inherit');
+            if (isWindows()) {
+                // On Windows, use mklink /J for directory junctions (doesn't require admin)
+                // First remove if exists to avoid errors
+                if (wfs.exists(dataSymlink)) {
+                    wsys.exec(`rmdir "${dataSymlink}"`, 'pipe');
+                }
+                wsys.exec(`mklink /J "${dataSymlink}" "${dataTarget}"`, 'inherit');
+            } else {
+                // On Unix, use symbolic links
+                wsys.exec(`ln -sf "${dataTarget}" "${dataSymlink}"`, 'inherit');
+            }
         }
 
         const utilSymlink = mpath(wowDir, 'util');
+        const utilTarget = mpath(bpaths.abs().get(), 'bootstrap', 'util');
+        
         if (!wfs.exists(utilSymlink)) {
-            wsys.exec(`ln -sf ../util ${utilSymlink}`, 'inherit');
+            if (isWindows()) {
+                // On Windows, use mklink /J for directory junctions (doesn't require admin)
+                // First remove if exists to avoid errors
+                if (wfs.exists(utilSymlink)) {
+                    wsys.exec(`rmdir "${utilSymlink}"`, 'pipe');
+                }
+                wsys.exec(`mklink /J "${utilSymlink}" "${utilTarget}"`, 'inherit');
+            } else {
+                // On Unix, use symbolic links
+                wsys.exec(`ln -sf "${utilTarget}" "${utilSymlink}"`, 'inherit');
+            }
         }
 
         // Package.json files are already copied by SWC with --copy-files
