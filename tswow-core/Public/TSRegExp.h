@@ -15,10 +15,50 @@ private:
     bool m_global;
     bool m_ignoreCase;
     bool m_multiline;
+    bool m_dotall;
+
+    // Helper function to preprocess pattern for dotall mode
+    std::string preprocessPattern(const std::string& pattern, bool dotall)
+    {
+        if (!dotall) {
+            return pattern;
+        }
+
+        // Replace unescaped dots with [\s\S] to match any character including newlines
+        std::string result;
+        bool escaped = false;
+        bool inCharClass = false;
+        
+        for (size_t i = 0; i < pattern.length(); ++i) {
+            char c = pattern[i];
+            
+            if (escaped) {
+                result += c;
+                escaped = false;
+            } else if (c == '\\') {
+                result += c;
+                escaped = true;
+            } else if (c == '[') {
+                result += c;
+                inCharClass = true;
+            } else if (c == ']' && inCharClass) {
+                result += c;
+                inCharClass = false;
+            } else if (c == '.' && !inCharClass) {
+                // Replace dot with [\s\S] to match any character including newlines
+                result += "[\\s\\S]";
+            } else {
+                result += c;
+            }
+        }
+        
+        return result;
+    }
 
     std::regex_constants::syntax_option_type parseFlags(const std::string& flags)
     {
         auto options = std::regex_constants::ECMAScript;
+        m_dotall = false;
 
         for (char flag : flags) {
             switch (flag) {
@@ -36,8 +76,8 @@ private:
                     break;
                 case 's':
                     // Dotall mode - . matches newlines
-                    // Note: This is C++17, but we're using C++20
-                    options |= std::regex_constants::multiline;
+                    // Since std::regex doesn't support dotall, we preprocess the pattern
+                    m_dotall = true;
                     break;
             }
         }
@@ -53,6 +93,7 @@ public:
         , m_global(false)
         , m_ignoreCase(false)
         , m_multiline(false)
+        , m_dotall(false)
     {
         try {
             m_regex = std::regex(pattern, std::regex_constants::ECMAScript);
@@ -68,10 +109,13 @@ public:
         , m_global(false)
         , m_ignoreCase(false)
         , m_multiline(false)
+        , m_dotall(false)
     {
         try {
             auto options = parseFlags(flags);
-            m_regex = std::regex(pattern, options);
+            // Preprocess pattern if dotall flag is set
+            std::string processedPattern = preprocessPattern(pattern, m_dotall);
+            m_regex = std::regex(processedPattern, options);
         } catch (const std::regex_error& e) {
             throw std::runtime_error("Invalid regular expression: " + pattern);
         }

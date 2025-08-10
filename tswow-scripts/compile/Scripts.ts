@@ -24,6 +24,7 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { isInteractive } from './BuildConfig';
 import { bpaths, spaths } from './CompilePaths';
+import { NpxExecutable } from '../runtime/Node';
 
 export namespace Scripts {
     export async function build() {
@@ -184,7 +185,7 @@ export namespace Scripts {
             wfs.write(unifiedDeclPath, JSON.stringify(unifiedDeclTsConfig, null, 2));
             
             try {
-                wsys.exec(`npx tsc --project ${unifiedDeclPath}`, 'pipe');
+                wsys.exec(`"${NpxExecutable}" tsc --project "${unifiedDeclPath}"`, 'pipe');
             } catch (e) {
                 const errorStr = e.toString();
                 if (!errorStr.includes('rootDir') && !errorStr.includes('is expected to contain all source files')) {
