@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { symlinkSync, unlinkSync, existsSync } from 'fs';
 import { watchTsc } from '../util/CompileTS';
 import { mpath, wfs } from '../util/FileSystem';
 import { FilePath, resfp } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
-import { termCustom } from '../util/TerminalCategories';
+import { term } from '../util/Terminal';
 import { isInteractive } from './BuildConfig';
 import { bpaths, spaths } from './CompilePaths';
 
@@ -83,39 +84,44 @@ export namespace Scripts {
         }
 
         // Create symlinks for data and util directories so module resolution works correctly
-        const dataSymlink = mpath(wowDir, 'data');
-        const dataTarget = mpath(bpaths.abs().get(), 'bootstrap', 'data');
-        
-        if (!wfs.exists(dataSymlink)) {
-            if (isWindows()) {
-                // On Windows, use mklink /J for directory junctions (doesn't require admin)
-                // First remove if exists to avoid errors
-                if (wfs.exists(dataSymlink)) {
-                    wsys.exec(`rmdir "${dataSymlink}"`, 'pipe');
+        const createSymlink = (target: string, link: string, name: string) => {
+            try {
+                // Remove existing symlink if it exists
+                if (existsSync(link)) {
+                    try {
+                        unlinkSync(link);
+                    } catch (e) {
+                        // If unlink fails, it might be a directory junction on Windows
+                        // Try to remove it as a directory
+                        if (isWindows() && wfs.exists(link)) {
+                            wfs.remove(link);
+                        }
+                    }
                 }
-                wsys.exec(`mklink /J "${dataSymlink}" "${dataTarget}"`, 'inherit');
-            } else {
-                // On Unix, use symbolic links
-                wsys.exec(`ln -sf "${dataTarget}" "${dataSymlink}"`, 'inherit');
+                
+                // Create new symlink
+                // On Windows, use 'junction' for directories (doesn't require admin)
+                // On Unix, use 'dir' for directory symlinks
+                symlinkSync(target, link, isWindows() ? 'junction' : 'dir');
+                term.log('build', `Created ${name} symlink: ${link} -> ${target}`);
+            } catch (err: any) {
+                // If symlink already exists and points to the right place, that's fine
+                if (err.code === 'EEXIST') {
+                    term.log('build', `${name} symlink already exists: ${link}`);
+                } else {
+                    term.error('build', `Failed to create ${name} symlink: ${err.message}`);
+                    throw err;
+                }
             }
-        }
+        };
 
-        const utilSymlink = mpath(wowDir, 'util');
+        const dataTarget = mpath(bpaths.abs().get(), 'bootstrap', 'data');
+        const dataSymlink = mpath(wowDir, 'data');
+        createSymlink(dataTarget, dataSymlink, 'data');
+
         const utilTarget = mpath(bpaths.abs().get(), 'bootstrap', 'util');
-        
-        if (!wfs.exists(utilSymlink)) {
-            if (isWindows()) {
-                // On Windows, use mklink /J for directory junctions (doesn't require admin)
-                // First remove if exists to avoid errors
-                if (wfs.exists(utilSymlink)) {
-                    wsys.exec(`rmdir "${utilSymlink}"`, 'pipe');
-                }
-                wsys.exec(`mklink /J "${utilSymlink}" "${utilTarget}"`, 'inherit');
-            } else {
-                // On Unix, use symbolic links
-                wsys.exec(`ln -sf "${utilTarget}" "${utilSymlink}"`, 'inherit');
-            }
-        }
+        const utilSymlink = mpath(wowDir, 'util');
+        createSymlink(utilTarget, utilSymlink, 'util');
 
         // Package.json files are already copied by SWC with --copy-files
 
@@ -141,7 +147,7 @@ export namespace Scripts {
         wfs.remove(tempDir);
 
         // Generate TypeScript declarations after everything is in place
-        termCustom('build','scripts','Generating TypeScript declarations...');
+        term.log('build', 'Generating TypeScript declarations...');
 
         try {
 
@@ -182,7 +188,7 @@ export namespace Scripts {
             } catch (e) {
                 const errorStr = e.toString();
                 if (!errorStr.includes('rootDir') && !errorStr.includes('is expected to contain all source files')) {
-                    termCustom('build','scripts',`TypeScript declaration error: ${errorStr}`);
+                    term.error('build', `TypeScript declaration error: ${errorStr}`);
                 }
             }
             wfs.remove(unifiedDeclPath);
@@ -209,10 +215,10 @@ export namespace Scripts {
                 wfs.remove(wotlkDeclSrc);
             }
 
-            termCustom('build','scripts','TypeScript declarations generated successfully');
+            term.log('build', 'TypeScript declarations generated successfully');
         } catch (e) {
-            termCustom('build','scripts','Warning: Failed to generate TypeScript declarations');
-            termCustom('build','scripts',`Error: ${e}`);
+            term.error('build', 'Warning: Failed to generate TypeScript declarations');
+            term.error('build', `Error: ${e}`);
         }
     }
 }
