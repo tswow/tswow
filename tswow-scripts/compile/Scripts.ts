@@ -116,11 +116,13 @@ export namespace Scripts {
             }
         };
 
-        const dataTarget = mpath(scriptsDest, 'data');
+        // Create relative symlinks that will work from the install directory
+        // The wow directory is in node_modules/wow, and we need to link to ../../bin/scripts/data and ../../bin/scripts/util
+        const dataTarget = '../../bin/scripts/data';
         const dataSymlink = mpath(wowDir, 'data');
         createSymlink(dataTarget, dataSymlink, 'data');
 
-        const utilTarget = mpath(scriptsDest, 'util');
+        const utilTarget = '../../bin/scripts/util';
         const utilSymlink = mpath(wowDir, 'util');
         createSymlink(utilTarget, utilSymlink, 'util');
 
