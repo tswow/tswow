@@ -124,12 +124,12 @@ export namespace Scripts {
 
         // Create symlinks for both wow directories
         
-        // For node_modules/wow (relative paths from node_modules/wow to bin/scripts)
-        const nodeModulesDataTarget = '../../bin/scripts/data';
+        // For node_modules/wow (absolute paths to ensure they work from install directory)
+        const nodeModulesDataTarget = mpath(scriptsDest, 'data');
         const nodeModulesDataSymlink = mpath(wowNodeModulesDir, 'data');
         createSymlink(nodeModulesDataTarget, nodeModulesDataSymlink, 'node_modules data');
 
-        const nodeModulesUtilTarget = '../../bin/scripts/util';
+        const nodeModulesUtilTarget = mpath(scriptsDest, 'util');
         const nodeModulesUtilSymlink = mpath(wowNodeModulesDir, 'util');
         createSymlink(nodeModulesUtilTarget, nodeModulesUtilSymlink, 'node_modules util');
         
