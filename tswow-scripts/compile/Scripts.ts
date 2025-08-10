@@ -75,8 +75,8 @@ export namespace Scripts {
 
         // Package.json files are already copied by SWC with --copy-files
 
-        // Create the wow directory and copy wotlk into it
-        const wowDir = mpath(scriptsDest, 'wow');
+        // Create the wow directory in node_modules (where it's expected by the runtime)
+        const wowDir = ipaths.node_modules.wow.abs().get();
         wfs.mkDirs(wowDir);
 
         // Copy wotlk into wow directory
@@ -116,11 +116,11 @@ export namespace Scripts {
             }
         };
 
-        const dataTarget = mpath(bpaths.abs().get(), 'bootstrap', 'data');
+        const dataTarget = mpath(scriptsDest, 'data');
         const dataSymlink = mpath(wowDir, 'data');
         createSymlink(dataTarget, dataSymlink, 'data');
 
-        const utilTarget = mpath(bpaths.abs().get(), 'bootstrap', 'util');
+        const utilTarget = mpath(scriptsDest, 'util');
         const utilSymlink = mpath(wowDir, 'util');
         createSymlink(utilTarget, utilSymlink, 'util');
 
