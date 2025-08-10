@@ -1,0 +1,64 @@
+import { Table } from "../../../data/table/Table";
+import { SpellChainEffectsQuery, SpellChainEffectsRow } from "../../dbc/SpellChainEffects";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
+export declare class SpellChainEffect extends MainEntity<SpellChainEffectsRow> {
+    clear(): this;
+    get AvgSegLen(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Width(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get NoiseScale(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get TexCoordScale(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get SegDuration(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get SegDelay(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Texture(): import("../../../data/cell/cells/Cell").CellWrapper<string, this>;
+    get Flags(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get JointCount(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get JointOffsetRadius(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get JointsPerMinorJoin(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinorJointsPerMajorJoint(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinorJointScale(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MajorJointScale(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get JointMoveSpeed(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get JointSmoothness(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinDurationBetweenJointJumps(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MaxDurationBetweenJointJumps(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get WaveHeight(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinWaveAngle(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MaxWaveAngle(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinWaveSpin(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MaxWaveSpin(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get ArcHeight(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinArcAngle(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MaxArcAngle(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinArcSpin(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MaxArcSpin(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get DelayBetweenEffects(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinFlickerOnDuration(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get MinFlickerOffDuration(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get PulseSpeed(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get PulseOnLength(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get PulseFadeLength(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Alpha(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Red(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Green(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Blue(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get BlendMode(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Combo(): import("../../../data/cell/cells/Cell").CellWrapper<string, this>;
+    get RenderLayer(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get TextureLength(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get WavePhase(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get ID(): number;
+}
+export declare class SpellChainEffectRegistryClass extends RegistryDynamic<SpellChainEffect, SpellChainEffectsRow, SpellChainEffectsQuery> {
+    protected Table(): Table<any, SpellChainEffectsQuery, SpellChainEffectsRow> & {
+        add: (id: number) => SpellChainEffectsRow;
+    };
+    protected ids(): DynamicIDGenerator;
+    Clear(entity: SpellChainEffect): void;
+    protected FindByID(id: number): SpellChainEffectsRow;
+    protected EmptyQuery(): SpellChainEffectsQuery;
+    ID(e: SpellChainEffect): number;
+    protected Entity(r: SpellChainEffectsRow): SpellChainEffect;
+}
+export declare const SpellChainEffectRegistry: SpellChainEffectRegistryClass;

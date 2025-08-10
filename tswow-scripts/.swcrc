@@ -10,8 +10,12 @@
       "decorators": true,
       "dynamicImport": false
     },
-    "transform":null,
-    "target":"es2016",
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true,
+      "useDefineForClassFields": false
+    },
+    "target":"es2021",
     "loose":false
   },
   "sourceMaps": true

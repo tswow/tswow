@@ -1,6 +1,5 @@
 import * as ts from 'typescript';
-import { CompilerOptions, EmitHost, Plugin } from "typescript-to-lua";
-import { EmitFile } from 'typescript-to-lua/dist/transpilation/utils';
+import { CompilerOptions, EmitHost, Plugin, EmitFile } from "typescript-to-lua";
 import { WDirectory } from '../util/FileTree';
 import { parseORMClass } from '../util/ORMClass';
 
@@ -9,7 +8,7 @@ export const LuaORM: Plugin = {
         void program;
         void options;
         void emitHost;
-    
+
         let databaseFile = ``
         result.forEach(file => {
             if(!file.sourceFiles) {
@@ -153,4 +152,4 @@ export const LuaORM: Plugin = {
         let dbpath = new WDirectory(options.outDir).join('__create_tables.lua')
         dbpath.toFile().write(databaseFile);
     },
-} 
+}

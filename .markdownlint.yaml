@@ -1,0 +1,59 @@
+---
+# markdownlint configuration.
+
+# For more information, see:
+# https://github.com/DavidAnson/markdownlint#optionsconfig.
+
+# Enable all rules.
+default: true
+
+# MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md013.md
+MD013:
+  # Number of characters
+  line_length: 80
+  # Number of characters for headings
+  heading_line_length: 80
+  # Number of characters for code blocks
+  code_block_line_length: 120
+  # Number of characters for tables
+  tables: false
+  # Strict length checking
+  strict: false
+
+# MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md033.md
+MD033:
+  # Allowed elements
+  allowed_elements: ['div']
+
+# MD040/fenced-code-language : Fenced code blocks should have a language specified : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md040.md
+MD040:
+  # List of languages
+  allowed_languages:
+    [
+      'bash',
+      'c',
+      'cpp',
+      'cmake',
+      'diff',
+      'dockerfile',
+      'glsl',
+      'json',
+      'ldif',
+      'lua',
+      'markdown',
+      'mermaid',
+      'pgsql',
+      'powershell',
+      'python',
+      'rust',
+      'shell',
+      'sql',
+      'text',
+      'toml',
+      'typescript',
+      'wgsl',
+      'xml',
+      'yaml',
+    ]
+  # Require language only
+  language_only: false

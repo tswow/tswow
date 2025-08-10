@@ -221,6 +221,19 @@ export class Realm {
         return i;
     }
 
+    getPort(): number {
+        if(!this.path.worldserver_conf.exists()) {
+            return 8085;
+        } else {
+            let portMatch = this.path.worldserver_conf.readString()
+                .match(/WorldServerPort *= *(\d+)/)
+            if(portMatch) {
+                return parseInt(portMatch[1]);
+            }
+            return 8085;
+        }
+    }
+
     realmlistSQL() {
         let flag = 0;
         if(this.config.Offline) flag |=0x2
@@ -228,16 +241,7 @@ export class Realm {
         if(this.config.Recommended) flag |= 0x20;
         if(this.config.Full) flag |= 0x40
 
-        let port: number;
-        if(!this.path.worldserver_conf.exists()) {
-            port = 8085;
-        } else {
-            let portMatch = this.path.worldserver_conf.readString()
-                .match(/WorldServerPort *= *(\d+)/)
-            if(portMatch) {
-                port = parseInt(portMatch[1]);
-            }
-        }
+        let port = this.getPort();
 
         let values = [
             ['id',this.getID()],
@@ -392,18 +396,52 @@ export class Realm {
             ipaths.modules.join('default/realms/realm').mkdir()
         }
 
+        // Check for duplicate realm IDs
+        const realmIdMap: {[id: number]: string[]} = {};
+        for (const realm of Realm.all()) {
+            if (realm.hasID()) {
+                const id = realm.getID();
+                if (!realmIdMap[id]) {
+                    realmIdMap[id] = [];
+                }
+                realmIdMap[id].push(realm.fullName);
+            }
+        }
+
+        // Check for duplicates
+        const duplicates = Object.entries(realmIdMap)
+            .filter(([id, realms]) => realms.length > 1);
+
+        if (duplicates.length > 0) {
+            term.error('realm', '='.repeat(60));
+            term.error('realm', 'ERROR: Duplicate realm IDs detected!');
+            term.error('realm', '='.repeat(60));
+            for (const [id, realms] of duplicates) {
+                term.error('realm', `Realm ID ${id} is used by multiple modules:`);
+                for (const realmName of realms) {
+                    term.error('realm', `  - ${realmName}`);
+                }
+            }
+            term.error('realm', '');
+            term.error('realm', 'Each realm must have a unique ID. Please edit the realm.id');
+            term.error('realm', 'file in one of the conflicting modules to use a different ID.');
+            term.error('realm', '='.repeat(60));
+            process.exit(1);
+        }
+
         if(
                !process.argv.includes('noac')
             && !process.argv.includes('norealm')
         ) {
-            await Promise.all(NodeConfig.AutoStartRealms
+            const autoStartRealms = NodeConfig.AutoStartRealms;
+            await Promise.all(autoStartRealms
                 .map(x=>Identifier.getRealm(x)
                     .start(NodeConfig.DefaultBuildType)))
         }
 
         StopCommand.addCommand(
               'realm'
-            , 'relamnames time --force'
+            , 'realmnames time --force'
             , 'Shuts down the specified realms. If the --force flag is supplied, time is ignored.'
             , args => {
                 let delay = args.map(x=>parseInt(x)).find(x=>!isNaN(x)) || 0
@@ -432,7 +470,7 @@ export class Realm {
         CreateCommand.addCommand(
               'realm'
             , 'module realmname displayname?'
-            , ''
+            , 'Creates a new realm configuration in the specified module'
             , args => {
                 const module = Identifier.getModule(args[0])
                 const realmname = Identifier.assertUnused(args[1],'realmname');
@@ -444,7 +482,7 @@ export class Realm {
         StartCommand.addCommand(
               'realm'
             , ''
-            , ''
+            , 'Starts the specified realm servers'
             , async args => {
                 await Promise.all(Identifier.getRealms(args,'MATCH_ANY',NodeConfig.DefaultRealm)
                     .map(x=>{
@@ -453,7 +491,7 @@ export class Realm {
             }
         ).addAlias('realms')
 
-        commands.addCommand('realm')
+        commands.addCommand('realm', '', 'Realm server management and configuration commands')
             .addCommand('send','','',args=>{
                 let realm = Identifier.getRealm(args[0]);
                 let message = args.slice(1);
@@ -463,7 +501,7 @@ export class Realm {
         ListCommand.addCommand(
               'realm'
             , ''
-            , ''
+            , 'Lists all available realms'
             , args => {
                 let isModule = Identifier.isModule(args[0])
                 Realm.all()

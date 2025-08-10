@@ -29,6 +29,16 @@ public:
     TSWorldPacket();
     TSWorldPacket(uint16 opcode, uint32 res = 200);
     TSWorldPacket(WorldPacket *packet);
+
+    // Copy constructor - transfer ownership
+    TSWorldPacket(const TSWorldPacket& other);
+    // Move constructor
+    TSWorldPacket(TSWorldPacket&& other) noexcept;
+    // Copy assignment - transfer ownership
+    TSWorldPacket& operator=(const TSWorldPacket& other);
+    // Move assignment
+    TSWorldPacket& operator=(TSWorldPacket&& other) noexcept;
+
     TSWorldPacket* operator->() { return this;}
     operator bool() const { return packet != nullptr; }
     bool operator==(TSWorldPacket const& rhs) { return packet == rhs.packet; }
@@ -40,6 +50,16 @@ public:
     ~TSWorldPacket();
 
     TSArray<uint8> GetBytes();
+
+private:
+    // Bounds checking helpers
+    // These methods prevent remote code execution via out-of-bounds memory access
+    // All indexed packet operations MUST use these validators
+    bool ValidateReadIndex(uint32 index, size_t typeSize) const;
+    bool ValidateWriteIndex(uint32 index, size_t typeSize) const;
+    void ThrowBoundsError(const char* operation, uint32 index, size_t typeSize, size_t packetSize) const;
+
+public:
 
     bool IsNull() { return packet == nullptr; }
     bool IsEmpty();

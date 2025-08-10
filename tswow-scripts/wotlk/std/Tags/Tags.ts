@@ -7,12 +7,40 @@ const reverse: {[key: number]: [string,string][]} = {}
 const tags: {[key: string]: number[]} = {}
 const uniqueTags: {[key: string]: boolean} = {}
 
+// Debug: log total tags at intervals
+let tagCount = 0;
+const checkTags = () => {
+    const currentCount = Object.keys(tags).length;
+    if (currentCount !== tagCount) {
+        if (BuildArgs.DEBUG) {
+            console.log(`[TAGS] Total tags registered so far: ${currentCount}`);
+        }
+        tagCount = currentCount;
+    }
+};
+// Check immediately and then every second
+if (BuildArgs.DEBUG) {
+    checkTags();
+    const interval = setInterval(checkTags, 1000);
+    // Clear interval after 30 seconds to avoid memory leak
+    setTimeout(() => clearInterval(interval), 30000);
+}
+
 function fullTagName(mod: string, name: string) {
     return `${mod}.${name}`
 }
 
 function AddTag(mod: string, name: string, id: number) {
     let fullTag = fullTagName(mod,name);
+    // Debug logging
+    if (BuildArgs.DEBUG) {
+        if (Object.keys(tags).length === 0) {
+            console.log(`[TAGS] First tag being added: ${fullTag} with id: ${id}`);
+        }
+        if (fullTag === 'tswow-tests.addon-messages-npc') {
+            console.log(`[TAGS] Adding specific tag: ${fullTag} with id: ${id}`);
+        }
+    }
     if(uniqueTags[fullTag]) {
         throw new Error(`Attempted to add tag ${mod}:${name}, but another entity already claimed it as unique.`)
     }
@@ -80,13 +108,13 @@ export class EntityTags<T> extends MultiRowSystem<EntityTag,T> {
         this.id = id;
     }
 
-    add(mod: string, id: string) {
-        AddTag(mod,id,this.id);
+    add(mod: string, name: string) {
+        AddTag(mod,name,this.id);
         return this.owner;
     }
 
-    addUnique(mod: string, id: string) {
-        AddUniqueTag(mod,id,this.id);
+    addUnique(mod: string, name: string) {
+        AddUniqueTag(mod,name,this.id);
         return this.owner;
     }
 
@@ -115,9 +143,29 @@ export const Tags = {
 }
 
 finish('tags',()=>{
-    if(BuildArgs.READ_ONLY || !BuildArgs.WRITE_SERVER) return;
+    if (BuildArgs.DEBUG) {
+        console.log('[TAGS] Running tags finish function');
+        console.log(`[TAGS] BuildArgs.READ_ONLY: ${BuildArgs.READ_ONLY}`);
+        console.log(`[TAGS] BuildArgs.WRITE_SERVER: ${BuildArgs.WRITE_SERVER}`);
+    }
+
+    if(BuildArgs.READ_ONLY || !BuildArgs.WRITE_SERVER) {
+        if (BuildArgs.DEBUG) {
+            console.log('[TAGS] Skipping tag file generation due to build flags');
+        }
+        return;
+    }
+
+    if (BuildArgs.DEBUG) {
+        console.log(`[TAGS] Writing ${Object.keys(tags).length} tag files...`);
+    }
     ipaths.coredata.tags.remove();
     Object.entries(tags).forEach(([key,value])=>{
-        ipaths.coredata.tags.tagfile(key).writeJson(value)
+        const tagFile = ipaths.coredata.tags.tagfile(key);
+        console.log(`[TAGS] Writing tag file: ${tagFile.get()}`);
+        tagFile.writeJson(value)
     });
+    if (BuildArgs.DEBUG) {
+        console.log('[TAGS] Tag file generation complete');
+    }
 });

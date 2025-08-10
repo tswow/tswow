@@ -23,7 +23,9 @@ import { termCustom } from "./TerminalCategories";
 
 const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
 function cleanup() {
-    for(const proc of Object.values(processes)) {
+    term.debug('process', `cleanup() called, killing ${Object.keys(processes).length} processes`);
+    for(const [pid, proc] of Object.entries(processes)) {
+        term.debug('process', `Sending SIGTERM to process ${pid}`);
         proc.kill('SIGTERM');
     }
 }
@@ -31,12 +33,26 @@ function cleanup() {
 // causes major terminal glitching
 if(!isWindows())
 {
-    process.on('exit', cleanup);
-    process.on('SIGINT', cleanup);
-    process.on('SIGUSR1', cleanup);
-    process.on('SIGUSR2', cleanup);
-    process.on('uncaughtException', cleanup);
-    process.on('SIGINT', cleanup)
+    process.on('exit', (code) => {
+        term.debug('process', `Main process exit event with code ${code}`);
+        cleanup();
+    });
+    process.on('SIGINT', () => {
+        term.debug('process', `Main process SIGINT`);
+        cleanup();
+    });
+    process.on('SIGUSR1', () => {
+        term.debug('process', `Main process SIGUSR1`);
+        cleanup();
+    });
+    process.on('SIGUSR2', () => {
+        term.debug('process', `Main process SIGUSR2`);
+        cleanup();
+    });
+    process.on('uncaughtException', (err) => {
+        term.debug('process', `Main process uncaughtException: ${err}`);
+        cleanup();
+    });
 }
 
 /**
@@ -209,6 +225,7 @@ export class Process {
             , {stdio:'pipe',cwd:resfp(directory)}
         )
         this._process = processes[proc.pid] = proc;
+        term.debug('process', `Registered process ${this._name} with PID ${proc.pid}`);
         this._process.stdout.on('data', (data) => {
             this.handleOutput(data, false);
         });
@@ -229,6 +246,7 @@ export class Process {
                         && proc.pid === this._process.pid) {
                             this._process = undefined;
                         res();
+                        term.debug('process', `Unregistering process ${this._name} with PID ${proc.pid}`);
                         delete processes[proc.pid]
                     }
                 }
@@ -239,6 +257,11 @@ export class Process {
                 this.postFail();
             });
             proc.on('exit', (code) => {
+                // Debug: Log process exit for authserver
+                if (this._name === 'authserver') {
+                    term.debug('process', `Authserver exited with code: ${code}`);
+                }
+                
                 let failed = code !== 0 && code !== null
                 if(failed) {
                     this.fail(new Error('Process error code '+code))
@@ -258,6 +281,11 @@ export class Process {
             } else {
                 term.log(termCustom(this._name),line)
             }
+        }
+        
+        // Debug: Log if authserver is exiting
+        if (this._name === 'authserver' && line.includes('Halting process')) {
+            term.debug('process', `Authserver halting detected - checking for bot-related issues`);
         }
 
         const removedCharacters =

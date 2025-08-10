@@ -1,0 +1,35 @@
+import { BuildType } from "../util/BuildType";
+import { Dataset } from "./Dataset";
+import { ModuleEndpoint } from "./Modules";
+import { Realm } from "./Realm";
+export type IdentifierType = 'DATASET' | 'MODULE' | 'REALM' | 'KEYWORD' | 'PATCHLETTER' | 'NONE' | 'BUILT_TYPE' | 'UNDEFINED' | 'OPTION';
+export type CollectMode = 'MATCH_ANY' | 'ALLOW_NONE';
+export type CollectModeMatchAll = CollectMode | 'MATCH_ALL';
+export declare class Identifier {
+    protected payload: any;
+    readonly type: IdentifierType;
+    constructor(type: IdentifierType, payload: any);
+    asDataset(): Dataset;
+    asOption(): string;
+    asModule(): ModuleEndpoint;
+    asRealm(): Realm;
+    asBuildType(): BuildType;
+    static assertUnused(identifier: string, name: string): string;
+    static resolve(identifier: string, expectedType?: IdentifierType): Identifier;
+    static isModule(identifier: string): boolean;
+    static isDataset(identifier: string): boolean;
+    static isRealm(identifier: string): boolean;
+    private static find;
+    static getBuildType(identifiers: string[], def?: BuildType): BuildType;
+    static getModules(identifiers: string[], mode: CollectMode, def?: string): ModuleEndpoint[];
+    static getModules(identifiers: string[], mode: CollectModeMatchAll): ModuleEndpoint[];
+    static getModulesOrAll(identifiers: string[]): ModuleEndpoint[];
+    static getRealms(identifiers: string[], mode: CollectMode, def?: string): Realm[];
+    static getRealms(identifiers: string[], mode: CollectModeMatchAll): Realm[];
+    static getDatasets(identifiers: string[], mode: CollectMode, def?: string): Dataset[];
+    static getDatasets(identifiers: string[], mode: CollectModeMatchAll): Dataset[];
+    static getDatasetsOrDefault(identifiers: string[], collectMode: CollectModeMatchAll): Dataset[];
+    static getModule(identifier: string): ModuleEndpoint;
+    static getRealm(identifier: string): Realm;
+    static getDataset(identifier: string): Dataset;
+}

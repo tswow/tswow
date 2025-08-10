@@ -48,6 +48,39 @@ export namespace AuthServer {
             .copyOnNoTarget(ipaths.coredata.authserver.authserver_conf)
 
         term.debug('authserver', 'Setting up realmlist table for authserver')
+
+        // Check for port conflicts
+        const portMap: {[port: number]: string[]} = {};
+        for (const realm of Realm.all()) {
+            const port = realm.getPort();
+            if (!portMap[port]) {
+                portMap[port] = [];
+            }
+            portMap[port].push(realm.fullName);
+        }
+
+        // Warn about port conflicts
+        const portConflicts = Object.entries(portMap)
+            .filter(([port, realms]) => realms.length > 1);
+
+        if (portConflicts.length > 0) {
+            term.warn('authserver', '='.repeat(60));
+            term.warn('authserver', 'WARNING: Port conflicts detected!');
+            term.warn('authserver', '='.repeat(60));
+            for (const [port, realms] of portConflicts) {
+                term.warn('authserver', `Port ${port} is used by multiple realms:`);
+                for (const realmName of realms) {
+                    term.warn('authserver', `  - ${realmName}`);
+                }
+            }
+            term.warn('authserver', '');
+            term.warn('authserver', 'Multiple realms cannot run on the same port.');
+            term.warn('authserver', 'Only one realm per port can be started at a time.');
+            term.warn('authserver', 'Consider changing WorldServerPort in worldserver.conf');
+            term.warn('authserver', 'for one or more conflicting realms.');
+            term.warn('authserver', '='.repeat(60));
+        }
+
         await query('DELETE FROM realmlist;');
         await Promise.all(Realm.all().map(x=>query(x.realmlistSQL())));
         await Promise.all(Dataset.all().map(x=>query(x.gamebuildSQL())));
@@ -57,6 +90,10 @@ export namespace AuthServer {
             ,'LoginDatabaseInfo',NodeConfig.DatabaseString('auth')
         )
 
+        // Add debug to check if process management is affected
+        term.debug('authserver', `Starting authserver with executable: ${ipaths.bin.core.pick('trinitycore').build.pick(type).authserver.get()}`);
+        term.debug('authserver', `Config file: ${ipaths.coredata.authserver.authserver_conf.get()}`);
+        
         authserver.startIn(ipaths.coredata.authserver.get(),
             wfs.absPath(
                   ipaths.bin.core.pick('trinitycore').build.pick(type).authserver.get())
@@ -64,14 +101,22 @@ export namespace AuthServer {
                     ipaths.coredata.authserver.authserver_conf.get()
                 )}`]
             );
+        term.log('authserver', 'Authserver process started');
+        
+        // Wait a moment to see if it stays running
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (!authserver.isRunning()) {
+            term.error('authserver', 'Authserver process exited immediately after starting!');
+        }
     }
 
-    export const command = commands.addCommand('authserver');
+    export const command = commands.addCommand('authserver', '', 'Authentication server management commands');
 
     export async function initializeDatabase() {
         term.debug('authserver', `Initializing authserver database`)
         if(NodeConfig.AutoStartAuthServer) {
-            connection = new Connection(NodeConfig.DatabaseSettings('auth'),'auth');
+            const dbSettings = NodeConfig.DatabaseSettings('auth');
+            connection = new Connection(dbSettings,'auth');
             await connection.connect();
             await mysql.installAuth(connection);
         }

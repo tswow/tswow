@@ -1,0 +1,12 @@
+{
+  "extension": ["js"],
+  "spec": "bin/scripts/tests/**/*.js",
+  "require": [
+    "source-map-support/register"
+  ],
+  "recursive": true,
+  "reporter": "spec",
+  "timeout": 10000,
+  "exit": true,
+  "colors": true
+}

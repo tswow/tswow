@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as assert from 'assert';
-import { Allocator } from '../../wotlkdata/ids/Allocator';
+import { Allocator } from '../../util/ids/Allocator';
 import { Random } from './Random';
 
 let p = new Allocator();

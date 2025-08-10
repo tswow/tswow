@@ -7,4 +7,4 @@ export const bpaths = function(){
   }
   return BuildPaths(arg.substring('--bpaths='.length),tdbFilename())
 }();
-export const spaths = SourcePaths('./')
+export const spaths = SourcePaths(process.cwd())

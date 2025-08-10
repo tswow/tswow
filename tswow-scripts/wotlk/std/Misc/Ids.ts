@@ -161,7 +161,6 @@ export const Ids = {
     FactionTemplate: new DynamicIDGenerator('FactionTemplate',2237),
 
     /** Starts at 105, Highest base value is 104. */
-    // @ts-ignore: ReputationIndex is not a real table
     ReputationIndex: new StaticIDGenerator('ReputationIndex',105),
 
     /** Start at 60000 , Highest base value is 56807 */
@@ -359,7 +358,6 @@ export const Ids = {
     /** Starts at 400, highest base value is 341 */
     CurrencyTypes: new StaticIDGenerator('CurrencyTypes',400),
 
-    // @ts-ignore
     CurrencyTypesBitIndex: new StaticIDGenerator('CurrencyTypesBitIndex',30),
 
     /** Starts at 100, highest base value is 85 */
@@ -387,7 +385,6 @@ export const Ids = {
     DungeonMapChunk: new DynamicIDGenerator('DungeonMapChunk',2000),
 
     /** Starts at 3618, highest base value is 3617 */
-    // @ts-ignore
     AreaBit: new StaticIDGenerator('AreaTableExplore',3618),
 
     /** Starts at 725, highest base value is 724 */

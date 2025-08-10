@@ -4,13 +4,13 @@ runs:
   using: "composite"
   steps:
     - name: Select node version
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18.12.1
+        node-version: 22
     - name: Install deps
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install git clang cmake make gcc g++ libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mysql-server p7zip
-        sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
-        sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
+        sudo apt-get install git clang-17 cmake make gcc g++ libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mysql-server p7zip
+        sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-17 100
+        sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-17 100

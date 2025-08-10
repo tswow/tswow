@@ -13,7 +13,7 @@ import { MainEntity } from "../Misc/Entity";
 import { LockTypeRegistry } from "./Locks";
 
 export class LockIndexBase extends TransformedClass<LockIndexPlain> {
-    @Transient
+    // @Transient removed to avoid circular dependency
     protected container: Lock;
     readonly index: number;
 
@@ -232,7 +232,7 @@ export class LockReferences extends CellSystem<Lock> {
     get Traps() { return new LockTraps(this.owner); }
 }
 
-// @ts-ignore - hack, it's valid
+// @ts-expect-error - ArraySystem generic constraint mismatch, but works at runtime
 export class LockRequirements extends ArraySystem<LockIndexBase,Lock> {
     addEmpty() {
         const index = this.addGet().index;

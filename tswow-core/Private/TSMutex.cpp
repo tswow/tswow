@@ -3,9 +3,9 @@
 
 TSMutex::TSMutex() = default;
 
-// Note: for TSWorldEntity in Battlegrounds
 TSMutex::TSMutex(TSMutex const&)
 {
+    // Creates a new independent mutex - not a shared lock
 }
 
 void TSMutex::lock()

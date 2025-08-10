@@ -3,13 +3,21 @@
 
 std::string __ts_string_substring(std::string const& str, double begin, double end)
 {
-    if (end == str.size() || end < 0)
+    // Validate and convert double indices to size_t
+    if (begin < 0) begin = 0;
+    if (begin > static_cast<double>(str.size())) begin = static_cast<double>(str.size());
+
+    size_t start_pos = static_cast<size_t>(begin);
+
+    if (end < 0 || end >= static_cast<double>(str.size()))
     {
-        return str.substr(begin);
+        return str.substr(start_pos);
     }
     else
     {
-        return str.substr(begin, end - begin);
+        if (end < begin) end = begin;
+        size_t end_pos = static_cast<size_t>(end);
+        return str.substr(start_pos, end_pos - start_pos);
     }
 }
 
@@ -76,7 +84,7 @@ double __ts_string_indexOf(std::string const& str, std::string const& sub)
     }
     else
     {
-        return value;
+        return static_cast<double>(value);
     }
 }
 
@@ -89,12 +97,17 @@ double __ts_string_lastIndexOf(std::string const& str, std::string const& sub)
     }
     else
     {
-        return value;
+        return static_cast<double>(value);
     }
 }
 
 std::string __ts_string_charAt(std::string const& str, double index)
 {
+    // Validate index bounds
+    if (index < 0 || index >= static_cast<double>(str.size()))
+    {
+        return "";
+    }
     return __ts_string_substring(str, index, index + 1);
 }
 
@@ -122,5 +135,5 @@ TSArray<std::string> __ts_string_split(std::string const& str, std::string const
 
 double __ts_string_length(std::string const& str)
 {
-    return str.size();
+    return static_cast<double>(str.size());
 }

@@ -187,13 +187,14 @@ TSArray<TSWorldObject> TSSmartScriptValues::GetTargets()
 
 void TSSmartScriptValues::StoreTargetList(TSArray<TSWorldObject> objects, uint32 id)
 {
-    TSObjectVector* objectsOut = new TSObjectVector(objects.get_length());
+    TSObjectVector objectsOut;  // Stack allocation
+    objectsOut.reserve(objects.get_length());  // Pre-allocate for efficiency
     for (size_t i = 0; i < objects.get_length(); ++i)
     {
-        objectsOut->push_back(objects[i].obj);
+        objectsOut.push_back(objects[i].obj);
     }
 #if TRINITY
-    m_script->StoreTargetList(*objectsOut, id);
+    m_script->StoreTargetList(objectsOut, id);  // Pass by value
 #endif
 }
 

@@ -40,7 +40,11 @@ export function writeLoader(outDir: string) {
     }
 
     if(inlinePath.exists()) {
-        cpp.writeStringNewLine(`#include "build/${datasetName}/inline/__inline_main.h"`)
+        // Check if the inline header was compiled to C++
+        const inlineHeaderPath = path.join(outDir, '..', 'inline', '__inline_main.h');
+        if(fs.existsSync(inlineHeaderPath)) {
+            cpp.writeStringNewLine(`#include "../inline/__inline_main.h"`)
+        }
     }
     cpp.writeStringNewLine(`#include "TCLoader.h"`);
     cpp.writeStringNewLine(`char const* GetScriptModuleRevisionHash()`)
@@ -58,7 +62,11 @@ export function writeLoader(outDir: string) {
     }
 
     if(inlinePath.exists()) {
-        cpp.writeStringNewLine('__InlineMain(handlers);');
+        // Check if the inline header was compiled to C++
+        const inlineHeaderPath = path.join(outDir, '..', 'inline', '__inline_main.h');
+        if(fs.existsSync(inlineHeaderPath)) {
+            cpp.writeStringNewLine('__InlineMain(handlers);');
+        }
     }
     cpp.EndBlock();
     cpp.writeStringNewLine(`void AddScripts(){}`);

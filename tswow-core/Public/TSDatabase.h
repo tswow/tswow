@@ -203,6 +203,9 @@ TC_GAME_API TSWorldDatabaseConnection GetWorldDBConnection();
 TC_GAME_API TSAuthDatabaseConnection GetAuthDBConnection();
 TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection();
 
+// Warning: These functions execute raw SQL queries without parameterization
+// We might want to use PrepareWorldQuery/PrepareCharactersQuery/PrepareAuthQuery
+// for queries with user input to prevent SQL injection attacks
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryWorld(std::string const& query);
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryCharacters(std::string const& query);
 TC_GAME_API std::shared_ptr<TSDatabaseResult> QueryAuth(std::string const& query);

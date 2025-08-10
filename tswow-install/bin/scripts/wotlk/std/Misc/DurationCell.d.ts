@@ -1,0 +1,40 @@
+import { Cell } from "../../../data/cell/cells/Cell";
+import { ObjectifyOptions } from "../../../data/cell/serialization/ObjectIteration";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+export declare const TimeUnits: readonly ["MILLISECONDS", "SECONDS", "MINUTES", "HOURS", "DAYS", "WEEKS", "YEARS", "AUTO"];
+export type TimeUnit = typeof TimeUnits[number];
+export declare function convertTime(num: number, from: TimeUnit, to: TimeUnit): number;
+export type TimeUnitConstructor = {
+    [Property in typeof TimeUnits[number]]?: number;
+};
+export declare function applyTimeConstructor(targetType: TimeUnit, con: TimeUnitConstructor): number;
+export declare class DurationCell<T> extends CellSystem<T> {
+    readonly unit: TimeUnit;
+    protected cell: Cell<number, any>;
+    readonly isRounded: boolean;
+    constructor(owner: T, unit: TimeUnit, isRounded: boolean, cell: Cell<number, any>);
+    get(): number;
+    set(value: number, type?: TimeUnit | TimeUnitConstructor): T;
+    addMilliseconds(ms: number): T;
+    addSeconds(ms: number): T;
+    addMinutes(ms: number): T;
+    addHours(ms: number): T;
+    addDays(ms: number): T;
+    addWeeks(ms: number): T;
+    addYears(ms: number): T;
+    setAsMilliseconds(ms: number): T;
+    setAsSeconds(s: number): T;
+    setAsMinutes(m: number): T;
+    setAsHours(h: number): T;
+    setAsDays(h: number): T;
+    setAsWeeks(h: number): T;
+    setAsYears(h: number): T;
+    getAsMilliseconds(): number;
+    getAsSeconds(): number;
+    getAsMinutes(): number;
+    getAsHours(): number;
+    getAsDays(): number;
+    getAsWeeks(): number;
+    getAsYears(): number;
+    objectify(options?: ObjectifyOptions): string;
+}

@@ -23,6 +23,7 @@ export type TerminalCategory =
     | 'modules'
     | 'datascripts'
     | 'livescripts'
+    | 'tests'
     | 'build'
     | 'process'
     | 'commands'
@@ -30,6 +31,7 @@ export type TerminalCategory =
     | 'client'
     | 'lua'
     | 'launcher'
+    | 'tswow'
     | CustomCategory
 
 export function termCustom(custom: string);

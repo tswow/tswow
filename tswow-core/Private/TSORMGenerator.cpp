@@ -48,6 +48,33 @@ std::string toLower(std::string const& str)
     return out;
 }
 
+std::string normalizeColumnType(std::string const& columnType)
+{
+    // MySQL 8.0.17+ no longer reports display width for integer types
+    // This function normalizes both old and new formats for comparison
+    std::string normalized = columnType;
+    
+    // Remove display width from integer types: int(10) -> int, bigint(20) -> bigint, etc.
+    // This handles: tinyint(N), smallint(N), mediumint(N), int(N), bigint(N)
+    std::vector<std::string> intTypes = {"tinyint", "smallint", "mediumint", "int", "bigint"};
+    
+    for (const std::string& intType : intTypes) {
+        // Look for pattern like "int(10)" or "int(10) unsigned"
+        size_t pos = normalized.find(intType + "(");
+        if (pos != std::string::npos) {
+            // Find the closing parenthesis
+            size_t parenStart = pos + intType.length();
+            size_t parenEnd = normalized.find(")", parenStart);
+            if (parenEnd != std::string::npos) {
+                // Remove the display width: "int(10)" -> "int"
+                normalized.erase(parenStart, parenEnd - parenStart + 1);
+            }
+        }
+    }
+    
+    return normalized;
+}
+
 void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string const& m_name, std::vector<FieldSpec> m_fields)
 {
     DatabaseType m_type = (DatabaseType)(type);
@@ -140,7 +167,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
                         pkChanged = true;
                         break;
                     }
-                    else if (itr->m_typeName != eff.m_typeName || itr->m_autoIncrements != eff.m_autoIncrements)
+                    else if (normalizeColumnType(itr->m_typeName) != normalizeColumnType(eff.m_typeName) || itr->m_autoIncrements != eff.m_autoIncrements)
                     {
                         TS_LOG_INFO(
                               "tswow.orm"
@@ -205,7 +232,7 @@ void CreateDatabaseSpec(uint32 type, std::string const& m_dbName, std::string co
                     + "`;"
                 );
             }
-            else if (itr->m_typeName != old.m_typeName)
+            else if (normalizeColumnType(itr->m_typeName) != normalizeColumnType(old.m_typeName))
             {
                 // update column type
                 TS_LOG_INFO(

@@ -148,7 +148,7 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
         this.RightHandEffect.set(eff.ID);
         return this;
     }
-    
+
     addBothWeapons(callback: (eff: SpellVisualEffect) => void)
     {
         let eff = SpellVisualEffectRegistry.create();
@@ -425,7 +425,6 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
         return SpellVisualKitRegistry.ref(this, kit);
     }
 
-    // @ts-ignore
     AllKits(): {name: string, ref: RefDynamic<SpellVisual,SpellVisualKit>}[] {
         return ([
             [this.row.CastKit,"Cast"],

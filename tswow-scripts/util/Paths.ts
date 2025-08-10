@@ -19,6 +19,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
+import { TestsDirectory } from "../test/TestsDirectory";
 import { isWindows } from './Platform';
 
 export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24081/TDB_full_world_335.24081_2024_08_17.7z"
@@ -105,7 +106,7 @@ export function DatascriptsDirectory(inPath: string) {
         build: dir({
             package_json: file('package.json')
         }),
-        swcrc: file('../.swcrc')
+        swcrc: file('.swcrc')
     }))
 }
 
@@ -169,6 +170,7 @@ export function EndpointDirectory(inPath: string) {
         addon: custom(inPath=>AddonDirectory(mpath(inPath,'addon'))),
         datascripts: custom(inPath=>DatascriptsDirectory(mpath(inPath,'datascripts'))),
         livescripts: custom(inPath=>LivescriptsDirectory(mpath(inPath,'livescripts'))),
+        tests: custom(inPath=>TestsDirectory(mpath(inPath,'tests'))),
         lua: dir({
             example: file('main.ts'),
             global_d_ts: file('global.d.ts'),
@@ -195,7 +197,7 @@ export function EndpointDirectory(inPath: string) {
                 Minimap: dir({})
             })
         }),
-        livescript_tsconfig_temp: file('tsconfig.json'),
+        livescript_tsconfig_temp: file('livescript_tsconfig_temp.json'),
     }));
 }
 
@@ -280,6 +282,7 @@ export function InstallPath(pathIn: string, tdb: string) {
 
         startBat: file('start.bat'),
         startJs: file('start.js'),
+        mise_toml: file('mise.toml'),
 
         bin: dir({
             package: dir({
@@ -309,22 +312,16 @@ export function InstallPath(pathIn: string, tdb: string) {
             }),
             scripts: dir({
                 addons: dir({
-                    addons: dir({
-                        require_preload: file('RequirePreload.js'),
-                        lua_orm: file('LuaORM.js')
-                    })
+                    require_preload: file('RequirePreload.js'),
+                    lua_orm: file('LuaORM.js')
                 }),
                 tests: dir({}),
                 runtime: dir({
-                    runtime: dir({
-                        TSWoW_js : file('TSWoW.js')
-                    })
+                    TSWoW_js : file('TSWoW.js')
                 }),
                 typescript2cxx: dir({
-                    typescript2cxx: dir({
-                        wowts_js: file('wowts.js'),
-                        main_js: file('main.js'),
-                    })
+                    wowts_js: file('wowts.js'),
+                    main_js: file('main.js'),
                 }),
                 wow: dir({
                     package_json: file('package.json'),
@@ -338,7 +335,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                 snippets_example: file('snippets-example.ts'),
             }),
             adtcreator: dirn('adt-creator',{
-                adtcreator_exe: file('adtcreator.exe'),
+                adt_creator_exe: file(`adt-creator${isWindows()?'.exe':''}`),
             }),
             mpqbuilder: dir({
                 mpqbuilder_exe: file(`mpqbuilder${isWindows()?'.exe':''}`),
@@ -378,7 +375,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             include_lua: dirn('include-lua',{
             }),
             BLPConverter: dir({
-                blpconverter: file('blpconverter.exe')
+                blpconverter: file(isWindows() ? 'blpconverter.exe' : 'blpconverter')
             }),
             tmp: dir({
                 file_changes_txt: file('file_changes.txt'),
@@ -463,6 +460,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                         , 'assets'
                         , 'addon'
                         , 'shared'
+                        , 'tests'
                     ]
                     let paths: WDirectory[] = [self]
                     self.iterate('RECURSE','DIRECTORIES','FULL',node=>{
@@ -506,7 +504,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
             typescript2cxx: dir({}),
             wow: dir({}),
             runtime: dir({}),
-            addons: dir({})
+            addons: dir({}),
+            tests: dir({})
         }),
         lua_events: dir({
             events_ts: file('Events.ts'),
@@ -672,6 +671,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         adtcreator: dir({
+            adt_creator_exe: file(`adt-creator${isWindows()?'.exe':''}`),
             Release: dir({
                 adt_creator_exe: file(`adt-creator${isWindows()?'.exe':''}`)
             })
@@ -711,7 +711,8 @@ export function SourcePaths(pathIn: string) {
                 node_yaml: file('node.yaml'),
                 vscode_install : file('.vscode-install'),
                 addons: dir({}),
-                snippet_example: file('snippet-example.ts')
+                snippet_example: file('snippet-example.ts'),
+                mise_toml: file('mise.toml')
             }),
 
             client_extensions: dirn('client-extensions',{
@@ -744,6 +745,7 @@ export function SourcePaths(pathIn: string) {
             typescript2cxx: dir({}),
             util: dir({}),
             addons: dir({}),
+            test: dir({}),
         }),
 
         TypeScript2Cxx: dir({}),

@@ -33,7 +33,7 @@ import { NodeConfig } from './NodeConfig';
  * Represents a single connection to a mysql server.
  */
 export class Connection {
-    con?: mysql_lib.Pool;
+    con?: mysql_lib.Pool | mysql_lib.Connection;
     cfg: DatabaseSettings;
     status?: Promise<void>;
     isConnected = false;
@@ -49,13 +49,43 @@ export class Connection {
     }
 
     private configWithoutDb() {
-        let c = this.config() as any;
+        let c = this.configForConnection() as any;
         delete c.database;
         return c;
     }
 
+    private configForConnection() {
+        // Create clean config excluding pool-specific options
+        const cleanCfg = {
+            host: this.cfg.host,
+            port: this.cfg.port,
+            user: this.cfg.user,
+            password: this.cfg.password,
+            database: this.cfg.database
+        };
+
+        return Object.assign({}, cleanCfg, {
+            multipleStatements: true,
+            connectTimeout: 10000 // 10 second timeout
+        });
+    }
+
+    private configForPool() {
+        // Include both connection options and pool-specific options
+        return Object.assign({}, this.cfg, {
+            multipleStatements: true,
+            connectTimeout: 10000,
+            enableKeepAlive: true,
+            acquireTimeout: 10000,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
+    }
+
     private config() {
-        return Object.assign({}, this.cfg, {multipleStatements: true, enableKeepAlive: true});
+        // For backward compatibility, return pool config
+        return this.configForPool();
     }
 
     /**
@@ -122,24 +152,59 @@ export class Connection {
             return this.status;
         }
 
-        term.debug('mysql', `Connecting to mysql server ${this.cfg.host}:${this.cfg.database}:${this.cfg.database}`)
-        const creator = mysql_lib.createConnection(this.configWithoutDb());
+        term.debug('mysql', `Connecting to mysql server ${this.cfg.host}:${this.cfg.port}:${this.cfg.database}`)
 
         return this.status = new Promise<void>(async (res,rej)=>{
+            const creator = mysql_lib.createConnection(this.configWithoutDb());
+
+            let connectionTimeout: NodeJS.Timeout;
+            let hasConnected = false;
+
+            // Set up timeout
+            connectionTimeout = setTimeout(() => {
+                if (!hasConnected) {
+                    creator.destroy();
+                    rej(new Error(`Connection to MySQL timed out after 10 seconds. Please ensure MySQL is running on ${this.cfg.host}:${this.cfg.port}`));
+                }
+            }, 10000);
+
+            // Add error handler for connection failures
+            creator.on('error', (err: any) => {
+                clearTimeout(connectionTimeout);
+                term.error('mysql', `Failed to connect to MySQL: ${err.message}`);
+                if (err.code === 'ECONNREFUSED') {
+                    term.error('mysql', `MySQL server appears to be down. Please ensure MySQL is running on ${this.cfg.host}:${this.cfg.port}`);
+                }
+                rej(err);
+            });
+
+            // Add connect handler
+            creator.on('connect', () => {
+                hasConnected = true;
+                clearTimeout(connectionTimeout);
+                term.debug('mysql', `Connected to MySQL server`);
+            });
+
             term.debug('mysql', `Creating database ${this.cfg.database}`)
             creator.query(
                   `CREATE DATABASE IF NOT EXISTS \`${this.cfg.database}\`;`
                 , (createErr)=>{
                     if(createErr) {
+                        clearTimeout(connectionTimeout);
                         return rej(createErr);
                     }
                     creator.end((endErr)=>{
-                        term.debug('mysql', `Closed initial connection, proceeding with connection pool`)
                         if(endErr) {
                             return rej(endErr);
                         }
-                        // workaround: the version of mysql2 we use lists enableKeepAlive as a 'true' type instead of 'boolean'
-                        this.con = mysql_lib.createPool(this.config() as any);
+
+                        if(NodeConfig.UsePooling) {
+                            term.debug('mysql', `Closed initial connection, proceeding with connection pool`)
+                            this.con = mysql_lib.createPool(this.configForPool() as any);
+                        } else {
+                            term.debug('mysql', `Closed initial connection, proceeding with single connection`)
+                            this.con = mysql_lib.createConnection(this.configForConnection() as any);
+                        }
                         this.status = undefined;
                         res();
                     });
@@ -172,7 +237,7 @@ export class Connection {
         term.debug('mysql', `Dropping database ${this.cfg.database}`)
         await new Promise<void>((res,rej)=>{
             let con = mysql_lib.createConnection(this.configWithoutDb());
-            con.query(`DROP DATABASE IF EXISTS \`${this.config().database}\`;`,(err)=>{
+            con.query(`DROP DATABASE IF EXISTS \`${this.cfg.database}\`;`,(err)=>{
                 if(err) {
                     rej(err);
                 } else {

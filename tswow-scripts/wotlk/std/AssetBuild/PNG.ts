@@ -73,6 +73,12 @@ export function onDirtyPNG(
     , force: boolean
     , callback: (png: WFile)=>void
 ) {
+    // Validate input
+    const baseFile = filenameNoSuffix.abs().get();
+    if (!baseFile || baseFile.endsWith('/') || baseFile.endsWith('\\')) {
+        return;
+    }
+
     const png = filenameNoSuffix.withExtension('.png',false);
     for(const conv of converters) {
         const fullname = filenameNoSuffix.withExtension(`.${conv.suffix}`);

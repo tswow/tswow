@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as assert from 'assert';
-import { deepAssign, isDifferentType } from '../../wotlkdata/table/DeepAssign';
+import { deepAssign, isDifferentType } from '../../data/table/DeepAssign';
 
 describe('deepAssign', function() {
     it('works with primitives', function() {

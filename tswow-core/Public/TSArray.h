@@ -107,6 +107,10 @@ public:
   }
 
   auto pop() {
+    if (vec->empty()) {
+      // Empty array - return default
+      return T{};
+    }
     auto value = (*vec)[vec->size() - 1];
     vec->pop_back();
     return value;
@@ -120,6 +124,14 @@ public:
   template <typename... Args>
   void splice(size_t position, size_t size, Args... args)
   {
+    if (position > vec->size()) {
+      // Position out of bounds - ignore operation
+      return;
+    }
+    if (position + size > vec->size()) {
+      // Adjust size to stay within bounds
+      size = vec->size() - position;
+    }
     vec->erase(vec->cbegin() + position, vec->cbegin() + position + size);
     vec->insert(vec->cbegin() + position, { args... });
   }
@@ -132,6 +144,18 @@ public:
 
   TSArray slice(size_t first, size_t last)
   {
+    if (first > vec->size()) {
+      // First index out of bounds - return empty array
+      return TSArray();
+    }
+    if (last > vec->size()) {
+      // Clamp last to array size
+      last = vec->size();
+    }
+    if (first > last) {
+      // Invalid range - return empty array
+      return TSArray();
+    }
     return TSArray(std::vector<T>(vec->cbegin() + first, vec->cbegin() + last));
   }
 
@@ -187,18 +211,36 @@ public:
   }
 
   auto& operator[](int index) {
+    if (index < 0 || index >= static_cast<int>(vec->size())) {
+      // Bounds error - return a static default to avoid crash
+      static T dummy{};
+      return dummy;
+    }
     return (*vec)[index];
   }
 
   auto& operator[](int index) const {
+    if (index < 0 || index >= static_cast<int>(vec->size())) {
+      // Bounds error - return a static default to avoid crash
+      static T dummy{};
+      return dummy;
+    }
     return (*vec)[index];
   }
 
   auto get(int index) {
+    if (index < 0 || index >= static_cast<int>(vec->size())) {
+      // Bounds error - return default value
+      return T{};
+    }
     return (*vec)[index];
   }
 
   auto set(int index, T value) {
+    if (index < 0 || index >= static_cast<int>(vec->size())) {
+      // Bounds error - silently ignore
+      return;
+    }
     (*vec)[index] = value;
   }
 
@@ -306,6 +348,10 @@ public:
 
   T shift()
   {
+    if (vec->empty()) {
+      // Empty array - return default
+      return T{};
+    }
     T value = (*vec)[0];
     vec->erase(vec->begin());
     return value;
@@ -313,6 +359,10 @@ public:
 
   void insert(uint32_t position, T value)
   {
+    if (position > vec->size()) {
+      // Position out of bounds - append to end instead
+      position = vec->size();
+    }
     vec->insert(vec->begin() + position, value);
   }
 

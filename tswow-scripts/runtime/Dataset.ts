@@ -208,18 +208,48 @@ export class Dataset {
     }
 
     refreshSymlinks() {
+        // Clear existing symlinks
         [this.client.path.Data,this.client.path.Data.locale()].forEach(x=>{
-            x.readDir('ABSOLUTE').forEach(y=>{
-                if(y.isSymlink()) {
+            const symlinks = x.readDir('ABSOLUTE').filter(y => y.isSymlink());
+            if(symlinks.length > 0) {
+                term.debug('datascripts', `Clearing ${symlinks.length} existing symlinks from ${x.get()}`);
+                symlinks.forEach(y=>{
+                    term.debug('datascripts', `  - Removing symlink: ${y.basename().get()}`);
                     y.unlink();
-                }
-            })
+                })
+            }
         })
-        this.modules().filter(x=>x.path.assets.exists()).forEach(x=>{
+        
+        // Create new symlinks for module assets
+        const modulesWithAssets = this.modules().filter(x=>x.path.assets.exists());
+        if(modulesWithAssets.length === 0) {
+            term.debug('datascripts', `No modules with assets found for dataset ${this.fullName}`);
+            return;
+        }
+        
+        term.log('datascripts', `Linking ${modulesWithAssets.length} module asset folder(s) to client patches:`);
+        modulesWithAssets.forEach(x=>{
             let patches = this.client.freePatches()
             if(patches.length === 0) {
                 throw new Error(`Client has no more free patches to symlink: ${this.client.path}`)
             }
+            const patchName = patches[0].basename().get();
+            
+            // Count assets in this module for summary
+            let assetCount = 0;
+            let assetTypes = new Set<string>();
+            x.assets.path.iterate('RECURSE','FILES','FULL', node => {
+                assetCount++;
+                const ext = node.toFile().extension().toLowerCase();
+                if(ext) assetTypes.add(ext);
+            });
+            
+            term.log('datascripts', `  - ${x.fullName}: ${assetCount} files → ${patchName}`);
+            term.debug('datascripts', `    Path: ${x.assets.path.abs().get()}`);
+            if(assetTypes.size > 0) {
+                term.debug('datascripts', `    Types: ${Array.from(assetTypes).join(', ')}`);
+            }
+            
             wfs.symlink(x.assets.path.abs().get(),patches[0].abs().get());
         })
     }
@@ -243,7 +273,7 @@ export class Dataset {
         CreateCommand.addCommand(
             'dataset'
           , 'module dataset clientPatch=12340'
-          , ''
+          , 'Creates a new dataset with specified module and client patch version'
           , args => {
               const module = Identifier.getModule(args[0])
               const dataset = Identifier.assertUnused(args[1],'dataset');

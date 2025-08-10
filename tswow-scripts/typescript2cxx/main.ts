@@ -4,7 +4,7 @@ import { terminal } from './terminal';
 declare var process: any;
 
 try {
-    new Run().run(Run.processFiles([]), Run.processOptions(process.argv));
+    new Run().run(Run.processFiles(process.argv), Run.processOptions(process.argv));
 } catch (e) {
     if (e.message.indexOf(`Could not find a valid 'tsconfig.json'`) !== -1) {
         print();

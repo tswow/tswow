@@ -58,17 +58,36 @@ async function compile(type: string, compileArgs: string[]) {
     if (isWindows()) { await SevenZipInstall.install(); }
     if (isWindows()) { await IMInstall.install() }
 
+    // Determine the build type that was used
+    let actualBuildType = 'RelWithDebInfo'; // default
+
     if (types.includes('full') || types.includes('release')) {
-        await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs.concat(['dynamic']));
+        actualBuildType = 'RelWithDebInfo';
+        await TrinityCore.install(cmake, openssl, mysql, actualBuildType, compileArgs.concat(['dynamic']));
     } else {
-        if (type == 'trinitycore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
-        if (isType('trinitycore') || isType('trinitycore-relwithdebinfo')) { await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
-        if (type == 'trinitycore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
+        if (type == 'trinitycore-release') {
+            actualBuildType = 'Release';
+            await TrinityCore.install(cmake, openssl, mysql, actualBuildType, compileArgs);
+        }
+        if (isType('trinitycore-relwithdebinfo')) {
+            actualBuildType = 'RelWithDebInfo';
+            await TrinityCore.install(cmake, openssl, mysql, actualBuildType, compileArgs);
+        }
+        if (type == 'trinitycore-debug') {
+            actualBuildType = 'Debug';
+            await TrinityCore.install(cmake, openssl, mysql, actualBuildType, compileArgs);
+        }
+    }
+    // Always create config with the correct build type after TrinityCore installation
+    if (types.includes('full') || types.includes('release') ||
+        isType('trinitycore-relwithdebinfo') || type == 'trinitycore-debug' ||
+        type == 'trinitycore-release') {
+        await Config.create(actualBuildType);
     }
 
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
-    if (isWindows() && isType('adtcreator')) { await ADTCreator.create(cmake); }
+    if (isType('adtcreator')) { await ADTCreator.create(cmake); }
     if (isType('client-extensions')) { await ClientExtensions.create(cmake); }
 
     if (!buildingScripts && isType('scripts')) {
@@ -77,7 +96,7 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if(isType('config')) {
-        await Config.create();
+        await Config.create(actualBuildType);
     }
 
     if (types.includes('release')) {
@@ -100,8 +119,7 @@ async function main() {
 
     const installedPrograms =
         [
-              'trinitycore'
-            , 'trinitycore-release'
+              'trinitycore-release'
             , 'trinitycore-relwithdebinfo'
             , 'trinitycore-debug'
             , 'mpqbuilder'
@@ -144,7 +162,36 @@ async function main() {
     if(isInteractive) {
         main();
     } else {
-        await compile(process.argv.includes('--release') ? 'release':'full',[]);
+        // Parse command line arguments to extract build type
+        const specifiedTarget = process.argv.find(arg =>
+            arg !== '--release' &&
+            !arg.startsWith('--') &&
+            !arg.includes('node') &&
+            !arg.endsWith('.js') &&
+            !arg.includes('CompileTsWow') &&
+            !arg.includes('ipaths') &&
+            !arg.includes('bpaths')
+        );
+
+        // List of all valid build targets from installedPrograms
+        const validTargets = [
+            'trinitycore-release',
+            'trinitycore-relwithdebinfo',
+            'trinitycore-debug',
+            'mpqbuilder',
+            'blpconverter',
+            'config',
+            'scripts',
+            'adtcreator',
+            'client-extensions'
+        ];
+
+        // Use the specified target if it's valid, otherwise default to full/release
+        const buildType = (specifiedTarget && validTargets.includes(specifiedTarget))
+            ? specifiedTarget
+            : (process.argv.includes('--release') ? 'release' : 'full');
+
+        await compile(buildType, []);
         process.exit(0);
     }
 }())

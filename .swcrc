@@ -1,0 +1,27 @@
+{
+  "module": {
+    "type": "commonjs",
+    "lazy": false,
+    "strict": false,
+    "strictMode": false,
+    "noInterop": false
+  },
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": true,
+      "dynamicImport": false
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": false,
+      "useDefineForClassFields": false
+    },
+    "target": "es2021",
+    "loose": false,
+    "preserveAllComments": true,
+    "keepClassNames": true
+  },
+  "sourceMaps": true
+}

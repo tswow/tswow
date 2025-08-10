@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as assert from 'assert';
-import { Cell, CPrim } from '../../wotlkdata/cell/cells/Cell';
-import { CellSystem, CellSystemTop } from '../../wotlkdata/cell/systems/CellSystem';
+import { Cell, CPrim } from '../../data/cell/cells/Cell';
+import { CellSystem, CellSystemTop } from '../../data/cell/systems/CellSystem';
 
 class BasicCell<T extends CPrim, G> extends Cell<T, G> {
     field: string;

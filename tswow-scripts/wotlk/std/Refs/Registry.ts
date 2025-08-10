@@ -4,7 +4,7 @@ import { Row } from "../../../data/table/Row";
 import { Table } from "../../../data/table/Table";
 import { IMainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, StaticIDGenerator } from "../Misc/Ids";
-import { RefDynamic, RefNoCreate, RefReadOnly, RefStatic } from "./Ref";
+import { DynamicRegistry, RefDynamic, RefNoCreate, RefReadOnly, RefStatic, StaticRegistry } from "./Ref";
 import { RegistryBase } from "./RegistryBase";
 
 export abstract class RegistryQueryBase<
@@ -103,8 +103,7 @@ export abstract class RegistryStatic<
     extends RegistryRowBase<E,R,Q>
 {
     ref<T>(owner: T, cell: Cell<number,any>): RefStatic<T,E> {
-        // @ts-ignore TODO FIX
-        return new RefStatic(owner, cell, this);
+        return new RefStatic(owner, cell, this as unknown as StaticRegistry<E>);
     }
 
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
@@ -158,8 +157,7 @@ export abstract class RegistryDynamic<
     extends RegistryRowBase<E,R,Q>
 {
     ref<T>(owner: T, cell: Cell<number,any>): RefDynamic<T,E> {
-        // @ts-ignore fix
-        return new RefDynamic(owner, cell, this);
+        return new RefDynamic(owner, cell, this as unknown as DynamicRegistry<E>);
     }
 
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}

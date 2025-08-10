@@ -16,7 +16,7 @@ export namespace ADTCreator {
                 + ` --build "${bpaths.adtcreator.get()}"`
                 + ` --config Release`, 'inherit');
             bpaths.adtcreator.Release.adt_creator_exe
-                .copy(ipaths.bin.adtcreator.adtcreator_exe)
+                .copy(ipaths.bin.adtcreator.adt_creator_exe)
         } else {
             bpaths.adtcreator.mkdir();
             const relativeSource = bpaths.adtcreator.relativeFrom(spaths.misc.adtcreator.get())
@@ -27,6 +27,9 @@ export namespace ADTCreator {
                     ,  'inherit');
                 wsys.exec(`make`,'inherit');
             })
+            // Copy the built executable to installation directory
+            bpaths.adtcreator.adt_creator_exe
+                .copy(ipaths.bin.adtcreator.adt_creator_exe)
         }
 
         await DownloadFile(

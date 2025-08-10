@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as assert from 'assert';
-import { DBC } from '../../wotlkdata/dbc/DBCFiles';
-import { inMemory, qall, qany, queryToSql } from '../../wotlkdata/query/Query';
-import { all, any, eq, gt, gte, includes, lt, lte, neq, numeq, numneq, streq, strneq } from '../../wotlkdata/query/Relations';
+import { DBC } from '../../wotlk/DBCFiles';
+import { inMemory, qall, qany, queryToSql } from '../../data/query/Query';
+import { all, any, eq, gt, gte, includes, lt, lte, neq, numeq, numneq, streq, strneq } from '../../data/query/Relations';
 
 describe('Query', function() {
     describe('AllQuery', function() {
@@ -290,7 +290,7 @@ describe('Relations', function() {
 
     describe('Cells', function() {
         it('doesnt freeze', function() {
-            DBC.AuctionHouse.find({Name: includes('stormwind')});
+            DBC.AuctionHouse.query({Name: includes('stormwind')});
         });
     });
 });

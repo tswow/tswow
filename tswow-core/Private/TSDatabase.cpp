@@ -79,9 +79,9 @@ public:
     TSNumber<float> GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
     TSNumber<double> GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
-    std::string GetString(int index) final { 
+    std::string GetString(int index) final {
 #if TRINITY
-        return field[index].GetString(); 
+        return field[index].GetString();
 #endif
     }
 
@@ -141,9 +141,9 @@ public:
     TSNumber<float> GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
     TSNumber<double> GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
-    std::string GetString(int index) final { 
+    std::string GetString(int index) final {
 #if TRINITY
-        return field[index].GetString(); 
+        return field[index].GetString();
 #endif
 
     }
@@ -156,16 +156,22 @@ public:
 
 std::shared_ptr<TSDatabaseResult> QueryWorld(std::string const& query)
 {
+    // Warning: Direct SQL queries can be vulnerable to injection attacks
+    // We might want to use PrepareWorldQuery() for parameterized queries
     return std::make_shared<TSDatabaseImpl>(WorldDatabase.Query(query.c_str()));
 }
 
 std::shared_ptr<TSDatabaseResult> QueryCharacters(std::string const& query)
 {
+    // Warning: Direct SQL queries can be vulnerable to injection attacks
+    // We might want to use PrepareCharactersQuery() for parameterized queries
     return std::make_shared<TSDatabaseImpl>(CharacterDatabase.Query(query.c_str()));
 }
 
 std::shared_ptr<TSDatabaseResult> QueryAuth(std::string const& query)
 {
+    // Warning: Direct SQL queries can be vulnerable to injection attacks
+    // We might want to use PrepareAuthQuery() for parameterized queries
     return std::make_shared<TSDatabaseImpl>(LoginDatabase.Query(query.c_str()));
 }
 
@@ -264,7 +270,7 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetInt16(const uint8 index, co
 {
 #if TRINITY
     m_statement->setInt16(index, value);
-#endif 
+#endif
     return this;
 }
 
@@ -557,15 +563,21 @@ TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
 
 TC_GAME_API void QueryWorldAsync(std::string const& query)
 {
+    // Warning: Direct SQL queries can be vulnerable to injection attacks
+    // We might want to use prepared statements for parameterized queries
     WorldDatabase.AsyncQuery(query.c_str());
 }
 
 TC_GAME_API void QueryCharactersAsync(std::string const& query)
 {
+    // Warning: Direct SQL queries can be vulnerable to injection attacks
+    // We might want to use prepared statements for parameterized queries
     CharacterDatabase.AsyncQuery(query.c_str());
 }
 
 TC_GAME_API void QueryAuthAsync(std::string const& query)
 {
+    // Warning: Direct SQL queries can be vulnerable to injection attacks
+    // We might want to use prepared statements for parameterized queries
     LoginDatabase.AsyncQuery(query.c_str());
 }

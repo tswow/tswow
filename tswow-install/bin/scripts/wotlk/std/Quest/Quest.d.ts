@@ -1,0 +1,63 @@
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { quest_templateRow } from "../../sql/quest_template";
+import { quest_template_addonRow } from "../../sql/quest_template_addon";
+import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
+import { MainEntityID } from "../Misc/Entity";
+import { MinTargetMaxCell } from "../Misc/LimitCells";
+import { RaceMask } from "../Race/RaceType";
+import { QuestAddon } from "./QuestAddon";
+import { QuestFlags } from "./QuestFlags";
+import { QuestGameEventCondition } from "./QuestGameEventPoints";
+import { QuestNPC } from "./QuestGiver";
+import { QuestInfoTypes } from "./QuestInfoTypes";
+import { QuestObjective } from "./QuestObjective";
+import { QuestPOIs } from "./QuestPOI";
+import { QuestReward } from "./QuestReward";
+import { Description, LogTitle, ObjectiveDescription, QuestCompletionLog, QuestText, RequestItems, Reward } from "./QuestText";
+export declare class QuestAddonRow extends CellSystem<Quest> {
+    protected readonly Addon: QuestAddon;
+    get(): quest_template_addonRow;
+    mod(callback: (row: quest_template_addonRow) => void): void;
+    exists(): boolean;
+    static addon(template: Quest): QuestAddon;
+}
+export declare class Quest extends MainEntityID<quest_templateRow> {
+    protected get Addon(): QuestAddon;
+    readonly AddonRow: QuestAddonRow;
+    get Name(): LogTitle;
+    get PickupText(): Description;
+    get IncompleteText(): RequestItems;
+    get CompleteText(): Reward;
+    get ObjectiveText(): ObjectiveDescription;
+    get CompleteLogText(): QuestCompletionLog;
+    get TimeAllowed(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get SpecialFlags(): import("../../../data/cell/cells/MaskCell").MaskCellWrite<Quest, typeof import("./QuestSpecialFlags").QuestSpecialFlags>;
+    get Level(): MinTargetMaxCell<this>;
+    get MaxLevel(): import("../Misc/SQLDBCEntity").MaybeSQLCell<Quest, number, quest_template_addonRow, import("../Misc/SQLDBCEntity").MaybeSQLEntityPublic<Quest, quest_template_addonRow>>;
+    get MinLevel(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get QuestLevel(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get NextQuest(): import("../Misc/SQLDBCEntity").MaybeSQLCell<Quest, number, quest_template_addonRow, import("../Misc/SQLDBCEntity").MaybeSQLEntityPublic<Quest, quest_template_addonRow>>;
+    get PrevQuest(): import("../Misc/SQLDBCEntity").MaybeSQLCell<Quest, number, quest_template_addonRow, import("../Misc/SQLDBCEntity").MaybeSQLEntityPublic<Quest, quest_template_addonRow>>;
+    get ProvidedItemCount(): import("../Misc/SQLDBCEntity").MaybeSQLCell<Quest, number, quest_template_addonRow, import("../Misc/SQLDBCEntity").MaybeSQLEntityPublic<Quest, quest_template_addonRow>>;
+    get SourceSpell(): import("../Refs/Ref").RefStatic<Quest, import("../Spell/Spell").Spell>;
+    get ClassMask(): import("../../../data/cell/cells/MaskCell").MaskCellWrite<Quest, typeof import("../Class/ClassRegistry").ClassMask>;
+    get BreadcrumbForQuest(): import("../Refs/Ref").RefStatic<Quest, Quest>;
+    get ExclusiveGroup(): import("../Misc/SQLDBCEntity").MaybeSQLCell<Quest, number, quest_template_addonRow, import("../Misc/SQLDBCEntity").MaybeSQLEntityPublic<Quest, quest_template_addonRow>>;
+    get RequiredMaxRep(): import("./QuestAddon").QuestRequiredReputation;
+    get RequiredMinRep(): import("./QuestAddon").QuestRequiredReputation;
+    get RequiredSKill(): import("./QuestAddon").QuestRequiredSkill;
+    get ID(): number;
+    get Questgiver(): QuestNPC;
+    get Rewards(): QuestReward;
+    get Objectives(): QuestObjective;
+    /** @deprecated use fields directly on Quest */
+    get Text(): QuestText;
+    get AreaSort(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get StartItem(): import("../../../data/cell/cells/Cell").CellWrapper<number, this>;
+    get Flags(): import("../../../data/cell/cells/MaskCell").MaskCellWrite<this, typeof QuestFlags>;
+    get POIs(): QuestPOIs;
+    get GameEvents(): QuestGameEventsForward;
+    get RaceMask(): import("../../../data/cell/cells/MaskCell").MaskCellWrite<this, typeof RaceMask>;
+    get QuestInfo(): import("../../../data/cell/cells/EnumCell").EnumCellWrite<this, typeof QuestInfoTypes>;
+    readonly GameEventPoints: QuestGameEventCondition;
+}

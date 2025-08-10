@@ -2,6 +2,8 @@ import * as ts from 'typescript';
 import { Emitter } from './emitter';
 import { IdentifierResolver } from './resolvers';
 
+const factory = ts.factory;
+
 export class Preprocessor {
 
     public constructor(private resolver: IdentifierResolver, private emitter: Emitter) {
@@ -75,23 +77,21 @@ export class Preprocessor {
             .filter(e => constructors.findIndex(c => c.parameters.every((p, index) =>
                 this.compareTypesOfParameters(e.parameters[index], p))) === -1)
             .forEach(element => {
-            const c = ts.createConstructor(
-                null,
-                null,
-                element.parameters.map(p => ts.createParameter(
-                    p.decorators,
-                    p.modifiers && p.modifiers.filter(m => m.kind !== ts.SyntaxKind.PrivateKeyword
-                        && m.kind !== ts.SyntaxKind.ProtectedKeyword && m.kind !== ts.SyntaxKind.PublicKeyword),
+            const c = factory.createConstructorDeclaration(
+                ts.getModifiers(element) || [],
+                element.parameters.map(p => factory.createParameterDeclaration(
+                    ts.getModifiers(p) && ts.getModifiers(p).filter(m => m.kind !== ts.SyntaxKind.PrivateKeyword
+                        && m.kind !== ts.SyntaxKind.ProtectedKeyword && m.kind !== ts.SyntaxKind.PublicKeyword) || [],
                     p.dotDotDotToken,
                     p.name,
                     p.questionToken,
                     p.type,
                     p.initializer)),
-                ts.createBlock(
-                    [ts.createStatement(
-                        ts.createCall(
-                            ts.createSuper(),
-                            null,
+                factory.createBlock(
+                    [factory.createExpressionStatement(
+                        factory.createCallExpression(
+                            factory.createSuper(),
+                            undefined,
                             element.parameters.map(p => <ts.Identifier>p.name)))]));
             this.fixupParentReferences(c, node);
             (<any>node.members).push(c);
@@ -106,9 +106,8 @@ export class Preprocessor {
         if (init && init.kind === ts.SyntaxKind.FunctionExpression) {
             const funcExpr = <ts.FunctionExpression>init;
             if (this.emitter.isTemplate(funcExpr)) {
-                const funcNode = ts.createFunctionDeclaration(
-                    funcExpr.decorators,
-                    funcExpr.modifiers,
+                const funcNode = factory.createFunctionDeclaration(
+                    ts.getModifiers(funcExpr) || [],
                     undefined,
                     <ts.Identifier>declaration0.name,
                     funcExpr.typeParameters,
@@ -138,7 +137,7 @@ export class Preprocessor {
                         || propertyAccess.name.text === 'length' && this.resolver.isArrayOrStringTypeFromSymbol(symbolInfo);
 
                     if (getAccess) {
-                        const newCall = ts.createCall(node.left, null, [node.right]);
+                        const newCall = factory.createCallExpression(node.left, null, [node.right]);
                         (<any>newCall.expression).__set = true;
                         return this.fixupParentReferences(newCall, node.parent);
                     }
@@ -148,17 +147,17 @@ export class Preprocessor {
                 let leftType = this.resolver.getTypeAtLocation(node.left)
                 let rightType = this.resolver.getTypeAtLocation(node.right)
                 if(leftType.isStringLiteral() && rightType.isStringLiteral()) {
-                    node = ts.createBinary(ts.createCall(ts.createIdentifier('std::string'),null,[node.left]),ts.SyntaxKind.PlusToken,ts.createCall(ts.createIdentifier('std::string'),null,[node.right]))
+                    node = factory.createBinaryExpression(factory.createCallExpression(factory.createIdentifier('std::string'),null,[node.left]),ts.SyntaxKind.PlusToken,factory.createCallExpression(factory.createIdentifier('std::string'),null,[node.right]))
                 } else {
                     let leftStr = this.resolver.isStringType(leftType)
                     let rightStr = this.resolver.isStringType(rightType)
                     const TO_STR_FUNC = 'ToStr'
                     if((leftStr && ! rightStr) || (rightStr && ! leftStr)) {
                         if(!leftStr) {
-                            node = ts.createBinary(ts.createCall(ts.createIdentifier(TO_STR_FUNC), null, [node.left]), ts.SyntaxKind.PlusToken, node.right);
+                            node = factory.createBinaryExpression(factory.createCallExpression(factory.createIdentifier(TO_STR_FUNC), null, [node.left]), ts.SyntaxKind.PlusToken, node.right);
                         }
                         if(!rightStr) {
-                            node = ts.createBinary(node.left, ts.SyntaxKind.PlusToken, ts.createCall(ts.createIdentifier(TO_STR_FUNC), null, [node.right]));
+                            node = factory.createBinaryExpression(node.left, ts.SyntaxKind.PlusToken, factory.createCallExpression(factory.createIdentifier(TO_STR_FUNC), null, [node.right]));
                         }
                     }
                 }
@@ -179,8 +178,8 @@ export class Preprocessor {
         if(!isString && !isNumber) {
             return node;
         }
-        let ident = ts.createIdentifier(`__ts_${isString ? 'string' : 'number'}_${methodName}`)
-        return ts.createCall(ident,node.typeArguments,[prop.getChildAt(0) as ts.Expression, ...node.arguments])
+        let ident = factory.createIdentifier(`__ts_${isString ? 'string' : 'number'}_${methodName}`)
+        return factory.createCallExpression(ident,node.typeArguments,[prop.getChildAt(0) as ts.Expression, ...node.arguments])
     }
 
     private preprocessCreateArrayCall(node: ts.CallExpression) {
@@ -204,7 +203,7 @@ export class Preprocessor {
 
         let entries = arrItems.getChildren().filter(x=>x.kind !== ts.SyntaxKind.CommaToken)
         if(entries.length === 0) {
-            return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,[]);
+            return factory.createCallExpression(node.getChildAt(0) as ts.Expression,node.typeArguments,[]);
         }
 
         let typestr = node.typeArguments[0].getText(node.getSourceFile());
@@ -214,10 +213,10 @@ export class Preprocessor {
 
         // todo: handle spread operator
         let entriesOut = entries
-            .map(x=>ts.createCall(ts.createIdentifier(typestr),null,[x as ts.Expression]))
-        let arrLit = ts.createArrayLiteral(entriesOut);
+            .map(x=>factory.createCallExpression(factory.createIdentifier(typestr),null,[x as ts.Expression]))
+        let arrLit = factory.createArrayLiteralExpression(entriesOut);
         (arrLit as any).__isIntLiteralArray = true;
-        return ts.createCall(node.getChildAt(0) as ts.Expression,node.typeArguments,[arrLit])
+        return factory.createCallExpression(node.getChildAt(0) as ts.Expression,node.typeArguments,[arrLit])
     }
 
     private preprocessIdentifierCall(node: ts.CallExpression, ident: ts.Identifier) {
@@ -253,7 +252,7 @@ export class Preprocessor {
             if(this.resolver.isStringType(firstChildType)) {
                 let lastChild = node.getChildAt(node.getChildCount() - 1)
                 if(lastChild.pos >= 0 && lastChild.getText() == 'length') {
-                    return ts.createCall(ts.createIdentifier('__ts_string_length'),null,[node.getChildAt(0) as ts.Expression])
+                    return factory.createCallExpression(factory.createIdentifier('__ts_string_length'),null,[node.getChildAt(0) as ts.Expression])
                 }
             }
         }

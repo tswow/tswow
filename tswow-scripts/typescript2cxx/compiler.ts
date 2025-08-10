@@ -3,6 +3,8 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as ts from 'typescript';
 import { Emitter } from './emitter';
+
+const factory = ts.factory;
 import { Helpers } from './helpers';
 import { loadIDFile, postprocess } from './postprocessor';
 import { writeLoader } from './tswow/loader';
@@ -101,30 +103,40 @@ export class Run {
 
     public async run(sourcesOrConfigFile: string[] | string, cmdLineOptions: any) {
         await loadIDFile()
+        // Ensure cmdLineOptions is always an object
+        cmdLineOptions = cmdLineOptions || {};
+
         if (typeof (sourcesOrConfigFile) === 'string') {
             if (sourcesOrConfigFile.endsWith('.json')) {
                 const configPath = ts.findConfigFile('./', ts.sys.fileExists, sourcesOrConfigFile);
+
                 if (configPath) {
-                    this.compileWithConfig(configPath, cmdLineOptions);
+                    await this.compileWithConfig(configPath, cmdLineOptions);
                     process.exit(0)
                 } else {
-                    throw new Error('Could not find a valid \'tsconfig.json\'.');
+                    // If ts.findConfigFile fails, check if the file exists directly
+                    if (ts.sys.fileExists(sourcesOrConfigFile)) {
+                        await this.compileWithConfig(sourcesOrConfigFile, cmdLineOptions);
+                        process.exit(0)
+                    } else {
+                        throw new Error('Could not find a valid \'tsconfig.json\'.');
+                    }
                 }
             }
 
-            this.compileSources([sourcesOrConfigFile], cmdLineOptions);
+            await this.compileSources([sourcesOrConfigFile], cmdLineOptions);
             process.exit(0)
         }
 
-        this.compileSources(sourcesOrConfigFile, cmdLineOptions);
+        await this.compileSources(sourcesOrConfigFile, cmdLineOptions);
         process.exit(0)
     }
 
-    public compileSources(sources: string[], cmdLineOptions: any): void {
-        this.generateBinary(ts.createProgram(sources, {}), sources, undefined, cmdLineOptions);
+    public async compileSources(sources: string[], cmdLineOptions: any): Promise<void> {
+        await this.generateBinary(ts.createProgram(sources, {}), sources, undefined, cmdLineOptions);
     }
 
-    public compileWithConfig(configPath: string, cmdLineOptions: any): void {
+    public async compileWithConfig(configPath: string, cmdLineOptions: any): Promise<void> {
         const configFile = ts.readJsonConfigFile(configPath, ts.sys.readFile);
 
         const parseConfigHost: ts.ParseConfigHost = {
@@ -134,10 +146,14 @@ export class Run {
             readFile: ts.sys.readFile
         };
 
-        const parsedCommandLine = ts.parseJsonSourceFileConfigFileContent(configFile, parseConfigHost, './');
+        const baseDir = path.dirname(path.resolve(configPath));
+        const parsedCommandLine = ts.parseJsonSourceFileConfigFileContent(configFile, parseConfigHost, baseDir);
 
         const watch = cmdLineOptions && 'watch' in cmdLineOptions;
-        cmdLineOptions.outDir = parsedCommandLine.options && parsedCommandLine.options.outDir;
+        // Make sure outDir is available in cmdLineOptions if not already set
+        if (!cmdLineOptions.outDir && parsedCommandLine.options && parsedCommandLine.options.outDir) {
+            cmdLineOptions.outDir = parsedCommandLine.options.outDir;
+        }
 
         if (!watch) {
             // simple case, just compile
@@ -145,7 +161,7 @@ export class Run {
                 rootNames: parsedCommandLine.fileNames,
                 options: parsedCommandLine.options
             });
-            this.generateBinary(program, parsedCommandLine.fileNames, parsedCommandLine.options, cmdLineOptions);
+            await this.generateBinary(program, parsedCommandLine.fileNames, parsedCommandLine.options, cmdLineOptions);
         } else {
             const createProgram = ts.createEmitAndSemanticDiagnosticsBuilderProgram;
 
@@ -158,8 +174,8 @@ export class Run {
                 (d) => this.reportWatchStatusChanged(d)
             );
 
-            watchCompilingHost.afterProgramCreate = program => {
-              this.generateBinary(
+            watchCompilingHost.afterProgramCreate = async program => {
+              await this.generateBinary(
                   program.getProgram(),
                   parsedCommandLine.fileNames,
                   parsedCommandLine.options,
@@ -205,7 +221,7 @@ export class Run {
         console.log(ts.formatDiagnostic(diagnostic, this.formatHost));
     }
 
-    private generateBinary(
+    private async generateBinary(
           program: ts.Program
         , sources: string[]
         , options: ts.CompilerOptions
@@ -229,7 +245,13 @@ export class Run {
 
         const sourceFiles = program.getSourceFiles();
 
-        let outDir = cmdLineOptions.outDir || '';
+        let outDir = cmdLineOptions.outDir || options?.outDir || '';
+
+        // Ensure outDir is always a valid, non-root directory
+        if (!outDir || outDir === '/' || outDir === '') {
+            throw new Error(`Invalid output directory: "${outDir}". Output directory must be specified and cannot be root.`);
+        }
+
         if(!outDir.endsWith('/') && !outDir.endsWith('\\')) outDir+='/'
         if (outDir && !fs.existsSync(outDir)) {
             fs.mkdirSync(outDir, {recursive: true});
@@ -241,7 +263,18 @@ export class Run {
             rootFolder += '/';
         }
 
-        sourceFiles.filter(s => !s.fileName.endsWith('.d.ts') && sources.some(sf => s.fileName.endsWith(sf))).forEach(s => {
+        const filesToProcess = sourceFiles.filter(s => {
+            // Skip declaration files
+            if (s.fileName.endsWith('.d.ts')) return false;
+
+            // Skip CMake dependency files (they have .ts extension but contain cmake comments)
+            if (s.text && s.text.startsWith('# CMAKE generated file: DO NOT EDIT!')) return false;
+
+            // Only include files that match our source patterns
+            return sources.some(sf => s.fileName.endsWith(sf));
+        });
+
+        for (const s of filesToProcess) {
             // track version
             const paths = sources.filter(sf => s.fileName.endsWith(sf));
             (<any>s).__path = paths[0];
@@ -275,13 +308,13 @@ export class Run {
             }
 
             const dir = path.dirname(path.join(outDir, fileNameHeader));
-            fs.mkdirsSync(dir);
-            const headerText = postprocess(emitterHeader.writer.getText());
-            const cppText = postprocess(emitterSource.writer.getText());
+            fs.ensureDirSync(dir);
+            const headerText = await postprocess(emitterHeader.writer.getText());
+            const cppText = await postprocess(emitterSource.writer.getText());
 
             TRANSPILER_CHANGES.writeIfChanged(headerPath,headerText);
             TRANSPILER_CHANGES.writeIfChanged(cppPath,cppText);
-        });
+        }
 
         if (cmdLineOptions.trace) {
             console.log(ForegroundColorEscapeSequences.Pink + 'Binary files have been generated...' + resetEscapeSequence);

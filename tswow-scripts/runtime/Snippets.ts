@@ -242,7 +242,7 @@ export namespace Snippets {
             generateSnippets(Module.endpoints(),false,false);
         }
 
-        BuildCommand.addCommand('snippets','','', args => {
+        BuildCommand.addCommand('snippets','module[]? --remove-comments --no-empty-trail','Generates VSCode snippets from module code comments', args => {
             generateSnippets(Identifier.getModulesOrAll(args),
                 Args.hasFlag('remove-comments', args),
                 Args.hasFlag('no-empty-trail',args),

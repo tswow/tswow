@@ -138,14 +138,14 @@ export class ChargesSystem<T> extends CellSystem<T> {
     set(value: 'UNLIMITED'): T;
     set(value: number, type: 'DELETE_ITEM'|'NO_DELETE_ITEM'): T;
     set(value: 'UNLIMITED'|number, type?: 'DELETE_ITEM'|'NO_DELETE_ITEM') {
-        if(value === 0 && type !== undefined) {
+        if(typeof value === 'number' && value === 0 && type !== undefined) {
             throw new Error(
                   `Trying to set item delete type (${type})`
                 + `with unlimited (0) charges`
             )
         }
 
-        if(value < 0 && type !== undefined) {
+        if(typeof value === 'number' && value < 0 && type !== undefined) {
             throw new Error(
                   `Attempting to set item delete type with multiple methods:`
                 + ` value is both negative`
