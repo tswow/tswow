@@ -126,7 +126,9 @@ declare class ChargeData {
 }
 
 declare const SpellChargeData: ChargeData[]
-declare const SpellsWithCharges: uint32[]
+declare const ActionButtonMap: any[]
+
+declare function ActionButton_UpdateUsable(self: WoWAPI.Button): void;
 
 declare function HideUIPanel(frame: WoWAPI.Frame): void;
 declare function format(formatString: String, input:String):String;
