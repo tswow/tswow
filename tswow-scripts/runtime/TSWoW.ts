@@ -87,12 +87,15 @@ export async function main() {
     }
 
     const isServerMode = process.argv.includes('server-mode');
-    
-    if (isWindows() && path.resolve(NodeConfig.DefaultClient).toLowerCase().charAt(0) != path.resolve(process.cwd()).toLowerCase().charAt(0) && !isServerMode)
+
+    let resolvedNodeConfigPath = path.resolve(NodeConfig.DefaultClient);
+    let resolvedCwdPath = path.resolve(process.cwd());
+
+    if (isWindows() && resolvedNodeConfigPath.charAt(0).toLowerCase() != resolvedCwdPath.charAt(0).toLowerCase() && !isServerMode)
     {
         term.error(
             'client'
-          , `Invalid client: ${NodeConfig.DefaultClient} is on different drive from TSWoW installation.\n\n`
+          , `Invalid client: ${resolvedNodeConfigPath} is on different drive from TSWoW installation (${resolvedCwdPath}).\n\n`
           + `TSWoW must be installed on the same drive as the client,`
           + ` please move TSWoW and the WoW client to the same drive.`
       )
