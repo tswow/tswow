@@ -88,7 +88,7 @@ export async function main() {
 
     const isServerMode = process.argv.includes('server-mode');
     
-    if (isWindows() && path.resolve(NodeConfig.DefaultClient).charAt(0) != path.resolve(process.cwd()).charAt(0) && !isServerMode)
+    if (isWindows() && path.resolve(NodeConfig.DefaultClient).toLowerCase().charAt(0) != path.resolve(process.cwd()).toLowerCase().charAt(0) && !isServerMode)
     {
         term.error(
             'client'
