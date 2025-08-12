@@ -21,13 +21,15 @@ import { SpellAdditionalAttributesCDBCFile } from "./cdbc/SpellAdditionalAttribu
 import { SpellAdditionalCostDataCDBCFile } from "./cdbc/SpellAdditionalCostData";
 import { ZoneLightCDBCFile } from "./cdbc/ZoneLight";
 import { ZoneLightPointCDBCFile } from "./cdbc/ZoneLightPoint";
+import { SpellEffectScalarsCDBCFile } from "./cdbc/SpellEffectScalars";
 
 export const CDBC = {
     LFGRoles : new LFGRolesCDBCFile(),
     SpellAdditionalAttributes : new SpellAdditionalAttributesCDBCFile(),
     SpellAdditionalCostData : new SpellAdditionalCostDataCDBCFile(),
     ZoneLight : new ZoneLightCDBCFile(),
-    ZoneLightPoint : new ZoneLightPointCDBCFile()
+    ZoneLightPoint : new ZoneLightPointCDBCFile(),
+    SpellEffectScalars : new SpellEffectScalarsCDBCFile(),
 }
 
 export const CDBCLoader = {
@@ -36,8 +38,9 @@ export const CDBCLoader = {
     SpellAdditionalCostData : (path: string) => SpellAdditionalCostDataCDBCFile.read(path),
     ZoneLight : (path: string) => ZoneLightCDBCFile.read(path),
     ZoneLightPoint : (path: string) => ZoneLightCDBCFile.read(path),
+    SpellEffectScalars: (path: string) => SpellEffectScalarsCDBCFile.read(path),
 }
 
-export type CDBCNames = "LFGRoles" | "SpellAdditionalAttributes" | "SpellAdditionalCostData" | "ZoneLight" | "ZoneLightPoint"
+export type CDBCNames = "LFGRoles" | "SpellAdditionalAttributes" | "SpellAdditionalCostData" | "ZoneLight" | "ZoneLightPoint" | "SpellEffectScalars"
 
 export const CDBCFiles : CDBCFile<any,any,any>[] = Object.values(CDBC);

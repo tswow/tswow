@@ -15,7 +15,6 @@
 
 /* tslint:disable */
 import { float, mediumint, varchar } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { SQLCell, SQLCellReadOnly } from '../../data/sql/SQLCell'
 import { SqlRow } from '../../data/sql/SQLRow'
@@ -51,7 +50,7 @@ export class spell_bonus_dataRow extends SqlRow<spell_bonus_dataCreator,spell_bo
     /**
      * No comment (yet!)
      */
-    get bv() {return new SQLCell<float, this>(this, 'bv')}
+    get bv() {return new SQLCell<float, this>(this, 'bv')} 
 
     /**
      * No comment (yet!)

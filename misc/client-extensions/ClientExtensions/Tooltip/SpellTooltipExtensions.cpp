@@ -12,7 +12,7 @@ void TooltipExtensions::Apply() {
     SpellTooltipRuneCostExtension();
     //SpellTooltipPowerCostExtension();
     //SpellTooltipCooldownExtension();
-    //SpellTooltipRemainingCooldownExtension();
+    SpellTooltipRemainingCooldownExtension();
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
