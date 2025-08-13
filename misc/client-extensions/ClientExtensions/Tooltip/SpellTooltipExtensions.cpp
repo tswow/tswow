@@ -13,7 +13,7 @@ void TooltipExtensions::Apply() {
     SpellTooltipRuneCostExtension();
     //SpellTooltipPowerCostExtension();
     //SpellTooltipCooldownExtension();
-    SpellTooltipRemainingCooldownExtension();
+    // SpellTooltipRemainingCooldownExtension();
 }
 
 void TooltipExtensions::SpellTooltipVariableExtension() {
@@ -43,18 +43,12 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
 
 void GetSpellScalarsForEffect(int SpellId, int idx, float& ap, float& sp, float& bv)
 {
-    LOG_INFO << "Finding scalars";
-    LOG_INFO << SpellId;
-    LOG_INFO << idx;
     auto scalars = GlobalCDBCMap.getCDBC("SpellEffectScalars");
     for (auto scalar : scalars)
     {
         if (SpellEffectScalarsRow* row = std::any_cast<SpellEffectScalarsRow>(&scalar.second))
         {
             if (row->spellID == SpellId && row->effectIdx == idx) {
-                LOG_INFO << "Found index.";
-                LOG_INFO << row->effectIdx;
-
                 ap += row->ap;
                 sp += row->sp;
                 bv += row->bv;
@@ -63,11 +57,6 @@ void GetSpellScalarsForEffect(int SpellId, int idx, float& ap, float& sp, float&
             }
         }
     }
-
-    LOG_INFO << "Got values: ";
-    LOG_INFO << ap;
-    LOG_INFO << sp;
-    LOG_INFO << bv;
 }
 
 float ApplyScalarsForPlayer(CGPlayer* activePlayer, SpellRow* spell, int index, float ap, float sp, float bv)
