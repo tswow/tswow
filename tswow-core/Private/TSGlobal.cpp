@@ -89,6 +89,10 @@ TSNumber<uint32> GetCurrTime()
     return getMSTime();
 }
 
+void KickAll() {
+    sWorld->KickAll();
+}
+
 TSNumber<uint64> GetUnixTime()
 {
     using namespace std::chrono;

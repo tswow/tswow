@@ -10274,6 +10274,7 @@ declare function StopGameEvent(event_id: uint16): void
 declare function GetLuaGarbageCur(): TSNumber<uint64>
 declare function GetLuaGarbageTotal(): TSNumber<uint64>
 declare function RegisterPacketForNotInWorld(opcode:number,isActive:bool): void;
+declare function KickAll(): void
 
 /**
  * @param entry - The id to be used for the new item template.

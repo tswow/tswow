@@ -136,9 +136,6 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                     case SPELLVARIABLE_MASTERY:
                         value = CharacterDefines::getMasteryRatingSpec(CharacterExtensions::SpecToIndex(CharacterDefines::getCharActiveSpec()));
                         break;
-                    case SPELLVARIABLE_bpct:
-                        value = activePlayer->PlayerData->blockPct;
-                        break;
                     case SPELLVARIABLE_dpct:
                         value = activePlayer->PlayerData->dodgePct;
                         break;
@@ -190,7 +187,7 @@ void TooltipExtensions::SetNewVariablePointers() {
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
         "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
         "mastery1", "mastery2", "mastery3", "mastery4", "MASTERY",
-        "bpct", "dpct", "ppct", "bon1", "bon2", "bon3"
+        "dpct", "ppct", "bon1", "bon2", "bon3"
     };
 
     for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)
