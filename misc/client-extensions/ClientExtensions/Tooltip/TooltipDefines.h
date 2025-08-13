@@ -35,6 +35,7 @@ enum SpellVariable : uint32_t {
     SPELLVARIABLE_bpct      = 189,
     SPELLVARIABLE_dpct      = 190,
     SPELLVARIABLE_ppct      = 191,
-    SPELLVARIABLE_sbl       = 192,
-    SPELLVARIABLE_wbon      = 193,
+    SPELLVARIABLE_bon1      = 192,
+    SPELLVARIABLE_bon2      = 193,
+    SPELLVARIABLE_bon3      = 194,
 };

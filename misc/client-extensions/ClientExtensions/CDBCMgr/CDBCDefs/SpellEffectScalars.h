@@ -3,15 +3,13 @@
 #include "CDBCMgr/CDBCMgr.h"
 
 struct SpellEffectScalarsRow {
-    int ID;
-    uint32_t spellID;
-    uint8_t effectIdx;
+    int spellID;
+    int effectIdx;
     float sp;
     float ap;
     float bv;
 
     int handleLuaPush(lua_State* L) {
-        ClientLua::PushNumber(L, ID);
         ClientLua::PushNumber(L, spellID);
         ClientLua::PushNumber(L, effectIdx);
         ClientLua::PushNumber(L, sp);
@@ -41,7 +39,7 @@ public:
     void SpellEffectScalars::setupTable() {
         SpellEffectScalarsRow* row = static_cast<SpellEffectScalarsRow*>(this->rows);
         for (uint32_t i = 0; i < this->numRows; i++) {
-            GlobalCDBCMap.addRow(this->fileName, row->ID, *row);
+            GlobalCDBCMap.addRow(this->fileName, i, *row);
             ++row;
         }
     };

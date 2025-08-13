@@ -18,7 +18,7 @@
 import { int, uint } from '../../data/primitives'
 import { Relation } from '../../data/query/Relations'
 import { PrimaryKey } from '../../data/table/PrimaryKey'
-import { DBCKeyCell, DBCStringCell, DBCUIntCell } from '../../data/dbc/DBCCell'
+import { DBCKeyCell, DBCStringCell, DBCUIntCell, DBCFloatCell, DBCIntCell } from '../../data/dbc/DBCCell'
 import { CDBCFile } from './CDBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
 
@@ -28,36 +28,31 @@ import { DBCRow } from '../../data/dbc/DBCRow'
  * - Add file comments to DBCFiles.ts
  */
 export class SpellEffectScalarsRow extends DBCRow<SpellEffectScalarsCreator,SpellEffectScalarsQuery> {
-    
-    @PrimaryKey()
-    get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0) }
 
     /**
-     * Primary Key
-     *
      * Spell id, from to Spell.dbc
      */
-    get SpellID() { return new DBCKeyCell(this,this.buffer,this.offset+4) }
+    get SpellID() { return new DBCIntCell(this,this.buffer,this.offset+0) }
 
     /**
      * effect index
      */
-    get effectIdx() { return new DBCStringCell(this,this.buffer,this.offset+8) }
+    get effectIdx() { return new DBCIntCell(this,this.buffer,this.offset+4) }
 
     /**
      * float
      */
-    get sp() { return new DBCUIntCell(this,this.buffer,this.offset+12) }
+    get sp() { return new DBCFloatCell(this,this.buffer,this.offset+8) }
 
     /**
      * float
      */
-    get ap() { return new DBCUIntCell(this,this.buffer,this.offset+16) }
+    get ap() { return new DBCFloatCell(this,this.buffer,this.offset+12) }
 
     /**
      * float
      */
-    get bv() { return new DBCUIntCell(this,this.buffer,this.offset+20) }
+    get bv() { return new DBCFloatCell(this,this.buffer,this.offset+16) }
 
     /**
      * Creates a clone of this row with new primary keys.
@@ -73,8 +68,7 @@ export class SpellEffectScalarsRow extends DBCRow<SpellEffectScalarsCreator,Spel
  * Used for object creation (Don't comment these)
  */
 export type SpellEffectScalarsCreator = {
-    SpellID?: uint
-    effectIdx?: uint
+    effectIdx?: int
     sp?: float
     ap?: float
     bv?: float
@@ -84,9 +78,8 @@ export type SpellEffectScalarsCreator = {
  * Used for queries (Don't comment these)
  */
 export type SpellEffectScalarsQuery = {
-    ID? : Relation<int>
-    SpellID? : Relation<uint>
-    effectIdx?: Relation<uint>
+    SpellID? : Relation<int>
+    effectIdx?: Relation<int>
     sp?: Relation<float>
     ap?: Relation<float>
     bv?: Relation<float>
@@ -100,7 +93,7 @@ export class SpellEffectScalarsCDBCFile extends CDBCFile<
     SpellEffectScalarsCreator,
     SpellEffectScalarsQuery,
     SpellEffectScalarsRow> {
-    protected defaultRow = [0, 2, 0, 0.0, 0.0, 0.0];
+    protected defaultRow = [1, 2, 0, 0.0, 0.0];
 
     constructor() {
         super('SpellEffectScalars',(t,b,o)=> new SpellEffectScalarsRow(t,b,o))

@@ -175,7 +175,16 @@ struct PlayerFields {
     float spellCritPct[7];
     float shieldBlock;
     float shieldBlockCritPct;
-    uint32_t padding0x0DEC[190];
+    uint32_t exploredzones[128];
+    uint32_t restedXP;
+    uint32_t coinage;
+    uint32_t SPPos[7];
+    uint32_t SPNeg[7];
+    uint32_t SPBonus[7];
+    uint32_t healingPower;
+    float healingTakenMult;
+    float healingDoneMult;
+    uint32_t padding0x0DEC[36];
     int32_t crWeaponSkill;
     int32_t crDefenseSkill;
     int32_t crDodge;

@@ -3,6 +3,7 @@
 #include "CDBCMgr/CDBCMgr.h"
 #include "CDBCMgr/CDBCDefs/SpellAdditionalCostData.h"
 #include "CDBCMgr/CDBCDefs/SpellAdditionalAttributes.h"
+#include "CDBCMgr/CDBCDefs/SpellEffectScalars.h"
 #include "windows.h"
 #include "Logger.h"
 #include <algorithm>
@@ -38,6 +39,52 @@ void TooltipExtensions::SpellTooltipRuneCostExtension() {
 
     Util::OverwriteBytesAtAddress(0x623C71, patchBytes, sizeof(patchBytes));
     Util::OverwriteUInt32AtAddress(0x623C8A, Util::CalculateAddress(reinterpret_cast<uint32_t>(&SetRuneCostTooltip), 0x623C8E));
+}
+
+void GetSpellScalarsForEffect(int SpellId, int idx, float& ap, float& sp, float& bv)
+{
+    LOG_INFO << "Finding scalars";
+    LOG_INFO << SpellId;
+    LOG_INFO << idx;
+    auto scalars = GlobalCDBCMap.getCDBC("SpellEffectScalars");
+    for (auto scalar : scalars)
+    {
+        if (SpellEffectScalarsRow* row = std::any_cast<SpellEffectScalarsRow>(&scalar.second))
+        {
+            if (row->spellID == SpellId && row->effectIdx == idx) {
+                LOG_INFO << "Found index.";
+                LOG_INFO << row->effectIdx;
+
+                ap += row->ap;
+                sp += row->sp;
+                bv += row->bv;
+
+                break;
+            }
+        }
+    }
+
+    LOG_INFO << "Got values: ";
+    LOG_INFO << ap;
+    LOG_INFO << sp;
+    LOG_INFO << bv;
+}
+
+float ApplyScalarsForPlayer(CGPlayer* activePlayer, SpellRow* spell, int index, float ap, float sp, float bv)
+{
+    float total = 0.0;
+    if (ap) {
+        uint8_t attType = (spell->m_equippedItemClass == 2 && spell->m_equippedItemSubclass & 262156 && spell->m_defenseType != 2) ? 2 : spell->m_attributesExC & SPELL_ATTR3_MAIN_HAND ? 0 : 1;
+        total += ap * CharacterDefines::GetTotalAttackPowerValue(attType, activePlayer);
+    }
+    if (sp) {
+        total += activePlayer->PlayerData->SPBonus[1] * (sp * activePlayer->PlayerData->SPPos[1] + activePlayer->PlayerData->SPNeg[1]);
+    }
+    if (bv) {
+        total += bv * static_cast<float>(activePlayer->PlayerData->shieldBlock);
+    }
+
+    return total;
 }
 
 int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t spellVariable, uint32_t a3, SpellRow* spell, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8, uint32_t a9) {
@@ -109,14 +156,29 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                     case SPELLVARIABLE_ppct:
                         value = activePlayer->PlayerData->parryPct;
                         break;
-                    case SPELLVARIABLE_sbl:
-                        value = static_cast<float>(activePlayer->PlayerData->shieldBlock);
-                        break;
-                    case SPELLVARIABLE_wbon: {
-                        uint8_t attType = (spell->m_equippedItemClass == 2 && spell->m_equippedItemSubclass & 262156 && spell->m_defenseType != 2) ? 2 : spell->m_attributesExC & SPELL_ATTR3_MAIN_HAND ? 0 : 1;
-                        float ap = CharacterDefines::GetTotalAttackPowerValue(attType, activePlayer);
-                        value = ap;
+                    case SPELLVARIABLE_bon1: {
+                        float ap = 0.0;
+                        float sp = 0.0;
+                        float bv = 0.0;
+                        GetSpellScalarsForEffect(spell->m_ID, 0, ap, sp, bv);
+                        value = ApplyScalarsForPlayer(activePlayer, spell, 0, ap, sp, bv);
                     } break;
+                    case SPELLVARIABLE_bon2: {
+                        float ap = 0.0;
+                        float sp = 0.0;
+                        float bv = 0.0;
+                        GetSpellScalarsForEffect(spell->m_ID, 1, ap, sp, bv);
+                        value = ApplyScalarsForPlayer(activePlayer, spell, 1, ap, sp, bv);
+                    }
+                    break;
+                    case SPELLVARIABLE_bon3: {
+                        float ap = 0.0;
+                        float sp = 0.0;
+                        float bv = 0.0;
+                        GetSpellScalarsForEffect(spell->m_ID, 2, ap, sp, bv);
+                        value = ApplyScalarsForPlayer(activePlayer, spell, 2, ap, sp, bv);
+                    }
+                    break;
                     default:
                         *reinterpret_cast<uint32_t*>(_this) = 1;
                         break;
@@ -139,7 +201,7 @@ void TooltipExtensions::SetNewVariablePointers() {
         "power1", "power2", "power3", "power4", "power5", "power6", "power7",
         "POWER1", "POWER2", "POWER3", "POWER4", "POWER5", "POWER6", "POWER7",
         "mastery1", "mastery2", "mastery3", "mastery4", "MASTERY",
-        "bpct", "dpct", "ppct", "sbl", "wbon"
+        "bpct", "dpct", "ppct", "bon1", "bon2", "bon3"
     };
 
     for (size_t i = 0; i < sizeof(tooltipSpellVariablesExtensions) / sizeof(tooltipSpellVariablesExtensions[0]); i++)

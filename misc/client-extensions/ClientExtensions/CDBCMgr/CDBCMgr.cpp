@@ -23,6 +23,10 @@ void CDBCMgr::addCDBC(std::string cdbcName) {
     cdbcIndexRanges[cdbcName] = { 0, 0 };
 }
 
+CDBCMgr::CDBC CDBCMgr::getCDBC(std::string cdbcName) {
+    return allCDBCs[cdbcName];
+}
+
 void CDBCMgr::addCDBCLuaHandler(std::string cdbcName, std::function<int(lua_State*,int)> func) {
     cdbcLuaHandlers[cdbcName] = func;
 }

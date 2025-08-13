@@ -16,6 +16,7 @@ public:
     void addCDBC(std::string cdbcName);
     static void CDBCMgr::addCDBCLuaHandler(std::string cdbcName,  std::function<int(lua_State*,int)> func);
     static int CDBCMgr::handleLua(lua_State* L, std::string cdbcName, int row);
+    CDBC getCDBC(std::string cdbcName);
     //these stay in .h because haha template
     template <typename T>
     void addRow(std::string cdbcName, int rowIndex, T row) { allCDBCs[cdbcName][rowIndex] = row; }
