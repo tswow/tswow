@@ -22,6 +22,8 @@ export namespace ClientExtensions {
                 , 'inherit');
             bpaths.client_extensions.dll_path.copy(ipaths.bin.ClientExtensions_dll)
         }
+        // not worth it, build
+        /*
         else
         {
             // download prebuild
@@ -31,5 +33,6 @@ export namespace ClientExtensions {
             );
             bpaths.ClientExtensionsDll.copy(ipaths.bin.ClientExtensions_dll)
         }
+        */
     }
 }
