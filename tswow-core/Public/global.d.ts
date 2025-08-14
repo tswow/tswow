@@ -6501,7 +6501,7 @@ declare interface TSUnit extends TSWorldObject {
     GetBleedsByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
 
     SelectNearbyTargets(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
-    SelectNearbyTargetWithoutAura(exclude: TSUnit, dist: float, Aura: uint32) : TSUnit
+    SelectNearbyTargetWithoutAura(exclude: TSUnit, friendly: TSUnit, dist: float, Aura: uint32) : TSUnit
     SelectNearbyAllies(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
     SelectTargetsNearTarget(target: TSUnit, exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
 

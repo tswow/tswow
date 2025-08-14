@@ -2719,8 +2719,8 @@ TSArray<TSUnit> TSUnit::SelectNearbyTargets(TSArray<TSUnit> exclude, float dist,
     return out;
 }
 
-TSUnit TSUnit::SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 Aura) {
-    Unit* target = unit->SelectNearbyTargetWithoutAura(exclude.unit, dist, Aura);
+TSUnit TSUnit::SelectNearbyTargetWithoutAura(TSUnit exclude, TSUnit friendly, float dist, uint32 Aura) {
+    Unit* target = unit->SelectNearbyTargetWithoutAura(exclude.unit, friendly.unit, dist, Aura);
 
     return TSUnit(target);
 }

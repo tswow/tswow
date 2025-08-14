@@ -252,7 +252,7 @@ public:
     TSNumber<uint32> GetBleedsByCaster(TSGUID casterGUID, bool remove);
 
     TSArray<TSUnit> SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount);
-    TSUnit SelectNearbyTargetWithoutAura(TSUnit exclude, float dist, uint32 Aura);
+    TSUnit SelectNearbyTargetWithoutAura(TSUnit exclude, TSUnit friendly, float dist, uint32 Aura);
     TSArray<TSUnit> SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, uint32 amount);
     TSArray<TSUnit> SelectTargetsNearTarget(TSUnit target, TSArray<TSUnit> exclude, float dist, uint32 amount);
 
