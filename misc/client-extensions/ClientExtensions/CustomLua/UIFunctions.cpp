@@ -1,4 +1,5 @@
 #include "ClientLua.h"
+#include "ClientDetours.h"
 #include "SharedDefines.h"
 #include "Logger.h"
 
@@ -91,5 +92,33 @@ LUA_FUNCTION(SetSpellInActionBarSlot, (lua_State* L)) {
         ClientPacket::MSG_SET_ACTION_BUTTON(slotID, 1, 0);
     }
 
+    return 0;
+}
+
+CLIENT_DETOUR(Lua_SetPortraitToTexture, 0x00516970, __cdecl, int, (lua_State * L))
+{
+    std::string mask = ClientLua::GetString(L, 3, "Interface\\CharacterFrame\\TempPortraitAlphaMask");
+
+    std::string tga       = mask + ".tga";
+    std::string small_tga = mask + "Small.tga";
+    std::string blp       = mask + ".blp";
+    std::string small_blp = mask + "Small.blp";
+
+    uint32_t prevTga      = *(uint32_t*)0x61773A;
+    uint32_t prevSmallTga = *(uint32_t*)0x617746;
+    uint32_t prevBlp      = *(uint32_t*)0x6177A6;
+    uint32_t prevSmallBlp = *(uint32_t*)0x6177B2;
+
+    Util::OverwriteUInt32AtAddress(0x61773A, reinterpret_cast<uint32_t>(tga.c_str()));
+    Util::OverwriteUInt32AtAddress(0x617746, reinterpret_cast<uint32_t>(small_tga.c_str()));
+    Util::OverwriteUInt32AtAddress(0x6177A6, reinterpret_cast<uint32_t>(blp.c_str()));
+    Util::OverwriteUInt32AtAddress(0x6177B2, reinterpret_cast<uint32_t>(small_blp.c_str()));
+
+    Lua_SetPortraitToTexture(L);
+
+    Util::OverwriteUInt32AtAddress(0x61773A, prevTga);
+    Util::OverwriteUInt32AtAddress(0x617746, prevSmallTga);
+    Util::OverwriteUInt32AtAddress(0x6177A6, prevBlp);
+    Util::OverwriteUInt32AtAddress(0x6177B2, prevSmallBlp);
     return 0;
 }

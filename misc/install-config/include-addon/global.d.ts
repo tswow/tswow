@@ -3768,7 +3768,7 @@ declare function ShowMerchantSellCursor(index:number):void;
 declare function ShowRepairCursor():void;
 declare function GetNumBuybackItems():number;
 
-declare function SetPortraitToTexture(texture:WoWAPI.Texture,path:string):void;
+declare function SetPortraitToTexture(texture:WoWAPI.Texture,path:string,mask?:string):void;
 declare function SetPortraitTexture(texture:WoWAPI.Texture,unitToken:WoWAPI.UnitId,disableMasking?:boolean):void;
 
 declare const MAX_PLAYER_LEVEL_TABLE: {
