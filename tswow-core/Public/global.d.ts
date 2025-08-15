@@ -6500,10 +6500,8 @@ declare interface TSUnit extends TSWorldObject {
     GetDiseasesByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
     GetBleedsByCaster(guid: TSGUID, remove: bool) : TSNumber<uint32>
 
-    SelectNearbyTargets(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
-    SelectNearbyTargetWithoutAura(exclude: TSUnit, friendly: TSUnit, dist: float, Aura: uint32) : TSUnit
-    SelectNearbyAllies(exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
-    SelectTargetsNearTarget(target: TSUnit, exclude: TSArray<TSUnit>, dist: float, amount: uint32) : TSArray<TSUnit>
+    SelectNearbyAllies(target: TSUnit, exclude: TSArray<TSUnit>, dist: float, amount: uint32, without: uint32) : TSArray<TSUnit>
+    SelectTargetsNearTarget(target: TSUnit, exclude: TSArray<TSUnit>, dist: float, amount: uint32, without: uint32) : TSArray<TSUnit>
 
     RemoveAllControlled(): void;
 

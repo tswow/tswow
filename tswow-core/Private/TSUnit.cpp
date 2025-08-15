@@ -2703,35 +2703,14 @@ TSNumber<uint32> TSUnit::GetBleedsByCaster(TSGUID casterGUID, bool remove) {
     return unit->GetBleedsByCaster(casterGUID.asGUID(), remove);
 }
 
-TSArray<TSUnit> TSUnit::SelectNearbyTargets(TSArray<TSUnit> exclude, float dist, uint32 amount) {
-    std::list<Unit*> ExcludedUnits = {};
-    for (auto tsUnit : exclude) {
-        ExcludedUnits.push_back(tsUnit.unit);
-    }
-
-    auto units = unit->SelectNearbyTargets(ExcludedUnits, dist, amount);
-    TSArray<TSUnit> out;
-    out.reserve(units.size());
-    for (Unit* u : units) {
-        out.push(TSUnit(u));
-    }
-
-    return out;
-}
-
-TSUnit TSUnit::SelectNearbyTargetWithoutAura(TSUnit exclude, TSUnit friendly, float dist, uint32 Aura) {
-    Unit* target = unit->SelectNearbyTargetWithoutAura(exclude.unit, friendly.unit, dist, Aura);
-
-    return TSUnit(target);
-}
-
-TSArray<TSUnit> TSUnit::SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, uint32 amount) {
+TSArray<TSUnit> TSUnit::SelectNearbyAllies(TSUnit target, TSArray<TSUnit> exclude, float dist, uint32 amount, uint32 without) {
     std::list<Unit*> ExcludedUnits = {};
     for (auto tsUnit : exclude) {
         ExcludedUnits.push_back(tsUnit.unit);
     }
 
     auto units = unit->SelectNearbyAllies(ExcludedUnits, dist, amount);
+
     TSArray<TSUnit> out;
     out.reserve(units.size());
     for (Unit* u : units) {
@@ -2741,13 +2720,14 @@ TSArray<TSUnit> TSUnit::SelectNearbyAllies(TSArray<TSUnit> exclude, float dist, 
     return out;
 }
 
-TSArray<TSUnit> TSUnit::SelectTargetsNearTarget(TSUnit target, TSArray<TSUnit> exclude, float dist, uint32 amount) {
+TSArray<TSUnit> TSUnit::SelectTargetsNearTarget(TSUnit target, TSArray<TSUnit> exclude, float dist, uint32 amount, uint32 without) {
     std::list<Unit*> ExcludedUnits = {};
     for (auto tsUnit : exclude) {
         ExcludedUnits.push_back(tsUnit.unit);
     }
 
-    auto units = unit->SelectTargetsNearTarget(target.unit, ExcludedUnits, dist, amount);
+    auto units = unit->SelectTargetsNearTarget(target.unit, ExcludedUnits, dist, amount, without);
+
     TSArray<TSUnit> out;
     out.reserve(units.size());
     for (Unit* u : units) {
