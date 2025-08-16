@@ -122,6 +122,17 @@ enum SpellAttr0Custom : uint32_t {
     SPELL_ATTR0_CU_LOW_CAST_TIME_DONT_INTERRUPT = 0x00000100,   // If cast time <= 250ms, does not interrupt
 };
 
+enum SpellSchools : uint32_t {
+    SPELL_SCHOOL_NORMAL = 0, // TITLE Physical
+    SPELL_SCHOOL_HOLY   = 1, // TITLE Holy
+    SPELL_SCHOOL_FIRE   = 2, // TITLE Fire
+    SPELL_SCHOOL_NATURE = 3, // TITLE Nature
+    SPELL_SCHOOL_FROST  = 4, // TITLE Frost
+    SPELL_SCHOOL_SHADOW = 5, // TITLE Shadow
+    SPELL_SCHOOL_ARCANE = 6, // TITLE Arcane
+    MAX_SPELL_SCHOOL    = 7  // SKIP
+};
+
 static uint32_t dummy = 0;
 
 static char* sConnectorPlus = " + ";
@@ -178,9 +189,9 @@ struct PlayerFields {
     uint32_t exploredzones[128];
     uint32_t restedXP;
     uint32_t coinage;
-    uint32_t SPPos[7];
-    uint32_t SPNeg[7];
-    uint32_t SPBonus[7];
+    int32_t SPPos[7];
+    int32_t SPNeg[7];
+    float SPBonus[7];
     uint32_t healingPower;
     float healingTakenMult;
     float healingDoneMult;
@@ -272,9 +283,21 @@ struct UnitFields {
     uint32_t createdBySpell;
     uint32_t npcFlags;
     uint32_t emoteState;
-    uint32_t attributes[5];
-    uint32_t attributesPos[5];
-    uint32_t attributesNeg[5];
+    int32_t strength;
+    int32_t agility;
+    int32_t stamina;
+    int32_t intellect;
+    int32_t spirit;
+    float strengthPos;
+    float agilityPos;
+    float staminaPos;
+    float intellectPos;
+    float spiritPos;
+    float strengthNeg;
+    float agilityNeg;
+    float staminaNeg;
+    float intellectNeg;
+    float spiritNeg;
     uint32_t resistances[7];
     uint32_t resistancesPos[7];
     uint32_t resistancesNeg[7];

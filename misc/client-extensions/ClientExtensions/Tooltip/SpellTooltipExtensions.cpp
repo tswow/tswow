@@ -67,7 +67,16 @@ float ApplyScalarsForPlayer(CGPlayer* activePlayer, SpellRow* spell, int index, 
         total += ap * CharacterDefines::GetTotalAttackPowerValue(attType, activePlayer);
     }
     if (sp) {
-        total += activePlayer->PlayerData->SPBonus[1] * (sp * activePlayer->PlayerData->SPPos[1] + activePlayer->PlayerData->SPNeg[1]);
+        int32_t spBonus = 0;
+        uint32_t schoolMask = spell->m_schoolMask;
+        for (uint32_t i = SPELL_SCHOOL_HOLY; i < MAX_SPELL_SCHOOL; ++i) {
+            if (schoolMask & (1 << i)) {
+                int32_t tempBonus = activePlayer->PlayerData->SPPos[i];
+                if (tempBonus > spBonus)
+                    spBonus = tempBonus;
+            }
+        }
+        total += sp * spBonus;
     }
     if (bv) {
         total += bv * static_cast<float>(activePlayer->PlayerData->shieldBlock);
@@ -148,6 +157,7 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         float bv = 0.0;
                         GetSpellScalarsForEffect(spell->m_ID, 0, ap, sp, bv);
                         value = ApplyScalarsForPlayer(activePlayer, spell, 0, ap, sp, bv);
+                        value += spell->m_effectRealPointsPerLevel[0] * activePlayer->unitBase.unitData->level;
                     } break;
                     case SPELLVARIABLE_bon2: {
                         float ap = 0.0;
@@ -155,6 +165,7 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         float bv = 0.0;
                         GetSpellScalarsForEffect(spell->m_ID, 1, ap, sp, bv);
                         value = ApplyScalarsForPlayer(activePlayer, spell, 1, ap, sp, bv);
+                        value += spell->m_effectRealPointsPerLevel[1] * activePlayer->unitBase.unitData->level;
                     }
                     break;
                     case SPELLVARIABLE_bon3: {
@@ -163,6 +174,7 @@ int TooltipExtensions::GetVariableValueEx(void* _this, uint32_t edx, uint32_t sp
                         float bv = 0.0;
                         GetSpellScalarsForEffect(spell->m_ID, 2, ap, sp, bv);
                         value = ApplyScalarsForPlayer(activePlayer, spell, 2, ap, sp, bv);
+                        value += spell->m_effectRealPointsPerLevel[2] * activePlayer->unitBase.unitData->level;
                     }
                     break;
                     default:
