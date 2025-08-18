@@ -376,6 +376,10 @@ void TSAura::Remove()
 #endif
 }
 
+bool TSAura::ModStackAmount(int32 amount, uint8 removeMode, bool resetTimer) {
+    return aura->ModStackAmount(amount, AuraRemoveMode(removeMode), resetTimer);
+}
+
 TSAuraEffect TSAura::GetEffect(uint8 index)
 {
     return TSAuraEffect(aura->GetEffect(index));
