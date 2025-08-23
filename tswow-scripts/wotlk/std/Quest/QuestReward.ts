@@ -274,6 +274,8 @@ export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     get MoneyBonus() { return this.ownerWrap(this.row.RewardBonusMoney) }
     /** Display a spell when the player completes the quest */
     get DisplaySpell() { return this.ownerWrap(this.row.RewardDisplaySpell) }
+    /** The real spell cast when you complete */
+    get Spell() { return this.ownerWrap(this.row.RewardSpell) }
     /** Reward player with honor points */
     get Honor() { return this.ownerWrap(this.row.RewardHonor)}
     /** Reward player with talent points */

@@ -99,8 +99,6 @@ CLIENT_DETOUR(Lua_SetPortraitToTexture, 0x00516970, __cdecl, int, (lua_State * L
 {
     std::string mask = ClientLua::GetString(L, 3, "Interface\\CharacterFrame\\TempPortraitAlphaMask");
 
-    LOG_INFO << mask;
-
     std::string tga       = mask + ".tga";
     std::string small_tga = mask + "Small.tga";
     std::string blp       = mask + ".blp";
