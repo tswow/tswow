@@ -569,6 +569,13 @@ struct ZoneLightData {
     float maxY;
 };
 
+struct TerrainClickEvent
+{
+    uint64_t GUID;
+    float x, y, z;
+    uint32_t button;
+};
+
 // client functions
 namespace CGChat {
     CLIENT_FUNCTION(AddChatMessage, 0x509DD0, __cdecl, bool, (char*, uint32_t, uint32_t, uint32_t, uint32_t*, uint32_t, char*, uint64_t, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t*))
@@ -604,6 +611,7 @@ namespace ClientPacket {
 
 namespace ClntObjMgr {
     CLIENT_FUNCTION(GetActivePlayer, 0x4D3790, __cdecl, uint64_t, ())
+    CLIENT_FUNCTION(GetActivePlayerObj, 0x004038F0, __cdecl, CGPlayer*, ())
     CLIENT_FUNCTION(GetUnitFromName, 0x60C1F0, __cdecl, CGUnit*, (char*))
     CLIENT_FUNCTION(ObjectPtr, 0x4D4DB0, __cdecl, void*, (uint64_t, uint32_t))
 }
@@ -684,3 +692,5 @@ CLIENT_FUNCTION(sub_61FEC0, 0x61FEC0, __thiscall, void, (void*, char*, char*, vo
 CLIENT_FUNCTION(sub_6B1080, 0x6B1080, __cdecl, uint8_t, ())
 CLIENT_FUNCTION(sub_6E22C0, 0x6E22C0, __thiscall, uint32_t, (void*, uint32_t))
 CLIENT_FUNCTION(sub_812410, 0x812410, __cdecl, SkillLineAbilityRow*, (uint32_t, uint32_t, uint32_t))
+CLIENT_FUNCTION(TerrainClick, 0x00527830, __cdecl, void, (TerrainClickEvent*))
+CLIENT_FUNCTION(SStrCmpI, 0x0076E780, __stdcall, int, (char* text1, const char* text2, int length))
