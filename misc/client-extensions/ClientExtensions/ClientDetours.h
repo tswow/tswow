@@ -36,7 +36,7 @@ private:
 #define STRIP_PARENS(...) __VA_ARGS__
 
 #define CLIENT_DETOUR_THISCALL(name, addr, retval, parameters)                                      \
-    using name##_t       = retval(__fastcall*)(void* self, STRIP_PARENS parameters);                \
+    using name##_t       = retval(__thiscall*)(void* self, STRIP_PARENS parameters);                \
     inline name##_t name = reinterpret_cast<name##_t>(addr);                                        \
     retval __fastcall name##Detour(void* self, void*, STRIP_PARENS parameters);                     \
     inline int name##__Result = ClientDetours::Add(#name, &name, name##Detour, __FILE__, __LINE__); \
