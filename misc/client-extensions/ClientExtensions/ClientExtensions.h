@@ -5,6 +5,7 @@
 #include "Misc/MiscFixes.h"
 #include "Tooltip/SpellTooltipExtensions.h"
 #include "World/WorldData.h"
+#include "Spells/Spells.h"
 
 class ClientExtensions {
 private:

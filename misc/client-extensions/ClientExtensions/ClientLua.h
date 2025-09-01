@@ -16,6 +16,7 @@ namespace ClientLua {
 
     CLIENT_FUNCTION(DoString, 0x00819210, __cdecl, void, (char const* code, lua_State* L))
     CLIENT_FUNCTION(GetTop, 0x0084DBD0, __cdecl, int, (lua_State* L))
+    CLIENT_FUNCTION(SetTop, 0x0084DBF0, __cdecl, void, (lua_State* L, int idx))
 
     CLIENT_FUNCTION(IsString, 0x0084DF60, __cdecl, uint32_t, (lua_State* L, int32_t))
     CLIENT_FUNCTION(IsNumber, 0x0084DF20, __cdecl, int32_t, (lua_State* L, int32_t))
