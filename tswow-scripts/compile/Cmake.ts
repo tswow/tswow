@@ -16,7 +16,7 @@
  */
 import { WNode } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
-import { CMAKE_DOWNLOAD_URL } from './BuildConfig';
+import { CMAKE_DOWNLOAD } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -24,7 +24,7 @@ import ExtractZip = require('extract-zip')
 export namespace CMake {
     export async function find(): Promise<WNode> {
         await DownloadFile(
-              CMAKE_DOWNLOAD_URL
+              CMAKE_DOWNLOAD
             , bpaths.cmakeArchive
         )
 

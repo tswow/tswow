@@ -21,7 +21,10 @@ import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24081/TDB_full_world_335.24081_2024_08_17.7z"
+export const TDB_URL = {
+    url: "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24081/TDB_full_world_335.24081_2024_08_17.7z",
+    hash: '6f8674f91328988eceac4c51e6a5f3fc970485bb4df2a855f7ba0a4dd3882485'
+}
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
@@ -36,7 +39,7 @@ function currentCommitShort()
 }
 
 export function tdbFilename() {
-    let split = TDB_URL.split('/')
+    let split = TDB_URL.url.split('/')
     let joined = split[split.length-1];
     return joined.substring(0,joined.length-3)+'.sql';
 }
