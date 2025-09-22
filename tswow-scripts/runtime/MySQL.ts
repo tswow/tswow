@@ -263,7 +263,6 @@ export namespace mysql {
                 `--port=${NodeConfig.DatabaseHostedPort}`,
                 '--log_syslog=0',
                 '--console',
-                '--wait-timeout=2147483',
                 '--wait_timeout=2147483',
                 `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
                 `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
