@@ -183,6 +183,7 @@ struct TSEvents
 
          EVENT(OnGenerateItemLoot, TSPlayer, TSItem, TSLoot, TSNumber<uint32>)
          EVENT(OnLootCorpse, TSPlayer, TSCorpse)
+         EVENT(OnCraftItem, TSPlayer, TSItem, TSSpellInfo, TSNumber<uint32>, TSNumber<uint32>)
          EVENT(OnLearnTalent, TSPlayer, TSNumber<uint32> tabId, TSNumber<uint32> talentId, TSNumber<uint32> talentRank, TSNumber<uint32> spellId, TSMutable<bool,bool>)
 
          EVENT(OnGossipSelect, TSPlayer, TSPlayer, TSNumber<uint32>, TSNumber<uint32>, TSMutable<bool,bool>)

@@ -78,6 +78,7 @@ void TSLua::load_events(sol::state& state)
     LUA_HANDLE(player_events, PlayerEvents, OnGossipSelect);
     LUA_HANDLE(player_events, PlayerEvents, OnGossipSelectCode);
     LUA_HANDLE(player_events, PlayerEvents, OnGenerateItemLoot);
+    LUA_HANDLE(player_events, PlayerEvents, OnCraftItem);
     LUA_HANDLE(player_events, PlayerEvents, OnLearnTalent);
     LUA_HANDLE(player_events, PlayerEvents, OnLootCorpse);
     //LUA_HANDLE(player_events, PlayerEvents, OnTradeComplete);
