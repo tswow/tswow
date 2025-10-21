@@ -1889,7 +1889,7 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 xp : experience to give
      * @param [Unit] victim = nil
      */
-    GiveXP(xp : uint32,victim : TSUnit) : void
+    GiveXP(xp : uint32,victim : TSUnit | null) : void
 
     /**
      * Toggle the [Player]s 'Do Not Disturb' flag
