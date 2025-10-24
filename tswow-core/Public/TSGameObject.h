@@ -54,6 +54,35 @@ public:
     void FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj);
     bool IsAIEnabled();
     TSGameObjectTemplate GetTemplate();
+    
+    // Rotation Getters (inherited: GetO for yaw)
+    TSNumber<float> GetYaw();
+    TSNumber<float> GetPitch();
+    TSNumber<float> GetRoll();
+    
+    // Rotation Setters
+    void SetRotation(float yaw, float pitch = 0.0f, float roll = 0.0f);
+    void SetYaw(float yaw);
+    void SetPitch(float pitch);
+    void SetRoll(float roll);
+    
+    // Relative Rotation
+    void Rotate(float deltaYaw, float deltaPitch = 0.0f, float deltaRoll = 0.0f);
+    void RotateYaw(float delta);
+    void RotatePitch(float delta);
+    void RotateRoll(float delta);
+    
+    // Position Setters (inherited: GetX, GetY, GetZ, GetPosition)
+    void SetPosition(float x, float y, float z, bool preserveOrientation = true);
+    void SetX(float x);
+    void SetY(float y);
+    void SetZ(float z);
+    
+    // Relative Position
+    void Move(float dx, float dy, float dz);
+    void MoveX(float dx);
+    void MoveY(float dy);
+    void MoveZ(float dz);
 };
 
 LUA_PTR_TYPE(TSGameObject)
