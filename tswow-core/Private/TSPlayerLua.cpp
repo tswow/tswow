@@ -339,4 +339,111 @@ void TSLua::load_player_methods(sol::state& state)
         }
     ));
 
+    // Stat Override System
+    LUA_FIELD(ts_player, TSPlayer, SetStatOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetStatOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasStatOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearStatOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearAllStatOverrides);
+
+    LUA_FIELD(ts_player, TSPlayer, SetMaxHealthOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetMaxHealthOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasMaxHealthOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearMaxHealthOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetMaxManaOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetMaxManaOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasMaxManaOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearMaxManaOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetManaRegenOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetManaRegenOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasManaRegenOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearManaRegenOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetAttackPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetAttackPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasAttackPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearAttackPowerOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetRangedAttackPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetRangedAttackPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasRangedAttackPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearRangedAttackPowerOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetMeleeCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetMeleeCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasMeleeCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearMeleeCritOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetRangedCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetRangedCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasRangedCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearRangedCritOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetSpellCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetSpellCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasSpellCritOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearSpellCritOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetSpellPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetSpellPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasSpellPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearSpellPowerOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetHealingPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetHealingPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasHealingPowerOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearHealingPowerOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetArmorOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetArmorOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasArmorOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearArmorOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetResistanceOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetResistanceOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasResistanceOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearResistanceOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetBlockOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetBlockOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasBlockOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearBlockOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetDodgeOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetDodgeOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasDodgeOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearDodgeOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetParryOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetParryOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasParryOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearParryOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetMeleeHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetMeleeHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasMeleeHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearMeleeHitOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetRangedHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetRangedHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasRangedHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearRangedHitOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetSpellHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetSpellHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasSpellHitOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearSpellHitOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetShieldBlockValueOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetShieldBlockValueOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasShieldBlockValueOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearShieldBlockValueOverride);
+
+    LUA_FIELD(ts_player, TSPlayer, SetExpertiseOverride);
+    LUA_FIELD(ts_player, TSPlayer, GetExpertiseOverride);
+    LUA_FIELD(ts_player, TSPlayer, HasExpertiseOverride);
+    LUA_FIELD(ts_player, TSPlayer, ClearExpertiseOverride);
+
 }

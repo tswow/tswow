@@ -4210,3 +4210,429 @@ void TSPlayer::ResyncRunes()
 {
     player->ResyncRunes();
 }
+
+// Stat Override System Implementation
+void TSPlayer::SetStatOverride(uint8 stat, int32 value)
+{
+    player->SetStatOverride(static_cast<Stats>(stat), value);
+}
+
+TSNumber<int32> TSPlayer::GetStatOverride(uint8 stat)
+{
+    return player->GetStatOverride(static_cast<Stats>(stat));
+}
+
+bool TSPlayer::HasStatOverride(uint8 stat)
+{
+    return player->HasStatOverride(static_cast<Stats>(stat));
+}
+
+void TSPlayer::ClearStatOverride(uint8 stat)
+{
+    player->ClearStatOverride(static_cast<Stats>(stat));
+}
+
+void TSPlayer::ClearAllStatOverrides()
+{
+    player->ClearAllStatOverrides();
+}
+
+void TSPlayer::SetMaxHealthOverride(int32 value)
+{
+    player->SetMaxHealthOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetMaxHealthOverride()
+{
+    return player->GetMaxHealthOverride();
+}
+
+bool TSPlayer::HasMaxHealthOverride()
+{
+    return player->HasMaxHealthOverride();
+}
+
+void TSPlayer::ClearMaxHealthOverride()
+{
+    player->ClearMaxHealthOverride();
+}
+
+void TSPlayer::SetMaxManaOverride(int32 value)
+{
+    player->SetMaxManaOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetMaxManaOverride()
+{
+    return player->GetMaxManaOverride();
+}
+
+bool TSPlayer::HasMaxManaOverride()
+{
+    return player->HasMaxManaOverride();
+}
+
+void TSPlayer::ClearMaxManaOverride()
+{
+    player->ClearMaxManaOverride();
+}
+
+void TSPlayer::SetManaRegenOverride(float value)
+{
+    player->SetManaRegenOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetManaRegenOverride()
+{
+    return player->GetManaRegenOverride();
+}
+
+bool TSPlayer::HasManaRegenOverride()
+{
+    return player->HasManaRegenOverride();
+}
+
+void TSPlayer::ClearManaRegenOverride()
+{
+    player->ClearManaRegenOverride();
+}
+
+void TSPlayer::SetAttackPowerOverride(int32 value)
+{
+    player->SetAttackPowerOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetAttackPowerOverride()
+{
+    return player->GetAttackPowerOverride();
+}
+
+bool TSPlayer::HasAttackPowerOverride()
+{
+    return player->HasAttackPowerOverride();
+}
+
+void TSPlayer::ClearAttackPowerOverride()
+{
+    player->ClearAttackPowerOverride();
+}
+
+void TSPlayer::SetRangedAttackPowerOverride(int32 value)
+{
+    player->SetRangedAttackPowerOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetRangedAttackPowerOverride()
+{
+    return player->GetRangedAttackPowerOverride();
+}
+
+bool TSPlayer::HasRangedAttackPowerOverride()
+{
+    return player->HasRangedAttackPowerOverride();
+}
+
+void TSPlayer::ClearRangedAttackPowerOverride()
+{
+    player->ClearRangedAttackPowerOverride();
+}
+
+void TSPlayer::SetMeleeCritOverride(float value)
+{
+    player->SetMeleeCritOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetMeleeCritOverride()
+{
+    return player->GetMeleeCritOverride();
+}
+
+bool TSPlayer::HasMeleeCritOverride()
+{
+    return player->HasMeleeCritOverride();
+}
+
+void TSPlayer::ClearMeleeCritOverride()
+{
+    player->ClearMeleeCritOverride();
+}
+
+void TSPlayer::SetRangedCritOverride(float value)
+{
+    player->SetRangedCritOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetRangedCritOverride()
+{
+    return player->GetRangedCritOverride();
+}
+
+bool TSPlayer::HasRangedCritOverride()
+{
+    return player->HasRangedCritOverride();
+}
+
+void TSPlayer::ClearRangedCritOverride()
+{
+    player->ClearRangedCritOverride();
+}
+
+void TSPlayer::SetSpellCritOverride(uint32 school, float value)
+{
+    player->SetSpellCritOverride(school, value);
+}
+
+TSNumber<float> TSPlayer::GetSpellCritOverride(uint32 school)
+{
+    return player->GetSpellCritOverride(school);
+}
+
+bool TSPlayer::HasSpellCritOverride(uint32 school)
+{
+    return player->HasSpellCritOverride(school);
+}
+
+void TSPlayer::ClearSpellCritOverride(uint32 school)
+{
+    player->ClearSpellCritOverride(school);
+}
+
+void TSPlayer::SetMeleeHitOverride(float value)
+{
+    player->SetMeleeHitOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetMeleeHitOverride()
+{
+    return player->GetMeleeHitOverride();
+}
+
+bool TSPlayer::HasMeleeHitOverride()
+{
+    return player->HasMeleeHitOverride();
+}
+
+void TSPlayer::ClearMeleeHitOverride()
+{
+    player->ClearMeleeHitOverride();
+}
+
+void TSPlayer::SetRangedHitOverride(float value)
+{
+    player->SetRangedHitOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetRangedHitOverride()
+{
+    return player->GetRangedHitOverride();
+}
+
+bool TSPlayer::HasRangedHitOverride()
+{
+    return player->HasRangedHitOverride();
+}
+
+void TSPlayer::ClearRangedHitOverride()
+{
+    player->ClearRangedHitOverride();
+}
+
+void TSPlayer::SetSpellHitOverride(float value)
+{
+    player->SetSpellHitOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetSpellHitOverride()
+{
+    return player->GetSpellHitOverride();
+}
+
+bool TSPlayer::HasSpellHitOverride()
+{
+    return player->HasSpellHitOverride();
+}
+
+void TSPlayer::ClearSpellHitOverride()
+{
+    player->ClearSpellHitOverride();
+}
+
+void TSPlayer::SetArmorOverride(int32 value)
+{
+    player->SetArmorOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetArmorOverride()
+{
+    return player->GetArmorOverride();
+}
+
+bool TSPlayer::HasArmorOverride()
+{
+    return player->HasArmorOverride();
+}
+
+void TSPlayer::ClearArmorOverride()
+{
+    player->ClearArmorOverride();
+}
+
+void TSPlayer::SetDodgeOverride(float value)
+{
+    player->SetDodgeOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetDodgeOverride()
+{
+    return player->GetDodgeOverride();
+}
+
+bool TSPlayer::HasDodgeOverride()
+{
+    return player->HasDodgeOverride();
+}
+
+void TSPlayer::ClearDodgeOverride()
+{
+    player->ClearDodgeOverride();
+}
+
+void TSPlayer::SetParryOverride(float value)
+{
+    player->SetParryOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetParryOverride()
+{
+    return player->GetParryOverride();
+}
+
+bool TSPlayer::HasParryOverride()
+{
+    return player->HasParryOverride();
+}
+
+void TSPlayer::ClearParryOverride()
+{
+    player->ClearParryOverride();
+}
+
+void TSPlayer::SetBlockOverride(float value)
+{
+    player->SetBlockOverride(value);
+}
+
+TSNumber<float> TSPlayer::GetBlockOverride()
+{
+    return player->GetBlockOverride();
+}
+
+bool TSPlayer::HasBlockOverride()
+{
+    return player->HasBlockOverride();
+}
+
+void TSPlayer::ClearBlockOverride()
+{
+    player->ClearBlockOverride();
+}
+
+void TSPlayer::SetShieldBlockValueOverride(int32 value)
+{
+    player->SetShieldBlockValueOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetShieldBlockValueOverride()
+{
+    return player->GetShieldBlockValueOverride();
+}
+
+bool TSPlayer::HasShieldBlockValueOverride()
+{
+    return player->HasShieldBlockValueOverride();
+}
+
+void TSPlayer::ClearShieldBlockValueOverride()
+{
+    player->ClearShieldBlockValueOverride();
+}
+
+void TSPlayer::SetSpellPowerOverride(int32 value)
+{
+    player->SetSpellPowerOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetSpellPowerOverride()
+{
+    return player->GetSpellPowerOverride();
+}
+
+bool TSPlayer::HasSpellPowerOverride()
+{
+    return player->HasSpellPowerOverride();
+}
+
+void TSPlayer::ClearSpellPowerOverride()
+{
+    player->ClearSpellPowerOverride();
+}
+
+void TSPlayer::SetHealingPowerOverride(int32 value)
+{
+    player->SetHealingPowerOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetHealingPowerOverride()
+{
+    return player->GetHealingPowerOverride();
+}
+
+bool TSPlayer::HasHealingPowerOverride()
+{
+    return player->HasHealingPowerOverride();
+}
+
+void TSPlayer::ClearHealingPowerOverride()
+{
+    player->ClearHealingPowerOverride();
+}
+
+void TSPlayer::SetExpertiseOverride(int32 value)
+{
+    player->SetExpertiseOverride(value);
+}
+
+TSNumber<int32> TSPlayer::GetExpertiseOverride()
+{
+    return player->GetExpertiseOverride();
+}
+
+bool TSPlayer::HasExpertiseOverride()
+{
+    return player->HasExpertiseOverride();
+}
+
+void TSPlayer::ClearExpertiseOverride()
+{
+    player->ClearExpertiseOverride();
+}
+
+void TSPlayer::SetResistanceOverride(uint32 school, int32 value)
+{
+    player->SetResistanceOverride(school, value);
+}
+
+TSNumber<int32> TSPlayer::GetResistanceOverride(uint32 school)
+{
+    return player->GetResistanceOverride(school);
+}
+
+bool TSPlayer::HasResistanceOverride(uint32 school)
+{
+    return player->HasResistanceOverride(school);
+}
+
+void TSPlayer::ClearResistanceOverride(uint32 school)
+{
+    player->ClearResistanceOverride(school);
+}

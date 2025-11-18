@@ -370,6 +370,113 @@ public:
 	void SetRuneCooldown(uint8 index, uint32 cooldown, bool casted);
 	void ResyncRunes();
 
+	// Stat Override System
+	void SetStatOverride(uint8 stat, int32 value);
+	TSNumber<int32> GetStatOverride(uint8 stat);
+	bool HasStatOverride(uint8 stat);
+	void ClearStatOverride(uint8 stat);
+	void ClearAllStatOverrides();
+
+	void SetMaxHealthOverride(int32 value);
+	TSNumber<int32> GetMaxHealthOverride();
+	bool HasMaxHealthOverride();
+	void ClearMaxHealthOverride();
+
+	void SetMaxManaOverride(int32 value);
+	TSNumber<int32> GetMaxManaOverride();
+	bool HasMaxManaOverride();
+	void ClearMaxManaOverride();
+
+	void SetManaRegenOverride(float value);
+	TSNumber<float> GetManaRegenOverride();
+	bool HasManaRegenOverride();
+	void ClearManaRegenOverride();
+
+	void SetAttackPowerOverride(int32 value);
+	TSNumber<int32> GetAttackPowerOverride();
+	bool HasAttackPowerOverride();
+	void ClearAttackPowerOverride();
+
+	void SetRangedAttackPowerOverride(int32 value);
+	TSNumber<int32> GetRangedAttackPowerOverride();
+	bool HasRangedAttackPowerOverride();
+	void ClearRangedAttackPowerOverride();
+
+	void SetMeleeCritOverride(float value);
+	TSNumber<float> GetMeleeCritOverride();
+	bool HasMeleeCritOverride();
+	void ClearMeleeCritOverride();
+
+	void SetRangedCritOverride(float value);
+	TSNumber<float> GetRangedCritOverride();
+	bool HasRangedCritOverride();
+	void ClearRangedCritOverride();
+
+	void SetSpellCritOverride(uint32 school, float value);
+	TSNumber<float> GetSpellCritOverride(uint32 school);
+	bool HasSpellCritOverride(uint32 school);
+	void ClearSpellCritOverride(uint32 school);
+
+	void SetMeleeHitOverride(float value);
+	TSNumber<float> GetMeleeHitOverride();
+	bool HasMeleeHitOverride();
+	void ClearMeleeHitOverride();
+
+	void SetRangedHitOverride(float value);
+	TSNumber<float> GetRangedHitOverride();
+	bool HasRangedHitOverride();
+	void ClearRangedHitOverride();
+
+	void SetSpellHitOverride(float value);
+	TSNumber<float> GetSpellHitOverride();
+	bool HasSpellHitOverride();
+	void ClearSpellHitOverride();
+
+	void SetArmorOverride(int32 value);
+	TSNumber<int32> GetArmorOverride();
+	bool HasArmorOverride();
+	void ClearArmorOverride();
+
+	void SetDodgeOverride(float value);
+	TSNumber<float> GetDodgeOverride();
+	bool HasDodgeOverride();
+	void ClearDodgeOverride();
+
+	void SetParryOverride(float value);
+	TSNumber<float> GetParryOverride();
+	bool HasParryOverride();
+	void ClearParryOverride();
+
+	void SetBlockOverride(float value);
+	TSNumber<float> GetBlockOverride();
+	bool HasBlockOverride();
+	void ClearBlockOverride();
+
+	void SetShieldBlockValueOverride(int32 value);
+	TSNumber<int32> GetShieldBlockValueOverride();
+	bool HasShieldBlockValueOverride();
+	void ClearShieldBlockValueOverride();
+
+	void SetSpellPowerOverride(int32 value);
+	TSNumber<int32> GetSpellPowerOverride();
+	bool HasSpellPowerOverride();
+	void ClearSpellPowerOverride();
+
+	void SetHealingPowerOverride(int32 value);
+	TSNumber<int32> GetHealingPowerOverride();
+	bool HasHealingPowerOverride();
+	void ClearHealingPowerOverride();
+
+	void SetExpertiseOverride(int32 value);
+	TSNumber<int32> GetExpertiseOverride();
+	bool HasExpertiseOverride();
+	void ClearExpertiseOverride();
+
+	void SetResistanceOverride(uint32 school, int32 value);
+	TSNumber<int32> GetResistanceOverride(uint32 school);
+	bool HasResistanceOverride(uint32 school);
+	void ClearResistanceOverride(uint32 school);
+
 private:
 		TSLua::Dictionary<TSNumber<uint32>, TSPlayerSpell> LGetSpellMap();
 		TSItem LGetItemByGUID0(TSGUID guid);
