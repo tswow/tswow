@@ -5066,6 +5066,150 @@ declare interface TSGameObject extends TSWorldObject {
      * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
      */
     SetRespawnTime(respawn : int32) : void
+
+    /**
+     * Gets the yaw (Z-axis rotation) of the [GameObject]
+     *
+     * @return float yaw in radians
+     */
+    GetYaw(): TSNumber<float>
+
+    /**
+     * Gets the pitch (Y-axis rotation) of the [GameObject]
+     *
+     * @return float pitch in radians
+     */
+    GetPitch(): TSNumber<float>
+
+    /**
+     * Gets the roll (X-axis rotation) of the [GameObject]
+     *
+     * @return float roll in radians
+     */
+    GetRoll(): TSNumber<float>
+
+    /**
+     * Sets the absolute rotation of the [GameObject]
+     *
+     * @param float yaw : yaw (Z-axis) in radians
+     * @param float pitch : pitch (Y-axis) in radians (default: 0.0)
+     * @param float roll : roll (X-axis) in radians (default: 0.0)
+     */
+    SetRotation(yaw: float, pitch?: float, roll?: float): void
+
+    /**
+     * Sets the yaw (Z-axis rotation) of the [GameObject]
+     *
+     * @param float yaw : yaw in radians
+     */
+    SetYaw(yaw: float): void
+
+    /**
+     * Sets the pitch (Y-axis rotation) of the [GameObject]
+     *
+     * @param float pitch : pitch in radians
+     */
+    SetPitch(pitch: float): void
+
+    /**
+     * Sets the roll (X-axis rotation) of the [GameObject]
+     *
+     * @param float roll : roll in radians
+     */
+    SetRoll(roll: float): void
+
+    /**
+     * Rotates the [GameObject] by the specified deltas (relative rotation)
+     *
+     * @param float deltaYaw : change in yaw (Z-axis) in radians
+     * @param float deltaPitch : change in pitch (Y-axis) in radians (default: 0.0)
+     * @param float deltaRoll : change in roll (X-axis) in radians (default: 0.0)
+     */
+    Rotate(deltaYaw: float, deltaPitch?: float, deltaRoll?: float): void
+
+    /**
+     * Rotates the [GameObject] yaw (Z-axis) by the specified delta
+     *
+     * @param float delta : change in yaw in radians
+     */
+    RotateYaw(delta: float): void
+
+    /**
+     * Rotates the [GameObject] pitch (Y-axis) by the specified delta
+     *
+     * @param float delta : change in pitch in radians
+     */
+    RotatePitch(delta: float): void
+
+    /**
+     * Rotates the [GameObject] roll (X-axis) by the specified delta
+     *
+     * @param float delta : change in roll in radians
+     */
+    RotateRoll(delta: float): void
+
+    /**
+     * Sets the absolute position of the [GameObject]
+     *
+     * Note: Inherited position getters - GetX(), GetY(), GetZ(), GetPosition()
+     *
+     * @param float x : X coordinate
+     * @param float y : Y coordinate
+     * @param float z : Z coordinate
+     * @param bool preserveOrientation : whether to keep current orientation (default: true)
+     */
+    SetPosition(x: float, y: float, z: float, preserveOrientation?: boolean): void
+
+    /**
+     * Sets the X coordinate of the [GameObject]
+     *
+     * @param float x : X coordinate
+     */
+    SetX(x: float): void
+
+    /**
+     * Sets the Y coordinate of the [GameObject]
+     *
+     * @param float y : Y coordinate
+     */
+    SetY(y: float): void
+
+    /**
+     * Sets the Z coordinate of the [GameObject]
+     *
+     * @param float z : Z coordinate
+     */
+    SetZ(z: float): void
+
+    /**
+     * Moves the [GameObject] by the specified deltas (relative movement)
+     *
+     * @param float dx : change in X coordinate
+     * @param float dy : change in Y coordinate
+     * @param float dz : change in Z coordinate
+     */
+    Move(dx: float, dy: float, dz: float): void
+
+    /**
+     * Moves the [GameObject] along the X axis by the specified delta
+     *
+     * @param float dx : change in X coordinate
+     */
+    MoveX(dx: float): void
+
+    /**
+     * Moves the [GameObject] along the Y axis by the specified delta
+     *
+     * @param float dy : change in Y coordinate
+     */
+    MoveY(dy: float): void
+
+    /**
+     * Moves the [GameObject] along the Z axis by the specified delta
+     *
+     * @param float dz : change in Z coordinate
+     */
+    MoveZ(dz: float): void
 }
 
 declare interface TSSpell extends TSEntityProvider {

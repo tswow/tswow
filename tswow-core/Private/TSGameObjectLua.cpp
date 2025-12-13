@@ -38,4 +38,23 @@ void TSLua::load_gameobject_methods(sol::state& state)
     LUA_FIELD(ts_gameobject, TSGameObject, IsAIEnabled);
     LUA_FIELD(ts_gameobject, TSGameObject, GetTemplate);
     LUA_FIELD_OVERLOAD_0_3(ts_gameobject, TSGameObject, Despawn, bool, uint32, uint32);
+    LUA_FIELD(ts_gameobject, TSGameObject, GetYaw);
+    LUA_FIELD(ts_gameobject, TSGameObject, GetPitch);
+    LUA_FIELD(ts_gameobject, TSGameObject, GetRoll);
+    LUA_FIELD_OVERLOAD_1_2(ts_gameobject, TSGameObject, SetRotation, float, float, float);
+    LUA_FIELD(ts_gameobject, TSGameObject, SetYaw);
+    LUA_FIELD(ts_gameobject, TSGameObject, SetPitch);
+    LUA_FIELD(ts_gameobject, TSGameObject, SetRoll);
+    LUA_FIELD_OVERLOAD_1_2(ts_gameobject, TSGameObject, Rotate, float, float, float);
+    LUA_FIELD(ts_gameobject, TSGameObject, RotateYaw);
+    LUA_FIELD(ts_gameobject, TSGameObject, RotatePitch);
+    LUA_FIELD(ts_gameobject, TSGameObject, RotateRoll);
+    LUA_FIELD_OVERLOAD_3_1(ts_gameobject, TSGameObject, SetPosition, float, float, float, bool);
+    LUA_FIELD(ts_gameobject, TSGameObject, SetX);
+    LUA_FIELD(ts_gameobject, TSGameObject, SetY);
+    LUA_FIELD(ts_gameobject, TSGameObject, SetZ);
+    LUA_FIELD(ts_gameobject, TSGameObject, Move);
+    LUA_FIELD(ts_gameobject, TSGameObject, MoveX);
+    LUA_FIELD(ts_gameobject, TSGameObject, MoveY);
+    LUA_FIELD(ts_gameobject, TSGameObject, MoveZ);
 }
