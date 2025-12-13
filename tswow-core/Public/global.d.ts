@@ -2612,6 +2612,9 @@ declare interface TSOutfit {
     SetHairColor(color: uint8): TSOutfit;
     GetHairColor(): TSNumber<uint8>;
 
+    SetFacialStyle(facialStyle: uint8): TSOutfit;
+    GetFacialStyle(): TSNumber<uint8>;
+
     SetSoundID(soundId: uint32): TSOutfit;
     GetSoundID(): TSNumber<uint32>
 
