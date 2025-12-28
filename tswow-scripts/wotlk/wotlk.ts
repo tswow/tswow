@@ -82,6 +82,7 @@ import { SoundAmbienceRegistry } from "./std/Sound/SoundAmbience";
 import { SoundEntryRegistry } from "./std/Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./std/Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./std/Sound/ZoneMusic";
+import { CreatureSound } from "./std/Sound/CreatureSound";
 import { SpawnGroupRegistry } from "./std/SpawnGroup/SpawnGroupRegistry";
 import { SpellMissileRegistry } from "./std/Spell/SpellMissile";
 import { SpellRuneCostRegistry } from "./std/Spell/SpellPower";
@@ -169,6 +170,7 @@ export const std = {
     SoundAmbience: SoundAmbienceRegistry,
     ZoneMusic: ZoneMusicRegistry,
     ZoneIntroMusic: ZoneIntroMusicRegistry,
+    CreatureSound: CreatureSound,
     MailTemplates: MailTemplateRegistry,
     Compare: Compare,
     SkillTiers: SkillTiersRegistry,
