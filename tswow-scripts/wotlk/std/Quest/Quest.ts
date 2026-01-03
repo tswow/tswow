@@ -88,7 +88,7 @@ export class Quest extends MainEntityID<quest_templateRow> {
     get ExclusiveGroup() { return this.Addon.ExclusiveGroup }
     get RequiredMaxRep() { return this.Addon.MaxReputation; }
     get RequiredMinRep() { return this.Addon.MinReputation; }
-    get RequiredSKill() { return this.Addon.RequiredSkill;}
+    get RequiredSkill() { return this.Addon.RequiredSkill;}
 
     get ID() { return this.row.ID.get(); }
     get Questgiver() { return new QuestNPC(this); }
