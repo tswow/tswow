@@ -1841,7 +1841,13 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      * @param uint32 entry : quest entry
      */
     CompleteQuest(entry : uint32) : void
-    //AddQuest(entry : uint32) : void
+
+    /**
+     * Adds the given quest entry to the [Player].
+     *
+     * @param uint32 entry : quest entry
+     */
+    AddQuest(entry : uint32) : void
 
     /**
      * Removes the given quest entry from the [Player].
