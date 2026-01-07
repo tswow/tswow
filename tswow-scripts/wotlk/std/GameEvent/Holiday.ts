@@ -99,6 +99,20 @@ export class HolidayRegistryClass
             .Priority.set(0)
             .Texture.set('')
             .Type.set(0)
+        entity.row.Region.set(0)
+        entity.row.Looping.set(0)
+        
+        for (let i = 0; i < 10; i++) {
+            entity.row.Duration.setIndex(i, 0);
+        }
+        
+        for (let i = 0; i < 26; i++) {
+            entity.row.Date.setIndex(i, 0);
+        }
+        
+        for (let i = 0; i < 10; i++) {
+            entity.row.CalendarFlags.setIndex(i, 0);
+        }
     }
     protected FindByID(id: number): HolidaysRow {
         return DBC.Holidays.findById(id);
