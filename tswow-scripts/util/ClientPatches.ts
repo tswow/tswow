@@ -17,25 +17,12 @@ export const EXTENSION_DLL_PATCH_NAME = 'client-extensions'
 export const ITEM_DBC_DISABLER_PATCH_NAME = 'item-dbc-disabler'
 export const FIX_COMBO_POINT_PATCH_NAME = 'fix-combo-points'
 
-export function ClientPatches(
-    gamebuild: number
-    , roles: {class:number,tank:number,healer:number,damage:number,leader:number}[]
-    ) {
-        let rolemask: number[] = new Array(32).fill(0)
-        roles.forEach(x=>{
-            rolemask[x.class-1] =
-              (x.leader ? 1 : 0)
-            | (x.tank   ? 2 : 0)
-            | (x.healer ? 4 : 0)
-            | (x.damage ? 8 : 0)
-        })
+export function ClientPatches(gamebuild: number) {
         return [
             patch('large-address-aware',[
                 [0x000126,[0x23]]
             ]),
             patch('view-distacnce-unlock',[
-                [0x014137,[0x10,0x27]],
-                [0x4c99f0,[0x34]],
                 [0x63cf0c,[
                     0x00,0x40,0x1c,0x46,0x00,0x40,0x1c,0x46
                 ]],
@@ -60,16 +47,6 @@ export function ClientPatches(
                 [0xe038e,[0x88]],
                 [0xe03a3,[0x88]],
                 [0xe03c3,[0x88]],
-            ]),
-            patch('class roles',[
-                // role mask cave
-                [0x005E1A37,[0,...rolemask]],
-                // xrefs
-                [0x151d48,[0x37,0x32,0x9E,0x00]],
-                [0x152f7d,[0x37,0x32,0x9E,0x00]],
-                [0x152f94,[0x37,0x32,0x9E,0x00]],
-                [0x1531e7,[0x37,0x32,0x9E,0x00]],
-                [0x153d22,[0x37,0x32,0x9E,0x00]],
             ]),
             // from https://model-changing.net/index.php?app=downloads&module=downloads&controller=view&id=314
             // credits to kebabstorm, original tbc version by BenjaminLSR and rajkosto

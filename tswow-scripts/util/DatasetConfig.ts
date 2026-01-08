@@ -78,7 +78,7 @@ export class DatasetConfig extends ConfigFile {
     private _client_patches: string[] = this.undefined();
     get client_patches() {
         return this.getArrayAll(this._client_patches,
-            ClientPatches(0,[]).map(x=>x.name)
+            ClientPatches(0).map(x=>x.name)
         )
     }
 

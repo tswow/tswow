@@ -31,7 +31,7 @@ export type DBCRowCreator<C, Q, R extends DBCRow<C, Q>> = (table: DBCFile<C, Q, 
  * Represents an entire DBC file loaded in memory, with all rows fully loaded.
  */
 export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
-    private loaded = false;
+    protected loaded = false;
     protected buffer: DBCBuffer;
     protected rowMaker: DBCRowCreator<C, Q, R>;
 
@@ -147,7 +147,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         fs.writeFileSync(filePath, this.buffer.write());
     }
 
-    private defaultPath() {
+    protected defaultPath() {
         return path.join(dataset.dbc_source.get(), this.name + '.dbc');
     }
 
@@ -161,7 +161,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         return this;
     }
 
-    private load(filePath: string = this.defaultPath()) {
+    protected load(filePath: string = this.defaultPath()) {
         if (!this.loaded) {
             this.buffer.read(filePath);
             this.loaded = true;
