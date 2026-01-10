@@ -87,7 +87,7 @@ export class Package {
                         }
                     }
                 }
-                appendListfile('luaxml',`${node.abs().get()}\t${rel}\n`)
+                appendListfile('luaxml',`${node.abs().get()}\t${rel.get().replace(/\//g, '\\')}\n`)
             });
         }
 
@@ -103,7 +103,7 @@ export class Package {
                         || lower.endsWith('.json')
                         || lower.endsWith('.dbc')
                     ) return;
-                    appendListfile(x.fullName, `${node.abs()}\t${node.relativeTo(x.assets.path)}\n`)
+                    appendListfile(x.fullName, `${node.abs()}\t${node.relativeTo(x.assets.path).get().replace(/\//g, '\\')}\n`)
                 });
             })
 
@@ -161,7 +161,7 @@ export class Package {
         }
     }
 
-    static Command = commands.addCommand('package')
+    static Command = commands.addCommand('package', '', 'Packages client and server data for distribution')
 
     static initialize() {
         term.debug('misc', `Initializing packages`)
