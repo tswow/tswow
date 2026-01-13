@@ -384,7 +384,7 @@ export class Livescripts {
 
         BuildCommand.addCommand(
               'livescripts'
-            , '(module|dataset)[]? --transpile-only'
+            , '(module|dataset)[]? --transpile-only --no-inline'
             , 'Comiles and hotswaps livescripts for select modules or'
             + 'modules within a dataset'
             , async args => {
