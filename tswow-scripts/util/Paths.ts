@@ -19,7 +19,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
-import { isWindows } from './Platform';
+import { isWindows, isOSX } from './Platform';
 
 export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.24081/TDB_full_world_335.24081_2024_08_17.7z"
 
@@ -612,6 +612,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
             }),
 
             libraries: custom((pathIn=>(type: string)=>{
+                const libExt = isOSX() ? 'dylib' : 'so';
                 return (isWindows() ?
                 [
                     `dep/zlib/${type}/zlib.lib`,
@@ -631,35 +632,38 @@ export function BuildPaths(pathIn: string, tdb: string) {
                 ]
                 :
                 [
-                    `install/trinitycore/lib/libcommon.so`,
-                    `install/trinitycore/lib/libdatabase.so`,
-                    `install/trinitycore/lib/libgame.so`,
-                    `install/trinitycore/lib/libshared.so`,
-                    `install/trinitycore/lib/libTracyClient.so`,
+                    `install/trinitycore/lib/libcommon.${libExt}`,
+                    `install/trinitycore/lib/libdatabase.${libExt}`,
+                    `install/trinitycore/lib/libgame.${libExt}`,
+                    `install/trinitycore/lib/libshared.${libExt}`,
+                    `install/trinitycore/lib/libTracyClient.${libExt}`,
                 ]
                 ).map(x=>new WFile(mpath(pathIn,x)))
             })),
 
-            libraries2: ((pathIn: string, type: string)=>(isWindows() ?
-            [
-                `dep/zlib/${type}/zlib.lib`,
-                `src/server/shared/${type}/shared.lib`,
-                `dep/SFMT/${type}/sfmt.lib`,
-                `dep/g3dlite/${type}/g3dlib.lib`,
-                `dep/fmt/${type}/fmt.lib`,
-                `dep/recastnavigation/Detour/${type}/detour.lib`,
-                `src/server/database/${type}/database.lib`,
-                `src/server/game/${type}/game.lib`,
-                `src/common/${type}/common.lib`,
-                `dep/argon2/${type}/argon2.lib`
-            ]
-            :
-            [
-                `install/trinitycore/lib/libcommon.so`,
-                `install/trinitycore/lib/libdatabase.so`,
-                `install/trinitycore/lib/libgame.so`,
-                `install/trinitycore/lib/libshared.so`,
-            ]).map(x=>new WFile(pathIn).join(x)))
+            libraries2: ((pathIn: string, type: string)=>{
+                const libExt = isOSX() ? 'dylib' : 'so';
+                return (isWindows() ?
+                [
+                    `dep/zlib/${type}/zlib.lib`,
+                    `src/server/shared/${type}/shared.lib`,
+                    `dep/SFMT/${type}/sfmt.lib`,
+                    `dep/g3dlite/${type}/g3dlib.lib`,
+                    `dep/fmt/${type}/fmt.lib`,
+                    `dep/recastnavigation/Detour/${type}/detour.lib`,
+                    `src/server/database/${type}/database.lib`,
+                    `src/server/game/${type}/game.lib`,
+                    `src/common/${type}/common.lib`,
+                    `dep/argon2/${type}/argon2.lib`
+                ]
+                :
+                [
+                    `install/trinitycore/lib/libcommon.${libExt}`,
+                    `install/trinitycore/lib/libdatabase.${libExt}`,
+                    `install/trinitycore/lib/libgame.${libExt}`,
+                    `install/trinitycore/lib/libshared.${libExt}`,
+                ]).map(x=>new WFile(pathIn).join(x))
+            })
         }),
 
         mpqbuilder: dir({
