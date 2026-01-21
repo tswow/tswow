@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { BOOST_URL, CLEAR_ARCHIVES } from './BuildConfig';
+import { BOOST_DOWNLOAD, CLEAR_ARCHIVES } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
 
 export namespace Boost {
     export async function install() {
-        await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
+        await DownloadFile(BOOST_DOWNLOAD,bpaths.boostArchive.get())
 
         if(!bpaths.boost.boost_1_82_0.exists())
         {

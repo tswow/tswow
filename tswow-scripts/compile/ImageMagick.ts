@@ -16,7 +16,7 @@
  */
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { CLEAR_ARCHIVES, IMAGEMAGICK_URL } from './BuildConfig';
+import { CLEAR_ARCHIVES, IMAGEMAGICK_DOWNLOAD } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -28,7 +28,7 @@ export namespace IMInstall {
         }
 
         await DownloadFile(
-             IMAGEMAGICK_URL
+             IMAGEMAGICK_DOWNLOAD
            , bpaths.imArchive
         )
 

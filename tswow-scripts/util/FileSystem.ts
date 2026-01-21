@@ -17,6 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { FilePath, resfp, WDirectory } from './FileTree';
+import * as crypto from 'crypto';
 
 /**
  * Async file system access using promises
@@ -241,6 +242,29 @@ export namespace wfsa {
                 await iterate(file, cb);
             }
         }
+    }
+
+    export function hash(file: FilePath, algorithm: string = 'sha256', chunkSize: number = 1024 * 1024) {
+        return new Promise<string>((resolve, reject) => {
+            try {
+                const hashSum = crypto.createHash(algorithm);
+                const stream = fs.createReadStream(resfp(file), { highWaterMark: chunkSize });
+                
+                stream.on('data', (chunk) => {
+                    hashSum.update(chunk);
+                });
+                
+                stream.on('end', () => {
+                    resolve(hashSum.digest('hex'));
+                });
+                
+                stream.on('error', (error) => {
+                    reject(error);
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 }
 
