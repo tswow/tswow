@@ -3443,6 +3443,8 @@ declare interface TSAura extends TSEntityProvider {
      * Remove this [Aura] from the [Unit] it is applied to.
      */
     Remove() : void
+
+    ModStackAmount(amount : int32, removeMode : uint8, resetTimer : bool);
 }
 
 declare interface TSAuraEffect extends TSEntityProvider {
