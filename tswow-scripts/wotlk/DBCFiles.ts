@@ -1839,6 +1839,7 @@ export const DBCLoader = {
     SpellCategory : (path: string) => SpellCategoryDBCFile.read(path),
 
     SpellChainEffects : (path: string) => SpellChainEffectsDBCFile.read(path),
+
     SpellDescriptionVariables : (path: string) => SpellDescriptionVariablesDBCFile.read(path),
 
     SpellDifficulty : (path: string) => SpellDifficultyDBCFile.read(path),
