@@ -259,18 +259,34 @@ export namespace TrinityCore {
                     .relativeFrom(spaths.cores.TrinityCore)
                 const relInstall = bpaths.TrinityCore
                     .relativeFrom(bpaths.TrinityCore.join('install','trinitycore'))
+                // Compiler selection: env-driven, with a gcc default. Modern
+                // clang (>= 18 or so) refuses to build TrinityCore when
+                // WITH_WARNINGS is enabled, so gcc is a safer baseline for
+                // Linux users; anyone preferring clang can still set
+                // TSWOW_CC / TSWOW_CXX.
+                const ccDefault = '/usr/bin/gcc'
+                const cxxDefault = '/usr/bin/g++'
+                const cc = process.env.TSWOW_CC || ccDefault
+                const cxx = process.env.TSWOW_CXX || cxxDefault
+                // Boost::system fallback for distros that ship Boost without
+                // a per-component boost_system config (see
+                // cmake/linux/boost_system_fallback/README.txt).
+                const boostSystemFallback = require('path').resolve(
+                    process.cwd(),'cmake','linux','boost_system_fallback')
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
                 setupCommand = `cmake ${relSource}`
                 +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
-                +` -DCMAKE_C_COMPILER=/usr/bin/clang`
-                +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+                +` -DCMAKE_C_COMPILER=${cc}`
+                +` -DCMAKE_CXX_COMPILER=${cxx}`
+                +` -DCMAKE_PREFIX_PATH="${boostSystemFallback}"`
+                +` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DBUILD_TESTING="OFF"`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
-                +` -DWITH_WARNINGS=1`
+                +` -DWITH_WARNINGS=0`
                 +` -DSCRIPTS=${scripts}`;
-                buildCommand = 'make -j 4';
+                buildCommand = `make -j ${require('os').cpus().length}`;
                 await bpaths.TrinityCore.doIn(() => {
                     wsys.exec(setupCommand, 'inherit');
                     if(generateOnly) return;
