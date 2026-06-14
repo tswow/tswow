@@ -33,12 +33,18 @@ export namespace BLPConverter {
             bpaths.blpconverter.mkdir()
             const relativeBlpConverterSource = bpaths.blpconverter
                 .relativeFrom(spaths.misc.blpconverter.get());
+            const cc = process.env.TSWOW_CC || '/usr/bin/gcc';
+            const cxx = process.env.TSWOW_CXX || '/usr/bin/g++';
+            const jobs = require('os').cpus().length;
             await wsys.inDirectory(bpaths.blpconverter.get()
                 , () => {
                     wsys.exec(
                         `${cmake} "${relativeBlpConverterSource}"`
+                        + ` -DCMAKE_C_COMPILER=${cc}`
+                        + ` -DCMAKE_CXX_COMPILER=${cxx}`
+                        + ` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
                         ,  'inherit');
-                    wsys.exec(`make`,'inherit');
+                    wsys.exec(`make -j ${jobs}`,'inherit');
                 });
         }
         bpaths.blpconverter.blpconverter_exe.copy(ipaths.bin.BLPConverter.blpconverter)

@@ -33,12 +33,18 @@ export namespace MPQBuilder {
         } else {
             bpaths.mpqbuilder.mkdir()
             const relativeMpqSource = bpaths.mpqbuilder.relativeFrom(spaths.misc.mpqbuilder.get());
+            const cc = process.env.TSWOW_CC || '/usr/bin/gcc';
+            const cxx = process.env.TSWOW_CXX || '/usr/bin/g++';
+            const jobs = require('os').cpus().length;
             await wsys.inDirectory(bpaths.mpqbuilder.get()
                 , () => {
                     wsys.exec(
                         `${cmake} "${relativeMpqSource}"`
+                        + ` -DCMAKE_C_COMPILER=${cc}`
+                        + ` -DCMAKE_CXX_COMPILER=${cxx}`
+                        + ` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
                         ,  'inherit');
-                    wsys.exec(`make`,'inherit');
+                    wsys.exec(`make -j ${jobs}`,'inherit');
                 });
         }
         bpaths.mpqbuilder.mpqbuilder_exe.copy(ipaths.bin.mpqbuilder.mpqbuilder_exe)
