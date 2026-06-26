@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as mysql_lib from 'mysql2';
+import * as child_process from 'child_process';
 import path from 'path';
 import { start } from 'repl';
 import { commands } from '../util/Commands';
@@ -190,6 +191,66 @@ export class Connection {
 export namespace mysql {
     const mysqlprocess: Process = new Process('mysql');
 
+    function id(name: string) {
+        return `\`${name.split('`').join('``')}\``;
+    }
+
+    export async function ensureUpdatesTable(con: Connection) {
+        await con.query(
+              `CREATE TABLE IF NOT EXISTS ${id('updates')} (`
+            + `${id('name')} VARCHAR(200) NOT NULL,`
+            + `${id('hash')} VARCHAR(40) NOT NULL DEFAULT '',`
+            + `${id('state')} VARCHAR(20) NOT NULL DEFAULT 'RELEASED',`
+            + `${id('installedOn')} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,`
+            + `${id('speed')} INT NOT NULL DEFAULT 0,`
+            + `PRIMARY KEY (${id('name')})`
+            + `);`
+        )
+    }
+
+    export async function selfHealWorldDest(source: Connection, dest: Connection) {
+        const missingTables = await source.query(
+              `SELECT s.table_name FROM information_schema.tables s `
+            + `LEFT JOIN information_schema.tables d `
+            + `ON d.table_schema='${dest.name()}' AND d.table_name=s.table_name `
+            + `WHERE s.table_schema='${source.name()}' `
+            + `AND s.table_type='BASE TABLE' `
+            + `AND d.table_name IS NULL;`
+        )
+
+        for (const row of missingTables as { table_name: string }[]) {
+            const table = row.table_name;
+            await dest.query(
+                  `CREATE TABLE IF NOT EXISTS ${id(dest.name())}.${id(table)} `
+                + `LIKE ${id(source.name())}.${id(table)};`
+            )
+        }
+
+        const hasTrinityString = await dest.query(
+              `SELECT COUNT(*) AS c FROM information_schema.tables `
+            + `WHERE table_schema='${dest.name()}' AND table_name='trinity_string';`
+        ) as { c: number }[];
+
+        if ((hasTrinityString[0]?.c || 0) === 0) {
+            return;
+        }
+
+        const destCount = await dest.query(`SELECT COUNT(*) AS c FROM ${id('trinity_string')};`) as { c: number }[];
+        if ((destCount[0]?.c || 0) > 0) {
+            return;
+        }
+
+        const sourceCount = await source.query(`SELECT COUNT(*) AS c FROM ${id('trinity_string')};`) as { c: number }[];
+        if ((sourceCount[0]?.c || 0) === 0) {
+            return;
+        }
+
+        await dest.query(
+              `TRUNCATE TABLE ${id('trinity_string')};`
+            + `INSERT INTO ${id('trinity_string')} SELECT * FROM ${id(source.name())}.${id('trinity_string')};`
+        )
+    }
+
     export function dump(connection: Connection, outputFile: string) {
         wsys.exec(
             `"${ipaths.bin.mysql.mysqldump_exe.get()}"`
@@ -363,16 +424,20 @@ export namespace mysql {
             `"${NodeConfig.MySQLExecutable}"`:
                 `mysql`;
 
-        await wsys.execAsync(
-              `${mysqlCommand}`
-            + ` -u ${con.cfg.user}`
-            + ` --default-character-set=utf8`
-            + (con.cfg.password.length > 0
-                ? ` -p${con.cfg.password}`
-                : '')
-            + ` --port ${con.cfg.port}`
-            + ` --host ${con.cfg.host}`
-            + ` ${con.name()} < ${sqlFilePath}`);
+        await new Promise<void>((res, rej) => {
+            child_process.exec(
+                  `${mysqlCommand}`
+                + ` -u ${con.cfg.user}`
+                + ` --default-character-set=utf8`
+                + (con.cfg.password.length > 0
+                    ? ` -p${con.cfg.password}`
+                    : '')
+                + ` --port ${con.cfg.port}`
+                + ` --host ${con.cfg.host}`
+                + ` ${con.name()} < ${sqlFilePath}`
+                , { maxBuffer: 512 * 1024 * 1024 }
+                , (err) => err ? rej(err) : res());
+        });
         term.success('mysql',`Rebuilt database ${con.name()}`);
     }
 
@@ -407,6 +472,7 @@ export namespace mysql {
           cons: Connection
         , type: 'world'|'auth'|'characters'
     ) {
+        await ensureUpdatesTable(cons)
         let total = await makeUpdate(cons, ipaths.bin.sql.updates.type.pick(type)._335.toDirectory())
         total += await makeUpdate(cons, ipaths.bin.sql.custom.type.pick(type).toDirectory())
         if(total > 0) {

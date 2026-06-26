@@ -277,7 +277,10 @@ export class Realm {
         this.lastBuildType = type;
         await this.connect();
         await this.config.Dataset.setupDatabases('BOTH',false);
-        await this.config.Dataset.setupClientData()
+        const isServerOnlyStart = process.argv.includes('server-mode') || process.argv.includes('noclient')
+        if(!isServerOnlyStart) {
+            await this.config.Dataset.setupClientData()
+        }
         this.config.Dataset.writeModulesTxt()
 
         // Generate .conf files

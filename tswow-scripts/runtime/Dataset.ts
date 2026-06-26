@@ -32,6 +32,10 @@ class DatasetManager {
 export class Dataset {
     private static managers: {[key: string]: DatasetManager} = {}
 
+    private hasContent(path: string) {
+        return wfs.exists(path) && wfs.readDir(path, true, 'files').length > 0
+    }
+
     private manager() {
         return Dataset.managers[this.fullName]
            || (Dataset.managers[this.fullName] = new DatasetManager(this.fullName))
@@ -104,23 +108,30 @@ export class Dataset {
     async setupClientData() {
         term.debug(this.logName(), `Setting up client data`)
         let anyChange: boolean = false;
-        if(!this.path.luaxml_source.exists()) {
+        const hasLuaxmlBase = wfs.exists(
+            this.path.luaxml_source
+                .join('Interface/GlueXML/CharacterCreate.xml')
+                .get()
+        )
+
+        if(!this.hasContent(this.path.luaxml_source.get()) || !hasLuaxmlBase) {
             MapData.luaxml(this);
             anyChange = true;
         }
 
         this.path.luaxml_source.copyOnNoTarget(this.path.luaxml)
 
-        if(!this.path.dbc_source.exists()) {
+        if(!this.hasContent(this.path.dbc_source.get())) {
             MapData.dbc(this);
+            anyChange = true;
         }
 
-        if(!this.path.maps.exists()) {
+        if(!this.hasContent(this.path.maps.get())) {
             MapData.map(this);
             anyChange = true;
         }
 
-        if(!this.path.vmaps.exists()) {
+        if(!this.hasContent(this.path.vmaps.get())) {
             MapData.vmap_extract(this);
             MapData.vmap_assemble(this)
             anyChange = true;
@@ -156,6 +167,9 @@ export class Dataset {
         switch(this.config.EmulatorCore) {
             case 'trinitycore':
                 await mysql.applySQLFiles(db,'world');
+                if(db === this.worldDest) {
+                    await mysql.selfHealWorldDest(this.worldSource, this.worldDest)
+                }
                 break;
         }
     }
@@ -216,7 +230,7 @@ export class Dataset {
             })
         })
         this.modules().filter(x=>x.path.assets.exists()).forEach(x=>{
-            let patches = this.client.freePatches()
+            let patches = this.client.freeNonLocalePatches()
             if(patches.length === 0) {
                 throw new Error(`Client has no more free patches to symlink: ${this.client.path}`)
             }

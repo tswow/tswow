@@ -20,7 +20,7 @@ import { Args } from '../util/Args';
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from '../util/ClientPatches';
 import { mpath, wfs } from '../util/FileSystem';
 import { WDirectory, WNode } from '../util/FileTree';
-import { ClientPath, findLocaleDir, ipaths } from '../util/Paths';
+import { ClientPath, ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { Process } from '../util/Process';
 import { term } from '../util/Terminal';
@@ -47,16 +47,11 @@ export class Client {
             )
         }
 
-        const useLocale = this.dataset.config.ClientPatchUseLocale
-        let patchdir = mpath(this.dataset.config.client_path,'Data')
-        if(useLocale) {
-            patchdir = findLocaleDir(patchdir).get();
-        }
-
-        let patchFile = useLocale
-            ? `patch-${wfs.basename(patchdir)}-${this.dataset.config.ClientDevPatchLetter}.MPQ`
-            : `patch-${this.dataset.config.ClientDevPatchLetter}.MPQ`
-        let patchPath = mpath(patchdir,patchFile);
+        const patchPath = mpath(
+            this.dataset.config.client_path,
+            'Data',
+            `patch-${this.dataset.config.ClientDevPatchLetter.toUpperCase()}.MPQ`
+        );
 
         return ClientPath(
               this.dataset.config.client_path
@@ -65,10 +60,7 @@ export class Client {
     }
 
     patchDir() {
-        return (this.dataset.config.ClientPatchUseLocale
-            ? this.path.Data.locale()
-            : this.path.Data
-            ) as WDirectory
+        return this.path.Data as WDirectory
     }
 
     locale() {
@@ -248,11 +240,7 @@ export class Client {
     }
 
     patchPath(letter: string) {
-        return this.dataset.config.ClientPatchUseLocale
-            ? this.path.Data.locale()
-                .join(`patch-${this.locale()}-${letter.toUpperCase()}.MPQ`)
-            : this.path.Data
-                .join(`patch-${letter.toUpperCase()}.MPQ`)
+        return this.path.Data.join(`patch-${letter.toUpperCase()}.MPQ`)
     }
 
     verify() {
@@ -276,23 +264,25 @@ export class Client {
         return this.path.Cache.remove();
     }
 
-    freePatches() {
-        const ids: WNode[] = []
-
+    private _patchOrder() {
         const order: string[] = []
         for(let i=4;i<9;++i) order.push(`${i}`)
         for(let i='A'.charCodeAt(0);i<'Z'.charCodeAt(0);++i) {
             order.push(`${String.fromCharCode(i)}`)
         }
-
-        let start = order.indexOf(this.dataset.config.ClientDevPatchLetter.toUpperCase())
+        const start = order.indexOf(this.dataset.config.ClientDevPatchLetter.toUpperCase())
         if(start === -1) {
             throw new Error(
                   `Invalid patch letter: ${this.dataset.config.ClientDevPatchLetter}`
                 + ` (in dataset ${this.dataset.fullName})`
             )
         }
+        return { order, start };
+    }
 
+    freePatches() {
+        const ids: WNode[] = []
+        const { order, start } = this._patchOrder()
         for(let i=start;i<order.length;++i) {
             let path = this.patchPath(order[i]);
             if( !path.exists()
@@ -301,7 +291,18 @@ export class Client {
                 ids.push(path)
             }
         }
+        return ids;
+    }
 
+    freeNonLocalePatches() {
+        const ids: WNode[] = []
+        const { order, start } = this._patchOrder()
+        for(let i=start;i<order.length;++i) {
+            let path = this.path.Data.join(`patch-${order[i].toUpperCase()}.MPQ`)
+            if(!path.exists()) {
+                ids.push(path)
+            }
+        }
         return ids;
     }
 

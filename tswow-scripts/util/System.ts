@@ -84,6 +84,7 @@ export namespace wsys {
     /**
      * Executes a child process asynchronously
      * @param program Command to execute
+     * @param cwd Working directory to execute in
      * @throws if the child process exits with an error
      * @returns Promise when the child process exits
      */
