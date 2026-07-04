@@ -117,6 +117,11 @@ int main(int argc, char **argv) {
 	}
 
 	for (auto& patch : patches) {
+		// Skip patches that aren't present in this client (e.g. an optional
+		// patch-3.MPQ). A missing optional patch shouldn't abort extraction.
+		if (!fs::exists(patch)) {
+			continue;
+		}
 		if (!SFileOpenPatchArchive(mpq, patch.string().c_str(), NULL, 0)) {
 			std::cout << "Failed to apply patch " << patch << " with error " << GetLastError() << "\n";
 			return GetLastError();

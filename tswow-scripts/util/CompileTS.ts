@@ -68,5 +68,5 @@ export function clearTscWatchers() {
 }
 
 export function compileTsc(dir: string) {
-    wsys.execIn(dir,'tsc','inherit');
+    wsys.execIn(dir,'npx tsc','inherit');
 }

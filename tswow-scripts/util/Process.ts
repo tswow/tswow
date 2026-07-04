@@ -55,7 +55,7 @@ export class Process {
     private _onFail: ((err: Error)=>void)|undefined = undefined;
     private _isStopping: boolean = false;
     private _autoRestart: boolean = false;
-    private _lastStart?: {directory : FilePath, program: string, args: string[]} = undefined
+    private _lastStart?: {directory : FilePath, program: string, args: string[], env?: NodeJS.ProcessEnv} = undefined
 
     private _lineBuffers = {
         stderr: {value: '', idx: 0},
@@ -199,14 +199,15 @@ export class Process {
           directory: FilePath
         , program: string
         , args: string[] = []
+        , env?: NodeJS.ProcessEnv
     ) {
         await this.stop();
-        this._lastStart = {directory,program,args};
+        this._lastStart = {directory,program,args,env};
         this._isStopping = false;
         const proc = child_process.spawn(
               program
             , args
-            , {stdio:'pipe',cwd:resfp(directory)}
+            , {stdio:'pipe',cwd:resfp(directory),env: env ? {...process.env, ...env} : process.env}
         )
         this._process = processes[proc.pid] = proc;
         this._process.stdout.on('data', (data) => {
@@ -281,7 +282,7 @@ export class Process {
     private postFail() {
         if(this._autoRestart && this._lastStart) {
             term.log('process',`Automatically restarting ${this._lastStart.program}`)
-            this.startIn(this._lastStart.directory, this._lastStart.program, this._lastStart.args);
+            this.startIn(this._lastStart.directory, this._lastStart.program, this._lastStart.args, this._lastStart.env);
         }
     }
 

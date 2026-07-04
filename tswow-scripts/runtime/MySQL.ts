@@ -251,9 +251,46 @@ export namespace mysql {
         )
     }
 
+    let cachedIsMariaDB: boolean | undefined = undefined;
+
+    /**
+     * Whether the local database server binary is MariaDB (as opposed to MySQL).
+     * MariaDB requires different initialization and startup flags than MySQL.
+     */
+    function isMariaDB(): boolean {
+        if (cachedIsMariaDB === undefined) {
+            try {
+                const version = wsys.exec(`"${mysqldExe()}" --version`, 'pipe');
+                cachedIsMariaDB = /mariadb/i.test(version);
+            } catch (error) {
+                cachedIsMariaDB = false;
+            }
+        }
+        return cachedIsMariaDB;
+    }
+
+    // Database binaries: bundled .exe on Windows, resolved system binary elsewhere.
+    function mysqldExe(): string {
+        return isWindows() ? ipaths.bin.mysql.mysqld_exe.get() : wsys.resolveExe(['mariadbd', 'mysqld']);
+    }
+    function mysqlClientExe(): string {
+        return isWindows() ? ipaths.bin.mysql.mysql_exe.get() : wsys.resolveExe(['mariadb', 'mysql']);
+    }
+    function mysqldumpExe(): string {
+        return isWindows() ? ipaths.bin.mysql.mysqldump_exe.get() : wsys.resolveExe(['mariadb-dump', 'mysqldump']);
+    }
+
+    // Socket + pid file for the tswow-managed database process (Linux/macOS).
+    function socketPath(): string {
+        return wfs.absPath(ipaths.coredata.join('tswow-db.sock').get());
+    }
+    function pidPath(): string {
+        return wfs.absPath(ipaths.coredata.join('tswow-db.pid').get());
+    }
+
     export function dump(connection: Connection, outputFile: string) {
         wsys.exec(
-            `"${ipaths.bin.mysql.mysqldump_exe.get()}"`
+            `"${mysqldumpExe()}"`
             + ` --port ${connection.cfg.port}`
             + ` --host ${connection.cfg.host}`
             + ` -u root ${connection.cfg.database}`
@@ -266,14 +303,34 @@ export namespace mysql {
         if(!ipaths.coredata.database.exists()) {
             term.log('mysql',"No mysql database found, creating it...");
             try {
-                wsys.exec(
-                    `${ipaths.bin.mysql.mysqld_exe.get()}`
-                    + ` --initialize`
-                    + ` --log_syslog=0`
-                    + ` --datadir=${ipaths.coredata.database.abs()}`);
+                if (isWindows()) {
+                    wsys.exec(
+                        `${mysqldExe()}`
+                        + ` --initialize`
+                        + ` --log_syslog=0`
+                        + ` --datadir=${ipaths.coredata.database.abs()}`);
+                } else if (isMariaDB()) {
+                    // MariaDB uses mariadb-install-db instead of `--initialize`.
+                    const installDb = wsys.resolveExe(['mariadb-install-db', 'mysql_install_db']);
+                    wsys.exec(
+                        `"${installDb}"`
+                        + ` --datadir="${wfs.absPath(ipaths.coredata.database.get())}"`
+                        + ` --auth-root-authentication-method=normal`
+                        + ` --skip-test-db`);
+                } else {
+                    // System MySQL on Linux
+                    wsys.exec(
+                        `"${mysqldExe()}"`
+                        + ` --initialize-insecure`
+                        + ` --datadir="${wfs.absPath(ipaths.coredata.database.get())}"`);
+                }
             } catch(error) {
-                term.error('mysql',`Failed to start MySQL: ${error.message}`)
-                term.error('mysql',`Make sure you installed all vcredist versions needed`)
+                term.error('mysql',`Failed to initialize database: ${error.message}`)
+                if (isWindows()) {
+                    term.error('mysql',`Make sure you installed all vcredist versions needed`)
+                } else {
+                    term.error('mysql',`Make sure mariadb/mysql server is installed (e.g. 'pacman -S mariadb' or 'apt install mariadb-server')`)
+                }
                 term.error('mysql',`See wiki for installation instructions: https://tswow.github.io/tswow-wiki/`)
                 process.exit(-1);
             }
@@ -311,16 +368,24 @@ export namespace mysql {
 
         const [user,pass] = Object.entries(users).find(()=>true);
 
+        // Grant the user on both localhost (unix socket) and 127.0.0.1 (TCP), since
+        // the emulator connects via TCP while the init-file runs over the socket.
         wfs.write(ipaths.bin.mysql_startup.get(),
               `CREATE USER IF NOT EXISTS`
             + ` '${user}'@'localhost'`
             + ` IDENTIFIED BY '${pass}';`
             + `\nGRANT ALL ON *.* TO '${user}'@'localhost';`
-            + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`);
-            + "`\nSET @@GLOBAL.wait_timeout=2147483"
+            + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`
+            + `\nCREATE USER IF NOT EXISTS`
+            + ` '${user}'@'127.0.0.1'`
+            + ` IDENTIFIED BY '${pass}';`
+            + `\nGRANT ALL ON *.* TO '${user}'@'127.0.0.1';`
+            + `\nALTER USER '${user}'@'127.0.0.1' IDENTIFIED BY '${pass}';`
+            + `\nFLUSH PRIVILEGES;`);
         await disconnect();
-        mysqlprocess.start(ipaths.bin.mysql.mysqld_exe.get(),
-            [
+
+        const startArgs = isWindows()
+            ? [
                 `--port=${NodeConfig.DatabaseHostedPort}`,
                 '--log_syslog=0',
                 '--console',
@@ -328,10 +393,25 @@ export namespace mysql {
                 '--wait_timeout=2147483',
                 `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
                 `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
-            ]);
+            ]
+            : [
+                `--port=${NodeConfig.DatabaseHostedPort}`,
+                `--socket=${socketPath()}`,
+                `--pid-file=${pidPath()}`,
+                '--wait-timeout=2147483',
+                `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
+                `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
+            ];
+
+        mysqlprocess.start(mysqldExe(), startArgs);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
+        // MariaDB/MySQL on Linux log 'ready for connections' once the init-file has
+        // been executed, while Windows MySQL logs 'Execution of init_file ended.'.
+        const readyMessage = isWindows()
+            ? 'Execution of init_file*ended.'
+            : 'ready for connections'
         let val = await Promise.race([
-            mysqlprocess.waitForMessage('Execution of init_file*ended.', true),
+            mysqlprocess.waitForMessage(readyMessage, true),
             mysqlprocess.waitForMessage('Can\'t start server', true),
         ]);
         if(val.includes('Can\'t start server')) {
@@ -353,10 +433,25 @@ export namespace mysql {
 
     /**
      * Returns whether this instance of TSWoW should manage its own MySQL process.
+     *
+     * On Windows, TSWoW bundles its own MySQL. On Linux/macOS it uses the system
+     * mariadbd/mysqld binary but still manages the process/data directory itself
+     * so that `npm start` works out of the box without a preconfigured server.
      */
     export function hasOwnProcess() {
-        return isWindows()
-            && NodeConfig.DatabaseHostedPort !== 0;
+        return NodeConfig.DatabaseHostedPort !== 0;
+    }
+
+    /**
+     * Absolute path to the MySQL/MariaDB client executable used by the emulator
+     * (worldserver) for e.g. running SQL updates. Resolves the bundled binary on
+     * Windows and the system mariadb/mysql client on Linux/macOS.
+     */
+    export function clientExecutable() {
+        if (isWindows()) {
+            return ipaths.bin.mysql.mysql_exe.abs().get();
+        }
+        return mysqlClientExe();
     }
 
     /**
@@ -419,7 +514,7 @@ export namespace mysql {
         await con.clean();
 
         const mysqlCommand = mysql.hasOwnProcess() ?
-            `"${ipaths.bin.mysql.mysql_exe.get()}"` :
+            `"${mysqlClientExe()}"` :
                 NodeConfig.MySQLExecutable != '' ?
             `"${NodeConfig.MySQLExecutable}"`:
                 `mysql`;

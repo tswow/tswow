@@ -2,6 +2,7 @@ import { patchTCConfig } from "../util/ConfigFile";
 import { DatasetConfig, GAME_BUILD_FIELD } from "../util/DatasetConfig";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
+import { isWindows } from "../util/Platform";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
 import { Client } from "./Client";
@@ -12,6 +13,8 @@ import { Module, ModuleEndpoint } from "./Modules";
 import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
+import * as fs from "fs";
+import * as path from "path";
 
 class DatasetManager {
     worldSource: Connection;
@@ -107,39 +110,91 @@ export class Dataset {
 
     async setupClientData() {
         term.debug(this.logName(), `Setting up client data`)
-        let anyChange: boolean = false;
-        const hasLuaxmlBase = wfs.exists(
-            this.path.luaxml_source
-                .join('Interface/GlueXML/CharacterCreate.xml')
-                .get()
-        )
+        // Temporary uppercase .MPQ symlinks for the extraction tools; removed in
+        // the finally block so the game client never sees duplicate archives.
+        const tempMpqLinks = this.normalizeClientMpqs();
+        try {
+            let anyChange: boolean = false;
+            const hasLuaxmlBase = wfs.exists(
+                this.path.luaxml_source
+                    .join('Interface/GlueXML/CharacterCreate.xml')
+                    .get()
+            )
 
-        if(!this.hasContent(this.path.luaxml_source.get()) || !hasLuaxmlBase) {
-            MapData.luaxml(this);
-            anyChange = true;
+            if(!this.hasContent(this.path.luaxml_source.get()) || !hasLuaxmlBase) {
+                MapData.luaxml(this);
+                anyChange = true;
+            }
+
+            this.path.luaxml_source.copyOnNoTarget(this.path.luaxml)
+
+            if(!this.hasContent(this.path.dbc_source.get())) {
+                MapData.dbc(this);
+                anyChange = true;
+            }
+
+            if(!this.hasContent(this.path.maps.get())) {
+                MapData.map(this);
+                anyChange = true;
+            }
+
+            if(!this.hasContent(this.path.vmaps.get())) {
+                MapData.vmap_extract(this);
+                MapData.vmap_assemble(this)
+                anyChange = true;
+            }
+
+            if(anyChange) {
+                term.success(this.logName(),'Finished installing server data');
+            }
+        } finally {
+            for(const link of tempMpqLinks) {
+                try { fs.unlinkSync(link); } catch(err) { /* ignore */ }
+            }
         }
+    }
 
-        this.path.luaxml_source.copyOnNoTarget(this.path.luaxml)
-
-        if(!this.hasContent(this.path.dbc_source.get())) {
-            MapData.dbc(this);
-            anyChange = true;
+    /**
+     * Case-sensitive filesystems: extraction tools (luaxmlreader, mapextractor)
+     * expect uppercase ".MPQ" archives, but clients often ship lowercase ".mpq".
+     * Symlink the missing uppercase names and return them so the caller can
+     * remove them after extraction (leaving duplicates crashes the game client).
+     */
+    private normalizeClientMpqs(): string[] {
+        const created: string[] = [];
+        if(isWindows()) { return created; }
+        let dataDir: string;
+        let localeDir: string;
+        try {
+            dataDir = this.client.path.Data.get();
+            localeDir = this.client.path.Data.locale().get();
+        } catch(err) {
+            return created;
         }
-
-        if(!this.hasContent(this.path.maps.get())) {
-            MapData.map(this);
-            anyChange = true;
+        for(const dir of [dataDir, localeDir]) {
+            let entries: string[];
+            try {
+                entries = fs.readdirSync(dir);
+            } catch(err) {
+                continue;
+            }
+            for(const name of entries) {
+                const match = name.match(/^(.*)\.mpq$/);
+                if(!match) { continue; }
+                const upper = `${match[1]}.MPQ`;
+                if(name === upper) { continue; }
+                const upperPath = path.join(dir, upper);
+                if(fs.existsSync(upperPath)) { continue; }
+                try {
+                    fs.symlinkSync(name, upperPath);
+                    created.push(upperPath);
+                    term.log(this.logName(), `Linked ${upper} -> ${name} (case-sensitive filesystem)`);
+                } catch(err) {
+                    // ignore; extraction will report a clearer error if truly missing
+                }
+            }
         }
-
-        if(!this.hasContent(this.path.vmaps.get())) {
-            MapData.vmap_extract(this);
-            MapData.vmap_assemble(this)
-            anyChange = true;
-        }
-
-        if(anyChange) {
-            term.success(this.logName(),'Finished installing server data');
-        }
+        return created;
     }
 
     protected async setupDatabase(db: Connection, force: boolean) {

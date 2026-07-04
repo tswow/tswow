@@ -279,7 +279,17 @@ export class Realm {
         await this.config.Dataset.setupDatabases('BOTH',false);
         const isServerOnlyStart = process.argv.includes('server-mode') || process.argv.includes('noclient')
         if(!isServerOnlyStart) {
-            await this.config.Dataset.setupClientData()
+            // Client data (dbc/maps/vmaps) is extracted here. If extraction fails
+            // or is incomplete, still start the worldserver so the realm comes
+            // online (it logs missing-map warnings but login/characters work).
+            try {
+                await this.config.Dataset.setupClientData()
+            } catch(err) {
+                term.error(
+                      this.logName()
+                    , `Client data setup failed (starting worldserver anyway): ${err && (err as any).message ? (err as any).message : err}`
+                )
+            }
         }
         this.config.Dataset.writeModulesTxt()
 
@@ -317,7 +327,7 @@ export class Realm {
               this.path.worldserver_conf.get()
             , 'MySQLExecutable'
             , NodeConfig.MySQLExecutable.length === 0
-                ? ipaths.bin.mysql.mysql_exe.abs().get()
+                ? mysql.clientExecutable()
                 : '"NodeConfig.MySQLExecutable"'
         )
 
