@@ -48,7 +48,7 @@ void TSLoot::AddItem(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode,
 {
     loot->items.reserve(MAX_NR_LOOT_ITEMS);
     loot->quest_items.reserve(MAX_NR_QUEST_ITEMS);
-    loot->AddItem(LootStoreItem(id,0,100,lootmode,needsQuest,groupId,minCount,maxCount));
+    loot->AddItem(LootStoreItem(id,0,100,needsQuest,lootmode,groupId,minCount,maxCount));
 }
 
 void TSLoot::AddLooter(uint64 looter)

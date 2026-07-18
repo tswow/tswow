@@ -2406,7 +2406,7 @@ export class Emitter {
         try
         {
             let ch = pare.expression.getChildAt(pare.expression.getChildCount()-1);
-            return ch.getText() == 'AddTimer'
+            return ch.getText() == 'AddTimer' || ch.getText() == "AddNamedTimer"
         }
         catch(error)
         {

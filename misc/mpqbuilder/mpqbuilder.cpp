@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 #include <cstdio>
+#include <algorithm>
 
 inline bool exists(std::string const& name) {
     std::ifstream f(name.c_str());
@@ -60,6 +61,11 @@ int main(int argc, char **argv)
     std::vector<std::string> errors;
     while (std::getline(is, line))
     {
+        // Trim trailing \r (Windows) and whitespace so path inside MPQ is exact
+        while (!line.empty() && (line.back() == '\r' || line.back() == ' ' || line.back() == '\t'))
+            line.pop_back();
+        if (line.empty())
+            continue;
         size_t fst = line.find_first_of('\t');
         if (fst == std::string::npos)
         {
@@ -69,6 +75,10 @@ int main(int argc, char **argv)
 
         std::string src = line.substr(0, fst);
         std::string dst = line.substr(fst + 1);
+        while (!src.empty() && (src.front() == ' ' || src.front() == '\t'))
+            src.erase(0, 1);
+        while (!dst.empty() && (dst.back() == '\r' || dst.back() == ' ' || dst.back() == '\t'))
+            dst.pop_back();
 
         if (!exists(src))
         {
@@ -120,9 +130,24 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    SFileSetDataCompression(MPQ_COMPRESSION_ZLIB);
+
     for (auto const& pair : files)
     {
-        SFileAddFile(handle, pair.first.c_str(), pair.second.c_str(), 0);
+        std::string archivedName = pair.second;
+        std::replace(archivedName.begin(), archivedName.end(), '/', '\\');
+
+        if (!SFileAddFile(handle, pair.first.c_str(), archivedName.c_str(), MPQ_FILE_COMPRESS | MPQ_FILE_REPLACEEXISTING))
+        {
+            std::cerr
+                << "Failed to add file to MPQ:"
+                << " src=" << pair.first
+                << " dst=" << archivedName
+                << " error=" << GetLastError()
+                << "\n";
+            SFileCloseArchive(handle);
+            return -1;
+        }
     }
     SFileFlushArchive(handle);
     SFileCloseArchive(handle);

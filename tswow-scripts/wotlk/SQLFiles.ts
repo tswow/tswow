@@ -74,6 +74,7 @@ import { SQL_gameobject_template } from './sql/gameobject_template'
 import { SQL_gameobject_template_addon } from './sql/gameobject_template_addon'
 import { SQL_gameobject_template_locale } from './sql/gameobject_template_locale'
 import { SQL_game_event } from './sql/game_event'
+import { SQL_game_event_arena_seasons } from './sql/game_event_arena_seasons'
 import { SQL_game_event_battleground_holiday } from './sql/game_event_battleground_holiday'
 import { SQL_game_event_condition } from './sql/game_event_condition'
 import { SQL_game_event_creature } from './sql/game_event_creature'
@@ -458,6 +459,11 @@ export const SQL = {
      * No comment (yet!)
      */
     game_event : SQL_game_event,
+
+    /**
+     * No comment (yet!)
+     */
+    game_event_arena_seasons : SQL_game_event_arena_seasons,
 
     /**
      * No comment (yet!)

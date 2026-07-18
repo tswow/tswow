@@ -176,12 +176,12 @@ private:
 
 #define FIRE(category,name,...)\
 		{\
-				for(auto cb : ts_events.category.name##_callbacks.m_cxx_callbacks)\
+				for(auto const& cb : ts_events.category.name##_callbacks.m_cxx_callbacks)\
 				{\
 						cb(__VA_ARGS__);\
 				}\
 				\
-				for(auto cb : ts_events.category.name##_callbacks.m_lua_callbacks)\
+				for(auto const& cb : ts_events.category.name##_callbacks.m_lua_callbacks)\
 				{\
 						TSLua::handle_error(cb(__VA_ARGS__));\
 				}\
@@ -190,18 +190,18 @@ private:
 #define FIRE_ID(ref,category,name,...)\
 		{\
 				FIRE(category,name,__VA_ARGS__)\
-				auto cxx_cbs = ts_events.category.name##_callbacks.m_id_cxx_callbacks;\
+				auto const& cxx_cbs = ts_events.category.name##_callbacks.m_id_cxx_callbacks;\
 				if(ref < cxx_cbs.size())\
 				{\
-						for(auto cb: cxx_cbs[ref])\
+						for(auto const& cb: cxx_cbs[ref])\
 						{\
 								cb(__VA_ARGS__);\
 						}\
 				}\
-				auto lua_cbs = ts_events.category.name##_callbacks.m_id_lua_callbacks;\
+				auto const& lua_cbs = ts_events.category.name##_callbacks.m_id_lua_callbacks;\
 				if(ref < lua_cbs.size())\
 				{\
-						for(auto cb: lua_cbs[ref])\
+						for(auto const& cb: lua_cbs[ref])\
 						{\
 								try\
 								{\
