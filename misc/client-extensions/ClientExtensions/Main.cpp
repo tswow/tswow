@@ -6,8 +6,8 @@
 #include "ClientArguments.h"
 #include "ClientNetwork.h"
 #include "ClientExtensions.h"
-#include "scripts.generated.h"
 #include "Clientlua.h"
+#include "scripts.generated.h"
 
 class Main
 {
@@ -21,7 +21,7 @@ public:
         ClientArguments::initialize(GetCommandLineA());
         ClientExtensions::initialize();
         ClientDetours::Apply();
-		ClientLua::allowOutOfBoundsPointer();
+        ClientLua::allowOutOfBoundsPointer();
     }
 };
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SharedDefines.h"
+
 #include <iostream>
 
 // number of races * 2; I've yet to determine what data exactly is stored here
