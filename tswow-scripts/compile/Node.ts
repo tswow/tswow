@@ -17,7 +17,7 @@
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { term } from '../util/Terminal';
-import { NODE_URL } from './BuildConfig';
+import { NODE_DOWNLOAD } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -30,7 +30,7 @@ export namespace NodeJS {
         }
 
         await DownloadFile(
-             NODE_URL
+             NODE_DOWNLOAD
            , bpaths.nodeArchive
         )
 

@@ -2,7 +2,7 @@ import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
-import { SOURCE_ADT_URL } from "./BuildConfig";
+import { SOURCE_ADT_DOWNLOAD } from "./BuildConfig";
 import { bpaths, spaths } from "./CompilePaths";
 import { DownloadFile } from "./Downloader";
 
@@ -30,7 +30,7 @@ export namespace ADTCreator {
         }
 
         await DownloadFile(
-              SOURCE_ADT_URL
+              SOURCE_ADT_DOWNLOAD
             , bpaths.sourceAdt.get()
         )
         wfs.copy(bpaths.sourceAdt,ipaths.bin.sourceAdt);
