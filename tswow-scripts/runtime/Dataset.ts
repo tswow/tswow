@@ -312,6 +312,7 @@ export class Datasets {
 
     all() {
         return this.path.dataset.all()
+            .filter(x => !x.basename().get().startsWith('.'))
             .map(x=>new Dataset(this.mod, x.basename().get()))
     }
 

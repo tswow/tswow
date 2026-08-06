@@ -401,29 +401,29 @@ void TSLua::load_events(sol::state& state)
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnReceive);
     LUA_MAPPED_HANDLE(worldpacket_events, WorldPacketEvents, OnSend);
 
-    lua_events["World"] = &TSEvents::World;
-    lua_events["Unit"] = &TSEvents::Unit;
-    lua_events["AuctionHouse"] = &TSEvents::AuctionHouse;
-    lua_events["Vehicle"] = &TSEvents::Vehicle;
-    lua_events["Player"] = &TSEvents::Player;
-    lua_events["Account"] = &TSEvents::Account;
-    lua_events["Guild"] = &TSEvents::Guild;
-    lua_events["Group"] = &TSEvents::Group;
-    lua_events["Spell"] = &TSEvents::Spell;
-    lua_events["Creature"] = &TSEvents::Creature;
-    lua_events["Battleground"] = &TSEvents::Battleground;
-    lua_events["Item"] = &TSEvents::Item;
-    lua_events["Quest"] = &TSEvents::Quest;
+    lua_events["World"] = [](TSEvents& events) -> TSEvents::WorldEvents& { return events.World; };
+    lua_events["Unit"] = [](TSEvents& events) -> TSEvents::UnitEvents& { return events.Unit; };
+    lua_events["AuctionHouse"] = [](TSEvents& events) -> TSEvents::AuctionEvents& { return events.AuctionHouse; };
+    lua_events["Vehicle"] = [](TSEvents& events) -> TSEvents::VehicleEvents& { return events.Vehicle; };
+    lua_events["Player"] = [](TSEvents& events) -> TSEvents::PlayerEvents& { return events.Player; };
+    lua_events["Account"] = [](TSEvents& events) -> TSEvents::AccountEvents& { return events.Account; };
+    lua_events["Guild"] = [](TSEvents& events) -> TSEvents::GuildEvents& { return events.Guild; };
+    lua_events["Group"] = [](TSEvents& events) -> TSEvents::GroupEvents& { return events.Group; };
+    lua_events["Spell"] = [](TSEvents& events) -> TSEvents::SpellEvents& { return events.Spell; };
+    lua_events["Creature"] = [](TSEvents& events) -> TSEvents::CreatureEvents& { return events.Creature; };
+    lua_events["Battleground"] = [](TSEvents& events) -> TSEvents::BattlegroundEvents& { return events.Battleground; };
+    lua_events["Item"] = [](TSEvents& events) -> TSEvents::ItemEvents& { return events.Item; };
+    lua_events["Quest"] = [](TSEvents& events) -> TSEvents::QuestEvents& { return events.Quest; };
 #if TRINITY
-    lua_events["AreaTrigger"] = &TSEvents::AreaTrigger;
+    lua_events["AreaTrigger"] = [](TSEvents& events) -> TSEvents::AreaTriggerEvents& { return events.AreaTrigger; };
 #endif
-    lua_events["Map"] = &TSEvents::Map;
-    lua_events["Instance"] = &TSEvents::Instance;
-    lua_events["Achievement"] = &TSEvents::Achievement;
-    lua_events["GameEvent"] = &TSEvents::GameEvent;
-    lua_events["SmartAction"] = &TSEvents::SmartAction;
-    lua_events["Condition"] = &TSEvents::Condition;
-    lua_events["CustomPacket"] = &TSEvents::CustomPacket;
-    lua_events["WorldPacket"] = &TSEvents::WorldPacket;
-    lua_events["GameObject"] = &TSEvents::GameObject;
+    lua_events["Map"] = [](TSEvents& events) -> TSEvents::MapEvents& { return events.Map; };
+    lua_events["Instance"] = [](TSEvents& events) -> TSEvents::InstanceEvents& { return events.Instance; };
+    lua_events["Achievement"] = [](TSEvents& events) -> TSEvents::AchievementEvents& { return events.Achievement; };
+    lua_events["GameEvent"] = [](TSEvents& events) -> TSEvents::GameEventsEvents& { return events.GameEvent; };
+    lua_events["SmartAction"] = [](TSEvents& events) -> TSEvents::SmartActionEvents& { return events.SmartAction; };
+    lua_events["Condition"] = [](TSEvents& events) -> TSEvents::ConditionEvents& { return events.Condition; };
+    lua_events["CustomPacket"] = [](TSEvents& events) -> TSEvents::CustomPacketEvents& { return events.CustomPacket; };
+    lua_events["WorldPacket"] = [](TSEvents& events) -> TSEvents::WorldPacketEvents& { return events.WorldPacket; };
+    lua_events["GameObject"] = [](TSEvents& events) -> TSEvents::GameObjectEvents& { return events.GameObject; };
 }

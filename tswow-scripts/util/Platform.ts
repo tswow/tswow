@@ -22,6 +22,10 @@ export function isWindows() {
     return process.platform === 'win32';
 }
 
+export function isOSX() {
+    return process.platform === 'darwin';
+}
+
 export function getOS() {
     if (isWindows()) { return 'windows'; }
     // Assume it's linux
