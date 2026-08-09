@@ -50,6 +50,7 @@ void TSLua::load_aura_methods(sol::state& state)
     LUA_FIELD(ts_aura, TSAura, SetMaxDuration);
     LUA_FIELD(ts_aura, TSAura, SetStackAmount);
     LUA_FIELD(ts_aura, TSAura, Remove);
+    LUA_FIELD(ts_aura, TSAura, ModStackAmount);
     LUA_FIELD(ts_aura, TSAura, GetEffect);
     ts_aura.set_function("GetApplications", &TSAura::LGetApplications);
 
