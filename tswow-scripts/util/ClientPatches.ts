@@ -166,6 +166,12 @@ export function ClientPatches(
                     gamebuild&0xff,
                     (gamebuild>>8)&0xff
                 ]]
+            ]),
+            patch('rce-fix', [
+                [0x2A7, [0xC0]]
+            ]),
+            patch('warden-disable', [
+                [0x3D9D7C, [0x90, 0x90]]
             ])
         ]
 }
