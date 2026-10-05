@@ -65,5 +65,9 @@
   "bugs": {
     "url": "https://github.com/tswow/tswow/issues"
   },
-  "homepage": "https://github.com/tswow/tswow#readme"
+  "homepage": "https://github.com/tswow/tswow#readme",
+  "allowScripts": {
+    "deasync": true,
+    "core-js": false
+  }
 }

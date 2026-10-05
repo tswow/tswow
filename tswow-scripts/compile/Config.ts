@@ -34,6 +34,8 @@ export namespace Config {
             description: '',
             dependencies: spaths.package_json.readJson({}).dependencies,
             devDependencies: spaths.package_json.readJson({}).devDependencies,
+            // npm >= 12 skips dependency install scripts that aren't listed here
+            allowScripts: spaths.package_json.readJson({}).allowScripts,
             scripts: {
                   start:
                       `node start`
@@ -177,7 +179,11 @@ export namespace Config {
         ipaths.bin.revisions.tswow.write(`${commit}${h.length>0?'+':''}`)
 
         ipaths.startBat.write(`./bin/node/npm run start %*`)
-        ipaths.startJs.write(`require('child_process').execSync(\`${isWindows() ? '"bin/node/node.exe"' : 'node'} -r source-map-support/register bin/scripts/runtime/runtime/TSWoW.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
+        ipaths.startJs.write(
+            // Linux uses the system node, which a distro update can move to a
+            // new ABI; rebuild the native deasync addon instead of failing.
+              (isWindows() ? '' : `try { require('deasync') } catch (e) { require('child_process').execSync('npm rebuild deasync', { stdio: 'inherit' }) }\n`)
+            + `require('child_process').execSync(\`${isWindows() ? '"bin/node/node.exe"' : 'node'} -r source-map-support/register bin/scripts/runtime/runtime/TSWoW.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
         // todo: realm/dataset configs
     }
 }
