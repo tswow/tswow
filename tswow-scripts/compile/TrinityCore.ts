@@ -61,8 +61,10 @@ export namespace TrinityCore {
             }
 
             sol_sourcedir.copy(ipaths.bin.include);
+            // lua.hpp too: livescripts include sol2, which prefers <lua.hpp>
+            // and must not fall back to a system Lua.
             bpaths.TrinityCore.lua_headers.iterateDef(node=>{
-                if(node.endsWith('.h')) {
+                if(node.endsWith('.h') || node.endsWith('.hpp')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
             })
@@ -268,11 +270,6 @@ export namespace TrinityCore {
                 const cxxDefault = '/usr/bin/g++'
                 const cc = process.env.TSWOW_CC || ccDefault
                 const cxx = process.env.TSWOW_CXX || cxxDefault
-                // Boost::system fallback for distros that ship Boost without
-                // a per-component boost_system config (see
-                // cmake/linux/boost_system_fallback/README.txt).
-                const boostSystemFallback = require('path').resolve(
-                    process.cwd(),'cmake','linux','boost_system_fallback')
                 // Parallel build jobs, overridable via build.conf (Linux.MakeJobs).
                 const parsedMakeJobs = Number(process.env.TSWOW_LINUX_MAKE_JOBS || '0');
                 const makeJobs = Number.isFinite(parsedMakeJobs) && parsedMakeJobs > 0
@@ -290,7 +287,6 @@ export namespace TrinityCore {
                 +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
                 +` -DCMAKE_C_COMPILER=${cc}`
                 +` -DCMAKE_CXX_COMPILER=${cxx}`
-                +` -DCMAKE_PREFIX_PATH="${boostSystemFallback}"`
                 +` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
                 +`${ccacheArgs}`
                 +` -DBUILD_SHARED_LIBS="ON"`
