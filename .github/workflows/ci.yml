@@ -3,8 +3,13 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  schedule:
+    # Weekly build against whatever Arch Linux ships that day, so toolchain
+    # drift on rolling-release distros shows up here before users hit it.
+    - cron: '0 6 * * 1'
 jobs:
   ubuntu-clang-trinitycore:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
@@ -15,7 +20,23 @@ jobs:
         shell: bash
         run: npm run build noac
 
+  arch-latest-gcc-trinitycore:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      # lua is installed on purpose: a system Lua must not leak into the build.
+      - name: Install deps
+        run: |
+          pacman -Syu --noconfirm --needed base-devel cmake git openssl mariadb nodejs npm python 7zip lua
+          git config --global --add safe.directory '*'
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      - name: Build tswow
+        run: npm run build
+
   windows-msvc-trinitycore:
+    if: github.event_name != 'schedule'
     runs-on: windows-2022
     steps:
       # Build
