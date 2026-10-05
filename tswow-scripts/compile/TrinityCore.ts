@@ -22,6 +22,7 @@ import { ipaths, TDB_URL } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
+import { Boost } from './Boost';
 import { copyExtLibs } from './CommonCore';
 import { bpaths, spaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
@@ -283,11 +284,13 @@ export namespace TrinityCore {
                     ccacheArgs = ' -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache';
                 }
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
+                await Boost.installLinux();
                 setupCommand = `cmake ${relSource}`
                 +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
                 +` -DCMAKE_C_COMPILER=${cc}`
                 +` -DCMAKE_CXX_COMPILER=${cxx}`
                 +` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
+                +`${Boost.linuxCMakeArgs()}`
                 +`${ccacheArgs}`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DBUILD_TESTING="OFF"`

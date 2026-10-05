@@ -17,6 +17,7 @@
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
+import { Boost } from './Boost';
 import { bpaths, spaths } from './CompilePaths';
 
 export namespace MPQBuilder {
@@ -36,6 +37,7 @@ export namespace MPQBuilder {
             const cc = process.env.TSWOW_CC || '/usr/bin/gcc';
             const cxx = process.env.TSWOW_CXX || '/usr/bin/g++';
             const jobs = require('os').cpus().length;
+            await Boost.installLinux();
             await wsys.inDirectory(bpaths.mpqbuilder.get()
                 , () => {
                     wsys.exec(
@@ -43,6 +45,7 @@ export namespace MPQBuilder {
                         + ` -DCMAKE_C_COMPILER=${cc}`
                         + ` -DCMAKE_CXX_COMPILER=${cxx}`
                         + ` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
+                        + Boost.linuxCMakeArgs()
                         ,  'inherit');
                     wsys.exec(`make -j ${jobs}`,'inherit');
                 });

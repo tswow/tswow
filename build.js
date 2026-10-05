@@ -14,7 +14,7 @@ const fs = require('fs')
  * We never install anything automatically unless the user explicitly opts in
  * with `--install-deps`, since that needs root and is potentially destructive.
  */
-function checkLinuxPrerequisites() {
+function checkLinuxPrerequisites(useSystemBoost) {
     if (process.platform === 'win32') { return; }
 
     const has = (cmd) => {
@@ -43,7 +43,9 @@ function checkLinuxPrerequisites() {
           pkg: { pacman:'cmake', apt:'cmake', dnf:'cmake', zypper:'cmake' } },
         { name: 'Git', ok: has('git'),
           pkg: { pacman:'git', apt:'git', dnf:'git', zypper:'git' } },
-        { name: 'Boost (headers + libraries)', ok: hasBoost(),
+        // Only with Linux.SystemBoost = true; otherwise a pinned Boost is
+        // downloaded and built from source.
+        { name: 'Boost (headers + libraries)', ok: !useSystemBoost || hasBoost(),
           pkg: { pacman:'boost', apt:'libboost-all-dev', dnf:'boost-devel', zypper:'boost-devel' } },
         { name: 'OpenSSL', ok: has('openssl'),
           pkg: { pacman:'openssl', apt:'libssl-dev', dnf:'openssl-devel', zypper:'libopenssl-devel' } },
@@ -127,7 +129,18 @@ function checkLinuxPrerequisites() {
     process.exit(1);
 }
 
-checkLinuxPrerequisites();
+if(!fs.existsSync('./build.conf')) {
+    fs.copyFileSync('./build.default.conf','./build.conf');
+}
+
+const buildConf = fs.readFileSync('./build.conf','utf-8')
+
+const linuxSystemBoostRaw = (buildConf.match(/^Linux\.SystemBoost *= *(.+)/m)||['','false'])[1]
+const linuxUseSystemBoost = ['true','1','yes','on'].includes(
+    String(linuxSystemBoostRaw).trim().replace(/^"|"$/g,'').toLowerCase()
+)
+
+checkLinuxPrerequisites(linuxUseSystemBoost || process.platform !== 'linux');
 
 // The TrinityCore core lives in a git submodule. If the user cloned without
 // --recursive it will be empty and the build fails cryptically later, so check
@@ -145,12 +158,6 @@ function checkSubmodules() {
     }
 }
 checkSubmodules();
-
-if(!fs.existsSync('./build.conf')) {
-    fs.copyFileSync('./build.default.conf','./build.conf');
-}
-
-const buildConf = fs.readFileSync('./build.conf','utf-8')
 
 const buildDir = buildConf.match(/^BuildDirectory *= *"(.+?)"/m)[1]
 const installDir = buildConf.match(/^InstallDirectory *= *"(.+?)"/m)[1]
@@ -213,4 +220,5 @@ child_process.execSync(
       ...process.env
     , TSWOW_LINUX_MAKE_JOBS: String(linuxMakeJobs)
     , TSWOW_LINUX_USE_CCACHE: linuxUseCCache ? '1' : '0'
+    , TSWOW_LINUX_SYSTEM_BOOST: linuxUseSystemBoost ? '1' : '0'
 }});
