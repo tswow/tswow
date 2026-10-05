@@ -34,6 +34,8 @@ export namespace Config {
             description: '',
             dependencies: spaths.package_json.readJson({}).dependencies,
             devDependencies: spaths.package_json.readJson({}).devDependencies,
+            // npm >= 12 skips dependency install scripts that aren't listed here
+            allowScripts: spaths.package_json.readJson({}).allowScripts,
             scripts: {
                   start:
                       `node start`
@@ -68,7 +70,7 @@ export namespace Config {
 
         // Serverside lua includes
         spaths.misc.install_config.include_lua.copy(bpaths.include_lua),
-        wsys.execIn(bpaths.include_lua,'tstl')
+        wsys.execIn(bpaths.include_lua,'npx tstl')
         bpaths.include_lua.iterate('RECURSE','FILES','FULL', node => {
             if(['.ts','.json'].find(x=>node.endsWith(x))) {
                 return;
@@ -97,7 +99,7 @@ export namespace Config {
                 "noImplicitSelf": true,
             }
         })
-        wsys.execIn(bpaths.lua_events, 'tstl')
+        wsys.execIn(bpaths.lua_events, 'npx tstl')
         bpaths.lua_events.events_lua.copy(
             ipaths.bin.include_addon.Events_lua)
         bpaths.lua_events.lualib_bundle.copy(
@@ -160,16 +162,28 @@ export namespace Config {
         TrinityCore.headers(false);
         spaths.misc.install_config.snippet_example.copy(ipaths.vscode.snippets_out)
 
-        let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
-        let h = wsys.exec('git status --porcelain')
-            .split(' ').join('')
-            .split('\n').join('')
-            .split('\r').join('');
+        // Revision stamping is best-effort: builds from a ZIP/tarball download
+        // (no .git) or without git installed should still succeed.
+        let commit = 'unknown';
+        let h = '';
+        try {
+            commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
+            h = wsys.exec('git status --porcelain')
+                .split(' ').join('')
+                .split('\n').join('')
+                .split('\r').join('');
+        } catch (err) {
+            term.warn('build','Could not read git revision (not a git checkout?); using "unknown".')
+        }
 
         ipaths.bin.revisions.tswow.write(`${commit}${h.length>0?'+':''}`)
 
         ipaths.startBat.write(`./bin/node/npm run start %*`)
-        ipaths.startJs.write(`require('child_process').execSync(\`${isWindows() ? '"bin/node/node.exe"' : 'node'} -r source-map-support/register bin/scripts/runtime/runtime/TSWoW.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
+        ipaths.startJs.write(
+            // Linux uses the system node, which a distro update can move to a
+            // new ABI; rebuild the native deasync addon instead of failing.
+              (isWindows() ? '' : `try { require('deasync') } catch (e) { require('child_process').execSync('npm rebuild deasync', { stdio: 'inherit' }) }\n`)
+            + `require('child_process').execSync(\`${isWindows() ? '"bin/node/node.exe"' : 'node'} -r source-map-support/register bin/scripts/runtime/runtime/TSWoW.js \${process.argv.slice(1).join(' ')}\`, { stdio: 'inherit' })`)
         // todo: realm/dataset configs
     }
 }

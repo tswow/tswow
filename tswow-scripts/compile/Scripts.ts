@@ -48,7 +48,7 @@ export namespace Scripts {
             )
 
             if(!isInteractive) {
-                wsys.execIn(buildDir,'tsc','inherit')
+                wsys.execIn(buildDir,'npx tsc','inherit')
             } else {
                 watchTsc(
                       'node'

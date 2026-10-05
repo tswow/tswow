@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as mysql_lib from 'mysql2';
+import * as child_process from 'child_process';
 import path from 'path';
 import { start } from 'repl';
 import { commands } from '../util/Commands';
@@ -190,9 +191,106 @@ export class Connection {
 export namespace mysql {
     const mysqlprocess: Process = new Process('mysql');
 
+    function id(name: string) {
+        return `\`${name.split('`').join('``')}\``;
+    }
+
+    export async function ensureUpdatesTable(con: Connection) {
+        await con.query(
+              `CREATE TABLE IF NOT EXISTS ${id('updates')} (`
+            + `${id('name')} VARCHAR(200) NOT NULL,`
+            + `${id('hash')} VARCHAR(40) NOT NULL DEFAULT '',`
+            + `${id('state')} VARCHAR(20) NOT NULL DEFAULT 'RELEASED',`
+            + `${id('installedOn')} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,`
+            + `${id('speed')} INT NOT NULL DEFAULT 0,`
+            + `PRIMARY KEY (${id('name')})`
+            + `);`
+        )
+    }
+
+    export async function selfHealWorldDest(source: Connection, dest: Connection) {
+        const missingTables = await source.query(
+              `SELECT s.table_name FROM information_schema.tables s `
+            + `LEFT JOIN information_schema.tables d `
+            + `ON d.table_schema='${dest.name()}' AND d.table_name=s.table_name `
+            + `WHERE s.table_schema='${source.name()}' `
+            + `AND s.table_type='BASE TABLE' `
+            + `AND d.table_name IS NULL;`
+        )
+
+        for (const row of missingTables as { table_name: string }[]) {
+            const table = row.table_name;
+            await dest.query(
+                  `CREATE TABLE IF NOT EXISTS ${id(dest.name())}.${id(table)} `
+                + `LIKE ${id(source.name())}.${id(table)};`
+            )
+        }
+
+        const hasTrinityString = await dest.query(
+              `SELECT COUNT(*) AS c FROM information_schema.tables `
+            + `WHERE table_schema='${dest.name()}' AND table_name='trinity_string';`
+        ) as { c: number }[];
+
+        if ((hasTrinityString[0]?.c || 0) === 0) {
+            return;
+        }
+
+        const destCount = await dest.query(`SELECT COUNT(*) AS c FROM ${id('trinity_string')};`) as { c: number }[];
+        if ((destCount[0]?.c || 0) > 0) {
+            return;
+        }
+
+        const sourceCount = await source.query(`SELECT COUNT(*) AS c FROM ${id('trinity_string')};`) as { c: number }[];
+        if ((sourceCount[0]?.c || 0) === 0) {
+            return;
+        }
+
+        await dest.query(
+              `TRUNCATE TABLE ${id('trinity_string')};`
+            + `INSERT INTO ${id('trinity_string')} SELECT * FROM ${id(source.name())}.${id('trinity_string')};`
+        )
+    }
+
+    let cachedIsMariaDB: boolean | undefined = undefined;
+
+    /**
+     * Whether the local database server binary is MariaDB (as opposed to MySQL).
+     * MariaDB requires different initialization and startup flags than MySQL.
+     */
+    function isMariaDB(): boolean {
+        if (cachedIsMariaDB === undefined) {
+            try {
+                const version = wsys.exec(`"${mysqldExe()}" --version`, 'pipe');
+                cachedIsMariaDB = /mariadb/i.test(version);
+            } catch (error) {
+                cachedIsMariaDB = false;
+            }
+        }
+        return cachedIsMariaDB;
+    }
+
+    // Database binaries: bundled .exe on Windows, resolved system binary elsewhere.
+    function mysqldExe(): string {
+        return isWindows() ? ipaths.bin.mysql.mysqld_exe.get() : wsys.resolveExe(['mariadbd', 'mysqld']);
+    }
+    function mysqlClientExe(): string {
+        return isWindows() ? ipaths.bin.mysql.mysql_exe.get() : wsys.resolveExe(['mariadb', 'mysql']);
+    }
+    function mysqldumpExe(): string {
+        return isWindows() ? ipaths.bin.mysql.mysqldump_exe.get() : wsys.resolveExe(['mariadb-dump', 'mysqldump']);
+    }
+
+    // Socket + pid file for the tswow-managed database process (Linux/macOS).
+    function socketPath(): string {
+        return wfs.absPath(ipaths.coredata.join('tswow-db.sock').get());
+    }
+    function pidPath(): string {
+        return wfs.absPath(ipaths.coredata.join('tswow-db.pid').get());
+    }
+
     export function dump(connection: Connection, outputFile: string) {
         wsys.exec(
-            `"${ipaths.bin.mysql.mysqldump_exe.get()}"`
+            `"${mysqldumpExe()}"`
             + ` --port ${connection.cfg.port}`
             + ` --host ${connection.cfg.host}`
             + ` -u root ${connection.cfg.database}`
@@ -205,14 +303,34 @@ export namespace mysql {
         if(!ipaths.coredata.database.exists()) {
             term.log('mysql',"No mysql database found, creating it...");
             try {
-                wsys.exec(
-                    `${ipaths.bin.mysql.mysqld_exe.get()}`
-                    + ` --initialize`
-                    + ` --log_syslog=0`
-                    + ` --datadir=${ipaths.coredata.database.abs()}`);
+                if (isWindows()) {
+                    wsys.exec(
+                        `${mysqldExe()}`
+                        + ` --initialize`
+                        + ` --log_syslog=0`
+                        + ` --datadir=${ipaths.coredata.database.abs()}`);
+                } else if (isMariaDB()) {
+                    // MariaDB uses mariadb-install-db instead of `--initialize`.
+                    const installDb = wsys.resolveExe(['mariadb-install-db', 'mysql_install_db']);
+                    wsys.exec(
+                        `"${installDb}"`
+                        + ` --datadir="${wfs.absPath(ipaths.coredata.database.get())}"`
+                        + ` --auth-root-authentication-method=normal`
+                        + ` --skip-test-db`);
+                } else {
+                    // System MySQL on Linux
+                    wsys.exec(
+                        `"${mysqldExe()}"`
+                        + ` --initialize-insecure`
+                        + ` --datadir="${wfs.absPath(ipaths.coredata.database.get())}"`);
+                }
             } catch(error) {
-                term.error('mysql',`Failed to start MySQL: ${error.message}`)
-                term.error('mysql',`Make sure you installed all vcredist versions needed`)
+                term.error('mysql',`Failed to initialize database: ${error.message}`)
+                if (isWindows()) {
+                    term.error('mysql',`Make sure you installed all vcredist versions needed`)
+                } else {
+                    term.error('mysql',`Make sure mariadb/mysql server is installed (e.g. 'pacman -S mariadb' or 'apt install mariadb-server')`)
+                }
                 term.error('mysql',`See wiki for installation instructions: https://tswow.github.io/tswow-wiki/`)
                 process.exit(-1);
             }
@@ -250,16 +368,24 @@ export namespace mysql {
 
         const [user,pass] = Object.entries(users).find(()=>true);
 
+        // Grant the user on both localhost (unix socket) and 127.0.0.1 (TCP), since
+        // the emulator connects via TCP while the init-file runs over the socket.
         wfs.write(ipaths.bin.mysql_startup.get(),
               `CREATE USER IF NOT EXISTS`
             + ` '${user}'@'localhost'`
             + ` IDENTIFIED BY '${pass}';`
             + `\nGRANT ALL ON *.* TO '${user}'@'localhost';`
-            + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`);
-            + "`\nSET @@GLOBAL.wait_timeout=2147483"
+            + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`
+            + `\nCREATE USER IF NOT EXISTS`
+            + ` '${user}'@'127.0.0.1'`
+            + ` IDENTIFIED BY '${pass}';`
+            + `\nGRANT ALL ON *.* TO '${user}'@'127.0.0.1';`
+            + `\nALTER USER '${user}'@'127.0.0.1' IDENTIFIED BY '${pass}';`
+            + `\nFLUSH PRIVILEGES;`);
         await disconnect();
-        mysqlprocess.start(ipaths.bin.mysql.mysqld_exe.get(),
-            [
+
+        const startArgs = isWindows()
+            ? [
                 `--port=${NodeConfig.DatabaseHostedPort}`,
                 '--log_syslog=0',
                 '--console',
@@ -267,10 +393,25 @@ export namespace mysql {
                 '--wait_timeout=2147483',
                 `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
                 `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
-            ]);
+            ]
+            : [
+                `--port=${NodeConfig.DatabaseHostedPort}`,
+                `--socket=${socketPath()}`,
+                `--pid-file=${pidPath()}`,
+                '--wait-timeout=2147483',
+                `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
+                `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
+            ];
+
+        mysqlprocess.start(mysqldExe(), startArgs);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
+        // MariaDB/MySQL on Linux log 'ready for connections' once the init-file has
+        // been executed, while Windows MySQL logs 'Execution of init_file ended.'.
+        const readyMessage = isWindows()
+            ? 'Execution of init_file*ended.'
+            : 'ready for connections'
         let val = await Promise.race([
-            mysqlprocess.waitForMessage('Execution of init_file*ended.', true),
+            mysqlprocess.waitForMessage(readyMessage, true),
             mysqlprocess.waitForMessage('Can\'t start server', true),
         ]);
         if(val.includes('Can\'t start server')) {
@@ -292,10 +433,25 @@ export namespace mysql {
 
     /**
      * Returns whether this instance of TSWoW should manage its own MySQL process.
+     *
+     * On Windows, TSWoW bundles its own MySQL. On Linux/macOS it uses the system
+     * mariadbd/mysqld binary but still manages the process/data directory itself
+     * so that `npm start` works out of the box without a preconfigured server.
      */
     export function hasOwnProcess() {
-        return isWindows()
-            && NodeConfig.DatabaseHostedPort !== 0;
+        return NodeConfig.DatabaseHostedPort !== 0;
+    }
+
+    /**
+     * Absolute path to the MySQL/MariaDB client executable used by the emulator
+     * (worldserver) for e.g. running SQL updates. Resolves the bundled binary on
+     * Windows and the system mariadb/mysql client on Linux/macOS.
+     */
+    export function clientExecutable() {
+        if (isWindows()) {
+            return ipaths.bin.mysql.mysql_exe.abs().get();
+        }
+        return mysqlClientExe();
     }
 
     /**
@@ -358,21 +514,25 @@ export namespace mysql {
         await con.clean();
 
         const mysqlCommand = mysql.hasOwnProcess() ?
-            `"${ipaths.bin.mysql.mysql_exe.get()}"` :
+            `"${mysqlClientExe()}"` :
                 NodeConfig.MySQLExecutable != '' ?
             `"${NodeConfig.MySQLExecutable}"`:
                 `mysql`;
 
-        await wsys.execAsync(
-              `${mysqlCommand}`
-            + ` -u ${con.cfg.user}`
-            + ` --default-character-set=utf8`
-            + (con.cfg.password.length > 0
-                ? ` -p${con.cfg.password}`
-                : '')
-            + ` --port ${con.cfg.port}`
-            + ` --host ${con.cfg.host}`
-            + ` ${con.name()} < ${sqlFilePath}`);
+        await new Promise<void>((res, rej) => {
+            child_process.exec(
+                  `${mysqlCommand}`
+                + ` -u ${con.cfg.user}`
+                + ` --default-character-set=utf8`
+                + (con.cfg.password.length > 0
+                    ? ` -p${con.cfg.password}`
+                    : '')
+                + ` --port ${con.cfg.port}`
+                + ` --host ${con.cfg.host}`
+                + ` ${con.name()} < ${sqlFilePath}`
+                , { maxBuffer: 512 * 1024 * 1024 }
+                , (err) => err ? rej(err) : res());
+        });
         term.success('mysql',`Rebuilt database ${con.name()}`);
     }
 
@@ -407,6 +567,7 @@ export namespace mysql {
           cons: Connection
         , type: 'world'|'auth'|'characters'
     ) {
+        await ensureUpdatesTable(cons)
         let total = await makeUpdate(cons, ipaths.bin.sql.updates.type.pick(type)._335.toDirectory())
         total += await makeUpdate(cons, ipaths.bin.sql.custom.type.pick(type).toDirectory())
         if(total > 0) {

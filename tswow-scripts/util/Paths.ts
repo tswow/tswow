@@ -28,11 +28,17 @@ export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
 
 function currentCommitShort()
 {
-    return child_process
-        .execSync('git rev-parse --short HEAD')
-        .toString('utf-8')
-        .trimRight()
-        .trimLeft()
+    // Best-effort: builds from a ZIP/tarball download (no .git) or without git
+    // installed should still work. Only affects the release-installer filename.
+    try {
+        return child_process
+            .execSync('git rev-parse --short HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
+            .toString('utf-8')
+            .trimRight()
+            .trimLeft()
+    } catch (err) {
+        return 'unknown'
+    }
 }
 
 export function tdbFilename() {

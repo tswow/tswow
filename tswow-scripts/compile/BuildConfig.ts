@@ -26,6 +26,12 @@ export const OPENSSL_DOWNLOAD_URL = 'https://github.com/tswow/misc/releases/down
 export const SOURCE_ADT_URL = 'https://github.com/tswow/misc/releases/download/adt-template/source.adt'
 export const BLPCONVERTER_URL = 'https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe'
 export const BOOST_URL = 'https://github.com/tswow/misc/releases/download/boost-1.82/boost_1_82_0.zip'
+// Linux builds this Boost release from source instead of using the distro's
+// Boost, so distro updates can't change the Boost API under TrinityCore or
+// remove the shared libraries an existing build links against.
+export const BOOST_LINUX_VERSION = '1.92.0'
+export const BOOST_LINUX_URL = `https://github.com/boostorg/boost/releases/download/boost-${BOOST_LINUX_VERSION}/boost-${BOOST_LINUX_VERSION}-b2-nodocs.tar.gz`
+export const BOOST_LINUX_SHA256 = 'e2a814b3a158ab482c7a3d330f8bf5a7a8423d258a4e2fb396996e00fcee2111'
 export const MYSQL_URL = 'https://github.com/tswow/misc/releases/download/mysql-5.7.32/mysql-5.7.32-winx64.zip'
 export const OPENSSL_URL = 'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip'
 export const IMAGEMAGICK_URL = 'https://github.com/tswow/misc/releases/download/imagemagick-7.1.0/ImageMagick-7.1.0-portable-Q16-x64.zip'

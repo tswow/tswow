@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
 project(mpqbuilder)
 set( Boost_USE_STATIC_LIBS ON )
 FIND_PACKAGE( Boost 1.60 COMPONENTS filesystem REQUIRED )

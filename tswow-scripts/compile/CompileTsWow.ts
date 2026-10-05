@@ -147,4 +147,9 @@ async function main() {
         await compile(process.argv.includes('--release') ? 'release':'full',[]);
         process.exit(0);
     }
-}())
+}()).catch(err => {
+    // On Linux an uncaughtException handler (util/Process.ts) swallows
+    // rejections, so without this a failed build exited 0 or hung.
+    term.error('build', `Build failed: ${err && err.stack ? err.stack : err}`);
+    process.exit(1);
+})

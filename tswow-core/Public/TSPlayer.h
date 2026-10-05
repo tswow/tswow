@@ -22,6 +22,11 @@
 #include "TSUnit.h"
 #include "TSOutfit.h"
 #include "TSDBJson.h"
+// GCC 16 instantiates the std::vector<TSItemEntry> destructor when this header
+// is parsed (because TSArray<TSItemEntry>() appears as a default argument
+// below), so the full definition is required here rather than only the
+// forward declaration further down the file.
+#include "TSItemEntry.h"
 
 #include <sol/sol.hpp>
 

@@ -84,6 +84,7 @@ export namespace wsys {
     /**
      * Executes a child process asynchronously
      * @param program Command to execute
+     * @param cwd Working directory to execute in
      * @throws if the child process exits with an error
      * @returns Promise when the child process exits
      */
@@ -134,6 +135,33 @@ export namespace wsys {
             str = data.toString();
         }
         return str;
+    }
+
+    /**
+     * Returns whether a command is available on the system PATH.
+     */
+    export function hasCommand(command: string): boolean {
+        try {
+            child_process.execSync(`command -v ${command}`, { stdio: 'ignore' });
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     * Resolves the first available executable from a list of candidate command
+     * names, returning its absolute path. Falls back to the last candidate as a
+     * bare command name if none are found on the PATH.
+     */
+    export function resolveExe(candidates: string[]): string {
+        for (const candidate of candidates) {
+            try {
+                const found = exec(`command -v ${candidate}`, 'pipe').trim();
+                if (found.length > 0) { return found; }
+            } catch (error) { /* try next candidate */ }
+        }
+        return candidates[candidates.length - 1];
     }
 
     /**

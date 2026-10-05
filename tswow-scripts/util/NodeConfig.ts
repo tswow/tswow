@@ -132,7 +132,7 @@ export class NodeConfigClass extends ConfigFile {
     @Property({
         name: 'Database.WorldSource'
       , description: 'This is the database used to read datascripts.'
-      , examples: [["localhost;3306;tswow;password",'']]
+      , examples: [["127.0.0.1;3306;tswow;password",'']]
     })
     DatabaseWorldSource!: string
 
@@ -140,21 +140,21 @@ export class NodeConfigClass extends ConfigFile {
         name: 'Database.WorldDest'
       , description:  'This is the database used by the worldserver. '
                     + 'Datascripts writes to this database.'
-      , examples: [["localhost;3306;tswow;password",'']]
+      , examples: [["127.0.0.1;3306;tswow;password",'']]
     })
     DatabaseWorldDest!: string
 
     @Property({
         name: 'Database.Auth'
       , description:  'This is the database used by the auth server. '
-      , examples: [["localhost;3306;tswow;password",'']]
+      , examples: [["127.0.0.1;3306;tswow;password",'']]
     })
     DatabaseAuth!: string
 
     @Property({
         name: 'Database.Characters'
       , description:  'This is the database storing dynamic game data, such as characters. '
-      , examples: [["localhost;3306;tswow;password",'']]
+      , examples: [["127.0.0.1;3306;tswow;password",'']]
     })
     DatabaseCharacters!: string
 

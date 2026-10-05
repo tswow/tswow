@@ -32,6 +32,28 @@ import { NodeConfig } from './NodeConfig';
  * runs `mapextractor`, `vmap4extractor`, `vmap4assembler` etc. and installs the results to TrinityCore.
  */
 export namespace MapData {
+  function ensureLegacyDevPatch(dataset: Dataset) {
+    const letter = dataset.config.ClientDevPatchLetter.toUpperCase();
+    const dataDir = dataset.client.path.Data;
+    const rootPatch = dataDir.join(`patch-${letter}.MPQ`);
+    if (rootPatch.exists()) {
+      return;
+    }
+
+    const localeDir = dataDir.locale();
+    if (!localeDir.exists()) {
+      return;
+    }
+
+    const localePatch = localeDir.join(`patch-${localeDir.basename()}-${letter}.MPQ`);
+    if (!localePatch.exists()) {
+      return;
+    }
+
+    term.debug('misc', `Creating compatibility dev patch ${rootPatch.abs()} from ${localePatch.abs()}`);
+    wfs.copy(localePatch.get(), rootPatch.get());
+  }
+
     export function dbc (
         dataset: Dataset
       , type: BuildType = NodeConfig.DefaultBuildType
@@ -121,6 +143,7 @@ export namespace MapData {
 
     export function luaxml(dataset: Dataset) {
         term.debug('misc', `Building luaxml from ${dataset.client.path.abs()}`)
+        ensureLegacyDevPatch(dataset);
         wsys.exec(
               `"${ipaths.bin.mpqbuilder.luaxml_exe.get()}"`
             + ` ${dataset.path.luaxml_source.abs()}`

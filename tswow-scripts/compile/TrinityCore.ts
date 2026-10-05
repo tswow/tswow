@@ -22,6 +22,7 @@ import { ipaths, TDB_URL } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
+import { Boost } from './Boost';
 import { copyExtLibs } from './CommonCore';
 import { bpaths, spaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
@@ -61,8 +62,10 @@ export namespace TrinityCore {
             }
 
             sol_sourcedir.copy(ipaths.bin.include);
+            // lua.hpp too: livescripts include sol2, which prefers <lua.hpp>
+            // and must not fall back to a system Lua.
             bpaths.TrinityCore.lua_headers.iterateDef(node=>{
-                if(node.endsWith('.h')) {
+                if(node.endsWith('.h') || node.endsWith('.hpp')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
             })
@@ -259,18 +262,44 @@ export namespace TrinityCore {
                     .relativeFrom(spaths.cores.TrinityCore)
                 const relInstall = bpaths.TrinityCore
                     .relativeFrom(bpaths.TrinityCore.join('install','trinitycore'))
+                // Compiler selection: env-driven, with a gcc default. Modern
+                // clang (>= 18 or so) refuses to build TrinityCore when
+                // WITH_WARNINGS is enabled, so gcc is a safer baseline for
+                // Linux users; anyone preferring clang can still set
+                // TSWOW_CC / TSWOW_CXX.
+                const ccDefault = '/usr/bin/gcc'
+                const cxxDefault = '/usr/bin/g++'
+                const cc = process.env.TSWOW_CC || ccDefault
+                const cxx = process.env.TSWOW_CXX || cxxDefault
+                // Parallel build jobs, overridable via build.conf (Linux.MakeJobs).
+                const parsedMakeJobs = Number(process.env.TSWOW_LINUX_MAKE_JOBS || '0');
+                const makeJobs = Number.isFinite(parsedMakeJobs) && parsedMakeJobs > 0
+                    ? parsedMakeJobs
+                    : require('os').cpus().length;
+                // Optional ccache to speed up repeat builds; opt out with
+                // Linux.UseCCache=false in build.conf.
+                const enableCcache = (process.env.TSWOW_LINUX_USE_CCACHE || '1') !== '0';
+                let ccacheArgs = '';
+                if (enableCcache && wsys.hasCommand('ccache')) {
+                    ccacheArgs = ' -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache';
+                }
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
+                await Boost.installLinux();
                 setupCommand = `cmake ${relSource}`
                 +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
-                +` -DCMAKE_C_COMPILER=/usr/bin/clang`
-                +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+                +` -DCMAKE_C_COMPILER=${cc}`
+                +` -DCMAKE_CXX_COMPILER=${cxx}`
+                +` -DCMAKE_POLICY_VERSION_MINIMUM=3.5`
+                +`${Boost.linuxCMakeArgs()}`
+                +`${ccacheArgs}`
                 +` -DBUILD_SHARED_LIBS="ON"`
                 +` -DBUILD_TESTING="OFF"`
+                +` -DNOJEM=1`
                 +` -DTRACY_ENABLED="${Args.hasFlag('tracy',[process.argv,args1])}"`
                 +` -DTRACY_TIMER_FALLBACK="${!Args.hasFlag('tracy-timer-fallback',[process.argv,args1])?'ON':'OFF'}"`
-                +` -DWITH_WARNINGS=1`
+                +` -DWITH_WARNINGS=0`
                 +` -DSCRIPTS=${scripts}`;
-                buildCommand = 'make -j 4';
+                buildCommand = `make -j ${makeJobs}`;
                 await bpaths.TrinityCore.doIn(() => {
                     wsys.exec(setupCommand, 'inherit');
                     if(generateOnly) return;
@@ -320,9 +349,16 @@ export namespace TrinityCore {
         // Move ts-module header files
         headers(false);
 
-        const rev = wsys.execIn(
-              spaths.cores.TrinityCore.get()
-            , 'git rev-parse HEAD','pipe').split('\n').join('');
+        // Best-effort revision stamp: don't fail the build if this isn't a git
+        // checkout (e.g. a ZIP/tarball download) or git isn't installed.
+        let rev = 'unknown';
+        try {
+            rev = wsys.execIn(
+                  spaths.cores.TrinityCore.get()
+                , 'git rev-parse HEAD','pipe').split('\n').join('');
+        } catch (err) {
+            term.warn('build','Could not read TrinityCore git revision; using "unknown".')
+        }
         ipaths.bin.revisions.trinitycore.write(rev)
 
         term.log('build','Copying sql patches')

@@ -15,14 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as crypto from 'crypto';
+import * as fs from 'fs';
 import { sleep } from 'deasync';
 import { Args } from '../util/Args';
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from '../util/ClientPatches';
 import { mpath, wfs } from '../util/FileSystem';
 import { WDirectory, WNode } from '../util/FileTree';
-import { ClientPath, findLocaleDir, ipaths } from '../util/Paths';
+import { ClientPath, ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { Process } from '../util/Process';
+import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { StartCommand } from './CommandActions';
 import { Dataset } from './Dataset';
@@ -32,6 +34,40 @@ import { NodeConfig } from './NodeConfig';
 export const CLEAN_CLIENT_MD5 = '45892bdedd0ad70aed4ccd22d9fb5984'
 
 const processMap: {[datasetName: string]: Process[]} = {}
+
+/**
+ * Absolute path to the dedicated wine prefix tswow uses for the client on
+ * Linux/macOS. Keeping the client in its own prefix means we can shut its wine
+ * session down (wineserver -k) without affecting any other wine apps.
+ */
+function winePrefix(): string {
+    return ipaths.coredata.join('wine').abs().get();
+}
+
+/**
+ * Environment for launching the wine client: an isolated prefix, and mono/gecko
+ * install prompts disabled so startup is non-interactive.
+ */
+function wineEnv(): NodeJS.ProcessEnv {
+    return {
+          WINEPREFIX: winePrefix()
+        , WINEDLLOVERRIDES: 'mscoree,mshtml='
+        , WINEDEBUG: process.env.WINEDEBUG || '-all'
+    };
+}
+
+/**
+ * Terminates the wine session for tswow's dedicated prefix. This kills the
+ * (possibly frozen) Wow.exe and its wine host processes right away, where a
+ * plain kill of the launched `wine` process would leave them running.
+ */
+function killWineSession() {
+    try {
+        wsys.exec('wineserver -k', 'ignore', { env: { ...process.env, ...wineEnv() } });
+    } catch (err) {
+        // wineserver may already be gone; nothing to clean up.
+    }
+}
 
 export class Client {
     readonly dataset: Dataset
@@ -47,16 +83,11 @@ export class Client {
             )
         }
 
-        const useLocale = this.dataset.config.ClientPatchUseLocale
-        let patchdir = mpath(this.dataset.config.client_path,'Data')
-        if(useLocale) {
-            patchdir = findLocaleDir(patchdir).get();
-        }
-
-        let patchFile = useLocale
-            ? `patch-${wfs.basename(patchdir)}-${this.dataset.config.ClientDevPatchLetter}.MPQ`
-            : `patch-${this.dataset.config.ClientDevPatchLetter}.MPQ`
-        let patchPath = mpath(patchdir,patchFile);
+        const patchPath = mpath(
+            this.dataset.config.client_path,
+            'Data',
+            `patch-${this.dataset.config.ClientDevPatchLetter.toUpperCase()}.MPQ`
+        );
 
         return ClientPath(
               this.dataset.config.client_path
@@ -65,10 +96,7 @@ export class Client {
     }
 
     patchDir() {
-        return (this.dataset.config.ClientPatchUseLocale
-            ? this.path.Data.locale()
-            : this.path.Data
-            ) as WDirectory
+        return this.path.Data as WDirectory
     }
 
     locale() {
@@ -81,6 +109,15 @@ export class Client {
         let count = 0;
         if(processes !== undefined) {
             count = processes.length;
+            // On Linux the client runs under wine: the `wine` launcher we spawn
+            // is not the real Wow.exe (that lives under the shared wineserver),
+            // so killing the launcher alone leaves the game window frozen. Shut
+            // down the whole wine session for our dedicated prefix instead, which
+            // terminates Wow.exe and its wine host processes immediately without
+            // touching any other wine apps the user may be running.
+            if(!isWindows() && count > 0) {
+                killWineSession();
+            }
             await Promise.all(processes.map(x=>x.stop()));
         }
         delete processMap[this.dataset.fullName];
@@ -135,7 +172,17 @@ export class Client {
             if(isWindows()) {
                 process.start(this.path.wow_exe.get())
             } else {
-                process.start('wine',[this.path.wow_exe.get()])
+                // Run in the client directory so WoW resolves Data/ relative to
+                // the executable, and use the exe's own basename (case may differ
+                // from the lowercase "wow.exe" path on case-sensitive filesystems).
+                // A dedicated WINEPREFIX keeps the session isolated so it can be
+                // shut down cleanly on exit (see kill()).
+                process.startIn(
+                      this.dataset.config.client_path
+                    , 'wine'
+                    , [this.path.wow_exe.get()]
+                    , wineEnv()
+                )
             }
             processes.push(process);
             sleep(200)
@@ -144,11 +191,36 @@ export class Client {
 
     async startup(count: number = 1, ip: string = '127.0.0.1') {
         await this.kill();
+        this.ensureWowExe();
         await this.applyExePatches();
         this.installAddons();
         this.clearCache();
         this.writeRealmlist();
         this.start(count);
+    }
+
+    /**
+     * On case-sensitive filesystems (Linux/macOS) the client executable is
+     * usually shipped as "Wow.exe", but tswow expects a lowercase "wow.exe".
+     * If the lowercase file is missing, locate a case-insensitive match in the
+     * client directory and create a lowercase copy so the rest of the pipeline
+     * (patching + launching) works without the user renaming anything.
+     */
+    private ensureWowExe() {
+        if (isWindows()) { return; }
+        const exePath = this.path.wow_exe.get();
+        if (fs.existsSync(exePath)) { return; }
+        const clientDir = this.dataset.config.client_path;
+        let match: string | undefined;
+        try {
+            match = fs.readdirSync(clientDir).find(f => /^wow\.exe$/i.test(f));
+        } catch (err) {
+            return;
+        }
+        if (match && match !== 'wow.exe') {
+            fs.copyFileSync(mpath(clientDir, match), exePath);
+            term.log('client', `Created lowercase wow.exe from ${match} for case-sensitive filesystem`);
+        }
     }
 
     async exePatches() {
@@ -248,11 +320,7 @@ export class Client {
     }
 
     patchPath(letter: string) {
-        return this.dataset.config.ClientPatchUseLocale
-            ? this.path.Data.locale()
-                .join(`patch-${this.locale()}-${letter.toUpperCase()}.MPQ`)
-            : this.path.Data
-                .join(`patch-${letter.toUpperCase()}.MPQ`)
+        return this.path.Data.join(`patch-${letter.toUpperCase()}.MPQ`)
     }
 
     verify() {
@@ -276,23 +344,25 @@ export class Client {
         return this.path.Cache.remove();
     }
 
-    freePatches() {
-        const ids: WNode[] = []
-
+    private _patchOrder() {
         const order: string[] = []
         for(let i=4;i<9;++i) order.push(`${i}`)
         for(let i='A'.charCodeAt(0);i<'Z'.charCodeAt(0);++i) {
             order.push(`${String.fromCharCode(i)}`)
         }
-
-        let start = order.indexOf(this.dataset.config.ClientDevPatchLetter.toUpperCase())
+        const start = order.indexOf(this.dataset.config.ClientDevPatchLetter.toUpperCase())
         if(start === -1) {
             throw new Error(
                   `Invalid patch letter: ${this.dataset.config.ClientDevPatchLetter}`
                 + ` (in dataset ${this.dataset.fullName})`
             )
         }
+        return { order, start };
+    }
 
+    freePatches() {
+        const ids: WNode[] = []
+        const { order, start } = this._patchOrder()
         for(let i=start;i<order.length;++i) {
             let path = this.patchPath(order[i]);
             if( !path.exists()
@@ -301,15 +371,33 @@ export class Client {
                 ids.push(path)
             }
         }
+        return ids;
+    }
 
+    freeNonLocalePatches() {
+        const ids: WNode[] = []
+        const { order, start } = this._patchOrder()
+        for(let i=start;i<order.length;++i) {
+            let path = this.path.Data.join(`patch-${order[i].toUpperCase()}.MPQ`)
+            if(!path.exists()) {
+                ids.push(path)
+            }
+        }
         return ids;
     }
 
     static initialize() {
         term.debug('client', `Initializing client`)
         if(!process.argv.includes('noclient') && NodeConfig.AutoStartClient > 0) {
+            // Never let a client-startup failure take down the whole runtime
+            // (an unhandled rejection here escalates to uncaughtException, which
+            // kills the managed MySQL/server child processes). Log and continue.
             Identifier.getDataset(NodeConfig.DefaultDataset)
                 .client.startup(NodeConfig.AutoStartClient)
+                .catch(err => term.error(
+                      'client'
+                    , `Failed to auto-start client (server keeps running): ${err && err.message ? err.message : err}`
+                ))
         }
 
         StartCommand.addCommand(
