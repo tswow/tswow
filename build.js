@@ -52,7 +52,7 @@ function checkLinuxPrerequisites() {
           pkg: { pacman:'mariadb', apt:'mariadb-server default-libmysqlclient-dev', dnf:'mariadb-server mariadb-connector-c-devel', zypper:'mariadb mariadb-client libmariadb-devel' } },
         { name: '7-Zip (extract world database)',
           ok: has('7za') || has('7z') || has('7zr'),
-          pkg: { pacman:'p7zip', apt:'p7zip-full', dnf:'p7zip', zypper:'p7zip' } },
+          pkg: { pacman:'7zip', apt:'p7zip-full', dnf:'p7zip', zypper:'p7zip' } },
     ];
     // Optional: warn only.
     const optional = [
